@@ -1,1 +1,3 @@
-export const greeting = (name: string) => console.log(`Hello, ${name}!`);
+import {greeting} from "@app/helpers";
+
+greeting("Adrian Parker");
