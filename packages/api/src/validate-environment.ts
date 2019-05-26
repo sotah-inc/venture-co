@@ -21,7 +21,7 @@ const main = async () => {
         throw new Error(missingEnvVarPairs.map(([key]) => `${key} was missing`).join("\n"));
     }
 
-    const envVars = envVarPairs.reduce((out: { [key: string]: string }, value) => {
+    const envVars = envVarPairs.reduce<{[k: string]: string}>((out: { [key: string]: string }, value) => {
         out[value[0]] = value[1];
         return out;
     }, {});
