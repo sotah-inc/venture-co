@@ -1,20 +1,20 @@
-import * as compression from "compression";
-import * as express from "express";
+import compression from "compression";
+import express from "express";
 import * as HttpStatus from "http-status";
 import * as nats from "nats";
-import {createConnection} from "typeorm";
-import {v4 as uuidv4} from "uuid";
-import {Logger} from "winston";
+import { createConnection } from "typeorm";
+import { v4 as uuidv4 } from "uuid";
+import { Logger } from "winston";
 
-import {Post} from "../entities/post";
-import {Preference} from "../entities/preference";
-import {Pricelist} from "../entities/pricelist";
-import {PricelistEntry} from "../entities/pricelist-entry";
-import {ProfessionPricelist} from "../entities/profession-pricelist";
-import {User} from "../entities/user";
-import {defaultRouter, getDataRouter, getUserRouter} from "../routes";
-import {Messenger} from "./messenger";
-import {appendSessions} from "./session";
+import { Post } from "../entities/post";
+import { Preference } from "../entities/preference";
+import { Pricelist } from "../entities/pricelist";
+import { PricelistEntry } from "../entities/pricelist-entry";
+import { ProfessionPricelist } from "../entities/profession-pricelist";
+import { User } from "../entities/user";
+import { defaultRouter, getDataRouter, getUserRouter } from "../routes";
+import { Messenger } from "./messenger";
+import { appendSessions } from "./session";
 
 export interface IOptions {
     logger: Logger;

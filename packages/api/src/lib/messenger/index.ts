@@ -1,9 +1,8 @@
 import * as nats from "nats";
 import * as zlib from "zlib";
-import {IRealmModificationDatesResponse} from "../../../dist/lib/messenger/contracts";
 
-import {ItemId} from "../../types/item";
-import {IStatus, RegionName} from "../../types/region";
+import { ItemId } from "@app/types/item";
+import { IStatus, RegionName } from "@app/types/region";
 import {
     IGetAuctionsRequest,
     IGetAuctionsResponse,
@@ -23,9 +22,10 @@ import {
     IQueryOwnersResponse,
     IQueryRealmModificationDatesRequest,
     IQueryRealmModificationDatesResponse,
+    IRealmModificationDatesResponse,
 } from "./contracts";
-import {Message} from "./message";
-import {MessageError} from "./message-error";
+import { Message } from "./message";
+import { MessageError } from "./message-error";
 
 const DEFAULT_TIMEOUT = 5 * 1000;
 

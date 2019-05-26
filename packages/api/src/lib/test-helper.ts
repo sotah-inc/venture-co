@@ -2,7 +2,7 @@ import {TestContext} from "ava";
 import {Express} from "express";
 import * as HTTPStatus from "http-status";
 import * as nats from "nats";
-import * as supertest from "supertest";
+import supertest from "supertest";
 import {Connection, createConnection} from "typeorm";
 import {v4 as uuidv4} from "uuid";
 

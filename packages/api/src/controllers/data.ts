@@ -1,13 +1,13 @@
-import * as boll from "bollinger-bands";
-import * as HTTPStatus from "http-status";
-import * as moment from "moment";
-import {Connection} from "typeorm";
+const boll = require("bollinger-bands");
+import HTTPStatus from "http-status";
+import moment from "moment";
+import { Connection } from "typeorm";
 
-import {Post} from "../entities/post";
-import {ProfessionPricelist} from "../entities/profession-pricelist";
-import {code, Messenger} from "../lib/messenger";
-import {AuctionsQueryParamsRules} from "../lib/validator-rules";
-import {IErrorResponse, IValidationErrorResponse} from "../types/contracts";
+import { Post } from "../entities/post";
+import { ProfessionPricelist } from "../entities/profession-pricelist";
+import { code, Messenger } from "../lib/messenger";
+import { AuctionsQueryParamsRules } from "../lib/validator-rules";
+import { IErrorResponse, IValidationErrorResponse } from "../types/contracts";
 import {
     IGetAuctionsRequest,
     IGetAuctionsResponse,
@@ -33,7 +33,7 @@ import {
     IQueryOwnerItemsResponse,
     IStatusRealm,
 } from "../types/contracts/data";
-import {ItemId} from "../types/item";
+import { ItemId } from "../types/item";
 import {
     IBollingerBands,
     IItemPriceLimits,
@@ -42,8 +42,8 @@ import {
     IPricelistHistoryMap,
     IPrices,
 } from "../types/pricelist";
-import {IRealmModificationDates} from "../types/region";
-import {QueryRequestHandler, RequestHandler} from "./index";
+import { IRealmModificationDates } from "../types/region";
+import { QueryRequestHandler, RequestHandler } from "./index";
 
 export class DataController {
     private messenger: Messenger;
@@ -551,7 +551,7 @@ export class DataController {
             }
 
             const itemPriceHistory: IPricelistHistoryMap = history[itemId];
-            const itemPrices: IPrices[] = Object.keys(itemPriceHistory).map(v => itemPriceHistory[v]);
+            const itemPrices = Object.keys(itemPriceHistory).map<IPrices>((v: string) => itemPriceHistory[Number(v)]);
             if (itemPrices.length > 0) {
                 const bands: IBollingerBands = boll(
                     itemPrices.map(v => v.min_buyout_per),

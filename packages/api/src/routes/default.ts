@@ -1,5 +1,4 @@
-import express = require("express");
-import {Response} from "express";
+import express, {Response} from "express";
 
 export const router = express.Router();
 
