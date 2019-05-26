@@ -1,0 +1,35 @@
+{
+  "name": "@sotah-inc/core",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./build/dist/index.js",
+  "typings": "build/tsc/index.d.ts",
+  "scripts": {
+    "clean": "rimraf ./build",
+    "debug": "npm run build:watch",
+    "start": "npm run build:watch",
+    "lint": "tslint ./src/**/*.ts{,x}",
+    "type-check": "tsc --noEmit",
+    "type-check:watch": "npm run type-check -- --watch",
+    "build": "run-s clean build:types build:js",
+    "build:types": "tsc --emitDeclarationOnly",
+    "build:js": "babel src --out-dir build/dist --extensions \".ts,.tsx\" --source-maps true",
+    "build:watch": "run-p build:watch:types build:watch:js",
+    "build:watch:types": "npm run build:types -- --watch",
+    "build:watch:js": "npm run build:js -- --watch"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/plugin-proposal-class-properties": "^7.4.4",
+    "@babel/plugin-proposal-object-rest-spread": "^7.4.4",
+    "@babel/preset-env": "^7.4.5",
+    "@babel/preset-typescript": "^7.3.3",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^2.6.3",
+    "tslint": "^5.16.0",
+    "typescript": "^3.4.5"
+  }
+}
