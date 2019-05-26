@@ -1,7 +1,7 @@
 import * as process from "process";
 
 import "reflect-metadata";
-import * as getSlug from "speakingurl";
+import getSlug from "speakingurl";
 import { createConnection } from "typeorm";
 import { v4 as uuidv4 } from "uuid";
 
