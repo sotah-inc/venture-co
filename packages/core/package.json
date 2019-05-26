@@ -1,5 +1,5 @@
 {
-  "name": "@sotah-inc/core",
+  "name": "@sotah/core",
   "version": "1.0.0",
   "description": "",
   "main": "./build/dist/index.js",
