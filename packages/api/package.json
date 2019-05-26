@@ -17,13 +17,11 @@
     "build:watch": "run-p build:watch:types build:watch:js",
     "build:watch:types": "npm run build:types -- --watch",
     "build:watch:js": "npm run build:js -- --watch",
-
     "run:watch": "nodemon --watch ./build/dist ./build/dist/index.js",
     "gcp-build": "npm run build",
     "prepublish": "npm run build",
     "migrate-up": "typeorm migration:run",
     "migrate-down": "typeorm migration:revert",
-
     "test": "ava -vs './dist/test/**/*.js'",
     "test:w": "ava -vsw './dist/test/**/*.js'",
     "test-coverage": "nyc --reporter=lcov npm test",
@@ -44,6 +42,7 @@
   "homepage": "https://github.com/ihsw/sotah-api#readme",
   "devDependencies": {
     "@babel/cli": "^7.4.4",
+    "@babel/polyfill": "^7.4.4",
     "@blueprintjs/tslint-config": "^1.6.0",
     "@types/bcrypt": "^2.0.0",
     "@types/compression": "0.0.36",
