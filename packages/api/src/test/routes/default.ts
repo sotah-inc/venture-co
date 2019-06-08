@@ -4,7 +4,7 @@ import "reflect-metadata";
 import test from "ava";
 import * as HttpStatus from "http-status";
 
-import { getLogger } from "../../lib/logger";
+import { getLogger } from "../..";
 import { setup } from "../../lib/test-helper";
 
 const helper = async () => {
