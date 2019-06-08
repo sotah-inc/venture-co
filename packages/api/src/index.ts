@@ -1,4 +1,3 @@
-import "@babel/polyfill";
 import * as http from "http";
 import * as process from "process";
 import "reflect-metadata";

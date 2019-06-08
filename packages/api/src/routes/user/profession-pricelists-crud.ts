@@ -3,6 +3,7 @@ import { Request, Response, Router } from "express";
 import { Connection } from "typeorm";
 
 import { handle } from "../../controllers";
+// tslint:disable-next-line:max-line-length
 import { ProfessionPricelistsCrudController } from "../../controllers/user/profession-pricelists-crud";
 import { auth } from "../../lib/session";
 

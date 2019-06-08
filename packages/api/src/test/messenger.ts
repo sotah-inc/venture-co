@@ -22,6 +22,7 @@ const setup = (): ISetupSettings => {
   return { messenger };
 };
 
+// tslint:disable-next-line:max-line-length
 test.skip("Messenger Should throw error when requesting from generic test errors queue", async t => {
   const { messenger } = setup();
 

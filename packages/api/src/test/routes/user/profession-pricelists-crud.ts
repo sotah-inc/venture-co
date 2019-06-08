@@ -90,6 +90,7 @@ test("Profession pricelists crud endpoint Should delete a profession-pricelist",
   t.is(res.status, HTTPStatus.OK);
 });
 
+// tslint:disable-next-line:max-line-length
 test("Profession pricelists crud endpoint Should fail on deleting a non-owned profession-pricelist", async t => {
   const { dbConn, request, createProfessionPricelist, createUser } = await helper();
 

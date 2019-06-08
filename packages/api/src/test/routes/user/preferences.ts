@@ -21,6 +21,7 @@ const helper = async () => {
   return { request, createUser };
 };
 
+// tslint:disable-next-line:max-line-length
 test("User creation endpoint Should return not found on existing user but no preferences", async t => {
   const { createUser, request } = await helper();
 
