@@ -1,33 +1,33 @@
-import {Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn} from "typeorm";
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
-import {IPreferenceJson} from "../types/entities";
-import {User} from "./user";
+import { IPreferenceJson } from "../types/entities";
+import { User } from "./user";
 
 @Entity({ name: "preferences" })
 export class Preference {
-    @PrimaryGeneratedColumn()
-    public id: number | undefined;
+  @PrimaryGeneratedColumn()
+  public id: number | undefined;
 
-    @OneToOne(() => User, user => user.preference, { nullable: false, eager: true })
-    @JoinColumn({ name: "user_id" })
-    public user: User | undefined;
+  @OneToOne(() => User, user => user.preference, { nullable: false, eager: true })
+  @JoinColumn({ name: "user_id" })
+  public user: User | undefined;
 
-    @Column("varchar", { length: 255, name: "current_region", nullable: true })
-    public currentRegion: string | null;
+  @Column("varchar", { length: 255, name: "current_region", nullable: true })
+  public currentRegion: string | null;
 
-    @Column("varchar", { length: 255, name: "current_realm", nullable: true })
-    public currentRealm: string | null;
+  @Column("varchar", { length: 255, name: "current_realm", nullable: true })
+  public currentRealm: string | null;
 
-    constructor() {
-        this.currentRegion = null;
-        this.currentRealm = null;
-    }
+  constructor() {
+    this.currentRegion = null;
+    this.currentRealm = null;
+  }
 
-    public toJson(): IPreferenceJson {
-        return {
-            current_realm: this.currentRealm,
-            current_region: this.currentRegion,
-            id: this.id!,
-        };
-    }
+  public toJson(): IPreferenceJson {
+    return {
+      current_realm: this.currentRealm,
+      current_region: this.currentRegion,
+      id: this.id!,
+    };
+  }
 }

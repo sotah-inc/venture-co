@@ -13,30 +13,30 @@ import { ProfessionPricelist } from "../entities/profession-pricelist";
 import { User } from "../entities/user";
 
 (async () => {
-    const dbHost = process.env["DB_HOST"] || "";
-    const dbConn = await createConnection({
-        database: "postgres",
-        entities: [Preference, Pricelist, PricelistEntry, ProfessionPricelist, User, Post],
-        host: dbHost,
-        logging: false,
-        name: `app-${uuidv4()}`,
-        password: "",
-        port: 5432,
-        synchronize: false,
-        type: "postgres",
-        username: "postgres",
-    });
+  const dbHost = process.env["DB_HOST"] || "";
+  const dbConn = await createConnection({
+    database: "postgres",
+    entities: [Preference, Pricelist, PricelistEntry, ProfessionPricelist, User, Post],
+    host: dbHost,
+    logging: false,
+    name: `app-${uuidv4()}`,
+    password: "",
+    port: 5432,
+    synchronize: false,
+    type: "postgres",
+    username: "postgres",
+  });
 
-    const posts = await dbConn.getRepository(Pricelist).find({
-        where: { slug: null },
-    });
-    await Promise.all(
-        posts.map(v => {
-            v.slug = getSlug(v.name);
+  const posts = await dbConn.getRepository(Pricelist).find({
+    where: { slug: null },
+  });
+  await Promise.all(
+    posts.map(v => {
+      v.slug = getSlug(v.name);
 
-            return dbConn.manager.save(v);
-        }),
-    );
+      return dbConn.manager.save(v);
+    }),
+  );
 
-    process.exit(0);
+  process.exit(0);
 })();

@@ -1,39 +1,39 @@
 export type RegionName = string;
 
 export interface IRegion {
-    name: RegionName;
-    hostname: string;
+  name: RegionName;
+  hostname: string;
 }
 
 export interface IStatus {
-    realms: IRealm[];
+  realms: IRealm[];
 }
 
 export type RealmSlug = string;
 
 export enum RealmPopulation {
-    na = "n/a",
-    medium = "medium",
-    high = "high",
-    full = "full",
+  na = "n/a",
+  medium = "medium",
+  high = "high",
+  full = "full",
 }
 
 export interface IRealmModificationDates {
-    downloaded: number;
-    live_auctions_received: number;
-    pricelist_histories_received: number;
+  downloaded: number;
+  live_auctions_received: number;
+  pricelist_histories_received: number;
 }
 
 export interface IRealm {
-    regionName: RegionName;
-    type: string;
-    population: RealmPopulation;
-    queue: boolean;
-    status: boolean;
-    name: string;
-    slug: RealmSlug;
-    battlegroup: string;
-    locale: string;
-    timezone: string;
-    connected_realms: RealmSlug[];
+  regionName: RegionName;
+  type: string;
+  population: RealmPopulation;
+  queue: boolean;
+  status: boolean;
+  name: string;
+  slug: RealmSlug;
+  battlegroup: string;
+  locale: string;
+  timezone: string;
+  connected_realms: RealmSlug[];
 }
