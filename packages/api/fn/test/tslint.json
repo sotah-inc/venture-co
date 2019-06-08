@@ -1,7 +1,0 @@
-{
-  "extends": "@blueprintjs/tslint-config",
-  "rules": {
-    "no-string-literal": false,
-    "no-submodule-imports": false
-  }
-}
