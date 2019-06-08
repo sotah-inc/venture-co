@@ -15,12 +15,11 @@
     "build:watch": "npm run -s build -- --watch",
     "prepublish": "npm run -s build:clean",
     "test": "ava -vs './dist/test/**/*.js'",
-    "test:w": "ava -vsw './dist/test/**/*.js'",
-    "test-coverage": "nyc --reporter=lcov npm test",
+    "test:watch": "ava -vsw './dist/test/**/*.js'",
+    "test-coverage": "nyc --reporter=lcov npm -s test",
     "test-coverage-report": "nyc report",
     "test-coverage-check": "nyc check-coverage --lines 95 --functions 75 --branches 95",
-    "coveralls-coverage": "nyc report --reporter=text-lcov | coveralls",
-    "ava": "ava --verbose"
+    "coveralls-coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "repository": {
     "type": "git",
