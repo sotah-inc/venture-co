@@ -1,0 +1,3 @@
+[submodule "extern/venture-co-api"]
+	path = extern/venture-co-api
+	url = git@github.com:sotah-inc/venture-co-api.git
