@@ -1,17 +1,14 @@
 {
-  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "outDir": "build/tsc",
     "baseUrl": "src",
-    "paths": {
-      "@app/*": ["./*"]
-    }
+    "outDir": "build/dist"
   },
-  "include": [
-    "src"
-  ],
   "exclude": [
     "node_modules",
     "build"
+  ],
+  "extends": "../../tsconfig.json",
+  "include": [
+    "src"
   ]
 }

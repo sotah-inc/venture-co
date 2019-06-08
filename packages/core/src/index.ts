@@ -1,3 +1,3 @@
-import {greeting} from "@app/helpers";
+import { greeting } from "./helpers";
 
 greeting("Adrian Parker");

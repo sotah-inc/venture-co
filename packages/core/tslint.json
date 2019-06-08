@@ -1,0 +1,11 @@
+{
+  "extends": "../../tslint.json",
+  "linterOptions": {
+    "exclude": [
+      "./src/migrations/*.ts"
+    ]
+  },
+  "rules": {
+    "no-console": false
+  }
+}
