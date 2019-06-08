@@ -99,5 +99,8 @@
   },
   "nyc": {
     "exclude": []
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
