@@ -1,11 +1,11 @@
 import { SortDirection, SortKind } from "../../../types";
-import { IAuction, IOwner, OwnerName } from "@app/types/auction";
-import { IExpansion } from "@app/types/expansion";
-import { IItemsMap, ItemId } from "@app/types/item";
-import { IItemClass } from "@app/types/item-class";
-import { IPricelistHistoryMap, IPriceListMap } from "@app/types/pricelist";
-import { IProfession } from "@app/types/profession";
-import { IRealmModificationDates, IRegion, RealmSlug, RegionName } from "@app/types/region";
+import { IAuction, IOwner, OwnerName } from "../../../types/auction";
+import { IExpansion } from "../../../types/expansion";
+import { IItemsMap, ItemId } from "../../../types/item";
+import { IItemClass } from "../../../types/item-class";
+import { IPricelistHistoryMap, IPriceListMap } from "../../../types/pricelist";
+import { IProfession } from "../../../types/profession";
+import { IRealmModificationDates, IRegion, RealmSlug, RegionName } from "../../../types/region";
 
 export interface IGetAuctionsRequest {
     region_name: RegionName;

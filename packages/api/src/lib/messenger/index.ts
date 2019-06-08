@@ -1,8 +1,8 @@
 import * as nats from "nats";
 import * as zlib from "zlib";
 
-import { ItemId } from "@app/types/item";
-import { IStatus, RegionName } from "@app/types/region";
+import { ItemId } from "../../types/item";
+import { IStatus, RegionName } from "../../types/region";
 import {
     IGetAuctionsRequest,
     IGetAuctionsResponse,
