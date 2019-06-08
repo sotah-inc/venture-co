@@ -1,7 +1,7 @@
 import * as process from "process";
 import "reflect-metadata";
 
-import { test } from "ava";
+import test from "ava";
 import * as HttpStatus from "http-status";
 
 import { getLogger } from "../../lib/logger";

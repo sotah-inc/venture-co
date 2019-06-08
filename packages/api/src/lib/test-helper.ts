@@ -1,4 +1,4 @@
-import { TestContext } from "ava";
+import { ExecutionContext } from "ava";
 import { Express } from "express";
 import * as HTTPStatus from "http-status";
 import * as nats from "nats";
@@ -58,7 +58,7 @@ export const setup = async (opts: IOptions): Promise<ISetupSettings> => {
 // user test-helper
 const getUserTestHelper = (request: supertest.SuperTest<supertest.Test>) => {
   const requestUser = (body: ICreateUserRequest) => request.post("/users").send(body);
-  const createUser = async (t: TestContext, body: ICreateUserRequest) => {
+  const createUser = async (t: ExecutionContext, body: ICreateUserRequest) => {
     const res = await requestUser(body);
     t.is(res.status, HTTPStatus.CREATED);
     t.not(String(res.header["content-type"]).match(/^application\/json/), null);
@@ -83,7 +83,7 @@ const getPricelistTestHelper = (request: supertest.SuperTest<supertest.Test>) =>
       .send(body);
   };
   const createPricelist = async (
-    t: TestContext,
+    t: ExecutionContext,
     token: string,
     body: ICreatePricelistRequest,
   ): Promise<ICreatePricelistResponse> => {
@@ -115,7 +115,7 @@ const getProfessionPricelistTestHelper = (request: supertest.SuperTest<supertest
       .send(body);
   };
   const createProfessionPricelist = async (
-    t: TestContext,
+    t: ExecutionContext,
     token: string,
     body: ICreateProfessionPricelistRequest,
   ): Promise<ICreateProfessionPricelistResponse> => {
@@ -151,7 +151,7 @@ const getPostTestHelper = (request: supertest.SuperTest<supertest.Test>) => {
       .send(body);
   };
   const createPost = async (
-    t: TestContext,
+    t: ExecutionContext,
     token: string,
     body: ICreatePostRequest,
   ): Promise<ICreatePostResponse> => {

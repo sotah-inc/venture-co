@@ -1,7 +1,7 @@
 import * as process from "process";
 import "reflect-metadata";
 
-import { test } from "ava";
+import test from "ava";
 import * as nats from "nats";
 
 import { code, Messenger, subjects } from "../lib/messenger";
