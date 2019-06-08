@@ -1,7 +1,33 @@
 {
   "extends": "@blueprintjs/tslint-config",
   "rules": {
-    "no-string-literal": false,
-    "no-submodule-imports": false
+    "arrow-parens": [
+      true,
+      "ban-single-arg-parens"
+    ],
+    "cyclomatic-complexity": [
+      true,
+      20
+    ],
+    "indent": [
+      true,
+      "spaces",
+      2
+    ],
+    "jsx-no-lambda": false,
+    "max-line-length": {
+      "options": {
+        "ignore-pattern": "//",
+        "limit": 100
+      }
+    },
+    "ordered-imports": true,
+    "prettier": {
+      "options": {
+        "printWidth": 100,
+        "tabWidth": 2,
+        "trailingComma": "all"
+      }
+    }
   }
 }
