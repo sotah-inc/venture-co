@@ -1,7 +1,7 @@
 export interface IErrorResponse {
-    error: string;
+  error: string;
 }
 
 export interface IValidationErrorResponse {
-    [path: string]: string;
+  [path: string]: string;
 }

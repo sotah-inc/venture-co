@@ -3,21 +3,21 @@ import { ExpansionName } from "../../expansion";
 import { ProfessionName } from "../../profession";
 
 export interface ICreateProfessionPricelistRequest {
-    pricelist: {
-        name: string;
-        slug: string;
-    };
-    entries: Array<{
-        id?: number;
-        item_id: number;
-        quantity_modifier: number;
-    }>;
-    profession_name: ProfessionName;
-    expansion_name: ExpansionName;
+  pricelist: {
+    name: string;
+    slug: string;
+  };
+  entries: Array<{
+    id?: number;
+    item_id: number;
+    quantity_modifier: number;
+  }>;
+  profession_name: ProfessionName;
+  expansion_name: ExpansionName;
 }
 
 export interface ICreateProfessionPricelistResponse {
-    entries: IPricelistEntryJson[];
-    pricelist: IPricelistJson;
-    profession_pricelist: IProfessionPricelistJson;
+  entries: IPricelistEntryJson[];
+  pricelist: IPricelistJson;
+  profession_pricelist: IProfessionPricelistJson;
 }
