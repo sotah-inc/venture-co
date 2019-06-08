@@ -35,7 +35,8 @@ test("Ping Should return pong", async t => {
   t.is(res.text, "Pong");
 });
 
-test("Internal-error Should return 500", async t => {
+// tslint:disable-next-line:ban
+test.only("Internal-error Should return 500", async t => {
   const { request } = await helper();
 
   const res = await request.get("/internal-error");
