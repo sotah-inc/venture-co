@@ -1,8 +1,8 @@
+// @ts-ignore
+import boll from "bollinger-bands";
 import HTTPStatus from "http-status";
 import moment from "moment";
 import { Connection } from "typeorm";
-// @ts-ignore
-import boll from "bollinger-bands";
 
 import { Post } from "../entities/post";
 import { ProfessionPricelist } from "../entities/profession-pricelist";
