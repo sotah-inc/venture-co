@@ -248,7 +248,7 @@ export class DataController {
       }
     }
 
-    const itemIds = [...new Set(msg.data!.auctions.map(v => v.itemId))];
+    const itemIds = [...Array.from(new Set(msg.data!.auctions.map(v => v.itemId)))];
     const itemsMsg = await this.messenger.getItems(itemIds);
     if (itemsMsg.code !== code.ok) {
       return {
