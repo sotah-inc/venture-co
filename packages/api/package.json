@@ -1,5 +1,5 @@
 {
-  "name": "@sotah/api",
+  "name": "@sotah-inc/api",
   "version": "v1.0.0",
   "description": "SotAH API SDK",
   "main": "build/dist/index.js",
