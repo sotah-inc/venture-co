@@ -57,11 +57,6 @@ export const getApp = async (opts: IOptions): Promise<express.Express | null> =>
 
         resolve(null);
       });
-      setTimeout(() => {
-        logger.error("Timed out when connecting to nats");
-
-        resolve(null);
-      }, 10 * 1000);
     });
   })();
   if (natsConnection === null) {
