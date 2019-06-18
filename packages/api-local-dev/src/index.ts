@@ -4,7 +4,7 @@ import * as process from "process";
 
 // app init
 const natsHost = process.env["NATS_HOST"] || "";
-const natsPort = process.env["NATS_PORT"] || "";
+const natsPort = process.env["NATS_PORT"] || "4222";
 const dbHost = process.env["DB_HOST"] || "";
 const dbPassword = process.env["DB_PASSWORD"] || "";
 const isGceEnv = (() => {
