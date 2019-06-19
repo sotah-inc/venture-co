@@ -1,5 +1,5 @@
 import { Express, NextFunction, Request, Response } from "express";
-import * as passport from "passport";
+import passport from "passport";
 import { ExtractJwt, Strategy, StrategyOptions } from "passport-jwt";
 import { Connection } from "typeorm";
 
