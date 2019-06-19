@@ -28,5 +28,9 @@
     "rimraf": "^2.6.3",
     "tslint": "^5.17.0",
     "typescript": "^3.5.2"
-  }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "f641bb67779aa5e7b65acdf3308ccc79accef3eb"
 }
