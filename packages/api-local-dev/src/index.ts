@@ -1,6 +1,6 @@
 import { getApp, getLogger } from "@sotah-inc/api";
 import * as http from "http";
-import * as process from "process";
+import process from "process";
 
 // app init
 const natsHost = process.env["NATS_HOST"] || "";
@@ -15,7 +15,7 @@ const isGceEnv = (() => {
 // logger init
 const logger = getLogger({ level: "debug", isGceEnv });
 
-const appPort = process.env["PORT"];
+const appPort = process.env["PORT"] || "8080";
 (async () => {
   const app = await getApp({ logger, natsHost, natsPort, dbHost, dbPassword, isGceEnv });
   if (app === null) {
