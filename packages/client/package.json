@@ -1,0 +1,46 @@
+{
+  "name": "@sotah-inc/client",
+  "version": "1.0.0",
+  "description": "SotAH Web Client SDK",
+  "main": "./build/dist/index.js",
+  "typings": "build/dist/index.d.ts",
+  "scripts": {
+    "clean": "rimraf ./build",
+    "debug": "run-p build:watch lint:watch",
+    "start": "node .",
+    "lint": "tslint ./src/**/*.ts{,x}",
+    "lint:watch": "chokidar --silent ./src/**/*.ts{,x} -c \"npm run -s lint\"",
+    "build": "tsc",
+    "build:clean": "run-s clean build",
+    "build:watch": "npm run -s build -- --watch",
+    "prepublish": "npm run -s build:clean"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sotah-inc/venture-co.git"
+  },
+  "author": "Adrian Parker <adrian@sotah.info>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sotah-inc/venture-co/issues"
+  },
+  "homepage": "https://github.com/sotah-inc/venture-co#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@sotah-inc/api": "^1.0.10",
+    "@sotah-inc/core": "^1.0.1",
+    "@types/react": "^16.8.21",
+    "@types/react-dom": "^16.8.4",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
+  },
+  "devDependencies": {
+    "npm-run-all": "^4.1.5",
+    "prettier": "^1.18.2",
+    "rimraf": "^2.6.3",
+    "tslint": "^5.17.0",
+    "typescript": "^3.5.2"
+  }
+}

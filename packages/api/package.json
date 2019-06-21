@@ -23,14 +23,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ihsw/sotah-api.git"
+    "url": "git+https://github.com/sotah-inc/venture-co.git"
   },
   "author": "Adrian Parker <adrian@sotah.info>",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ihsw/sotah-api/issues"
+    "url": "https://github.com/sotah-inc/venture-co/issues"
   },
-  "homepage": "https://github.com/ihsw/sotah-api#readme",
+  "homepage": "https://github.com/sotah-inc/venture-co#readme",
   "devDependencies": {
     "@blueprintjs/tslint-config": "^1.8.0",
     "ava": "^2.0.0",
