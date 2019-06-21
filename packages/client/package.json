@@ -5,7 +5,15 @@
   "main": "./build/dist/index.js",
   "typings": "build/dist/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "clean": "rimraf ./build",
+    "debug": "run-p build:watch lint:watch",
+    "start": "node .",
+    "lint": "tslint ./src/**/*.ts{,x}",
+    "lint:watch": "chokidar --silent ./src/**/*.ts{,x} -c \"npm run -s lint\"",
+    "build": "tsc",
+    "build:clean": "run-s clean build",
+    "build:watch": "npm run -s build -- --watch",
+    "prepublish": "npm run -s build:clean"
   },
   "repository": {
     "type": "git",
