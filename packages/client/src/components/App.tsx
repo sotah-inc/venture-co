@@ -14,26 +14,26 @@ import { AppToaster } from "@app/util/toasters";
 import "./App.scss";
 
 export interface IStateProps {
-    fetchPingLevel: FetchLevel;
-    currentRegion: IRegion | null;
-    fetchRealmLevel: FetchLevel;
-    currentRealm: IRealm | null;
-    preloadedToken: string;
-    authLevel: AuthLevel;
-    isLoginDialogOpen: boolean;
-    fetchUserPreferencesLevel: FetchLevel;
-    userPreferences: IPreferenceJson | null;
-    profile: IProfile | null;
-    fetchBootLevel: FetchLevel;
+  fetchPingLevel: FetchLevel;
+  currentRegion: IRegion | null;
+  fetchRealmLevel: FetchLevel;
+  currentRealm: IRealm | null;
+  preloadedToken: string;
+  authLevel: AuthLevel;
+  isLoginDialogOpen: boolean;
+  fetchUserPreferencesLevel: FetchLevel;
+  userPreferences: IPreferenceJson | null;
+  profile: IProfile | null;
+  fetchBootLevel: FetchLevel;
 }
 
 export interface IDispatchProps {
-    onLoad: () => void;
-    reloadUser: (token: string) => void;
-    changeIsLoginDialogOpen: (isLoginDialogOpen: boolean) => void;
-    loadUserPreferences: (token: string) => void;
-    changeAuthLevel: (authLevel: AuthLevel) => void;
-    boot: () => void;
+  onLoad: () => void;
+  reloadUser: (token: string) => void;
+  changeIsLoginDialogOpen: (isLoginDialogOpen: boolean) => void;
+  loadUserPreferences: (token: string) => void;
+  changeAuthLevel: (authLevel: AuthLevel) => void;
+  boot: () => void;
 }
 
 export interface IOwnProps extends RouteComponentProps<{}> {}
@@ -41,298 +41,304 @@ export interface IOwnProps extends RouteComponentProps<{}> {}
 export type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
 
 export class App extends React.Component<Props> {
-    public didHandleUnauth: boolean = false;
+  public didHandleUnauth: boolean = false;
 
-    public componentDidMount() {
-        const { onLoad } = this.props;
+  public componentDidMount() {
+    const { onLoad } = this.props;
 
-        // checking access to api with ping endpoint
-        onLoad();
-    }
+    // checking access to api with ping endpoint
+    onLoad();
+  }
 
-    public componentDidUpdate(prevProps: Props) {
-        const { fetchPingLevel } = this.props;
+  public componentDidUpdate(prevProps: Props) {
+    const { fetchPingLevel } = this.props;
 
-        switch (fetchPingLevel) {
-            case FetchLevel.failure:
-                if (prevProps.fetchPingLevel === FetchLevel.fetching) {
-                    AppToaster.show({
-                        icon: "warning-sign",
-                        intent: Intent.DANGER,
-                        message: "Could not connect to Sotah API.",
-                    });
-                }
-
-                return;
-            case FetchLevel.success:
-                if (prevProps.fetchPingLevel === FetchLevel.fetching) {
-                    AppToaster.show({
-                        icon: "info-sign",
-                        intent: Intent.SUCCESS,
-                        message: "Connected to Sotah API.",
-                    });
-                }
-
-                this.handleConnected(prevProps);
-
-                return;
-            default:
-                return;
+    switch (fetchPingLevel) {
+      case FetchLevel.failure:
+        if (prevProps.fetchPingLevel === FetchLevel.fetching) {
+          AppToaster.show({
+            icon: "warning-sign",
+            intent: Intent.DANGER,
+            message: "Could not connect to Sotah API.",
+          });
         }
-    }
 
-    public render() {
-        const { fetchPingLevel } = this.props;
-        switch (fetchPingLevel) {
-            case FetchLevel.initial:
-                return <>Welcome!</>;
-            case FetchLevel.fetching:
-                return <>Connecting...</>;
-            case FetchLevel.failure:
-                return <>Could not connect!</>;
-            case FetchLevel.success:
-                return this.renderConnected();
-            default:
-                return <>You should never see this!</>;
+        return;
+      case FetchLevel.success:
+        if (prevProps.fetchPingLevel === FetchLevel.fetching) {
+          AppToaster.show({
+            icon: "info-sign",
+            intent: Intent.SUCCESS,
+            message: "Connected to Sotah API.",
+          });
         }
-    }
 
-    private renderConnected() {
+        this.handleConnected(prevProps);
+
+        return;
+      default:
+        return;
+    }
+  }
+
+  public render() {
+    const { fetchPingLevel } = this.props;
+    switch (fetchPingLevel) {
+      case FetchLevel.initial:
+        return <>Welcome!</>;
+      case FetchLevel.fetching:
+        return <>Connecting...</>;
+      case FetchLevel.failure:
+        return <>Could not connect!</>;
+      case FetchLevel.success:
+        return this.renderConnected();
+      default:
+        return <>You should never see this!</>;
+    }
+  }
+
+  private renderConnected() {
+    return (
+      <div id="app" className={`${Classes.DARK} dark-app`}>
+        {this.renderConnectedContent()}
+      </div>
+    );
+  }
+
+  private renderConnectedContent() {
+    const { authLevel } = this.props;
+
+    switch (authLevel) {
+      case AuthLevel.authenticated:
+        return this.renderAuth();
+      case AuthLevel.unauthenticated:
+        return this.renderUnauth();
+      case AuthLevel.initial:
+      default:
         return (
-            <div id="app" className={`${Classes.DARK} dark-app`}>
-                {this.renderConnectedContent()}
-            </div>
+          <NonIdealState
+            title="Loading"
+            icon={<Spinner className={Classes.LARGE} intent={Intent.NONE} value={0} />}
+          />
         );
     }
+  }
 
-    private renderConnectedContent() {
-        const { authLevel } = this.props;
+  private renderAuth() {
+    const { fetchBootLevel } = this.props;
 
-        switch (authLevel) {
-            case AuthLevel.authenticated:
-                return this.renderAuth();
-            case AuthLevel.unauthenticated:
-                return this.renderUnauth();
-            case AuthLevel.initial:
-            default:
-                return (
-                    <NonIdealState
-                        title="Loading"
-                        icon={<Spinner className={Classes.LARGE} intent={Intent.NONE} value={0} />}
-                    />
-                );
-        }
-    }
-
-    private renderAuth() {
-        const { fetchBootLevel } = this.props;
-
-        switch (fetchBootLevel) {
-            case FetchLevel.success:
-                return this.renderBootAuth();
-            case FetchLevel.fetching:
-                return (
-                    <NonIdealState
-                        title="Loading"
-                        icon={<Spinner className={Classes.LARGE} intent={Intent.PRIMARY} />}
-                    />
-                );
-            case FetchLevel.failure:
-                return (
-                    <NonIdealState
-                        title="Failed to load"
-                        icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={1} />}
-                    />
-                );
-            case FetchLevel.initial:
-            default:
-                return (
-                    <NonIdealState
-                        title="Loading"
-                        icon={<Spinner className={Classes.LARGE} intent={Intent.NONE} value={0} />}
-                    />
-                );
-        }
-    }
-
-    private renderBootAuth() {
-        const { fetchUserPreferencesLevel } = this.props;
-
-        switch (fetchUserPreferencesLevel) {
-            case FetchLevel.fetching:
-            case FetchLevel.refetching:
-            case FetchLevel.prompted:
-                return (
-                    <NonIdealState
-                        title="Loading"
-                        icon={<Spinner className={Classes.LARGE} intent={Intent.PRIMARY} />}
-                    />
-                );
-            case FetchLevel.success:
-                return this.renderBootAuthWithPreferences();
-            case FetchLevel.failure:
-                return (
-                    <NonIdealState
-                        title="Failed to load user preferences."
-                        icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={1} />}
-                    />
-                );
-            case FetchLevel.initial:
-            default:
-                return (
-                    <NonIdealState
-                        title="Loading"
-                        icon={<Spinner className={Classes.LARGE} intent={Intent.NONE} value={0} />}
-                    />
-                );
-        }
-    }
-
-    private renderBootAuthWithPreferences() {
+    switch (fetchBootLevel) {
+      case FetchLevel.success:
+        return this.renderBootAuth();
+      case FetchLevel.fetching:
         return (
-            <>
-                <TopbarRouteContainer />
-                <ViewportRouteContainer />
-            </>
+          <NonIdealState
+            title="Loading"
+            icon={<Spinner className={Classes.LARGE} intent={Intent.PRIMARY} />}
+          />
+        );
+      case FetchLevel.failure:
+        return (
+          <NonIdealState
+            title="Failed to load"
+            icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={1} />}
+          />
+        );
+      case FetchLevel.initial:
+      default:
+        return (
+          <NonIdealState
+            title="Loading"
+            icon={<Spinner className={Classes.LARGE} intent={Intent.NONE} value={0} />}
+          />
         );
     }
+  }
 
-    private renderUnauth() {
+  private renderBootAuth() {
+    const { fetchUserPreferencesLevel } = this.props;
+
+    switch (fetchUserPreferencesLevel) {
+      case FetchLevel.fetching:
+      case FetchLevel.refetching:
+      case FetchLevel.prompted:
         return (
-            <>
-                <TopbarRouteContainer />
-                <ViewportRouteContainer />
-            </>
+          <NonIdealState
+            title="Loading"
+            icon={<Spinner className={Classes.LARGE} intent={Intent.PRIMARY} />}
+          />
+        );
+      case FetchLevel.success:
+        return this.renderBootAuthWithPreferences();
+      case FetchLevel.failure:
+        return (
+          <NonIdealState
+            title="Failed to load user preferences."
+            icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={1} />}
+          />
+        );
+      case FetchLevel.initial:
+      default:
+        return (
+          <NonIdealState
+            title="Loading"
+            icon={<Spinner className={Classes.LARGE} intent={Intent.NONE} value={0} />}
+          />
         );
     }
+  }
 
-    private handleConnected(prevProps: Props) {
-        const { authLevel, preloadedToken, changeAuthLevel, reloadUser } = this.props;
+  private renderBootAuthWithPreferences() {
+    return (
+      <>
+        <TopbarRouteContainer />
+        <ViewportRouteContainer />
+      </>
+    );
+  }
 
-        switch (authLevel) {
-            case AuthLevel.unauthenticated:
-                this.handleUnauth(prevProps);
+  private renderUnauth() {
+    return (
+      <>
+        <TopbarRouteContainer />
+        <ViewportRouteContainer />
+      </>
+    );
+  }
 
-                return;
-            case AuthLevel.authenticated:
-                const hasBeenAuthorized =
-                    [AuthLevel.unauthenticated, AuthLevel.initial].indexOf(prevProps.authLevel) > -1;
-                if (hasBeenAuthorized) {
-                    AppToaster.show({
-                        icon: "user",
-                        intent: Intent.SUCCESS,
-                        message: "You are logged in.",
-                    });
-                }
+  private handleConnected(prevProps: Props) {
+    const { authLevel, preloadedToken, changeAuthLevel, reloadUser } = this.props;
 
-                this.handleAuth(prevProps);
+    switch (authLevel) {
+      case AuthLevel.unauthenticated:
+        this.handleUnauth(prevProps);
 
-                return;
-            case AuthLevel.initial:
-                if (preloadedToken.length === 0) {
-                    changeAuthLevel(AuthLevel.unauthenticated);
-
-                    return;
-                }
-
-                reloadUser(preloadedToken);
-
-                return;
-            default:
-                return;
+        return;
+      case AuthLevel.authenticated:
+        const hasBeenAuthorized =
+          [AuthLevel.unauthenticated, AuthLevel.initial].indexOf(prevProps.authLevel) > -1;
+        if (hasBeenAuthorized) {
+          AppToaster.show({
+            icon: "user",
+            intent: Intent.SUCCESS,
+            message: "You are logged in.",
+          });
         }
-    }
 
-    private handleUnauth(prevProps: Props) {
-        const { fetchBootLevel, boot, preloadedToken, changeIsLoginDialogOpen, isLoginDialogOpen } = this.props;
+        this.handleAuth(prevProps);
 
-        switch (fetchBootLevel) {
-            case FetchLevel.initial:
-                boot();
+        return;
+      case AuthLevel.initial:
+        if (preloadedToken.length === 0) {
+          changeAuthLevel(AuthLevel.unauthenticated);
 
-                return;
-            case FetchLevel.failure:
-                if (prevProps.fetchBootLevel === FetchLevel.fetching) {
-                    AppToaster.show({
-                        icon: "info-sign",
-                        intent: Intent.DANGER,
-                        message: "Failed to load regions.",
-                    });
-                }
-
-                return;
-            case FetchLevel.success:
-                if (prevProps.fetchBootLevel === FetchLevel.fetching) {
-                    if (preloadedToken.length > 0) {
-                        AppToaster.show({
-                            action: {
-                                icon: "log-in",
-                                intent: Intent.PRIMARY,
-                                onClick: () => changeIsLoginDialogOpen(!isLoginDialogOpen),
-                                text: "Login",
-                            },
-                            icon: "info-sign",
-                            intent: Intent.WARNING,
-                            message: "Your session has expired.",
-                            timeout: 10 * 1000,
-                        });
-                    }
-                }
-
-                return;
-            default:
-                return;
+          return;
         }
+
+        reloadUser(preloadedToken);
+
+        return;
+      default:
+        return;
     }
+  }
 
-    private handleAuth(prevProps: Props) {
-        const { fetchUserPreferencesLevel, loadUserPreferences, profile } = this.props;
+  private handleUnauth(prevProps: Props) {
+    const {
+      fetchBootLevel,
+      boot,
+      preloadedToken,
+      changeIsLoginDialogOpen,
+      isLoginDialogOpen,
+    } = this.props;
 
-        switch (fetchUserPreferencesLevel) {
-            case FetchLevel.initial:
-                loadUserPreferences(profile!.token);
+    switch (fetchBootLevel) {
+      case FetchLevel.initial:
+        boot();
 
-                return;
-            case FetchLevel.failure:
-                if (prevProps.fetchUserPreferencesLevel === FetchLevel.fetching) {
-                    AppToaster.show({
-                        icon: "warning-sign",
-                        intent: Intent.DANGER,
-                        message: "Failed to load user preferences.",
-                    });
-                }
-
-                return;
-            case FetchLevel.success:
-                this.handleAuthWithPreferences(prevProps);
-
-                return;
-            default:
-                return;
+        return;
+      case FetchLevel.failure:
+        if (prevProps.fetchBootLevel === FetchLevel.fetching) {
+          AppToaster.show({
+            icon: "info-sign",
+            intent: Intent.DANGER,
+            message: "Failed to load regions.",
+          });
         }
-    }
 
-    private handleAuthWithPreferences(prevProps: Props) {
-        const { fetchBootLevel, boot } = this.props;
-
-        switch (fetchBootLevel) {
-            case FetchLevel.initial:
-                boot();
-
-                return;
-            case FetchLevel.failure:
-                if (prevProps.fetchBootLevel === FetchLevel.fetching) {
-                    AppToaster.show({
-                        icon: "info-sign",
-                        intent: Intent.DANGER,
-                        message: "Failed to load regions.",
-                    });
-                }
-
-                return;
-            case FetchLevel.success:
-            default:
-                return;
+        return;
+      case FetchLevel.success:
+        if (prevProps.fetchBootLevel === FetchLevel.fetching) {
+          if (preloadedToken.length > 0) {
+            AppToaster.show({
+              action: {
+                icon: "log-in",
+                intent: Intent.PRIMARY,
+                onClick: () => changeIsLoginDialogOpen(!isLoginDialogOpen),
+                text: "Login",
+              },
+              icon: "info-sign",
+              intent: Intent.WARNING,
+              message: "Your session has expired.",
+              timeout: 10 * 1000,
+            });
+          }
         }
+
+        return;
+      default:
+        return;
     }
+  }
+
+  private handleAuth(prevProps: Props) {
+    const { fetchUserPreferencesLevel, loadUserPreferences, profile } = this.props;
+
+    switch (fetchUserPreferencesLevel) {
+      case FetchLevel.initial:
+        loadUserPreferences(profile!.token);
+
+        return;
+      case FetchLevel.failure:
+        if (prevProps.fetchUserPreferencesLevel === FetchLevel.fetching) {
+          AppToaster.show({
+            icon: "warning-sign",
+            intent: Intent.DANGER,
+            message: "Failed to load user preferences.",
+          });
+        }
+
+        return;
+      case FetchLevel.success:
+        this.handleAuthWithPreferences(prevProps);
+
+        return;
+      default:
+        return;
+    }
+  }
+
+  private handleAuthWithPreferences(prevProps: Props) {
+    const { fetchBootLevel, boot } = this.props;
+
+    switch (fetchBootLevel) {
+      case FetchLevel.initial:
+        boot();
+
+        return;
+      case FetchLevel.failure:
+        if (prevProps.fetchBootLevel === FetchLevel.fetching) {
+          AppToaster.show({
+            icon: "info-sign",
+            intent: Intent.DANGER,
+            message: "Failed to load regions.",
+          });
+        }
+
+        return;
+      case FetchLevel.success:
+      default:
+        return;
+    }
+  }
 }

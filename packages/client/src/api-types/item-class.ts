@@ -1,10 +1,10 @@
 export interface ISubItemClass {
-    subclass: number;
-    name: string;
+  subclass: number;
+  name: string;
 }
 
 export interface IItemClass {
-    class: number;
-    name: string;
-    subclasses: ISubItemClass[];
+  class: number;
+  name: string;
+  subclasses: ISubItemClass[];
 }

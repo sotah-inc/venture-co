@@ -5,16 +5,20 @@ import { runners } from "./handlers";
 type State = Readonly<IPostsState>;
 
 export const posts = (state: State | undefined, action: PostsActions): State => {
-    if (state === undefined) {
-        return defaultPostsState;
-    }
+  if (state === undefined) {
+    return defaultPostsState;
+  }
 
-    switch (action.type) {
-        case CHANGE_POST:
-            return { ...state, currentPost: action.payload };
-        case CHANGE_IS_DELETE_POST_DIALOG_OPEN:
-            return { ...state, isDeletePostDialogOpen: action.payload.isOpen, currentPost: action.payload.post };
-        default:
-            return runners.post(state, action);
-    }
+  switch (action.type) {
+    case CHANGE_POST:
+      return { ...state, currentPost: action.payload };
+    case CHANGE_IS_DELETE_POST_DIALOG_OPEN:
+      return {
+        ...state,
+        isDeletePostDialogOpen: action.payload.isOpen,
+        currentPost: action.payload.post,
+      };
+    default:
+      return runners.post(state, action);
+  }
 };

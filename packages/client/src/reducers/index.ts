@@ -7,9 +7,9 @@ import { priceLists } from "./price-lists";
 import { profile } from "./profile";
 
 export const rootReducer = combineReducers({
-    Auction: auction,
-    Main: main,
-    Posts: posts,
-    PriceLists: priceLists,
-    Profile: profile,
+  Auction: auction,
+  Main: main,
+  Posts: posts,
+  PriceLists: priceLists,
+  Profile: profile,
 });

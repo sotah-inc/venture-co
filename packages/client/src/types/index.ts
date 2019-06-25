@@ -11,9 +11,9 @@ export { defaultPriceListsState } from "./price-lists";
 export { defaultProfileState } from "./profile";
 
 export interface IStoreState {
-    Main: IMainState;
-    Auction: IAuctionState;
-    PriceLists: IPriceListsState;
-    Posts: IPostsState;
-    Profile: IProfileState;
+  Main: IMainState;
+  Auction: IAuctionState;
+  PriceLists: IPriceListsState;
+  Posts: IPostsState;
+  Profile: IProfileState;
 }
