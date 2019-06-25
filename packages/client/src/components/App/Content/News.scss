@@ -1,0 +1,15 @@
+.welcome {
+    text-align: center;
+    margin: 20px 0;
+
+    .bp3-icon {
+        color: #bfccd6 !important;
+    }
+
+    .homepage-card-container:first-child .card-callout {
+        padding-left: 0;
+    }
+    .homepage-card-container:last-child .card-callout {
+        padding-right: 0;
+    }
+}
