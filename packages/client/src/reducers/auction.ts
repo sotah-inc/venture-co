@@ -11,10 +11,10 @@ import {
   REQUEST_AUCTIONS,
   REQUEST_AUCTIONS_QUERY,
   SORT_CHANGE,
-} from "@app/actions/auction";
-import { IAuction } from "@app/api-types/auction";
-import { defaultAuctionState, IAuctionState } from "@app/types/auction";
-import { FetchLevel } from "@app/types/main";
+} from "../actions/auction";
+import { IAuction } from "../api-types/auction";
+import { defaultAuctionState, IAuctionState } from "../types/auction";
+import { FetchLevel } from "../types/main";
 
 type State = Readonly<IAuctionState>;
 

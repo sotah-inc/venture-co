@@ -1,5 +1,5 @@
-import { ProfileActions } from "@app/actions/profile";
-import { defaultProfileState, IProfileState } from "@app/types/profile";
+import { ProfileActions } from "../actions/profile";
+import { defaultProfileState, IProfileState } from "../types/profile";
 import { runners } from "./handlers";
 
 type State = Readonly<IProfileState>;

@@ -1,5 +1,5 @@
-import { IPricelistJson, IProfessionPricelistJson } from "@app/api-types/entities";
-import { IPriceListsState } from "@app/types/price-lists";
+import { IPricelistJson, IProfessionPricelistJson } from "../api-types/entities";
+import { IPriceListsState } from "../types/price-lists";
 
 export const getPricelistIndex = (pricelists: IPricelistJson[], id: number): number => {
   for (let i = 0; i < pricelists.length; i++) {

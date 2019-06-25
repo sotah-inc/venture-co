@@ -10,9 +10,9 @@ import {
   NAVIGATE_PROFESSIONNODE,
   PriceListsActions,
   RESET_PROFESSIONS_SELECTIONS,
-} from "@app/actions/price-lists";
-import { IItem } from "@app/api-types/item";
-import { defaultPriceListsState, IPriceListsState } from "@app/types/price-lists";
+} from "../actions/price-lists";
+import { IItem } from "../api-types/item";
+import { defaultPriceListsState, IPriceListsState } from "../types/price-lists";
 import { runners } from "./handlers";
 
 type State = Readonly<IPriceListsState>;

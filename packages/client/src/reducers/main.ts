@@ -8,8 +8,8 @@ import {
   REGION_CHANGE,
   USER_LOGIN,
   USER_REGISTER,
-} from "@app/actions/main";
-import { AuthLevel, defaultMainState, FetchLevel, IMainState } from "@app/types/main";
+} from "../actions/main";
+import { AuthLevel, defaultMainState, FetchLevel, IMainState } from "../types/main";
 import { runners } from "./handlers";
 
 type State = Readonly<IMainState>;
@@ -23,16 +23,16 @@ export const main = (state: State | undefined, action: MainActions): State => {
     case USER_REGISTER:
       return {
         ...state,
-        profile: action.payload,
-        isRegistered: true,
         authLevel: AuthLevel.authenticated,
+        isRegistered: true,
+        profile: action.payload,
       };
     case USER_LOGIN:
       return {
         ...state,
-        profile: action.payload,
-        isLoggedIn: true,
         authLevel: AuthLevel.authenticated,
+        isLoggedIn: true,
+        profile: action.payload,
       };
     case RECEIVE_USER_RELOAD:
       if (action.payload.error !== null) {

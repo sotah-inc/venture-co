@@ -5,10 +5,10 @@ import {
   ReceiveGetPost,
   ReceiveGetPosts,
   ReceiveUpdatePost,
-} from "@app/actions/posts";
-import { IValidationErrorResponse } from "@app/api-types/contracts";
-import { FetchLevel } from "@app/types/main";
-import { IPostsState } from "@app/types/posts";
+} from "../../actions/posts";
+import { IValidationErrorResponse } from "../../api-types/contracts";
+import { FetchLevel } from "../../types/main";
+import { IPostsState } from "../../types/posts";
 
 import { IKindHandlers, Runner } from "./index";
 

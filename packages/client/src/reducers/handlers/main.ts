@@ -4,10 +4,10 @@ import {
   ReceiveGetPing,
   ReceiveGetRealms,
   ReceiveGetUserPreferences,
-} from "@app/actions/main";
-import { IRealm, IRegion } from "@app/api-types/region";
-import { IItemClasses, IRealms, IRegions, ISubItemClasses } from "@app/types/global";
-import { FetchLevel, IMainState } from "@app/types/main";
+} from "../../actions/main";
+import { IRealm, IRegion } from "../../api-types/region";
+import { IItemClasses, IRealms, IRegions, ISubItemClasses } from "../../types/global";
+import { FetchLevel, IMainState } from "../../types/main";
 
 import { IKindHandlers, Runner } from "./index";
 
@@ -84,7 +84,7 @@ const handlers: IKindHandlers<IMainState, MainActions> = {
   ping: {
     get: {
       receive: (state: IMainState, action: ReturnType<typeof ReceiveGetPing>) => {
-        if (action.payload === false) {
+        if (!action.payload) {
           return { ...state, fetchPingLevel: FetchLevel.failure };
         }
 
@@ -144,8 +144,6 @@ const handlers: IKindHandlers<IMainState, MainActions> = {
           (result, realm) => ({ ...result, [realm.slug]: realm }),
           {},
         );
-
-        debugger;
 
         return { ...state, fetchRealmLevel: FetchLevel.success, realms, currentRealm };
       },

@@ -1,6 +1,6 @@
-import { ProfileActions, ReceiveUpdateProfile, RequestUpdateProfile } from "@app/actions/profile";
-import { FetchLevel } from "@app/types/main";
-import { IProfileState } from "@app/types/profile";
+import { ProfileActions, ReceiveUpdateProfile, RequestUpdateProfile } from "../../actions/profile";
+import { FetchLevel } from "../../types/main";
+import { IProfileState } from "../../types/profile";
 
 import { IKindHandlers, Runner } from "./index";
 

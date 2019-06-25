@@ -1,5 +1,5 @@
-import { CHANGE_IS_DELETE_POST_DIALOG_OPEN, CHANGE_POST, PostsActions } from "@app/actions/posts";
-import { defaultPostsState, IPostsState } from "@app/types/posts";
+import { CHANGE_IS_DELETE_POST_DIALOG_OPEN, CHANGE_POST, PostsActions } from "../actions/posts";
+import { defaultPostsState, IPostsState } from "../types/posts";
 import { runners } from "./handlers";
 
 type State = Readonly<IPostsState>;
@@ -15,8 +15,8 @@ export const posts = (state: State | undefined, action: PostsActions): State => 
     case CHANGE_IS_DELETE_POST_DIALOG_OPEN:
       return {
         ...state,
-        isDeletePostDialogOpen: action.payload.isOpen,
         currentPost: action.payload.post,
+        isDeletePostDialogOpen: action.payload.isOpen,
       };
     default:
       return runners.post(state, action);

@@ -12,12 +12,12 @@ import {
   ReceiveGetProfessionPricelists,
   ReceiveGetUnmetDemand,
   ReceiveUpdatePricelist,
-} from "@app/actions/price-lists";
-import { IPricelistJson, IProfessionPricelistJson } from "@app/api-types/entities";
-import { IItemsMap } from "@app/api-types/item";
-import { getPricelistIndex, getProfessionPricelistIndex } from "@app/reducers/helper";
-import { FetchLevel } from "@app/types/main";
-import { IExpansionProfessionPricelistMap, IPriceListsState } from "@app/types/price-lists";
+} from "../../actions/price-lists";
+import { IPricelistJson, IProfessionPricelistJson } from "../../api-types/entities";
+import { IItemsMap } from "../../api-types/item";
+import { FetchLevel } from "../../types/main";
+import { IExpansionProfessionPricelistMap, IPriceListsState } from "../../types/price-lists";
+import { getPricelistIndex, getProfessionPricelistIndex } from "../helper";
 
 import { IKindHandlers, Runner } from "./index";
 
@@ -358,17 +358,16 @@ const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           return { ...state, getProfessionPricelistsLevel: FetchLevel.failure };
         }
 
-        const professionPricelists: IExpansionProfessionPricelistMap = action.payload.data!.profession_pricelists.reduce(
-          (result: IExpansionProfessionPricelistMap, v: IProfessionPricelistJson) => {
-            if (!(v.expansion in result)) {
-              result[v.expansion] = [];
-            }
-            result[v.expansion].push(v);
+        const professionPricelists = action.payload.data!.profession_pricelists.reduce<
+          IExpansionProfessionPricelistMap
+        >((result: IExpansionProfessionPricelistMap, v: IProfessionPricelistJson) => {
+          if (!(v.expansion in result)) {
+            result[v.expansion] = [];
+          }
+          result[v.expansion].push(v);
 
-            return result;
-          },
-          {},
-        );
+          return result;
+        }, {});
 
         return {
           ...state,

@@ -1,6 +1,6 @@
 import { withRouter } from "react-router-dom";
 
-import { IOwnProps } from "@app/components/App/Data/PriceLists/EditListDialog";
-import { EditListDialogContainer } from "@app/containers/App/Data/PriceLists/EditListDialog";
+import { IOwnProps } from "../../../../components/App/Data/PriceLists/EditListDialog";
+import { EditListDialogContainer } from "../../../../containers/App/Data/PriceLists/EditListDialog";
 
 export const EditListDialogRouteContainer = withRouter<IOwnProps>(EditListDialogContainer);
