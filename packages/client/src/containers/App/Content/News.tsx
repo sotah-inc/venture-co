@@ -5,15 +5,15 @@ import { IDispatchProps, IOwnProps, IStateProps, News } from "@app/components/Ap
 import { IStoreState } from "@app/types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
-    const { currentRegion, authLevel } = state.Main;
-    return { currentRegion, authLevel };
+  const { currentRegion, authLevel } = state.Main;
+  return { currentRegion, authLevel };
 };
 
 const mapDispatchToProps: IDispatchProps = {
-    changeIsRegisterDialogOpen: ChangeIsRegisterDialogOpen,
+  changeIsRegisterDialogOpen: ChangeIsRegisterDialogOpen,
 };
 
 export const NewsContainer = connect<IStateProps, IDispatchProps, IOwnProps>(
-    mapStateToProps,
-    mapDispatchToProps,
+  mapStateToProps,
+  mapDispatchToProps,
 )(News);

@@ -1,14 +1,14 @@
 import { IPostJson } from "../../entities";
 
 export interface ICreatePostRequest {
-    title: string;
-    slug: string;
-    body: string;
-    summary: string;
+  title: string;
+  slug: string;
+  body: string;
+  summary: string;
 }
 
 export interface ICreatePostResponse {
-    post: IPostJson;
+  post: IPostJson;
 }
 
 export type IUpdatePostRequest = ICreatePostRequest;

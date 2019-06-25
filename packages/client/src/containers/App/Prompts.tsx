@@ -4,19 +4,19 @@ import { IDispatchProps, IStateProps, Prompts } from "@app/components/App/Prompt
 import { IStoreState } from "@app/types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
-    const { profile } = state.Main;
-    const user = profile === null ? null : profile.user;
+  const { profile } = state.Main;
+  const user = profile === null ? null : profile.user;
 
-    return { user };
+  return { user };
 };
 
 const mapDispatchToProps: IDispatchProps = {
-    hello: () => {
-        return;
-    },
+  hello: () => {
+    return;
+  },
 };
 
 export const PromptsContainer = connect<IStateProps, IDispatchProps>(
-    mapStateToProps,
-    mapDispatchToProps,
+  mapStateToProps,
+  mapDispatchToProps,
 )(Prompts);

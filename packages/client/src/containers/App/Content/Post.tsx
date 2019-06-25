@@ -5,20 +5,20 @@ import { IDispatchProps, IOwnProps, IStateProps, Post } from "@app/components/Ap
 import { IStoreState } from "@app/types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
-    const { profile } = state.Main;
-    const { currentPost, getPostLevel } = state.Posts;
-    const user = profile === null ? null : profile.user;
+  const { profile } = state.Main;
+  const { currentPost, getPostLevel } = state.Posts;
+  const user = profile === null ? null : profile.user;
 
-    return { currentPost, getPostLevel, user };
+  return { currentPost, getPostLevel, user };
 };
 
 const mapDispatchToProps: IDispatchProps = {
-    changeIsDeletePostDialogOpen: ChangeIsDeletePostDialogOpen,
-    changePost: ChangePost,
-    getPost: FetchGetPost,
+  changeIsDeletePostDialogOpen: ChangeIsDeletePostDialogOpen,
+  changePost: ChangePost,
+  getPost: FetchGetPost,
 };
 
 export const PostContainer = connect<IStateProps, IDispatchProps, IOwnProps>(
-    mapStateToProps,
-    mapDispatchToProps,
+  mapStateToProps,
+  mapDispatchToProps,
 )(Post);

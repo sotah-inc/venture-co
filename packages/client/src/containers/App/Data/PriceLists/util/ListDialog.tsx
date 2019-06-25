@@ -4,8 +4,8 @@ import { IStateProps, ListDialog } from "@app/components/App/Data/PriceLists/uti
 import { IStoreState } from "@app/types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
-    const { items } = state.PriceLists;
-    return { items };
+  const { items } = state.PriceLists;
+  return { items };
 };
 
 export const ListDialogContainer = connect<IStateProps>(mapStateToProps)(ListDialog);

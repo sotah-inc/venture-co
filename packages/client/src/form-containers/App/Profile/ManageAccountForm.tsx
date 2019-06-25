@@ -6,35 +6,35 @@ import { FetchLevel } from "@app/types/main";
 import { ManageAccountRules } from "@app/validator-rules";
 
 interface IFormProps {
-    onSubmit: (v: IFormValues) => void;
-    onComplete: () => void;
-    onFatalError: (err: string) => void;
+  onSubmit: (v: IFormValues) => void;
+  onComplete: () => void;
+  onFatalError: (err: string) => void;
 
-    updateProfileLevel: FetchLevel;
-    updateProfileErrors: {
-        [key: string]: string;
-    };
-    defaultFormValues?: IFormValues;
+  updateProfileLevel: FetchLevel;
+  updateProfileErrors: {
+    [key: string]: string;
+  };
+  defaultFormValues?: IFormValues;
 }
 
 const config: WithFormikConfig<IFormProps, IFormValues> = {
-    handleSubmit: async (values, { props }) => {
-        const { onSubmit } = props;
+  handleSubmit: async (values, { props }) => {
+    const { onSubmit } = props;
 
-        onSubmit(values);
-    },
-    mapPropsToValues: ({ defaultFormValues }: IFormProps) => {
-        if (typeof defaultFormValues !== "undefined") {
-            return defaultFormValues;
-        }
+    onSubmit(values);
+  },
+  mapPropsToValues: ({ defaultFormValues }: IFormProps) => {
+    if (typeof defaultFormValues !== "undefined") {
+      return defaultFormValues;
+    }
 
-        return {
-            email: "",
-        };
-    },
-    validationSchema: Yup.object().shape({
-        email: ManageAccountRules.email,
-    }),
+    return {
+      email: "",
+    };
+  },
+  validationSchema: Yup.object().shape({
+    email: ManageAccountRules.email,
+  }),
 };
 
 export const ManageAccountFormFormContainer = withFormik(config)(ManageAccountForm);

@@ -5,19 +5,19 @@ import { IDispatchProps, IStateProps, PostList } from "@app/components/App/Conte
 import { IStoreState } from "@app/types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
-    const { profile } = state.Main;
-    const { posts, getPostsLevel } = state.Posts;
-    const user = profile === null ? null : profile.user;
+  const { profile } = state.Main;
+  const { posts, getPostsLevel } = state.Posts;
+  const user = profile === null ? null : profile.user;
 
-    return { getPostsLevel, posts, user };
+  return { getPostsLevel, posts, user };
 };
 
 const mapDispatchToProps: IDispatchProps = {
-    changeIsDeletePostDialogOpen: ChangeIsDeletePostDialogOpen,
-    refreshPosts: FetchGetPosts,
+  changeIsDeletePostDialogOpen: ChangeIsDeletePostDialogOpen,
+  refreshPosts: FetchGetPosts,
 };
 
 export const PostListContainer = connect<IStateProps, IDispatchProps>(
-    mapStateToProps,
-    mapDispatchToProps,
+  mapStateToProps,
+  mapDispatchToProps,
 )(PostList);

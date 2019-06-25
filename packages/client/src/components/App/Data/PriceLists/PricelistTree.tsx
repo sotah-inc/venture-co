@@ -15,24 +15,24 @@ import { AuthLevel, FetchLevel } from "@app/types/main";
 import { IExpansionProfessionPricelistMap } from "@app/types/price-lists";
 
 export interface IStateProps {
-    pricelists: IPricelistJson[];
-    selectedList: IPricelistJson | null;
-    currentRegion: IRegion | null;
-    currentRealm: IRealm | null;
-    professions: IProfession[];
-    selectedProfession: IProfession | null;
-    getProfessionPricelistsLevel: FetchLevel;
-    professionPricelists: IExpansionProfessionPricelistMap;
-    expansions: IExpansion[];
-    selectedExpansion: IExpansion | null;
-    authLevel: AuthLevel;
-    profile: IProfile | null;
-    getPricelistsLevel: FetchLevel;
+  pricelists: IPricelistJson[];
+  selectedList: IPricelistJson | null;
+  currentRegion: IRegion | null;
+  currentRealm: IRealm | null;
+  professions: IProfession[];
+  selectedProfession: IProfession | null;
+  getProfessionPricelistsLevel: FetchLevel;
+  professionPricelists: IExpansionProfessionPricelistMap;
+  expansions: IExpansion[];
+  selectedExpansion: IExpansion | null;
+  authLevel: AuthLevel;
+  profile: IProfile | null;
+  getPricelistsLevel: FetchLevel;
 }
 
 export interface IDispatchProps {
-    refreshProfessionPricelists: (profession: ProfessionName) => void;
-    refreshPricelists: (token: string) => void;
+  refreshProfessionPricelists: (profession: ProfessionName) => void;
+  refreshPricelists: (token: string) => void;
 }
 
 export interface IOwnProps extends RouteComponentProps<{}> {}
@@ -40,459 +40,472 @@ export interface IOwnProps extends RouteComponentProps<{}> {}
 export type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
 
 interface ITopOpenMap {
-    [key: string]: boolean;
+  [key: string]: boolean;
 }
 
 interface IState {
-    topOpenMap: ITopOpenMap;
+  topOpenMap: ITopOpenMap;
 }
 
 enum TopOpenKey {
-    summary = "summary",
-    pricelists = "pricelists",
-    professions = "professions",
+  summary = "summary",
+  pricelists = "pricelists",
+  professions = "professions",
 }
 
 export class PricelistTree extends React.Component<Props, IState> {
-    public state: IState = {
-        topOpenMap: {
-            [TopOpenKey.pricelists]: true,
-            [TopOpenKey.professions]: true,
-        },
+  public state: IState = {
+    topOpenMap: {
+      [TopOpenKey.pricelists]: true,
+      [TopOpenKey.professions]: true,
+    },
+  };
+
+  public componentDidMount() {
+    const { refreshPricelists, profile, getPricelistsLevel } = this.props;
+
+    if (profile === null) {
+      return;
+    }
+
+    switch (getPricelistsLevel) {
+      case FetchLevel.initial:
+        refreshPricelists(profile.token);
+
+        return;
+      default:
+        return;
+    }
+  }
+
+  public componentDidUpdate(prevProps: Props) {
+    const {
+      refreshPricelists,
+      profile,
+      selectedProfession,
+      refreshProfessionPricelists,
+      getPricelistsLevel,
+    } = this.props;
+
+    if (selectedProfession !== null) {
+      const shouldRefreshProfessionPricelists =
+        prevProps.selectedProfession === null ||
+        prevProps.selectedProfession.name !== selectedProfession.name;
+      if (shouldRefreshProfessionPricelists) {
+        refreshProfessionPricelists(selectedProfession.name);
+      }
+    }
+
+    if (profile === null) {
+      return;
+    }
+
+    switch (getPricelistsLevel) {
+      case FetchLevel.initial:
+        refreshPricelists(profile.token);
+
+        return;
+      default:
+        return;
+    }
+  }
+
+  public render() {
+    const { authLevel, currentRealm, currentRegion } = this.props;
+    const { topOpenMap } = this.state;
+
+    const nodes: ITreeNode[] = [];
+    if (currentRegion !== null && currentRealm !== null) {
+      nodes.push({
+        id: `top-summary`,
+        isSelected: this.isSummarySelected(),
+        label: `${currentRegion.name.toUpperCase()}-${currentRealm!.name} Summary`,
+      });
+    }
+
+    // optionally appending custom-pricelists
+    if (authLevel === AuthLevel.authenticated) {
+      nodes.push({
+        childNodes: this.getPricelistNodes(),
+        hasCaret: true,
+        icon: "list",
+        id: `top-${TopOpenKey.pricelists}`,
+        isExpanded: topOpenMap[TopOpenKey.pricelists],
+        label: "Custom Pricelists",
+      });
+    }
+
+    // appending profession-pricelists
+    nodes.push({
+      childNodes: this.getProfessionNodes(),
+      hasCaret: true,
+      icon: "list",
+      id: `top-${TopOpenKey.professions}`,
+      isExpanded: topOpenMap[TopOpenKey.professions],
+      label: "Professions",
+    });
+
+    return (
+      <div style={{ marginTop: "10px" }}>
+        <div className="pure-g">
+          <div className="pure-u-1-4 pricelist-tree">
+            <Tree
+              contents={nodes}
+              className={Classes.ELEVATION_0}
+              onNodeClick={v => this.onNodeClick(v)}
+            />
+          </div>
+          <div className="pure-u-3-4">
+            <div style={{ paddingLeft: "10px" }}>
+              <TreeContentContainer />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  private isSummarySelected() {
+    const { selectedList, selectedProfession } = this.props;
+
+    return selectedList === null && selectedProfession === null;
+  }
+
+  private getProfessionNodes() {
+    const { professions } = this.props;
+
+    return professions.map(v => this.getProfessionNode(v));
+  }
+
+  private getProfessionNode(v: IProfession) {
+    const { selectedProfession, getProfessionPricelistsLevel } = this.props;
+
+    const isSelected = selectedProfession !== null && selectedProfession.name === v.name;
+    const result: ITreeNode = {
+      className: "profession-node",
+      icon: <ProfessionIcon profession={v} />,
+      id: `profession-${v.name}`,
+      isSelected,
+      label: v.label,
+    };
+    if (!isSelected) {
+      return result;
+    }
+
+    result.isExpanded = true;
+    result.hasCaret = false;
+
+    switch (getProfessionPricelistsLevel) {
+      case FetchLevel.initial:
+        result.childNodes = [
+          {
+            icon: <Spinner size={20} value={0} intent={Intent.NONE} />,
+            id: "loading-0",
+            label: <span style={{ marginLeft: "5px" }}>Loading</span>,
+          },
+        ];
+
+        break;
+      case FetchLevel.fetching:
+        result.childNodes = [
+          {
+            icon: <Spinner size={20} intent={Intent.PRIMARY} />,
+            id: "loading-0",
+            label: <span style={{ marginLeft: "5px" }}>Loading</span>,
+          },
+        ];
+
+        break;
+      case FetchLevel.failure:
+        result.childNodes = [
+          {
+            icon: <Spinner size={20} intent={Intent.DANGER} value={1} />,
+            id: "loading-0",
+            label: <span style={{ marginLeft: "5px" }}>Failed to load profession pricelists!</span>,
+          },
+        ];
+
+        break;
+      case FetchLevel.success:
+        result.childNodes = this.getExpansionNodes();
+
+        break;
+      default:
+        break;
+    }
+
+    return result;
+  }
+
+  private getExpansionNodes(): ITreeNode[] {
+    const { expansions, selectedExpansion } = this.props;
+
+    return expansions.map(v => {
+      const isSelected = selectedExpansion !== null && selectedExpansion.name === v.name;
+      const result: ITreeNode = {
+        childNodes: this.getProfessionPricelistNodes(v),
+        className: "expansion-node",
+        hasCaret: false,
+        id: `expansion-${v.name}`,
+        isExpanded: isSelected,
+        isSelected,
+        label: <span style={{ color: v.label_color }}>{v.label}</span>,
+      };
+
+      return result;
+    });
+  }
+
+  private getProfessionPricelistNodes(expansion: IExpansion): ITreeNode[] {
+    const { professionPricelists, selectedExpansion } = this.props;
+
+    const isSelected = selectedExpansion !== null && expansion.name === selectedExpansion.name;
+
+    if (expansion === null || !(expansion.name in professionPricelists)) {
+      if (!isSelected) {
+        return [];
+      }
+
+      return [{ id: "none-none", label: <em>None found.</em> }];
+    }
+
+    const result = professionPricelists[expansion.name];
+    if (result.length === 0) {
+      if (!isSelected) {
+        return [];
+      }
+
+      return [{ id: "none-none", label: <em>None found.</em> }];
+    }
+
+    const pricelistNodes = result.map(v => this.getPricelistNode(v.pricelist!));
+    const sortedPricelistNodes = pricelistNodes.sort((a, b) => {
+      if (a.label === b.label) {
+        return 0;
+      }
+
+      return a.label > b.label ? 1 : -1;
+    });
+
+    return sortedPricelistNodes;
+  }
+
+  private getPricelistNode(v: IPricelistJson) {
+    const { selectedList } = this.props;
+
+    const result: ITreeNode = {
+      className: "pricelist-node",
+      icon: <PricelistIconContainer pricelist={v} />,
+      id: `pricelist-${v.id}`,
+      isSelected: selectedList !== null && selectedList.id === v.id,
+      label: v.name,
     };
 
-    public componentDidMount() {
-        const { refreshPricelists, profile, getPricelistsLevel } = this.props;
+    return result;
+  }
 
-        if (profile === null) {
-            return;
-        }
+  private getPricelistNodes(): ITreeNode[] {
+    const { pricelists } = this.props;
 
-        switch (getPricelistsLevel) {
-            case FetchLevel.initial:
-                refreshPricelists(profile.token);
-
-                return;
-            default:
-                return;
-        }
+    if (pricelists.length === 0) {
+      return [{ id: "none-none", label: <em>None found.</em> }];
     }
 
-    public componentDidUpdate(prevProps: Props) {
-        const {
-            refreshPricelists,
-            profile,
-            selectedProfession,
-            refreshProfessionPricelists,
-            getPricelistsLevel,
-        } = this.props;
+    return pricelists.map(v => this.getPricelistNode(v));
+  }
 
-        if (selectedProfession !== null) {
-            const shouldRefreshProfessionPricelists =
-                prevProps.selectedProfession === null || prevProps.selectedProfession.name !== selectedProfession.name;
-            if (shouldRefreshProfessionPricelists) {
-                refreshProfessionPricelists(selectedProfession.name);
-            }
-        }
+  private onPricelistNodeClick(id: string) {
+    const {
+      pricelists,
+      professionPricelists,
+      selectedExpansion,
+      history,
+      currentRegion,
+      currentRealm,
+      selectedProfession,
+    } = this.props;
 
-        if (profile === null) {
-            return;
-        }
-
-        switch (getPricelistsLevel) {
-            case FetchLevel.initial:
-                refreshPricelists(profile.token);
-
-                return;
-            default:
-                return;
-        }
+    if (currentRegion === null || currentRealm === null) {
+      return;
     }
 
-    public render() {
-        const { authLevel, currentRealm, currentRegion } = this.props;
-        const { topOpenMap } = this.state;
-
-        const nodes: ITreeNode[] = [];
-        if (currentRegion !== null && currentRealm !== null) {
-            nodes.push({
-                id: `top-summary`,
-                isSelected: this.isSummarySelected(),
-                label: `${currentRegion.name.toUpperCase()}-${currentRealm!.name} Summary`,
-            });
-        }
-
-        // optionally appending custom-pricelists
-        if (authLevel === AuthLevel.authenticated) {
-            nodes.push({
-                childNodes: this.getPricelistNodes(),
-                hasCaret: true,
-                icon: "list",
-                id: `top-${TopOpenKey.pricelists}`,
-                isExpanded: topOpenMap[TopOpenKey.pricelists],
-                label: "Custom Pricelists",
-            });
-        }
-
-        // appending profession-pricelists
-        nodes.push({
-            childNodes: this.getProfessionNodes(),
-            hasCaret: true,
-            icon: "list",
-            id: `top-${TopOpenKey.professions}`,
-            isExpanded: topOpenMap[TopOpenKey.professions],
-            label: "Professions",
-        });
-
-        return (
-            <div style={{ marginTop: "10px" }}>
-                <div className="pure-g">
-                    <div className="pure-u-1-4 pricelist-tree">
-                        <Tree contents={nodes} className={Classes.ELEVATION_0} onNodeClick={v => this.onNodeClick(v)} />
-                    </div>
-                    <div className="pure-u-3-4">
-                        <div style={{ paddingLeft: "10px" }}>
-                            <TreeContentContainer />
-                        </div>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
-    private isSummarySelected() {
-        const { selectedList, selectedProfession } = this.props;
-
-        return selectedList === null && selectedProfession === null;
-    }
-
-    private getProfessionNodes() {
-        const { professions } = this.props;
-
-        return professions.map(v => this.getProfessionNode(v));
-    }
-
-    private getProfessionNode(v: IProfession) {
-        const { selectedProfession, getProfessionPricelistsLevel } = this.props;
-
-        const isSelected = selectedProfession !== null && selectedProfession.name === v.name;
-        const result: ITreeNode = {
-            className: "profession-node",
-            icon: <ProfessionIcon profession={v} />,
-            id: `profession-${v.name}`,
-            isSelected,
-            label: v.label,
-        };
-        if (!isSelected) {
-            return result;
-        }
-
-        result.isExpanded = true;
-        result.hasCaret = false;
-
-        switch (getProfessionPricelistsLevel) {
-            case FetchLevel.initial:
-                result.childNodes = [
-                    {
-                        icon: <Spinner size={20} value={0} intent={Intent.NONE} />,
-                        id: "loading-0",
-                        label: <span style={{ marginLeft: "5px" }}>Loading</span>,
-                    },
-                ];
-
-                break;
-            case FetchLevel.fetching:
-                result.childNodes = [
-                    {
-                        icon: <Spinner size={20} intent={Intent.PRIMARY} />,
-                        id: "loading-0",
-                        label: <span style={{ marginLeft: "5px" }}>Loading</span>,
-                    },
-                ];
-
-                break;
-            case FetchLevel.failure:
-                result.childNodes = [
-                    {
-                        icon: <Spinner size={20} intent={Intent.DANGER} value={1} />,
-                        id: "loading-0",
-                        label: <span style={{ marginLeft: "5px" }}>Failed to load profession pricelists!</span>,
-                    },
-                ];
-
-                break;
-            case FetchLevel.success:
-                result.childNodes = this.getExpansionNodes();
-
-                break;
-            default:
-                break;
-        }
-
+    // checking user pricelists first
+    const list = pricelists.reduce((result, v) => {
+      if (result !== null) {
         return result;
+      }
+
+      if (v.id.toString() === id) {
+        return v;
+      }
+
+      return null;
+    }, null);
+    if (list !== null) {
+      if (list.slug === null) {
+        return;
+      }
+
+      const userPricelistUrl = [
+        "data",
+        currentRegion.name,
+        currentRealm.slug,
+        "professions",
+        "user",
+        list.slug,
+      ].join("/");
+      history.push(`/${userPricelistUrl}`);
+
+      return;
     }
 
-    private getExpansionNodes(): ITreeNode[] {
-        const { expansions, selectedExpansion } = this.props;
-
-        return expansions.map(v => {
-            const isSelected = selectedExpansion !== null && selectedExpansion.name === v.name;
-            const result: ITreeNode = {
-                childNodes: this.getProfessionPricelistNodes(v),
-                className: "expansion-node",
-                hasCaret: false,
-                id: `expansion-${v.name}`,
-                isExpanded: isSelected,
-                isSelected,
-                label: <span style={{ color: v.label_color }}>{v.label}</span>,
-            };
-
-            return result;
-        });
+    if (selectedProfession === null || selectedExpansion === null) {
+      return;
     }
 
-    private getProfessionPricelistNodes(expansion: IExpansion): ITreeNode[] {
-        const { professionPricelists, selectedExpansion } = this.props;
+    if (!(selectedExpansion.name in professionPricelists)) {
+      return;
+    }
 
-        const isSelected = selectedExpansion !== null && expansion.name === selectedExpansion.name;
-
-        if (expansion === null || !(expansion.name in professionPricelists)) {
-            if (!isSelected) {
-                return [];
-            }
-
-            return [{ id: "none-none", label: <em>None found.</em> }];
+    const expansionProfessionPricelists = professionPricelists[selectedExpansion.name];
+    const foundProfessionPricelist: IPricelistJson | null = expansionProfessionPricelists.reduce(
+      (previousValue, currentValue) => {
+        if (previousValue !== null) {
+          return previousValue;
         }
 
-        const result = professionPricelists[expansion.name];
-        if (result.length === 0) {
-            if (!isSelected) {
-                return [];
-            }
-
-            return [{ id: "none-none", label: <em>None found.</em> }];
+        if (currentValue.pricelist.id.toString() === id) {
+          return currentValue.pricelist;
         }
 
-        const pricelistNodes = result.map(v => this.getPricelistNode(v.pricelist!));
-        const sortedPricelistNodes = pricelistNodes.sort((a, b) => {
-            if (a.label === b.label) {
-                return 0;
-            }
-
-            return a.label > b.label ? 1 : -1;
-        });
-
-        return sortedPricelistNodes;
+        return null;
+      },
+      null,
+    );
+    if (foundProfessionPricelist === null) {
+      return;
     }
 
-    private getPricelistNode(v: IPricelistJson) {
-        const { selectedList } = this.props;
+    if (foundProfessionPricelist.slug === null) {
+      return;
+    }
 
-        const result: ITreeNode = {
-            className: "pricelist-node",
-            icon: <PricelistIconContainer pricelist={v} />,
-            id: `pricelist-${v.id}`,
-            isSelected: selectedList !== null && selectedList.id === v.id,
-            label: v.name,
-        };
+    const professionPricelistUrl = [
+      "data",
+      currentRegion.name,
+      currentRealm.slug,
+      "professions",
+      selectedProfession.name,
+      selectedExpansion.name,
+      foundProfessionPricelist.slug,
+    ].join("/");
+    history.push(`/${professionPricelistUrl}`);
+  }
 
+  private onProfessionNodeClick(id: string) {
+    const { professions, selectedProfession, history, currentRegion, currentRealm } = this.props;
+
+    if (currentRegion === null || currentRealm === null) {
+      return;
+    }
+
+    const profession = professions.reduce((result, v) => {
+      if (result !== null) {
         return result;
+      }
+
+      if (v.name === id) {
+        return v;
+      }
+
+      return null;
+    }, null);
+
+    if (
+      profession === null ||
+      (selectedProfession !== null && profession.name === selectedProfession.name)
+    ) {
+      history.push(`/data/${currentRegion.name}/${currentRealm.slug}/professions`);
+
+      return;
     }
 
-    private getPricelistNodes(): ITreeNode[] {
-        const { pricelists } = this.props;
+    history.push(`/data/${currentRegion.name}/${currentRealm.slug}/professions/${profession.name}`);
+  }
 
-        if (pricelists.length === 0) {
-            return [{ id: "none-none", label: <em>None found.</em> }];
-        }
+  private onTopNodeClick(id: TopOpenKey) {
+    const { history, currentRegion, currentRealm } = this.props;
+    const { topOpenMap } = this.state;
 
-        return pricelists.map(v => this.getPricelistNode(v));
+    if (currentRegion === null || currentRealm === null) {
+      return;
     }
 
-    private onPricelistNodeClick(id: string) {
-        const {
-            pricelists,
-            professionPricelists,
-            selectedExpansion,
-            history,
-            currentRegion,
-            currentRealm,
-            selectedProfession,
-        } = this.props;
+    if (id === TopOpenKey.summary) {
+      history.push(`/data/${currentRegion.name}/${currentRealm.slug}/professions`);
 
-        if (currentRegion === null || currentRealm === null) {
-            return;
-        }
-
-        // checking user pricelists first
-        const list = pricelists.reduce((result, v) => {
-            if (result !== null) {
-                return result;
-            }
-
-            if (v.id.toString() === id) {
-                return v;
-            }
-
-            return null;
-        }, null);
-        if (list !== null) {
-            if (list.slug === null) {
-                return;
-            }
-
-            const userPricelistUrl = [
-                "data",
-                currentRegion.name,
-                currentRealm.slug,
-                "professions",
-                "user",
-                list.slug,
-            ].join("/");
-            history.push(`/${userPricelistUrl}`);
-
-            return;
-        }
-
-        if (selectedProfession === null || selectedExpansion === null) {
-            return;
-        }
-
-        if (!(selectedExpansion.name in professionPricelists)) {
-            return;
-        }
-
-        const expansionProfessionPricelists = professionPricelists[selectedExpansion.name];
-        const foundProfessionPricelist: IPricelistJson | null = expansionProfessionPricelists.reduce(
-            (previousValue, currentValue) => {
-                if (previousValue !== null) {
-                    return previousValue;
-                }
-
-                if (currentValue.pricelist.id.toString() === id) {
-                    return currentValue.pricelist;
-                }
-
-                return null;
-            },
-            null,
-        );
-        if (foundProfessionPricelist === null) {
-            return;
-        }
-
-        if (foundProfessionPricelist.slug === null) {
-            return;
-        }
-
-        const professionPricelistUrl = [
-            "data",
-            currentRegion.name,
-            currentRealm.slug,
-            "professions",
-            selectedProfession.name,
-            selectedExpansion.name,
-            foundProfessionPricelist.slug,
-        ].join("/");
-        history.push(`/${professionPricelistUrl}`);
+      return;
     }
 
-    private onProfessionNodeClick(id: string) {
-        const { professions, selectedProfession, history, currentRegion, currentRealm } = this.props;
+    this.setState({ topOpenMap: { ...topOpenMap, [id]: !topOpenMap[id] } });
+  }
 
-        if (currentRegion === null || currentRealm === null) {
-            return;
-        }
+  private onExpansionClick(id: string) {
+    const { expansions, currentRegion, currentRealm, history, selectedProfession } = this.props;
 
-        const profession = professions.reduce((result, v) => {
-            if (result !== null) {
-                return result;
-            }
+    const expansion = expansions.reduce((result, v) => {
+      if (result !== null) {
+        return result;
+      }
 
-            if (v.name === id) {
-                return v;
-            }
+      if (v.name === id) {
+        return v;
+      }
 
-            return null;
-        }, null);
+      return null;
+    }, null);
 
-        if (profession === null || (selectedProfession !== null && profession.name === selectedProfession.name)) {
-            history.push(`/data/${currentRegion.name}/${currentRealm.slug}/professions`);
-
-            return;
-        }
-
-        history.push(`/data/${currentRegion.name}/${currentRealm.slug}/professions/${profession.name}`);
+    if (
+      expansion === null ||
+      currentRegion === null ||
+      currentRealm === null ||
+      selectedProfession === null
+    ) {
+      return;
     }
 
-    private onTopNodeClick(id: TopOpenKey) {
-        const { history, currentRegion, currentRealm } = this.props;
-        const { topOpenMap } = this.state;
+    const url = [
+      "data",
+      currentRegion.name,
+      currentRealm.slug,
+      "professions",
+      selectedProfession.name,
+      expansion.name,
+    ].join("/");
+    history.push(`/${url}`);
+  }
 
-        if (currentRegion === null || currentRealm === null) {
-            return;
-        }
-
-        if (id === TopOpenKey.summary) {
-            history.push(`/data/${currentRegion.name}/${currentRealm.slug}/professions`);
-
-            return;
-        }
-
-        this.setState({ topOpenMap: { ...topOpenMap, [id]: !topOpenMap[id] } });
+  private onNodeClick(node: ITreeNode) {
+    const separatorIndex = node.id.toString().indexOf("-");
+    if (separatorIndex === -1) {
+      return;
     }
 
-    private onExpansionClick(id: string) {
-        const { expansions, currentRegion, currentRealm, history, selectedProfession } = this.props;
+    const [kind, id] = [
+      node.id.toString().substr(0, separatorIndex),
+      node.id.toString().substr(separatorIndex + 1),
+    ];
+    const nodeClickMap = {
+      expansion: (v: string) => this.onExpansionClick(v),
+      pricelist: (v: string) => this.onPricelistNodeClick(v),
+      profession: (v: string) => this.onProfessionNodeClick(v),
+      top: (v: TopOpenKey) => this.onTopNodeClick(v),
+    };
 
-        const expansion = expansions.reduce((result, v) => {
-            if (result !== null) {
-                return result;
-            }
-
-            if (v.name === id) {
-                return v;
-            }
-
-            return null;
-        }, null);
-
-        if (expansion === null || currentRegion === null || currentRealm === null || selectedProfession === null) {
-            return;
-        }
-
-        const url = [
-            "data",
-            currentRegion.name,
-            currentRealm.slug,
-            "professions",
-            selectedProfession.name,
-            expansion.name,
-        ].join("/");
-        history.push(`/${url}`);
+    if (!(kind in nodeClickMap)) {
+      return;
     }
 
-    private onNodeClick(node: ITreeNode) {
-        const separatorIndex = node.id.toString().indexOf("-");
-        if (separatorIndex === -1) {
-            return;
-        }
-
-        const [kind, id] = [
-            node.id.toString().substr(0, separatorIndex),
-            node.id.toString().substr(separatorIndex + 1),
-        ];
-        const nodeClickMap = {
-            expansion: (v: string) => this.onExpansionClick(v),
-            pricelist: (v: string) => this.onPricelistNodeClick(v),
-            profession: (v: string) => this.onProfessionNodeClick(v),
-            top: (v: TopOpenKey) => this.onTopNodeClick(v),
-        };
-
-        if (!(kind in nodeClickMap)) {
-            return;
-        }
-
-        nodeClickMap[kind](id);
-    }
+    nodeClickMap[kind](id);
+  }
 }

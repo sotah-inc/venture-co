@@ -5,16 +5,16 @@ import { IDispatchProps, IOwnProps, IStateProps, Region } from "@app/components/
 import { IStoreState } from "@app/types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
-    const { currentRegion, currentRealm, authLevel, regions, fetchRealmLevel } = state.Main;
-    return { currentRegion, currentRealm, authLevel, regions, fetchRealmLevel };
+  const { currentRegion, currentRealm, authLevel, regions, fetchRealmLevel } = state.Main;
+  return { currentRegion, currentRealm, authLevel, regions, fetchRealmLevel };
 };
 
 const mapDispatchToProps: IDispatchProps = {
-    fetchRealms: FetchGetRealms,
-    onRegionChange: RegionChange,
+  fetchRealms: FetchGetRealms,
+  onRegionChange: RegionChange,
 };
 
 export const RegionContainer = connect<IStateProps, IDispatchProps, IOwnProps>(
-    mapStateToProps,
-    mapDispatchToProps,
+  mapStateToProps,
+  mapDispatchToProps,
 )(Region);

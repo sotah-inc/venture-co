@@ -1,7 +1,7 @@
 export interface IUpdateProfileRequest {
-    email: string;
+  email: string;
 }
 
 export interface IUpdateProfileResponse {
-    email: string;
+  email: string;
 }

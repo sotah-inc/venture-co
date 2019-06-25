@@ -8,16 +8,16 @@ const shortcodes = require("remark-shortcodes");
 import { ShortcodeRenderer } from "./ShortcodeRenderer";
 
 interface IProps {
-    body: string;
+  body: string;
 }
 
 export const MarkdownRenderer: React.SFC<IProps> = ({ body }: IProps) => {
-    return (
-        <ReactMarkdown
-            escapeHtml={false}
-            plugins={[shortcodes]}
-            source={body}
-            renderers={{ shortcode: ShortcodeRenderer }}
-        />
-    );
+  return (
+    <ReactMarkdown
+      escapeHtml={false}
+      plugins={[shortcodes]}
+      source={body}
+      renderers={{ shortcode: ShortcodeRenderer }}
+    />
+  );
 };

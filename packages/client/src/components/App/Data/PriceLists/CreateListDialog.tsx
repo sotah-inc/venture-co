@@ -17,22 +17,22 @@ import { FetchLevel } from "@app/types/main";
 import { AppToaster } from "@app/util/toasters";
 
 export interface IStateProps {
-    isAddListDialogOpen: boolean;
-    createPricelistLevel: FetchLevel;
-    createPricelistErrors: IErrors;
-    profile: IProfile | null;
-    selectedProfession: IProfession | null;
-    selectedExpansion: IExpansion | null;
-    currentRegion: IRegion | null;
-    currentRealm: IRealm | null;
-    selectedList: IPricelistJson | null;
+  isAddListDialogOpen: boolean;
+  createPricelistLevel: FetchLevel;
+  createPricelistErrors: IErrors;
+  profile: IProfile | null;
+  selectedProfession: IProfession | null;
+  selectedExpansion: IExpansion | null;
+  currentRegion: IRegion | null;
+  currentRealm: IRealm | null;
+  selectedList: IPricelistJson | null;
 }
 
 export interface IDispatchProps {
-    appendItems: (items: IItemsMap) => void;
-    changeIsAddListDialogOpen: (isDialogOpen: boolean) => void;
-    createPricelist: (token: string, request: ICreatePricelistRequest) => void;
-    createProfessionPricelist: (token: string, request: ICreateProfessionPricelistRequest) => void;
+  appendItems: (items: IItemsMap) => void;
+  changeIsAddListDialogOpen: (isDialogOpen: boolean) => void;
+  createPricelist: (token: string, request: ICreatePricelistRequest) => void;
+  createProfessionPricelist: (token: string, request: ICreateProfessionPricelistRequest) => void;
 }
 
 export interface IOwnProps extends RouteComponentProps<{}> {}
@@ -40,116 +40,116 @@ export interface IOwnProps extends RouteComponentProps<{}> {}
 export type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
 
 type State = Readonly<{
-    listDialogResetTrigger: number;
+  listDialogResetTrigger: number;
 }>;
 
 export class CreateListDialog extends React.Component<Props, State> {
-    public state = {
-        listDialogResetTrigger: 0,
-    };
+  public state = {
+    listDialogResetTrigger: 0,
+  };
 
-    public componentDidUpdate(prevProps: Props) {
-        const {
-            createPricelistLevel,
-            selectedList,
-            currentRegion,
-            currentRealm,
-            selectedProfession,
-            selectedExpansion,
-            history,
-        } = this.props;
-        const { listDialogResetTrigger } = this.state;
+  public componentDidUpdate(prevProps: Props) {
+    const {
+      createPricelistLevel,
+      selectedList,
+      currentRegion,
+      currentRealm,
+      selectedProfession,
+      selectedExpansion,
+      history,
+    } = this.props;
+    const { listDialogResetTrigger } = this.state;
 
-        if (
-            currentRegion === null ||
-            currentRealm === null ||
-            selectedProfession === null ||
-            selectedExpansion === null ||
-            selectedList === null
-        ) {
-            return;
-        }
-
-        if (prevProps.createPricelistLevel !== createPricelistLevel) {
-            switch (createPricelistLevel) {
-                case FetchLevel.success:
-                    AppToaster.show({
-                        icon: "info-sign",
-                        intent: Intent.SUCCESS,
-                        message: "Your pricelist has been created.",
-                    });
-                    this.setState({ listDialogResetTrigger: listDialogResetTrigger + 1 });
-
-                    const url = [
-                        "data",
-                        currentRegion.name,
-                        currentRealm.slug,
-                        "professions",
-                        selectedProfession.name,
-                        selectedExpansion.name,
-                        selectedList.slug,
-                    ].join("/");
-                    history.replace(`/${url}`);
-
-                    break;
-                default:
-                    break;
-            }
-        }
+    if (
+      currentRegion === null ||
+      currentRealm === null ||
+      selectedProfession === null ||
+      selectedExpansion === null ||
+      selectedList === null
+    ) {
+      return;
     }
 
-    public render() {
-        const {
-            isAddListDialogOpen,
-            changeIsAddListDialogOpen,
-            createPricelistErrors,
-            createPricelistLevel,
-            selectedProfession,
-        } = this.props;
-        const { listDialogResetTrigger } = this.state;
+    if (prevProps.createPricelistLevel !== createPricelistLevel) {
+      switch (createPricelistLevel) {
+        case FetchLevel.success:
+          AppToaster.show({
+            icon: "info-sign",
+            intent: Intent.SUCCESS,
+            message: "Your pricelist has been created.",
+          });
+          this.setState({ listDialogResetTrigger: listDialogResetTrigger + 1 });
 
-        let dialogTitle = "New Price List";
-        if (selectedProfession !== null) {
-            dialogTitle = `New ${selectedProfession.label} Price List`;
-        }
+          const url = [
+            "data",
+            currentRegion.name,
+            currentRealm.slug,
+            "professions",
+            selectedProfession.name,
+            selectedExpansion.name,
+            selectedList.slug,
+          ].join("/");
+          history.replace(`/${url}`);
 
-        return (
-            <ListDialogContainer
-                isOpen={isAddListDialogOpen}
-                onClose={() => changeIsAddListDialogOpen(!isAddListDialogOpen)}
-                title={dialogTitle}
-                mutationErrors={createPricelistErrors}
-                mutatePricelistLevel={createPricelistLevel}
-                resetTrigger={listDialogResetTrigger}
-                onComplete={(v: IOnCompleteOptions) => this.onListDialogComplete(v)}
-            />
-        );
+          break;
+        default:
+          break;
+      }
+    }
+  }
+
+  public render() {
+    const {
+      isAddListDialogOpen,
+      changeIsAddListDialogOpen,
+      createPricelistErrors,
+      createPricelistLevel,
+      selectedProfession,
+    } = this.props;
+    const { listDialogResetTrigger } = this.state;
+
+    let dialogTitle = "New Price List";
+    if (selectedProfession !== null) {
+      dialogTitle = `New ${selectedProfession.label} Price List`;
     }
 
-    private onListDialogComplete({ name, slug, entries, items }: IOnCompleteOptions) {
-        const {
-            createPricelist,
-            profile,
-            appendItems,
-            selectedProfession,
-            createProfessionPricelist,
-            selectedExpansion,
-        } = this.props;
+    return (
+      <ListDialogContainer
+        isOpen={isAddListDialogOpen}
+        onClose={() => changeIsAddListDialogOpen(!isAddListDialogOpen)}
+        title={dialogTitle}
+        mutationErrors={createPricelistErrors}
+        mutatePricelistLevel={createPricelistLevel}
+        resetTrigger={listDialogResetTrigger}
+        onComplete={(v: IOnCompleteOptions) => this.onListDialogComplete(v)}
+      />
+    );
+  }
 
-        if (selectedProfession === null) {
-            createPricelist(profile!.token, {
-                entries,
-                pricelist: { name, slug },
-            });
-        } else {
-            createProfessionPricelist(profile!.token, {
-                entries,
-                expansion_name: selectedExpansion!.name,
-                pricelist: { name, slug },
-                profession_name: selectedProfession.name,
-            });
-        }
+  private onListDialogComplete({ name, slug, entries, items }: IOnCompleteOptions) {
+    const {
+      createPricelist,
+      profile,
+      appendItems,
+      selectedProfession,
+      createProfessionPricelist,
+      selectedExpansion,
+    } = this.props;
 
-        appendItems(items);
+    if (selectedProfession === null) {
+      createPricelist(profile!.token, {
+        entries,
+        pricelist: { name, slug },
+      });
+    } else {
+      createProfessionPricelist(profile!.token, {
+        entries,
+        expansion_name: selectedExpansion!.name,
+        pricelist: { name, slug },
+        profession_name: selectedProfession.name,
+      });
     }
+
+    appendItems(items);
+  }
 }

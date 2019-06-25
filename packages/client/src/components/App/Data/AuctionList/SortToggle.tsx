@@ -7,83 +7,83 @@ import { SortDirection, SortKind } from "@app/api-types";
 import { ISortChangeOptions } from "@app/types/auction";
 
 export interface IStateProps {
-    currentSortDirection: SortDirection;
-    currentSortKind: SortKind;
+  currentSortDirection: SortDirection;
+  currentSortKind: SortKind;
 }
 
 type OnChangeCb = (payload: ISortChangeOptions) => void;
 
 export interface IDispatchProps {
-    onChange: OnChangeCb;
+  onChange: OnChangeCb;
 }
 
 export interface IOwnProps {
-    label: string;
-    sortKind: SortKind;
+  label: string;
+  sortKind: SortKind;
 }
 
 type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
 
 export class SortToggle extends React.Component<Props> {
-    public onToggle(sortKind: SortKind) {
-        const { currentSortDirection, currentSortKind, onChange } = this.props;
+  public onToggle(sortKind: SortKind) {
+    const { currentSortDirection, currentSortKind, onChange } = this.props;
 
-        let sortDirection = SortDirection.up;
-        if (currentSortKind === sortKind) {
-            if (currentSortDirection === SortDirection.up) {
-                sortDirection = SortDirection.down;
-            } else if (currentSortDirection === SortDirection.down) {
-                sortDirection = SortDirection.none;
-            }
-        }
-
-        onChange({ sortKind, sortDirection });
-
-        return;
+    let sortDirection = SortDirection.up;
+    if (currentSortKind === sortKind) {
+      if (currentSortDirection === SortDirection.up) {
+        sortDirection = SortDirection.down;
+      } else if (currentSortDirection === SortDirection.down) {
+        sortDirection = SortDirection.none;
+      }
     }
 
-    public renderButton(icon: IconName | null) {
-        const { label, sortKind } = this.props;
+    onChange({ sortKind, sortDirection });
 
-        if (icon === null) {
-            return (
-                <Button
-                    className={`${Classes.SMALL} ${Classes.MINIMAL}`}
-                    text={label}
-                    onClick={() => this.onToggle(sortKind)}
-                />
-            );
-        }
+    return;
+  }
 
-        return (
-            <Button
-                className={`${Classes.SMALL} ${Classes.MINIMAL}`}
-                text={label}
-                icon={icon}
-                onClick={() => this.onToggle(sortKind)}
-            />
-        );
+  public renderButton(icon: IconName | null) {
+    const { label, sortKind } = this.props;
+
+    if (icon === null) {
+      return (
+        <Button
+          className={`${Classes.SMALL} ${Classes.MINIMAL}`}
+          text={label}
+          onClick={() => this.onToggle(sortKind)}
+        />
+      );
     }
 
-    public render() {
-        const { sortKind, currentSortDirection, currentSortKind } = this.props;
+    return (
+      <Button
+        className={`${Classes.SMALL} ${Classes.MINIMAL}`}
+        text={label}
+        icon={icon}
+        onClick={() => this.onToggle(sortKind)}
+      />
+    );
+  }
 
-        let icon: IconName | null = null;
-        if (currentSortKind === sortKind) {
-            switch (currentSortDirection) {
-                case SortDirection.up:
-                    icon = IconNames.SORT_ASC;
+  public render() {
+    const { sortKind, currentSortDirection, currentSortKind } = this.props;
 
-                    break;
-                case SortDirection.down:
-                    icon = IconNames.SORT_DESC;
+    let icon: IconName | null = null;
+    if (currentSortKind === sortKind) {
+      switch (currentSortDirection) {
+        case SortDirection.up:
+          icon = IconNames.SORT_ASC;
 
-                    break;
-                default:
-                    break;
-            }
-        }
+          break;
+        case SortDirection.down:
+          icon = IconNames.SORT_DESC;
 
-        return this.renderButton(icon);
+          break;
+        default:
+          break;
+      }
     }
+
+    return this.renderButton(icon);
+  }
 }
