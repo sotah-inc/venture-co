@@ -3,19 +3,19 @@ import * as React from "react";
 import { Button, ButtonGroup, Classes, HTMLTable } from "@blueprintjs/core";
 import { RouteComponentProps } from "react-router";
 
-import { SortKind } from "@app/api-types";
-import { IAuction } from "@app/api-types/auction";
-import { IQueryAuctionsItem } from "@app/api-types/contracts/data";
-import { IProfessionPricelistJson } from "@app/api-types/entities";
-import { IExpansion } from "@app/api-types/expansion";
-import { IItem, IItemsMap, ItemId } from "@app/api-types/item";
-import { IProfession } from "@app/api-types/profession";
-import { IRealm, IRegion } from "@app/api-types/region";
-import { Currency, ProfessionIcon } from "@app/components/util";
-import { SortToggleContainer } from "@app/containers/App/Data/AuctionList/SortToggle";
-import { ItemPopoverContainer } from "@app/containers/util/ItemPopover";
-import { PricelistIconContainer } from "@app/containers/util/PricelistIcon";
-import { getSelectedResultIndex, qualityToColorClass } from "@app/util";
+import { SortKind } from "../../../api-types";
+import { IAuction } from "../../../api-types/auction";
+import { IQueryAuctionsItem } from "../../../api-types/contracts/data";
+import { IProfessionPricelistJson } from "../../../api-types/entities";
+import { IExpansion } from "../../../api-types/expansion";
+import { IItem, IItemsMap, ItemId } from "../../../api-types/item";
+import { IProfession } from "../../../api-types/profession";
+import { IRealm, IRegion } from "../../../api-types/region";
+import { Currency, ProfessionIcon } from "../../../components/util";
+import { SortToggleContainer } from "../../../containers/App/Data/AuctionList/SortToggle";
+import { ItemPopoverContainer } from "../../../containers/util/ItemPopover";
+import { PricelistIconContainer } from "../../../containers/util/PricelistIcon";
+import { getSelectedResultIndex, qualityToColorClass } from "../../../util";
 
 import "./AuctionTable.scss";
 

@@ -2,10 +2,11 @@ import * as React from "react";
 
 import { Button, Classes, NonIdealState } from "@blueprintjs/core";
 
-import { IPricelistJson } from "@app/api-types/entities";
-import { IItem } from "@app/api-types/item";
-import { IRealm, IRegion } from "@app/api-types/region";
-import { PricelistTableContainer } from "@app/containers/App/Data/PriceLists/PricelistTree/PricelistPanel/PricelistTable";
+import { IPricelistJson } from "../../../../../api-types/entities";
+import { IItem } from "../../../../../api-types/item";
+import { IRealm, IRegion } from "../../../../../api-types/region";
+// tslint:disable-next-line:max-line-length
+import { PricelistTableContainer } from "../../../../../containers/App/Data/PriceLists/PricelistTree/PricelistPanel/PricelistTable";
 
 export interface IStateProps {
   currentRegion: IRegion | null;

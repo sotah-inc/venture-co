@@ -3,11 +3,11 @@ import * as React from "react";
 import { Button, FormGroup, H5, Intent } from "@blueprintjs/core";
 import { FormikProps } from "formik";
 
-import { IPricelistEntryJson } from "@app/api-types/entities";
-import { IItem, ItemId } from "@app/api-types/item";
-import { DialogActions, DialogBody, ItemInput } from "@app/components/util";
-import { Generator as FormFieldGenerator } from "@app/components/util/FormField";
-import { getItemIconUrl, getItemTextValue, qualityToColorClass } from "@app/util";
+import { IPricelistEntryJson } from "../../../../../api-types/entities";
+import { IItem, ItemId } from "../../../../../api-types/item";
+import { DialogActions, DialogBody, ItemInput } from "../../../../../components/util";
+import { Generator as FormFieldGenerator } from "../../../../../components/util/FormField";
+import { getItemIconUrl, getItemTextValue, qualityToColorClass } from "../../../../../util";
 
 import "./CreateEntryForm.scss";
 

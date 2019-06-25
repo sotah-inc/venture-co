@@ -3,9 +3,9 @@ import * as React from "react";
 import { Button, FormGroup, H5, Intent } from "@blueprintjs/core";
 import { FormikProps } from "formik";
 
-import { IItem, ItemId } from "@app/api-types/item";
-import { DialogActions, DialogBody, ItemInput } from "@app/components/util";
-import { getItemIconUrl, getItemTextValue, qualityToColorClass } from "@app/util";
+import { IItem, ItemId } from "../../../../../api-types/item";
+import { getItemIconUrl, getItemTextValue, qualityToColorClass } from "../../../../../util";
+import { DialogActions, DialogBody, ItemInput } from "../../../../util";
 
 import "./CreateEntryForm.scss";
 

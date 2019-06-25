@@ -1,7 +1,7 @@
 import { FormGroup, Intent } from "@blueprintjs/core";
 import * as React from "react";
 
-import { IErrors } from "@app/types/global";
+import { IErrors } from "../../types/global";
 
 type Props = Readonly<{
   errors: IErrors;

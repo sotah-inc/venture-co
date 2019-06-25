@@ -9,16 +9,16 @@ import {
   ItemBind,
   ItemClassClasses,
   ItemSpellTrigger,
-} from "@app/api-types/item";
-import { Currency } from "@app/components/util";
-import { IItemClasses } from "@app/types/global";
+} from "../../api-types/item";
+import { Currency } from "../../components/util";
+import { IItemClasses } from "../../types/global";
 import {
   getItemIconUrl,
   getItemTextValue,
   inventoryTypeToString,
   itemStatToString,
   qualityToColorClass,
-} from "@app/util";
+} from "../../util";
 
 import "./ItemPopover.scss";
 

@@ -2,17 +2,20 @@ import * as React from "react";
 
 import { Button, Classes, Dialog, HTMLTable, Intent, Tooltip } from "@blueprintjs/core";
 
-import { IPricelistEntryJson } from "@app/api-types/entities";
-import { IItem, IItemsMap, ItemId } from "@app/api-types/item";
-import { DialogActions, DialogBody, ErrorList, PanelHeader } from "@app/components/util";
-import { ItemPopoverContainer } from "@app/containers/util/ItemPopover";
-import { BulkEntryFormFormContainer } from "@app/form-containers/App/Data/PriceLists/util/BulkEntryForm";
-import { CreateEntryFormFormContainer } from "@app/form-containers/App/Data/PriceLists/util/CreateEntryForm";
-import { ListFormFormContainer } from "@app/form-containers/App/Data/PriceLists/util/ListForm";
-import { IErrors } from "@app/types/global";
-import { FetchLevel } from "@app/types/main";
-import { ListDialogStep } from "@app/types/price-lists";
-import { qualityToColorClass } from "@app/util";
+import { IPricelistEntryJson } from "../../../../../api-types/entities";
+import { IItem, IItemsMap, ItemId } from "../../../../../api-types/item";
+import { ItemPopoverContainer } from "../../../../../containers/util/ItemPopover";
+// tslint:disable-next-line:max-line-length
+import { BulkEntryFormFormContainer } from "../../../../../form-containers/App/Data/PriceLists/util/BulkEntryForm";
+// tslint:disable-next-line:max-line-length
+import { CreateEntryFormFormContainer } from "../../../../../form-containers/App/Data/PriceLists/util/CreateEntryForm";
+// tslint:disable-next-line:max-line-length
+import { ListFormFormContainer } from "../../../../../form-containers/App/Data/PriceLists/util/ListForm";
+import { IErrors } from "../../../../../types/global";
+import { FetchLevel } from "../../../../../types/main";
+import { ListDialogStep } from "../../../../../types/price-lists";
+import { qualityToColorClass } from "../../../../../util";
+import { DialogActions, DialogBody, ErrorList, PanelHeader } from "../../../../util";
 
 export interface IOnCompleteOptions {
   name: string;

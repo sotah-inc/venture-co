@@ -1,8 +1,8 @@
 import * as React from "react";
 
-import { IPricelistJson } from "@app/api-types/entities";
-import { IItemsMap } from "@app/api-types/item";
-import { getItemIconUrl } from "@app/util";
+import { IPricelistJson } from "../../api-types/entities";
+import { IItemsMap } from "../../api-types/item";
+import { getItemIconUrl } from "../../util";
 
 export interface IStateProps {
   items: IItemsMap;

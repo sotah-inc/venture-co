@@ -12,23 +12,23 @@ import {
   YAxis,
 } from "recharts";
 
-import { IItemsMap, ItemId } from "@app/api-types/item";
+import { IItemsMap, ItemId } from "../../api-types/item";
 import {
   IItemPriceLimits,
   IItemPricelistHistoryMap,
   IPriceLimits,
   IPricelistHistoryMap,
-} from "@app/api-types/pricelist";
-import { IRealm, IRegion } from "@app/api-types/region";
-import { IGetPriceListHistoryOptions } from "@app/api/data";
-import { FetchLevel } from "@app/types/main";
+} from "../../api-types/pricelist";
+import { IRealm, IRegion } from "../../api-types/region";
+import { IGetPriceListHistoryOptions } from "../../api/data";
+import { FetchLevel } from "../../types/main";
 import {
   currencyToText,
   didRealmChange,
   didRegionChange,
   getColor,
   unixTimestampToText,
-} from "@app/util";
+} from "../../util";
 
 export interface IStateProps {
   items: IItemsMap;

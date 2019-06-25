@@ -3,14 +3,14 @@ import * as React from "react";
 import { Button, Callout, Dialog, Intent } from "@blueprintjs/core";
 import { RouteComponentProps } from "react-router";
 
-import { IPricelistJson } from "@app/api-types/entities";
-import { IExpansion } from "@app/api-types/expansion";
-import { IProfession } from "@app/api-types/profession";
-import { IRealm, IRegion } from "@app/api-types/region";
-import { DialogActions, DialogBody } from "@app/components/util";
-import { IProfile } from "@app/types/global";
-import { FetchLevel } from "@app/types/main";
-import { AppToaster } from "@app/util/toasters";
+import { IPricelistJson } from "../../../../../api-types/entities";
+import { IExpansion } from "../../../../../api-types/expansion";
+import { IProfession } from "../../../../../api-types/profession";
+import { IRealm, IRegion } from "../../../../../api-types/region";
+import { DialogActions, DialogBody } from "../../../../../components/util";
+import { IProfile } from "../../../../../types/global";
+import { FetchLevel } from "../../../../../types/main";
+import { AppToaster } from "../../../../../util/toasters";
 
 export interface IStateProps {
   selectedList: IPricelistJson | null;

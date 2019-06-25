@@ -2,11 +2,11 @@ import * as React from "react";
 
 import { Classes, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
 
-import { IPricelistJson } from "@app/api-types/entities";
-import { IRealm, IRegion } from "@app/api-types/region";
-import { LastModified } from "@app/components/util";
-import { PricelistPanelContainer } from "@app/containers/App/Data/PriceLists/PricelistTree/PricelistPanel";
-import { RealmSummaryPanelContainer } from "@app/containers/App/Data/PriceLists/PricelistTree/TreeContent/RealmSummaryPanel";
+import { IPricelistJson } from "../../../../../api-types/entities";
+import { IRealm, IRegion } from "../../../../../api-types/region";
+import { LastModified } from "../../../../../components/util";
+import { PricelistPanelContainer } from "../../../../../containers/App/Data/PriceLists/PricelistTree/PricelistPanel";
+import { RealmSummaryPanelContainer } from "../../../../../containers/App/Data/PriceLists/PricelistTree/TreeContent/RealmSummaryPanel";
 
 export interface IStateProps {
   currentRegion: IRegion | null;

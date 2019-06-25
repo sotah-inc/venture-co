@@ -3,18 +3,18 @@ import * as React from "react";
 import { Intent } from "@blueprintjs/core";
 import { RouteComponentProps } from "react-router";
 
-import { ICreatePricelistRequest } from "@app/api-types/contracts/user/pricelist-crud";
-import { ICreateProfessionPricelistRequest } from "@app/api-types/contracts/user/profession-pricelists-crud";
-import { IPricelistJson } from "@app/api-types/entities";
-import { IExpansion } from "@app/api-types/expansion";
-import { IItemsMap } from "@app/api-types/item";
-import { IProfession } from "@app/api-types/profession";
-import { IRealm, IRegion } from "@app/api-types/region";
-import { IOnCompleteOptions } from "@app/components/App/Data/PriceLists/util/ListDialog";
-import { ListDialogContainer } from "@app/containers/App/Data/PriceLists/util/ListDialog";
-import { IErrors, IProfile } from "@app/types/global";
-import { FetchLevel } from "@app/types/main";
-import { AppToaster } from "@app/util/toasters";
+import { ICreatePricelistRequest } from "../../../../../api-types/contracts/user/pricelist-crud";
+import { ICreateProfessionPricelistRequest } from "../../../../../api-types/contracts/user/profession-pricelists-crud";
+import { IPricelistJson } from "../../../../../api-types/entities";
+import { IExpansion } from "../../../../../api-types/expansion";
+import { IItemsMap } from "../../../../../api-types/item";
+import { IProfession } from "../../../../../api-types/profession";
+import { IRealm, IRegion } from "../../../../../api-types/region";
+import { IOnCompleteOptions } from "../../../../../components/App/Data/PriceLists/util/ListDialog";
+import { ListDialogContainer } from "../../../../../containers/App/Data/PriceLists/util/ListDialog";
+import { IErrors, IProfile } from "../../../../../types/global";
+import { FetchLevel } from "../../../../../types/main";
+import { AppToaster } from "../../../../../util/toasters";
 
 export interface IStateProps {
   isAddListDialogOpen: boolean;

@@ -10,10 +10,10 @@ import {
 } from "@blueprintjs/select";
 import { debounce } from "lodash";
 
-import { IQueryItemsItem } from "@app/api-types/contracts/data";
-import { IItem, ItemId } from "@app/api-types/item";
-import { getItems } from "@app/api/data";
-import { getItemIconUrl, getItemTextValue, qualityToColorClass } from "@app/util";
+import { IQueryItemsItem } from "../../api-types/contracts/data";
+import { IItem, ItemId } from "../../api-types/item";
+import { getItems } from "../../api/data";
+import { getItemIconUrl, getItemTextValue, qualityToColorClass } from "../../util";
 
 const ItemSuggest = Suggest.ofType<IQueryItemsItem>();
 

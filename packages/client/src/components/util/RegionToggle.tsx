@@ -2,8 +2,8 @@ import * as React from "react";
 
 import { Button, Classes, H6, Menu, MenuItem, Popover, Position } from "@blueprintjs/core";
 
-import { IRegion } from "@app/api-types/region";
-import { IRegions } from "@app/types/global";
+import { IRegion } from "../../api-types/region";
+import { IRegions } from "../../types/global";
 
 export interface IStateProps {
   currentRegion: IRegion | null;

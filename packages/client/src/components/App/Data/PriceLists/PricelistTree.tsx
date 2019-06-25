@@ -3,16 +3,16 @@ import * as React from "react";
 import { Classes, Intent, ITreeNode, Spinner, Tree } from "@blueprintjs/core";
 import { RouteComponentProps } from "react-router";
 
-import { IPricelistJson } from "@app/api-types/entities";
-import { IExpansion } from "@app/api-types/expansion";
-import { IProfession, ProfessionName } from "@app/api-types/profession";
-import { IRealm, IRegion } from "@app/api-types/region";
-import { ProfessionIcon } from "@app/components/util/ProfessionIcon";
-import { TreeContentContainer } from "@app/containers/App/Data/PriceLists/PricelistTree/TreeContent";
-import { PricelistIconContainer } from "@app/containers/util/PricelistIcon";
-import { IProfile } from "@app/types/global";
-import { AuthLevel, FetchLevel } from "@app/types/main";
-import { IExpansionProfessionPricelistMap } from "@app/types/price-lists";
+import { IPricelistJson } from "../../../../../api-types/entities";
+import { IExpansion } from "../../../../../api-types/expansion";
+import { IProfession, ProfessionName } from "../../../../../api-types/profession";
+import { IRealm, IRegion } from "../../../../../api-types/region";
+import { ProfessionIcon } from "../../../../../components/util/ProfessionIcon";
+import { TreeContentContainer } from "../../../../../containers/App/Data/PriceLists/PricelistTree/TreeContent";
+import { PricelistIconContainer } from "../../../../../containers/util/PricelistIcon";
+import { IProfile } from "../../../../../types/global";
+import { AuthLevel, FetchLevel } from "../../../../../types/main";
+import { IExpansionProfessionPricelistMap } from "../../../../../types/price-lists";
 
 export interface IStateProps {
   pricelists: IPricelistJson[];

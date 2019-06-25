@@ -25,17 +25,17 @@ import {
 } from "@blueprintjs/select";
 import { debounce } from "lodash";
 
-import { IQueryAuctionsItem } from "@app/api-types/contracts/data";
-import { IItem } from "@app/api-types/item";
-import { IRealm, IRegion } from "@app/api-types/region";
-import { IQueryAuctionsOptions } from "@app/api/data";
-import { FetchLevel } from "@app/types/main";
+import { IQueryAuctionsItem } from "../../../api-types/contracts/data";
+import { IItem } from "../../../api-types/item";
+import { IRealm, IRegion } from "../../../api-types/region";
+import { IQueryAuctionsOptions } from "../../../api/data";
+import { FetchLevel } from "../../../types/main";
 import {
   getItemIconUrl,
   getItemTextValue,
   getSelectedResultIndex,
   qualityToColorClass,
-} from "@app/util";
+} from "../../../util";
 
 const QueryAuctionResultSuggest = Suggest.ofType<IQueryAuctionsItem>();
 

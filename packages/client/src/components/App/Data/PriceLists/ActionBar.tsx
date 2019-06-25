@@ -14,14 +14,14 @@ import {
 } from "@blueprintjs/core";
 import { RouteComponentProps } from "react-router";
 
-import { IPricelistJson, UserLevel } from "@app/api-types/entities";
-import { IExpansion } from "@app/api-types/expansion";
-import { IProfession } from "@app/api-types/profession";
-import { IRealm, IRegion } from "@app/api-types/region";
-import { RealmToggleContainer } from "@app/containers/util/RealmToggle";
-import { RegionToggleContainer } from "@app/containers/util/RegionToggle";
-import { IProfile } from "@app/types/global";
-import { AuthLevel } from "@app/types/main";
+import { IPricelistJson, UserLevel } from "../../../../../api-types/entities";
+import { IExpansion } from "../../../../../api-types/expansion";
+import { IProfession } from "../../../../../api-types/profession";
+import { IRealm, IRegion } from "../../../../../api-types/region";
+import { RealmToggleContainer } from "../../../../../containers/util/RealmToggle";
+import { RegionToggleContainer } from "../../../../../containers/util/RegionToggle";
+import { IProfile } from "../../../../../types/global";
+import { AuthLevel } from "../../../../../types/main";
 
 export interface IStateProps {
   currentRegion: IRegion | null;

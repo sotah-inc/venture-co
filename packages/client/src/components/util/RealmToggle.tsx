@@ -13,12 +13,12 @@ import {
 import {
   ICreatePreferencesRequest,
   IUpdatePreferencesRequest,
-} from "@app/api-types/contracts/user/preferences";
-import { IPreferenceJson } from "@app/api-types/entities";
-import { IRealm, IRegion } from "@app/api-types/region";
-import { IProfile, IRealms } from "@app/types/global";
-import { AuthLevel, FetchLevel } from "@app/types/main";
-import { didRealmChange } from "@app/util";
+} from "../../api-types/contracts/user/preferences";
+import { IPreferenceJson } from "../../api-types/entities";
+import { IRealm, IRegion } from "../../api-types/region";
+import { IProfile, IRealms } from "../../types/global";
+import { AuthLevel, FetchLevel } from "../../types/main";
+import { didRealmChange } from "../../util";
 
 const RealmToggleSelect = Select.ofType<IRealm>();
 

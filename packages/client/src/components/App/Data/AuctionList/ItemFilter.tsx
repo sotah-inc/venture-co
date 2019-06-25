@@ -19,9 +19,9 @@ import {
   Suggest,
 } from "@blueprintjs/select";
 
-import { IItem } from "@app/api-types/item";
-import { IRealm, IRegion } from "@app/api-types/region";
-import { FetchLevel } from "@app/types/main";
+import { IItem } from "../../../api-types/item";
+import { IRealm, IRegion } from "../../../api-types/region";
+import { FetchLevel } from "../../../types/main";
 
 const ItemFilterSuggest = Suggest.ofType<IItem>();
 

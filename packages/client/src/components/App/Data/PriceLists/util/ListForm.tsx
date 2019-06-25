@@ -5,7 +5,7 @@ import { IconName } from "@blueprintjs/icons";
 import { FormikProps } from "formik";
 import speakingurl from "speakingurl";
 
-import { DialogActions, DialogBody } from "@app/components/util";
+import { DialogActions, DialogBody } from "../../../../util";
 
 export interface IOwnProps {
   onComplete: (name: string, slug: string) => void;
