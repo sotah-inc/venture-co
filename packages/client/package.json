@@ -42,6 +42,7 @@
     "@types/react-redux": "^7.1.0",
     "@types/react-router": "^5.0.2",
     "@types/react-router-dom": "^4.3.4",
+    "@types/recharts": "^1.1.17",
     "@types/speakingurl": "^13.0.2",
     "@types/yup": "^0.26.17",
     "formik": "^1.5.7",
@@ -55,8 +56,10 @@
     "react-redux": "^7.1.0",
     "react-router": "^5.0.1",
     "react-router-dom": "^5.0.1",
+    "recharts": "^1.6.2",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
+    "remark-shortcodes": "^0.2.1",
     "speakingurl": "^14.0.1",
     "yup": "^0.27.0"
   },
