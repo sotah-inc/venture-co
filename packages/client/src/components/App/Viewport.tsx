@@ -1,24 +1,25 @@
+/* tslint:disable:max-line-length */
 import * as React from "react";
 
 import { Route, RouteComponentProps, Switch } from "react-router-dom";
 
-import { NotFound } from "@app/components/util/NotFound";
-import { NewsCreatorContainer } from "@app/containers/App/Content/NewsCreator";
-import { NewsEditorContainer } from "@app/containers/App/Content/NewsEditor";
-import { PostContainer } from "@app/containers/App/Content/Post";
-import { DataContainer } from "@app/containers/App/Data";
-import { AuctionsLandingRouteContainer } from "@app/route-containers/App/AuctionsLanding";
-import { ContentRouteContainer } from "@app/route-containers/App/Content";
-import { NewsRouteContainer } from "@app/route-containers/App/Content/News";
-import { AuctionListRouteContainer } from "@app/route-containers/App/Data/AuctionList";
-import { PriceListsRouteContainer } from "@app/route-containers/App/Data/PriceLists";
-import { RealmRouteContainer } from "@app/route-containers/App/Data/Realm";
-import { RegionRouteContainer } from "@app/route-containers/App/Data/Region";
-import { ProfessionsLandingRouteContainer } from "@app/route-containers/App/ProfessionsLanding";
-import { ProfileRouteContainer } from "@app/route-containers/App/Profile";
-import { ManageAccountRouteContainer } from "@app/route-containers/App/Profile/ManageAccount";
-import { PromptsRouteContainer } from "@app/route-containers/App/Prompts";
-import { RootRouteContainer } from "@app/route-containers/App/Root";
+import { NewsCreatorContainer } from "../../containers/App/Content/NewsCreator";
+import { NewsEditorContainer } from "../../containers/App/Content/NewsEditor";
+import { PostContainer } from "../../containers/App/Content/Post";
+import { DataContainer } from "../../containers/App/Data";
+import { AuctionsLandingRouteContainer } from "../../route-containers/App/AuctionsLanding";
+import { ContentRouteContainer } from "../../route-containers/App/Content";
+import { NewsRouteContainer } from "../../route-containers/App/Content/News";
+import { AuctionListRouteContainer } from "../../route-containers/App/Data/AuctionList";
+import { PriceListsRouteContainer } from "../../route-containers/App/Data/PriceLists";
+import { RealmRouteContainer } from "../../route-containers/App/Data/Realm";
+import { RegionRouteContainer } from "../../route-containers/App/Data/Region";
+import { ProfessionsLandingRouteContainer } from "../../route-containers/App/ProfessionsLanding";
+import { ProfileRouteContainer } from "../../route-containers/App/Profile";
+import { ManageAccountRouteContainer } from "../../route-containers/App/Profile/ManageAccount";
+import { PromptsRouteContainer } from "../../route-containers/App/Prompts";
+import { RootRouteContainer } from "../../route-containers/App/Root";
+import { NotFound } from "../util/NotFound";
 
 export interface IOwnProps extends RouteComponentProps<{}> {}
 

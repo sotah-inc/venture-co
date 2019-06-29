@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { Redirect } from "react-router-dom";
 
-import { IRegion } from "@app/api-types/region";
+import { IRegion } from "../../api-types/region";
 
 export interface IStateProps {
   currentRegion: IRegion | null;

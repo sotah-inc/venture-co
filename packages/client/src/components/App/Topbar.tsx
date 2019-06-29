@@ -14,12 +14,12 @@ import {
 } from "@blueprintjs/core";
 import { RouteComponentProps } from "react-router-dom";
 
-import { IUserJson } from "@app/api-types/entities";
-import { IRealm, IRegion } from "@app/api-types/region";
-import { LoginContainer } from "@app/containers/App/Login";
-import { RegisterContainer } from "@app/containers/App/Register";
-import { NewsButtonRouteContainer } from "@app/route-containers/App/Topbar/NewsButton";
-import { LinkButtonRouteContainer } from "@app/route-containers/util/LinkButton";
+import { IUserJson } from "../../api-types/entities";
+import { IRealm, IRegion } from "../../api-types/region";
+import { LoginContainer } from "../../containers/App/Login";
+import { RegisterContainer } from "../../containers/App/Register";
+import { NewsButtonRouteContainer } from "../../route-containers/App/Topbar/NewsButton";
+import { LinkButtonRouteContainer } from "../../route-containers/util/LinkButton";
 
 export interface IStateProps {
   user: IUserJson | null;

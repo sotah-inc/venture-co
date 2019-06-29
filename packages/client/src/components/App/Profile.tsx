@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { Redirect, RouteComponentProps } from "react-router-dom";
 
-import { setTitle } from "@app/util";
+import { setTitle } from "../../util";
 
 export interface IOwnProps extends RouteComponentProps<{}> {}
 

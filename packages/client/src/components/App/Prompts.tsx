@@ -3,7 +3,7 @@ import * as React from "react";
 import { Button, Callout, Intent } from "@blueprintjs/core";
 import { RouteComponentProps } from "react-router-dom";
 
-import { IUserJson, UserLevel } from "@app/api-types/entities";
+import { IUserJson, UserLevel } from "../../api-types/entities";
 
 export interface IStateProps {
   user: IUserJson | null;
