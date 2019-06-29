@@ -170,16 +170,12 @@ export class PriceLists extends React.Component<Props> {
     } = this.props;
 
     if (typeof profession_name !== "undefined") {
-      const hasProfession: boolean = professions.reduce((previousValue, currentValue) => {
-        if (previousValue !== false) {
+      const hasProfession = professions.reduce<boolean>((previousValue, currentValue) => {
+        if (previousValue) {
           return previousValue;
         }
 
-        if (currentValue.name === profession_name) {
-          return true;
-        }
-
-        return false;
+        return currentValue.name === profession_name;
       }, false);
 
       if (!hasProfession) {
@@ -292,7 +288,7 @@ export class PriceLists extends React.Component<Props> {
         return;
       }
 
-      const foundList: IPricelistJson | null = pricelists.reduce((prevValue, curValue) => {
+      const foundList = pricelists.reduce<IPricelistJson | null>((prevValue, curValue) => {
         if (prevValue !== null) {
           return prevValue;
         }
@@ -319,7 +315,7 @@ export class PriceLists extends React.Component<Props> {
     }
 
     if (selectedProfession === null || selectedProfession.name !== profession_name) {
-      const foundProfession: IProfession | null = professions.reduce(
+      const foundProfession = professions.reduce<IProfession | null>(
         (previousValue, currentValue) => {
           if (previousValue !== null) {
             return previousValue;
@@ -378,7 +374,7 @@ export class PriceLists extends React.Component<Props> {
     }
 
     if (selectedExpansion === null || selectedExpansion.name !== expansion_name) {
-      const foundExpansion: IExpansion | null = expansions.reduce((previousValue, currentValue) => {
+      const foundExpansion = expansions.reduce<IExpansion | null>((previousValue, currentValue) => {
         if (previousValue !== null) {
           return previousValue;
         }
@@ -464,7 +460,7 @@ export class PriceLists extends React.Component<Props> {
       return;
     }
 
-    const foundList: IPricelistJson | null = professionPricelists[selectedExpansion.name].reduce(
+    const foundList = professionPricelists[selectedExpansion.name].reduce<IPricelistJson | null>(
       (prevValue, curValue) => {
         if (prevValue !== null) {
           return prevValue;

@@ -25,7 +25,7 @@ const mapDispatchToProps: IDispatchProps = {
   updateProfile: FetchUpdateProfile,
 };
 
-export const ManageAccountContainer = connect<IStateProps, IDispatchProps, IOwnProps>(
+export const ManageAccountContainer = connect<IStateProps, IDispatchProps, IOwnProps, IStoreState>(
   mapStateToProps,
   mapDispatchToProps,
 )(ManageAccount);

@@ -15,7 +15,7 @@ const mapDispatchToProps: IDispatchProps = {
   onUserLogin: UserLogin,
 };
 
-export const LoginContainer = connect<IStateProps, IDispatchProps, IStoreState>(
+export const LoginContainer = connect<IStateProps, IDispatchProps, {}, IStoreState>(
   mapStateToProps,
   mapDispatchToProps,
 )(LoginFormContainer);
