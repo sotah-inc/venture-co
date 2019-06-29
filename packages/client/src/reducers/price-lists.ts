@@ -64,7 +64,7 @@ export const priceLists = (state: State | undefined, action: PriceListsActions):
     case APPEND_ITEMS:
       const appendingItems = { ...state.items };
       for (const itemId of Object.keys(action.payload)) {
-        const item: IItem = action.payload[itemId];
+        const item: IItem = action.payload[Number(itemId)];
         appendingItems[item.id] = item;
       }
 
