@@ -1,13 +1,13 @@
 import { withFormik, WithFormikConfig } from "formik";
 import * as Yup from "yup";
 
-import { IPricelistEntryJson } from "@app/api-types/entities";
-import { IItem, ItemId } from "@app/api-types/item";
+import { IPricelistEntryJson } from "../../../../../api-types/entities";
+import { IItem, ItemId } from "../../../../../api-types/item";
 import {
   CreateEntryForm,
   IFormValues,
-} from "@app/components/App/Data/PriceLists/util/CreateEntryForm";
-import { PriceListRules } from "@app/validator-rules";
+} from "../../../../../components/App/Data/PriceLists/util/CreateEntryForm";
+import { PriceListRules } from "../../../../../validator-rules";
 
 interface IFormProps {
   onComplete: (entry: IPricelistEntryJson, item: IItem) => void;

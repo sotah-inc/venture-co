@@ -1,10 +1,10 @@
 import { withFormik, WithFormikConfig } from "formik";
 import * as Yup from "yup";
 
-import { loginUser } from "@app/api/user";
-import { IFormValues, Login } from "@app/components/App/Login";
-import { IProfile } from "@app/types/global";
-import { UserRules } from "@app/validator-rules";
+import { loginUser } from "../../api/user";
+import { IFormValues, Login } from "../../components/App/Login";
+import { IProfile } from "../../types/global";
+import { UserRules } from "../../validator-rules";
 
 interface IFormProps {
   isLoggedIn: boolean;

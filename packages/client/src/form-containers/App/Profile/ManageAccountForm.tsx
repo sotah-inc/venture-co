@@ -1,9 +1,9 @@
 import { withFormik, WithFormikConfig } from "formik";
 import * as Yup from "yup";
 
-import { IFormValues, ManageAccountForm } from "@app/components/App/Profile/ManageAccountForm";
-import { FetchLevel } from "@app/types/main";
-import { ManageAccountRules } from "@app/validator-rules";
+import { IFormValues, ManageAccountForm } from "../../../components/App/Profile/ManageAccountForm";
+import { FetchLevel } from "../../../types/main";
+import { ManageAccountRules } from "../../../validator-rules";
 
 interface IFormProps {
   onSubmit: (v: IFormValues) => void;

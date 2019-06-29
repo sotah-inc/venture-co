@@ -1,9 +1,9 @@
 import { withFormik, WithFormikConfig } from "formik";
 import * as Yup from "yup";
 
-import { IFormValues, PostForm } from "@app/components/App/Content/PostForm";
-import { FetchLevel } from "@app/types/main";
-import { PostRules } from "@app/validator-rules";
+import { IFormValues, PostForm } from "../../../components/App/Content/PostForm";
+import { FetchLevel } from "../../../types/main";
+import { PostRules } from "../../../validator-rules";
 
 interface IFormProps {
   onSubmit: (v: IFormValues) => void;

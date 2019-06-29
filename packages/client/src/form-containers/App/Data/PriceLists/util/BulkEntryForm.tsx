@@ -1,9 +1,12 @@
 import { withFormik, WithFormikConfig } from "formik";
 import * as Yup from "yup";
 
-import { IItem, ItemId } from "@app/api-types/item";
-import { BulkEntryForm, IFormValues } from "@app/components/App/Data/PriceLists/util/BulkEntryForm";
-import { PriceListRules } from "@app/validator-rules";
+import { IItem, ItemId } from "../../../../../api-types/item";
+import {
+  BulkEntryForm,
+  IFormValues,
+} from "../../../../../components/App/Data/PriceLists/util/BulkEntryForm";
+import { PriceListRules } from "../../../../../validator-rules";
 
 interface IFormProps {
   onComplete: () => void;

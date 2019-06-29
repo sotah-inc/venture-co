@@ -2,8 +2,8 @@ import { IconName } from "@blueprintjs/icons";
 import { withFormik, WithFormikConfig } from "formik";
 import * as Yup from "yup";
 
-import { IFormValues, ListForm } from "@app/components/App/Data/PriceLists/util/ListForm";
-import { PriceListRules } from "@app/validator-rules";
+import { IFormValues, ListForm } from "../../../../../components/App/Data/PriceLists/util/ListForm";
+import { PriceListRules } from "../../../../../validator-rules";
 
 interface IFormProps {
   defaultName?: string;

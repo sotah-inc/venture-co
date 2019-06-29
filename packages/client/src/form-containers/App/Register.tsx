@@ -1,10 +1,10 @@
 import { withFormik, WithFormikConfig } from "formik";
 import * as Yup from "yup";
 
-import { registerUser } from "@app/api/user";
-import { IFormValues, Register } from "@app/components/App/Register";
-import { IProfile } from "@app/types/global";
-import { UserRules } from "@app/validator-rules";
+import { registerUser } from "../../api/user";
+import { IFormValues, Register } from "../../components/App/Register";
+import { IProfile } from "../../types/global";
+import { UserRules } from "../../validator-rules";
 
 interface IFormProps {
   onUserRegister: (payload: IProfile) => void;
