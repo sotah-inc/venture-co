@@ -2,16 +2,16 @@ import * as React from "react";
 
 import { H2, H4 } from "@blueprintjs/core";
 
-import { IPricelistJson } from "../../../../../api-types/entities";
-import { IItemsMap } from "../../../../../api-types/item";
-import { IRealm, IRegion } from "../../../../../api-types/region";
+import { IPricelistJson } from "../../../../../../api-types/entities";
+import { IItemsMap } from "../../../../../../api-types/item";
+import { IRealm, IRegion } from "../../../../../../api-types/region";
 // tslint:disable-next-line:max-line-length
-import { CurrentPricesTableContainer } from "../../../../../containers/App/Data/PriceLists/PricelistTree/PricelistPanel/PricelistTable/CurrentPricesTable";
+import { CurrentPricesTableContainer } from "../../../../../../containers/App/Data/PriceLists/PricelistTree/PricelistPanel/PricelistTable/CurrentPricesTable";
 // tslint:disable-next-line:max-line-length
-import { CurrentSellersTableContainer } from "../../../../../containers/App/Data/PriceLists/PricelistTree/PricelistPanel/PricelistTable/CurrentSellersTable";
+import { CurrentSellersTableContainer } from "../../../../../../containers/App/Data/PriceLists/PricelistTree/PricelistPanel/PricelistTable/CurrentSellersTable";
 // tslint:disable-next-line:max-line-length
-import { PricelistHistoryGraphContainer } from "../../../../../containers/util/PricelistHistoryGraph";
-import { PricelistIconContainer } from "../../../../../containers/util/PricelistIcon";
+import { PricelistHistoryGraphContainer } from "../../../../../../containers/util/PricelistHistoryGraph";
+import { PricelistIconContainer } from "../../../../../../containers/util/PricelistIcon";
 
 export interface IStateProps {
   items: IItemsMap;

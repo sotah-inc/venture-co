@@ -11,14 +11,17 @@ import {
   Spinner,
 } from "@blueprintjs/core";
 
-import { OwnerName } from "../../../../../../api-types/auction";
-import { IQueryOwnerItem, IQueryOwnerItemsMap } from "../../../../../../api-types/contracts/data";
-import { IPricelistJson } from "../../../../../../api-types/entities";
-import { IRealm, IRegion } from "../../../../../../api-types/region";
-import { IQueryOwnersByItemsOptions } from "../../../../../../api/data";
-import { Currency, Pagination } from "../../../../../../components/util";
-import { FetchLevel } from "../../../../../../types/main";
-import { didRealmChange, didRegionChange } from "../../../../../../util";
+import { OwnerName } from "../../../../../../../api-types/auction";
+import {
+  IQueryOwnerItem,
+  IQueryOwnerItemsMap,
+} from "../../../../../../../api-types/contracts/data";
+import { IPricelistJson } from "../../../../../../../api-types/entities";
+import { IRealm, IRegion } from "../../../../../../../api-types/region";
+import { IQueryOwnersByItemsOptions } from "../../../../../../../api/data";
+import { FetchLevel } from "../../../../../../../types/main";
+import { didRealmChange, didRegionChange } from "../../../../../../../util";
+import { Currency, Pagination } from "../../../../../../util";
 
 export interface IStateProps {
   itemsOwnershipMap: IQueryOwnerItemsMap;

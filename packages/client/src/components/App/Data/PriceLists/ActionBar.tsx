@@ -14,14 +14,14 @@ import {
 } from "@blueprintjs/core";
 import { RouteComponentProps } from "react-router";
 
-import { IPricelistJson, UserLevel } from "../../../../../api-types/entities";
-import { IExpansion } from "../../../../../api-types/expansion";
-import { IProfession } from "../../../../../api-types/profession";
-import { IRealm, IRegion } from "../../../../../api-types/region";
-import { RealmToggleContainer } from "../../../../../containers/util/RealmToggle";
-import { RegionToggleContainer } from "../../../../../containers/util/RegionToggle";
-import { IProfile } from "../../../../../types/global";
-import { AuthLevel } from "../../../../../types/main";
+import { IPricelistJson, UserLevel } from "../../../../api-types/entities";
+import { IExpansion } from "../../../../api-types/expansion";
+import { IProfession } from "../../../../api-types/profession";
+import { IRealm, IRegion } from "../../../../api-types/region";
+import { RealmToggleContainer } from "../../../../containers/util/RealmToggle";
+import { RegionToggleContainer } from "../../../../containers/util/RegionToggle";
+import { IProfile } from "../../../../types/global";
+import { AuthLevel } from "../../../../types/main";
 
 export interface IStateProps {
   currentRegion: IRegion | null;

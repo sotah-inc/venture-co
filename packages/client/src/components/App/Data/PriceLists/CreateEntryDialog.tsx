@@ -2,12 +2,13 @@ import * as React from "react";
 
 import { Dialog } from "@blueprintjs/core";
 
-import { IPricelistEntryJson, IPricelistJson } from "../../../../../api-types/entities";
-import { IItem, ItemId } from "../../../../../api-types/item";
-import { CreateEntryFormFormContainer } from "../../../../../form-containers/App/Data/PriceLists/util/CreateEntryForm";
-import { IProfile } from "../../../../../types/global";
-import { FetchLevel } from "../../../../../types/main";
-import { IUpdatePricelistRequestOptions } from "../../../../../types/price-lists";
+import { IPricelistEntryJson, IPricelistJson } from "../../../../api-types/entities";
+import { IItem, ItemId } from "../../../../api-types/item";
+// tslint:disable-next-line:max-line-length
+import { CreateEntryFormFormContainer } from "../../../../form-containers/App/Data/PriceLists/util/CreateEntryForm";
+import { IProfile } from "../../../../types/global";
+import { FetchLevel } from "../../../../types/main";
+import { IUpdatePricelistRequestOptions } from "../../../../types/price-lists";
 
 export interface IStateProps {
   isAddEntryDialogOpen: boolean;

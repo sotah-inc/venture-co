@@ -2,15 +2,15 @@ import * as React from "react";
 
 import { Classes, H4, HTMLTable, Intent, Spinner } from "@blueprintjs/core";
 
-import { IPricelistEntryJson, IPricelistJson } from "../../../../../../api-types/entities";
-import { IItemsMap, ItemId } from "../../../../../../api-types/item";
-import { IPriceListMap } from "../../../../../../api-types/pricelist";
-import { IRealm, IRegion } from "../../../../../../api-types/region";
-import { IGetPriceListOptions } from "../../../../../../api/data";
-import { ItemPopoverContainer } from "../../../../../../containers/util/ItemPopover";
-import { FetchLevel } from "../../../../../../types/main";
-import { didRealmChange, didRegionChange, qualityToColorClass } from "../../../../../../util";
-import { Currency } from "../../../../../util";
+import { IPricelistEntryJson, IPricelistJson } from "../../../../../../../api-types/entities";
+import { IItemsMap, ItemId } from "../../../../../../../api-types/item";
+import { IPriceListMap } from "../../../../../../../api-types/pricelist";
+import { IRealm, IRegion } from "../../../../../../../api-types/region";
+import { IGetPriceListOptions } from "../../../../../../../api/data";
+import { ItemPopoverContainer } from "../../../../../../../containers/util/ItemPopover";
+import { FetchLevel } from "../../../../../../../types/main";
+import { didRealmChange, didRegionChange, qualityToColorClass } from "../../../../../../../util";
+import { Currency } from "../../../../../../util";
 
 export interface IStateProps {
   items: IItemsMap;

@@ -19,10 +19,10 @@ import {
   Suggest,
 } from "@blueprintjs/select";
 
-import { IOwner, OwnerName } from "../../../api-types/auction";
-import { IRealm, IRegion } from "../../../api-types/region";
-import { IGetOwnersOptions } from "../../../api/data";
-import { FetchLevel } from "../../../types/main";
+import { IOwner, OwnerName } from "../../../../api-types/auction";
+import { IRealm, IRegion } from "../../../../api-types/region";
+import { IGetOwnersOptions } from "../../../../api/data";
+import { FetchLevel } from "../../../../types/main";
 
 const OwnerFilterSuggest = Suggest.ofType<IOwner>();
 

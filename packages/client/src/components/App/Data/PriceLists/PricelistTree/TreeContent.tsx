@@ -4,9 +4,9 @@ import { Classes, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
 
 import { IPricelistJson } from "../../../../../api-types/entities";
 import { IRealm, IRegion } from "../../../../../api-types/region";
-import { LastModified } from "../../../../../components/util";
 import { PricelistPanelContainer } from "../../../../../containers/App/Data/PriceLists/PricelistTree/PricelistPanel";
 import { RealmSummaryPanelContainer } from "../../../../../containers/App/Data/PriceLists/PricelistTree/TreeContent/RealmSummaryPanel";
+import { LastModified } from "../../../../util";
 
 export interface IStateProps {
   currentRegion: IRegion | null;
