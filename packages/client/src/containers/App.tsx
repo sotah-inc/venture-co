@@ -7,9 +7,9 @@ import {
   FetchGetPing,
   FetchGetUserPreferences,
   FetchUserReload,
-} from "@app/actions/main";
-import { App, IDispatchProps, IOwnProps, IStateProps } from "@app/components/App";
-import { IStoreState } from "@app/types";
+} from "../actions/main";
+import { App, IDispatchProps, IOwnProps, IStateProps } from "../components/App";
+import { IStoreState } from "../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const {
