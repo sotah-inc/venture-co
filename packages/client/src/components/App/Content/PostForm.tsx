@@ -20,7 +20,7 @@ import { FormikProps } from "formik";
 import ReactMarkdown from "react-markdown";
 import speakingurl from "speakingurl";
 
-import { FetchLevel } from "@app/types/main";
+import { FetchLevel } from "../../../types/main";
 
 export interface IOwnProps {
   onSubmit: (v: IFormValues) => void;

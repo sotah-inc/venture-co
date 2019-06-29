@@ -3,20 +3,25 @@ import * as React from "react";
 import { Classes, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
 import { RouteComponentProps } from "react-router";
 
-import { IPricelistJson } from "@app/api-types/entities";
-import { IExpansion } from "@app/api-types/expansion";
-import { IProfession } from "@app/api-types/profession";
-import { IRealm, IRegion } from "@app/api-types/region";
-import { CreateEntryDialogContainer } from "@app/containers/App/Data/PriceLists/CreateEntryDialog";
-import { ActionBarRouteContainer } from "@app/route-containers/App/Data/PriceLists/ActionBar";
-import { CreateListDialogRouteContainer } from "@app/route-containers/App/Data/PriceLists/CreateListDialog";
-import { DeleteListDialogRouteContainer } from "@app/route-containers/App/Data/PriceLists/DeleteListDialog";
-import { EditListDialogRouteContainer } from "@app/route-containers/App/Data/PriceLists/EditListDialog";
-import { PricelistTreeRouteContainer } from "@app/route-containers/App/Data/PriceLists/PricelistTree";
-import { IRealms, IRegions } from "@app/types/global";
-import { AuthLevel, FetchLevel } from "@app/types/main";
-import { IExpansionProfessionPricelistMap } from "@app/types/price-lists";
-import { setTitle } from "@app/util";
+import { IPricelistJson } from "../../../api-types/entities";
+import { IExpansion } from "../../../api-types/expansion";
+import { IProfession } from "../../../api-types/profession";
+import { IRealm, IRegion } from "../../../api-types/region";
+// tslint:disable-next-line:max-line-length
+import { CreateEntryDialogContainer } from "../../../containers/App/Data/PriceLists/CreateEntryDialog";
+import { ActionBarRouteContainer } from "../../../route-containers/App/Data/PriceLists/ActionBar";
+// tslint:disable-next-line:max-line-length
+import { CreateListDialogRouteContainer } from "../../../route-containers/App/Data/PriceLists/CreateListDialog";
+// tslint:disable-next-line:max-line-length
+import { DeleteListDialogRouteContainer } from "../../../route-containers/App/Data/PriceLists/DeleteListDialog";
+// tslint:disable-next-line:max-line-length
+import { EditListDialogRouteContainer } from "../../../route-containers/App/Data/PriceLists/EditListDialog";
+// tslint:disable-next-line:max-line-length
+import { PricelistTreeRouteContainer } from "../../../route-containers/App/Data/PriceLists/PricelistTree";
+import { IRealms, IRegions } from "../../../types/global";
+import { AuthLevel, FetchLevel } from "../../../types/main";
+import { IExpansionProfessionPricelistMap } from "../../../types/price-lists";
+import { setTitle } from "../../../util";
 
 import "./PriceLists.scss";
 

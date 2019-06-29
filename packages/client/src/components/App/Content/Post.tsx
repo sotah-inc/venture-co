@@ -18,12 +18,12 @@ import {
 import moment from "moment";
 import { RouteComponentProps } from "react-router-dom";
 
-import { IDeletePostOptions } from "@app/actions/posts";
-import { IPostJson, IUserJson, UserLevel } from "@app/api-types/entities";
-import { MarkdownRenderer } from "@app/components/util";
-import { DeletePostDialogRouteContainer } from "@app/route-containers/App/Content/DeletePostDialog";
-import { FetchLevel } from "@app/types/main";
-import { setTitle } from "@app/util";
+import { IDeletePostOptions } from "../../../actions/posts";
+import { IPostJson, IUserJson, UserLevel } from "../../../api-types/entities";
+import { DeletePostDialogRouteContainer } from "../../../route-containers/App/Content/DeletePostDialog";
+import { FetchLevel } from "../../../types/main";
+import { setTitle } from "../../../util";
+import { MarkdownRenderer } from "../../util";
 
 export interface IStateProps {
   currentPost: IPostJson | null;

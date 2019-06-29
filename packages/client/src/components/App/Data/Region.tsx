@@ -3,9 +3,9 @@ import * as React from "react";
 import { Classes, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
 import { Redirect, RouteComponentProps } from "react-router-dom";
 
-import { IRealm, IRegion } from "@app/api-types/region";
-import { IRegions } from "@app/types/global";
-import { AuthLevel, FetchLevel } from "@app/types/main";
+import { IRealm, IRegion } from "../../../api-types/region";
+import { IRegions } from "../../../types/global";
+import { AuthLevel, FetchLevel } from "../../../types/main";
 
 export interface IStateProps {
   currentRegion: IRegion | null;

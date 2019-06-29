@@ -3,12 +3,12 @@ import * as React from "react";
 import { Button, Callout, Dialog, Intent } from "@blueprintjs/core";
 import { RouteComponentProps } from "react-router";
 
-import { IDeletePostOptions } from "@app/actions/posts";
-import { IPostJson } from "@app/api-types/entities";
-import { DialogActions, DialogBody } from "@app/components/util";
-import { IProfile } from "@app/types/global";
-import { FetchLevel } from "@app/types/main";
-import { AppToaster } from "@app/util/toasters";
+import { IDeletePostOptions } from "../../../actions/posts";
+import { IPostJson } from "../../../api-types/entities";
+import { IProfile } from "../../../types/global";
+import { FetchLevel } from "../../../types/main";
+import { AppToaster } from "../../../util/toasters";
+import { DialogActions, DialogBody } from "../../util";
 
 export interface IStateProps {
   profile: IProfile | null;

@@ -13,7 +13,7 @@ import {
 } from "@blueprintjs/core";
 import { FormikProps } from "formik";
 
-import { FetchLevel } from "@app/types/main";
+import { FetchLevel } from "../../../types/main";
 
 export interface IOwnProps {
   onSubmit: (v: IFormValues) => void;

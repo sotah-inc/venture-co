@@ -3,8 +3,8 @@ import * as React from "react";
 import { ButtonGroup } from "@blueprintjs/core";
 import { RouteComponentProps } from "react-router-dom";
 
-import { IUserJson, UserLevel } from "@app/api-types/entities";
-import { LinkButtonRouteContainer } from "@app/route-containers/util/LinkButton";
+import { IUserJson, UserLevel } from "../../../api-types/entities";
+import { LinkButtonRouteContainer } from "../../../route-containers/util/LinkButton";
 
 export interface IStateProps {
   user: IUserJson | null;

@@ -11,14 +11,15 @@ import {
 } from "@blueprintjs/core";
 import { RouteComponentProps } from "react-router-dom";
 
-import { IUpdateProfileRequest } from "@app/api-types/contracts/user/profile";
-import { IUserJson } from "@app/api-types/entities";
-import { IFormValues } from "@app/components/App/Profile/ManageAccountForm";
-import { ManageAccountFormFormContainer } from "@app/form-containers/App/Profile/ManageAccountForm";
-import { IErrors } from "@app/types/global";
-import { FetchLevel } from "@app/types/main";
-import { setTitle } from "@app/util";
-import { AppToaster } from "@app/util/toasters";
+import { IUpdateProfileRequest } from "../../../api-types/contracts/user/profile";
+import { IUserJson } from "../../../api-types/entities";
+// tslint:disable-next-line:max-line-length
+import { ManageAccountFormFormContainer } from "../../../form-containers/App/Profile/ManageAccountForm";
+import { IErrors } from "../../../types/global";
+import { FetchLevel } from "../../../types/main";
+import { setTitle } from "../../../util";
+import { AppToaster } from "../../../util/toasters";
+import { IFormValues } from "./ManageAccountForm";
 
 export interface IStateProps {
   user: IUserJson | null;

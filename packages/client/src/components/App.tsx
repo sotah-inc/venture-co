@@ -3,13 +3,13 @@ import * as React from "react";
 import { Classes, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
 import { RouteComponentProps } from "react-router-dom";
 
-import { IPreferenceJson } from "@app/api-types/entities";
-import { IRealm, IRegion } from "@app/api-types/region";
-import { TopbarRouteContainer } from "@app/route-containers/App/Topbar";
-import { ViewportRouteContainer } from "@app/route-containers/App/Viewport";
-import { IProfile } from "@app/types/global";
-import { AuthLevel, FetchLevel } from "@app/types/main";
-import { AppToaster } from "@app/util/toasters";
+import { IPreferenceJson } from "../api-types/entities";
+import { IRealm, IRegion } from "../api-types/region";
+import { TopbarRouteContainer } from "../route-containers/App/Topbar";
+import { ViewportRouteContainer } from "../route-containers/App/Viewport";
+import { IProfile } from "../types/global";
+import { AuthLevel, FetchLevel } from "../types/main";
+import { AppToaster } from "../util/toasters";
 
 import "./App.scss";
 

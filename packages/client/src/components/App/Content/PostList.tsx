@@ -4,10 +4,10 @@ import { Button, ButtonGroup, Card, Classes, H2, H5, Intent, Spinner } from "@bl
 import moment from "moment";
 import { RouteComponentProps } from "react-router-dom";
 
-import { IDeletePostOptions } from "@app/actions/posts";
-import { IPostJson, IUserJson, UserLevel } from "@app/api-types/entities";
-import { MarkdownRenderer } from "@app/components/util";
-import { FetchLevel } from "@app/types/main";
+import { IDeletePostOptions } from "../../../actions/posts";
+import { IPostJson, IUserJson, UserLevel } from "../../../api-types/entities";
+import { FetchLevel } from "../../../types/main";
+import { MarkdownRenderer } from "../../util";
 
 export interface IDispatchProps {
   refreshPosts: () => void;

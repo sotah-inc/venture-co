@@ -11,14 +11,14 @@ import {
 } from "@blueprintjs/core";
 import { RouteComponentProps } from "react-router-dom";
 
-import { ICreatePostRequest } from "@app/api-types/contracts/user/post-crud";
-import { IPostJson, UserLevel } from "@app/api-types/entities";
-import { IFormValues } from "@app/components/App/Content/PostForm";
-import { PostFormFormContainer } from "@app/form-containers/App/Content/PostForm";
-import { IProfile } from "@app/types/global";
-import { FetchLevel } from "@app/types/main";
-import { setTitle } from "@app/util";
-import { AppToaster } from "@app/util/toasters";
+import { ICreatePostRequest } from "../../../api-types/contracts/user/post-crud";
+import { IPostJson, UserLevel } from "../../../api-types/entities";
+import { PostFormFormContainer } from "../../../form-containers/App/Content/PostForm";
+import { IProfile } from "../../../types/global";
+import { FetchLevel } from "../../../types/main";
+import { setTitle } from "../../../util";
+import { AppToaster } from "../../../util/toasters";
+import { IFormValues } from "./PostForm";
 
 export interface IStateProps {
   profile: IProfile | null;
