@@ -1,11 +1,8 @@
 import * as HTTPStatus from "http-status";
 
-import { IValidationErrorResponse } from "@app/api-types/contracts";
-import {
-  IUpdateProfileRequest,
-  IUpdateProfileResponse,
-} from "@app/api-types/contracts/user/profile";
-import { IErrors } from "@app/types/global";
+import { IValidationErrorResponse } from "../api-types/contracts";
+import { IUpdateProfileRequest, IUpdateProfileResponse } from "../api-types/contracts/user/profile";
+import { IErrors } from "../types/global";
 
 import { apiEndpoint, gather } from "./index";
 

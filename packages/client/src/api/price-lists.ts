@@ -1,24 +1,24 @@
 import * as HTTPStatus from "http-status";
 
-import { IErrorResponse, IValidationErrorResponse } from "@app/api-types/contracts";
+import { IErrorResponse, IValidationErrorResponse } from "../api-types/contracts";
 import {
   IGetProfessionPricelistsResponse,
   IGetUnmetDemandRequest,
   IGetUnmetDemandResponse,
-} from "@app/api-types/contracts/data";
+} from "../api-types/contracts/data";
 import {
   ICreatePricelistRequest,
   ICreatePricelistResponse,
   IGetPricelistsResponse,
   IUpdatePricelistRequest,
   IUpdatePricelistResponse,
-} from "@app/api-types/contracts/user/pricelist-crud";
+} from "../api-types/contracts/user/pricelist-crud";
 import {
   ICreateProfessionPricelistRequest,
   ICreateProfessionPricelistResponse,
-} from "@app/api-types/contracts/user/profession-pricelists-crud";
-import { ProfessionName } from "@app/api-types/profession";
-import { RealmSlug, RegionName } from "@app/api-types/region";
+} from "../api-types/contracts/user/profession-pricelists-crud";
+import { ProfessionName } from "../api-types/profession";
+import { RealmSlug, RegionName } from "../api-types/region";
 import { apiEndpoint, gather } from "./index";
 
 export interface ICreatePricelistResult {

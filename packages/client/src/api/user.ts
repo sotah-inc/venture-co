@@ -1,20 +1,20 @@
 import * as HTTPStatus from "http-status";
 
-import { IErrorResponse, IValidationErrorResponse } from "@app/api-types/contracts";
+import { IErrorResponse, IValidationErrorResponse } from "../api-types/contracts";
 import {
   ICreateUserRequest,
   ICreateUserResponse,
   ILoginRequest,
   ILoginResponse,
-} from "@app/api-types/contracts/user";
+} from "../api-types/contracts/user";
 import {
   ICreatePreferencesRequest,
   ICreatePreferencesResponse,
   IGetPreferencesResponse,
   IUpdatePreferencesRequest,
   IUpdatePreferencesResponse,
-} from "@app/api-types/contracts/user/preferences";
-import { IPreferenceJson, IUserJson } from "@app/api-types/entities";
+} from "../api-types/contracts/user/preferences";
+import { IPreferenceJson, IUserJson } from "../api-types/entities";
 import { apiEndpoint, gather } from "./index";
 
 interface IRegisterUserResult {

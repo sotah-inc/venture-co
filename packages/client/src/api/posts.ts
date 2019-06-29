@@ -1,14 +1,14 @@
 import * as HTTPStatus from "http-status";
 
-import { IErrorResponse, IValidationErrorResponse } from "@app/api-types/contracts";
-import { IGetPostResponse } from "@app/api-types/contracts/data";
+import { IErrorResponse, IValidationErrorResponse } from "../api-types/contracts";
+import { IGetPostResponse } from "../api-types/contracts/data";
 import {
   ICreatePostRequest,
   ICreatePostResponse,
   IUpdatePostRequest,
   IUpdatePostResponse,
-} from "@app/api-types/contracts/user/post-crud";
-import { IPostJson } from "@app/api-types/entities";
+} from "../api-types/contracts/user/post-crud";
+import { IPostJson } from "../api-types/entities";
 import { apiEndpoint, gather } from "./index";
 
 export interface ICreatePostResult {

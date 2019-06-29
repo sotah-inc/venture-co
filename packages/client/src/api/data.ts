@@ -19,10 +19,10 @@ import {
   IQueryOwnerItemsRequest,
   IQueryOwnerItemsResponse,
   IStatusRealm,
-} from "@app/api-types/contracts/data";
-import { IPostJson } from "@app/api-types/entities";
-import { ItemId } from "@app/api-types/item";
-import { RealmSlug, RegionName } from "@app/api-types/region";
+} from "../api-types/contracts/data";
+import { IPostJson } from "../api-types/entities";
+import { ItemId } from "../api-types/item";
+import { RealmSlug, RegionName } from "../api-types/region";
 import { apiEndpoint, gather, gatherWithQuery } from "./index";
 
 export const getPing = async (): Promise<boolean> => {
