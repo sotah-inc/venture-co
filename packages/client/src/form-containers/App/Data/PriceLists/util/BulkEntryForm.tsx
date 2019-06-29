@@ -1,31 +1,20 @@
 import { withFormik, WithFormikConfig } from "formik";
 import * as Yup from "yup";
 
-import { IItem, ItemId } from "../../../../../api-types/item";
 import {
   BulkEntryForm,
   IFormValues,
+  IOwnProps,
 } from "../../../../../components/App/Data/PriceLists/util/BulkEntryForm";
 import { PriceListRules } from "../../../../../validator-rules";
 
-interface IFormProps {
-  onComplete: () => void;
-  onItemSelect?: (item: IItem) => void;
-
-  isSubmitDisabled?: boolean;
-  externalItemError?: string;
-  itemIdBlacklist?: ItemId[];
-  leftChildren?: React.ReactNode;
-  entriesTable: React.ReactNode;
-}
-
-const config: WithFormikConfig<IFormProps, IFormValues> = {
+const config: WithFormikConfig<IOwnProps, IFormValues> = {
   handleSubmit: async (_values, { setSubmitting, resetForm, props }) => {
     setSubmitting(false);
     resetForm();
     props.onComplete();
   },
-  mapPropsToValues: (_: IFormProps) => {
+  mapPropsToValues: (_: IOwnProps) => {
     return {
       item: null,
       quantity: 1,

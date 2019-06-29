@@ -8,8 +8,9 @@ import speakingurl from "speakingurl";
 import { DialogActions, DialogBody } from "../../../../util";
 
 export interface IOwnProps {
-  onComplete: (name: string, slug: string) => void;
   defaultName?: string;
+  defaultSlug?: string;
+  onComplete: (name: string, slug: string) => void;
   submitIcon: IconName;
   submitText: string;
   children: React.ReactChildren;

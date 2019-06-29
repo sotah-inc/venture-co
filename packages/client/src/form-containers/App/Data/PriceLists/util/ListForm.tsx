@@ -1,24 +1,19 @@
-import { IconName } from "@blueprintjs/icons";
 import { withFormik, WithFormikConfig } from "formik";
 import * as Yup from "yup";
 
-import { IFormValues, ListForm } from "../../../../../components/App/Data/PriceLists/util/ListForm";
+import {
+  IFormValues,
+  IOwnProps,
+  ListForm,
+} from "../../../../../components/App/Data/PriceLists/util/ListForm";
 import { PriceListRules } from "../../../../../validator-rules";
 
-interface IFormProps {
-  defaultName?: string;
-  defaultSlug?: string;
-  onComplete: (name: string, slug: string) => void;
-  submitIcon: IconName;
-  submitText: string;
-}
-
-const config: WithFormikConfig<IFormProps, IFormValues> = {
+const config: WithFormikConfig<IOwnProps, IFormValues> = {
   handleSubmit: async (values, { setSubmitting, props }) => {
     setSubmitting(false);
     props.onComplete(values.name, values.slug);
   },
-  mapPropsToValues: (props: IFormProps) => {
+  mapPropsToValues: (props: IOwnProps) => {
     return {
       name: props.defaultName ? props.defaultName : "",
       slug: props.defaultSlug ? props.defaultSlug : "",
