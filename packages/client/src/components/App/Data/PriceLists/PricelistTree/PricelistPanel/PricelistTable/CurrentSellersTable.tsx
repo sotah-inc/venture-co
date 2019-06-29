@@ -47,7 +47,7 @@ type State = Readonly<{
 
 const resultsPerPage = 5;
 
-export class CurrentSellersTable extends React.Component<Props & State> {
+export class CurrentSellersTable extends React.Component<Props, State> {
   public state: State = { currentPage: 0 };
 
   public componentDidMount() {
