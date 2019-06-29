@@ -4,7 +4,9 @@ import { Classes, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
 
 import { IPricelistJson } from "../../../../../api-types/entities";
 import { IRealm, IRegion } from "../../../../../api-types/region";
+// tslint:disable-next-line:max-line-length
 import { PricelistPanelContainer } from "../../../../../containers/App/Data/PriceLists/PricelistTree/PricelistPanel";
+// tslint:disable-next-line:max-line-length
 import { RealmSummaryPanelContainer } from "../../../../../containers/App/Data/PriceLists/PricelistTree/TreeContent/RealmSummaryPanel";
 import { LastModified } from "../../../../util";
 
@@ -47,8 +49,6 @@ export class TreeContent extends React.Component<Props> {
     if (currentRealm === null) {
       return;
     }
-
-    debugger;
 
     return (
       <LastModified

@@ -42,6 +42,7 @@ export class Prompts extends React.Component<Props> {
               icon={"envelope"}
               intent={Intent.PRIMARY}
               onClick={() => {
+                // tslint:disable-next-line:no-console
                 console.log("wew lad");
               }}
               text="Verify with Email"

@@ -7,6 +7,7 @@ import { IPricelistJson } from "../../../../api-types/entities";
 import { IExpansion } from "../../../../api-types/expansion";
 import { IProfession, ProfessionName } from "../../../../api-types/profession";
 import { IRealm, IRegion } from "../../../../api-types/region";
+// tslint:disable-next-line:max-line-length
 import { TreeContentContainer } from "../../../../containers/App/Data/PriceLists/PricelistTree/TreeContent";
 import { PricelistIconContainer } from "../../../../containers/util/PricelistIcon";
 import { IProfile } from "../../../../types/global";
