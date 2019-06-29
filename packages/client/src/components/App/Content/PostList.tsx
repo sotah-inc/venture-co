@@ -128,7 +128,7 @@ export class PostList extends React.Component<Props> {
         <Button
           icon="calendar"
           intent={Intent.PRIMARY}
-          onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+          onClick={(e: React.MouseEvent<HTMLElement>) => {
             e.stopPropagation();
 
             this.browseToPost(post);
@@ -143,7 +143,7 @@ export class PostList extends React.Component<Props> {
         <Button
           icon="calendar"
           intent={Intent.PRIMARY}
-          onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+          onClick={(e: React.MouseEvent<HTMLElement>) => {
             e.stopPropagation();
 
             this.browseToPost(post);
@@ -152,7 +152,7 @@ export class PostList extends React.Component<Props> {
         />
         <Button
           icon="edit"
-          onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+          onClick={(e: React.MouseEvent<HTMLElement>) => {
             e.stopPropagation();
 
             history.push(`/content/news/${post.slug}/edit`);
@@ -160,7 +160,7 @@ export class PostList extends React.Component<Props> {
         />
         <Button
           icon="delete"
-          onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+          onClick={(e: React.MouseEvent<HTMLElement>) => {
             e.stopPropagation();
 
             changeIsDeletePostDialogOpen({ isOpen: true, post });
@@ -205,7 +205,7 @@ export class PostList extends React.Component<Props> {
   }
 
   private renderSkeleton() {
-    const numbers: number[] = Array.apply(null, Array(2)).map((_: null, i: number) => i);
+    const numbers: number[] = Array.apply(null, Array(2)).map((_: unknown, i: number) => i);
 
     return numbers.map((_, i) => this.renderSkeletonItem(i));
   }
