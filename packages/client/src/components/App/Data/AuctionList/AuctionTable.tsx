@@ -165,7 +165,7 @@ export class AuctionTable extends React.Component<Props> {
       return null;
     }
 
-    const expansion: IExpansion | null = expansions.reduce((prev, v) => {
+    const expansion = expansions.reduce<IExpansion | null>((prev, v) => {
       if (prev !== null) {
         return prev;
       }
@@ -180,7 +180,7 @@ export class AuctionTable extends React.Component<Props> {
       return null;
     }
 
-    const profession: IProfession | null = professions.reduce((prev, v) => {
+    const profession = professions.reduce<IProfession | null>((prev, v) => {
       if (prev !== null) {
         return prev;
       }

@@ -44,6 +44,10 @@ interface ITopOpenMap {
   [key: string]: boolean;
 }
 
+interface INodeClickMap {
+  [key: string]: (v: string) => void;
+}
+
 interface IState {
   topOpenMap: ITopOpenMap;
 }
@@ -331,7 +335,7 @@ export class PricelistTree extends React.Component<Props, IState> {
     }
 
     // checking user pricelists first
-    const list = pricelists.reduce((result, v) => {
+    const list = pricelists.reduce<IPricelistJson | null>((result, v) => {
       if (result !== null) {
         return result;
       }
@@ -369,7 +373,7 @@ export class PricelistTree extends React.Component<Props, IState> {
     }
 
     const expansionProfessionPricelists = professionPricelists[selectedExpansion.name];
-    const foundProfessionPricelist: IPricelistJson | null = expansionProfessionPricelists.reduce(
+    const foundProfessionPricelist = expansionProfessionPricelists.reduce<IPricelistJson | null>(
       (previousValue, currentValue) => {
         if (previousValue !== null) {
           return previousValue;
@@ -410,7 +414,7 @@ export class PricelistTree extends React.Component<Props, IState> {
       return;
     }
 
-    const profession = professions.reduce((result, v) => {
+    const profession = professions.reduce<IProfession | null>((result, v) => {
       if (result !== null) {
         return result;
       }
@@ -454,7 +458,7 @@ export class PricelistTree extends React.Component<Props, IState> {
   private onExpansionClick(id: string) {
     const { expansions, currentRegion, currentRealm, history, selectedProfession } = this.props;
 
-    const expansion = expansions.reduce((result, v) => {
+    const expansion = expansions.reduce<IExpansion | null>((result, v) => {
       if (result !== null) {
         return result;
       }
@@ -496,11 +500,11 @@ export class PricelistTree extends React.Component<Props, IState> {
       node.id.toString().substr(0, separatorIndex),
       node.id.toString().substr(separatorIndex + 1),
     ];
-    const nodeClickMap = {
+    const nodeClickMap: INodeClickMap = {
       expansion: (v: string) => this.onExpansionClick(v),
       pricelist: (v: string) => this.onPricelistNodeClick(v),
       profession: (v: string) => this.onProfessionNodeClick(v),
-      top: (v: TopOpenKey) => this.onTopNodeClick(v),
+      top: (v: string) => this.onTopNodeClick(v as TopOpenKey),
     };
 
     if (!(kind in nodeClickMap)) {
