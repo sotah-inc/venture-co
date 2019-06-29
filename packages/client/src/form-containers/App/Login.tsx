@@ -2,18 +2,10 @@ import { withFormik, WithFormikConfig } from "formik";
 import * as Yup from "yup";
 
 import { loginUser } from "../../api/user";
-import { IFormValues, Login } from "../../components/App/Login";
-import { IProfile } from "../../types/global";
+import { IDispatchProps, IFormValues, IStateProps, Login } from "../../components/App/Login";
 import { UserRules } from "../../validator-rules";
 
-interface IFormProps {
-  isLoggedIn: boolean;
-  isLoginDialogOpen: boolean;
-  onUserLogin: (payload: IProfile) => void;
-  changeIsLoginDialogOpen: (isLoginDialogOpen: boolean) => void;
-}
-
-const config: WithFormikConfig<IFormProps, IFormValues> = {
+const config: WithFormikConfig<IDispatchProps & IStateProps, IFormValues> = {
   handleSubmit: async (values, { setSubmitting, setErrors, props }) => {
     const { data, errors } = await loginUser(values.email, values.password);
     if (errors !== null) {
@@ -26,7 +18,7 @@ const config: WithFormikConfig<IFormProps, IFormValues> = {
     setSubmitting(false);
     props.onUserLogin(data!);
   },
-  mapPropsToValues: (_: IFormProps) => {
+  mapPropsToValues: (_: IDispatchProps & IStateProps) => {
     return {
       email: "",
       password: "",

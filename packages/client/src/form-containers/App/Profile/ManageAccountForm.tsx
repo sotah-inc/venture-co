@@ -1,29 +1,20 @@
 import { withFormik, WithFormikConfig } from "formik";
 import * as Yup from "yup";
 
-import { IFormValues, ManageAccountForm } from "../../../components/App/Profile/ManageAccountForm";
-import { FetchLevel } from "../../../types/main";
+import {
+  IFormValues,
+  IOwnProps,
+  ManageAccountForm,
+} from "../../../components/App/Profile/ManageAccountForm";
 import { ManageAccountRules } from "../../../validator-rules";
 
-interface IFormProps {
-  onSubmit: (v: IFormValues) => void;
-  onComplete: () => void;
-  onFatalError: (err: string) => void;
-
-  updateProfileLevel: FetchLevel;
-  updateProfileErrors: {
-    [key: string]: string;
-  };
-  defaultFormValues?: IFormValues;
-}
-
-const config: WithFormikConfig<IFormProps, IFormValues> = {
+const config: WithFormikConfig<IOwnProps, IFormValues> = {
   handleSubmit: async (values, { props }) => {
     const { onSubmit } = props;
 
     onSubmit(values);
   },
-  mapPropsToValues: ({ defaultFormValues }: IFormProps) => {
+  mapPropsToValues: ({ defaultFormValues }: IOwnProps) => {
     if (typeof defaultFormValues !== "undefined") {
       return defaultFormValues;
     }

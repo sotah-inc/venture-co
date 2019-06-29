@@ -1,29 +1,16 @@
 import { withFormik, WithFormikConfig } from "formik";
 import * as Yup from "yup";
 
-import { IFormValues, PostForm } from "../../../components/App/Content/PostForm";
-import { FetchLevel } from "../../../types/main";
+import { IFormValues, IOwnProps, PostForm } from "../../../components/App/Content/PostForm";
 import { PostRules } from "../../../validator-rules";
 
-interface IFormProps {
-  onSubmit: (v: IFormValues) => void;
-  onComplete: () => void;
-  onFatalError: (err: string) => void;
-
-  mutatePostErrors: {
-    [key: string]: string;
-  };
-  mutatePostLevel: FetchLevel;
-  defaultFormValues?: IFormValues;
-}
-
-const config: WithFormikConfig<IFormProps, IFormValues> = {
+const config: WithFormikConfig<IOwnProps, IFormValues> = {
   handleSubmit: async (values, { props }) => {
     const { onSubmit } = props;
 
     onSubmit(values);
   },
-  mapPropsToValues: ({ defaultFormValues }: IFormProps) => {
+  mapPropsToValues: ({ defaultFormValues }: IOwnProps) => {
     if (typeof defaultFormValues !== "undefined") {
       return defaultFormValues;
     }
