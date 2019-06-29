@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 
-import { IStateProps, NewsButton } from "@app/components/App/Topbar/NewsButton";
-import { IStoreState } from "@app/types";
+import { IStateProps, NewsButton } from "../../../components/App/Topbar/NewsButton";
+import { IStoreState } from "../../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const { profile } = state.Main;

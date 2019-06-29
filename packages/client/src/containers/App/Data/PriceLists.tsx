@@ -5,15 +5,15 @@ import {
   FetchGetRealms,
   RealmChange,
   RegionChange,
-} from "@app/actions/main";
+} from "../../../actions/main";
 import {
   ChangeSelectedExpansion,
   ChangeSelectedList,
   ChangeSelectedProfession,
   ResetProfessionsSelections,
-} from "@app/actions/price-lists";
-import { IDispatchProps, IStateProps, PriceLists } from "@app/components/App/Data/PriceLists";
-import { IStoreState } from "@app/types";
+} from "../../../actions/price-lists";
+import { IDispatchProps, IStateProps, PriceLists } from "../../../components/App/Data/PriceLists";
+import { IStoreState } from "../../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const {

@@ -1,13 +1,13 @@
 import { connect } from "react-redux";
 
-import { ChangeIsAddEntryDialogOpen } from "@app/actions/price-lists";
+import { ChangeIsAddEntryDialogOpen } from "../../../../../actions/price-lists";
 import {
   IDispatchProps,
   IOwnProps,
   IStateProps,
   PricelistPanel,
-} from "@app/components/App/Data/PriceLists/PricelistTree/PricelistPanel";
-import { IStoreState } from "@app/types";
+} from "../../../../../components/App/Data/PriceLists/PricelistTree/PricelistPanel";
+import { IStoreState } from "../../../../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const { currentRegion, currentRealm } = state.Main;

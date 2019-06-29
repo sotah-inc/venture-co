@@ -1,8 +1,8 @@
 import { connect } from "react-redux";
 
-import { RegionChange } from "@app/actions/main";
-import { IDispatchProps, IStateProps, RegionToggle } from "@app/components/util/RegionToggle";
-import { IStoreState } from "@app/types";
+import { RegionChange } from "../../actions/main";
+import { IDispatchProps, IStateProps, RegionToggle } from "../../components/util/RegionToggle";
+import { IStoreState } from "../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const { regions, currentRegion } = state.Main;

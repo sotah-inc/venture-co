@@ -1,8 +1,8 @@
 import { connect } from "react-redux";
 
-import { FetchUserPreferencesCreate, FetchUserPreferencesUpdate } from "@app/actions/main";
-import { IDispatchProps, IStateProps, RealmToggle } from "@app/components/util/RealmToggle";
-import { IStoreState } from "@app/types";
+import { FetchUserPreferencesCreate, FetchUserPreferencesUpdate } from "../../actions/main";
+import { IDispatchProps, IStateProps, RealmToggle } from "../../components/util/RealmToggle";
+import { IStoreState } from "../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const {

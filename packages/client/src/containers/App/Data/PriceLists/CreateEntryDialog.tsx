@@ -1,12 +1,12 @@
 import { connect } from "react-redux";
 
-import { ChangeIsAddEntryDialogOpen, FetchUpdatePricelist } from "@app/actions/price-lists";
+import { ChangeIsAddEntryDialogOpen, FetchUpdatePricelist } from "../../../../actions/price-lists";
 import {
   CreateEntryDialog,
   IDispatchProps,
   IStateProps,
-} from "@app/components/App/Data/PriceLists/CreateEntryDialog";
-import { IStoreState } from "@app/types";
+} from "../../../../components/App/Data/PriceLists/CreateEntryDialog";
+import { IStoreState } from "../../../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const { profile } = state.Main;

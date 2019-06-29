@@ -5,13 +5,13 @@ import {
   ChangeIsAddListDialogOpen,
   FetchCreatePricelist,
   FetchCreateProfessionPricelist,
-} from "@app/actions/price-lists";
+} from "../../../../actions/price-lists";
 import {
   CreateListDialog,
   IDispatchProps,
   IStateProps,
-} from "@app/components/App/Data/PriceLists/CreateListDialog";
-import { IStoreState } from "@app/types";
+} from "../../../../components/App/Data/PriceLists/CreateListDialog";
+import { IStoreState } from "../../../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const { profile, currentRegion, currentRealm } = state.Main;

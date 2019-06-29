@@ -1,8 +1,8 @@
 import { connect } from "react-redux";
 
-import { ChangeIsRegisterDialogOpen } from "@app/actions/main";
-import { IDispatchProps, IOwnProps, IStateProps, News } from "@app/components/App/Content/News";
-import { IStoreState } from "@app/types";
+import { ChangeIsRegisterDialogOpen } from "../../../actions/main";
+import { IDispatchProps, IOwnProps, IStateProps, News } from "../../../components/App/Content/News";
+import { IStoreState } from "../../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const { currentRegion, authLevel } = state.Main;

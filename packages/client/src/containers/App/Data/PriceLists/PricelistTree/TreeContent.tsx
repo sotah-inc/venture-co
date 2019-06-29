@@ -3,8 +3,8 @@ import { connect } from "react-redux";
 import {
   IStateProps,
   TreeContent,
-} from "@app/components/App/Data/PriceLists/PricelistTree/TreeContent";
-import { IStoreState } from "@app/types";
+} from "../../../../../components/App/Data/PriceLists/PricelistTree/TreeContent";
+import { IStoreState } from "../../../../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const { currentRealm, currentRegion } = state.Main;

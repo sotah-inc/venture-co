@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 
-import { IOwnProps, IStateProps, Topbar } from "@app/components/App/Topbar";
-import { IStoreState } from "@app/types";
+import { IOwnProps, IStateProps, Topbar } from "../../components/App/Topbar";
+import { IStoreState } from "../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const { profile, currentRealm, currentRegion } = state.Main;

@@ -4,13 +4,13 @@ import {
   AppendItems,
   ChangeIsEditListDialogOpen,
   FetchUpdatePricelist,
-} from "@app/actions/price-lists";
+} from "../../../../actions/price-lists";
 import {
   EditListDialog,
   IDispatchProps,
   IStateProps,
-} from "@app/components/App/Data/PriceLists/EditListDialog";
-import { IStoreState } from "@app/types";
+} from "../../../../components/App/Data/PriceLists/EditListDialog";
+import { IStoreState } from "../../../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const { profile, currentRegion, currentRealm } = state.Main;

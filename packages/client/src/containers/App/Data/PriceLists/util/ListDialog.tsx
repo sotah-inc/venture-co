@@ -1,7 +1,10 @@
 import { connect } from "react-redux";
 
-import { IStateProps, ListDialog } from "@app/components/App/Data/PriceLists/util/ListDialog";
-import { IStoreState } from "@app/types";
+import {
+  IStateProps,
+  ListDialog,
+} from "../../../../../components/App/Data/PriceLists/util/ListDialog";
+import { IStoreState } from "../../../../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const { items } = state.PriceLists;

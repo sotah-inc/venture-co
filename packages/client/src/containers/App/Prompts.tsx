@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 
-import { IDispatchProps, IStateProps, Prompts } from "@app/components/App/Prompts";
-import { IStoreState } from "@app/types";
+import { IDispatchProps, IStateProps, Prompts } from "../../components/App/Prompts";
+import { IStoreState } from "../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const { profile } = state.Main;

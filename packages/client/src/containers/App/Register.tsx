@@ -1,9 +1,9 @@
 import { connect } from "react-redux";
 
-import { ChangeIsRegisterDialogOpen, UserRegister } from "@app/actions/main";
-import { IDispatchProps, IStateProps } from "@app/components/App/Register";
-import { RegisterFormContainer } from "@app/form-containers/App/Register";
-import { IStoreState } from "@app/types";
+import { ChangeIsRegisterDialogOpen, UserRegister } from "../../actions/main";
+import { IDispatchProps, IStateProps } from "../../components/App/Register";
+import { RegisterFormContainer } from "../../form-containers/App/Register";
+import { IStoreState } from "../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const { isRegisterDialogOpen, isRegistered } = state.Main;

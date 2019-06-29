@@ -1,12 +1,12 @@
 import { connect } from "react-redux";
 
-import { FetchGetPricelists, FetchGetProfessionPricelists } from "@app/actions/price-lists";
+import { FetchGetPricelists, FetchGetProfessionPricelists } from "../../../../actions/price-lists";
 import {
   IDispatchProps,
   IStateProps,
   PricelistTree,
-} from "@app/components/App/Data/PriceLists/PricelistTree";
-import { IStoreState } from "@app/types";
+} from "../../../../components/App/Data/PriceLists/PricelistTree";
+import { IStoreState } from "../../../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const { currentRealm, professions, currentRegion, expansions, authLevel, profile } = state.Main;

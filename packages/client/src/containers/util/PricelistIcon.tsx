@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 
-import { IOwnProps, IStateProps, PricelistIcon } from "@app/components/util/PricelistIcon";
-import { IStoreState } from "@app/types";
+import { IOwnProps, IStateProps, PricelistIcon } from "../../components/util/PricelistIcon";
+import { IStoreState } from "../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const { items: auctionItems } = state.Auction;

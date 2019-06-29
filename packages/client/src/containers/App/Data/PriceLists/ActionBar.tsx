@@ -5,14 +5,14 @@ import {
   ChangeIsAddListDialogOpen,
   ChangeIsDeleteListDialogOpen,
   ChangeIsEditListDialogOpen,
-} from "@app/actions/price-lists";
+} from "../../../../actions/price-lists";
 import {
   ActionBar,
   IDispatchProps,
   IOwnProps,
   IStateProps,
-} from "@app/components/App/Data/PriceLists/ActionBar";
-import { IStoreState } from "@app/types";
+} from "../../../../components/App/Data/PriceLists/ActionBar";
+import { IStoreState } from "../../../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const { currentRegion, currentRealm, authLevel, profile } = state.Main;

@@ -1,13 +1,13 @@
 import { connect } from "react-redux";
 
-import { FetchGetRealms, RegionChange } from "@app/actions/main";
+import { FetchGetRealms, RegionChange } from "../../actions/main";
 import {
   IDispatchProps,
   IOwnProps,
   IStateProps,
   ProfessionsLanding,
-} from "@app/components/App/ProfessionsLanding";
-import { IStoreState } from "@app/types";
+} from "../../components/App/ProfessionsLanding";
+import { IStoreState } from "../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const { currentRealm, currentRegion, fetchRealmLevel, regions } = state.Main;

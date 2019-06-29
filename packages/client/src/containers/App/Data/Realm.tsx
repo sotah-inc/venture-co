@@ -1,8 +1,8 @@
 import { connect } from "react-redux";
 
-import { FetchGetRealms, RealmChange, RegionChange } from "@app/actions/main";
-import { IDispatchProps, IOwnProps, IStateProps, Realm } from "@app/components/App/Data/Realm";
-import { IStoreState } from "@app/types";
+import { FetchGetRealms, RealmChange, RegionChange } from "../../../actions/main";
+import { IDispatchProps, IOwnProps, IStateProps, Realm } from "../../../components/App/Data/Realm";
+import { IStoreState } from "../../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const { fetchRealmLevel, realms, currentRegion, currentRealm, authLevel, regions } = state.Main;

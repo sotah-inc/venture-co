@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 
-import { IOwnProps, IStateProps, ItemPopover } from "@app/components/util/ItemPopover";
-import { IStoreState } from "@app/types";
+import { IOwnProps, IStateProps, ItemPopover } from "../../components/util/ItemPopover";
+import { IStoreState } from "../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const { itemClasses } = state.Main;

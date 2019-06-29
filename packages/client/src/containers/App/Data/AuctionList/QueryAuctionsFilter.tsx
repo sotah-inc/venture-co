@@ -6,13 +6,13 @@ import {
   FetchAuctionsQuery,
   RefreshAuctionsQuery,
   RemoveAuctionsQuery,
-} from "@app/actions/auction";
+} from "../../../../actions/auction";
 import {
   IDispatchProps,
   IStateProps,
   QueryAuctionsFilter,
-} from "@app/components/App/Data/AuctionList/QueryAuctionsFilter";
-import { IStoreState } from "@app/types";
+} from "../../../../components/App/Data/AuctionList/QueryAuctionsFilter";
+import { IStoreState } from "../../../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const { currentRegion, currentRealm } = state.Main;

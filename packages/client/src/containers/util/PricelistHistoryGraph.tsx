@@ -1,13 +1,13 @@
 import { connect } from "react-redux";
 
-import { FetchGetPricelistHistory } from "@app/actions/price-lists";
+import { FetchGetPricelistHistory } from "../../actions/price-lists";
 import {
   IDispatchProps,
   IOwnProps,
   IStateProps,
   PricelistHistoryGraph,
-} from "@app/components/util/PricelistHistoryGraph";
-import { IStoreState } from "@app/types";
+} from "../../components/util/PricelistHistoryGraph";
+import { IStoreState } from "../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const { fetchRealmLevel } = state.Main;

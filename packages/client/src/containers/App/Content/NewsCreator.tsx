@@ -1,13 +1,13 @@
 import { connect } from "react-redux";
 
-import { FetchCreatePost } from "@app/actions/posts";
+import { FetchCreatePost } from "../../../actions/posts";
 import {
   IDispatchProps,
   IOwnProps,
   IStateProps,
   NewsCreator,
-} from "@app/components/App/Content/NewsCreator";
-import { IStoreState } from "@app/types";
+} from "../../../components/App/Content/NewsCreator";
+import { IStoreState } from "../../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const { profile } = state.Main;

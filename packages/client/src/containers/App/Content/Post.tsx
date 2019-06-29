@@ -1,8 +1,8 @@
 import { connect } from "react-redux";
 
-import { ChangeIsDeletePostDialogOpen, ChangePost, FetchGetPost } from "@app/actions/posts";
-import { IDispatchProps, IOwnProps, IStateProps, Post } from "@app/components/App/Content/Post";
-import { IStoreState } from "@app/types";
+import { ChangeIsDeletePostDialogOpen, ChangePost, FetchGetPost } from "../../../actions/posts";
+import { IDispatchProps, IOwnProps, IStateProps, Post } from "../../../components/App/Content/Post";
+import { IStoreState } from "../../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const { profile } = state.Main;

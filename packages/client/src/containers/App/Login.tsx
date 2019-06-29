@@ -1,9 +1,9 @@
 import { connect } from "react-redux";
 
-import { ChangeIsLoginDialogOpen, UserLogin } from "@app/actions/main";
-import { IDispatchProps, IStateProps } from "@app/components/App/Login";
-import { LoginFormContainer } from "@app/form-containers/App/Login";
-import { IStoreState } from "@app/types";
+import { ChangeIsLoginDialogOpen, UserLogin } from "../../actions/main";
+import { IDispatchProps, IStateProps } from "../../components/App/Login";
+import { LoginFormContainer } from "../../form-containers/App/Login";
+import { IStoreState } from "../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const { isLoggedIn, isLoginDialogOpen } = state.Main;
