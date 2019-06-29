@@ -119,7 +119,7 @@ const handlers: IKindHandlers<IMainState, MainActions> = {
           }
 
           // gathering preferred realm
-          const foundRealm: IRealm | null = action.payload.reduce((result, v) => {
+          const foundRealm = action.payload.reduce<IRealm | null>((result, v) => {
             if (result !== null) {
               return result;
             }
