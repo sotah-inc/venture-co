@@ -8,4 +8,4 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
   return { currentRegion };
 };
 
-export const DataContainer = connect<IStateProps>(mapStateToProps)(Data);
+export const DataContainer = connect<IStateProps, {}, {}, IStoreState>(mapStateToProps)(Data);

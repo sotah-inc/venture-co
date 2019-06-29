@@ -40,7 +40,7 @@ const mapDispatchToProps: IDispatchProps = {
   refreshAuctionsQuery: RefreshAuctionsQuery,
 };
 
-export const QueryAuctionsFilterContainer = connect<IStateProps, IDispatchProps>(
+export const QueryAuctionsFilterContainer = connect<IStateProps, IDispatchProps, {}, IStoreState>(
   mapStateToProps,
   mapDispatchToProps,
 )(QueryAuctionsFilter);

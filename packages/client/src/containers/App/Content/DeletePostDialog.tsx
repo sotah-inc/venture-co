@@ -25,7 +25,7 @@ const mapDispatchToProps: IDispatchProps = {
   deletePost: FetchDeletePost,
 };
 
-export const DeletePostDialogContainer = connect<IStateProps, IDispatchProps>(
+export const DeletePostDialogContainer = connect<IStateProps, IDispatchProps, {}, IStoreState>(
   mapStateToProps,
   mapDispatchToProps,
 )(DeletePostDialog);

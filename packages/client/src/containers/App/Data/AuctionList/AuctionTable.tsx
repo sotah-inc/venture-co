@@ -34,7 +34,7 @@ const mapDispatchToProps: IDispatchProps = {
   onAuctionsQuerySelect: AddAuctionsQuery,
 };
 
-export const AuctionTableContainer = connect<IStateProps, IDispatchProps>(
+export const AuctionTableContainer = connect<IStateProps, IDispatchProps, {}, IStoreState>(
   mapStateToProps,
   mapDispatchToProps,
 )(AuctionTable);

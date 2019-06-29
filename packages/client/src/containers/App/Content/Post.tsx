@@ -18,7 +18,7 @@ const mapDispatchToProps: IDispatchProps = {
   getPost: FetchGetPost,
 };
 
-export const PostContainer = connect<IStateProps, IDispatchProps, IOwnProps>(
+export const PostContainer = connect<IStateProps, IDispatchProps, IOwnProps, IStoreState>(
   mapStateToProps,
   mapDispatchToProps,
 )(Post);

@@ -20,7 +20,7 @@ const mapDispatchToProps: IDispatchProps = {
   createPost: FetchCreatePost,
 };
 
-export const NewsCreatorContainer = connect<IStateProps, IDispatchProps, IOwnProps>(
+export const NewsCreatorContainer = connect<IStateProps, IDispatchProps, IOwnProps, IStoreState>(
   mapStateToProps,
   mapDispatchToProps,
 )(NewsCreator);

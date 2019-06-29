@@ -20,7 +20,12 @@ const mapDispatchToProps: IDispatchProps = {
   queryOwnersByItems: FetchGetItemsOwnership,
 };
 
-export const CurrentSellersTableContainer = connect<IStateProps, IDispatchProps, IOwnProps>(
+export const CurrentSellersTableContainer = connect<
+  IStateProps,
+  IDispatchProps,
+  IOwnProps,
+  IStoreState
+>(
   mapStateToProps,
   mapDispatchToProps,
 )(CurrentSellersTable);

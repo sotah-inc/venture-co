@@ -19,7 +19,12 @@ const mapDispatchToProps: IDispatchProps = {
   onRegionChange: RegionChange,
 };
 
-export const ProfessionsLandingContainer = connect<IStateProps, IDispatchProps, IOwnProps>(
+export const ProfessionsLandingContainer = connect<
+  IStateProps,
+  IDispatchProps,
+  IOwnProps,
+  IStoreState
+>(
   mapStateToProps,
   mapDispatchToProps,
 )(ProfessionsLanding);

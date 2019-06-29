@@ -18,7 +18,7 @@ const mapDispatchToProps: IDispatchProps = {
   onChange: SortChange,
 };
 
-export const SortToggleContainer = connect<IStateProps, IDispatchProps, IOwnProps>(
+export const SortToggleContainer = connect<IStateProps, IDispatchProps, IOwnProps, IStoreState>(
   mapStateToProps,
   mapDispatchToProps,
 )(SortToggle);

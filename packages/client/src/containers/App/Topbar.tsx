@@ -10,4 +10,6 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
   return { user, currentRealm, currentRegion };
 };
 
-export const TopbarContainer = connect<IStateProps, IOwnProps>(mapStateToProps)(Topbar);
+export const TopbarContainer = connect<IStateProps, {}, IOwnProps, IStoreState>(mapStateToProps)(
+  Topbar,
+);

@@ -21,7 +21,7 @@ const mapDispatchToProps: IDispatchProps = {
   updatePost: FetchUpdatePost,
 };
 
-export const NewsEditorContainer = connect<IStateProps, IDispatchProps, IOwnProps>(
+export const NewsEditorContainer = connect<IStateProps, IDispatchProps, IOwnProps, IStoreState>(
   mapStateToProps,
   mapDispatchToProps,
 )(NewsEditor);

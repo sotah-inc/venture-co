@@ -13,7 +13,7 @@ const mapDispatchToProps: IDispatchProps = {
   changeIsRegisterDialogOpen: ChangeIsRegisterDialogOpen,
 };
 
-export const NewsContainer = connect<IStateProps, IDispatchProps, IOwnProps>(
+export const NewsContainer = connect<IStateProps, IDispatchProps, IOwnProps, IStoreState>(
   mapStateToProps,
   mapDispatchToProps,
 )(News);

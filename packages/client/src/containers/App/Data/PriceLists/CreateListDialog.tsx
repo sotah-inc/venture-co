@@ -44,7 +44,7 @@ const mapDispatchToProps: IDispatchProps = {
   createProfessionPricelist: FetchCreateProfessionPricelist,
 };
 
-export const CreateListDialogContainer = connect<IStateProps, IDispatchProps>(
+export const CreateListDialogContainer = connect<IStateProps, IDispatchProps, {}, IStoreState>(
   mapStateToProps,
   mapDispatchToProps,
 )(CreateListDialog);

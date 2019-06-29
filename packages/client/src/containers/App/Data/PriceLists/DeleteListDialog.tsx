@@ -40,7 +40,7 @@ const mapDispatchToProps: IDispatchProps = {
   deleteProfessionPricelist: FetchDeleteProfessionPricelist,
 };
 
-export const DeleteListDialogContainer = connect<IStateProps, IDispatchProps>(
+export const DeleteListDialogContainer = connect<IStateProps, IDispatchProps, {}, IStoreState>(
   mapStateToProps,
   mapDispatchToProps,
 )(DeleteListDialog);

@@ -42,7 +42,7 @@ const mapDispatchToProps: IDispatchProps = {
   refreshProfessionPricelists: FetchGetProfessionPricelists,
 };
 
-export const PricelistTreeContainer = connect<IStateProps, IDispatchProps>(
+export const PricelistTreeContainer = connect<IStateProps, IDispatchProps, {}, IStoreState>(
   mapStateToProps,
   mapDispatchToProps,
 )(PricelistTree);

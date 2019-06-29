@@ -17,7 +17,7 @@ const mapDispatchToProps: IDispatchProps = {
   onCountChange: CountChange,
 };
 
-export const CountToggleContainer = connect<IStateProps, IDispatchProps>(
+export const CountToggleContainer = connect<IStateProps, IDispatchProps, {}, IStoreState>(
   mapStateToProps,
   mapDispatchToProps,
 )(CountToggle);

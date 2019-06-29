@@ -15,7 +15,7 @@ const mapDispatchToProps: IDispatchProps = {
   onRegionChange: RegionChange,
 };
 
-export const RealmContainer = connect<IStateProps, IDispatchProps, IOwnProps>(
+export const RealmContainer = connect<IStateProps, IDispatchProps, IOwnProps, IStoreState>(
   mapStateToProps,
   mapDispatchToProps,
 )(Realm);

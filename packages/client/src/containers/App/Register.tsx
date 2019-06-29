@@ -15,7 +15,7 @@ const mapDispatchToProps: IDispatchProps = {
   onUserRegister: UserRegister,
 };
 
-export const RegisterContainer = connect<IStateProps, IDispatchProps>(
+export const RegisterContainer = connect<IStateProps, IDispatchProps, {}, IStoreState>(
   mapStateToProps,
   mapDispatchToProps,
 )(RegisterFormContainer);

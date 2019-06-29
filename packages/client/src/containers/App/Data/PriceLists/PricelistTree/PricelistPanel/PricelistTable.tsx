@@ -12,4 +12,6 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
   return { items };
 };
 
-export const PricelistTableContainer = connect<IStateProps>(mapStateToProps)(PricelistTable);
+export const PricelistTableContainer = connect<IStateProps, {}, {}, IStoreState>(mapStateToProps)(
+  PricelistTable,
+);

@@ -16,7 +16,7 @@ const mapDispatchToProps: IDispatchProps = {
   },
 };
 
-export const PromptsContainer = connect<IStateProps, IDispatchProps>(
+export const PromptsContainer = connect<IStateProps, IDispatchProps, {}, IStoreState>(
   mapStateToProps,
   mapDispatchToProps,
 )(Prompts);

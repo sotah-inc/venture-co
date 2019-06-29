@@ -17,7 +17,7 @@ const mapDispatchToProps: IDispatchProps = {
   refreshPosts: FetchGetPosts,
 };
 
-export const PostListContainer = connect<IStateProps, IDispatchProps>(
+export const PostListContainer = connect<IStateProps, IDispatchProps, {}, IStoreState>(
   mapStateToProps,
   mapDispatchToProps,
 )(PostList);

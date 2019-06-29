@@ -64,7 +64,7 @@ const mapDispatchToProps: IDispatchProps = {
   resetProfessionsSelections: ResetProfessionsSelections,
 };
 
-export const PriceListsContainer = connect<IStateProps, IDispatchProps>(
+export const PriceListsContainer = connect<IStateProps, IDispatchProps, {}, IStoreState>(
   mapStateToProps,
   mapDispatchToProps,
 )(PriceLists);

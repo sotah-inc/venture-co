@@ -44,7 +44,7 @@ const mapDispatchToProps: IDispatchProps = {
   updatePricelist: FetchUpdatePricelist,
 };
 
-export const EditListDialogContainer = connect<IStateProps, IDispatchProps>(
+export const EditListDialogContainer = connect<IStateProps, IDispatchProps, {}, IStoreState>(
   mapStateToProps,
   mapDispatchToProps,
 )(EditListDialog);

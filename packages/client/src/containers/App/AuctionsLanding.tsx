@@ -19,7 +19,12 @@ const mapDispatchToProps: IDispatchProps = {
   onRegionChange: RegionChange,
 };
 
-export const AuctionsLandingContainer = connect<IStateProps, IDispatchProps, IOwnProps>(
+export const AuctionsLandingContainer = connect<
+  IStateProps,
+  IDispatchProps,
+  IOwnProps,
+  IStoreState
+>(
   mapStateToProps,
   mapDispatchToProps,
 )(AuctionsLanding);

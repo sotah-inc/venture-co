@@ -59,7 +59,7 @@ const mapDispatchToProps: IDispatchProps = {
   setCurrentPage: PageChange,
 };
 
-export const AuctionsListContainer = connect<IStateProps, IDispatchProps>(
+export const AuctionsListContainer = connect<IStateProps, IDispatchProps, {}, IStoreState>(
   mapStateToProps,
   mapDispatchToProps,
 )(AuctionList);

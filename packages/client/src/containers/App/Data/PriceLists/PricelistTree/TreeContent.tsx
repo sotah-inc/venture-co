@@ -12,4 +12,6 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
   return { currentRealm, selectedList, currentRegion };
 };
 
-export const TreeContentContainer = connect<IStateProps>(mapStateToProps)(TreeContent);
+export const TreeContentContainer = connect<IStateProps, {}, {}, IStoreState>(mapStateToProps)(
+  TreeContent,
+);

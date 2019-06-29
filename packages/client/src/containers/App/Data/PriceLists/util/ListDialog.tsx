@@ -11,4 +11,6 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
   return { items };
 };
 
-export const ListDialogContainer = connect<IStateProps>(mapStateToProps)(ListDialog);
+export const ListDialogContainer = connect<IStateProps, {}, {}, IStoreState>(mapStateToProps)(
+  ListDialog,
+);

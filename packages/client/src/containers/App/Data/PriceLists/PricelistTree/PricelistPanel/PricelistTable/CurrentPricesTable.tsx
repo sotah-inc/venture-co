@@ -20,7 +20,12 @@ const mapDispatchToProps: IDispatchProps = {
   reloadPrices: FetchGetPricelist,
 };
 
-export const CurrentPricesTableContainer = connect<IStateProps, IDispatchProps, IOwnProps>(
+export const CurrentPricesTableContainer = connect<
+  IStateProps,
+  IDispatchProps,
+  IOwnProps,
+  IStoreState
+>(
   mapStateToProps,
   mapDispatchToProps,
 )(CurrentPricesTable);

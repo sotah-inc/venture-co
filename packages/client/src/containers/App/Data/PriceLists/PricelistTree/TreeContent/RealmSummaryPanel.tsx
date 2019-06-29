@@ -33,7 +33,12 @@ const mapDispatchToProps: IDispatchProps = {
   refreshUnmetDemand: FetchGetUnmetDemand,
 };
 
-export const RealmSummaryPanelContainer = connect<IStateProps, IDispatchProps, IOwnProps>(
+export const RealmSummaryPanelContainer = connect<
+  IStateProps,
+  IDispatchProps,
+  IOwnProps,
+  IStoreState
+>(
   mapStateToProps,
   mapDispatchToProps,
 )(RealmSummaryPanel);

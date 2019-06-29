@@ -44,7 +44,7 @@ const mapDispatchToProps: IDispatchProps = {
   changeIsEditListDialogOpen: ChangeIsEditListDialogOpen,
 };
 
-export const ActionBarContainer = connect<IStateProps, IDispatchProps, IOwnProps>(
+export const ActionBarContainer = connect<IStateProps, IDispatchProps, IOwnProps, IStoreState>(
   mapStateToProps,
   mapDispatchToProps,
 )(ActionBar);

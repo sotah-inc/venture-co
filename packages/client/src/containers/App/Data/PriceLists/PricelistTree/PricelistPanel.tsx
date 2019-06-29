@@ -19,7 +19,7 @@ const mapDispatchToProps: IDispatchProps = {
   changeIsAddEntryDialogOpen: ChangeIsAddEntryDialogOpen,
 };
 
-export const PricelistPanelContainer = connect<IStateProps, IDispatchProps, IOwnProps>(
+export const PricelistPanelContainer = connect<IStateProps, IDispatchProps, IOwnProps, IStoreState>(
   mapStateToProps,
   mapDispatchToProps,
 )(PricelistPanel);
