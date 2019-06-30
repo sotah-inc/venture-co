@@ -7,8 +7,6 @@ import { IItem, ItemId } from "../../../../../api-types/item";
 import { getItemIconUrl, getItemTextValue, qualityToColorClass } from "../../../../../util";
 import { DialogActions, DialogBody, ItemInput } from "../../../../util";
 
-import "./CreateEntryForm.scss";
-
 export interface IOwnProps {
   onComplete: () => void;
   onItemSelect?: (item: IItem) => void;

@@ -17,8 +17,6 @@ import { PricelistIconContainer } from "../../../../containers/util/PricelistIco
 import { getSelectedResultIndex, qualityToColorClass } from "../../../../util";
 import { Currency, ProfessionIcon } from "../../../util";
 
-import "./AuctionTable.scss";
-
 type ListAuction = IAuction | null;
 
 export interface IStateProps {

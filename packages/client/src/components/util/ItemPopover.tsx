@@ -10,7 +10,6 @@ import {
   ItemClassClasses,
   ItemSpellTrigger,
 } from "../../api-types/item";
-import { Currency } from "../../components/util";
 import { IItemClasses } from "../../types/global";
 import {
   getItemIconUrl,
@@ -19,8 +18,7 @@ import {
   itemStatToString,
   qualityToColorClass,
 } from "../../util";
-
-import "./ItemPopover.scss";
+import { Currency } from "./Currency";
 
 export interface IStateProps {
   itemClasses: IItemClasses;

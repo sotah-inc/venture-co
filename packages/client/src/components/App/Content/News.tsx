@@ -11,8 +11,6 @@ import { AuthLevel } from "../../../types/main";
 import { setTitle } from "../../../util";
 import { CardCallout } from "../../util";
 
-import "./News.scss";
-
 export interface IStateProps {
   currentRegion: IRegion | null;
   authLevel: AuthLevel;

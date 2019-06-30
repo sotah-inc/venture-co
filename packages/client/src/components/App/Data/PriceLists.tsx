@@ -23,8 +23,6 @@ import { AuthLevel, FetchLevel } from "../../../types/main";
 import { IExpansionProfessionPricelistMap } from "../../../types/price-lists";
 import { setTitle } from "../../../util";
 
-import "./PriceLists.scss";
-
 export interface IStateProps {
   authLevel: AuthLevel;
 

@@ -11,8 +11,6 @@ import { IProfile } from "../types/global";
 import { AuthLevel, FetchLevel } from "../types/main";
 import { AppToaster } from "../util/toasters";
 
-import "./App.scss";
-
 export interface IStateProps {
   fetchPingLevel: FetchLevel;
   currentRegion: IRegion | null;

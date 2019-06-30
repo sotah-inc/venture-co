@@ -9,8 +9,6 @@ import { Generator as FormFieldGenerator } from "../../../../../components/util/
 import { getItemIconUrl, getItemTextValue, qualityToColorClass } from "../../../../../util";
 import { DialogActions, DialogBody, ItemInput } from "../../../../util";
 
-import "./CreateEntryForm.scss";
-
 export interface IOwnProps {
   onComplete: (entry: IPricelistEntryJson, item: IItem) => void;
   onItemSelect?: (item: IItem) => void;
