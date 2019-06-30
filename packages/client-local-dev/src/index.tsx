@@ -4,7 +4,6 @@ import ReactDOM from "react-dom";
 import { Boot } from "@sotah-inc/client";
 import "@sotah-inc/client/styles/App.scss";
 import "@sotah-inc/client/styles/AuctionTable.scss";
-import "@sotah-inc/client/styles/blueprint-variables.scss";
 import "@sotah-inc/client/styles/CreateEntryForm.scss";
 import "@sotah-inc/client/styles/ItemPopover.scss";
 import "@sotah-inc/client/styles/News.scss";
