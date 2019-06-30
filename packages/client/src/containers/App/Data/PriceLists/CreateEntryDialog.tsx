@@ -24,7 +24,7 @@ const mapDispatchToProps: IDispatchProps = {
   updatePricelist: FetchUpdatePricelist,
 };
 
-export const CreateEntryDialogContainer = connect<IStateProps, IDispatchProps, IStoreState>(
+export const CreateEntryDialogContainer = connect<IStateProps, IDispatchProps, {}, IStoreState>(
   mapStateToProps,
   mapDispatchToProps,
 )(CreateEntryDialog);

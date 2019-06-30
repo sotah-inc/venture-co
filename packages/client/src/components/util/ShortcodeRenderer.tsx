@@ -2,7 +2,11 @@ import * as React from "react";
 
 import { Currency } from "./Currency";
 
-const renderers = {
+interface IRenderers {
+  [key: string]: (v: IAttributes) => React.ReactElement;
+}
+
+const renderers: IRenderers = {
   Currency: (attributes: IAttributes) => {
     return <Currency amount={Number(attributes.amount)} />;
   },

@@ -234,9 +234,9 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
         return <Spinner intent={Intent.NONE} value={1} />;
     }
 
-    const data: ILineItem[] = Object.keys(pricelistHistoryMap).reduce(
+    const data = Object.keys(pricelistHistoryMap).reduce<ILineItem[]>(
       (dataPreviousValue: ILineItem[], itemIdKey: string) => {
-        const itemPricelistHistory: IPricelistHistoryMap = pricelistHistoryMap[itemIdKey];
+        const itemPricelistHistory: IPricelistHistoryMap = pricelistHistoryMap[Number(itemIdKey)];
         const itemId = Number(itemIdKey);
 
         return Object.keys(itemPricelistHistory).reduce(

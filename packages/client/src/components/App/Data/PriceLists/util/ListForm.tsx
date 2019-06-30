@@ -13,7 +13,7 @@ export interface IOwnProps {
   onComplete: (name: string, slug: string) => void;
   submitIcon: IconName;
   submitText: string;
-  children: React.ReactChildren;
+  children: React.ReactNode;
 }
 
 export interface IFormValues {
