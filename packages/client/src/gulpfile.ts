@@ -3,16 +3,15 @@ import concat from "gulp-concat";
 import postcss from "gulp-postcss";
 import sass from "gulp-sass";
 
-const stylesGlob = "./styles/*.scss";
+const stylesGlobs = [
+  "./styles/*.scss",
+  "./node_modules/@blueprintjs/core/lib/css/blueprint.css",
+  "./node_modules/@blueprintjs/select/lib/css/blueprint-select.css",
+];
 
 const sassTask = () => {
   return gulp
-    .src([
-      stylesGlob,
-      "./node_modules/@blueprintjs/core/lib/css/blueprint.css",
-      "./node_modules/@blueprintjs/icons/lib/css/blueprint-icons.css",
-      "./node_modules/@blueprintjs/select/lib/css/blueprint-select.css",
-    ])
+    .src(stylesGlobs)
     .pipe(sass())
     .pipe(concat("venture-co.min.css"))
     .pipe(postcss())
@@ -20,4 +19,4 @@ const sassTask = () => {
 };
 
 gulp.task("sass", sassTask);
-gulp.task("sass:watch", () => gulp.watch(stylesGlob, sassTask));
+gulp.task("sass:watch", () => gulp.watch(stylesGlobs, sassTask));
