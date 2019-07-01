@@ -51,11 +51,15 @@ const store = createStore(
 
 export const Boot = () => {
   return (
-    <Provider store={store}>
-      <Router>
-        <AppRouteContainer />
-      </Router>
-    </Provider>
+    <div className="pure-g" id="top-root">
+      <div className="pure-u-1" id="root">
+        <Provider store={store}>
+          <Router>
+            <AppRouteContainer />
+          </Router>
+        </Provider>
+      </div>
+    </div>
   );
 };
 
