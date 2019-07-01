@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 import { Boot } from "@sotah-inc/client";
+import "@sotah-inc/client/build/styles/venture-co.min.css";
 
 import * as serviceWorker from "./serviceWorker";
 
