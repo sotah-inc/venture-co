@@ -7,7 +7,12 @@ const stylesGlob = "./styles/*.scss";
 
 const sassTask = () => {
   return gulp
-    .src(stylesGlob)
+    .src([
+      stylesGlob,
+      "./node_modules/@blueprintjs/core/lib/css/blueprint.css",
+      "./node_modules/@blueprintjs/icons/lib/css/blueprint-icons.css",
+      "./node_modules/@blueprintjs/select/lib/css/blueprint-select.css",
+    ])
     .pipe(sass())
     .pipe(concat("venture-co.min.css"))
     .pipe(postcss())
@@ -15,5 +20,4 @@ const sassTask = () => {
 };
 
 gulp.task("sass", sassTask);
-
 gulp.task("sass:watch", () => gulp.watch(stylesGlob, sassTask));
