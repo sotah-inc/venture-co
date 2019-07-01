@@ -11,18 +11,6 @@
     padding: $pt-grid-size;
 }
 
-body {
-    margin: 0;
-}
-
-html,
-body,
-#top-root,
-#root,
-#app {
-    min-height: 100%;
-}
-
 body.bp3-dark,
 #app.dark-app {
     background: #30404d;

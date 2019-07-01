@@ -51,8 +51,8 @@ const store = createStore(
 
 export const Boot = () => {
   return (
-    <div className="pure-g" id="top-root">
-      <div className="pure-u-1" id="root">
+    <div className="pure-g">
+      <div className="pure-u-1">
         <Provider store={store}>
           <Router>
             <AppRouteContainer />
