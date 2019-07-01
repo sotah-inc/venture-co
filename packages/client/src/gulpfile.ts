@@ -4,9 +4,11 @@ import postcss from "gulp-postcss";
 import sass from "gulp-sass";
 
 const stylesGlobs = [
-  "./styles/*.scss",
+  "./node_modules/normalize.css/normalize.css",
+  "./node_modules/purecss/build/pure-min.css",
   "./node_modules/@blueprintjs/core/lib/css/blueprint.css",
   "./node_modules/@blueprintjs/select/lib/css/blueprint-select.css",
+  "./styles/*.scss",
 ];
 
 const sassTask = () => {
