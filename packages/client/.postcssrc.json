@@ -1,0 +1,7 @@
+{
+  "parser": "postcss-safe-parser",
+  "map": false,
+  "plugins": {
+    "postcss-clean": {}
+  }
+}
