@@ -6,16 +6,16 @@
   "typings": "build/dist/index.d.ts",
   "scripts": {
     "clean": "rimraf ./build",
-    "debug": "run-p build:watch lint:watch build:styles:watch",
+    "debug": "run-p build:ts:watch lint:watch build:styles:watch",
     "start": "node .",
     "lint": "tslint ./src/**/*.ts{,x}",
     "lint:watch": "chokidar --silent ./src/**/*.ts{,x} -c \"npm run -s lint\"",
-    "build": "tsc",
-    "build:clean": "run-s clean build",
+    "build": "run-s build:ts build:styles",
+    "build:ts": "tsc",
+    "build:ts:watch": "npm run -s build:ts -- --watch",
     "build:styles": "gulp -f ./build/dist/gulpfile.js --cwd . sass",
     "build:styles:watch": "gulp -f ./build/dist/gulpfile.js --cwd . sass:watch",
-    "build:watch": "npm run -s build -- --watch",
-    "prepublish": "run-s clean build build:styles"
+    "prepublish": "run-s clean build"
   },
   "repository": {
     "type": "git",
