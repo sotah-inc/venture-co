@@ -1,5 +1,5 @@
 {
-  "name": "client-local-dev",
+  "name": "@sotah-inc/client-local-dev",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -134,5 +134,8 @@
     "presets": [
       "react-app"
     ]
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
