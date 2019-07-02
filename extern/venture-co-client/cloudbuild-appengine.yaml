@@ -1,0 +1,9 @@
+steps:
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: [
+      'beta',
+      'app',
+      'deploy',
+      '--quiet',
+      './app/app.yaml',
+    ]
