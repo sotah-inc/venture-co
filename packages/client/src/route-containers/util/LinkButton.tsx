@@ -1,5 +1,5 @@
 import { withRouter } from "react-router-dom";
 
-import { IProps, LinkButton } from "../../components/util/LinkButton";
+import { LinkButton } from "../../components/util/LinkButton";
 
-export const LinkButtonRouteContainer = withRouter<IProps>(LinkButton);
+export const LinkButtonRouteContainer = withRouter(LinkButton);
