@@ -1,7 +1,6 @@
 {
   "name": "@sotah-inc/client-local-dev",
   "version": "1.0.12",
-  "private": true,
   "dependencies": {
     "@babel/core": "7.4.3",
     "@sotah-inc/client": "^1.0.12",
