@@ -4,3 +4,6 @@
 [submodule "extern/infra"]
 	path = extern/infra
 	url = git@github.com:sotah-inc/infra.git
+[submodule "extern/venture-co-client"]
+	path = extern/venture-co-client
+	url = git@github.com:sotah-inc/venture-co-client.git
