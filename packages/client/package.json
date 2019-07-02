@@ -15,7 +15,7 @@
     "build:styles": "gulp -f ./build/dist/gulpfile.js --cwd . sass",
     "build:styles:watch": "gulp -f ./build/dist/gulpfile.js --cwd . sass:watch",
     "build:watch": "npm run -s build -- --watch",
-    "prepublish": "npm run -s build:clean"
+    "prepublish": "npm run -s clean build build:styles"
   },
   "repository": {
     "type": "git",
