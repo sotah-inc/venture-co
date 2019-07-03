@@ -14,7 +14,7 @@
     "build:watch": "run-p build:ts:watch lint:watch",
     "build:ts": "tsc",
     "build:ts:watch": "npm run -s build -- --watch",
-    "prepublish": "npm run -s build:clean"
+    "prepublish": "npm run -s build"
   },
   "author": "Adrian Parker <adrian@sotah.info>",
   "license": "ISC",
