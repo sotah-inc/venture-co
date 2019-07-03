@@ -10,7 +10,7 @@
     "start": "node .",
     "lint": "tslint ./src/**/*.ts{,x}",
     "lint:watch": "chokidar --silent ./src/**/*.ts{,x} -c \"npm run -s lint\"",
-    "build": "run-s clean build",
+    "build": "run-s clean build:ts",
     "build:watch": "run-p build:ts:watch lint:watch",
     "build:ts": "tsc",
     "build:ts:watch": "npm run -s build:ts -- --watch",
@@ -100,5 +100,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "f641bb67779aa5e7b65acdf3308ccc79accef3eb"
+  "gitHead": "086d3cf89e3ceb7a3d5c1da66c0eedffeabec7f2"
 }
