@@ -10,9 +10,10 @@
     "start": "node .",
     "lint": "tslint ./src/**/*.ts{,x}",
     "lint:watch": "chokidar --silent ./src/**/*.ts{,x} -c \"npm run -s lint\"",
-    "build": "tsc",
-    "build:clean": "run-s clean build",
-    "build:watch": "npm run -s build -- --watch",
+    "build": "run-s clean build:ts",
+    "build:watch": "run-p build:ts:watch lint:watch",
+    "build:ts": "tsc",
+    "build:ts:watch": "npm run -s build -- --watch",
     "prepublish": "npm run -s build:clean"
   },
   "author": "Adrian Parker <adrian@sotah.info>",

@@ -10,12 +10,12 @@
     "start": "node .",
     "lint": "tslint ./src/**/*.ts{,x}",
     "lint:watch": "chokidar --silent ./src/**/*.ts{,x} -c \"npm run -s lint\"",
-    "build": "run-s build:ts build:styles",
+    "build": "run-s clean build:ts build:styles",
     "build:ts": "tsc",
     "build:ts:watch": "npm run -s build:ts -- --watch",
     "build:styles": "gulp -f ./build/dist/gulpfile.js --cwd . sass",
     "build:styles:watch": "gulp -f ./build/dist/gulpfile.js --cwd . sass:watch",
-    "prepublish": "run-s clean build"
+    "prepublish": "npm run -s build"
   },
   "repository": {
     "type": "git",
