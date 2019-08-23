@@ -16,6 +16,10 @@ const hostname: string = (() => {
 export const title: string =
   hostname === "localhost" ? "SotAH (DEV)" : "Secrets of the Auction House";
 export const setTitle = (prefix: string) => {
+  if (typeof document === "undefined") {
+    return;
+  }
+
   document.title = `${prefix} - ${title}`;
 };
 
