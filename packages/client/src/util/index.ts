@@ -6,7 +6,13 @@ import { IExpansion } from "../api-types/expansion";
 import { IItem, InventoryType, ItemQuality, ItemStat } from "../api-types/item";
 import { IRealm, IRegion } from "../api-types/region";
 
-const hostname = window.location.hostname;
+const hostname: string = (() => {
+  if (typeof window === "undefined") {
+    return "";
+  }
+
+  return window.location.hostname;
+})();
 export const title: string =
   hostname === "localhost" ? "SotAH (DEV)" : "Secrets of the Auction House";
 export const setTitle = (prefix: string) => {
