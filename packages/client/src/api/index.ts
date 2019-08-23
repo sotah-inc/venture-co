@@ -1,6 +1,12 @@
 import queryString from "query-string";
 
-const hostname = window.location.hostname;
+const hostname: string = (() => {
+  if (typeof window === "undefined") {
+    return "";
+  }
+
+  return window.location.hostname;
+})();
 export let apiEndpoint = "https://api.sotah.info";
 if (hostname === "localhost") {
   apiEndpoint = "https://api.sotah.info";
