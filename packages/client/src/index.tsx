@@ -24,7 +24,13 @@ const defaultState: IStoreState = {
   Profile: defaultProfileState,
 };
 
-const token = localStorage.getItem("token");
+const token: string | null = (() => {
+  if (typeof localStorage === "undefined") {
+    return null;
+  }
+
+  return localStorage.getItem("token");
+})();
 if (token !== null) {
   defaultState.Main.preloadedToken = token;
 }
@@ -33,7 +39,9 @@ const localStorageMiddleware: Middleware = () => next => action => {
   switch (action.type) {
     case USER_LOGIN:
     case USER_REGISTER:
-      localStorage.setItem("token", action.payload.token);
+      if (typeof localStorage !== "undefined") {
+        localStorage.setItem("token", action.payload.token);
+      }
 
       break;
     default:
