@@ -17,7 +17,7 @@ import { PostFormFormContainer } from "../../../form-containers/App/Content/Post
 import { IProfile } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
 import { setTitle } from "../../../util";
-import { AppToaster } from "../../../util/toasters";
+import { GetAppToaster } from "../../../util/toasters";
 import { IFormValues } from "./PostForm";
 
 export interface IStateProps {
@@ -127,6 +127,11 @@ export class NewsEditor extends React.Component<Props> {
             return;
           }}
           onFatalError={err => {
+            const AppToaster = GetAppToaster();
+            if (AppToaster === null) {
+              return;
+            }
+
             AppToaster.show({
               icon: "warning-sign",
               intent: "danger",
@@ -217,11 +222,14 @@ export class NewsEditor extends React.Component<Props> {
             return;
           }
 
-          AppToaster.show({
-            icon: "info-sign",
-            intent: "success",
-            message: "Your post has successfully been updated!",
-          });
+          const AppToaster = GetAppToaster();
+          if (AppToaster !== null) {
+            AppToaster.show({
+              icon: "info-sign",
+              intent: "success",
+              message: "Your post has successfully been updated!",
+            });
+          }
 
           history.push(`/content/news/${currentPost.slug}`);
 
@@ -238,11 +246,14 @@ export class NewsEditor extends React.Component<Props> {
         return;
       case FetchLevel.failure:
         if (typeof prevProps !== "undefined" && prevProps.getPostLevel !== getPostLevel) {
-          AppToaster.show({
-            icon: "warning-sign",
-            intent: "danger",
-            message: "Could not fetch post.",
-          });
+          const AppToaster = GetAppToaster();
+          if (AppToaster !== null) {
+            AppToaster.show({
+              icon: "warning-sign",
+              intent: "danger",
+              message: "Could not fetch post.",
+            });
+          }
 
           return;
         }

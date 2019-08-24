@@ -14,7 +14,7 @@ import { IRealm, IRegion } from "../../../../api-types/region";
 import { ListDialogContainer } from "../../../../containers/App/Data/PriceLists/util/ListDialog";
 import { IErrors, IProfile } from "../../../../types/global";
 import { FetchLevel } from "../../../../types/main";
-import { AppToaster } from "../../../../util/toasters";
+import { GetAppToaster } from "../../../../util/toasters";
 import { IOnCompleteOptions } from "./util/ListDialog";
 
 export interface IStateProps {
@@ -74,11 +74,14 @@ export class CreateListDialog extends React.Component<Props, State> {
     if (prevProps.createPricelistLevel !== createPricelistLevel) {
       switch (createPricelistLevel) {
         case FetchLevel.success:
-          AppToaster.show({
-            icon: "info-sign",
-            intent: Intent.SUCCESS,
-            message: "Your pricelist has been created.",
-          });
+          const AppToaster = GetAppToaster();
+          if (AppToaster !== null) {
+            AppToaster.show({
+              icon: "info-sign",
+              intent: Intent.SUCCESS,
+              message: "Your pricelist has been created.",
+            });
+          }
           this.setState({ listDialogResetTrigger: listDialogResetTrigger + 1 });
 
           const url = [

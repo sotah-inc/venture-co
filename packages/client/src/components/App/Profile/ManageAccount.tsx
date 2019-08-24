@@ -18,7 +18,7 @@ import { ManageAccountFormFormContainer } from "../../../form-containers/App/Pro
 import { IErrors } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
 import { setTitle } from "../../../util";
-import { AppToaster } from "../../../util/toasters";
+import { GetAppToaster } from "../../../util/toasters";
 import { IFormValues } from "./ManageAccountForm";
 
 export interface IStateProps {
@@ -54,6 +54,8 @@ export class ManageAccount extends React.Component<Props> {
       );
     }
 
+    const AppToaster = GetAppToaster();
+
     return (
       <>
         <H2>Manage Account</H2>
@@ -61,6 +63,10 @@ export class ManageAccount extends React.Component<Props> {
         <ManageAccountFormFormContainer
           defaultFormValues={{ email: user.email }}
           onComplete={() => {
+            if (AppToaster === null) {
+              return;
+            }
+
             AppToaster.show({
               icon: "info-sign",
               intent: "success",
@@ -68,6 +74,10 @@ export class ManageAccount extends React.Component<Props> {
             });
           }}
           onFatalError={err => {
+            if (AppToaster === null) {
+              return;
+            }
+
             AppToaster.show({
               icon: "warning-sign",
               intent: "danger",

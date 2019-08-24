@@ -12,7 +12,7 @@ import { ListDialogContainer } from "../../../../containers/App/Data/PriceLists/
 import { IErrors, IProfile } from "../../../../types/global";
 import { FetchLevel } from "../../../../types/main";
 import { IUpdatePricelistRequestOptions } from "../../../../types/price-lists";
-import { AppToaster } from "../../../../util/toasters";
+import { GetAppToaster } from "../../../../util/toasters";
 import { IOnCompleteOptions } from "./util/ListDialog";
 
 export interface IStateProps {
@@ -72,11 +72,14 @@ export class EditListDialog extends React.Component<Props, State> {
     if (prevProps.updatePricelistLevel !== updatePricelistLevel) {
       switch (updatePricelistLevel) {
         case FetchLevel.success:
-          AppToaster.show({
-            icon: "info-sign",
-            intent: Intent.SUCCESS,
-            message: `"${selectedList.name}" has been saved.`,
-          });
+          const AppToaster = GetAppToaster();
+          if (AppToaster !== null) {
+            AppToaster.show({
+              icon: "info-sign",
+              intent: Intent.SUCCESS,
+              message: `"${selectedList.name}" has been saved.`,
+            });
+          }
           this.setState({ listDialogResetTrigger: listDialogResetTrigger + 1 });
 
           const url = [

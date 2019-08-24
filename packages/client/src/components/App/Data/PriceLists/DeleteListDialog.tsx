@@ -9,7 +9,7 @@ import { IProfession } from "../../../../api-types/profession";
 import { IRealm, IRegion } from "../../../../api-types/region";
 import { IProfile } from "../../../../types/global";
 import { FetchLevel } from "../../../../types/main";
-import { AppToaster } from "../../../../util/toasters";
+import { GetAppToaster } from "../../../../util/toasters";
 import { DialogActions, DialogBody } from "../../../util";
 
 export interface IStateProps {
@@ -57,11 +57,14 @@ export class DeleteListDialog extends React.Component<Props> {
     if (prevProps.deletePricelistLevel !== deletePricelistLevel) {
       switch (deletePricelistLevel) {
         case FetchLevel.success:
-          AppToaster.show({
-            icon: "info-sign",
-            intent: Intent.SUCCESS,
-            message: "Your pricelist has been deleted.",
-          });
+          const AppToaster = GetAppToaster();
+          if (AppToaster !== null) {
+            AppToaster.show({
+              icon: "info-sign",
+              intent: Intent.SUCCESS,
+              message: "Your pricelist has been deleted.",
+            });
+          }
 
           const urlParts = [
             "data",

@@ -9,7 +9,7 @@ import { TopbarRouteContainer } from "../route-containers/App/Topbar";
 import { ViewportRouteContainer } from "../route-containers/App/Viewport";
 import { IProfile } from "../types/global";
 import { AuthLevel, FetchLevel } from "../types/main";
-import { AppToaster } from "../util/toasters";
+import { GetAppToaster } from "../util/toasters";
 
 export interface IStateProps {
   fetchPingLevel: FetchLevel;
@@ -51,24 +51,30 @@ export class App extends React.Component<Props> {
   public componentDidUpdate(prevProps: Props) {
     const { fetchPingLevel } = this.props;
 
+    const AppToaster = GetAppToaster();
+
     switch (fetchPingLevel) {
       case FetchLevel.failure:
         if (prevProps.fetchPingLevel === FetchLevel.fetching) {
-          AppToaster.show({
-            icon: "warning-sign",
-            intent: Intent.DANGER,
-            message: "Could not connect to Sotah API.",
-          });
+          if (AppToaster !== null) {
+            AppToaster.show({
+              icon: "warning-sign",
+              intent: Intent.DANGER,
+              message: "Could not connect to Sotah API.",
+            });
+          }
         }
 
         return;
       case FetchLevel.success:
         if (prevProps.fetchPingLevel === FetchLevel.fetching) {
-          AppToaster.show({
-            icon: "info-sign",
-            intent: Intent.SUCCESS,
-            message: "Connected to Sotah API.",
-          });
+          if (AppToaster !== null) {
+            AppToaster.show({
+              icon: "info-sign",
+              intent: Intent.SUCCESS,
+              message: "Connected to Sotah API.",
+            });
+          }
         }
 
         this.handleConnected(prevProps);
@@ -216,11 +222,14 @@ export class App extends React.Component<Props> {
         const hasBeenAuthorized =
           [AuthLevel.unauthenticated, AuthLevel.initial].indexOf(prevProps.authLevel) > -1;
         if (hasBeenAuthorized) {
-          AppToaster.show({
-            icon: "user",
-            intent: Intent.SUCCESS,
-            message: "You are logged in.",
-          });
+          const AppToaster = GetAppToaster();
+          if (AppToaster !== null) {
+            AppToaster.show({
+              icon: "user",
+              intent: Intent.SUCCESS,
+              message: "You are logged in.",
+            });
+          }
         }
 
         this.handleAuth(prevProps);
@@ -250,6 +259,8 @@ export class App extends React.Component<Props> {
       isLoginDialogOpen,
     } = this.props;
 
+    const AppToaster = GetAppToaster();
+
     switch (fetchBootLevel) {
       case FetchLevel.initial:
         boot();
@@ -257,29 +268,33 @@ export class App extends React.Component<Props> {
         return;
       case FetchLevel.failure:
         if (prevProps.fetchBootLevel === FetchLevel.fetching) {
-          AppToaster.show({
-            icon: "info-sign",
-            intent: Intent.DANGER,
-            message: "Failed to load regions.",
-          });
+          if (AppToaster !== null) {
+            AppToaster.show({
+              icon: "info-sign",
+              intent: Intent.DANGER,
+              message: "Failed to load regions.",
+            });
+          }
         }
 
         return;
       case FetchLevel.success:
         if (prevProps.fetchBootLevel === FetchLevel.fetching) {
           if (preloadedToken.length > 0) {
-            AppToaster.show({
-              action: {
-                icon: "log-in",
-                intent: Intent.PRIMARY,
-                onClick: () => changeIsLoginDialogOpen(!isLoginDialogOpen),
-                text: "Login",
-              },
-              icon: "info-sign",
-              intent: Intent.WARNING,
-              message: "Your session has expired.",
-              timeout: 10 * 1000,
-            });
+            if (AppToaster !== null) {
+              AppToaster.show({
+                action: {
+                  icon: "log-in",
+                  intent: Intent.PRIMARY,
+                  onClick: () => changeIsLoginDialogOpen(!isLoginDialogOpen),
+                  text: "Login",
+                },
+                icon: "info-sign",
+                intent: Intent.WARNING,
+                message: "Your session has expired.",
+                timeout: 10 * 1000,
+              });
+            }
           }
         }
 
@@ -292,6 +307,8 @@ export class App extends React.Component<Props> {
   private handleAuth(prevProps: Props) {
     const { fetchUserPreferencesLevel, loadUserPreferences, profile } = this.props;
 
+    const AppToaster = GetAppToaster();
+
     switch (fetchUserPreferencesLevel) {
       case FetchLevel.initial:
         loadUserPreferences(profile!.token);
@@ -299,11 +316,13 @@ export class App extends React.Component<Props> {
         return;
       case FetchLevel.failure:
         if (prevProps.fetchUserPreferencesLevel === FetchLevel.fetching) {
-          AppToaster.show({
-            icon: "warning-sign",
-            intent: Intent.DANGER,
-            message: "Failed to load user preferences.",
-          });
+          if (AppToaster !== null) {
+            AppToaster.show({
+              icon: "warning-sign",
+              intent: Intent.DANGER,
+              message: "Failed to load user preferences.",
+            });
+          }
         }
 
         return;
@@ -319,6 +338,8 @@ export class App extends React.Component<Props> {
   private handleAuthWithPreferences(prevProps: Props) {
     const { fetchBootLevel, boot } = this.props;
 
+    const AppToaster = GetAppToaster();
+
     switch (fetchBootLevel) {
       case FetchLevel.initial:
         boot();
@@ -326,11 +347,13 @@ export class App extends React.Component<Props> {
         return;
       case FetchLevel.failure:
         if (prevProps.fetchBootLevel === FetchLevel.fetching) {
-          AppToaster.show({
-            icon: "info-sign",
-            intent: Intent.DANGER,
-            message: "Failed to load regions.",
-          });
+          if (AppToaster !== null) {
+            AppToaster.show({
+              icon: "info-sign",
+              intent: Intent.DANGER,
+              message: "Failed to load regions.",
+            });
+          }
         }
 
         return;

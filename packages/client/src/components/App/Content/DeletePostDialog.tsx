@@ -7,7 +7,7 @@ import { IDeletePostOptions } from "../../../actions/posts";
 import { IPostJson } from "../../../api-types/entities";
 import { IProfile } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
-import { AppToaster } from "../../../util/toasters";
+import { GetAppToaster } from "../../../util/toasters";
 import { DialogActions, DialogBody } from "../../util";
 
 export interface IStateProps {
@@ -33,11 +33,14 @@ export class DeletePostDialog extends React.Component<Props> {
     if (prevProps.deletePostLevel !== deletePostLevel) {
       switch (deletePostLevel) {
         case FetchLevel.success:
-          AppToaster.show({
-            icon: "info-sign",
-            intent: Intent.SUCCESS,
-            message: "Your post has been deleted.",
-          });
+          const AppToaster = GetAppToaster();
+          if (AppToaster !== null) {
+            AppToaster.show({
+              icon: "info-sign",
+              intent: Intent.SUCCESS,
+              message: "Your post has been deleted.",
+            });
+          }
 
           history.replace("/content/news");
 
