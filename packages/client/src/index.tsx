@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Provider } from "react-redux";
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import { applyMiddleware, createStore, Middleware } from "redux";
 import thunk from "redux-thunk";
 
@@ -62,9 +62,9 @@ export const Boot = () => {
     <div className="pure-g">
       <div className="pure-u-1">
         <Provider store={store}>
-          <Router>
+          <BrowserRouter>
             <AppRouteContainer />
-          </Router>
+          </BrowserRouter>
         </Provider>
       </div>
     </div>
