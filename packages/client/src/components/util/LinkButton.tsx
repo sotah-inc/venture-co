@@ -1,28 +1,34 @@
 import * as React from "react";
 
 import { Button, IButtonProps } from "@blueprintjs/core";
-import { RouteComponentProps } from "react-router-dom";
 
 interface ILinkButtonButtonProps extends IButtonProps {
   type?: "button" | "reset" | "submit";
 }
 
-export interface IProps extends RouteComponentProps<{}> {
+export interface IRouteProps {
+  locationPathname: string;
+  historyPush: (destination: string) => void;
+}
+
+export interface IOwnProps {
   destination: string;
   buttonProps: ILinkButtonButtonProps;
   prefix?: boolean;
 }
 
-export const LinkButton: React.SFC<IProps> = (props: IProps) => {
-  const { destination, location, history, buttonProps, prefix } = props;
+type Props = Readonly<IOwnProps & IRouteProps>;
+
+export function LinkButton(props: Props) {
+  const { destination, locationPathname, historyPush, buttonProps, prefix } = props;
 
   const active: boolean = (() => {
     if (typeof prefix === "undefined") {
-      return location.pathname === destination;
+      return locationPathname === destination;
     }
 
-    return location.pathname.startsWith(destination);
+    return locationPathname.startsWith(destination);
   })();
 
-  return <Button active={active} onClick={() => history.push(destination)} {...buttonProps} />;
-};
+  return <Button active={active} onClick={() => historyPush(destination)} {...buttonProps} />;
+}

@@ -1,5 +1,20 @@
-import { withRouter } from "react-router-dom";
+import React from "react";
+
+import { RouteComponentProps, withRouter } from "react-router-dom";
 
 import { ManageAccountContainer } from "../../../containers/App/Profile/ManageAccount";
 
-export const ManageAccountRouteContainer = withRouter(ManageAccountContainer);
+type Props = RouteComponentProps<{}>;
+
+function RouteContainer(props: Props) {
+  const { history } = props;
+
+  return (
+    <ManageAccountContainer
+      browseToHome={() => history.push("/")}
+      browseToProfile={() => history.push("/profile")}
+    />
+  );
+}
+
+export const ManageAccountRouteContainer = withRouter(RouteContainer);

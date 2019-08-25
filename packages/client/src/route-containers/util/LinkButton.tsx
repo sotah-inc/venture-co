@@ -1,5 +1,25 @@
-import { withRouter } from "react-router-dom";
+import React from "react";
 
-import { LinkButton } from "../../components/util/LinkButton";
+import { RouteComponentProps, withRouter } from "react-router-dom";
 
-export const LinkButtonRouteContainer = withRouter(LinkButton);
+import { IOwnProps, LinkButton } from "../../components/util/LinkButton";
+
+type Props = Readonly<RouteComponentProps<{}> & IOwnProps>;
+
+function RouteContainer(props: Props) {
+  // props
+  const { buttonProps, destination, history, location } = props;
+
+  return (
+    <LinkButton
+      locationPathname={location.pathname}
+      historyPush={(pushDestination: string) => {
+        history.push(pushDestination);
+      }}
+      destination={destination}
+      buttonProps={buttonProps}
+    />
+  );
+}
+
+export const LinkButtonRouteContainer = withRouter(RouteContainer);

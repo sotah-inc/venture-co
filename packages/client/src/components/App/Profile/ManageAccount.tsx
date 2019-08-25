@@ -9,7 +9,6 @@ import {
   NonIdealState,
   Spinner,
 } from "@blueprintjs/core";
-import { RouteComponentProps } from "react-router-dom";
 
 import { IUpdateProfileRequest } from "../../../api-types/contracts/user/profile";
 import { IUserJson } from "../../../api-types/entities";
@@ -32,9 +31,14 @@ export interface IDispatchProps {
   updateProfile: (token: string, req: IUpdateProfileRequest) => void;
 }
 
-export interface IOwnProps extends RouteComponentProps<{}> {}
+export interface IRouteProps {
+  browseToHome: () => void;
+  browseToProfile: () => void;
+}
 
-type Props = Readonly<IOwnProps & IStateProps & IDispatchProps>;
+export type IOwnProps = IRouteProps;
+
+type Props = Readonly<IRouteProps & IOwnProps & IStateProps & IDispatchProps>;
 
 export class ManageAccount extends React.Component<Props> {
   public componentDidMount() {
@@ -93,7 +97,7 @@ export class ManageAccount extends React.Component<Props> {
   }
 
   private renderBreadcrumbs() {
-    const { history } = this.props;
+    const { browseToHome, browseToProfile } = this.props;
 
     const breadcrumbs: IBreadcrumbProps[] = [
       {
@@ -101,7 +105,7 @@ export class ManageAccount extends React.Component<Props> {
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           e.preventDefault();
 
-          history.push("/");
+          browseToHome();
         },
         text: "Home",
       },
@@ -110,7 +114,7 @@ export class ManageAccount extends React.Component<Props> {
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           e.preventDefault();
 
-          history.push("/profile");
+          browseToProfile();
         },
         text: "Profile",
       },
