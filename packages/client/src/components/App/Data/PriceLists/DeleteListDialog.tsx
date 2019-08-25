@@ -1,7 +1,6 @@
 import * as React from "react";
 
 import { Button, Callout, Dialog, Intent } from "@blueprintjs/core";
-import { RouteComponentProps } from "react-router";
 
 import { IPricelistJson } from "../../../../api-types/entities";
 import { IExpansion } from "../../../../api-types/expansion";
@@ -29,7 +28,17 @@ export interface IDispatchProps {
   deleteProfessionPricelist: (token: string, id: number) => void;
 }
 
-export interface IOwnProps extends RouteComponentProps<{}> {}
+export interface IRouteProps {
+  browseOnDeletion: (
+    region: IRegion,
+    realm: IRealm,
+    profession: IProfession,
+    expansion: IExpansion,
+    pricelist: IPricelistJson | null,
+  ) => void;
+}
+
+export type IOwnProps = IRouteProps;
 
 export type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
 
@@ -41,8 +50,8 @@ export class DeleteListDialog extends React.Component<Props> {
       currentRealm,
       selectedProfession,
       selectedExpansion,
-      history,
       selectedList,
+      browseOnDeletion,
     } = this.props;
 
     if (
@@ -66,18 +75,13 @@ export class DeleteListDialog extends React.Component<Props> {
             });
           }
 
-          const urlParts = [
-            "data",
-            currentRegion.name,
-            currentRealm.slug,
-            "professions",
-            selectedProfession.name,
-            selectedExpansion.name,
-          ];
-          if (selectedList !== null && selectedList.slug !== null) {
-            urlParts.push(selectedList.slug);
-          }
-          history.replace(`/${urlParts.join("/")}`);
+          browseOnDeletion(
+            currentRegion,
+            currentRealm,
+            selectedProfession,
+            selectedExpansion,
+            selectedList,
+          );
 
           return;
         default:

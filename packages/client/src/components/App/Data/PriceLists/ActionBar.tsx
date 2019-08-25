@@ -12,7 +12,6 @@ import {
   Spinner,
   Tooltip,
 } from "@blueprintjs/core";
-import { RouteComponentProps } from "react-router";
 
 import { IPricelistJson, UserLevel } from "../../../../api-types/entities";
 import { IExpansion } from "../../../../api-types/expansion";
@@ -42,7 +41,17 @@ export interface IDispatchProps {
   changeIsDeleteListDialogOpen: (isDialogOpen: boolean) => void;
 }
 
-export interface IOwnProps extends RouteComponentProps<{}> {}
+export interface IRouteProps {
+  browseOnRealmChange: (
+    region: IRegion,
+    realm: IRealm,
+    profession: IProfession | null,
+    expansion: IExpansion | null,
+    list: IPricelistJson | null,
+  ) => void;
+}
+
+export type IOwnProps = IRouteProps;
 
 export type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
 
@@ -63,7 +72,7 @@ export class ActionBar extends React.Component<Props> {
 
   private onRealmChange(realm: IRealm) {
     const {
-      history,
+      browseOnRealmChange,
       currentRegion,
       selectedProfession,
       selectedList,
@@ -74,22 +83,7 @@ export class ActionBar extends React.Component<Props> {
       return;
     }
 
-    const urlParts = ["data", currentRegion.name, realm.slug, "professions"];
-    if (selectedProfession === null) {
-      if (selectedList !== null && selectedList.slug !== null) {
-        urlParts.push(...["user", selectedList.slug]);
-      }
-    } else {
-      urlParts.push(selectedProfession.name);
-
-      if (selectedExpansion !== null) {
-        urlParts.push(selectedExpansion.name);
-      }
-      if (selectedList !== null && selectedList.slug !== null) {
-        urlParts.push(selectedList.slug);
-      }
-    }
-    history.push(`/${urlParts.join("/")}`);
+    browseOnRealmChange(currentRegion, realm, selectedProfession, selectedExpansion, selectedList);
   }
 
   private renderListButtons() {

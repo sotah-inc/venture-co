@@ -1,7 +1,6 @@
 import * as React from "react";
 
 import { Intent } from "@blueprintjs/core";
-import { RouteComponentProps } from "react-router";
 
 import { ICreatePricelistRequest } from "../../../../api-types/contracts/user/pricelist-crud";
 // tslint:disable-next-line:max-line-length
@@ -36,7 +35,17 @@ export interface IDispatchProps {
   createProfessionPricelist: (token: string, request: ICreateProfessionPricelistRequest) => void;
 }
 
-export interface IOwnProps extends RouteComponentProps<{}> {}
+export interface IRouteProps {
+  browseToProfessionPricelist: (
+    region: IRegion,
+    realm: IRealm,
+    profession: IProfession,
+    expansion: IExpansion,
+    pricelist: IPricelistJson,
+  ) => void;
+}
+
+export type IOwnProps = IRouteProps;
 
 export type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
 
@@ -57,7 +66,7 @@ export class CreateListDialog extends React.Component<Props, State> {
       currentRealm,
       selectedProfession,
       selectedExpansion,
-      history,
+      browseToProfessionPricelist,
     } = this.props;
     const { listDialogResetTrigger } = this.state;
 
@@ -84,16 +93,13 @@ export class CreateListDialog extends React.Component<Props, State> {
           }
           this.setState({ listDialogResetTrigger: listDialogResetTrigger + 1 });
 
-          const url = [
-            "data",
-            currentRegion.name,
-            currentRealm.slug,
-            "professions",
-            selectedProfession.name,
-            selectedExpansion.name,
-            selectedList.slug,
-          ].join("/");
-          history.replace(`/${url}`);
+          browseToProfessionPricelist(
+            currentRegion,
+            currentRealm,
+            selectedProfession,
+            selectedExpansion,
+            selectedList,
+          );
 
           break;
         default:
