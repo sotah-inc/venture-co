@@ -365,14 +365,17 @@ export class ListDialog extends React.Component<Props, State> {
   private renderEntries() {
     const { entries } = this.state;
 
+    const tableClassNames = [
+      Classes.HTML_TABLE,
+      Classes.HTML_TABLE_BORDERED,
+      Classes.SMALL,
+      "list-dialog-table",
+    ];
+
     if (entries.length > 0) {
       return (
         <div style={{ maxHeight: "300px", overflow: "auto" }}>
-          <HTMLTable
-            className={`${Classes.HTML_TABLE} ${Classes.HTML_TABLE_BORDERED} ${
-              Classes.SMALL
-            } list-dialog-table`}
-          >
+          <HTMLTable className={tableClassNames.join(" ")}>
             <thead>
               <tr>
                 <th>Item</th>
