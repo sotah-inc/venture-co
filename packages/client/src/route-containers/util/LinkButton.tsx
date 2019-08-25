@@ -13,9 +13,7 @@ function RouteContainer(props: Props) {
   return (
     <LinkButton
       locationPathname={location.pathname}
-      historyPush={(pushDestination: string) => {
-        history.push(pushDestination);
-      }}
+      historyPush={(pushDestination: string) => history.push(pushDestination)}
       destination={destination}
       buttonProps={buttonProps}
     />
