@@ -1,12 +1,11 @@
 import * as React from "react";
 
 import { Button, ButtonGroup, Classes, HTMLTable } from "@blueprintjs/core";
-import { RouteComponentProps } from "react-router";
 
 import { SortKind } from "../../../../api-types";
 import { IAuction } from "../../../../api-types/auction";
 import { IQueryAuctionsItem } from "../../../../api-types/contracts/data";
-import { IProfessionPricelistJson } from "../../../../api-types/entities";
+import { IPricelistJson, IProfessionPricelistJson } from "../../../../api-types/entities";
 import { IExpansion } from "../../../../api-types/expansion";
 import { IItem, IItemsMap, ItemId } from "../../../../api-types/item";
 import { IProfession } from "../../../../api-types/profession";
@@ -35,7 +34,17 @@ export interface IDispatchProps {
   onAuctionsQueryDeselect: (index: number) => void;
 }
 
-export interface IOwnProps extends RouteComponentProps<{}> {}
+export interface IRouteProps {
+  browseToProfessionPricelist: (
+    region: IRegion,
+    realm: IRealm,
+    profession: IProfession,
+    expansion: IExpansion,
+    pricelist: IPricelistJson,
+  ) => void;
+}
+
+export type IOwnProps = IRouteProps;
 
 type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
 
@@ -160,7 +169,13 @@ export class AuctionTable extends React.Component<Props> {
   }
 
   private renderProfessionPricelist(index: number, professionPricelist: IProfessionPricelistJson) {
-    const { expansions, professions, currentRegion, currentRealm, history } = this.props;
+    const {
+      expansions,
+      professions,
+      currentRegion,
+      currentRealm,
+      browseToProfessionPricelist,
+    } = this.props;
 
     if (currentRegion === null || currentRealm === null) {
       return null;
@@ -198,16 +213,6 @@ export class AuctionTable extends React.Component<Props> {
 
     const boxShadow: string = index === 0 ? "none" : "inset 0 1px 0 0 rgba(255, 255, 255, 0.15)";
 
-    const url = [
-      "data",
-      currentRegion.name,
-      currentRealm.slug,
-      "professions",
-      profession.name,
-      expansion.name,
-      professionPricelist.pricelist.slug,
-    ].join("/");
-
     return (
       <tr className="related-profession-pricelists" key={index}>
         <td colSpan={3} style={{ boxShadow }}>
@@ -216,7 +221,15 @@ export class AuctionTable extends React.Component<Props> {
               rightIcon="chevron-right"
               minimal={true}
               small={true}
-              onClick={() => history.push(`/${url}`)}
+              onClick={() =>
+                browseToProfessionPricelist(
+                  currentRegion,
+                  currentRealm,
+                  profession,
+                  expansion,
+                  professionPricelist.pricelist,
+                )
+              }
             >
               <ProfessionIcon profession={profession} /> {profession.label}
             </Button>
@@ -224,7 +237,15 @@ export class AuctionTable extends React.Component<Props> {
               rightIcon="chevron-right"
               minimal={true}
               small={true}
-              onClick={() => history.push(`/${url}`)}
+              onClick={() =>
+                browseToProfessionPricelist(
+                  currentRegion,
+                  currentRealm,
+                  profession,
+                  expansion,
+                  professionPricelist.pricelist,
+                )
+              }
             >
               <span style={{ color: expansion.label_color }}>{expansion.label}</span>
             </Button>
@@ -232,7 +253,15 @@ export class AuctionTable extends React.Component<Props> {
               icon={<PricelistIconContainer pricelist={professionPricelist.pricelist} />}
               minimal={true}
               small={true}
-              onClick={() => history.push(`/${url}`)}
+              onClick={() =>
+                browseToProfessionPricelist(
+                  currentRegion,
+                  currentRealm,
+                  profession,
+                  expansion,
+                  professionPricelist.pricelist,
+                )
+              }
             >
               {professionPricelist.pricelist.name}
             </Button>
