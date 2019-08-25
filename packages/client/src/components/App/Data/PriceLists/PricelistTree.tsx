@@ -35,7 +35,7 @@ export interface IDispatchProps {
   refreshPricelists: (token: string) => void;
 }
 
-export interface IOwnProps {
+export interface IRouteProps {
   browseToUserPricelist: (region: IRegion, realm: IRealm, pricelist: IPricelistJson) => void;
   browseToProfessionPricelist: (
     region: IRegion,
@@ -54,7 +54,9 @@ export interface IOwnProps {
   ) => void;
 }
 
-export type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
+export type IOwnProps = IRouteProps;
+
+export type Props = Readonly<IStateProps & IDispatchProps & IRouteProps>;
 
 interface ITopOpenMap {
   [key: string]: boolean;
