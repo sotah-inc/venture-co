@@ -1,7 +1,6 @@
 import * as React from "react";
 
 import { Classes, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
-import { RouteComponentProps } from "react-router-dom";
 
 import { IPreferenceJson } from "../api-types/entities";
 import { IRealm, IRegion } from "../api-types/region";
@@ -34,9 +33,7 @@ export interface IDispatchProps {
   boot: () => void;
 }
 
-export interface IOwnProps extends RouteComponentProps<{}> {}
-
-export type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
+export type Props = Readonly<IStateProps & IDispatchProps>;
 
 export class App extends React.Component<Props> {
   public didHandleUnauth: boolean = false;
