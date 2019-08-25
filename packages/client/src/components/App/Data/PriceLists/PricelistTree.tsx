@@ -1,6 +1,5 @@
-import * as React from "react";
-
 import { Classes, Intent, ITreeNode, Spinner, Tree } from "@blueprintjs/core";
+import * as React from "react";
 import { RouteComponentProps } from "react-router";
 
 import { IPricelistJson } from "../../../../api-types/entities";
@@ -284,15 +283,13 @@ export class PricelistTree extends React.Component<Props, IState> {
     }
 
     const pricelistNodes = result.map(v => this.getPricelistNode(v.pricelist!));
-    const sortedPricelistNodes = pricelistNodes.sort((a, b) => {
+    return pricelistNodes.sort((a, b) => {
       if (a.label === b.label) {
         return 0;
       }
 
       return a.label > b.label ? 1 : -1;
     });
-
-    return sortedPricelistNodes;
   }
 
   private getPricelistNode(v: IPricelistJson) {
