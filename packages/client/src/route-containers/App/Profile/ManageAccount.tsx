@@ -4,7 +4,7 @@ import { RouteComponentProps, withRouter } from "react-router-dom";
 
 import { ManageAccountContainer } from "../../../containers/App/Profile/ManageAccount";
 
-type Props = RouteComponentProps<{}>;
+type Props = Readonly<RouteComponentProps<{}>>;
 
 function RouteContainer(props: Props) {
   const { history } = props;

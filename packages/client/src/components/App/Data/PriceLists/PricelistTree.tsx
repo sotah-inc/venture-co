@@ -1,6 +1,6 @@
-import { Classes, Intent, ITreeNode, Spinner, Tree } from "@blueprintjs/core";
 import * as React from "react";
-import { RouteComponentProps } from "react-router";
+
+import { Classes, Intent, ITreeNode, Spinner, Tree } from "@blueprintjs/core";
 
 import { IPricelistJson } from "../../../../api-types/entities";
 import { IExpansion } from "../../../../api-types/expansion";
@@ -35,7 +35,24 @@ export interface IDispatchProps {
   refreshPricelists: (token: string) => void;
 }
 
-export interface IOwnProps extends RouteComponentProps<{}> {}
+export interface IOwnProps {
+  browseToUserPricelist: (region: IRegion, realm: IRealm, pricelist: IPricelistJson) => void;
+  browseToProfessionPricelist: (
+    region: IRegion,
+    realm: IRealm,
+    profession: IProfession,
+    expansion: IExpansion,
+    pricelist: IPricelistJson,
+  ) => void;
+  browseToProfessions: (region: IRegion, realm: IRealm) => void;
+  browseToProfession: (region: IRegion, realm: IRealm, profession: IProfession) => void;
+  browseToProfessionExpansion: (
+    region: IRegion,
+    realm: IRealm,
+    profession: IProfession,
+    expansion: IExpansion,
+  ) => void;
+}
 
 export type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
 
@@ -321,10 +338,11 @@ export class PricelistTree extends React.Component<Props, IState> {
       pricelists,
       professionPricelists,
       selectedExpansion,
-      history,
       currentRegion,
       currentRealm,
       selectedProfession,
+      browseToProfessionPricelist,
+      browseToUserPricelist,
     } = this.props;
 
     if (currentRegion === null || currentRealm === null) {
@@ -348,15 +366,7 @@ export class PricelistTree extends React.Component<Props, IState> {
         return;
       }
 
-      const userPricelistUrl = [
-        "data",
-        currentRegion.name,
-        currentRealm.slug,
-        "professions",
-        "user",
-        list.slug,
-      ].join("/");
-      history.push(`/${userPricelistUrl}`);
+      browseToUserPricelist(currentRegion, currentRealm, list);
 
       return;
     }
@@ -392,20 +402,24 @@ export class PricelistTree extends React.Component<Props, IState> {
       return;
     }
 
-    const professionPricelistUrl = [
-      "data",
-      currentRegion.name,
-      currentRealm.slug,
-      "professions",
-      selectedProfession.name,
-      selectedExpansion.name,
-      foundProfessionPricelist.slug,
-    ].join("/");
-    history.push(`/${professionPricelistUrl}`);
+    browseToProfessionPricelist(
+      currentRegion,
+      currentRealm,
+      selectedProfession,
+      selectedExpansion,
+      foundProfessionPricelist,
+    );
   }
 
   private onProfessionNodeClick(id: string) {
-    const { professions, selectedProfession, history, currentRegion, currentRealm } = this.props;
+    const {
+      professions,
+      selectedProfession,
+      browseToProfessions,
+      currentRegion,
+      currentRealm,
+      browseToProfession,
+    } = this.props;
 
     if (currentRegion === null || currentRealm === null) {
       return;
@@ -427,16 +441,16 @@ export class PricelistTree extends React.Component<Props, IState> {
       profession === null ||
       (selectedProfession !== null && profession.name === selectedProfession.name)
     ) {
-      history.push(`/data/${currentRegion.name}/${currentRealm.slug}/professions`);
+      browseToProfessions(currentRegion, currentRealm);
 
       return;
     }
 
-    history.push(`/data/${currentRegion.name}/${currentRealm.slug}/professions/${profession.name}`);
+    browseToProfession(currentRegion, currentRealm, profession);
   }
 
   private onTopNodeClick(id: TopOpenKey) {
-    const { history, currentRegion, currentRealm } = this.props;
+    const { browseToProfessions, currentRegion, currentRealm } = this.props;
     const { topOpenMap } = this.state;
 
     if (currentRegion === null || currentRealm === null) {
@@ -444,7 +458,7 @@ export class PricelistTree extends React.Component<Props, IState> {
     }
 
     if (id === TopOpenKey.summary) {
-      history.push(`/data/${currentRegion.name}/${currentRealm.slug}/professions`);
+      browseToProfessions(currentRegion, currentRealm);
 
       return;
     }
@@ -453,7 +467,13 @@ export class PricelistTree extends React.Component<Props, IState> {
   }
 
   private onExpansionClick(id: string) {
-    const { expansions, currentRegion, currentRealm, history, selectedProfession } = this.props;
+    const {
+      expansions,
+      currentRegion,
+      currentRealm,
+      browseToProfessionExpansion,
+      selectedProfession,
+    } = this.props;
 
     const expansion = expansions.reduce<IExpansion | null>((result, v) => {
       if (result !== null) {
@@ -476,15 +496,7 @@ export class PricelistTree extends React.Component<Props, IState> {
       return;
     }
 
-    const url = [
-      "data",
-      currentRegion.name,
-      currentRealm.slug,
-      "professions",
-      selectedProfession.name,
-      expansion.name,
-    ].join("/");
-    history.push(`/${url}`);
+    browseToProfessionExpansion(currentRegion, currentRealm, selectedProfession, expansion);
   }
 
   private onNodeClick(node: ITreeNode) {
