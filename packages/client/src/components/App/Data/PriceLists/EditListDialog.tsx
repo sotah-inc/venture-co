@@ -1,7 +1,6 @@
 import * as React from "react";
 
 import { Intent } from "@blueprintjs/core";
-import { RouteComponentProps } from "react-router";
 
 import { IPricelistJson } from "../../../../api-types/entities";
 import { IExpansion } from "../../../../api-types/expansion";
@@ -34,9 +33,17 @@ export interface IDispatchProps {
   updatePricelist: (opts: IUpdatePricelistRequestOptions) => void;
 }
 
-export interface IOwnProps extends RouteComponentProps<{}> {}
+export interface IRouteProps {
+  browseToProfessionPricelist: (
+    region: IRegion,
+    realm: IRealm,
+    profession: IProfession,
+    expansion: IExpansion,
+    pricelist: IPricelistJson,
+  ) => void;
+}
 
-export type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
+export type Props = Readonly<IStateProps & IDispatchProps & IRouteProps>;
 
 type State = Readonly<{
   listDialogResetTrigger: number;
@@ -55,7 +62,7 @@ export class EditListDialog extends React.Component<Props, State> {
       currentRealm,
       selectedProfession,
       selectedExpansion,
-      history,
+      browseToProfessionPricelist,
     } = this.props;
     const { listDialogResetTrigger } = this.state;
 
@@ -82,16 +89,13 @@ export class EditListDialog extends React.Component<Props, State> {
           }
           this.setState({ listDialogResetTrigger: listDialogResetTrigger + 1 });
 
-          const url = [
-            "data",
-            currentRegion.name,
-            currentRealm.slug,
-            "professions",
-            selectedProfession.name,
-            selectedExpansion.name,
-            selectedList.slug,
-          ].join("/");
-          history.replace(`/${url}`);
+          browseToProfessionPricelist(
+            currentRegion,
+            currentRealm,
+            selectedProfession,
+            selectedExpansion,
+            selectedList,
+          );
 
           break;
         default:
