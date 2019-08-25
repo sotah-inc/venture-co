@@ -110,12 +110,15 @@ export class AuctionTable extends React.Component<Props> {
   public render() {
     const { auctions } = this.props;
 
+    const classNames = [
+      Classes.HTML_TABLE,
+      Classes.HTML_TABLE_BORDERED,
+      Classes.SMALL,
+      "auction-table",
+    ];
+
     return (
-      <HTMLTable
-        className={`${Classes.HTML_TABLE} ${Classes.HTML_TABLE_BORDERED} ${
-          Classes.SMALL
-        } auction-table`}
-      >
+      <HTMLTable className={classNames.join(" ")}>
         <thead>
           <tr>
             <th>
