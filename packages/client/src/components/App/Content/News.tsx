@@ -1,7 +1,6 @@
 import * as React from "react";
 
 import { Classes, H1, H4, Icon, IconName, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
-import { RouteComponentProps } from "react-router-dom";
 
 import { IRegion } from "../../../api-types/region";
 // tslint:disable-next-line:max-line-length
@@ -20,7 +19,11 @@ export interface IDispatchProps {
   changeIsRegisterDialogOpen: (isOpen: boolean) => void;
 }
 
-export interface IOwnProps extends RouteComponentProps<{}> {}
+export interface IRouteProps {
+  historyPush: (destination: string) => void;
+}
+
+export type IOwnProps = IRouteProps;
 
 type Props = Readonly<IOwnProps & IStateProps & IDispatchProps>;
 
@@ -83,9 +86,9 @@ export class News extends React.Component<Props> {
   }
 
   private renderCard(dest: string, icon: IconName, label: string) {
-    const { history } = this.props;
+    const { historyPush } = this.props;
 
-    return <CardCallout onClick={() => history.push(dest)} icon={icon} label={label} />;
+    return <CardCallout onClick={() => historyPush(dest)} icon={icon} label={label} />;
   }
 
   private renderUserCallout() {

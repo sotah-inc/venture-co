@@ -1,7 +1,6 @@
 import * as React from "react";
 
 import { Button, Callout, Dialog, Intent } from "@blueprintjs/core";
-import { RouteComponentProps } from "react-router";
 
 import { IDeletePostOptions } from "../../../actions/posts";
 import { IPostJson } from "../../../api-types/entities";
@@ -22,13 +21,17 @@ export interface IDispatchProps {
   deletePost: (token: string, id: number) => void;
 }
 
-export interface IOwnProps extends RouteComponentProps<{}> {}
+export interface IRouteProps {
+  browseToNews: () => void;
+}
+
+export type IOwnProps = IRouteProps;
 
 export type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
 
 export class DeletePostDialog extends React.Component<Props> {
   public componentDidUpdate(prevProps: Props) {
-    const { history, deletePostLevel } = this.props;
+    const { browseToNews, deletePostLevel } = this.props;
 
     if (prevProps.deletePostLevel !== deletePostLevel) {
       switch (deletePostLevel) {
@@ -42,7 +45,7 @@ export class DeletePostDialog extends React.Component<Props> {
             });
           }
 
-          history.replace("/content/news");
+          browseToNews();
 
           return;
         default:
