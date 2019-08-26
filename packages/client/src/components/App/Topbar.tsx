@@ -12,7 +12,6 @@ import {
   NavbarHeading,
   Tooltip,
 } from "@blueprintjs/core";
-import { RouteComponentProps } from "react-router-dom";
 
 import { IUserJson } from "../../api-types/entities";
 import { IRealm, IRegion } from "../../api-types/region";
@@ -27,7 +26,11 @@ export interface IStateProps {
   currentRegion: IRegion | null;
 }
 
-export interface IOwnProps extends RouteComponentProps<{}> {}
+export interface IRouteProps {
+  locationPathname: string;
+}
+
+export type IOwnProps = IRouteProps;
 
 export type Props = Readonly<IStateProps & IOwnProps>;
 
@@ -115,17 +118,17 @@ export class Topbar extends React.Component<Props> {
   }
 
   private getSubBarKind() {
-    const { location } = this.props;
+    const { locationPathname } = this.props;
 
-    if (location.pathname.startsWith("/content")) {
+    if (locationPathname.startsWith("/content")) {
       return SubBarKind.Content;
     }
 
-    if (location.pathname.startsWith("/data")) {
+    if (locationPathname.startsWith("/data")) {
       return SubBarKind.Data;
     }
 
-    if (location.pathname.startsWith("/profile")) {
+    if (locationPathname.startsWith("/profile")) {
       return SubBarKind.Profile;
     }
 
