@@ -1,10 +1,12 @@
 import * as React from "react";
 
-import { Redirect, RouteComponentProps } from "react-router-dom";
-
 import { setTitle } from "../../util";
 
-export interface IOwnProps extends RouteComponentProps<{}> {}
+export interface IRouteProps {
+  browseToManageAccount: () => void;
+}
+
+export type IOwnProps = IRouteProps;
 
 export type Props = Readonly<IOwnProps>;
 
@@ -14,6 +16,11 @@ export class Profile extends React.Component<Props> {
   }
 
   public render() {
-    return <Redirect to="/profile/manage-account" />;
+    // props
+    const { browseToManageAccount } = this.props;
+
+    browseToManageAccount();
+
+    return <p>Redirecting to Manage Account</p>;
   }
 }

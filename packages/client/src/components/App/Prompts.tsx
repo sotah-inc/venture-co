@@ -1,7 +1,6 @@
 import * as React from "react";
 
 import { Button, Callout, Intent } from "@blueprintjs/core";
-import { RouteComponentProps } from "react-router-dom";
 
 import { IUserJson, UserLevel } from "../../api-types/entities";
 
@@ -13,7 +12,10 @@ export interface IDispatchProps {
   hello: () => void;
 }
 
-export interface IOwnProps extends RouteComponentProps<{}> {}
+// tslint:disable-next-line:no-empty-interface
+export interface IRouteProps {}
+
+export type IOwnProps = IRouteProps;
 
 export type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
 

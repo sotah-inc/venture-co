@@ -1,13 +1,15 @@
 import * as React from "react";
 
-import { Redirect, RouteComponentProps } from "react-router-dom";
+export interface IRouteProps {
+  redirectToContent: () => void;
+}
 
-export interface IOwnProps extends RouteComponentProps<{}> {}
+export type IOwnProps = IRouteProps;
 
 export type Props = Readonly<IOwnProps>;
 
-export class Root extends React.Component<Props> {
-  public render() {
-    return <Redirect to="/content" />;
-  }
+export function Root({ redirectToContent }: Props) {
+  redirectToContent();
+
+  return <p>Redirecting to content!</p>;
 }
