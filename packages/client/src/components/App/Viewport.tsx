@@ -26,11 +26,7 @@ export interface IOwnProps extends RouteComponentProps<{}> {}
 export type Props = Readonly<IOwnProps>;
 
 export class Viewport extends React.Component<Props> {
-  public render() {
-    return <div id="content">{this.renderContent()}</div>;
-  }
-
-  private renderContent() {
+  private static renderContent() {
     return (
       <>
         <PromptsRouteContainer />
@@ -105,5 +101,9 @@ export class Viewport extends React.Component<Props> {
         </Switch>
       </>
     );
+  }
+
+  public render() {
+    return <div id="content">{Viewport.renderContent()}</div>;
   }
 }
