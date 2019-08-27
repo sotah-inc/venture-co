@@ -1,13 +1,17 @@
 import React from "react";
 
-import { RouteComponentProps, withRouter } from "react-router-dom";
+import { BrowserRouter, RouteComponentProps, withRouter } from "react-router-dom";
 
 import { AppContainer } from "../containers/App";
 
 type Props = Readonly<RouteComponentProps<{}>>;
 
 function RouteContainer(_props: Props) {
-  return <AppContainer />;
+  return (
+    <BrowserRouter>
+      <AppContainer />
+    </BrowserRouter>
+  );
 }
 
 export const AppRouteContainer = withRouter(RouteContainer);
