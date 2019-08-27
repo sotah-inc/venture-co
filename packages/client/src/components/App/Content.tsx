@@ -1,10 +1,12 @@
 import * as React from "react";
 
-import { Redirect, RouteComponentProps } from "react-router-dom";
-
 import { setTitle } from "../../util";
 
-export interface IOwnProps extends RouteComponentProps<{}> {}
+export interface IRouteProps {
+  browseToNews: () => void;
+}
+
+export type IOwnProps = IRouteProps;
 
 export type Props = Readonly<IOwnProps>;
 
@@ -14,6 +16,11 @@ export class Content extends React.Component<Props> {
   }
 
   public render() {
-    return <Redirect to="/content/news" />;
+    // props
+    const { browseToNews } = this.props;
+
+    browseToNews();
+
+    return <p>Redirecting to News</p>;
   }
 }

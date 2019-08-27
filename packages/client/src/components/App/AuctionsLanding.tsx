@@ -1,7 +1,6 @@
 import * as React from "react";
 
 import { Classes, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
-import { Redirect, RouteComponentProps } from "react-router-dom";
 
 import { IRealm, IRegion } from "../../api-types/region";
 import { IRegions } from "../../types/global";
@@ -20,11 +19,16 @@ export interface IDispatchProps {
   onRegionChange: (region: IRegion) => void;
 }
 
-interface IRouteParams {
+export interface IRouteProps {
+  routeParams: IRouteParams;
+  redirectToAuctions: (region: IRegion, realm: IRealm) => void;
+}
+
+export interface IRouteParams {
   region_name?: string;
 }
 
-export interface IOwnProps extends RouteComponentProps<IRouteParams> {}
+export type IOwnProps = IRouteProps;
 
 export type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
 
@@ -32,9 +36,7 @@ export class AuctionsLanding extends React.Component<Props> {
   public componentDidMount() {
     const {
       currentRegion,
-      match: {
-        params: { region_name },
-      },
+      routeParams: { region_name },
       onRegionChange,
       regions,
       fetchRealmLevel,
@@ -90,9 +92,7 @@ export class AuctionsLanding extends React.Component<Props> {
 
   public componentDidUpdate() {
     const {
-      match: {
-        params: { region_name },
-      },
+      routeParams: { region_name },
       fetchRealmLevel,
       currentRegion,
       fetchRealms,
@@ -144,9 +144,8 @@ export class AuctionsLanding extends React.Component<Props> {
       currentRealm,
       currentRegion,
       fetchRealmLevel,
-      match: {
-        params: { region_name },
-      },
+      routeParams: { region_name },
+      redirectToAuctions,
     } = this.props;
 
     if (currentRegion === null) {
@@ -203,7 +202,9 @@ export class AuctionsLanding extends React.Component<Props> {
       );
     }
 
-    return <Redirect to={`/data/${currentRegion.name}/${currentRealm.slug}/auctions`} />;
+    redirectToAuctions(currentRegion, currentRealm);
+
+    return <p>Redirecting to auctions!</p>;
   }
 
   private setTitle() {
