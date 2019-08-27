@@ -1,7 +1,6 @@
 import * as React from "react";
 
 import { Classes, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
-import { Redirect, RouteComponentProps } from "react-router-dom";
 
 import { IRealm, IRegion } from "../../../api-types/region";
 import { IRealms, IRegions } from "../../../types/global";
@@ -23,12 +22,17 @@ export interface IDispatchProps {
   onRealmChange: (realm: IRealm) => void;
 }
 
-interface IRouteParams {
+export interface IRouteProps {
+  routeParams: IRouteParams;
+  redirectToRealmAuctions: (region: IRegion, realm: IRealm) => void;
+}
+
+export interface IRouteParams {
   region_name: string;
   realm_slug: string;
 }
 
-export interface IOwnProps extends RouteComponentProps<IRouteParams> {}
+export type IOwnProps = IRouteProps;
 
 export type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
 
@@ -36,9 +40,7 @@ export class Realm extends React.Component<Props> {
   public componentDidMount() {
     const {
       currentRegion,
-      match: {
-        params: { region_name },
-      },
+      routeParams: { region_name },
       onRegionChange,
       regions,
       fetchRealmLevel,
@@ -73,9 +75,7 @@ export class Realm extends React.Component<Props> {
   public componentDidUpdate(prevProps: Props) {
     const {
       currentRegion,
-      match: {
-        params: { region_name, realm_slug },
-      },
+      routeParams: { region_name, realm_slug },
       fetchRealmLevel,
       fetchRealms,
       currentRealm,
@@ -120,9 +120,7 @@ export class Realm extends React.Component<Props> {
   public render() {
     const {
       currentRegion,
-      match: {
-        params: { region_name },
-      },
+      routeParams: { region_name },
     } = this.props;
 
     if (currentRegion === null) {
@@ -144,9 +142,7 @@ export class Realm extends React.Component<Props> {
   private renderUnmatchedRegion() {
     const {
       regions,
-      match: {
-        params: { region_name },
-      },
+      routeParams: { region_name },
     } = this.props;
 
     if (!(region_name in regions)) {
@@ -203,10 +199,9 @@ export class Realm extends React.Component<Props> {
     const {
       currentRealm,
       currentRegion,
-      match: {
-        params: { realm_slug },
-      },
+      routeParams: { realm_slug },
       realms,
+      redirectToRealmAuctions,
     } = this.props;
 
     if (currentRegion === null || currentRealm === null) {
@@ -238,6 +233,8 @@ export class Realm extends React.Component<Props> {
 
     setTitle(`Redirecting to Auctions - ${currentRegion.name.toUpperCase()} ${currentRealm.name}`);
 
-    return <Redirect to={`/data/${currentRegion.name}/${currentRealm.slug}/auctions`} />;
+    redirectToRealmAuctions(currentRegion, currentRealm);
+
+    return <p>Redirecting to Auctions!</p>;
   }
 }

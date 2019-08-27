@@ -9,7 +9,6 @@ import {
   NonIdealState,
   Spinner,
 } from "@blueprintjs/core";
-import { RouteComponentProps } from "react-router-dom";
 
 import { ICreatePostRequest } from "../../../api-types/contracts/user/post-crud";
 import { IPostJson, UserLevel } from "../../../api-types/entities";
@@ -33,7 +32,13 @@ export interface IDispatchProps {
   createPost: (token: string, v: ICreatePostRequest) => void;
 }
 
-export interface IOwnProps extends RouteComponentProps<{}> {}
+export interface IRouteProps {
+  browseToPost: (post: IPostJson) => void;
+  browseToHome: () => void;
+  browseToNews: () => void;
+}
+
+export type IOwnProps = IRouteProps;
 
 type Props = Readonly<IDispatchProps & IStateProps & IOwnProps>;
 
@@ -48,7 +53,7 @@ export class NewsCreator extends React.Component<Props> {
       createPost,
       createPostLevel,
       createPostErrors,
-      history,
+      browseToPost,
       currentPost,
     } = this.props;
 
@@ -83,7 +88,7 @@ export class NewsCreator extends React.Component<Props> {
               });
             }
 
-            history.push(`/content/news/${currentPost.slug}`);
+            browseToPost(currentPost);
           }}
           onFatalError={err => {
             const AppToaster = GetAppToaster();
@@ -101,7 +106,7 @@ export class NewsCreator extends React.Component<Props> {
   }
 
   private renderBreadcrumbs() {
-    const { history } = this.props;
+    const { browseToHome, browseToNews } = this.props;
 
     const breadcrumbs: IBreadcrumbProps[] = [
       {
@@ -109,7 +114,7 @@ export class NewsCreator extends React.Component<Props> {
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           e.preventDefault();
 
-          history.push("/");
+          browseToHome();
         },
         text: "Home",
       },
@@ -118,7 +123,7 @@ export class NewsCreator extends React.Component<Props> {
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           e.preventDefault();
 
-          history.push("/content/news");
+          browseToNews();
         },
         text: "News",
       },

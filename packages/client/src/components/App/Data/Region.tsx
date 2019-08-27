@@ -1,7 +1,6 @@
 import * as React from "react";
 
 import { Classes, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
-import { Redirect, RouteComponentProps } from "react-router-dom";
 
 import { IRealm, IRegion } from "../../../api-types/region";
 import { IRegions } from "../../../types/global";
@@ -20,20 +19,23 @@ export interface IDispatchProps {
   fetchRealms: (region: IRegion) => void;
 }
 
-interface IRouteProps {
+export interface IRouteProps {
+  routeParams: IRouteParams;
+  browseToRealmData: (region: IRegion, realm: IRealm) => void;
+}
+
+export interface IRouteParams {
   region_name: string;
 }
 
-export interface IOwnProps extends RouteComponentProps<IRouteProps> {}
+export type IOwnProps = IRouteProps;
 
 export type Props = Readonly<IOwnProps & IStateProps & IDispatchProps>;
 
 export class Region extends React.Component<Props> {
   public componentDidMount() {
     const {
-      match: {
-        params: { region_name },
-      },
+      routeParams: { region_name },
       regions,
       currentRegion,
       onRegionChange,
@@ -70,9 +72,7 @@ export class Region extends React.Component<Props> {
   public componentDidUpdate(prevProps: Props) {
     const {
       currentRegion,
-      match: {
-        params: { region_name },
-      },
+      routeParams: { region_name },
       fetchRealmLevel,
       fetchRealms,
     } = this.props;
@@ -106,9 +106,7 @@ export class Region extends React.Component<Props> {
   public render() {
     const {
       currentRegion,
-      match: {
-        params: { region_name },
-      },
+      routeParams: { region_name },
     } = this.props;
 
     if (currentRegion === null || currentRegion.name !== region_name) {
@@ -152,7 +150,7 @@ export class Region extends React.Component<Props> {
   }
 
   private renderMatchedWithRealms() {
-    const { currentRealm, currentRegion } = this.props;
+    const { currentRealm, currentRegion, browseToRealmData } = this.props;
 
     if (currentRegion === null || currentRealm === null) {
       return (
@@ -163,15 +161,15 @@ export class Region extends React.Component<Props> {
       );
     }
 
-    return <Redirect to={`/data/${currentRegion.name}/${currentRealm.slug}`} />;
+    browseToRealmData(currentRegion, currentRealm);
+
+    return <p>Redirecting to realm data!</p>;
   }
 
   private renderUnmatched() {
     const {
       regions,
-      match: {
-        params: { region_name },
-      },
+      routeParams: { region_name },
     } = this.props;
 
     if (!(region_name in regions)) {

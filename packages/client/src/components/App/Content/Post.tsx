@@ -16,7 +16,6 @@ import {
   Spinner,
 } from "@blueprintjs/core";
 import moment from "moment";
-import { RouteComponentProps } from "react-router-dom";
 
 import { IDeletePostOptions } from "../../../actions/posts";
 import { IPostJson, IUserJson, UserLevel } from "../../../api-types/entities";
@@ -38,11 +37,18 @@ export interface IDispatchProps {
   changeIsDeletePostDialogOpen: (v: IDeletePostOptions) => void;
 }
 
-interface IRouteParams {
+export interface IRouteParams {
   post_slug?: string;
 }
 
-export interface IOwnProps extends RouteComponentProps<IRouteParams> {}
+export interface IRouteProps {
+  routeParams: IRouteParams;
+  browseToHome: () => void;
+  browseToNews: () => void;
+  browseToPostEdit: (post: IPostJson) => void;
+}
+
+export type IOwnProps = IRouteProps;
 
 export type Props = Readonly<IDispatchProps & IStateProps & IOwnProps>;
 
@@ -74,7 +80,7 @@ export class Post extends React.Component<Props> {
   }
 
   private renderBreadcrumbs() {
-    const { history, currentPost } = this.props;
+    const { currentPost, browseToHome, browseToNews } = this.props;
 
     if (currentPost === null) {
       return;
@@ -86,7 +92,7 @@ export class Post extends React.Component<Props> {
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           e.preventDefault();
 
-          history.push("/");
+          browseToHome();
         },
         text: "Home",
       },
@@ -95,7 +101,7 @@ export class Post extends React.Component<Props> {
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           e.preventDefault();
 
-          history.push("/content/news");
+          browseToNews();
         },
         text: "News",
       },
@@ -113,9 +119,7 @@ export class Post extends React.Component<Props> {
 
   private handle(prevProps?: Props) {
     const {
-      match: {
-        params: { post_slug },
-      },
+      routeParams: { post_slug },
       getPostLevel,
       getPost,
       currentPost,
@@ -163,9 +167,7 @@ export class Post extends React.Component<Props> {
 
   private renderContent() {
     const {
-      match: {
-        params: { post_slug },
-      },
+      routeParams: { post_slug },
       getPostLevel,
       currentPost,
     } = this.props;
@@ -241,7 +243,7 @@ export class Post extends React.Component<Props> {
   }
 
   private renderActionBar() {
-    const { user, currentPost, history, changeIsDeletePostDialogOpen } = this.props;
+    const { user, currentPost, browseToPostEdit, changeIsDeletePostDialogOpen } = this.props;
 
     if (user === null || user.level < UserLevel.Admin) {
       return null;
@@ -255,11 +257,7 @@ export class Post extends React.Component<Props> {
       <>
         <hr />
         <ButtonGroup>
-          <Button
-            icon="edit"
-            text="Edit"
-            onClick={() => history.push(`/content/news/${currentPost.slug}/edit`)}
-          />
+          <Button icon="edit" text="Edit" onClick={() => browseToPostEdit(currentPost)} />
           <Button
             icon="delete"
             onClick={() => changeIsDeletePostDialogOpen({ isOpen: true, post: currentPost })}

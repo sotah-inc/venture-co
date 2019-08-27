@@ -1,7 +1,6 @@
 import * as React from "react";
 
 import { Classes, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
-import { RouteComponentProps } from "react-router";
 
 import { IPricelistJson } from "../../../api-types/entities";
 import { IExpansion } from "../../../api-types/expansion";
@@ -52,7 +51,25 @@ export interface IDispatchProps {
   resetProfessionsSelections: () => void;
 }
 
-interface IRouteParams {
+export interface IRouteProps {
+  routeParams: IRouteParams;
+  redirectToPricelist: (
+    region: IRegion,
+    realm: IRealm,
+    profession: IProfession,
+    expansion: IExpansion,
+    pricelist: IPricelistJson,
+  ) => void;
+  browseOnRealmChange: (
+    region: IRegion,
+    realm: IRealm,
+    profession: IProfession | null,
+    expansion: IExpansion | null,
+    pricelist: IPricelistJson | null,
+  ) => void;
+}
+
+export interface IRouteParams {
   region_name: string;
   realm_slug: string;
   profession_name?: string;
@@ -60,7 +77,7 @@ interface IRouteParams {
   pricelist_slug?: string;
 }
 
-export interface IOwnProps extends RouteComponentProps<IRouteParams> {}
+export type IOwnProps = IRouteProps;
 
 type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
 
@@ -68,9 +85,7 @@ export class PriceLists extends React.Component<Props> {
   public componentDidMount() {
     const {
       currentRegion,
-      match: {
-        params: { region_name },
-      },
+      routeParams: { region_name },
       onRegionChange,
       regions,
     } = this.props;
@@ -94,19 +109,17 @@ export class PriceLists extends React.Component<Props> {
 
   public componentDidUpdate() {
     const {
-      match: {
-        params: { region_name },
-      },
+      routeParams: { region_name },
       currentRegion,
       onRegionChange,
       regions,
       fetchRealmLevel,
       fetchRealms,
       currentRealm,
-      history,
       selectedProfession,
       selectedExpansion,
       selectedList,
+      browseOnRealmChange,
     } = this.props;
 
     if (currentRegion === null) {
@@ -132,22 +145,13 @@ export class PriceLists extends React.Component<Props> {
             return;
           }
 
-          const urlParts = ["data", currentRegion.name, currentRealm.slug, "professions"];
-          if (selectedProfession === null) {
-            if (selectedList !== null && selectedList.slug !== null) {
-              urlParts.push(...["user", selectedList.slug]);
-            }
-          } else {
-            urlParts.push(selectedProfession.name);
-
-            if (selectedExpansion !== null) {
-              urlParts.push(selectedExpansion.name);
-            }
-            if (selectedList !== null && selectedList.slug !== null) {
-              urlParts.push(selectedList.slug);
-            }
-          }
-          history.push(`/${urlParts.join("/")}`);
+          browseOnRealmChange(
+            currentRegion,
+            currentRealm,
+            selectedProfession,
+            selectedExpansion,
+            selectedList,
+          );
 
           return;
         default:
@@ -161,9 +165,7 @@ export class PriceLists extends React.Component<Props> {
   public render() {
     const {
       authLevel,
-      match: {
-        params: { profession_name },
-      },
+      routeParams: { profession_name },
       professions,
     } = this.props;
 
@@ -210,9 +212,7 @@ export class PriceLists extends React.Component<Props> {
 
   private handleWithRegion() {
     const {
-      match: {
-        params: { realm_slug },
-      },
+      routeParams: { realm_slug },
       fetchRealmLevel,
       currentRegion,
       fetchRealms,
@@ -256,9 +256,7 @@ export class PriceLists extends React.Component<Props> {
 
   private handleWithRealm() {
     const {
-      match: {
-        params: { profession_name, pricelist_slug },
-      },
+      routeParams: { profession_name, pricelist_slug },
       currentRegion,
       currentRealm,
       selectedProfession,
@@ -342,9 +340,7 @@ export class PriceLists extends React.Component<Props> {
 
   private handleWithProfession() {
     const {
-      match: {
-        params: { expansion_name },
-      },
+      routeParams: { expansion_name },
       currentRegion,
       currentRealm,
       selectedProfession,
@@ -398,10 +394,7 @@ export class PriceLists extends React.Component<Props> {
 
   private handleWithExpansion() {
     const {
-      match: {
-        params: { pricelist_slug },
-      },
-      history,
+      routeParams: { pricelist_slug },
       currentRegion,
       currentRealm,
       selectedProfession,
@@ -409,6 +402,7 @@ export class PriceLists extends React.Component<Props> {
       selectedList,
       professionPricelists,
       changeSelectedList,
+      redirectToPricelist,
     } = this.props;
 
     if (
@@ -444,16 +438,13 @@ export class PriceLists extends React.Component<Props> {
         return;
       }
 
-      const url = [
-        "data",
-        currentRegion.name,
-        currentRealm.slug,
-        "professions",
-        selectedProfession.name,
-        selectedExpansion.name,
-        preselectedList.slug,
-      ].join("/");
-      history.replace(`/${url}`);
+      redirectToPricelist(
+        currentRegion,
+        currentRealm,
+        selectedProfession,
+        selectedExpansion,
+        preselectedList,
+      );
 
       return;
     }

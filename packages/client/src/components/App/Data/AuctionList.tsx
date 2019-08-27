@@ -11,7 +11,6 @@ import {
   NonIdealState,
   Spinner,
 } from "@blueprintjs/core";
-import { RouteComponentProps } from "react-router";
 
 import { SortDirection, SortKind } from "../../../api-types";
 import { IAuction, OwnerName } from "../../../api-types/auction";
@@ -64,12 +63,17 @@ export interface IDispatchProps {
   refreshAuctionsQuery: (opts: IQueryAuctionsOptions) => void;
 }
 
-interface IRouteParams {
+export interface IRouteProps {
+  routeParams: IRouteParams;
+  browseToRealmAuctions: (region: IRegion, realm: IRealm) => void;
+}
+
+export interface IRouteParams {
   region_name: string;
   realm_slug: string;
 }
 
-export interface IOwnProps extends RouteComponentProps<IRouteParams> {}
+export type IOwnProps = IRouteProps;
 
 type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
 
@@ -77,9 +81,7 @@ export class AuctionList extends React.Component<Props> {
   public componentDidMount() {
     const {
       currentRegion,
-      match: {
-        params: { region_name, realm_slug },
-      },
+      routeParams: { region_name, realm_slug },
       onRegionChange,
       regions,
       fetchRealmLevel,
@@ -137,10 +139,7 @@ export class AuctionList extends React.Component<Props> {
 
   public componentDidUpdate(prevProps: Props) {
     const {
-      match: {
-        params: { region_name, realm_slug },
-      },
-      history,
+      routeParams: { region_name, realm_slug },
       fetchRealmLevel,
       currentRegion,
       fetchRealms,
@@ -149,6 +148,7 @@ export class AuctionList extends React.Component<Props> {
       onRealmChange,
       realms,
       regions,
+      browseToRealmAuctions,
     } = this.props;
 
     if (currentRegion === null) {
@@ -175,7 +175,7 @@ export class AuctionList extends React.Component<Props> {
           }
 
           this.setTitle();
-          history.push(`/data/${currentRegion.name}/${currentRealm.slug}/auctions`);
+          browseToRealmAuctions(currentRegion, currentRealm);
           this.refreshAuctions();
           this.refreshAuctionsQuery();
 
@@ -219,9 +219,7 @@ export class AuctionList extends React.Component<Props> {
   public render() {
     const {
       currentRegion,
-      match: {
-        params: { region_name },
-      },
+      routeParams: { region_name },
     } = this.props;
 
     if (currentRegion === null) {
@@ -303,9 +301,7 @@ export class AuctionList extends React.Component<Props> {
   private renderUnmatchedRegion() {
     const {
       regions,
-      match: {
-        params: { region_name },
-      },
+      routeParams: { region_name },
     } = this.props;
 
     if (!(region_name in regions)) {
@@ -362,9 +358,7 @@ export class AuctionList extends React.Component<Props> {
     const {
       currentRealm,
       currentRegion,
-      match: {
-        params: { realm_slug },
-      },
+      routeParams: { realm_slug },
       realms,
     } = this.props;
 
@@ -574,13 +568,13 @@ export class AuctionList extends React.Component<Props> {
   }
 
   private onRealmChange(realm: IRealm) {
-    const { history, currentRegion } = this.props;
+    const { browseToRealmAuctions, currentRegion } = this.props;
 
     if (currentRegion === null) {
       return;
     }
 
-    history.push(`/data/${currentRegion.name}/${realm.slug}/auctions`);
+    browseToRealmAuctions(currentRegion, realm);
   }
 
   private renderAuctions() {

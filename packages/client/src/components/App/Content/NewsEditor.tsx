@@ -9,7 +9,6 @@ import {
   NonIdealState,
   Spinner,
 } from "@blueprintjs/core";
-import { RouteComponentProps } from "react-router-dom";
 
 import { IUpdatePostRequest } from "../../../api-types/contracts/user/post-crud";
 import { IPostJson, UserLevel } from "../../../api-types/entities";
@@ -35,11 +34,18 @@ export interface IDispatchProps {
   updatePost: (token: string, postId: number, v: IUpdatePostRequest) => void;
 }
 
-interface IRouteParams {
+export interface IRouteProps {
+  routeParams: IRouteParams;
+  browseToHome: () => void;
+  browseToPost: (post: IPostJson) => void;
+  browseToNews: () => void;
+}
+
+export interface IRouteParams {
   post_slug?: string;
 }
 
-export interface IOwnProps extends RouteComponentProps<IRouteParams> {}
+export type IOwnProps = IRouteProps;
 
 type Props = Readonly<IDispatchProps & IStateProps & IOwnProps>;
 
@@ -54,9 +60,7 @@ export class NewsEditor extends React.Component<Props> {
 
   public render() {
     const {
-      match: {
-        params: { post_slug },
-      },
+      routeParams: { post_slug },
       profile,
       updatePost,
       updatePostLevel,
@@ -144,7 +148,7 @@ export class NewsEditor extends React.Component<Props> {
   }
 
   private renderBreadcrumbs() {
-    const { history, currentPost } = this.props;
+    const { browseToHome, currentPost, browseToNews, browseToPost } = this.props;
 
     if (currentPost === null) {
       return;
@@ -156,7 +160,7 @@ export class NewsEditor extends React.Component<Props> {
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           e.preventDefault();
 
-          history.push("/");
+          browseToHome();
         },
         text: "Home",
       },
@@ -165,7 +169,7 @@ export class NewsEditor extends React.Component<Props> {
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           e.preventDefault();
 
-          history.push("/content/news");
+          browseToNews();
         },
         text: "News",
       },
@@ -174,7 +178,7 @@ export class NewsEditor extends React.Component<Props> {
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           e.preventDefault();
 
-          history.push(`/content/news/${currentPost.slug}`);
+          browseToPost(currentPost);
         },
         text: currentPost.title,
       },
@@ -192,15 +196,13 @@ export class NewsEditor extends React.Component<Props> {
 
   private handle(prevProps?: Props) {
     const {
-      match: {
-        params: { post_slug },
-      },
+      routeParams: { post_slug },
       currentPost,
       getPost,
       getPostLevel,
       profile,
       updatePostLevel,
-      history,
+      browseToPost,
     } = this.props;
 
     if (profile === null || profile.user.level < UserLevel.Admin) {
@@ -231,7 +233,7 @@ export class NewsEditor extends React.Component<Props> {
             });
           }
 
-          history.push(`/content/news/${currentPost.slug}`);
+          browseToPost(currentPost);
 
           return;
         default:
