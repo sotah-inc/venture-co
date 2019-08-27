@@ -8,10 +8,10 @@ import { NotFound } from "../../components/util/NotFound";
 import { NewsCreatorContainer } from "../../containers/App/Content/NewsCreator";
 import { NewsEditorContainer } from "../../containers/App/Content/NewsEditor";
 import { PostContainer } from "../../containers/App/Content/Post";
-import { DataContainer } from "../../containers/App/Data";
 import { AuctionsLandingRouteContainer } from "./AuctionsLanding";
 import { ContentRouteContainer } from "./Content";
 import { NewsRouteContainer } from "./Content/News";
+import { DataRouteContainer } from "./Data";
 import { AuctionListRouteContainer } from "./Data/AuctionList";
 import { PriceListsRouteContainer } from "./Data/PriceLists";
 import { RealmRouteContainer } from "./Data/Realm";
@@ -47,7 +47,7 @@ function RouteContainer(_props: Props) {
               path="/content/news/:post_slug/edit"
               component={NewsEditorContainer}
             />
-            <Route exact={true} path="/data" component={DataContainer} />
+            <Route exact={true} path="/data" component={DataRouteContainer} />
             <Route
               exact={true}
               path="/data/auctions/:region_name"

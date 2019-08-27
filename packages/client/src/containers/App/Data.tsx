@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 
-import { Data, IStateProps } from "../../components/App/Data";
+import { Data, IOwnProps, IStateProps } from "../../components/App/Data";
 import { IStoreState } from "../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
@@ -8,4 +8,6 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
   return { currentRegion };
 };
 
-export const DataContainer = connect<IStateProps, {}, {}, IStoreState>(mapStateToProps)(Data);
+export const DataContainer = connect<IStateProps, {}, IOwnProps, IStoreState>(mapStateToProps)(
+  Data,
+);

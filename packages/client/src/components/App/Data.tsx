@@ -1,23 +1,25 @@
 import * as React from "react";
 
-import { Redirect } from "react-router-dom";
-
 import { IRegion } from "../../api-types/region";
+
+export interface IRouteProps {
+  redirectToRegion: (region: IRegion) => void;
+}
 
 export interface IStateProps {
   currentRegion: IRegion | null;
 }
 
-export type Props = Readonly<IStateProps>;
+export type IOwnProps = IRouteProps;
 
-export class Data extends React.Component<Props> {
-  public render() {
-    const { currentRegion } = this.props;
+export type Props = Readonly<IStateProps & IOwnProps>;
 
-    if (currentRegion === null) {
-      return null;
-    }
-
-    return <Redirect to={`/data/${currentRegion.name}`} />;
+export function Data({ currentRegion, redirectToRegion }: Props) {
+  if (currentRegion === null) {
+    return null;
   }
+
+  redirectToRegion(currentRegion);
+
+  return <p>Redirecting to data for {currentRegion.name}!</p>;
 }
