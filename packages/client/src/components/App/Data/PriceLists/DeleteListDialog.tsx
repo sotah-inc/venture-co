@@ -66,7 +66,7 @@ export class DeleteListDialog extends React.Component<Props> {
     if (prevProps.deletePricelistLevel !== deletePricelistLevel) {
       switch (deletePricelistLevel) {
         case FetchLevel.success:
-          const AppToaster = GetAppToaster();
+          const AppToaster = GetAppToaster(true);
           if (AppToaster !== null) {
             AppToaster.show({
               icon: "info-sign",

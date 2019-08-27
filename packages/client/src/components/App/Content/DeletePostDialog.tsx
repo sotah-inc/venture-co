@@ -36,7 +36,7 @@ export class DeletePostDialog extends React.Component<Props> {
     if (prevProps.deletePostLevel !== deletePostLevel) {
       switch (deletePostLevel) {
         case FetchLevel.success:
-          const AppToaster = GetAppToaster();
+          const AppToaster = GetAppToaster(true);
           if (AppToaster !== null) {
             AppToaster.show({
               icon: "info-sign",

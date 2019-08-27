@@ -79,7 +79,7 @@ export class NewsCreator extends React.Component<Props> {
               return;
             }
 
-            const AppToaster = GetAppToaster();
+            const AppToaster = GetAppToaster(false);
             if (AppToaster !== null) {
               AppToaster.show({
                 icon: "info-sign",
@@ -91,7 +91,7 @@ export class NewsCreator extends React.Component<Props> {
             browseToPost(currentPost);
           }}
           onFatalError={err => {
-            const AppToaster = GetAppToaster();
+            const AppToaster = GetAppToaster(false);
             if (AppToaster !== null) {
               AppToaster.show({
                 icon: "warning-sign",

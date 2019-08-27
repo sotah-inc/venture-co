@@ -131,7 +131,7 @@ export class NewsEditor extends React.Component<Props> {
             return;
           }}
           onFatalError={err => {
-            const AppToaster = GetAppToaster();
+            const AppToaster = GetAppToaster(false);
             if (AppToaster === null) {
               return;
             }
@@ -224,7 +224,7 @@ export class NewsEditor extends React.Component<Props> {
             return;
           }
 
-          const AppToaster = GetAppToaster();
+          const AppToaster = GetAppToaster(true);
           if (AppToaster !== null) {
             AppToaster.show({
               icon: "info-sign",
@@ -248,7 +248,7 @@ export class NewsEditor extends React.Component<Props> {
         return;
       case FetchLevel.failure:
         if (typeof prevProps !== "undefined" && prevProps.getPostLevel !== getPostLevel) {
-          const AppToaster = GetAppToaster();
+          const AppToaster = GetAppToaster(true);
           if (AppToaster !== null) {
             AppToaster.show({
               icon: "warning-sign",

@@ -48,7 +48,7 @@ export class App extends React.Component<Props> {
   public componentDidUpdate(prevProps: Props) {
     const { fetchPingLevel } = this.props;
 
-    const AppToaster = GetAppToaster();
+    const AppToaster = GetAppToaster(true);
 
     switch (fetchPingLevel) {
       case FetchLevel.failure:
@@ -219,7 +219,7 @@ export class App extends React.Component<Props> {
         const hasBeenAuthorized =
           [AuthLevel.unauthenticated, AuthLevel.initial].indexOf(prevProps.authLevel) > -1;
         if (hasBeenAuthorized) {
-          const AppToaster = GetAppToaster();
+          const AppToaster = GetAppToaster(true);
           if (AppToaster !== null) {
             AppToaster.show({
               icon: "user",
@@ -256,7 +256,7 @@ export class App extends React.Component<Props> {
       isLoginDialogOpen,
     } = this.props;
 
-    const AppToaster = GetAppToaster();
+    const AppToaster = GetAppToaster(true);
 
     switch (fetchBootLevel) {
       case FetchLevel.initial:
@@ -304,7 +304,7 @@ export class App extends React.Component<Props> {
   private handleAuth(prevProps: Props) {
     const { fetchUserPreferencesLevel, loadUserPreferences, profile } = this.props;
 
-    const AppToaster = GetAppToaster();
+    const AppToaster = GetAppToaster(true);
 
     switch (fetchUserPreferencesLevel) {
       case FetchLevel.initial:
@@ -335,7 +335,7 @@ export class App extends React.Component<Props> {
   private handleAuthWithPreferences(prevProps: Props) {
     const { fetchBootLevel, boot } = this.props;
 
-    const AppToaster = GetAppToaster();
+    const AppToaster = GetAppToaster(true);
 
     switch (fetchBootLevel) {
       case FetchLevel.initial:

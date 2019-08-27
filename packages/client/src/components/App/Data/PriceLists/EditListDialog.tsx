@@ -79,7 +79,7 @@ export class EditListDialog extends React.Component<Props, State> {
     if (prevProps.updatePricelistLevel !== updatePricelistLevel) {
       switch (updatePricelistLevel) {
         case FetchLevel.success:
-          const AppToaster = GetAppToaster();
+          const AppToaster = GetAppToaster(true);
           if (AppToaster !== null) {
             AppToaster.show({
               icon: "info-sign",

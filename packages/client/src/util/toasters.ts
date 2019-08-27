@@ -1,12 +1,16 @@
 import { IToaster, Position, Toaster } from "@blueprintjs/core";
 
 let AppToaster: IToaster | null = null;
-export const GetAppToaster = () => {
+export const GetAppToaster = (calledFromLifecycle: boolean) => {
   if (AppToaster !== null) {
     return AppToaster;
   }
 
   if (typeof document === "undefined") {
+    return null;
+  }
+
+  if (calledFromLifecycle) {
     return null;
   }
 

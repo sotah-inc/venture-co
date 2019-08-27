@@ -83,7 +83,7 @@ export class CreateListDialog extends React.Component<Props, State> {
     if (prevProps.createPricelistLevel !== createPricelistLevel) {
       switch (createPricelistLevel) {
         case FetchLevel.success:
-          const AppToaster = GetAppToaster();
+          const AppToaster = GetAppToaster(true);
           if (AppToaster !== null) {
             AppToaster.show({
               icon: "info-sign",

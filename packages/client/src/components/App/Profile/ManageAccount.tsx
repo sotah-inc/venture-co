@@ -58,7 +58,7 @@ export class ManageAccount extends React.Component<Props> {
       );
     }
 
-    const AppToaster = GetAppToaster();
+    const AppToaster = GetAppToaster(false);
 
     return (
       <>
