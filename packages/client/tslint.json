@@ -1,7 +1,8 @@
 {
   "extends": "../../tslint.json",
   "rules": {
-    "no-import-side-effect": true
+    "no-import-side-effect": true,
+    "no-submodule-imports": [false, "next"]
   },
   "linterOptions": {
     "exclude": [
