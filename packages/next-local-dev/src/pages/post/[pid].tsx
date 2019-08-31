@@ -8,7 +8,11 @@ import { Layout } from "../../components/Layout";
 type Props = Readonly<WithRouterProps>;
 
 const View = ({ router }: Props) => {
-  return <Layout><p>Hello, world! {router.query["pid"]}</p></Layout>;
+  return (
+    <Layout>
+      <p>Hello, world! {router.query["pid"]}</p>
+    </Layout>
+  );
 };
 
 export default withRouter(View);
