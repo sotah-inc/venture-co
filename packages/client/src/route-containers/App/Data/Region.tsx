@@ -1,17 +1,19 @@
 import * as React from "react";
 
-import { RouteComponentProps, withRouter } from "react-router-dom";
+import { WithRouterProps } from "next/dist/client/with-router";
+import { withRouter } from "next/router";
 
-import { IRouteParams } from "../../../components/App/Data/Region";
+import { IRouteProps } from "../../../components/App/Data/Region";
 import { RegionContainer } from "../../../containers/App/Data/Region";
+import { extractString } from "../../../util";
 
-type Props = Readonly<RouteComponentProps<IRouteParams>>;
+type Props = Readonly<IRouteProps & WithRouterProps>;
 
-function RouteContainer({ match: { params }, history }: Props) {
+function RouteContainer({ router }: Props) {
   return (
     <RegionContainer
-      routeParams={params}
-      browseToRealmData={(region, realm) => history.push(`/data/${region.name}/${realm.slug}`)}
+      routeParams={{ region_name: extractString("region_name", router.query) }}
+      browseToRealmData={(region, realm) => router.push(`/data/${region.name}/${realm.slug}`)}
     />
   );
 }

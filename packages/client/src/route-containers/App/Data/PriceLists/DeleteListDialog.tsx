@@ -1,11 +1,12 @@
 import React from "react";
 
-import { RouteComponentProps, withRouter } from "react-router-dom";
+import { WithRouterProps } from "next/dist/client/with-router";
+import { withRouter } from "next/router";
 
 // tslint:disable-next-line:max-line-length
 import { DeleteListDialogContainer } from "../../../../containers/App/Data/PriceLists/DeleteListDialog";
 
-type Props = Readonly<RouteComponentProps<{}>>;
+type Props = Readonly<WithRouterProps>;
 
 function RouteContainer(props: Props) {
   const { history } = props;
@@ -24,7 +25,7 @@ function RouteContainer(props: Props) {
         if (list !== null && list.slug !== null) {
           urlParts.push(list.slug);
         }
-        history.replace(`/${urlParts.join("/")}`);
+        router.replace(`/${urlParts.join("/")}`);
       }}
     />
   );

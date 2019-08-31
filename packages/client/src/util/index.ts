@@ -231,3 +231,19 @@ export const getPrimaryExpansion = (expansions: IExpansion[]): IExpansion => {
     return previousValue;
   }, expansions[0]);
 };
+
+interface IExtractStringMap {
+  [key: string]: string | string[];
+}
+
+export const extractString = (key: string, params: IExtractStringMap): string => {
+  if (!(key in params)) {
+    return "";
+  }
+
+  if (typeof params[key] === "string") {
+    return params[key] as string;
+  }
+
+  return "";
+};

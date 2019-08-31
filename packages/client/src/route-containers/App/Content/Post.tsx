@@ -1,18 +1,19 @@
 import React from "react";
 
-import { RouteComponentProps, withRouter } from "react-router-dom";
+import { WithRouterProps } from "next/dist/client/with-router";
+import { withRouter } from "next/router";
 
-import { IRouteParams } from "../../../components/App/Content/Post";
+import { IRouteProps } from "../../../components/App/Content/Post";
 import { PostContainer } from "../../../containers/App/Content/Post";
 
-type Props = Readonly<RouteComponentProps<IRouteParams>>;
+type Props = Readonly<IRouteProps & WithRouterProps>;
 
 function RouteContainer({ history, match: { params } }: Props) {
   return (
     <PostContainer
-      browseToPostEdit={post => history.push(`/content/news/${post.slug}/edit`)}
-      browseToHome={() => history.push("")}
-      browseToNews={() => history.push("/content/news")}
+      browseToPostEdit={post => router.push(`/content/news/${post.slug}/edit`)}
+      browseToHome={() => router.push("")}
+      browseToNews={() => router.push("/content/news")}
       routeParams={params}
     />
   );

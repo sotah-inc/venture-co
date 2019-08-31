@@ -1,10 +1,11 @@
 import React from "react";
 
-import { RouteComponentProps, withRouter } from "react-router-dom";
+import { WithRouterProps } from "next/dist/client/with-router";
+import { withRouter } from "next/router";
 
 import { AuctionTableContainer } from "../../../../containers/App/Data/AuctionList/AuctionTable";
 
-type Props = Readonly<RouteComponentProps<{}>>;
+type Props = Readonly<WithRouterProps>;
 
 function RouteContainer({ history }: Props) {
   return (
@@ -19,7 +20,7 @@ function RouteContainer({ history }: Props) {
           expansion.name,
           pricelist.slug,
         ].join("/");
-        history.push(`/${professionPricelistUrl}`);
+        router.push(`/${professionPricelistUrl}`);
       }}
     />
   );

@@ -1,16 +1,17 @@
 import React from "react";
 
-import { RouteComponentProps, withRouter } from "react-router-dom";
+import { WithRouterProps } from "next/dist/client/with-router";
+import { withRouter } from "next/router";
 
 import { PostListContainer } from "../../../containers/App/Content/PostList";
 
-type Props = Readonly<RouteComponentProps<{}>>;
+type Props = Readonly<WithRouterProps>;
 
 function RouteContainer({ history }: Props) {
   return (
     <PostListContainer
-      browseToPost={post => history.push(`/content/news/${post.slug}`)}
-      browseToPostEdit={post => history.push(`/content/news/${post.slug}/edit`)}
+      browseToPost={post => router.push(`/content/news/${post.slug}`)}
+      browseToPostEdit={post => router.push(`/content/news/${post.slug}/edit`)}
     />
   );
 }

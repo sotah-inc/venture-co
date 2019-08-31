@@ -1,11 +1,12 @@
 import React from "react";
 
-import { RouteComponentProps, withRouter } from "react-router-dom";
+import { WithRouterProps } from "next/dist/client/with-router";
+import { withRouter } from "next/router";
 
 // tslint:disable-next-line:max-line-length
 import { CreateListDialogContainer } from "../../../../containers/App/Data/PriceLists/CreateListDialog";
 
-type Props = Readonly<RouteComponentProps<{}>>;
+type Props = Readonly<WithRouterProps>;
 
 function RouteContainer(props: Props) {
   const { history } = props;
@@ -22,7 +23,7 @@ function RouteContainer(props: Props) {
           expansion.name,
           pricelist.slug,
         ].join("/");
-        history.replace(`/${professionPricelistUrl}`);
+        router.replace(`/${professionPricelistUrl}`);
       }}
     />
   );

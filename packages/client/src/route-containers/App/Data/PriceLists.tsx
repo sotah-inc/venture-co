@@ -1,11 +1,12 @@
 import * as React from "react";
 
-import { RouteComponentProps, withRouter } from "react-router-dom";
+import { WithRouterProps } from "next/dist/client/with-router";
+import { withRouter } from "next/router";
 
-import { IRouteParams } from "../../../components/App/Data/PriceLists";
+import { IRouteProps } from "../../../components/App/Data/PriceLists";
 import { PriceListsContainer } from "../../../containers/App/Data/PriceLists";
 
-type Props = Readonly<RouteComponentProps<IRouteParams>>;
+type Props = Readonly<IRouteProps & WithRouterProps>;
 
 function RouteContainer({ match: { params }, history }: Props) {
   return (
@@ -21,7 +22,7 @@ function RouteContainer({ match: { params }, history }: Props) {
           expansion.name,
           pricelist.slug,
         ].join("/");
-        history.replace(`/${url}`);
+        router.replace(`/${url}`);
       }}
       browseOnRealmChange={(region, realm, profession, expansion, pricelist) => {
         const urlParts = ["data", region.name, realm.slug, "professions"];
@@ -39,7 +40,7 @@ function RouteContainer({ match: { params }, history }: Props) {
             urlParts.push(pricelist.slug);
           }
         }
-        history.push(`/${urlParts.join("/")}`);
+        router.push(`/${urlParts.join("/")}`);
 
         return;
       }}

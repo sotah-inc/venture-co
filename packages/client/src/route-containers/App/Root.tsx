@@ -1,13 +1,14 @@
 import React from "react";
 
-import { RouteComponentProps, withRouter } from "react-router-dom";
+import { WithRouterProps } from "next/dist/client/with-router";
+import { withRouter } from "next/router";
 
 import { Root } from "../../components/App/Root";
 
-type Props = Readonly<RouteComponentProps<{}>>;
+type Props = Readonly<WithRouterProps>;
 
-function RouteContainer({ history }: Props) {
-  return <Root redirectToContent={() => history.replace("/content")} />;
+function RouteContainer({ router }: Props) {
+  return <Root redirectToContent={() => router.replace("/content")} />;
 }
 
 export const RootRouteContainer = withRouter(RouteContainer);

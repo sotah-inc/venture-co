@@ -1,17 +1,18 @@
 import React from "react";
 
-import { RouteComponentProps, withRouter } from "react-router-dom";
+import { WithRouterProps } from "next/dist/client/with-router";
+import { withRouter } from "next/router";
 
 import { NewsCreatorContainer } from "../../../containers/App/Content/NewsCreator";
 
-type Props = Readonly<RouteComponentProps<{}>>;
+type Props = Readonly<WithRouterProps>;
 
 function RouteContainer({ history }: Props) {
   return (
     <NewsCreatorContainer
-      browseToPost={post => history.push(`/content/news/${post.slug}`)}
-      browseToHome={() => history.push("")}
-      browseToNews={() => history.push("/content/news")}
+      browseToPost={post => router.push(`/content/news/${post.slug}`)}
+      browseToHome={() => router.push("")}
+      browseToNews={() => router.push("/content/news")}
     />
   );
 }

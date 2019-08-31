@@ -1,13 +1,14 @@
 import React from "react";
 
-import { RouteComponentProps, withRouter } from "react-router-dom";
+import { WithRouterProps } from "next/dist/client/with-router";
+import { withRouter } from "next/router";
 
 import { TopbarContainer } from "../../containers/App/Topbar";
 
-type Props = Readonly<RouteComponentProps<{}>>;
+type Props = Readonly<WithRouterProps>;
 
-function RouteContainer({ location }: Props) {
-  return <TopbarContainer locationPathname={location.pathname} />;
+function RouteContainer({ router }: Props) {
+  return <TopbarContainer locationPathname={router.pathname} />;
 }
 
 export const TopbarRouteContainer = withRouter(RouteContainer);

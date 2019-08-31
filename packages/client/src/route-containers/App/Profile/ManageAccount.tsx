@@ -1,18 +1,17 @@
 import React from "react";
 
-import { RouteComponentProps, withRouter } from "react-router-dom";
+import { WithRouterProps } from "next/dist/client/with-router";
+import { withRouter } from "next/router";
 
 import { ManageAccountContainer } from "../../../containers/App/Profile/ManageAccount";
 
-type Props = Readonly<RouteComponentProps<{}>>;
+type Props = Readonly<WithRouterProps>;
 
-function RouteContainer(props: Props) {
-  const { history } = props;
-
+function RouteContainer({ router }: Props) {
   return (
     <ManageAccountContainer
-      browseToHome={() => history.push("/")}
-      browseToProfile={() => history.push("/profile")}
+      browseToHome={() => router.push("/")}
+      browseToProfile={() => router.push("/profile")}
     />
   );
 }

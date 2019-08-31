@@ -1,18 +1,19 @@
 import * as React from "react";
 
-import { RouteComponentProps, withRouter } from "react-router-dom";
+import { WithRouterProps } from "next/dist/client/with-router";
+import { withRouter } from "next/router";
 
-import { IRouteParams } from "../../components/App/AuctionsLanding";
+import { IRouteProps } from "../../components/App/AuctionsLanding";
 import { AuctionsLandingContainer } from "../../containers/App/AuctionsLanding";
 
-type Props = Readonly<RouteComponentProps<IRouteParams>>;
+type Props = Readonly<IRouteProps & WithRouterProps>;
 
 function RouteContainer({ match: { params }, history }: Props) {
   return (
     <AuctionsLandingContainer
       routeParams={params}
       redirectToAuctions={(region, realm) =>
-        history.replace(`/data/${region.name}/${realm.slug}/auctions`)
+        router.replace(`/data/${region.name}/${realm.slug}/auctions`)
       }
     />
   );

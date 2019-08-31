@@ -1,10 +1,11 @@
 import React from "react";
 
-import { RouteComponentProps, withRouter } from "react-router-dom";
+import { WithRouterProps } from "next/dist/client/with-router";
+import { withRouter } from "next/router";
 
 import { ActionBarContainer } from "../../../../containers/App/Data/PriceLists/ActionBar";
 
-type Props = Readonly<RouteComponentProps<{}>>;
+type Props = Readonly<WithRouterProps>;
 
 function RouteContainer({ history }: Props) {
   return (
@@ -25,7 +26,7 @@ function RouteContainer({ history }: Props) {
             urlParts.push(list.slug);
           }
         }
-        history.push(`/${urlParts.join("/")}`);
+        router.push(`/${urlParts.join("/")}`);
       }}
     />
   );

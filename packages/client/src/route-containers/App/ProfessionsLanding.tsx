@@ -1,18 +1,19 @@
 import React from "react";
 
-import { RouteComponentProps, withRouter } from "react-router-dom";
+import { WithRouterProps } from "next/dist/client/with-router";
+import { withRouter } from "next/router";
 
-import { IRouteParams } from "../../components/App/ProfessionsLanding";
+import { IRouteProps } from "../../components/App/ProfessionsLanding";
 import { ProfessionsLandingContainer } from "../../containers/App/ProfessionsLanding";
 
-type Props = Readonly<RouteComponentProps<IRouteParams>>;
+type Props = Readonly<IRouteProps & WithRouterProps>;
 
-function RouteContainer({ match: { params }, history }: Props) {
+function RouteContainer({ router }: Props) {
   return (
     <ProfessionsLandingContainer
-      routeParams={params}
+      routeParams={router.query}
       browseToProfessions={(region, realm) =>
-        history.replace(`/data/${region.name}/${realm.slug}/professions`)
+        router.replace(`/data/${region.name}/${realm.slug}/professions`)
       }
     />
   );

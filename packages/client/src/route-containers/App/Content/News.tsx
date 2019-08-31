@@ -1,13 +1,14 @@
 import React from "react";
 
-import { RouteComponentProps, withRouter } from "react-router-dom";
+import { WithRouterProps } from "next/dist/client/with-router";
+import { withRouter } from "next/router";
 
 import { NewsContainer } from "../../../containers/App/Content/News";
 
-type Props = Readonly<RouteComponentProps<{}>>;
+type Props = Readonly<WithRouterProps>;
 
 function RouteContainer({ history }: Props) {
-  return <NewsContainer historyPush={destination => history.push(destination)} />;
+  return <NewsContainer historyPush={destination => router.push(destination)} />;
 }
 
 export const NewsRouteContainer = withRouter(RouteContainer);

@@ -1,9 +1,10 @@
+import { WithRouterProps } from "next/dist/client/with-router";
+import { withRouter } from "next/router";
 import React from "react";
-import { RouteComponentProps, withRouter } from "react-router-dom";
 
 import { EditListDialogContainer } from "../../../../containers/App/Data/PriceLists/EditListDialog";
 
-type Props = Readonly<RouteComponentProps<{}>>;
+type Props = Readonly<WithRouterProps>;
 
 function RouteContainer(props: Props) {
   const { history } = props;
@@ -20,7 +21,7 @@ function RouteContainer(props: Props) {
           expansion.name,
           pricelist.slug,
         ].join("/");
-        history.replace(`/${professionPricelistUrl}`);
+        router.replace(`/${professionPricelistUrl}`);
       }}
     />
   );
