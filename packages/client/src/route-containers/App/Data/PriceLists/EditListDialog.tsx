@@ -6,9 +6,7 @@ import { EditListDialogContainer } from "../../../../containers/App/Data/PriceLi
 
 type Props = Readonly<WithRouterProps>;
 
-function RouteContainer(props: Props) {
-  const { history } = props;
-
+function RouteContainer({ router }: Props) {
   return (
     <EditListDialogContainer
       browseToProfessionPricelist={(region, realm, profession, expansion, pricelist) => {
@@ -21,7 +19,7 @@ function RouteContainer(props: Props) {
           expansion.name,
           pricelist.slug,
         ].join("/");
-        router.replace(`/${professionPricelistUrl}`);
+        (async () => router.replace(`/${professionPricelistUrl}`))();
       }}
     />
   );

@@ -7,7 +7,7 @@ import { NewsCreatorContainer } from "../../../containers/App/Content/NewsCreato
 
 type Props = Readonly<WithRouterProps>;
 
-function RouteContainer({ history }: Props) {
+function RouteContainer({ router }: Props) {
   return (
     <NewsCreatorContainer
       browseToPost={post => router.push(`/content/news/${post.slug}`)}

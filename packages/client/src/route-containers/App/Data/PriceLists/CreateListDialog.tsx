@@ -8,9 +8,7 @@ import { CreateListDialogContainer } from "../../../../containers/App/Data/Price
 
 type Props = Readonly<WithRouterProps>;
 
-function RouteContainer(props: Props) {
-  const { history } = props;
-
+function RouteContainer({ router }: Props) {
   return (
     <CreateListDialogContainer
       browseToProfessionPricelist={(region, realm, profession, expansion, pricelist) => {

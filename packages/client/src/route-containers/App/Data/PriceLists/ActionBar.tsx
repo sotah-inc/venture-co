@@ -7,7 +7,7 @@ import { ActionBarContainer } from "../../../../containers/App/Data/PriceLists/A
 
 type Props = Readonly<WithRouterProps>;
 
-function RouteContainer({ history }: Props) {
+function RouteContainer({ router }: Props) {
   return (
     <ActionBarContainer
       browseOnRealmChange={(region, realm, profession, expansion, list) => {
@@ -26,7 +26,7 @@ function RouteContainer({ history }: Props) {
             urlParts.push(list.slug);
           }
         }
-        router.push(`/${urlParts.join("/")}`);
+        (async () => router.push(`/${urlParts.join("/")}`))();
       }}
     />
   );

@@ -5,15 +5,22 @@ import { withRouter } from "next/router";
 
 import { IRouteProps } from "../../../components/App/Data/PriceLists";
 import { PriceListsContainer } from "../../../containers/App/Data/PriceLists";
+import { extractString } from "../../../util";
 
 type Props = Readonly<IRouteProps & WithRouterProps>;
 
-function RouteContainer({ match: { params }, history }: Props) {
+function RouteContainer({ router }: Props) {
   return (
     <PriceListsContainer
-      routeParams={params}
+      routeParams={{
+        expansion_name: extractString("expansion_name", router.query),
+        pricelist_slug: extractString("pricelist_slug", router.query),
+        profession_name: extractString("profession_name", router.query),
+        realm_slug: extractString("realm_slug", router.query),
+        region_name: extractString("region_name", router.query),
+      }}
       redirectToPricelist={(region, realm, profession, expansion, pricelist) => {
-        const url = [
+        const urlParts = [
           "data",
           region.name,
           realm.slug,
@@ -21,8 +28,8 @@ function RouteContainer({ match: { params }, history }: Props) {
           profession.name,
           expansion.name,
           pricelist.slug,
-        ].join("/");
-        router.replace(`/${url}`);
+        ];
+        (async () => router.replace(`/${urlParts.join("/")}`))();
       }}
       browseOnRealmChange={(region, realm, profession, expansion, pricelist) => {
         const urlParts = ["data", region.name, realm.slug, "professions"];
@@ -40,7 +47,7 @@ function RouteContainer({ match: { params }, history }: Props) {
             urlParts.push(pricelist.slug);
           }
         }
-        router.push(`/${urlParts.join("/")}`);
+        (async () => router.push(`/${urlParts.join("/")}`))();
 
         return;
       }}

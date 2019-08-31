@@ -7,7 +7,7 @@ import { DataContainer } from "../../containers/App/Data";
 
 type Props = Readonly<WithRouterProps>;
 
-function RouteContainer({ history }: Props) {
+function RouteContainer({ router }: Props) {
   return <DataContainer redirectToRegion={region => router.replace(`/data/${region.name}`)} />;
 }
 

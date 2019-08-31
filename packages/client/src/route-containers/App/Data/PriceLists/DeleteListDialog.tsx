@@ -8,9 +8,7 @@ import { DeleteListDialogContainer } from "../../../../containers/App/Data/Price
 
 type Props = Readonly<WithRouterProps>;
 
-function RouteContainer(props: Props) {
-  const { history } = props;
-
+function RouteContainer({ router }: Props) {
   return (
     <DeleteListDialogContainer
       browseOnDeletion={(region, realm, profession, expansion, list) => {
@@ -25,7 +23,7 @@ function RouteContainer(props: Props) {
         if (list !== null && list.slug !== null) {
           urlParts.push(list.slug);
         }
-        router.replace(`/${urlParts.join("/")}`);
+        (async () => router.replace(`/${urlParts.join("/")}`))();
       }}
     />
   );

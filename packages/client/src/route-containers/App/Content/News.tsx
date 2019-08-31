@@ -7,7 +7,7 @@ import { NewsContainer } from "../../../containers/App/Content/News";
 
 type Props = Readonly<WithRouterProps>;
 
-function RouteContainer({ history }: Props) {
+function RouteContainer({ router }: Props) {
   return <NewsContainer historyPush={destination => router.push(destination)} />;
 }
 

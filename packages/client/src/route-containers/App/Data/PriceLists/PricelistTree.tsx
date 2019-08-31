@@ -7,9 +7,7 @@ import { PricelistTreeContainer } from "../../../../containers/App/Data/PriceLis
 
 type Props = Readonly<WithRouterProps>;
 
-function RouteContainer(props: Props) {
-  const { history } = props;
-
+function RouteContainer({ router }: Props) {
   return (
     <PricelistTreeContainer
       browseToProfessionPricelist={(region, realm, profession, expansion, pricelist) => {
@@ -22,7 +20,7 @@ function RouteContainer(props: Props) {
           expansion.name,
           pricelist.slug,
         ].join("/");
-        router.push(`/${professionPricelistUrl}`);
+        (async () => router.push(`/${professionPricelistUrl}`))();
       }}
       browseToUserPricelist={(region, realm, pricelist) => {
         const userPricelistUrl = [
@@ -33,13 +31,14 @@ function RouteContainer(props: Props) {
           "user",
           pricelist.slug,
         ].join("/");
-        router.push(`/${userPricelistUrl}`);
+        (async () => router.push(`/${userPricelistUrl}`))();
       }}
       browseToProfessions={(region, realm) => {
-        router.push(`/data/${region.name}/${realm.slug}/professions`);
+        (async () => router.push(`/data/${region.name}/${realm.slug}/professions`))();
       }}
       browseToProfession={(region, realm, profession) => {
-        router.push(`/data/${region.name}/${realm.slug}/professions/${profession.name}`);
+        (async () =>
+          router.push(`/data/${region.name}/${realm.slug}/professions/${profession.name}`))();
       }}
       browseToProfessionExpansion={(region, realm, profession, expansion) => {
         const url = [
@@ -50,7 +49,7 @@ function RouteContainer(props: Props) {
           profession.name,
           expansion.name,
         ].join("/");
-        router.push(`/${url}`);
+        (async () => router.push(`/${url}`))();
       }}
     />
   );

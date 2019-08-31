@@ -7,7 +7,7 @@ import { PostListContainer } from "../../../containers/App/Content/PostList";
 
 type Props = Readonly<WithRouterProps>;
 
-function RouteContainer({ history }: Props) {
+function RouteContainer({ router }: Props) {
   return (
     <PostListContainer
       browseToPost={post => router.push(`/content/news/${post.slug}`)}

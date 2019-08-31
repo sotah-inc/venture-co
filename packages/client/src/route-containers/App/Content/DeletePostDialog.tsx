@@ -7,7 +7,7 @@ import { DeletePostDialogContainer } from "../../../containers/App/Content/Delet
 
 type Props = Readonly<WithRouterProps>;
 
-function RouteContainer({ history }: Props) {
+function RouteContainer({ router }: Props) {
   return <DeletePostDialogContainer browseToNews={() => router.replace("/content/news")} />;
 }
 

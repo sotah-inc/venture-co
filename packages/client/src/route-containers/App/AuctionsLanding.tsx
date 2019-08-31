@@ -5,13 +5,14 @@ import { withRouter } from "next/router";
 
 import { IRouteProps } from "../../components/App/AuctionsLanding";
 import { AuctionsLandingContainer } from "../../containers/App/AuctionsLanding";
+import { extractString } from "../../util";
 
 type Props = Readonly<IRouteProps & WithRouterProps>;
 
-function RouteContainer({ match: { params }, history }: Props) {
+function RouteContainer({ router }: Props) {
   return (
     <AuctionsLandingContainer
-      routeParams={params}
+      routeParams={{ region_name: extractString("region_name", router.query) }}
       redirectToAuctions={(region, realm) =>
         router.replace(`/data/${region.name}/${realm.slug}/auctions`)
       }

@@ -7,7 +7,7 @@ import { AuctionTableContainer } from "../../../../containers/App/Data/AuctionLi
 
 type Props = Readonly<WithRouterProps>;
 
-function RouteContainer({ history }: Props) {
+function RouteContainer({ router }: Props) {
   return (
     <AuctionTableContainer
       browseToProfessionPricelist={(region, realm, profession, expansion, pricelist) => {
@@ -20,7 +20,7 @@ function RouteContainer({ history }: Props) {
           expansion.name,
           pricelist.slug,
         ].join("/");
-        router.push(`/${professionPricelistUrl}`);
+        (async () => router.push(`/${professionPricelistUrl}`))();
       }}
     />
   );

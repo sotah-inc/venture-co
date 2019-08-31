@@ -7,7 +7,7 @@ import { Content } from "../../components/App/Content";
 
 type Props = Readonly<WithRouterProps>;
 
-function RouteContainer({ history }: Props) {
+function RouteContainer({ router }: Props) {
   return <Content browseToNews={() => router.replace("/content/news")} />;
 }
 

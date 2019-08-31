@@ -5,7 +5,6 @@ import { Classes, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
 import { IPreferenceJson } from "../api-types/entities";
 import { IRealm, IRegion } from "../api-types/region";
 import { TopbarRouteContainer } from "../route-containers/App/Topbar";
-import { ViewportRouteContainer } from "../route-containers/App/Viewport";
 import { IProfile } from "../types/global";
 import { AuthLevel, FetchLevel } from "../types/main";
 import { GetAppToaster } from "../util/toasters";
@@ -193,7 +192,6 @@ export class App extends React.Component<Props> {
     return (
       <>
         <TopbarRouteContainer />
-        <ViewportRouteContainer />
       </>
     );
   }
@@ -202,7 +200,6 @@ export class App extends React.Component<Props> {
     return (
       <>
         <TopbarRouteContainer />
-        <ViewportRouteContainer />
       </>
     );
   }
