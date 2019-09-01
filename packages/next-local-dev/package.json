@@ -1,6 +1,6 @@
 {
   "name": "@sotah-inc/next-local-dev",
-  "version": "0.1.0",
+  "version": "1.0.31",
   "scripts": {
     "dev": "next dev ./src",
     "build": "next build ./src",
