@@ -6,7 +6,7 @@ import Head from "next/head";
 export function Sotah() {
   return (
     <>
-      <Boot />
+      <Boot Viewport={<p>Hello, world!</p>} />
       <Head>
         <title>SotAH</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
