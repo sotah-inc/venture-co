@@ -1,7 +1,8 @@
 import React from "react";
 
-import "@sotah-inc/client/build/styles/venture-co.min.css";
 import App from "next/app";
+
+import "./_app.css";
 
 class MyApp extends App {
   public render() {
