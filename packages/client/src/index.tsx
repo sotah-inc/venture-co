@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 
 import { Provider } from "react-redux";
-import { applyMiddleware, createStore, Middleware } from "redux";
+import { applyMiddleware, createStore, Middleware, Store } from "redux";
 import thunk from "redux-thunk";
 
 import { USER_LOGIN, USER_REGISTER } from "./actions/main";
@@ -51,19 +51,23 @@ const localStorageMiddleware: Middleware = () => next => action => {
   return next(action);
 };
 
-const store = createStore(
-  rootReducer,
-  defaultState,
-  applyMiddleware(localStorageMiddleware, thunk),
-);
+type StoreType = Store<IStoreState>;
+
+let store: StoreType | null = null;
 
 interface IProps {
   Viewport: ReactNode;
+  PredefinedState?: IStoreState;
 }
 
-export const Boot = ({ Viewport }: IProps) => {
-  // tslint:disable-next-line:no-console
-  console.log("Boot()");
+export const Boot = ({ Viewport, PredefinedState }: IProps) => {
+  if (store === null) {
+    store = createStore(
+      rootReducer,
+      typeof PredefinedState === "undefined" ? defaultState : PredefinedState,
+      applyMiddleware(localStorageMiddleware, thunk),
+    );
+  }
 
   return (
     <div className="pure-g">
