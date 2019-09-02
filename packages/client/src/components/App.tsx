@@ -1,6 +1,5 @@
-import React, { ReactNode } from "react";
-
 import { Classes, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
+import React, { ReactNode } from "react";
 
 import { IPreferenceJson } from "../api-types/entities";
 import { IRealm, IRegion } from "../api-types/region";
@@ -43,10 +42,28 @@ export class App extends React.Component<Props> {
   public didHandleUnauth: boolean = false;
 
   public componentDidMount() {
-    const { onLoad } = this.props;
+    const { onLoad, fetchPingLevel } = this.props;
 
-    // checking access to api with ping endpoint
-    onLoad();
+    const AppToaster = GetAppToaster(true);
+
+    switch (fetchPingLevel) {
+      case FetchLevel.initial:
+        onLoad();
+
+        break;
+      case FetchLevel.success:
+        if (AppToaster !== null) {
+          AppToaster.show({
+            icon: "info-sign",
+            intent: Intent.SUCCESS,
+            message: "Connected to Sotah API.",
+          });
+        }
+
+        break;
+      default:
+        break;
+    }
   }
 
   public componentDidUpdate(prevProps: Props) {
