@@ -28,6 +28,12 @@ export function Home() {
             <p>El oh el</p>
           </a>
         </Link>
+        <Link href="/sotah" as="/sotah">
+          <a className="card">
+            <h3>SotAH</h3>
+            <p>SotAH</p>
+          </a>
+        </Link>
       </div>
     </Layout>
   );
