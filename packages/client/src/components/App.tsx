@@ -60,6 +60,8 @@ export class App extends React.Component<Props> {
           });
         }
 
+        this.handleConnected(this.props);
+
         break;
       default:
         break;
