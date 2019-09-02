@@ -58,6 +58,9 @@ const store = createStore(
 );
 
 export const Boot = () => {
+  // tslint:disable-next-line:no-console
+  console.log("Boot()");
+
   return (
     <div className="pure-g">
       <div className="pure-u-1">
