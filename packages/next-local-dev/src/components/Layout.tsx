@@ -1,14 +1,19 @@
 import React, { ReactNode } from "react";
 
-import { Boot } from "@sotah-inc/client";
+import { Boot, defaultState } from "@sotah-inc/client";
+import { IStoreState } from "@sotah-inc/client/build/dist/types";
 import Head from "next/head";
 
 interface IProps {
   children: ReactNode;
   title: string;
+  predefinedState?: Partial<IStoreState>;
 }
 
-export function Layout({ children, title }: Readonly<IProps>) {
+export function Layout({ children, title, predefinedState }: Readonly<IProps>) {
+  const bootPredefinedState =
+    typeof predefinedState === "undefined" ? defaultState : { ...defaultState, ...predefinedState };
+
   return (
     <>
       <Head>
@@ -16,7 +21,7 @@ export function Layout({ children, title }: Readonly<IProps>) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#000000" />
       </Head>
-      <Boot viewport={children} />
+      <Boot viewport={children} predefinedState={bootPredefinedState} />
     </>
   );
 }
