@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { ReactNode } from "react";
 
 import { Provider } from "react-redux";
 import { applyMiddleware, createStore, Middleware } from "redux";
@@ -57,7 +57,11 @@ const store = createStore(
   applyMiddleware(localStorageMiddleware, thunk),
 );
 
-export const Boot = () => {
+interface IProps {
+  Viewport: ReactNode;
+}
+
+export const Boot = ({ Viewport }: IProps) => {
   // tslint:disable-next-line:no-console
   console.log("Boot()");
 
@@ -65,7 +69,7 @@ export const Boot = () => {
     <div className="pure-g">
       <div className="pure-u-1">
         <Provider store={store}>
-          <AppRouteContainer />
+          <AppRouteContainer Viewport={Viewport} />
         </Provider>
       </div>
     </div>
