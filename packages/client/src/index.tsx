@@ -16,7 +16,7 @@ import {
   IStoreState,
 } from "./types";
 
-const defaultState: IStoreState = {
+export const defaultState: IStoreState = {
   Auction: defaultAuctionState,
   Main: defaultMainState,
   Posts: defaultPostsState,
@@ -79,5 +79,3 @@ export const Boot = ({ Viewport, PredefinedState }: IProps) => {
     </div>
   );
 };
-
-export const Hello = () => <p>Hello, world!</p>;
