@@ -56,15 +56,15 @@ type StoreType = Store<IStoreState>;
 let store: StoreType | null = null;
 
 interface IProps {
-  Viewport: ReactNode;
-  PredefinedState?: IStoreState;
+  viewport: ReactNode;
+  predefinedState?: IStoreState;
 }
 
-export const Boot = ({ Viewport, PredefinedState }: IProps) => {
+export const Boot = ({ viewport, predefinedState }: IProps) => {
   if (store === null) {
     store = createStore(
       rootReducer,
-      typeof PredefinedState === "undefined" ? defaultState : PredefinedState,
+      typeof predefinedState === "undefined" ? defaultState : predefinedState,
       applyMiddleware(localStorageMiddleware, thunk),
     );
   }
@@ -73,7 +73,7 @@ export const Boot = ({ Viewport, PredefinedState }: IProps) => {
     <div className="pure-g">
       <div className="pure-u-1">
         <Provider store={store}>
-          <AppRouteContainer Viewport={Viewport} />
+          <AppRouteContainer viewport={viewport} />
         </Provider>
       </div>
     </div>

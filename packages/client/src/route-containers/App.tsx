@@ -8,8 +8,8 @@ import { AppContainer } from "../containers/App";
 
 type Props = Readonly<WithRouterProps & IOwnProps>;
 
-function RouteContainer({ Viewport }: Props) {
-  return <AppContainer Viewport={Viewport} />;
+function RouteContainer({ viewport }: Props) {
+  return <AppContainer viewport={viewport} />;
 }
 
 export const AppRouteContainer = withRouter(RouteContainer);

@@ -34,7 +34,7 @@ export interface IDispatchProps {
 }
 
 export interface IOwnProps {
-  Viewport: ReactNode;
+  viewport: ReactNode;
 }
 
 export type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
@@ -203,7 +203,7 @@ export class App extends React.Component<Props> {
 
   private renderContent() {
     // props
-    const { Viewport } = this.props;
+    const { viewport } = this.props;
 
     return (
       <>
@@ -211,7 +211,7 @@ export class App extends React.Component<Props> {
 
         <div id="content">
           <PromptsRouteContainer />
-          {Viewport}
+          {viewport}
         </div>
       </>
     );
