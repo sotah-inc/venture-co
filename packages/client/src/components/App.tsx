@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { ReactNode } from "react";
 
 import { Classes, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
 
@@ -32,7 +32,11 @@ export interface IDispatchProps {
   boot: () => void;
 }
 
-export type Props = Readonly<IStateProps & IDispatchProps>;
+export interface IOwnProps {
+  Viewport: ReactNode;
+}
+
+export type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
 
 export class App extends React.Component<Props> {
   public didHandleUnauth: boolean = false;
@@ -189,17 +193,25 @@ export class App extends React.Component<Props> {
   }
 
   private renderBootAuthWithPreferences() {
+    // props
+    const { Viewport } = this.props;
+
     return (
       <>
         <TopbarRouteContainer />
+        {Viewport}
       </>
     );
   }
 
   private renderUnauth() {
+    // props
+    const { Viewport } = this.props;
+
     return (
       <>
         <TopbarRouteContainer />
+        {Viewport}
       </>
     );
   }
