@@ -4,6 +4,7 @@ import { Classes, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
 
 import { IPreferenceJson } from "../api-types/entities";
 import { IRealm, IRegion } from "../api-types/region";
+import { PromptsRouteContainer } from "../route-containers/App/Prompts";
 import { TopbarRouteContainer } from "../route-containers/App/Topbar";
 import { IProfile } from "../types/global";
 import { AuthLevel, FetchLevel } from "../types/main";
@@ -193,25 +194,25 @@ export class App extends React.Component<Props> {
   }
 
   private renderBootAuthWithPreferences() {
-    // props
-    const { Viewport } = this.props;
-
-    return (
-      <>
-        <TopbarRouteContainer />
-        {Viewport}
-      </>
-    );
+    return this.renderContent();
   }
 
   private renderUnauth() {
+    return this.renderContent();
+  }
+
+  private renderContent() {
     // props
     const { Viewport } = this.props;
 
     return (
       <>
         <TopbarRouteContainer />
-        {Viewport}
+
+        <div id="content">
+          <PromptsRouteContainer />
+          {Viewport}
+        </div>
       </>
     );
   }
