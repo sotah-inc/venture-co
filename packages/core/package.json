@@ -3,7 +3,7 @@
   "version": "1.0.42",
   "description": "SotAH Core SDK",
   "main": "build/dist/index.js",
-  "typings": "build/tsc/index.d.ts",
+  "typings": "build/dist/index.d.ts",
   "scripts": {
     "clean": "rimraf ./build",
     "debug": "run-p build:watch lint:watch",
