@@ -1,3 +1,13 @@
+import {
+  ICreatePostRequest,
+  ICreatePostResponse,
+  ICreatePricelistRequest,
+  ICreatePricelistResponse,
+  ICreateProfessionPricelistRequest,
+  ICreateProfessionPricelistResponse,
+  ICreateUserRequest,
+  ICreateUserResponse,
+} from "@sotah-inc/core";
 import { ExecutionContext } from "ava";
 import { Express } from "express";
 import * as HTTPStatus from "http-status";
@@ -12,16 +22,6 @@ import { Pricelist } from "../entities/pricelist";
 import { PricelistEntry } from "../entities/pricelist-entry";
 import { ProfessionPricelist } from "../entities/profession-pricelist";
 import { User } from "../entities/user";
-import { ICreateUserRequest, ICreateUserResponse } from "../types/contracts/user";
-import { ICreatePostRequest, ICreatePostResponse } from "../types/contracts/user/post-crud";
-import {
-  ICreatePricelistRequest,
-  ICreatePricelistResponse,
-} from "../types/contracts/user/pricelist-crud";
-import {
-  ICreateProfessionPricelistRequest,
-  ICreateProfessionPricelistResponse,
-} from "../types/contracts/user/profession-pricelists-crud";
 import { getApp, IOptions } from "./app";
 import { Messenger } from "./messenger";
 

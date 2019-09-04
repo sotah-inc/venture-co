@@ -5,7 +5,7 @@ import test from "ava";
 import * as HTTPStatus from "http-status";
 import { v4 as uuidv4 } from "uuid";
 
-import { getLogger } from "../../../lib/logger";
+import { getLogger } from "../../..";
 import { getTestHelper, setup } from "../../../lib/test-helper";
 
 const helper = async () => {

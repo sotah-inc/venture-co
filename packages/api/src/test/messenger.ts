@@ -1,12 +1,12 @@
 import * as process from "process";
 import "reflect-metadata";
 
+import { SortDirection, SortKind } from "@sotah-inc/core";
 import test from "ava";
 import * as nats from "nats";
 
 import { code, Messenger, subjects } from "../lib/messenger";
 import { MessageError } from "../lib/messenger/message-error";
-import { SortDirection, SortKind } from "../types";
 
 interface ISetupSettings {
   messenger: Messenger;

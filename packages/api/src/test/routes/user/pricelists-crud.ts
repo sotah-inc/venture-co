@@ -1,13 +1,13 @@
 import * as process from "process";
 import "reflect-metadata";
 
+import { IGetPricelistsResponse } from "@sotah-inc/core";
 import test from "ava";
 import * as HTTPStatus from "http-status";
 import { v4 as uuidv4 } from "uuid";
 
-import { getLogger } from "../../../lib/logger";
+import { getLogger } from "../../..";
 import { getTestHelper, setup } from "../../../lib/test-helper";
-import { IGetPricelistsResponse } from "../../../types/contracts/user/pricelist-crud";
 
 const helper = async () => {
   const { request } = await setup({

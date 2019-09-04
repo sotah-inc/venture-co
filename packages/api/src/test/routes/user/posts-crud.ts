@@ -2,14 +2,14 @@ import * as bcrypt from "bcrypt";
 import * as process from "process";
 import "reflect-metadata";
 
+import { UserLevel } from "@sotah-inc/core";
 import test from "ava";
 import * as HTTPStatus from "http-status";
 import { v4 as uuidv4 } from "uuid";
 
+import { getLogger } from "../../..";
 import { User } from "../../../entities/user";
-import { getLogger } from "../../../lib/logger";
 import { getTestHelper, setup } from "../../../lib/test-helper";
-import { UserLevel } from "../../../types/entities";
 
 const helper = async () => {
   const { request, dbConn } = await setup({

@@ -1,13 +1,12 @@
 import * as process from "process";
 import "reflect-metadata";
 
+import { IRegion, SortDirection, SortKind } from "@sotah-inc/core";
 import test from "ava";
 import * as HttpStatus from "http-status";
 
-import { getLogger } from "../../lib/logger";
+import { getLogger } from "../..";
 import { setup } from "../../lib/test-helper";
-import { SortDirection, SortKind } from "../../types";
-import { IRegion } from "../../types/region";
 
 const helper = async () => {
   const { request, messenger } = await setup({
