@@ -1,11 +1,21 @@
-import { SortDirection, SortKind } from "../../../types";
-import { IAuction, IOwner, OwnerName } from "../../../types/auction";
-import { IExpansion } from "../../../types/expansion";
-import { IItemsMap, ItemId } from "../../../types/item";
-import { IItemClass } from "../../../types/item-class";
-import { IPricelistHistoryMap, IPriceListMap } from "../../../types/pricelist";
-import { IProfession } from "../../../types/profession";
-import { IRealmModificationDates, IRegion, RealmSlug, RegionName } from "../../../types/region";
+import {
+  IAuction,
+  IExpansion,
+  IItemClass,
+  IItemsMap,
+  IOwner,
+  IPricelistHistoryMap,
+  IPriceListMap,
+  IProfession,
+  IRealmModificationDates,
+  IRegion,
+  ItemId,
+  OwnerName,
+  RealmSlug,
+  RegionName,
+  SortDirection,
+  SortKind,
+} from "@sotah-inc/core";
 
 export interface IGetAuctionsRequest {
   region_name: RegionName;

@@ -1,11 +1,13 @@
+import {
+  ICreatePostRequest,
+  ICreatePreferencesRequest,
+  IGetAuctionsRequest,
+  IUpdateProfileRequest,
+} from "@sotah-inc/core";
 import * as yup from "yup";
 
 import { PostRepository } from "../entities/post-repository";
 import { UserRepository } from "../entities/user-repository";
-import { IGetAuctionsRequest } from "../types/contracts/data";
-import { ICreatePostRequest } from "../types/contracts/user/post-crud";
-import { ICreatePreferencesRequest } from "../types/contracts/user/preferences";
-import { IUpdateProfileRequest } from "../types/contracts/user/profile";
 
 export const PreferenceRules = yup
   .object<ICreatePreferencesRequest>()

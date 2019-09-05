@@ -1,8 +1,7 @@
+import { IStatus, ItemId, RegionName } from "@sotah-inc/core";
 import * as nats from "nats";
 import * as zlib from "zlib";
 
-import { ItemId } from "../../types/item";
-import { IStatus, RegionName } from "../../types/region";
 import {
   IGetAuctionsRequest,
   IGetAuctionsResponse,
