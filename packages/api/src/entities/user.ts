@@ -1,9 +1,9 @@
+import { IUserJson, UserLevel } from "@sotah-inc/core";
 import * as jwt from "jsonwebtoken";
 import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 import { Messenger } from "../lib/messenger";
 import { getJwtOptions } from "../lib/session";
-import { IUserJson, UserLevel } from "../types/entities";
 import { Post } from "./post";
 import { Preference } from "./preference";
 import { Pricelist } from "./pricelist";

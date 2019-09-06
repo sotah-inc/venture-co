@@ -1,3 +1,4 @@
+import { IPostJson } from "@sotah-inc/core";
 import {
   BeforeInsert,
   Column,
@@ -8,7 +9,6 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 
-import { IPostJson } from "../types/entities";
 import { User } from "./user";
 
 @Entity({ name: "posts" })

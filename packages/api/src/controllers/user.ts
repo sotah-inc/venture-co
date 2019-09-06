@@ -1,3 +1,11 @@
+import {
+  ICreateUserRequest,
+  ICreateUserResponse,
+  ILoginRequest,
+  ILoginResponse,
+  IValidationErrorResponse,
+  UserLevel,
+} from "@sotah-inc/core";
 import * as bcrypt from "bcrypt";
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
@@ -5,14 +13,6 @@ import { Connection } from "typeorm";
 import { User } from "../entities/user";
 import { Messenger } from "../lib/messenger";
 import { UserRequestBodyRules } from "../lib/validator-rules";
-import { IValidationErrorResponse } from "../types/contracts";
-import {
-  ICreateUserRequest,
-  ICreateUserResponse,
-  ILoginRequest,
-  ILoginResponse,
-} from "../types/contracts/user";
-import { UserLevel } from "../types/entities";
 import { RequestHandler } from "./index";
 
 export class UserController {

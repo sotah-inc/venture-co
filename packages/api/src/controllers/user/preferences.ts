@@ -1,18 +1,18 @@
-import { Response } from "express";
-import * as HTTPStatus from "http-status";
-import { Connection } from "typeorm";
-
-import { Preference } from "../../entities/preference";
-import { PreferenceRules } from "../../lib/validator-rules";
-import { IValidationErrorResponse } from "../../types/contracts";
 import {
   ICreatePreferencesRequest,
   ICreatePreferencesResponse,
   IGetPreferencesResponse,
   IUpdatePreferencesRequest,
   IUpdatePreferencesResponse,
-} from "../../types/contracts/user/preferences";
-import { UserLevel } from "../../types/entities";
+  IValidationErrorResponse,
+  UserLevel,
+} from "@sotah-inc/core";
+import { Response } from "express";
+import * as HTTPStatus from "http-status";
+import { Connection } from "typeorm";
+
+import { Preference } from "../../entities/preference";
+import { PreferenceRules } from "../../lib/validator-rules";
 import { Authenticator, IRequest, IRequestResult, Validator } from "../index";
 
 export class PreferencesController {

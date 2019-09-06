@@ -1,12 +1,15 @@
+import {
+  IUpdateProfileRequest,
+  IUpdateProfileResponse,
+  IValidationErrorResponse,
+  UserLevel,
+} from "@sotah-inc/core";
 import { Response } from "express";
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
 
 import { UserRepository } from "../../entities/user-repository";
 import { UpdateProfileRequestBodyRules } from "../../lib/validator-rules";
-import { IValidationErrorResponse } from "../../types/contracts";
-import { IUpdateProfileRequest, IUpdateProfileResponse } from "../../types/contracts/user/profile";
-import { UserLevel } from "../../types/entities";
 import { Authenticator, IRequest, IRequestResult, ManualValidator } from "../index";
 
 export class ProfileController {

@@ -1,3 +1,4 @@
+import { IPricelistEntryJson, IPricelistJson } from "@sotah-inc/core";
 import {
   Column,
   Entity,
@@ -8,7 +9,6 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 
-import { IPricelistEntryJson, IPricelistJson } from "../types/entities";
 import { PricelistEntry } from "./pricelist-entry";
 import { ProfessionPricelist } from "./profession-pricelist";
 import { User } from "./user";

@@ -1,3 +1,9 @@
+import {
+  ICreateProfessionPricelistRequest,
+  ICreateProfessionPricelistResponse,
+  IValidationErrorResponse,
+  UserLevel,
+} from "@sotah-inc/core";
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
 
@@ -5,12 +11,6 @@ import { Pricelist } from "../../entities/pricelist";
 import { PricelistEntry } from "../../entities/pricelist-entry";
 import { ProfessionPricelist } from "../../entities/profession-pricelist";
 import { ProfessionPricelistRequestBodyRules } from "../../lib/validator-rules";
-import { IValidationErrorResponse } from "../../types/contracts";
-import {
-  ICreateProfessionPricelistRequest,
-  ICreateProfessionPricelistResponse,
-} from "../../types/contracts/user/profession-pricelists-crud";
-import { UserLevel } from "../../types/entities";
 import { RequestHandler } from "../index";
 
 export class ProfessionPricelistsCrudController {

@@ -1,3 +1,11 @@
+import {
+  ICreatePostRequest,
+  ICreatePostResponse,
+  IUpdatePostRequest,
+  IUpdatePostResponse,
+  IValidationErrorResponse,
+  UserLevel,
+} from "@sotah-inc/core";
 import { Response } from "express";
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
@@ -5,14 +13,6 @@ import { Connection } from "typeorm";
 import { Post } from "../../entities/post";
 import { PostRepository } from "../../entities/post-repository";
 import { FullPostRequestBodyRules, PostRequestBodyRules } from "../../lib/validator-rules";
-import { IValidationErrorResponse } from "../../types/contracts";
-import {
-  ICreatePostRequest,
-  ICreatePostResponse,
-  IUpdatePostRequest,
-  IUpdatePostResponse,
-} from "../../types/contracts/user/post-crud";
-import { UserLevel } from "../../types/entities";
 import { Authenticator, IRequest, IRequestResult, ManualValidator, Validator } from "../index";
 
 export class PostCrudController {

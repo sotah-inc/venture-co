@@ -1,3 +1,13 @@
+import {
+  ICreatePricelistRequest,
+  ICreatePricelistResponse,
+  IGetPricelistsResponse,
+  IGetUserPricelistResponse,
+  ItemId,
+  IUpdatePricelistRequest,
+  IUpdatePricelistResponse,
+  IValidationErrorResponse,
+} from "@sotah-inc/core";
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
 
@@ -5,16 +15,6 @@ import { Pricelist } from "../../entities/pricelist";
 import { PricelistEntry } from "../../entities/pricelist-entry";
 import { Messenger } from "../../lib/messenger";
 import { PricelistRequestBodyRules } from "../../lib/validator-rules";
-import { IValidationErrorResponse } from "../../types/contracts";
-import {
-  ICreatePricelistRequest,
-  ICreatePricelistResponse,
-  IGetPricelistResponse,
-  IGetPricelistsResponse,
-  IUpdatePricelistRequest,
-  IUpdatePricelistResponse,
-} from "../../types/contracts/user/pricelist-crud";
-import { ItemId } from "../../types/item";
 import { RequestHandler } from "../index";
 
 export class PricelistCrudController {
@@ -96,7 +96,7 @@ export class PricelistCrudController {
     };
   };
 
-  public getPricelist: RequestHandler<null, IGetPricelistResponse | null> = async req => {
+  public getPricelist: RequestHandler<null, IGetUserPricelistResponse | null> = async req => {
     const user = req.user!;
     const pricelist = await this.dbConn.manager.getRepository(Pricelist).findOne({
       where: { id: req.params["id"], user: { id: user.id } },

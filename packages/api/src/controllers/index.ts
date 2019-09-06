@@ -1,10 +1,9 @@
+import { IValidationErrorResponse, UserLevel } from "@sotah-inc/core";
 import { Request, Response } from "express";
 import * as HTTPStatus from "http-status";
 import { ObjectSchema } from "yup";
 
 import { User } from "../entities/user";
-import { IValidationErrorResponse } from "../types/contracts";
-import { UserLevel } from "../types/entities";
 
 export { DataController } from "./data";
 

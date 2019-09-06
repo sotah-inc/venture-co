@@ -1,7 +1,6 @@
+import { IPricelistEntryJson, ItemId } from "@sotah-inc/core";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
-import { IPricelistEntryJson } from "../types/entities";
-import { ItemId } from "../types/item";
 import { Pricelist } from "./pricelist";
 
 @Entity({ name: "pricelist_entries" })

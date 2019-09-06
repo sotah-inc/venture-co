@@ -1,6 +1,6 @@
+import { IPreferenceJson } from "@sotah-inc/core";
 import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
-import { IPreferenceJson } from "../types/entities";
 import { User } from "./user";
 
 @Entity({ name: "preferences" })

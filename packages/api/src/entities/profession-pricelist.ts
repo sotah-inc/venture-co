@@ -1,8 +1,6 @@
+import { ExpansionName, IProfessionPricelistJson, ProfessionName } from "@sotah-inc/core";
 import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
-import { IProfessionPricelistJson } from "../types/entities";
-import { ExpansionName } from "../types/expansion";
-import { ProfessionName } from "../types/profession";
 import { Pricelist } from "./pricelist";
 
 @Entity({ name: "profession_pricelists" })
