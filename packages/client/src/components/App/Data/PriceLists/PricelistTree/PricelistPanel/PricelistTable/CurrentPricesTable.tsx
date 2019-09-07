@@ -6,8 +6,8 @@ import {
   IPricelistEntryJson,
   IPricelistJson,
   IPriceListMap,
-  IRealm,
   IRegion,
+  IStatusRealm,
   ItemId,
 } from "@sotah-inc/core";
 
@@ -31,7 +31,7 @@ export interface IDispatchProps {
 export interface IOwnProps {
   list: IPricelistJson;
   region: IRegion;
-  realm: IRealm;
+  realm: IStatusRealm;
 }
 
 type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;

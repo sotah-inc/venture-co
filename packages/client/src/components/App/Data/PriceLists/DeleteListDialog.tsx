@@ -1,11 +1,8 @@
 import React from "react";
 
 import { Button, Callout, Dialog, Intent } from "@blueprintjs/core";
+import { IExpansion, IPricelistJson, IProfession, IRegion, IStatusRealm } from "@sotah-inc/core";
 
-import { IPricelistJson } from "@sotah-inc/core";
-import { IExpansion } from "@sotah-inc/core";
-import { IProfession } from "@sotah-inc/core";
-import { IRealm, IRegion } from "@sotah-inc/core";
 import { IProfile } from "../../../../types/global";
 import { FetchLevel } from "../../../../types/main";
 import { GetAppToaster } from "../../../../util/toasters";
@@ -18,7 +15,7 @@ export interface IStateProps {
   deletePricelistLevel: FetchLevel;
   selectedProfession: IProfession | null;
   selectedExpansion: IExpansion | null;
-  currentRealm: IRealm | null;
+  currentRealm: IStatusRealm | null;
   currentRegion: IRegion | null;
 }
 
@@ -31,7 +28,7 @@ export interface IDispatchProps {
 export interface IRouteProps {
   browseOnDeletion: (
     region: IRegion,
-    realm: IRealm,
+    realm: IStatusRealm,
     profession: IProfession,
     expansion: IExpansion,
     pricelist: IPricelistJson | null,

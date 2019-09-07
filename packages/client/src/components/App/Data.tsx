@@ -1,6 +1,6 @@
 import React from "react";
 
-import { IRegion } from "../../api-types/region";
+import { IRegion } from "@sotah-inc/core";
 
 export interface IRouteProps {
   redirectToRegion: (region: IRegion) => void;

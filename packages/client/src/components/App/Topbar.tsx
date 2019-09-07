@@ -12,8 +12,7 @@ import {
   NavbarHeading,
   Tooltip,
 } from "@blueprintjs/core";
-import { IUserJson } from "../../api-types/entities";
-import { IRealm, IRegion } from "../../api-types/region";
+import { IRegion, IStatusRealm, IUserJson } from "@sotah-inc/core";
 
 import { LoginContainer } from "../../containers/App/Login";
 import { RegisterContainer } from "../../containers/App/Register";
@@ -22,7 +21,7 @@ import { LinkButtonRouteContainer } from "../../route-containers/util/LinkButton
 
 export interface IStateProps {
   user: IUserJson | null;
-  currentRealm: IRealm | null;
+  currentRealm: IStatusRealm | null;
   currentRegion: IRegion | null;
 }
 

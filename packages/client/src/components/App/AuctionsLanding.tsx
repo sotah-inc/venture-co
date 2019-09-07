@@ -1,15 +1,15 @@
 import React from "react";
 
 import { Classes, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
+import { IRegion, IStatusRealm } from "@sotah-inc/core";
 
-import { IRealm, IRegion } from "../../api-types/region";
 import { IRegions } from "../../types/global";
 import { FetchLevel } from "../../types/main";
 import { setTitle } from "../../util";
 
 export interface IStateProps {
   currentRegion: IRegion | null;
-  currentRealm: IRealm | null;
+  currentRealm: IStatusRealm | null;
   fetchRealmLevel: FetchLevel;
   regions: IRegions;
 }
@@ -21,7 +21,7 @@ export interface IDispatchProps {
 
 export interface IRouteProps {
   routeParams: IRouteParams;
-  redirectToAuctions: (region: IRegion, realm: IRealm) => void;
+  redirectToAuctions: (region: IRegion, realm: IStatusRealm) => void;
 }
 
 export interface IRouteParams {

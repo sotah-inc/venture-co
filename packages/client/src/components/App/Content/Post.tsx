@@ -15,10 +15,10 @@ import {
   NonIdealState,
   Spinner,
 } from "@blueprintjs/core";
+import { IPostJson, IUserJson, UserLevel } from "@sotah-inc/core";
 import moment from "moment";
 
 import { IDeletePostOptions } from "../../../actions/posts";
-import { IPostJson, IUserJson, UserLevel } from "../../../api-types/entities";
 // tslint:disable-next-line:max-line-length
 import { DeletePostDialogRouteContainer } from "../../../route-containers/App/Content/DeletePostDialog";
 import { FetchLevel } from "../../../types/main";

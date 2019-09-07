@@ -1,7 +1,7 @@
 import React from "react";
 
 import { H2, H4 } from "@blueprintjs/core";
-import { IItemsMap, IPricelistJson, IRealm, IRegion } from "@sotah-inc/core";
+import { IItemsMap, IPricelistJson, IRegion, IStatusRealm } from "@sotah-inc/core";
 
 // tslint:disable-next-line:max-line-length
 import { CurrentPricesTableContainer } from "../../../../../../containers/App/Data/PriceLists/PricelistTree/PricelistPanel/PricelistTable/CurrentPricesTable";
@@ -18,7 +18,7 @@ export interface IStateProps {
 export interface IOwnProps {
   list: IPricelistJson;
   region: IRegion;
-  realm: IRealm;
+  realm: IStatusRealm;
 }
 
 type Props = Readonly<IStateProps & IOwnProps>;

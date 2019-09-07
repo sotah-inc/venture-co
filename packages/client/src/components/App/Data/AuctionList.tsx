@@ -11,13 +11,18 @@ import {
   NonIdealState,
   Spinner,
 } from "@blueprintjs/core";
+import {
+  IAuction,
+  IPreferenceJson,
+  IQueryAuctionsItem,
+  IRegion,
+  IStatusRealm,
+  ItemId,
+  OwnerName,
+  SortDirection,
+  SortKind,
+} from "@sotah-inc/core";
 
-import { SortDirection, SortKind } from "../../../api-types";
-import { IAuction, OwnerName } from "../../../api-types/auction";
-import { IQueryAuctionsItem } from "../../../api-types/contracts/data";
-import { IPreferenceJson } from "../../../api-types/entities";
-import { ItemId } from "../../../api-types/item";
-import { IRealm, IRegion } from "../../../api-types/region";
 import { IGetAuctionsOptions, IQueryAuctionsOptions } from "../../../api/data";
 import { CountToggleContainer } from "../../../containers/App/Data/AuctionList/CountToggle";
 // tslint:disable-next-line:max-line-length
@@ -49,7 +54,7 @@ export interface IStateProps {
   fetchRealmLevel: FetchLevel;
   realms: IRealms;
   currentRegion: IRegion | null;
-  currentRealm: IRealm | null;
+  currentRealm: IStatusRealm | null;
   authLevel: AuthLevel;
   regions: IRegions;
 }
@@ -57,7 +62,7 @@ export interface IStateProps {
 export interface IDispatchProps {
   fetchRealms: (region: IRegion) => void;
   onRegionChange: (region: IRegion) => void;
-  onRealmChange: (realm: IRealm) => void;
+  onRealmChange: (realm: IStatusRealm) => void;
   refreshAuctions: (opts: IGetAuctionsOptions) => void;
   setCurrentPage: (page: number) => void;
   refreshAuctionsQuery: (opts: IQueryAuctionsOptions) => void;
@@ -65,7 +70,7 @@ export interface IDispatchProps {
 
 export interface IRouteProps {
   routeParams: IRouteParams;
-  browseToRealmAuctions: (region: IRegion, realm: IRealm) => void;
+  browseToRealmAuctions: (region: IRegion, realm: IStatusRealm) => void;
 }
 
 export interface IRouteParams {
@@ -567,7 +572,7 @@ export class AuctionList extends React.Component<Props> {
     return pageCount;
   }
 
-  private onRealmChange(realm: IRealm) {
+  private onRealmChange(realm: IStatusRealm) {
     const { browseToRealmAuctions, currentRegion } = this.props;
 
     if (currentRegion === null) {
@@ -608,7 +613,7 @@ export class AuctionList extends React.Component<Props> {
           </NavbarGroup>
           <NavbarGroup align={Alignment.RIGHT}>
             <ButtonGroup>
-              <RealmToggleContainer onRealmChange={(v: IRealm) => this.onRealmChange(v)} />
+              <RealmToggleContainer onRealmChange={(v: IStatusRealm) => this.onRealmChange(v)} />
               <RegionToggleContainer />
             </ButtonGroup>
           </NavbarGroup>

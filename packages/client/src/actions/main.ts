@@ -1,8 +1,8 @@
 import {
   ICreatePreferencesRequest,
   IGetBootResponse,
-  IRealm,
   IRegion,
+  IStatusRealm,
   IUpdatePreferencesRequest,
 } from "@sotah-inc/core";
 import { Dispatch } from "redux";
@@ -120,7 +120,7 @@ export const RegionChange = (payload: IRegion) => createAction(REGION_CHANGE, pa
 export const REQUEST_GET_REALMS = "REQUEST_GET_REALMS";
 export const RECEIVE_GET_REALMS = "RECEIVE_GET_REALMS";
 export const RequestGetRealms = () => createAction(REQUEST_GET_REALMS);
-export const ReceiveGetRealms = (payload: IRealm[] | null) =>
+export const ReceiveGetRealms = (payload: IStatusRealm[] | null) =>
   createAction(RECEIVE_GET_REALMS, payload);
 type FetchGetRealmType = ReturnType<typeof RequestGetRealms | typeof ReceiveGetRealms>;
 export const FetchGetRealms = (region: IRegion) => {
@@ -131,7 +131,7 @@ export const FetchGetRealms = (region: IRegion) => {
 };
 
 export const REALM_CHANGE = "REALM_CHANGE";
-export const RealmChange = (payload: IRealm) => createAction(REALM_CHANGE, payload);
+export const RealmChange = (payload: IStatusRealm) => createAction(REALM_CHANGE, payload);
 
 export const CHANGE_IS_LOGIN_DIALOG_OPEN = "CHANGE_IS_LOGIN_DIALOG_OPEN";
 export const ChangeIsLoginDialogOpen = (payload: boolean) =>

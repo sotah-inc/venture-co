@@ -8,8 +8,8 @@ import {
   IItemsMap,
   IPricelistJson,
   IProfession,
-  IRealm,
   IRegion,
+  IStatusRealm,
 } from "@sotah-inc/core";
 
 import { ListDialogContainer } from "../../../../containers/App/Data/PriceLists/util/ListDialog";
@@ -26,7 +26,7 @@ export interface IStateProps {
   selectedProfession: IProfession | null;
   selectedExpansion: IExpansion | null;
   currentRegion: IRegion | null;
-  currentRealm: IRealm | null;
+  currentRealm: IStatusRealm | null;
   selectedList: IPricelistJson | null;
 }
 
@@ -40,7 +40,7 @@ export interface IDispatchProps {
 export interface IRouteProps {
   browseToProfessionPricelist: (
     region: IRegion,
-    realm: IRealm,
+    realm: IStatusRealm,
     profession: IProfession,
     expansion: IExpansion,
     pricelist: IPricelistJson,

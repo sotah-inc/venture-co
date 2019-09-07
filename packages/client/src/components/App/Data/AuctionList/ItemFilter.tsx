@@ -18,9 +18,8 @@ import {
   ItemRenderer,
   Suggest,
 } from "@blueprintjs/select";
+import { IItem, IRegion, IStatusRealm } from "@sotah-inc/core";
 
-import { IItem } from "../../../../api-types/item";
-import { IRealm, IRegion } from "../../../../api-types/region";
 import { FetchLevel } from "../../../../types/main";
 
 const ItemFilterSuggest = Suggest.ofType<IItem>();
@@ -30,7 +29,7 @@ export interface IStateProps {
   items: IItem[];
   itemFilter: IItem | null;
   currentRegion: IRegion | null;
-  currentRealm: IRealm | null;
+  currentRealm: IStatusRealm | null;
 }
 
 export interface IDispatchProps {

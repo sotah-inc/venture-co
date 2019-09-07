@@ -1,11 +1,8 @@
 import React from "react";
 
 import { Classes, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
+import { IExpansion, IPricelistJson, IProfession, IRegion, IStatusRealm } from "@sotah-inc/core";
 
-import { IPricelistJson } from "../../../api-types/entities";
-import { IExpansion } from "../../../api-types/expansion";
-import { IProfession } from "../../../api-types/profession";
-import { IRealm, IRegion } from "../../../api-types/region";
 // tslint:disable-next-line:max-line-length
 import { CreateEntryDialogContainer } from "../../../containers/App/Data/PriceLists/CreateEntryDialog";
 import { ActionBarRouteContainer } from "../../../route-containers/App/Data/PriceLists/ActionBar";
@@ -25,7 +22,7 @@ import { setTitle } from "../../../util";
 export interface IStateProps {
   authLevel: AuthLevel;
 
-  currentRealm: IRealm | null;
+  currentRealm: IStatusRealm | null;
   currentRegion: IRegion | null;
   regions: IRegions;
   fetchRealmLevel: FetchLevel;
@@ -47,7 +44,7 @@ export interface IDispatchProps {
   changeSelectedProfession: (profession: IProfession) => void;
   fetchRealms: (region: IRegion) => void;
   onRegionChange: (region: IRegion) => void;
-  onRealmChange: (realm: IRealm) => void;
+  onRealmChange: (realm: IStatusRealm) => void;
   resetProfessionsSelections: () => void;
 }
 
@@ -55,14 +52,14 @@ export interface IRouteProps {
   routeParams: IRouteParams;
   redirectToPricelist: (
     region: IRegion,
-    realm: IRealm,
+    realm: IStatusRealm,
     profession: IProfession,
     expansion: IExpansion,
     pricelist: IPricelistJson,
   ) => void;
   browseOnRealmChange: (
     region: IRegion,
-    realm: IRealm,
+    realm: IStatusRealm,
     profession: IProfession | null,
     expansion: IExpansion | null,
     pricelist: IPricelistJson | null,

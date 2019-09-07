@@ -17,8 +17,8 @@ import {
   IPricelistJson,
   IProfession,
   IProfessionPricelistJson,
-  IRealm,
   IRegion,
+  IStatusRealm,
   ItemId,
   ProfessionName,
   RealmPopulation,
@@ -48,7 +48,7 @@ export interface IDispatchProps {
 }
 
 export interface IOwnProps {
-  realm: IRealm;
+  realm: IStatusRealm;
   region: IRegion;
 }
 

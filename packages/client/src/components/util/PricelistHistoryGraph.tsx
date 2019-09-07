@@ -7,8 +7,8 @@ import {
   IItemsMap,
   IPriceLimits,
   IPricelistHistoryMap,
-  IRealm,
   IRegion,
+  IStatusRealm,
   ItemId,
 } from "@sotah-inc/core";
 import moment from "moment";
@@ -47,7 +47,7 @@ export interface IDispatchProps {
 
 export interface IOwnProps {
   region: IRegion;
-  realm: IRealm;
+  realm: IStatusRealm;
   itemIds: ItemId[];
 }
 

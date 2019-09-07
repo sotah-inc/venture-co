@@ -1,4 +1,4 @@
-import { IItemClass, IRealm, IRegion, ISubItemClass, IUserJson } from "@sotah-inc/core";
+import { IItemClass, IRegion, IStatusRealm, ISubItemClass, IUserJson } from "@sotah-inc/core";
 
 export interface IRegions {
   [key: string]: IRegion;
@@ -10,7 +10,7 @@ export interface IErrors {
 
 // realm types
 export interface IRealms {
-  [key: string]: IRealm;
+  [key: string]: IStatusRealm;
 }
 
 // user types

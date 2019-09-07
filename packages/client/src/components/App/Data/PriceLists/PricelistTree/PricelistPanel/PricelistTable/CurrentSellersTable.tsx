@@ -14,8 +14,8 @@ import {
   IPricelistJson,
   IQueryOwnerItem,
   IQueryOwnerItemsMap,
-  IRealm,
   IRegion,
+  IStatusRealm,
   OwnerName,
 } from "@sotah-inc/core";
 
@@ -37,7 +37,7 @@ export interface IDispatchProps {
 export interface IOwnProps {
   list: IPricelistJson;
   region: IRegion;
-  realm: IRealm;
+  realm: IStatusRealm;
 }
 
 type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;

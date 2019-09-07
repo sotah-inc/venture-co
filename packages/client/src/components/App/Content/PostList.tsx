@@ -1,10 +1,10 @@
 import React from "react";
 
 import { Button, ButtonGroup, Card, Classes, H2, H5, Intent, Spinner } from "@blueprintjs/core";
+import { IPostJson, IUserJson, UserLevel } from "@sotah-inc/core";
 import moment from "moment";
 
 import { IDeletePostOptions } from "../../../actions/posts";
-import { IPostJson, IUserJson, UserLevel } from "../../../api-types/entities";
 import { FetchLevel } from "../../../types/main";
 import { MarkdownRenderer } from "../../util";
 

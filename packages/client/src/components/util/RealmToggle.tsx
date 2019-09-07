@@ -12,8 +12,8 @@ import {
 import {
   ICreatePreferencesRequest,
   IPreferenceJson,
-  IRealm,
   IRegion,
+  IStatusRealm,
   IUpdatePreferencesRequest,
 } from "@sotah-inc/core";
 
@@ -21,11 +21,11 @@ import { IProfile, IRealms } from "../../types/global";
 import { AuthLevel, FetchLevel } from "../../types/main";
 import { didRealmChange } from "../../util";
 
-const RealmToggleSelect = Select.ofType<IRealm>();
+const RealmToggleSelect = Select.ofType<IStatusRealm>();
 
 export interface IStateProps {
   realms: IRealms;
-  currentRealm: IRealm | null;
+  currentRealm: IStatusRealm | null;
   fetchRealmLevel: FetchLevel;
   userPreferences: IPreferenceJson | null;
   authLevel: AuthLevel;
@@ -44,7 +44,7 @@ export interface IDispatchProps {
 }
 
 export interface IOwnProps {
-  onRealmChange: (realm: IRealm) => void;
+  onRealmChange: (realm: IStatusRealm) => void;
 }
 
 type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
@@ -79,7 +79,7 @@ export class RealmToggle extends React.Component<Props> {
     }
   }
 
-  public itemPredicate: ItemPredicate<IRealm> = (query: string, item: IRealm) => {
+  public itemPredicate: ItemPredicate<IStatusRealm> = (query: string, item: IStatusRealm) => {
     query = query.toLowerCase();
     return (
       item.name.toLowerCase().indexOf(query) >= 0 ||
@@ -87,8 +87,8 @@ export class RealmToggle extends React.Component<Props> {
     );
   };
 
-  public itemRenderer: ItemRenderer<IRealm> = (
-    realm: IRealm,
+  public itemRenderer: ItemRenderer<IStatusRealm> = (
+    realm: IStatusRealm,
     { handleClick, modifiers, index }: IItemRendererProps,
   ) => {
     if (!modifiers.matchesPredicate) {
@@ -111,7 +111,9 @@ export class RealmToggle extends React.Component<Props> {
     );
   };
 
-  public itemListRenderer: ItemListRenderer<IRealm> = (params: IItemListRendererProps<IRealm>) => {
+  public itemListRenderer: ItemListRenderer<IStatusRealm> = (
+    params: IItemListRendererProps<IStatusRealm>,
+  ) => {
     const { items, itemsParentRef, renderItem } = params;
     const renderedItems = items.map(renderItem).filter(renderedItem => renderedItem !== null);
     return (

@@ -1,12 +1,15 @@
 import React from "react";
 
 import { Intent } from "@blueprintjs/core";
+import {
+  IExpansion,
+  IItemsMap,
+  IPricelistJson,
+  IProfession,
+  IRegion,
+  IStatusRealm,
+} from "@sotah-inc/core";
 
-import { IPricelistJson } from "@sotah-inc/core";
-import { IExpansion } from "@sotah-inc/core";
-import { IItemsMap } from "@sotah-inc/core";
-import { IProfession } from "@sotah-inc/core";
-import { IRealm, IRegion } from "@sotah-inc/core";
 import { ListDialogContainer } from "../../../../containers/App/Data/PriceLists/util/ListDialog";
 import { IErrors, IProfile } from "../../../../types/global";
 import { FetchLevel } from "../../../../types/main";
@@ -22,7 +25,7 @@ export interface IStateProps {
   selectedList: IPricelistJson | null;
   items: IItemsMap;
   currentRegion: IRegion | null;
-  currentRealm: IRealm | null;
+  currentRealm: IStatusRealm | null;
   selectedProfession: IProfession | null;
   selectedExpansion: IExpansion | null;
 }
@@ -36,7 +39,7 @@ export interface IDispatchProps {
 export interface IRouteProps {
   browseToProfessionPricelist: (
     region: IRegion,
-    realm: IRealm,
+    realm: IStatusRealm,
     profession: IProfession,
     expansion: IExpansion,
     pricelist: IPricelistJson,

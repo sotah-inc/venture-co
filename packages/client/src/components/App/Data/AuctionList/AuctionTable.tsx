@@ -1,15 +1,21 @@
 import React from "react";
 
 import { Button, ButtonGroup, Classes, HTMLTable } from "@blueprintjs/core";
+import {
+  IAuction,
+  IExpansion,
+  IItem,
+  IItemsMap,
+  IPricelistJson,
+  IProfession,
+  IProfessionPricelistJson,
+  IQueryAuctionsItem,
+  IRegion,
+  IStatusRealm,
+  ItemId,
+  SortKind,
+} from "@sotah-inc/core";
 
-import { SortKind } from "../../../../api-types";
-import { IAuction } from "../../../../api-types/auction";
-import { IQueryAuctionsItem } from "../../../../api-types/contracts/data";
-import { IPricelistJson, IProfessionPricelistJson } from "../../../../api-types/entities";
-import { IExpansion } from "../../../../api-types/expansion";
-import { IItem, IItemsMap, ItemId } from "../../../../api-types/item";
-import { IProfession } from "../../../../api-types/profession";
-import { IRealm, IRegion } from "../../../../api-types/region";
 import { SortToggleContainer } from "../../../../containers/App/Data/AuctionList/SortToggle";
 import { ItemPopoverContainer } from "../../../../containers/util/ItemPopover";
 import { PricelistIconContainer } from "../../../../containers/util/PricelistIcon";
@@ -25,7 +31,7 @@ export interface IStateProps {
   relatedProfessionPricelists: IProfessionPricelistJson[];
   expansions: IExpansion[];
   professions: IProfession[];
-  currentRealm: IRealm | null;
+  currentRealm: IStatusRealm | null;
   currentRegion: IRegion | null;
 }
 
@@ -37,7 +43,7 @@ export interface IDispatchProps {
 export interface IRouteProps {
   browseToProfessionPricelist: (
     region: IRegion,
-    realm: IRealm,
+    realm: IStatusRealm,
     profession: IProfession,
     expansion: IExpansion,
     pricelist: IPricelistJson,

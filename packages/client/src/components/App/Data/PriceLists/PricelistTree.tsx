@@ -1,11 +1,15 @@
 import React from "react";
 
 import { Classes, Intent, ITreeNode, Spinner, Tree } from "@blueprintjs/core";
+import {
+  IExpansion,
+  IPricelistJson,
+  IProfession,
+  IRegion,
+  IStatusRealm,
+  ProfessionName,
+} from "@sotah-inc/core";
 
-import { IPricelistJson } from "@sotah-inc/core";
-import { IExpansion } from "@sotah-inc/core";
-import { IProfession, ProfessionName } from "@sotah-inc/core";
-import { IRealm, IRegion } from "@sotah-inc/core";
 // tslint:disable-next-line:max-line-length
 import { TreeContentContainer } from "../../../../containers/App/Data/PriceLists/PricelistTree/TreeContent";
 import { PricelistIconContainer } from "../../../../containers/util/PricelistIcon";
@@ -18,7 +22,7 @@ export interface IStateProps {
   pricelists: IPricelistJson[];
   selectedList: IPricelistJson | null;
   currentRegion: IRegion | null;
-  currentRealm: IRealm | null;
+  currentRealm: IStatusRealm | null;
   professions: IProfession[];
   selectedProfession: IProfession | null;
   getProfessionPricelistsLevel: FetchLevel;
@@ -36,19 +40,19 @@ export interface IDispatchProps {
 }
 
 export interface IRouteProps {
-  browseToUserPricelist: (region: IRegion, realm: IRealm, pricelist: IPricelistJson) => void;
+  browseToUserPricelist: (region: IRegion, realm: IStatusRealm, pricelist: IPricelistJson) => void;
   browseToProfessionPricelist: (
     region: IRegion,
-    realm: IRealm,
+    realm: IStatusRealm,
     profession: IProfession,
     expansion: IExpansion,
     pricelist: IPricelistJson,
   ) => void;
-  browseToProfessions: (region: IRegion, realm: IRealm) => void;
-  browseToProfession: (region: IRegion, realm: IRealm, profession: IProfession) => void;
+  browseToProfessions: (region: IRegion, realm: IStatusRealm) => void;
+  browseToProfession: (region: IRegion, realm: IStatusRealm, profession: IProfession) => void;
   browseToProfessionExpansion: (
     region: IRegion,
-    realm: IRealm,
+    realm: IStatusRealm,
     profession: IProfession,
     expansion: IExpansion,
   ) => void;

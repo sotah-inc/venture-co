@@ -1,8 +1,8 @@
 import React from "react";
 
 import { Classes, H1, H4, Icon, IconName, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
+import { IRegion } from "@sotah-inc/core";
 
-import { IRegion } from "../../../api-types/region";
 // tslint:disable-next-line:max-line-length
 import { DeletePostDialogRouteContainer } from "../../../route-containers/App/Content/DeletePostDialog";
 import { PostListRouteContainer } from "../../../route-containers/App/Content/PostList";

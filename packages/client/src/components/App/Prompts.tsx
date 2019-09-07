@@ -1,8 +1,7 @@
 import React from "react";
 
 import { Button, Callout, Intent } from "@blueprintjs/core";
-
-import { IUserJson, UserLevel } from "../../api-types/entities";
+import { IUserJson, UserLevel } from "@sotah-inc/core";
 
 export interface IStateProps {
   user: IUserJson | null;

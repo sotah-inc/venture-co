@@ -16,8 +16,8 @@ import {
   IExpansion,
   IPricelistJson,
   IProfession,
-  IRealm,
   IRegion,
+  IStatusRealm,
   UserLevel,
 } from "@sotah-inc/core";
 
@@ -28,7 +28,7 @@ import { AuthLevel } from "../../../../types/main";
 
 export interface IStateProps {
   currentRegion: IRegion | null;
-  currentRealm: IRealm | null;
+  currentRealm: IStatusRealm | null;
   isAddListDialogOpen: boolean;
   isAddEntryDialogOpen: boolean;
   selectedList: IPricelistJson | null;
@@ -48,7 +48,7 @@ export interface IDispatchProps {
 export interface IRouteProps {
   browseOnRealmChange: (
     region: IRegion,
-    realm: IRealm,
+    realm: IStatusRealm,
     profession: IProfession | null,
     expansion: IExpansion | null,
     list: IPricelistJson | null,
@@ -66,7 +66,7 @@ export class ActionBar extends React.Component<Props> {
         <NavbarGroup align={Alignment.LEFT}>{this.renderButtons()}</NavbarGroup>
         <NavbarGroup align={Alignment.RIGHT}>
           <ButtonGroup>
-            <RealmToggleContainer onRealmChange={(v: IRealm) => this.onRealmChange(v)} />
+            <RealmToggleContainer onRealmChange={(v: IStatusRealm) => this.onRealmChange(v)} />
             <RegionToggleContainer />
           </ButtonGroup>
         </NavbarGroup>
@@ -74,7 +74,7 @@ export class ActionBar extends React.Component<Props> {
     );
   }
 
-  private onRealmChange(realm: IRealm) {
+  private onRealmChange(realm: IStatusRealm) {
     const {
       browseOnRealmChange,
       currentRegion,

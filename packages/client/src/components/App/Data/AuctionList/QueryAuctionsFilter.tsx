@@ -23,11 +23,9 @@ import {
   ItemRenderer,
   Suggest,
 } from "@blueprintjs/select";
+import { IItem, IQueryAuctionsItem, IRegion, IStatusRealm } from "@sotah-inc/core";
 import { debounce } from "lodash";
 
-import { IQueryAuctionsItem } from "../../../../api-types/contracts/data";
-import { IItem } from "../../../../api-types/item";
-import { IRealm, IRegion } from "../../../../api-types/region";
 import { IQueryAuctionsOptions } from "../../../../api/data";
 import { FetchLevel } from "../../../../types/main";
 import {
@@ -42,7 +40,7 @@ const QueryAuctionResultSuggest = Suggest.ofType<IQueryAuctionsItem>();
 export interface IStateProps {
   queryAuctionsLevel: FetchLevel;
   currentRegion: IRegion | null;
-  currentRealm: IRealm | null;
+  currentRealm: IStatusRealm | null;
   items: IQueryAuctionsItem[];
   selectedItems: IQueryAuctionsItem[];
   activeSelect: boolean;

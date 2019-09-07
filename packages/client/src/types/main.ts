@@ -1,4 +1,4 @@
-import { IExpansion, IPreferenceJson, IProfession, IRealm, IRegion } from "@sotah-inc/core";
+import { IExpansion, IPreferenceJson, IProfession, IRegion, IStatusRealm } from "@sotah-inc/core";
 
 import { IItemClasses, IProfile, IRealms, IRegions } from "./global";
 
@@ -14,7 +14,7 @@ export interface IMainState {
   currentRegion: IRegion | null;
   fetchRealmLevel: FetchLevel;
   realms: IRealms;
-  currentRealm: IRealm | null;
+  currentRealm: IStatusRealm | null;
   authLevel: AuthLevel;
   isLoginDialogOpen: boolean;
   expansions: IExpansion[];

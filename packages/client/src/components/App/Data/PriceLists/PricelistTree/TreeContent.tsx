@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Classes, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
-import { IPricelistJson, IRealm, IRegion } from "@sotah-inc/core";
+import { IPricelistJson, IRegion, IStatusRealm } from "@sotah-inc/core";
 
 // tslint:disable-next-line:max-line-length
 import { PricelistPanelContainer } from "../../../../../containers/App/Data/PriceLists/PricelistTree/PricelistPanel";
@@ -11,7 +11,7 @@ import { LastModified } from "../../../../util";
 
 export interface IStateProps {
   currentRegion: IRegion | null;
-  currentRealm: IRealm | null;
+  currentRealm: IStatusRealm | null;
   selectedList: IPricelistJson | null;
 }
 

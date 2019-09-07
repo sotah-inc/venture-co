@@ -18,9 +18,8 @@ import {
   ItemRenderer,
   Suggest,
 } from "@blueprintjs/select";
+import { IOwner, IRegion, IStatusRealm, OwnerName } from "@sotah-inc/core";
 
-import { IOwner, OwnerName } from "../../../../api-types/auction";
-import { IRealm, IRegion } from "../../../../api-types/region";
 import { IGetOwnersOptions } from "../../../../api/data";
 import { FetchLevel } from "../../../../types/main";
 
@@ -31,7 +30,7 @@ export interface IStateProps {
   owners: IOwner[];
   ownerFilter: OwnerName | null;
   currentRegion: IRegion | null;
-  currentRealm: IRealm | null;
+  currentRealm: IStatusRealm | null;
 }
 
 export interface IDispatchProps {

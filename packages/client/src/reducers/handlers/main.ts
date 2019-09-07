@@ -1,4 +1,4 @@
-import { IRealm, IRegion } from "@sotah-inc/core";
+import { IRegion, IStatusRealm } from "@sotah-inc/core";
 
 import {
   MainActions,
@@ -103,7 +103,7 @@ const handlers: IKindHandlers<IMainState, MainActions> = {
           return { ...state, fetchRealmLevel: FetchLevel.failure };
         }
 
-        const currentRealm: IRealm = (() => {
+        const currentRealm: IStatusRealm = (() => {
           // optionally halting on blank user-preferences
           if (state.userPreferences === null) {
             return action.payload[0];
@@ -120,7 +120,7 @@ const handlers: IKindHandlers<IMainState, MainActions> = {
           }
 
           // gathering preferred realm
-          const foundRealm = action.payload.reduce<IRealm | null>((result, v) => {
+          const foundRealm = action.payload.reduce<IStatusRealm | null>((result, v) => {
             if (result !== null) {
               return result;
             }
