@@ -1,3 +1,5 @@
+import { IAuction } from "@sotah-inc/core";
+
 import {
   ACTIVESELECT_CHANGE,
   ADD_AUCTIONS_QUERY,
@@ -12,7 +14,6 @@ import {
   REQUEST_AUCTIONS_QUERY,
   SORT_CHANGE,
 } from "../actions/auction";
-import { IAuction } from "../api-types/auction";
 import { defaultAuctionState, IAuctionState } from "../types/auction";
 import { FetchLevel } from "../types/main";
 

@@ -1,20 +1,20 @@
 import * as HTTPStatus from "http-status";
 
-import { IErrorResponse, IValidationErrorResponse } from "../api-types/contracts";
+import { IErrorResponse, IValidationErrorResponse } from "@sotah-inc/core";
 import {
   ICreateUserRequest,
   ICreateUserResponse,
   ILoginRequest,
   ILoginResponse,
-} from "../api-types/contracts/user";
+} from "@sotah-inc/core";
 import {
   ICreatePreferencesRequest,
   ICreatePreferencesResponse,
   IGetPreferencesResponse,
   IUpdatePreferencesRequest,
   IUpdatePreferencesResponse,
-} from "../api-types/contracts/user/preferences";
-import { IPreferenceJson, IUserJson } from "../api-types/entities";
+} from "@sotah-inc/core";
+import { IPreferenceJson, IUserJson } from "@sotah-inc/core";
 import { apiEndpoint, gather } from "./index";
 
 interface IRegisterUserResult {

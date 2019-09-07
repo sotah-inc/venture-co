@@ -1,8 +1,12 @@
-import { SortDirection, SortKind } from "../api-types";
-import { IAuction } from "../api-types/auction";
-import { IQueryAuctionsItem } from "../api-types/contracts/data";
-import { IProfessionPricelistJson } from "../api-types/entities";
-import { IItemsMap } from "../api-types/item";
+import {
+  IAuction,
+  IItemsMap,
+  IProfessionPricelistJson,
+  IQueryAuctionsItem,
+  SortDirection,
+  SortKind,
+} from "@sotah-inc/core";
+
 import { FetchLevel } from "./main";
 
 export interface IAuctionState {

@@ -1,3 +1,5 @@
+import { IItem } from "@sotah-inc/core";
+
 import {
   APPEND_ITEMS,
   CHANGE_ENTRY_CREATELEVEL,
@@ -11,7 +13,6 @@ import {
   PriceListsActions,
   RESET_PROFESSIONS_SELECTIONS,
 } from "../actions/price-lists";
-import { IItem } from "../api-types/item";
 import { defaultPriceListsState, IPriceListsState } from "../types/price-lists";
 import { runners } from "./handlers";
 

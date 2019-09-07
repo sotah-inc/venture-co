@@ -1,5 +1,3 @@
-import * as HTTPStatus from "http-status";
-
 import {
   IGetAuctionsRequest,
   IGetAuctionsResponse,
@@ -12,6 +10,7 @@ import {
   IGetPricelistRequest,
   IGetPricelistResponse,
   IGetRealmsResponse,
+  IPostJson,
   IQueryAuctionsRequest,
   IQueryAuctionsResponse,
   IQueryItemsRequest,
@@ -19,10 +18,12 @@ import {
   IQueryOwnerItemsRequest,
   IQueryOwnerItemsResponse,
   IStatusRealm,
-} from "../api-types/contracts/data";
-import { IPostJson } from "../api-types/entities";
-import { ItemId } from "../api-types/item";
-import { RealmSlug, RegionName } from "../api-types/region";
+  ItemId,
+  RealmSlug,
+  RegionName,
+} from "@sotah-inc/core";
+import * as HTTPStatus from "http-status";
+
 import { apiEndpoint, gather, gatherWithQuery } from "./index";
 
 export const getPing = async (): Promise<boolean> => {

@@ -1,6 +1,4 @@
-import { IUserJson } from "../api-types/entities";
-import { IItemClass, ISubItemClass } from "../api-types/item-class";
-import { IRealm, IRegion } from "../api-types/region";
+import { IItemClass, IRealm, IRegion, ISubItemClass, IUserJson } from "@sotah-inc/core";
 
 export interface IRegions {
   [key: string]: IRegion;

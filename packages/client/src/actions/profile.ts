@@ -1,6 +1,6 @@
+import { IUpdateProfileRequest } from "@sotah-inc/core";
 import { Dispatch } from "redux";
 
-import { IUpdateProfileRequest } from "../api-types/contracts/user/profile";
 import { IUpdateProfileResult, updateProfile } from "../api/profile";
 import { ActionsUnion, createAction } from "./helpers";
 

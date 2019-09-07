@@ -1,4 +1,5 @@
-import { IPricelistJson, IProfessionPricelistJson } from "../api-types/entities";
+import { IPricelistJson, IProfessionPricelistJson } from "@sotah-inc/core";
+
 import { IPriceListsState } from "../types/price-lists";
 
 export const getPricelistIndex = (pricelists: IPricelistJson[], id: number): number => {

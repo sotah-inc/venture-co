@@ -1,4 +1,5 @@
-import { IPostJson } from "../api-types/entities";
+import { IPostJson } from "@sotah-inc/core";
+
 import { FetchLevel } from "./main";
 
 export interface IPostsState {

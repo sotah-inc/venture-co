@@ -1,11 +1,12 @@
-import { Dispatch } from "redux";
-
-import { IGetBootResponse } from "../api-types/contracts/data";
 import {
   ICreatePreferencesRequest,
+  IGetBootResponse,
+  IRealm,
+  IRegion,
   IUpdatePreferencesRequest,
-} from "../api-types/contracts/user/preferences";
-import { IRealm, IRegion } from "../api-types/region";
+} from "@sotah-inc/core";
+import { Dispatch } from "redux";
+
 import { getBoot, getPing, getStatus } from "../api/data";
 import {
   createPreferences,

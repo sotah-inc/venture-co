@@ -1,7 +1,7 @@
 import * as HTTPStatus from "http-status";
 
-import { IValidationErrorResponse } from "../api-types/contracts";
-import { IUpdateProfileRequest, IUpdateProfileResponse } from "../api-types/contracts/user/profile";
+import { IValidationErrorResponse } from "@sotah-inc/core";
+import { IUpdateProfileRequest, IUpdateProfileResponse } from "@sotah-inc/core";
 import { IErrors } from "../types/global";
 
 import { apiEndpoint, gather } from "./index";

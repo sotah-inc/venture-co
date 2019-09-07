@@ -1,7 +1,5 @@
-import { IPreferenceJson } from "../api-types/entities";
-import { IExpansion } from "../api-types/expansion";
-import { IProfession } from "../api-types/profession";
-import { IRealm, IRegion } from "../api-types/region";
+import { IExpansion, IPreferenceJson, IProfession, IRealm, IRegion } from "@sotah-inc/core";
+
 import { IItemClasses, IProfile, IRealms, IRegions } from "./global";
 
 export interface IMainState {

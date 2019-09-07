@@ -1,14 +1,15 @@
-import * as HTTPStatus from "http-status";
-
-import { IErrorResponse, IValidationErrorResponse } from "../api-types/contracts";
-import { IGetPostResponse } from "../api-types/contracts/data";
 import {
   ICreatePostRequest,
   ICreatePostResponse,
+  IErrorResponse,
+  IGetPostResponse,
+  IPostJson,
   IUpdatePostRequest,
   IUpdatePostResponse,
-} from "../api-types/contracts/user/post-crud";
-import { IPostJson } from "../api-types/entities";
+  IValidationErrorResponse,
+} from "@sotah-inc/core";
+import * as HTTPStatus from "http-status";
+
 import { apiEndpoint, gather } from "./index";
 
 export interface ICreatePostResult {

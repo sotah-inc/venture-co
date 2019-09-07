@@ -1,3 +1,5 @@
+import { IItemsMap, IPricelistJson, IProfessionPricelistJson } from "@sotah-inc/core";
+
 import {
   ChangeSelectedExpansion,
   PriceListsActions,
@@ -13,8 +15,6 @@ import {
   ReceiveGetUnmetDemand,
   ReceiveUpdatePricelist,
 } from "../../actions/price-lists";
-import { IPricelistJson, IProfessionPricelistJson } from "../../api-types/entities";
-import { IItemsMap } from "../../api-types/item";
 import { FetchLevel } from "../../types/main";
 import { IExpansionProfessionPricelistMap, IPriceListsState } from "../../types/price-lists";
 import { getPricelistIndex, getProfessionPricelistIndex } from "../helper";

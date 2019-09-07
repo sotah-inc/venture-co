@@ -1,13 +1,13 @@
-import { Dispatch } from "redux";
-
-import { OwnerName } from "../api-types/auction";
 import {
   IGetAuctionsResponse,
   IGetOwnersResponse,
+  IItem,
   IQueryAuctionsItem,
   IQueryAuctionsResponse,
-} from "../api-types/contracts/data";
-import { IItem } from "../api-types/item";
+  OwnerName,
+} from "@sotah-inc/core";
+import { Dispatch } from "redux";
+
 import {
   getAuctions,
   getOwners,

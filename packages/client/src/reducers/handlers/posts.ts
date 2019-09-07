@@ -1,3 +1,5 @@
+import { IValidationErrorResponse } from "@sotah-inc/core";
+
 import {
   PostsActions,
   ReceiveCreatePost,
@@ -6,7 +8,6 @@ import {
   ReceiveGetPosts,
   ReceiveUpdatePost,
 } from "../../actions/posts";
-import { IValidationErrorResponse } from "../../api-types/contracts";
 import { FetchLevel } from "../../types/main";
 import { IPostsState } from "../../types/posts";
 

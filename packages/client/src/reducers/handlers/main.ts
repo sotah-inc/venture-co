@@ -1,3 +1,5 @@
+import { IRealm, IRegion } from "@sotah-inc/core";
+
 import {
   MainActions,
   ReceiveGetBoot,
@@ -5,7 +7,6 @@ import {
   ReceiveGetRealms,
   ReceiveGetUserPreferences,
 } from "../../actions/main";
-import { IRealm, IRegion } from "../../api-types/region";
 import { IItemClasses, IRealms, IRegions, ISubItemClasses } from "../../types/global";
 import { FetchLevel, IMainState } from "../../types/main";
 

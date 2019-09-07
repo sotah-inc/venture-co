@@ -1,20 +1,18 @@
-import { Dispatch } from "redux";
-
-import {
-  IGetPricelistHistoriesResponse,
-  IGetPricelistResponse,
-  IQueryOwnerItemsResponse,
-} from "../api-types/contracts/data";
 import {
   ICreatePricelistRequest,
+  ICreateProfessionPricelistRequest,
+  IExpansion,
+  IGetPricelistHistoriesResponse,
+  IGetPricelistResponse,
   IGetPricelistsResponse,
-} from "../api-types/contracts/user/pricelist-crud";
-// tslint:disable-next-line:max-line-length
-import { ICreateProfessionPricelistRequest } from "../api-types/contracts/user/profession-pricelists-crud";
-import { IPricelistJson } from "../api-types/entities";
-import { IExpansion } from "../api-types/expansion";
-import { IItemsMap } from "../api-types/item";
-import { IProfession, ProfessionName } from "../api-types/profession";
+  IItemsMap,
+  IPricelistJson,
+  IProfession,
+  IQueryOwnerItemsResponse,
+  ProfessionName,
+} from "@sotah-inc/core";
+import { Dispatch } from "redux";
+
 import {
   getPriceList,
   getPriceListHistory,

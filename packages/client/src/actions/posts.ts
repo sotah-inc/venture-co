@@ -1,8 +1,11 @@
+import {
+  ICreatePostRequest,
+  IGetPostResponse,
+  IPostJson,
+  IUpdatePostRequest,
+} from "@sotah-inc/core";
 import { Dispatch } from "redux";
 
-import { IGetPostResponse } from "../api-types/contracts/data";
-import { ICreatePostRequest, IUpdatePostRequest } from "../api-types/contracts/user/post-crud";
-import { IPostJson } from "../api-types/entities";
 import { getPosts, IGetPostsResult } from "../api/data";
 import {
   createPost,
