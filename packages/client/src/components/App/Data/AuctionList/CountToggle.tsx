@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 
 import { Button, Classes, H6, Menu, MenuItem, Popover, Position } from "@blueprintjs/core";
 

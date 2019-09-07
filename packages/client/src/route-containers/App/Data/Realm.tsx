@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 
 import { WithRouterProps } from "next/dist/client/with-router";
 import { withRouter } from "next/router";

@@ -1,9 +1,8 @@
-import * as React from "react";
+import React from "react";
 
 import { Classes, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
+import { IPricelistJson, IRealm, IRegion } from "@sotah-inc/core";
 
-import { IPricelistJson } from "../../../../../api-types/entities";
-import { IRealm, IRegion } from "../../../../../api-types/region";
 // tslint:disable-next-line:max-line-length
 import { PricelistPanelContainer } from "../../../../../containers/App/Data/PriceLists/PricelistTree/PricelistPanel";
 // tslint:disable-next-line:max-line-length

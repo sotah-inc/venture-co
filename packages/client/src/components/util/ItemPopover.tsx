@@ -1,7 +1,6 @@
-import * as React from "react";
+import React from "react";
 
 import { Popover, PopoverInteractionKind, Position } from "@blueprintjs/core";
-
 import {
   IItem,
   IItemBonusStat,
@@ -9,7 +8,8 @@ import {
   ItemBind,
   ItemClassClasses,
   ItemSpellTrigger,
-} from "../../api-types/item";
+} from "@sotah-inc/core";
+
 import { IItemClasses } from "../../types/global";
 import {
   getItemIconUrl,
@@ -60,10 +60,10 @@ const renderClass = (item: IItem, itemClasses: IItemClasses) => {
   }
   const iClass = itemClasses[item.itemClass];
 
-  if (!(item.itemSubClass in iClass.subclasses)) {
+  if (!(item.itemSubClass in iClass.subClasses)) {
     return `${iClass.name} sub-class #${item.itemSubClass}`;
   }
-  const iSubClass = iClass.subclasses[item.itemSubClass];
+  const iSubClass = iClass.subClasses[item.itemSubClass];
 
   return `${iClass.name} (#${item.itemClass}) - ${iSubClass.name}`;
 };
@@ -133,11 +133,11 @@ const renderInventoryType = (item: IItem, itemClasses: IItemClasses) => {
         }
 
         const iClass = itemClasses[item.itemClass];
-        if (!(item.itemSubClass in iClass.subclasses)) {
+        if (!(item.itemSubClass in iClass.subClasses)) {
           return "";
         }
 
-        return iClass.subclasses[item.itemSubClass].name;
+        return iClass.subClasses[item.itemSubClass].name;
       })();
 
       return (

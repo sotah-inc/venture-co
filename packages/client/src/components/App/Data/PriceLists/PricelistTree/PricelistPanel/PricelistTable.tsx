@@ -1,10 +1,8 @@
-import * as React from "react";
+import React from "react";
 
 import { H2, H4 } from "@blueprintjs/core";
+import { IItemsMap, IPricelistJson, IRealm, IRegion } from "@sotah-inc/core";
 
-import { IPricelistJson } from "../../../../../../api-types/entities";
-import { IItemsMap } from "../../../../../../api-types/item";
-import { IRealm, IRegion } from "../../../../../../api-types/region";
 // tslint:disable-next-line:max-line-length
 import { CurrentPricesTableContainer } from "../../../../../../containers/App/Data/PriceLists/PricelistTree/PricelistPanel/PricelistTable/CurrentPricesTable";
 // tslint:disable-next-line:max-line-length

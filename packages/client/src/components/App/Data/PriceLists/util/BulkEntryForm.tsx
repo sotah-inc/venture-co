@@ -1,9 +1,9 @@
-import * as React from "react";
+import React from "react";
 
 import { Button, FormGroup, H5, Intent } from "@blueprintjs/core";
+import { IItem, ItemId } from "@sotah-inc/core";
 import { FormikProps } from "formik";
 
-import { IItem, ItemId } from "../../../../../api-types/item";
 import { getItemIconUrl, getItemTextValue, qualityToColorClass } from "../../../../../util";
 import { DialogActions, DialogBody, ItemInput } from "../../../../util";
 

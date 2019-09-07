@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 
 import {
   Callout,
@@ -10,14 +10,15 @@ import {
   NavbarGroup,
   Spinner,
 } from "@blueprintjs/core";
-
-import { OwnerName } from "../../../../../../../api-types/auction";
 import {
+  IPricelistJson,
   IQueryOwnerItem,
   IQueryOwnerItemsMap,
-} from "../../../../../../../api-types/contracts/data";
-import { IPricelistJson } from "../../../../../../../api-types/entities";
-import { IRealm, IRegion } from "../../../../../../../api-types/region";
+  IRealm,
+  IRegion,
+  OwnerName,
+} from "@sotah-inc/core";
+
 import { IQueryOwnersByItemsOptions } from "../../../../../../../api/data";
 import { FetchLevel } from "../../../../../../../types/main";
 import { didRealmChange, didRegionChange } from "../../../../../../../util";
@@ -201,9 +202,7 @@ export class CurrentSellersTable extends React.Component<Props, State> {
           </NavbarGroup>
         </Navbar>
         <HTMLTable
-          className={`${Classes.HTML_TABLE} ${Classes.HTML_TABLE_BORDERED} ${
-            Classes.SMALL
-          } ownership-table`}
+          className={`${Classes.HTML_TABLE} ${Classes.HTML_TABLE_BORDERED} ${Classes.SMALL} ownership-table`}
         >
           <thead>
             <tr>

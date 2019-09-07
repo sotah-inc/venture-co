@@ -1,12 +1,12 @@
-import * as React from "react";
+import React from "react";
 
 import { Intent } from "@blueprintjs/core";
 
-import { IPricelistJson } from "../../../../api-types/entities";
-import { IExpansion } from "../../../../api-types/expansion";
-import { IItemsMap } from "../../../../api-types/item";
-import { IProfession } from "../../../../api-types/profession";
-import { IRealm, IRegion } from "../../../../api-types/region";
+import { IPricelistJson } from "@sotah-inc/core";
+import { IExpansion } from "@sotah-inc/core";
+import { IItemsMap } from "@sotah-inc/core";
+import { IProfession } from "@sotah-inc/core";
+import { IRealm, IRegion } from "@sotah-inc/core";
 import { ListDialogContainer } from "../../../../containers/App/Data/PriceLists/util/ListDialog";
 import { IErrors, IProfile } from "../../../../types/global";
 import { FetchLevel } from "../../../../types/main";

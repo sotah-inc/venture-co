@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 
 import { Button, Classes } from "@blueprintjs/core";
 import { IconName, IconNames } from "@blueprintjs/icons";

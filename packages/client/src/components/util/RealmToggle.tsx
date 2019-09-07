@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 
 import { Button, Classes, H6, Intent, Menu, MenuItem, Spinner } from "@blueprintjs/core";
 import {
@@ -9,13 +9,14 @@ import {
   ItemRenderer,
   Select,
 } from "@blueprintjs/select";
-
 import {
   ICreatePreferencesRequest,
+  IPreferenceJson,
+  IRealm,
+  IRegion,
   IUpdatePreferencesRequest,
-} from "../../api-types/contracts/user/preferences";
-import { IPreferenceJson } from "../../api-types/entities";
-import { IRealm, IRegion } from "../../api-types/region";
+} from "@sotah-inc/core";
+
 import { IProfile, IRealms } from "../../types/global";
 import { AuthLevel, FetchLevel } from "../../types/main";
 import { didRealmChange } from "../../util";

@@ -1,6 +1,6 @@
-import * as React from "react";
+import React from "react";
 
-import { IProfession } from "../../api-types/profession";
+import { IProfession } from "@sotah-inc/core";
 
 interface IProps {
   profession: IProfession;

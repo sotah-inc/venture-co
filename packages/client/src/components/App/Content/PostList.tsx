@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 
 import { Button, ButtonGroup, Card, Classes, H2, H5, Intent, Spinner } from "@blueprintjs/core";
 import moment from "moment";

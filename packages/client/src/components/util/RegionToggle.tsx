@@ -1,8 +1,8 @@
-import * as React from "react";
+import React from "react";
 
 import { Button, Classes, H6, Menu, MenuItem, Popover, Position } from "@blueprintjs/core";
+import { IRegion } from "@sotah-inc/core";
 
-import { IRegion } from "../../api-types/region";
 import { IRegions } from "../../types/global";
 
 export interface IStateProps {

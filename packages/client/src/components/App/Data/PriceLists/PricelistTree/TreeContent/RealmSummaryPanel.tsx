@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 
 import {
   Callout,
@@ -10,17 +10,22 @@ import {
   NonIdealState,
   Spinner,
 } from "@blueprintjs/core";
-
-import { IProfessionNode } from "../../../../../../actions/price-lists";
 import {
+  IExpansion,
+  IItemsMap,
   IPricelistEntryJson,
   IPricelistJson,
+  IProfession,
   IProfessionPricelistJson,
-} from "../../../../../../api-types/entities";
-import { IExpansion } from "../../../../../../api-types/expansion";
-import { IItemsMap, ItemId } from "../../../../../../api-types/item";
-import { IProfession, ProfessionName } from "../../../../../../api-types/profession";
-import { IRealm, IRegion, RealmPopulation } from "../../../../../../api-types/region";
+  IRealm,
+  IRegion,
+  ItemId,
+  ProfessionName,
+  RealmPopulation,
+} from "@sotah-inc/core";
+
+import { IProfessionNode } from "../../../../../../actions/price-lists";
+
 import { IGetUnmetDemandOptions } from "../../../../../../api/price-lists";
 import { ItemPopoverContainer } from "../../../../../../containers/util/ItemPopover";
 import { PricelistIconContainer } from "../../../../../../containers/util/PricelistIcon";
@@ -209,9 +214,7 @@ export class RealmSummaryPanel extends React.Component<Props> {
           {realm.name}.
         </Callout>
         <HTMLTable
-          className={`${Classes.HTML_TABLE} ${Classes.HTML_TABLE_BORDERED} ${
-            Classes.SMALL
-          } unmet-items-table`}
+          className={`${Classes.HTML_TABLE} ${Classes.HTML_TABLE_BORDERED} ${Classes.SMALL} unmet-items-table`}
         >
           <thead>
             <tr>

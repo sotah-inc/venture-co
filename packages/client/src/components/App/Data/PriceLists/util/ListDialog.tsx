@@ -1,9 +1,8 @@
-import * as React from "react";
+import React from "react";
 
 import { Button, Classes, Dialog, HTMLTable, Intent, Tooltip } from "@blueprintjs/core";
+import { IItem, IItemsMap, IPricelistEntryJson, ItemId } from "@sotah-inc/core";
 
-import { IPricelistEntryJson } from "../../../../../api-types/entities";
-import { IItem, IItemsMap, ItemId } from "../../../../../api-types/item";
 import { ItemPopoverContainer } from "../../../../../containers/util/ItemPopover";
 // tslint:disable-next-line:max-line-length
 import { BulkEntryFormFormContainer } from "../../../../../form-containers/App/Data/PriceLists/util/BulkEntryForm";

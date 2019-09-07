@@ -55,7 +55,7 @@ const handlers: IKindHandlers<IMainState, MainActions> = {
 
         const itemClasses: IItemClasses = action.payload.item_classes.classes.reduce(
           (previousItemClasses: IItemClasses, itemClass) => {
-            const subclasses: ISubItemClasses = itemClass.subclasses.reduce(
+            const subclasses: ISubItemClasses = itemClass.subClasses.reduce(
               (previousSubClasses: ISubItemClasses, subItemClass) => {
                 return { ...previousSubClasses, [subItemClass.subclass]: subItemClass };
               },

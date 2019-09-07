@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 
 import {
   Alignment,
@@ -12,11 +12,15 @@ import {
   Spinner,
   Tooltip,
 } from "@blueprintjs/core";
+import {
+  IExpansion,
+  IPricelistJson,
+  IProfession,
+  IRealm,
+  IRegion,
+  UserLevel,
+} from "@sotah-inc/core";
 
-import { IPricelistJson, UserLevel } from "../../../../api-types/entities";
-import { IExpansion } from "../../../../api-types/expansion";
-import { IProfession } from "../../../../api-types/profession";
-import { IRealm, IRegion } from "../../../../api-types/region";
 import { RealmToggleContainer } from "../../../../containers/util/RealmToggle";
 import { RegionToggleContainer } from "../../../../containers/util/RegionToggle";
 import { IProfile } from "../../../../types/global";

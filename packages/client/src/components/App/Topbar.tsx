@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 
 import {
   Alignment,
@@ -12,9 +12,9 @@ import {
   NavbarHeading,
   Tooltip,
 } from "@blueprintjs/core";
-
 import { IUserJson } from "../../api-types/entities";
 import { IRealm, IRegion } from "../../api-types/region";
+
 import { LoginContainer } from "../../containers/App/Login";
 import { RegisterContainer } from "../../containers/App/Register";
 import { NewsButtonRouteContainer } from "../../route-containers/App/Topbar/NewsButton";

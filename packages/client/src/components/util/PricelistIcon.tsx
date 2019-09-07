@@ -1,7 +1,7 @@
-import * as React from "react";
+import React from "react";
 
-import { IPricelistJson } from "../../api-types/entities";
-import { IItemsMap } from "../../api-types/item";
+import { IItemsMap, IPricelistJson } from "@sotah-inc/core";
+
 import { getItemIconUrl } from "../../util";
 
 export interface IStateProps {

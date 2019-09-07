@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 
 import {
   Breadcrumbs,
@@ -9,9 +9,8 @@ import {
   NonIdealState,
   Spinner,
 } from "@blueprintjs/core";
+import { IUpdateProfileRequest, IUserJson } from "@sotah-inc/core";
 
-import { IUpdateProfileRequest } from "../../../api-types/contracts/user/profile";
-import { IUserJson } from "../../../api-types/entities";
 // tslint:disable-next-line:max-line-length
 import { ManageAccountFormFormContainer } from "../../../form-containers/App/Profile/ManageAccountForm";
 import { IErrors } from "../../../types/global";

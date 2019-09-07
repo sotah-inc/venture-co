@@ -1,9 +1,8 @@
-import * as React from "react";
+import React from "react";
 
 import { Dialog } from "@blueprintjs/core";
+import { IItem, IPricelistEntryJson, IPricelistJson, ItemId } from "@sotah-inc/core";
 
-import { IPricelistEntryJson, IPricelistJson } from "../../../../api-types/entities";
-import { IItem, ItemId } from "../../../../api-types/item";
 // tslint:disable-next-line:max-line-length
 import { CreateEntryFormFormContainer } from "../../../../form-containers/App/Data/PriceLists/util/CreateEntryForm";
 import { IProfile } from "../../../../types/global";

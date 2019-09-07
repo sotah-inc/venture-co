@@ -1,8 +1,8 @@
-import * as React from "react";
+import React from "react";
 
 import { ButtonGroup } from "@blueprintjs/core";
+import { IUserJson, UserLevel } from "@sotah-inc/core";
 
-import { IUserJson, UserLevel } from "../../../api-types/entities";
 import { LinkButtonRouteContainer } from "../../../route-containers/util/LinkButton";
 
 export interface IStateProps {
