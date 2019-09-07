@@ -1,8 +1,8 @@
 import React from "react";
 
 import { Button, Callout, Dialog, Intent } from "@blueprintjs/core";
-
 import { IPostJson } from "@sotah-inc/core";
+
 import { IDeletePostOptions } from "../../../actions/posts";
 import { IProfile } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";

@@ -1,20 +1,19 @@
-import * as HTTPStatus from "http-status";
-
-import { IErrorResponse, IValidationErrorResponse } from "@sotah-inc/core";
-import {
-  ICreateUserRequest,
-  ICreateUserResponse,
-  ILoginRequest,
-  ILoginResponse,
-} from "@sotah-inc/core";
 import {
   ICreatePreferencesRequest,
   ICreatePreferencesResponse,
+  ICreateUserRequest,
+  ICreateUserResponse,
+  IErrorResponse,
   IGetPreferencesResponse,
+  ILoginRequest,
+  ILoginResponse,
+  IPreferenceJson,
   IUpdatePreferencesRequest,
   IUpdatePreferencesResponse,
+  IUserJson,
+  IValidationErrorResponse,
 } from "@sotah-inc/core";
-import { IPreferenceJson, IUserJson } from "@sotah-inc/core";
+import * as HTTPStatus from "http-status";
 import { apiEndpoint, gather } from "./index";
 
 interface IRegisterUserResult {
