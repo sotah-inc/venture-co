@@ -1,10 +1,10 @@
+import { IQueryAuctionsItem } from "@sotah-inc/core";
+import { IExpansion } from "@sotah-inc/core";
+import { IItem, InventoryType, ItemQuality, ItemStat } from "@sotah-inc/core";
+import { IRealm, IRegion } from "@sotah-inc/core";
 import moment from "moment";
 
 import { apiEndpoint } from "../api";
-import { IQueryAuctionsItem } from "../api-types/contracts/data";
-import { IExpansion } from "../api-types/expansion";
-import { IItem, InventoryType, ItemQuality, ItemStat } from "../api-types/item";
-import { IRealm, IRegion } from "../api-types/region";
 
 const hostname: string = (() => {
   if (typeof window === "undefined") {
