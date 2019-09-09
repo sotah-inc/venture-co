@@ -1,4 +1,4 @@
-import { createConnection } from "typeorm";
+import { Connection, createConnection } from "typeorm";
 
 import { Post, Preference, Pricelist, PricelistEntry, ProfessionPricelist, User } from "./entities";
 
@@ -13,14 +13,16 @@ export interface IDatabaseSettings {
   port: number;
 }
 
-export const connectDatabase = ({
+type ConnectDatabaseFn = (opts: IDatabaseSettings) => Promise<Connection>;
+
+export const connectDatabase: ConnectDatabaseFn = ({
   dbName,
   dbHostname,
   connectionName,
   password,
   port,
   username,
-}: IDatabaseSettings) => {
+}) => {
   return createConnection({
     database: dbName,
     entities: [Preference, Pricelist, PricelistEntry, ProfessionPricelist, User, Post],
