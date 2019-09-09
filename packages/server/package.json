@@ -24,7 +24,7 @@
     "prettier": "^1.18.2",
     "rimraf": "^3.0.0",
     "tslint": "^5.19.0",
-    "typescript": "^3.5.1"
+    "typescript": "3.5.1"
   },
   "dependencies": {
     "@sotah-inc/core": "^1.0.43",
