@@ -1,20 +1,12 @@
-import { Messenger } from "@sotah-inc/server";
+import { appendSessions, connectDatabase, Messenger } from "@sotah-inc/server";
 import compression from "compression";
 import express from "express";
 import * as HttpStatus from "http-status";
 import * as nats from "nats";
-import { createConnection } from "typeorm";
 import { v4 as uuidv4 } from "uuid";
 import { Logger } from "winston";
 
-import { Post } from "../entities/post";
-import { Preference } from "../entities/preference";
-import { Pricelist } from "../entities/pricelist";
-import { PricelistEntry } from "../entities/pricelist-entry";
-import { ProfessionPricelist } from "../entities/profession-pricelist";
-import { User } from "../entities/user";
 import { defaultRouter, getDataRouter, getUserRouter } from "../routes";
-import { appendSessions } from "./session";
 
 export interface IOptions {
   logger: Logger;
@@ -69,16 +61,12 @@ export const getApp = async (opts: IOptions): Promise<express.Express | null> =>
   logger.info("Connecting to db", { dbHost, dbPassword });
   const dbConn = await (async () => {
     try {
-      return await createConnection({
-        database: "postgres",
-        entities: [Preference, Pricelist, PricelistEntry, ProfessionPricelist, User, Post],
-        host: dbHost,
-        logging: false,
-        name: `app-${uuidv4()}`,
+      return await connectDatabase({
+        connectionName: `app-${uuidv4()}`,
+        dbHostname: dbHost,
+        dbName: "postgres",
         password: typeof dbPassword !== "undefined" ? dbPassword : "",
         port: 5432,
-        synchronize: false,
-        type: "postgres",
         username: "postgres",
       });
     } catch (err) {
