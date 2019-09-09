@@ -1,11 +1,7 @@
 import { createConnection } from "typeorm";
 
-import { Post } from "../../../api/src/entities/post";
-import { Preference } from "../../../api/src/entities/preference";
-import { Pricelist } from "../../../api/src/entities/pricelist";
-import { PricelistEntry } from "../../../api/src/entities/pricelist-entry";
-import { ProfessionPricelist } from "../../../api/src/entities/profession-pricelist";
-import { User } from "../../../api/src/entities/user";
+import { Post, Preference, Pricelist, PricelistEntry, ProfessionPricelist, User } from "./entities";
+
 export * from "./entities";
 
 export interface IDatabaseSettings {
