@@ -1,10 +1,10 @@
+import { Messenger } from "@sotah-inc/server";
 import { wrap } from "async-middleware";
 import { Request, Response, Router } from "express";
 import { Connection } from "typeorm";
 
 import { handle } from "../controllers";
 import { UserController } from "../controllers/user";
-import { Messenger } from "../lib/messenger";
 import { getRouter as getBaseRouter } from "./user/base";
 import { getRouter as getPostsRouter } from "./user/posts-crud";
 import { getRouter as getPreferencesRouter } from "./user/preferences";

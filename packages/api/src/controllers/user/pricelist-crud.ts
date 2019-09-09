@@ -8,12 +8,12 @@ import {
   IUpdatePricelistResponse,
   IValidationErrorResponse,
 } from "@sotah-inc/core";
+import { Messenger } from "@sotah-inc/server";
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
 
 import { Pricelist } from "../../entities/pricelist";
 import { PricelistEntry } from "../../entities/pricelist-entry";
-import { Messenger } from "../../lib/messenger";
 import { PricelistRequestBodyRules } from "../../lib/validator-rules";
 import { RequestHandler } from "../index";
 

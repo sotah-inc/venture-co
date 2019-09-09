@@ -1,3 +1,4 @@
+import { Messenger } from "@sotah-inc/server";
 import compression from "compression";
 import express from "express";
 import * as HttpStatus from "http-status";
@@ -13,7 +14,6 @@ import { PricelistEntry } from "../entities/pricelist-entry";
 import { ProfessionPricelist } from "../entities/profession-pricelist";
 import { User } from "../entities/user";
 import { defaultRouter, getDataRouter, getUserRouter } from "../routes";
-import { Messenger } from "./messenger";
 import { appendSessions } from "./session";
 
 export interface IOptions {

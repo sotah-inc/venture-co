@@ -1,9 +1,9 @@
+import { Messenger } from "@sotah-inc/server";
 import { wrap } from "async-middleware";
 import { Request, Response, Router } from "express";
 import { Connection } from "typeorm";
 
 import { DataController, handle } from "../controllers";
-import { Messenger } from "../lib/messenger";
 
 export const getRouter = (dbConn: Connection, messenger: Messenger) => {
   const router = Router();

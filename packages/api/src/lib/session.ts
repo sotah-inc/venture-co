@@ -1,10 +1,10 @@
+import { code, Messenger } from "@sotah-inc/server";
 import { Express, NextFunction, Request, Response } from "express";
 import passport from "passport";
 import { ExtractJwt, Strategy, StrategyOptions } from "passport-jwt";
 import { Connection } from "typeorm";
 
 import { User } from "../entities/user";
-import { code, Messenger } from "./messenger";
 
 export interface IJwtOptions {
   audience: string;

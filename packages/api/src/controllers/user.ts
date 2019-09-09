@@ -6,12 +6,12 @@ import {
   IValidationErrorResponse,
   UserLevel,
 } from "@sotah-inc/core";
+import { Messenger } from "@sotah-inc/server";
 import * as bcrypt from "bcrypt";
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
 
 import { User } from "../entities/user";
-import { Messenger } from "../lib/messenger";
 import { UserRequestBodyRules } from "../lib/validator-rules";
 import { RequestHandler } from "./index";
 

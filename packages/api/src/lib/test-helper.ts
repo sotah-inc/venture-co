@@ -8,6 +8,7 @@ import {
   ICreateUserRequest,
   ICreateUserResponse,
 } from "@sotah-inc/core";
+import { Messenger } from "@sotah-inc/server";
 import { ExecutionContext } from "ava";
 import { Express } from "express";
 import * as HTTPStatus from "http-status";
@@ -23,7 +24,6 @@ import { PricelistEntry } from "../entities/pricelist-entry";
 import { ProfessionPricelist } from "../entities/profession-pricelist";
 import { User } from "../entities/user";
 import { getApp, IOptions } from "./app";
-import { Messenger } from "./messenger";
 
 // setup func
 interface ISetupSettings {
