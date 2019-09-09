@@ -24,7 +24,7 @@
     "prettier": "^1.18.2",
     "rimraf": "^3.0.0",
     "tslint": "^5.19.0",
-    "typescript": "^3.6.2"
+    "typescript": "^3.5.1"
   },
   "dependencies": {
     "@sotah-inc/core": "^1.0.43",
@@ -37,7 +37,7 @@
     "nats": "^1.3.0",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
-    "typeorm": "^0.2.18",
+    "typeorm": "^0.3.0-alpha.23",
     "uuid": "^3.3.3"
   },
   "publishConfig": {
