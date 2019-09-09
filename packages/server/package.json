@@ -3,6 +3,7 @@
   "version": "1.0.52",
   "description": "",
   "main": "./build/dist/index.js",
+  "typings": "build/dist/index.d.ts",
   "scripts": {
     "clean": "rimraf ./build",
     "debug": "run-p build:ts:watch lint:watch build:styles:watch",
