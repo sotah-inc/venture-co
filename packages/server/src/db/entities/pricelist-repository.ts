@@ -17,4 +17,16 @@ export class PricelistRepository extends AbstractRepository<Pricelist> {
 
     return pricelist;
   }
+
+  public async removeByUserId(id: number, userId: number): Promise<boolean> {
+    const pricelist = await this.getBelongingToUserById(id, userId);
+    if (pricelist === null) {
+      return false;
+    }
+
+    await Promise.all(pricelist.entries!.map(v => this.manager.remove(v)));
+    await this.manager.remove(pricelist);
+
+    return true;
+  }
 }
