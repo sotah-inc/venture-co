@@ -6,7 +6,7 @@ import {
 } from "@sotah-inc/core";
 import { Pricelist, PricelistEntry, ProfessionPricelist } from "@sotah-inc/server";
 import * as HTTPStatus from "http-status";
-import { Connection, Equal, FindOptionsWhereCondition } from "typeorm";
+import { Connection } from "typeorm";
 
 import { ProfessionPricelistRequestBodyRules } from "../../lib/validator-rules";
 import { RequestHandler } from "../index";
