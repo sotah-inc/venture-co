@@ -1,25 +1,20 @@
 import { AbstractRepository, EntityRepository } from "typeorm";
 
 import { Pricelist } from "./pricelist";
-import { ProfessionPricelist } from "./profession-pricelist";
 
 @EntityRepository(Pricelist)
 export class PricelistRepository extends AbstractRepository<Pricelist> {
-  public async getProfessionPricelist(pricelistId: number): Promise<ProfessionPricelist | null> {
-    const pricelist = await this.repository.findOne({
-      relations: ["professionPricelist"],
-      where: {
-        id: pricelistId,
-      },
-    });
+  public async getBelongingToUserById(id: number, userId: number): Promise<Pricelist | null> {
+    const pricelist = await this.repository
+      .createQueryBuilder("pricelist")
+      .innerJoinAndSelect("pricelist.user", "user", "user.id = :user_id", { user_id: userId })
+      .where({ id })
+      .getOne();
+
     if (typeof pricelist === "undefined") {
       return null;
     }
 
-    if (typeof pricelist.professionPricelist === "undefined") {
-      return null;
-    }
-
-    return pricelist.professionPricelist;
+    return pricelist;
   }
 }
