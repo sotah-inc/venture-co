@@ -1,13 +1,13 @@
 import * as process from "process";
 import "reflect-metadata";
 
+import { getJwtOptions } from "@sotah-inc/server";
 import test from "ava";
 import * as HTTPStatus from "http-status";
 import * as jwt from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
 
-import { getLogger } from "../../lib/logger";
-import { getJwtOptions } from "../../lib/session";
+import { getLogger } from "../..";
 import { getTestHelper, setup } from "../../lib/test-helper";
 
 const helper = async () => {

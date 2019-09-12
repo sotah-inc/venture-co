@@ -7,11 +7,11 @@ import {
   IValidationErrorResponse,
   UserLevel,
 } from "@sotah-inc/core";
+import { Preference } from "@sotah-inc/server";
 import { Response } from "express";
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
 
-import { Preference } from "../../entities/preference";
 import { PreferenceRules } from "../../lib/validator-rules";
 import { Authenticator, IRequest, IRequestResult, Validator } from "../index";
 

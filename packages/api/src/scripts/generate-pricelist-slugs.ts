@@ -1,29 +1,18 @@
 import * as process from "process";
-
 import "reflect-metadata";
-import getSlug from "speakingurl";
-import { createConnection } from "typeorm";
-import { v4 as uuidv4 } from "uuid";
 
-import { Post } from "../entities/post";
-import { Preference } from "../entities/preference";
-import { Pricelist } from "../entities/pricelist";
-import { PricelistEntry } from "../entities/pricelist-entry";
-import { ProfessionPricelist } from "../entities/profession-pricelist";
-import { User } from "../entities/user";
+import { connectDatabase, Pricelist } from "@sotah-inc/server";
+import getSlug from "speakingurl";
+import { v4 as uuidv4 } from "uuid";
 
 (async () => {
   const dbHost = process.env["DB_HOST"] || "";
-  const dbConn = await createConnection({
-    database: "postgres",
-    entities: [Preference, Pricelist, PricelistEntry, ProfessionPricelist, User, Post],
-    host: dbHost,
-    logging: false,
-    name: `app-${uuidv4()}`,
+  const dbConn = await connectDatabase({
+    connectionName: `app-${uuidv4()}`,
+    dbHostname: dbHost,
+    dbName: "postgres",
     password: "",
     port: 5432,
-    synchronize: false,
-    type: "postgres",
     username: "postgres",
   });
 

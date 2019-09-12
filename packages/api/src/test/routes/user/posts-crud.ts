@@ -3,12 +3,12 @@ import * as process from "process";
 import "reflect-metadata";
 
 import { UserLevel } from "@sotah-inc/core";
+import { User } from "@sotah-inc/server";
 import test from "ava";
 import * as HTTPStatus from "http-status";
 import { v4 as uuidv4 } from "uuid";
 
 import { getLogger } from "../../..";
-import { User } from "../../../entities/user";
 import { getTestHelper, setup } from "../../../lib/test-helper";
 
 const helper = async () => {

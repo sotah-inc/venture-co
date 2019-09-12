@@ -33,15 +33,13 @@ import {
   ItemId,
   IValidationErrorResponse,
 } from "@sotah-inc/core";
-import { code, Messenger } from "@sotah-inc/server";
+import { code, Messenger, Post, ProfessionPricelist } from "@sotah-inc/server";
 // @ts-ignore
 import boll from "bollinger-bands";
 import HTTPStatus from "http-status";
 import moment from "moment";
 import { Connection } from "typeorm";
 
-import { Post } from "../entities/post";
-import { ProfessionPricelist } from "../entities/profession-pricelist";
 import { AuctionsQueryParamsRules } from "../lib/validator-rules";
 import { QueryRequestHandler, RequestHandler } from "./index";
 

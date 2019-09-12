@@ -4,11 +4,11 @@ import {
   IValidationErrorResponse,
   UserLevel,
 } from "@sotah-inc/core";
+import { UserRepository } from "@sotah-inc/server";
 import { Response } from "express";
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
 
-import { UserRepository } from "../../entities/user-repository";
 import { UpdateProfileRequestBodyRules } from "../../lib/validator-rules";
 import { Authenticator, IRequest, IRequestResult, ManualValidator } from "../index";
 

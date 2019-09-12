@@ -6,12 +6,11 @@ import {
   IValidationErrorResponse,
   UserLevel,
 } from "@sotah-inc/core";
+import { Post, PostRepository } from "@sotah-inc/server";
 import { Response } from "express";
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
 
-import { Post } from "../../entities/post";
-import { PostRepository } from "../../entities/post-repository";
 import { FullPostRequestBodyRules, PostRequestBodyRules } from "../../lib/validator-rules";
 import { Authenticator, IRequest, IRequestResult, ManualValidator, Validator } from "../index";
 

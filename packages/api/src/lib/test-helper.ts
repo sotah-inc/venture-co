@@ -8,7 +8,15 @@ import {
   ICreateUserRequest,
   ICreateUserResponse,
 } from "@sotah-inc/core";
-import { Messenger } from "@sotah-inc/server";
+import {
+  Messenger,
+  Post,
+  Preference,
+  Pricelist,
+  PricelistEntry,
+  ProfessionPricelist,
+  User,
+} from "@sotah-inc/server";
 import { ExecutionContext } from "ava";
 import { Express } from "express";
 import * as HTTPStatus from "http-status";
@@ -17,12 +25,6 @@ import supertest from "supertest";
 import { Connection, createConnection } from "typeorm";
 import { v4 as uuidv4 } from "uuid";
 
-import { Post } from "../entities/post";
-import { Preference } from "../entities/preference";
-import { Pricelist } from "../entities/pricelist";
-import { PricelistEntry } from "../entities/pricelist-entry";
-import { ProfessionPricelist } from "../entities/profession-pricelist";
-import { User } from "../entities/user";
 import { getApp, IOptions } from "./app";
 
 // setup func

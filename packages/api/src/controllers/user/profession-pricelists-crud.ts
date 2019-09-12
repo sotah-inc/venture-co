@@ -4,12 +4,10 @@ import {
   IValidationErrorResponse,
   UserLevel,
 } from "@sotah-inc/core";
+import { Pricelist, PricelistEntry, ProfessionPricelist } from "@sotah-inc/server";
 import * as HTTPStatus from "http-status";
-import { Connection } from "typeorm";
+import { Connection, Equal, FindOptionsWhereCondition } from "typeorm";
 
-import { Pricelist } from "../../entities/pricelist";
-import { PricelistEntry } from "../../entities/pricelist-entry";
-import { ProfessionPricelist } from "../../entities/profession-pricelist";
 import { ProfessionPricelistRequestBodyRules } from "../../lib/validator-rules";
 import { RequestHandler } from "../index";
 
@@ -99,9 +97,18 @@ export class ProfessionPricelistsCrudController {
       };
     }
 
-    const professionPricelist = await this.dbConn.getRepository(ProfessionPricelist).findOne({
-      where: { pricelist: { id: req.params["pricelist_id"] } },
-    });
+    const findOptions: FindOptionsWhereCondition<ProfessionPricelist> = {
+      pricelist: {
+        id: Number(req.params["pricelist_id"]),
+      },
+    };
+
+    const professionPricelist = await this.dbConn
+      .getRepository(ProfessionPricelist)
+      .findOne(findOptions);
+    // const professionPricelist = await this.dbConn.getRepository(ProfessionPricelist).findOne({
+    //   where: { pricelist: { id: req.params["pricelist_id"] } },
+    // });
     if (typeof professionPricelist === "undefined") {
       return {
         data: null,

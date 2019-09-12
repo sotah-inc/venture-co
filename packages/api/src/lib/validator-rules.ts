@@ -4,10 +4,8 @@ import {
   IGetAuctionsRequest,
   IUpdateProfileRequest,
 } from "@sotah-inc/core";
+import { PostRepository, UserRepository } from "@sotah-inc/server";
 import * as yup from "yup";
-
-import { PostRepository } from "../entities/post-repository";
-import { UserRepository } from "../entities/user-repository";
 
 export const PreferenceRules = yup
   .object<ICreatePreferencesRequest>()

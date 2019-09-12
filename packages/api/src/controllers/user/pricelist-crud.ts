@@ -8,12 +8,11 @@ import {
   IUpdatePricelistResponse,
   IValidationErrorResponse,
 } from "@sotah-inc/core";
-import { Messenger } from "@sotah-inc/server";
+// tslint:disable-next-line:no-duplicate-imports
+import { Messenger, Pricelist, PricelistEntry } from "@sotah-inc/server";
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
 
-import { Pricelist } from "../../entities/pricelist";
-import { PricelistEntry } from "../../entities/pricelist-entry";
 import { PricelistRequestBodyRules } from "../../lib/validator-rules";
 import { RequestHandler } from "../index";
 
