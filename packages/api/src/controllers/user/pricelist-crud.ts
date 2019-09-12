@@ -8,8 +8,7 @@ import {
   IUpdatePricelistResponse,
   IValidationErrorResponse,
 } from "@sotah-inc/core";
-// tslint:disable-next-line:no-duplicate-imports
-import { Messenger, Pricelist, PricelistEntry } from "@sotah-inc/server";
+import { Messenger, Pricelist, PricelistEntry, PricelistRepository } from "@sotah-inc/server";
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
 
@@ -97,10 +96,10 @@ export class PricelistCrudController {
 
   public getPricelist: RequestHandler<null, IGetUserPricelistResponse | null> = async req => {
     const user = req.user!;
-    const pricelist = await this.dbConn.manager.getRepository(Pricelist).findOne({
-      where: { id: req.params["id"], user: { id: user.id } },
-    });
-    if (typeof pricelist === "undefined") {
+    const pricelist = await this.dbConn
+      .getCustomRepository(PricelistRepository)
+      .getBelongingToUserById(Number(req.params["id"]), user.id!);
+    if (pricelist === null) {
       return {
         data: null,
         status: HTTPStatus.NOT_FOUND,
@@ -121,10 +120,10 @@ export class PricelistCrudController {
   > = async req => {
     // resolving the pricelist
     const user = req.user!;
-    const pricelist = await this.dbConn.getRepository(Pricelist).findOne({
-      where: { id: req.params["id"], user: { id: user.id } },
-    });
-    if (typeof pricelist === "undefined") {
+    const pricelist = await this.dbConn
+      .getCustomRepository(PricelistRepository)
+      .getBelongingToUserById(Number(req.params["id"]), user.id!);
+    if (pricelist === null) {
       return {
         data: null,
         status: HTTPStatus.NOT_FOUND,
@@ -202,18 +201,15 @@ export class PricelistCrudController {
   public deletePricelist: RequestHandler<null, null> = async req => {
     // resolving the pricelist
     const user = req.user!;
-    const pricelist = await this.dbConn.getRepository(Pricelist).findOne({
-      where: { id: req.params["id"], user: { id: user.id } },
-    });
-    if (typeof pricelist === "undefined") {
+    const removed = await this.dbConn
+      .getCustomRepository(PricelistRepository)
+      .removeByUserId(Number(req.params["id"]), user.id!);
+    if (!removed) {
       return {
         data: null,
         status: HTTPStatus.NOT_FOUND,
       };
     }
-
-    await Promise.all(pricelist.entries!.map(v => this.dbConn.manager.remove(v)));
-    await this.dbConn.manager.remove(pricelist);
 
     return {
       data: null,
