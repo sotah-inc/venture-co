@@ -96,19 +96,9 @@ export class ProfessionPricelistsCrudController {
         status: HTTPStatus.UNAUTHORIZED,
       };
     }
-
-    const findOptions: FindOptionsWhereCondition<ProfessionPricelist> = {
-      pricelist: {
-        id: Number(req.params["pricelist_id"]),
-      },
-    };
-
-    const professionPricelist = await this.dbConn
-      .getRepository(ProfessionPricelist)
-      .findOne(findOptions);
-    // const professionPricelist = await this.dbConn.getRepository(ProfessionPricelist).findOne({
-    //   where: { pricelist: { id: req.params["pricelist_id"] } },
-    // });
+    const professionPricelist = await this.dbConn.getRepository(ProfessionPricelist).findOne({
+      where: { pricelist: { id: req.params["pricelist_id"] } },
+    });
     if (typeof professionPricelist === "undefined") {
       return {
         data: null,
