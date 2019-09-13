@@ -1,6 +1,9 @@
 {
   "name": "root",
   "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "devDependencies": {
     "@blueprintjs/tslint-config": "^1.8.1",
     "chokidar-cli": "^1.2.2",
