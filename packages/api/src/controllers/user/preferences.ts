@@ -7,7 +7,7 @@ import {
   IValidationErrorResponse,
   UserLevel,
 } from "@sotah-inc/core";
-import { Preference } from "@sotah-inc/server";
+import { Preference, User } from "@sotah-inc/server";
 import { Response } from "express";
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
@@ -27,7 +27,7 @@ export class PreferencesController {
     req: IRequest<null>,
     _res: Response,
   ): Promise<IRequestResult<IGetPreferencesResponse | IValidationErrorResponse>> {
-    const user = req.user!;
+    const user = req.user as User;
     const preference = await this.dbConn
       .getRepository(Preference)
       .findOne({ where: { user: { id: user.id } } });
@@ -53,7 +53,7 @@ export class PreferencesController {
     req: IRequest<ICreatePreferencesRequest>,
     _res: Response,
   ): Promise<IRequestResult<ICreatePreferencesResponse | IValidationErrorResponse>> {
-    const user = req.user!;
+    const user = req.user as User;
     const hasPreference: boolean = await (async () => {
       const foundPreference = await this.dbConn
         .getRepository(Preference)
@@ -87,7 +87,7 @@ export class PreferencesController {
     req: IRequest<IUpdatePreferencesRequest>,
     _res: Response,
   ): Promise<IRequestResult<IUpdatePreferencesResponse | IValidationErrorResponse>> {
-    const user = req.user!;
+    const user = req.user as User;
     const preference = await this.dbConn
       .getRepository(Preference)
       .findOne({ where: { user: { id: user.id } } });

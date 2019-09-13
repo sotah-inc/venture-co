@@ -23,61 +23,61 @@ export const getRouter = (dbConn: Connection, messenger: Messenger) => {
   );
   router.get(
     "/boot",
-    wrap(async (req, res) => {
+    wrap(async (req: Request, res: Response) => {
       await handle(controller.getBoot, req, res);
     }),
   );
   router.get(
     "/region/:regionName/realms",
-    wrap(async (req, res) => {
+    wrap(async (req: Request, res: Response) => {
       await handle(controller.getRealms, req, res);
     }),
   );
   router.get(
     "/region/:regionName/realm/:realmSlug/auctions",
-    wrap(async (req, res) => {
+    wrap(async (req: Request, res: Response) => {
       await handle(controller.getAuctions, req, res);
     }),
   );
   router.post(
     "/region/:regionName/realm/:realmSlug/owners",
-    wrap(async (req, res) => {
+    wrap(async (req: Request, res: Response) => {
       await handle(controller.getOwners, req, res);
     }),
   );
   router.post(
     "/items",
-    wrap(async (req, res) => {
+    wrap(async (req: Request, res: Response) => {
       await handle(controller.queryItems, req, res);
     }),
   );
   router.post(
     "/region/:regionName/realm/:realmSlug/query-auctions",
-    wrap(async (req, res) => {
+    wrap(async (req: Request, res: Response) => {
       await handle(controller.queryAuctions, req, res);
     }),
   );
   router.post(
     "/region/:regionName/realm/:realmSlug/query-owner-items",
-    wrap(async (req, res) => {
+    wrap(async (req: Request, res: Response) => {
       await handle(controller.queryOwnerItems, req, res);
     }),
   );
   router.post(
     "/region/:regionName/realm/:realmSlug/price-list",
-    wrap(async (req, res) => {
+    wrap(async (req: Request, res: Response) => {
       await handle(controller.getPricelist, req, res);
     }),
   );
   router.post(
     "/region/:regionName/realm/:realmSlug/price-list-history",
-    wrap(async (req, res) => {
+    wrap(async (req: Request, res: Response) => {
       await handle(controller.getPricelistHistories, req, res);
     }),
   );
   router.post(
     "/region/:regionName/realm/:realmSlug/unmet-demand",
-    wrap(async (req, res) => {
+    wrap(async (req: Request, res: Response) => {
       await handle(controller.getUnmetDemand, req, res);
     }),
   );

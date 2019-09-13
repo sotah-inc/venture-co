@@ -2,13 +2,14 @@ import { IValidationErrorResponse, UserLevel } from "@sotah-inc/core";
 import { User } from "@sotah-inc/server";
 import { Request, Response } from "express";
 import * as HTTPStatus from "http-status";
+import "passport";
 import { ObjectSchema } from "yup";
 
 export { DataController } from "./data";
 
 export interface IRequest<T> extends Request {
   body: T;
-  user?: User;
+  user?: Express.User;
   params: {
     [key: string]: string;
   };
@@ -16,7 +17,7 @@ export interface IRequest<T> extends Request {
 
 export interface IQueryRequest extends Request {
   body: null;
-  user?: User;
+  user?: Express.User;
   params: {
     [key: string]: string;
   };
@@ -128,7 +129,7 @@ export function Authenticator<T, A>(requiredLevel: UserLevel) {
       req,
       res,
     ): Promise<IRequestResult<A | IValidationErrorResponse>> {
-      const user = req.user;
+      const user = req.user as User;
       if (typeof user === "undefined" || user === null) {
         const validationErrors: IValidationErrorResponse = { unauthorized: "Unauthorized" };
 

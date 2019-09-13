@@ -9,6 +9,7 @@ import {
   PricelistEntry,
   ProfessionPricelist,
   ProfessionPricelistRepository,
+  User,
 } from "@sotah-inc/server";
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
@@ -27,7 +28,7 @@ export class ProfessionPricelistsCrudController {
     ICreateProfessionPricelistRequest,
     ICreateProfessionPricelistResponse | IValidationErrorResponse
   > = async req => {
-    const user = req.user!;
+    const user = req.user as User;
     if (user.level !== UserLevel.Admin) {
       const validationErrors: IValidationErrorResponse = {
         unauthorized: "You are not authorized to do that.",
@@ -90,7 +91,7 @@ export class ProfessionPricelistsCrudController {
     null,
     null | IValidationErrorResponse
   > = async req => {
-    const user = req.user!;
+    const user = req.user as User;
     if (user.level !== UserLevel.Admin) {
       const validationErrors: IValidationErrorResponse = {
         unauthorized: "You are not authorized to do that.",

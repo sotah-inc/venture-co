@@ -8,7 +8,7 @@ import {
   IUpdatePricelistResponse,
   IValidationErrorResponse,
 } from "@sotah-inc/core";
-import { Messenger, Pricelist, PricelistEntry, PricelistRepository } from "@sotah-inc/server";
+import { Messenger, Pricelist, PricelistEntry, PricelistRepository, User } from "@sotah-inc/server";
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
 
@@ -28,7 +28,7 @@ export class PricelistCrudController {
     ICreatePricelistRequest,
     ICreatePricelistResponse | IValidationErrorResponse
   > = async req => {
-    const user = req.user!;
+    const user = req.user as User;
     let result: ICreatePricelistRequest | null = null;
     try {
       result = (await PricelistRequestBodyRules.validate(req.body)) as ICreatePricelistRequest;
@@ -62,7 +62,7 @@ export class PricelistCrudController {
   };
 
   public getPricelists: RequestHandler<null, IGetPricelistsResponse> = async req => {
-    const user = req.user!;
+    const user = req.user as User;
 
     // gathering pricelists associated with this user
     let pricelists = await this.dbConn
@@ -94,7 +94,7 @@ export class PricelistCrudController {
   };
 
   public getPricelist: RequestHandler<null, IGetUserPricelistResponse | null> = async req => {
-    const user = req.user!;
+    const user = req.user as User;
     const pricelist = await this.dbConn
       .getCustomRepository(PricelistRepository)
       .getBelongingToUserById(Number(req.params["id"]), user.id!);
@@ -118,7 +118,7 @@ export class PricelistCrudController {
     IUpdatePricelistResponse | IValidationErrorResponse | null
   > = async req => {
     // resolving the pricelist
-    const user = req.user!;
+    const user = req.user as User;
     const pricelist = await this.dbConn
       .getCustomRepository(PricelistRepository)
       .getBelongingToUserById(Number(req.params["id"]), user.id!);
@@ -199,7 +199,7 @@ export class PricelistCrudController {
 
   public deletePricelist: RequestHandler<null, null> = async req => {
     // resolving the pricelist
-    const user = req.user!;
+    const user = req.user as User;
     const removed = await this.dbConn
       .getCustomRepository(PricelistRepository)
       .removeByUserId(Number(req.params["id"]), user.id!);

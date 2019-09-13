@@ -4,7 +4,7 @@ import {
   IValidationErrorResponse,
   UserLevel,
 } from "@sotah-inc/core";
-import { UserRepository } from "@sotah-inc/server";
+import { User, UserRepository } from "@sotah-inc/server";
 import { Response } from "express";
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
@@ -24,7 +24,7 @@ export class ProfileController {
     req: IRequest<IUpdateProfileRequest>,
     _res: Response,
   ): Promise<IRequestResult<IUpdateProfileResponse | IValidationErrorResponse>> {
-    const user = req.user!;
+    const user = req.user as User;
 
     const result = await ManualValidator<IUpdateProfileRequest>(
       req,

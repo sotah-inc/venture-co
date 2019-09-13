@@ -73,7 +73,7 @@ export class PostCrudController {
       };
     }
 
-    const user = req.user!;
+    const user = req.user as User;
     if (post.user!.id !== user.id) {
       const validationResponse: IValidationErrorResponse = {
         unauthorized: "Unauthorized",
@@ -111,7 +111,7 @@ export class PostCrudController {
     req: IRequest<null>,
     _res: Response,
   ): Promise<IRequestResult<null | IValidationErrorResponse>> {
-    const user = req.user!;
+    const user = req.user as User;
     const post = await this.dbConn.getRepository(Post).findOne({
       relations: ["user"],
       where: {
