@@ -6,7 +6,7 @@ import {
   IValidationErrorResponse,
   UserLevel,
 } from "@sotah-inc/core";
-import { Post, PostRepository } from "@sotah-inc/server";
+import { Post, PostRepository, User } from "@sotah-inc/server";
 import { Response } from "express";
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
@@ -39,7 +39,7 @@ export class PostCrudController {
     const post = new Post();
     post.title = body.title;
     post.slug = body.slug;
-    post.user = req.user!;
+    post.user = req.user as User;
     post.body = body.body;
     post.summary = body.summary;
     await this.dbConn.manager.save(post);
@@ -56,13 +56,10 @@ export class PostCrudController {
     req: IRequest<IUpdatePostRequest>,
     _res: Response,
   ): Promise<IRequestResult<IUpdatePostResponse | IValidationErrorResponse>> {
-    const post = await this.dbConn.getRepository(Post).findOne({
-      relations: ["user"],
-      where: {
-        id: req.params["post_id"],
-      },
-    });
-    if (typeof post === "undefined" || post === null) {
+    const post = await this.dbConn
+      .getCustomRepository(PostRepository)
+      .getWithUser(Number(req.params["post_id"]));
+    if (post === null) {
       const validationResponse: IValidationErrorResponse = {
         notFound: "Not Found",
       };
@@ -112,13 +109,10 @@ export class PostCrudController {
     _res: Response,
   ): Promise<IRequestResult<null | IValidationErrorResponse>> {
     const user = req.user as User;
-    const post = await this.dbConn.getRepository(Post).findOne({
-      relations: ["user"],
-      where: {
-        id: req.params["post_id"],
-      },
-    });
-    if (typeof post === "undefined" || post === null) {
+    const post = await this.dbConn
+      .getCustomRepository(PostRepository)
+      .getWithUser(Number(req.params["post_id"]));
+    if (post === null) {
       const validationResponse: IValidationErrorResponse = {
         notFound: "Not Found",
       };

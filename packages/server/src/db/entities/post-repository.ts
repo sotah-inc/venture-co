@@ -16,4 +16,18 @@ export class PostRepository extends AbstractRepository<Post> {
 
     return foundPost.slug === exceptSlug;
   }
+
+  public async getWithUser(id: number): Promise<Post | null> {
+    const post = await this.repository
+      .createQueryBuilder("post")
+      .innerJoinAndSelect("post.user", "user")
+      .where({ id })
+      .getOne();
+
+    if (typeof post === "undefined") {
+      return null;
+    }
+
+    return post;
+  }
 }
