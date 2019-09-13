@@ -7,7 +7,7 @@ import {
   IValidationErrorResponse,
   UserLevel,
 } from "@sotah-inc/core";
-import { Preference, User } from "@sotah-inc/server";
+import { Preference, PreferenceRepository, User } from "@sotah-inc/server";
 import { Response } from "express";
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
@@ -29,10 +29,10 @@ export class PreferencesController {
   ): Promise<IRequestResult<IGetPreferencesResponse | IValidationErrorResponse>> {
     const user = req.user as User;
     const preference = await this.dbConn
-      .getRepository(Preference)
-      .findOne({ where: { user: { id: user.id } } });
+      .getCustomRepository(PreferenceRepository)
+      .getFromUserId(user.id!);
 
-    if (typeof preference === "undefined") {
+    if (preference === null) {
       return {
         data: { notFound: "Not Found" },
         status: HTTPStatus.NOT_FOUND,
@@ -56,9 +56,9 @@ export class PreferencesController {
     const user = req.user as User;
     const hasPreference: boolean = await (async () => {
       const foundPreference = await this.dbConn
-        .getRepository(Preference)
-        .findOne({ where: { user: { id: user.id } } });
-      return typeof foundPreference !== "undefined";
+        .getCustomRepository(PreferenceRepository)
+        .getFromUserId(user.id!);
+      return foundPreference !== null;
     })();
     if (hasPreference) {
       return {
@@ -89,10 +89,10 @@ export class PreferencesController {
   ): Promise<IRequestResult<IUpdatePreferencesResponse | IValidationErrorResponse>> {
     const user = req.user as User;
     const preference = await this.dbConn
-      .getRepository(Preference)
-      .findOne({ where: { user: { id: user.id } } });
+      .getCustomRepository(PreferenceRepository)
+      .getFromUserId(user.id!);
 
-    if (typeof preference === "undefined") {
+    if (preference === null) {
       return {
         data: { notFound: "Not Found" },
         status: HTTPStatus.NOT_FOUND,

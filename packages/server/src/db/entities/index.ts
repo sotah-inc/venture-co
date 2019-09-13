@@ -1,5 +1,6 @@
 export * from "./post";
 export * from "./post-repository";
+export * from "./preference-repository";
 export * from "./preference";
 export * from "./pricelist";
 export * from "./pricelist-repository";
