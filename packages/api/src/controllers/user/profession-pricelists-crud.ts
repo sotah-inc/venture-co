@@ -4,7 +4,12 @@ import {
   IValidationErrorResponse,
   UserLevel,
 } from "@sotah-inc/core";
-import { Pricelist, PricelistEntry, ProfessionPricelist } from "@sotah-inc/server";
+import {
+  Pricelist,
+  PricelistEntry,
+  ProfessionPricelist,
+  ProfessionPricelistRepository,
+} from "@sotah-inc/server";
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
 
@@ -96,10 +101,10 @@ export class ProfessionPricelistsCrudController {
         status: HTTPStatus.UNAUTHORIZED,
       };
     }
-    const professionPricelist = await this.dbConn.getRepository(ProfessionPricelist).findOne({
-      where: { pricelist: { id: req.params["pricelist_id"] } },
-    });
-    if (typeof professionPricelist === "undefined") {
+    const professionPricelist = await this.dbConn
+      .getCustomRepository(ProfessionPricelistRepository)
+      .getFromPricelistId(Number(req.params["pricelist_id"]));
+    if (professionPricelist === null) {
       return {
         data: null,
         status: HTTPStatus.NOT_FOUND,
