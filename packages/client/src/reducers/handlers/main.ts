@@ -7,7 +7,13 @@ import {
   ReceiveGetRealms,
   ReceiveGetUserPreferences,
 } from "../../actions/main";
-import { IItemClasses, IRealms, IRegions, ISubItemClasses } from "../../types/global";
+import {
+  IItemClasses,
+  IItemClassWithSub,
+  IRealms,
+  IRegions,
+  ISubItemClasses,
+} from "../../types/global";
 import { FetchLevel, IMainState } from "../../types/main";
 
 import { IKindHandlers, Runner } from "./index";
@@ -55,14 +61,26 @@ const handlers: IKindHandlers<IMainState, MainActions> = {
 
         const itemClasses: IItemClasses = action.payload.item_classes.classes.reduce(
           (previousItemClasses: IItemClasses, itemClass) => {
-            const subclasses: ISubItemClasses = itemClass.subClasses.reduce(
+            const subClassesMap: ISubItemClasses = itemClass.subClasses.reduce(
               (previousSubClasses: ISubItemClasses, subItemClass) => {
-                return { ...previousSubClasses, [subItemClass.subclass]: subItemClass };
+                const nextSubClasses: ISubItemClasses = {
+                  ...previousSubClasses,
+                  [subItemClass.subclass]: subItemClass,
+                };
+
+                return nextSubClasses;
               },
               {},
             );
 
-            return { ...previousItemClasses, [itemClass.class]: { ...itemClass, subclasses } };
+            const itemClassWithSub: IItemClassWithSub = { ...itemClass, subClassesMap };
+
+            const nextItemClasses: IItemClasses = {
+              ...previousItemClasses,
+              [itemClass.class]: itemClassWithSub,
+            };
+
+            return nextItemClasses;
           },
           {},
         );
