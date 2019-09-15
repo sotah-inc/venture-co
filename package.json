@@ -1,17 +1,9 @@
 {
   "name": "root",
   "private": true,
-  "workspaces": {
-    "packages": [
-      "packages/*"
-    ],
-    "nohoist": [
-      "**/normalize.css", "**/normalize.css/**",
-      "**/purecss", "**/purecss/**",
-      "**/@blueprintjs/core", "**/@blueprintjs/core/**",
-      "**/@blueprintjs/select", "**/@blueprintjs/select/**"
-    ]
-  },
+  "workspaces": [
+    "packages/*"
+  ],
   "devDependencies": {
     "@blueprintjs/tslint-config": "^1.8.1",
     "chokidar-cli": "^1.2.2",
