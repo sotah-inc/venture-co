@@ -2,7 +2,7 @@ import React from "react";
 
 import { defaultState } from "@sotah-inc/client";
 import { ReceiveGetBoot } from "@sotah-inc/client/build/dist/actions/main";
-import { handlers } from "@sotah-inc/client/build/dist/reducers/handlers";
+import { runners } from "@sotah-inc/client/build/dist/reducers/handlers";
 import { NewsRouteContainer } from "@sotah-inc/client/build/dist/route-containers/App/Content/News";
 import { defaultMainState } from "@sotah-inc/client/build/dist/types";
 import { code } from "@sotah-inc/server";
@@ -21,7 +21,7 @@ export function Content({ boot }: IInitialProps) {
       title="Secrets of the Auction House"
       predefinedState={{
         ...defaultState,
-        Main: handlers.main["boot"]["get"]["receive"](defaultMainState, ReceiveGetBoot(boot)),
+        Main: runners.main(defaultMainState, ReceiveGetBoot(boot)),
       }}
     >
       <NewsRouteContainer />
