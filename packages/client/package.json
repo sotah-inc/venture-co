@@ -34,7 +34,6 @@
     "@blueprintjs/core": "^3.18.0",
     "@blueprintjs/icons": "^3.10.0",
     "@blueprintjs/select": "^3.10.0",
-    "@sotah-inc/api": "^1.0.59",
     "@sotah-inc/core": "^1.0.59",
     "@types/http-status": "^0.2.30",
     "@types/lodash": "^4.14.136",
