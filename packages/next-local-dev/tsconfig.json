@@ -21,6 +21,7 @@
     "noImplicitThis": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "preserveSymlinks": true,
     "removeComments": true,
     "sourceMap": true,
     "strict": true,
