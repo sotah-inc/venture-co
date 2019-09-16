@@ -6,7 +6,7 @@ import { Connection } from "typeorm";
 import { handle } from "../../controllers";
 import { PreferencesController } from "../../controllers/user/preferences";
 
-export const getRouter = (dbConn: Connection) => {
+export const getRouter = (dbConn: Connection): Router => {
   const router = Router();
   const controller = new PreferencesController(dbConn);
 

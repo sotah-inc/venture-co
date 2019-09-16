@@ -6,7 +6,7 @@ import { Connection } from "typeorm";
 import { handle } from "../../controllers";
 import { PostCrudController } from "../../controllers/user/post-crud";
 
-export const getRouter = (dbConn: Connection) => {
+export const getRouter = (dbConn: Connection): Router => {
   const router = Router();
   const controller = new PostCrudController(dbConn);
 

@@ -6,7 +6,7 @@ import { Connection } from "typeorm";
 import { handle } from "../../controllers";
 import { ProfileController } from "../../controllers/user/profile";
 
-export const getRouter = (dbConn: Connection) => {
+export const getRouter = (dbConn: Connection): Router => {
   const router = Router();
   const controller = new ProfileController(dbConn);
 

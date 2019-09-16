@@ -5,7 +5,7 @@ import { Connection } from "typeorm";
 
 import { DataController, handle } from "../controllers";
 
-export const getRouter = (dbConn: Connection, messenger: Messenger) => {
+export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
   const router = Router();
   const controller = new DataController(messenger, dbConn);
 

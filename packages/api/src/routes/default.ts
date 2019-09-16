@@ -1,6 +1,6 @@
-import express, { Response } from "express";
+import { Response, Router } from "express";
 
-export const router = express.Router();
+export const router: Router = Router();
 
 router.get("/", (_, res: Response) => {
   res.set("Content-type", "text/plain").send("Hello, world!");

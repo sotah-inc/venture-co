@@ -7,7 +7,7 @@ import { handle } from "../../controllers";
 // tslint:disable-next-line:max-line-length
 import { ProfessionPricelistsCrudController } from "../../controllers/user/profession-pricelists-crud";
 
-export const getRouter = (dbConn: Connection) => {
+export const getRouter = (dbConn: Connection): Router => {
   const router = Router();
   const controller = new ProfessionPricelistsCrudController(dbConn);
 
