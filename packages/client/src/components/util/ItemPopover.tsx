@@ -60,10 +60,10 @@ const renderClass = (item: IItem, itemClasses: IItemClasses) => {
   }
   const iClass = itemClasses[item.itemClass];
 
-  if (!(item.itemSubClass in iClass.subClasses)) {
+  if (!(item.itemSubClass in iClass.subClassesMap)) {
     return `${iClass.name} sub-class #${item.itemSubClass}`;
   }
-  const iSubClass = iClass.subClasses[item.itemSubClass];
+  const iSubClass = iClass.subClassesMap[item.itemSubClass];
 
   return `${iClass.name} (#${item.itemClass}) - ${iSubClass.name}`;
 };
@@ -133,11 +133,11 @@ const renderInventoryType = (item: IItem, itemClasses: IItemClasses) => {
         }
 
         const iClass = itemClasses[item.itemClass];
-        if (!(item.itemSubClass in iClass.subClasses)) {
+        if (!(item.itemSubClass in iClass.subClassesMap)) {
           return "";
         }
 
-        return iClass.subClasses[item.itemSubClass].name;
+        return iClass.subClassesMap[item.itemSubClass].name;
       })();
 
       return (
