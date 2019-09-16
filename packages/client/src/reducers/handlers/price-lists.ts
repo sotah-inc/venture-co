@@ -21,7 +21,7 @@ import { getPricelistIndex, getProfessionPricelistIndex } from "../helper";
 
 import { IKindHandlers, Runner } from "./index";
 
-const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
+export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
   expansion: {
     selected: {
       change: (state: IPriceListsState, action: ReturnType<typeof ChangeSelectedExpansion>) => {

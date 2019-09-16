@@ -13,7 +13,7 @@ import { IPostsState } from "../../types/posts";
 
 import { IKindHandlers, Runner } from "./index";
 
-const handlers: IKindHandlers<IPostsState, PostsActions> = {
+export const handlers: IKindHandlers<IPostsState, PostsActions> = {
   post: {
     create: {
       receive: (state: IPostsState, action: ReturnType<typeof ReceiveCreatePost>) => {

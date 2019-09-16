@@ -1,7 +1,7 @@
-import { run as mainRunner } from "./main";
-import { run as postsRunner } from "./posts";
-import { run as pricelistsRunner } from "./price-lists";
-import { run as profileRunner } from "./profile";
+import { handlers as mainHandlers, run as mainRunner } from "./main";
+import { handlers as postsHandlers, run as postsRunner } from "./posts";
+import { handlers as pricelistsHandlers, run as pricelistsRunner } from "./price-lists";
+import { handlers as profileHandlers, run as profileRunner } from "./profile";
 
 export interface IKindHandlers<T, A> {
   [key: string]: IVerbHandlers<T, A>;
@@ -22,4 +22,11 @@ export const runners = {
   post: postsRunner,
   pricelist: pricelistsRunner,
   profile: profileRunner,
+};
+
+export const handlers = {
+  main: mainHandlers,
+  post: postsHandlers,
+  pricelist: pricelistsHandlers,
+  profileHandlers,
 };

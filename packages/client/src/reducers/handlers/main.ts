@@ -18,7 +18,7 @@ import { FetchLevel, IMainState } from "../../types/main";
 
 import { IKindHandlers, Runner } from "./index";
 
-const handlers: IKindHandlers<IMainState, MainActions> = {
+export const handlers: IKindHandlers<IMainState, MainActions> = {
   boot: {
     get: {
       receive: (state: IMainState, action: ReturnType<typeof ReceiveGetBoot>) => {

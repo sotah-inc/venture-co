@@ -4,7 +4,7 @@ import { IProfileState } from "../../types/profile";
 
 import { IKindHandlers, Runner } from "./index";
 
-const handlers: IKindHandlers<IProfileState, ProfileActions> = {
+export const handlers: IKindHandlers<IProfileState, ProfileActions> = {
   profile: {
     update: {
       receive: (state: IProfileState, action: ReturnType<typeof ReceiveUpdateProfile>) => {
