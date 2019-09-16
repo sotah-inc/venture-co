@@ -1,6 +1,6 @@
 {
   "name": "@sotah-inc/server",
-  "version": "1.0.57",
+  "version": "1.0.59",
   "description": "",
   "main": "./build/dist/index.js",
   "typings": "build/dist/index.d.ts",
@@ -28,7 +28,7 @@
     "typescript": "3.5.1"
   },
   "dependencies": {
-    "@sotah-inc/core": "^1.0.57",
+    "@sotah-inc/core": "^1.0.59",
     "@types/express": "^4.17.1",
     "@types/passport": "^1.0.1",
     "@types/passport-jwt": "^3.0.1",
