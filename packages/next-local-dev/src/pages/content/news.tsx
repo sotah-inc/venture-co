@@ -1,7 +1,7 @@
 import React from "react";
 
 import { defaultState } from "@sotah-inc/client";
-import { ReceiveGetBoot } from "@sotah-inc/client/build/dist/actions/main";
+import { ReceiveGetBoot, ReceiveGetPing } from "@sotah-inc/client/build/dist/actions/main";
 import { getBoot } from "@sotah-inc/client/build/dist/api/data";
 import { runners } from "@sotah-inc/client/build/dist/reducers/handlers";
 import { NewsRouteContainer } from "@sotah-inc/client/build/dist/route-containers/App/Content/News";
@@ -20,7 +20,10 @@ export function Content({ boot }: IInitialProps) {
       title="Secrets of the Auction House"
       predefinedState={{
         ...defaultState,
-        Main: runners.main(defaultMainState, ReceiveGetBoot(boot)),
+        Main: runners.main(
+          runners.main(defaultMainState, ReceiveGetPing(true)),
+          ReceiveGetBoot(boot),
+        ),
       }}
     >
       <NewsRouteContainer />
