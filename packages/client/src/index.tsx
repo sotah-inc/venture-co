@@ -64,9 +64,6 @@ export const Boot = ({ viewport, predefinedState }: IProps) => {
   if (store === null) {
     const preloadedState = typeof predefinedState === "undefined" ? defaultState : predefinedState;
 
-    // tslint:disable-next-line:no-console
-    console.log(preloadedState);
-
     store = createStore(
       rootReducer,
       preloadedState,

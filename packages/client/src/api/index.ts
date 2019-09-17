@@ -1,7 +1,16 @@
-import { getEnvVar } from "@sotah-inc/core";
 // tslint:disable-next-line:no-import-side-effect
 import "isomorphic-fetch";
+import getConfig from "next/config";
 import queryString from "query-string";
+
+interface IConfig {
+  publicRuntimeConfig?: {
+    publicApiEndpoint: string;
+  };
+  serverRuntimeConfig?: {
+    serverApiEndpoint: string;
+  };
+}
 
 const hostname: string = (() => {
   if (typeof window === "undefined") {
@@ -13,9 +22,19 @@ const hostname: string = (() => {
 
 const defaultApiEndpoint = "https://api.sotah.info";
 export const apiEndpoint: string = (() => {
-  const apiEndpointProvided = getEnvVar("API_ENDPOINT");
-  if (apiEndpointProvided.length === 0) {
-    return defaultApiEndpoint;
+  const { publicRuntimeConfig, serverRuntimeConfig }: IConfig = getConfig();
+  if (
+    typeof serverRuntimeConfig !== "undefined" &&
+    typeof serverRuntimeConfig.serverApiEndpoint !== "undefined"
+  ) {
+    return serverRuntimeConfig.serverApiEndpoint;
+  }
+
+  if (
+    typeof publicRuntimeConfig !== "undefined" &&
+    typeof publicRuntimeConfig.publicApiEndpoint !== "undefined"
+  ) {
+    return publicRuntimeConfig.publicApiEndpoint;
   }
 
   if (hostname === "localhost") {
