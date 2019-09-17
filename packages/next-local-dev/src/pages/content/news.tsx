@@ -6,7 +6,6 @@ import { getBoot } from "@sotah-inc/client/build/dist/api/data";
 import { runners } from "@sotah-inc/client/build/dist/reducers/handlers";
 import { NewsRouteContainer } from "@sotah-inc/client/build/dist/route-containers/App/Content/News";
 import { defaultMainState } from "@sotah-inc/client/build/dist/types";
-import { getEnvVar } from "@sotah-inc/core";
 import { IGetBootResponse } from "@sotah-inc/server/build/dist/messenger/contracts";
 
 import { Layout } from "../../components/Layout";
