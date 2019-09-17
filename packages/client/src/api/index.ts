@@ -1,4 +1,6 @@
 import { getEnvVar } from "@sotah-inc/core";
+// tslint:disable-next-line:no-import-side-effect
+import "isomorphic-fetch";
 import queryString from "query-string";
 
 const hostname: string = (() => {
@@ -11,12 +13,12 @@ const hostname: string = (() => {
 
 const defaultApiEndpoint = "https://api.sotah.info";
 export const apiEndpoint: string = (() => {
-  if (hostname === "localhost") {
+  const apiEndpointProvided = getEnvVar("API_ENDPOINT");
+  if (apiEndpointProvided.length === 0) {
     return defaultApiEndpoint;
   }
 
-  const apiEndpointProvided = getEnvVar("API_ENDPOINT");
-  if (apiEndpointProvided.length === 0) {
+  if (hostname === "localhost") {
     return defaultApiEndpoint;
   }
 
