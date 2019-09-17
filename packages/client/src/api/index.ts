@@ -1,3 +1,4 @@
+import { getEnvVar } from "@sotah-inc/core";
 import queryString from "query-string";
 
 const hostname: string = (() => {
@@ -7,10 +8,20 @@ const hostname: string = (() => {
 
   return window.location.hostname;
 })();
-export let apiEndpoint = "https://api.sotah.info";
-if (hostname === "localhost") {
-  apiEndpoint = "https://api.sotah.info";
-}
+
+const defaultApiEndpoint = "https://api.sotah.info";
+export const apiEndpoint: string = (() => {
+  if (hostname === "localhost") {
+    return defaultApiEndpoint;
+  }
+
+  const apiEndpointProvided = getEnvVar("API_ENDPOINT");
+  if (apiEndpointProvided.length === 0) {
+    return defaultApiEndpoint;
+  }
+
+  return defaultApiEndpoint;
+})();
 
 export interface IGatherOptions<T> {
   headers?: Headers;
