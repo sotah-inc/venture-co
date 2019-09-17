@@ -2,14 +2,14 @@ import React from "react";
 
 import { defaultState } from "@sotah-inc/client";
 import { ReceiveGetBoot } from "@sotah-inc/client/build/dist/actions/main";
+import { getBoot } from "@sotah-inc/client/build/dist/api/data";
 import { runners } from "@sotah-inc/client/build/dist/reducers/handlers";
 import { NewsRouteContainer } from "@sotah-inc/client/build/dist/route-containers/App/Content/News";
 import { defaultMainState } from "@sotah-inc/client/build/dist/types";
-import { code } from "@sotah-inc/server";
+import { getEnvVar } from "@sotah-inc/core";
 import { IGetBootResponse } from "@sotah-inc/server/build/dist/messenger/contracts";
 
 import { Layout } from "../../components/Layout";
-import { getMessengerClient } from "../../lib";
 
 interface IInitialProps {
   boot: IGetBootResponse | null;
@@ -30,12 +30,12 @@ export function Content({ boot }: IInitialProps) {
 }
 
 Content.getInitialProps = async (): Promise<IInitialProps> => {
-  const msg = await (await getMessengerClient()).getBoot();
-  if (msg.code !== code.ok) {
-    return { boot: null };
-  }
+  // tslint:disable-next-line:no-console
+  console.log(getEnvVar("API_ENDPOINT"));
 
-  return { boot: msg.data };
+  const boot = await getBoot();
+
+  return { boot };
 };
 
 export default Content;
