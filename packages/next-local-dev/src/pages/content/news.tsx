@@ -30,12 +30,7 @@ export function Content({ boot }: IInitialProps) {
 }
 
 Content.getInitialProps = async (): Promise<IInitialProps> => {
-  // tslint:disable-next-line:no-console
-  console.log(getEnvVar("API_ENDPOINT"));
-
-  const boot = await getBoot();
-
-  return { boot };
+  return { boot: await getBoot() };
 };
 
 export default Content;
