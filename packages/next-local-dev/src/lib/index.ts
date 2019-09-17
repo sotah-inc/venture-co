@@ -1,15 +1,6 @@
+import { getEnvVar } from "@sotah-inc/core";
 import { Messenger } from "@sotah-inc/server";
 import * as nats from "nats";
-import process from "process";
-
-const getEnvVar = (envVarName: string): string => {
-  const envVar = process.env[envVarName];
-  if (typeof envVar === "undefined") {
-    return "";
-  }
-
-  return envVar;
-};
 
 const getNatsClient = async (natsHost: string, natsPort: string): Promise<nats.Client> => {
   const conn = nats.connect({
