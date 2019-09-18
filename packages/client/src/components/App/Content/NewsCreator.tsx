@@ -9,9 +9,8 @@ import {
   NonIdealState,
   Spinner,
 } from "@blueprintjs/core";
+import { ICreatePostRequest, IPostJson, UserLevel } from "@sotah-inc/core";
 
-import { ICreatePostRequest } from "@sotah-inc/core";
-import { IPostJson, UserLevel } from "@sotah-inc/core";
 import { PostFormFormContainer } from "../../../form-containers/App/Content/PostForm";
 import { IProfile } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
