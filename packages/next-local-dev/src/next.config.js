@@ -8,7 +8,7 @@ module.exports = withCSS({
     localIdentName: "[local]",
   },
   publicRuntimeConfig: {
-    publicApiEndpoint: "https://api.sotah.info"
+    publicApiEndpoint: sotahCore.getEnvVar("API_ENDPOINT")
   },
   serverRuntimeConfig: {
     serverApiEndpoint: sotahCore.getEnvVar("API_ENDPOINT")
