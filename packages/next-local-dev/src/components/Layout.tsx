@@ -1,8 +1,7 @@
 import React, { ReactNode } from "react";
 
 import { Boot, defaultState } from "@sotah-inc/client";
-import { defaultMainState, IStoreState } from "@sotah-inc/client/build/dist/types";
-import { FetchLevel } from "@sotah-inc/client/build/dist/types/main";
+import { IStoreState } from "@sotah-inc/client/build/dist/types";
 import Head from "next/head";
 
 interface IProps {
@@ -11,16 +10,9 @@ interface IProps {
   predefinedState?: Partial<IStoreState>;
 }
 
-const defaultPredefinedState: IStoreState = {
-  ...defaultState,
-  Main: { ...defaultMainState, fetchPingLevel: FetchLevel.success },
-};
-
 export function Layout({ children, title, predefinedState }: Readonly<IProps>) {
-  const bootPredefinedState =
-    typeof predefinedState === "undefined"
-      ? defaultPredefinedState
-      : { ...defaultPredefinedState, ...predefinedState };
+  const bootPredefinedState: IStoreState =
+    typeof predefinedState === "undefined" ? defaultState : { ...defaultState, ...predefinedState };
 
   return (
     <>
