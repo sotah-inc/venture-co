@@ -1,3 +1,5 @@
+import React from "react";
+
 import { ReceiveGetBoot, ReceiveGetPing } from "@sotah-inc/client/build/dist/actions/main";
 import { getBoot } from "@sotah-inc/client/build/dist/api/data";
 import { runners } from "@sotah-inc/client/build/dist/reducers/handlers";
@@ -5,7 +7,6 @@ import { ContentRouteContainer } from "@sotah-inc/client/build/dist/route-contai
 import { defaultMainState, IStoreState } from "@sotah-inc/client/build/dist/types";
 import { IGetBootResponse } from "@sotah-inc/core";
 import { NextPageContext } from "next";
-import React from "react";
 
 import { Layout } from "../components/Layout";
 
