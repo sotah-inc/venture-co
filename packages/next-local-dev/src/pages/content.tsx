@@ -14,7 +14,7 @@ interface IInitialProps {
   boot: IGetBootResponse | null;
 }
 
-export function Content({ boot }: IInitialProps) {
+export function Content({ boot }: Readonly<IInitialProps>) {
   return (
     <Layout
       title="Secrets of the Auction House"

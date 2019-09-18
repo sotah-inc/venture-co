@@ -16,7 +16,7 @@ interface IInitialProps {
   posts: IGetPostsResult | null;
 }
 
-export function Content({ boot, posts }: IInitialProps) {
+export function Content({ boot, posts }: Readonly<IInitialProps>) {
   return (
     <Layout
       title="Secrets of the Auction House"

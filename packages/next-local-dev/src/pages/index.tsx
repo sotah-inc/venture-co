@@ -13,7 +13,7 @@ interface IInitialProps {
   boot: IGetBootResponse | null;
 }
 
-export function Home({ boot }: IInitialProps) {
+export function Home({ boot }: Readonly<IInitialProps>) {
   return (
     <Layout
       title="Secrets of the Auction House"
