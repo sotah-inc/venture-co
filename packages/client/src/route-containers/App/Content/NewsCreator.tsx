@@ -17,4 +17,4 @@ function RouteContainer({ router }: Props) {
   );
 }
 
-export const NewsRouteContainer = withRouter(RouteContainer);
+export const NewsCreatorRouteContainer = withRouter(RouteContainer);

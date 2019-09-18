@@ -20,4 +20,4 @@ function RouteContainer({ router }: Props) {
   );
 }
 
-export const NewsRouteContainer = withRouter(RouteContainer);
+export const PostRouteContainer = withRouter(RouteContainer);
