@@ -6,6 +6,7 @@ import {
   H2,
   IBreadcrumbProps,
   Intent,
+  IToastProps,
   NonIdealState,
   Spinner,
 } from "@blueprintjs/core";
@@ -16,7 +17,6 @@ import { ManageAccountFormFormContainer } from "../../../form-containers/App/Pro
 import { IErrors } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
 import { setTitle } from "../../../util";
-import { GetAppToaster } from "../../../util/toasters";
 import { IFormValues } from "./ManageAccountForm";
 
 export interface IStateProps {
@@ -28,6 +28,7 @@ export interface IStateProps {
 
 export interface IDispatchProps {
   updateProfile: (token: string, req: IUpdateProfileRequest) => void;
+  insertToast: (toast: IToastProps) => void;
 }
 
 export interface IRouteProps {
@@ -45,7 +46,14 @@ export class ManageAccount extends React.Component<Props> {
   }
 
   public render() {
-    const { user, updateProfile, token, updateProfileErrors, updateProfileLevel } = this.props;
+    const {
+      user,
+      updateProfile,
+      token,
+      updateProfileErrors,
+      updateProfileLevel,
+      insertToast,
+    } = this.props;
 
     if (user === null) {
       return (
@@ -57,8 +65,6 @@ export class ManageAccount extends React.Component<Props> {
       );
     }
 
-    const AppToaster = GetAppToaster(false);
-
     return (
       <>
         <H2>Manage Account</H2>
@@ -66,22 +72,14 @@ export class ManageAccount extends React.Component<Props> {
         <ManageAccountFormFormContainer
           defaultFormValues={{ email: user.email }}
           onComplete={() => {
-            if (AppToaster === null) {
-              return;
-            }
-
-            AppToaster.show({
+            insertToast({
               icon: "info-sign",
               intent: "success",
               message: "Your profile has been updated!",
             });
           }}
           onFatalError={err => {
-            if (AppToaster === null) {
-              return;
-            }
-
-            AppToaster.show({
+            insertToast({
               icon: "warning-sign",
               intent: "danger",
               message: `Could not save profile: ${err}`,
