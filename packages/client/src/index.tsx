@@ -10,6 +10,7 @@ import { AppRouteContainer } from "./route-containers/App";
 import {
   defaultAuctionState,
   defaultMainState,
+  defaultOvenState,
   defaultPostsState,
   defaultPriceListsState,
   defaultProfileState,
@@ -19,6 +20,7 @@ import {
 export const defaultState: IStoreState = {
   Auction: defaultAuctionState,
   Main: defaultMainState,
+  Oven: defaultOvenState,
   Posts: defaultPostsState,
   PriceLists: defaultPriceListsState,
   Profile: defaultProfileState,
