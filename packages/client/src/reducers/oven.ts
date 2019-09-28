@@ -9,7 +9,7 @@ export const oven = (state: State | undefined, action: OvenActions): State => {
   }
 
   // tslint:disable-next-line:no-console
-  console.log("oven()", state);
+  console.log("oven()", state, action);
 
   switch (action.type) {
     case INSERT_TOAST:
