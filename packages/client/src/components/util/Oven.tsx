@@ -23,7 +23,7 @@ export class Oven extends React.Component<Props> {
     const { index, toast } = this.props;
 
     // tslint:disable-next-line:no-console
-    console.log("Oven.componentDidUpdate()");
+    console.log("Oven.componentDidUpdate()", index, toast);
 
     if (index === prevProps.index) {
       return;
