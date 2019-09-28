@@ -30,6 +30,6 @@ export class Oven extends React.Component<Props> {
   }
 
   public render() {
-    return <Toaster position={Position.TOP_RIGHT} ref={this.refHandlers.toaster} />;
+    return <Toaster position={Position.BOTTOM} ref={this.refHandlers.toaster} />;
   }
 }
