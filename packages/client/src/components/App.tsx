@@ -42,7 +42,7 @@ export class App extends React.Component<Props> {
   public didHandleUnauth: boolean = false;
 
   public componentDidMount() {
-    const { onLoad, fetchPingLevel, insertToast } = this.props;
+    const { onLoad, fetchPingLevel } = this.props;
 
     switch (fetchPingLevel) {
       case FetchLevel.initial:
@@ -50,12 +50,6 @@ export class App extends React.Component<Props> {
 
         break;
       case FetchLevel.success:
-        insertToast({
-          icon: "info-sign",
-          intent: Intent.SUCCESS,
-          message: "Connected to Sotah API.",
-        });
-
         this.handleConnected(this.props);
 
         break;
