@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Intent } from "@blueprintjs/core";
+import { Intent, IToastProps } from "@blueprintjs/core";
 import {
   ICreatePricelistRequest,
   ICreateProfessionPricelistRequest,
@@ -15,7 +15,6 @@ import {
 import { ListDialogContainer } from "../../../../containers/App/Data/PriceLists/util/ListDialog";
 import { IErrors, IProfile } from "../../../../types/global";
 import { FetchLevel } from "../../../../types/main";
-import { GetAppToaster } from "../../../../util/toasters";
 import { IOnCompleteOptions } from "./util/ListDialog";
 
 export interface IStateProps {
@@ -35,6 +34,7 @@ export interface IDispatchProps {
   changeIsAddListDialogOpen: (isDialogOpen: boolean) => void;
   createPricelist: (token: string, request: ICreatePricelistRequest) => void;
   createProfessionPricelist: (token: string, request: ICreateProfessionPricelistRequest) => void;
+  insertToast: (toast: IToastProps) => void;
 }
 
 export interface IRouteProps {
@@ -69,6 +69,7 @@ export class CreateListDialog extends React.Component<Props, State> {
       selectedProfession,
       selectedExpansion,
       browseToProfessionPricelist,
+      insertToast,
     } = this.props;
     const { listDialogResetTrigger } = this.state;
 
@@ -85,14 +86,11 @@ export class CreateListDialog extends React.Component<Props, State> {
     if (prevProps.createPricelistLevel !== createPricelistLevel) {
       switch (createPricelistLevel) {
         case FetchLevel.success:
-          const AppToaster = GetAppToaster(true);
-          if (AppToaster !== null) {
-            AppToaster.show({
-              icon: "info-sign",
-              intent: Intent.SUCCESS,
-              message: "Your pricelist has been created.",
-            });
-          }
+          insertToast({
+            icon: "info-sign",
+            intent: Intent.SUCCESS,
+            message: "Your pricelist has been created.",
+          });
           this.setState({ listDialogResetTrigger: listDialogResetTrigger + 1 });
 
           browseToProfessionPricelist(

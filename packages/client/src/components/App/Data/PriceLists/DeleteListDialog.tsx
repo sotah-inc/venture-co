@@ -1,11 +1,10 @@
 import React from "react";
 
-import { Button, Callout, Dialog, Intent } from "@blueprintjs/core";
+import { Button, Callout, Dialog, Intent, IToastProps } from "@blueprintjs/core";
 import { IExpansion, IPricelistJson, IProfession, IRegion, IStatusRealm } from "@sotah-inc/core";
 
 import { IProfile } from "../../../../types/global";
 import { FetchLevel } from "../../../../types/main";
-import { GetAppToaster } from "../../../../util/toasters";
 import { DialogActions, DialogBody } from "../../../util";
 
 export interface IStateProps {
@@ -23,6 +22,7 @@ export interface IDispatchProps {
   changeIsDeleteListDialogOpen: (isDialogOpen: boolean) => void;
   deletePricelist: (token: string, id: number) => void;
   deleteProfessionPricelist: (token: string, id: number) => void;
+  insertToast: (toast: IToastProps) => void;
 }
 
 export interface IRouteProps {
@@ -49,6 +49,7 @@ export class DeleteListDialog extends React.Component<Props> {
       selectedExpansion,
       selectedList,
       browseOnDeletion,
+      insertToast,
     } = this.props;
 
     if (
@@ -63,14 +64,11 @@ export class DeleteListDialog extends React.Component<Props> {
     if (prevProps.deletePricelistLevel !== deletePricelistLevel) {
       switch (deletePricelistLevel) {
         case FetchLevel.success:
-          const AppToaster = GetAppToaster(true);
-          if (AppToaster !== null) {
-            AppToaster.show({
-              icon: "info-sign",
-              intent: Intent.SUCCESS,
-              message: "Your pricelist has been deleted.",
-            });
-          }
+          insertToast({
+            icon: "info-sign",
+            intent: Intent.SUCCESS,
+            message: "Your pricelist has been deleted.",
+          });
 
           browseOnDeletion(
             currentRegion,

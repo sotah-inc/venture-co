@@ -6,6 +6,7 @@ import {
   H2,
   IBreadcrumbProps,
   Intent,
+  IToastProps,
   NonIdealState,
   Spinner,
 } from "@blueprintjs/core";
@@ -15,7 +16,6 @@ import { PostFormFormContainer } from "../../../form-containers/App/Content/Post
 import { IProfile } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
 import { setTitle } from "../../../util";
-import { GetAppToaster } from "../../../util/toasters";
 import { IFormValues } from "./PostForm";
 
 export interface IStateProps {
@@ -31,6 +31,7 @@ export interface IStateProps {
 export interface IDispatchProps {
   getPost: (slug: string) => void;
   updatePost: (token: string, postId: number, v: IUpdatePostRequest) => void;
+  insertToast: (toast: IToastProps) => void;
 }
 
 export interface IRouteProps {
@@ -66,6 +67,7 @@ export class NewsEditor extends React.Component<Props> {
       currentPost,
       updatePostErrors,
       getPostLevel,
+      insertToast,
     } = this.props;
 
     if (profile === null || profile.user.level < UserLevel.Admin) {
@@ -130,12 +132,7 @@ export class NewsEditor extends React.Component<Props> {
             return;
           }}
           onFatalError={err => {
-            const AppToaster = GetAppToaster(false);
-            if (AppToaster === null) {
-              return;
-            }
-
-            AppToaster.show({
+            insertToast({
               icon: "warning-sign",
               intent: "danger",
               message: `Could not update post: ${err}`,
@@ -202,6 +199,7 @@ export class NewsEditor extends React.Component<Props> {
       profile,
       updatePostLevel,
       browseToPost,
+      insertToast,
     } = this.props;
 
     if (profile === null || profile.user.level < UserLevel.Admin) {
@@ -223,14 +221,11 @@ export class NewsEditor extends React.Component<Props> {
             return;
           }
 
-          const AppToaster = GetAppToaster(true);
-          if (AppToaster !== null) {
-            AppToaster.show({
-              icon: "info-sign",
-              intent: "success",
-              message: "Your post has successfully been updated!",
-            });
-          }
+          insertToast({
+            icon: "info-sign",
+            intent: "success",
+            message: "Your post has successfully been updated!",
+          });
 
           browseToPost(currentPost);
 
@@ -247,14 +242,11 @@ export class NewsEditor extends React.Component<Props> {
         return;
       case FetchLevel.failure:
         if (typeof prevProps !== "undefined" && prevProps.getPostLevel !== getPostLevel) {
-          const AppToaster = GetAppToaster(true);
-          if (AppToaster !== null) {
-            AppToaster.show({
-              icon: "warning-sign",
-              intent: "danger",
-              message: "Could not fetch post.",
-            });
-          }
+          insertToast({
+            icon: "warning-sign",
+            intent: "danger",
+            message: "Could not fetch post.",
+          });
 
           return;
         }

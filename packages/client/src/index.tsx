@@ -5,6 +5,7 @@ import { applyMiddleware, createStore, Middleware, Store } from "redux";
 import thunk from "redux-thunk";
 
 import { USER_LOGIN, USER_REGISTER } from "./actions/main";
+import { OvenContainer } from "./containers/util/Oven";
 import { rootReducer } from "./reducers";
 import { AppRouteContainer } from "./route-containers/App";
 import {
@@ -78,6 +79,7 @@ export const Boot = ({ viewport, predefinedState }: IProps) => {
       <div className="pure-u-1">
         <Provider store={store}>
           <AppRouteContainer viewport={viewport} />
+          <OvenContainer />
         </Provider>
       </div>
     </div>

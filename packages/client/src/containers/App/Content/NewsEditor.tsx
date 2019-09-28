@@ -1,5 +1,6 @@
 import { connect } from "react-redux";
 
+import { InsertToast } from "../../../actions/oven";
 import { FetchGetPost, FetchUpdatePost } from "../../../actions/posts";
 import {
   IDispatchProps,
@@ -18,6 +19,7 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
 
 const mapDispatchToProps: IDispatchProps = {
   getPost: FetchGetPost,
+  insertToast: InsertToast,
   updatePost: FetchUpdatePost,
 };
 

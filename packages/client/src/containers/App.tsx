@@ -8,6 +8,7 @@ import {
   FetchGetUserPreferences,
   FetchUserReload,
 } from "../actions/main";
+import { InsertToast } from "../actions/oven";
 import { App, IDispatchProps, IStateProps } from "../components/App";
 import { IStoreState } from "../types";
 
@@ -44,6 +45,7 @@ const mapDispatchToProps: IDispatchProps = {
   boot: FetchGetBoot,
   changeAuthLevel: ChangeAuthLevel,
   changeIsLoginDialogOpen: ChangeIsLoginDialogOpen,
+  insertToast: InsertToast,
   loadUserPreferences: FetchGetUserPreferences,
   onLoad: FetchGetPing,
   reloadUser: FetchUserReload,

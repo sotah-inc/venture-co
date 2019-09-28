@@ -1,12 +1,11 @@
 import React from "react";
 
-import { Button, Callout, Dialog, Intent } from "@blueprintjs/core";
+import { Button, Callout, Dialog, Intent, IToastProps } from "@blueprintjs/core";
 import { IPostJson } from "@sotah-inc/core";
 
 import { IDeletePostOptions } from "../../../actions/posts";
 import { IProfile } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
-import { GetAppToaster } from "../../../util/toasters";
 import { DialogActions, DialogBody } from "../../util";
 
 export interface IStateProps {
@@ -19,6 +18,7 @@ export interface IStateProps {
 export interface IDispatchProps {
   changeIsDeletePostDialogOpen: (v: IDeletePostOptions) => void;
   deletePost: (token: string, id: number) => void;
+  insertToast: (toast: IToastProps) => void;
 }
 
 export interface IRouteProps {
@@ -31,19 +31,16 @@ export type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
 
 export class DeletePostDialog extends React.Component<Props> {
   public componentDidUpdate(prevProps: Props) {
-    const { browseToNews, deletePostLevel } = this.props;
+    const { browseToNews, deletePostLevel, insertToast } = this.props;
 
     if (prevProps.deletePostLevel !== deletePostLevel) {
       switch (deletePostLevel) {
         case FetchLevel.success:
-          const AppToaster = GetAppToaster(true);
-          if (AppToaster !== null) {
-            AppToaster.show({
-              icon: "info-sign",
-              intent: Intent.SUCCESS,
-              message: "Your post has been deleted.",
-            });
-          }
+          insertToast({
+            icon: "info-sign",
+            intent: Intent.SUCCESS,
+            message: "Your post has been deleted.",
+          });
 
           browseToNews();
 

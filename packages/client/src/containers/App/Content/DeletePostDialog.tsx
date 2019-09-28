@@ -1,5 +1,6 @@
 import { connect } from "react-redux";
 
+import { InsertToast } from "../../../actions/oven";
 import { ChangeIsDeletePostDialogOpen, FetchDeletePost } from "../../../actions/posts";
 import {
   DeletePostDialog,
@@ -23,6 +24,7 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
 const mapDispatchToProps: IDispatchProps = {
   changeIsDeletePostDialogOpen: ChangeIsDeletePostDialogOpen,
   deletePost: FetchDeletePost,
+  insertToast: InsertToast,
 };
 
 export const DeletePostDialogContainer = connect<IStateProps, IDispatchProps, {}, IStoreState>(

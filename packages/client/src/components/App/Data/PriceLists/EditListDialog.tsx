@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Intent } from "@blueprintjs/core";
+import { Intent, IToastProps } from "@blueprintjs/core";
 import {
   IExpansion,
   IItemsMap,
@@ -14,7 +14,6 @@ import { ListDialogContainer } from "../../../../containers/App/Data/PriceLists/
 import { IErrors, IProfile } from "../../../../types/global";
 import { FetchLevel } from "../../../../types/main";
 import { IUpdatePricelistRequestOptions } from "../../../../types/price-lists";
-import { GetAppToaster } from "../../../../util/toasters";
 import { IOnCompleteOptions } from "./util/ListDialog";
 
 export interface IStateProps {
@@ -34,6 +33,7 @@ export interface IDispatchProps {
   appendItems: (items: IItemsMap) => void;
   changeIsEditListDialogOpen: (isDialogOpen: boolean) => void;
   updatePricelist: (opts: IUpdatePricelistRequestOptions) => void;
+  insertToast: (toast: IToastProps) => void;
 }
 
 export interface IRouteProps {
@@ -66,6 +66,7 @@ export class EditListDialog extends React.Component<Props, State> {
       selectedProfession,
       selectedExpansion,
       browseToProfessionPricelist,
+      insertToast,
     } = this.props;
     const { listDialogResetTrigger } = this.state;
 
@@ -82,14 +83,11 @@ export class EditListDialog extends React.Component<Props, State> {
     if (prevProps.updatePricelistLevel !== updatePricelistLevel) {
       switch (updatePricelistLevel) {
         case FetchLevel.success:
-          const AppToaster = GetAppToaster(true);
-          if (AppToaster !== null) {
-            AppToaster.show({
-              icon: "info-sign",
-              intent: Intent.SUCCESS,
-              message: `"${selectedList.name}" has been saved.`,
-            });
-          }
+          insertToast({
+            icon: "info-sign",
+            intent: Intent.SUCCESS,
+            message: `"${selectedList.name}" has been saved.`,
+          });
           this.setState({ listDialogResetTrigger: listDialogResetTrigger + 1 });
 
           browseToProfessionPricelist(

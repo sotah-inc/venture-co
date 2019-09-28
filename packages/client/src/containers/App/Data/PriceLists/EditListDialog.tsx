@@ -1,5 +1,6 @@
 import { connect } from "react-redux";
 
+import { InsertToast } from "../../../../actions/oven";
 import {
   AppendItems,
   ChangeIsEditListDialogOpen,
@@ -41,6 +42,7 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
 const mapDispatchToProps: IDispatchProps = {
   appendItems: AppendItems,
   changeIsEditListDialogOpen: ChangeIsEditListDialogOpen,
+  insertToast: InsertToast,
   updatePricelist: FetchUpdatePricelist,
 };
 

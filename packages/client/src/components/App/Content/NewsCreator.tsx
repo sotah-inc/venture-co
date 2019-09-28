@@ -6,6 +6,7 @@ import {
   H2,
   IBreadcrumbProps,
   Intent,
+  IToastProps,
   NonIdealState,
   Spinner,
 } from "@blueprintjs/core";
@@ -15,7 +16,6 @@ import { PostFormFormContainer } from "../../../form-containers/App/Content/Post
 import { IProfile } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
 import { setTitle } from "../../../util";
-import { GetAppToaster } from "../../../util/toasters";
 import { IFormValues } from "./PostForm";
 
 export interface IStateProps {
@@ -29,6 +29,7 @@ export interface IStateProps {
 
 export interface IDispatchProps {
   createPost: (token: string, v: ICreatePostRequest) => void;
+  insertToast: (toast: IToastProps) => void;
 }
 
 export interface IRouteProps {
@@ -54,6 +55,7 @@ export class NewsCreator extends React.Component<Props> {
       createPostErrors,
       browseToPost,
       currentPost,
+      insertToast,
     } = this.props;
 
     if (profile === null || profile.user.level < UserLevel.Admin) {
@@ -78,26 +80,20 @@ export class NewsCreator extends React.Component<Props> {
               return;
             }
 
-            const AppToaster = GetAppToaster(false);
-            if (AppToaster !== null) {
-              AppToaster.show({
-                icon: "info-sign",
-                intent: "success",
-                message: "Your post has successfully been created!",
-              });
-            }
+            insertToast({
+              icon: "info-sign",
+              intent: "success",
+              message: "Your post has successfully been created!",
+            });
 
             browseToPost(currentPost);
           }}
           onFatalError={err => {
-            const AppToaster = GetAppToaster(false);
-            if (AppToaster !== null) {
-              AppToaster.show({
-                icon: "warning-sign",
-                intent: "danger",
-                message: `Could not create post: ${err}`,
-              });
-            }
+            insertToast({
+              icon: "warning-sign",
+              intent: "danger",
+              message: `Could not create post: ${err}`,
+            });
           }}
         />
       </>

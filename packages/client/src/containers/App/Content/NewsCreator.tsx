@@ -1,5 +1,6 @@
 import { connect } from "react-redux";
 
+import { InsertToast } from "../../../actions/oven";
 import { FetchCreatePost } from "../../../actions/posts";
 import {
   IDispatchProps,
@@ -18,6 +19,7 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
 
 const mapDispatchToProps: IDispatchProps = {
   createPost: FetchCreatePost,
+  insertToast: InsertToast,
 };
 
 export const NewsCreatorContainer = connect<IStateProps, IDispatchProps, IOwnProps, IStoreState>(
