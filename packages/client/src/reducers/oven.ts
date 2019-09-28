@@ -8,12 +8,9 @@ export const oven = (state: State | undefined, action: OvenActions): State => {
     return defaultOvenState;
   }
 
-  // tslint:disable-next-line:no-console
-  console.log("oven()", state, action);
-
   switch (action.type) {
     case INSERT_TOAST:
-      return { ...state, ...action.payload, index: state.index + 1 };
+      return { ...state, index: state.index + 1, toast: action.payload };
   }
 
   return state;
