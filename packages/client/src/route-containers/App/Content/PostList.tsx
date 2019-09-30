@@ -8,12 +8,7 @@ import { PostListContainer } from "../../../containers/App/Content/PostList";
 type Props = Readonly<WithRouterProps>;
 
 function RouteContainer({ router }: Props) {
-  return (
-    <PostListContainer
-      browseToPost={post => router.push(`/content/news/${post.slug}`)}
-      browseToPostEdit={post => router.push(`/content/news/${post.slug}/edit`)}
-    />
-  );
+  return <PostListContainer browseToPost={post => router.push(`/content/news/${post.slug}`)} />;
 }
 
 export const PostListRouteContainer = withRouter(RouteContainer);

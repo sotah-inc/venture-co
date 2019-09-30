@@ -5,6 +5,7 @@ import { IPostJson, IUserJson, UserLevel } from "@sotah-inc/core";
 import moment from "moment";
 
 import { IDeletePostOptions } from "../../../actions/posts";
+import { LinkButtonRouteContainer } from "../../../route-containers/util/LinkButton";
 import { FetchLevel } from "../../../types/main";
 import { MarkdownRenderer } from "../../util";
 
@@ -21,7 +22,6 @@ export interface IStateProps {
 
 export interface IRouteProps {
   browseToPost: (post: IPostJson) => void;
-  browseToPostEdit: (post: IPostJson) => void;
 }
 
 export type IOwnProps = IRouteProps;
@@ -150,43 +150,30 @@ export class PostList extends React.Component<Props> {
     );
   }
 
+  private renderReadMoreButton(post: IPostJson) {
+    return (
+      <>
+        <LinkButtonRouteContainer
+          destination={`/content/news/${post.slug}`}
+          buttonProps={{ icon: "calendar", intent: Intent.PRIMARY, text: "Read More" }}
+        />
+      </>
+    );
+  }
+
   private renderActionButtons(post: IPostJson) {
-    const { user, browseToPost, browseToPostEdit, changeIsDeletePostDialogOpen } = this.props;
+    const { user, changeIsDeletePostDialogOpen } = this.props;
 
     if (user === null || user.level < UserLevel.Admin) {
-      return (
-        <Button
-          icon="calendar"
-          intent={Intent.PRIMARY}
-          onClick={(e: React.MouseEvent<HTMLElement>) => {
-            e.stopPropagation();
-
-            browseToPost(post);
-          }}
-          text="Read More"
-        />
-      );
+      return this.renderReadMoreButton(post);
     }
 
     return (
       <ButtonGroup>
-        <Button
-          icon="calendar"
-          intent={Intent.PRIMARY}
-          onClick={(e: React.MouseEvent<HTMLElement>) => {
-            e.stopPropagation();
-
-            browseToPost(post);
-          }}
-          text="Read More"
-        />
-        <Button
-          icon="edit"
-          onClick={(e: React.MouseEvent<HTMLElement>) => {
-            e.stopPropagation();
-
-            browseToPostEdit(post);
-          }}
+        {this.renderReadMoreButton(post)}
+        <LinkButtonRouteContainer
+          destination={`/content/news/${post.slug}/edit`}
+          buttonProps={{ icon: "edit" }}
         />
         <Button
           icon="delete"
