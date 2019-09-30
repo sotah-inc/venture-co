@@ -7,19 +7,14 @@ import { IOwnProps, LinkButton } from "../../components/util/LinkButton";
 
 type Props = Readonly<IOwnProps & WithRouterProps>;
 
-function RouteContainer(props: Props) {
-  // props
-  const { buttonProps, destination, router } = props;
-
-  // tslint:disable-next-line:no-console
-  console.log(router.pathname, router);
-
+function RouteContainer({ buttonProps, destination, router, prefix }: Props) {
   return (
     <LinkButton
       locationPathname={router.pathname}
       historyPush={(pushDestination: string) => router.push(pushDestination)}
       destination={destination}
       buttonProps={buttonProps}
+      prefix={prefix}
     />
   );
 }
