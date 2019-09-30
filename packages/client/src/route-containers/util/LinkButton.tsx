@@ -11,6 +11,9 @@ function RouteContainer(props: Props) {
   // props
   const { buttonProps, destination, router } = props;
 
+  // tslint:disable-next-line:no-console
+  console.log(router.pathname, router);
+
   return (
     <LinkButton
       locationPathname={router.pathname}
