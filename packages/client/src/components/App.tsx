@@ -124,10 +124,17 @@ export class App extends React.Component<Props> {
       case AuthLevel.initial:
       default:
         return (
-          <NonIdealState
-            title="Loading"
-            icon={<Spinner className={Classes.LARGE} intent={Intent.NONE} value={0} />}
-          />
+          <>
+            <TopbarRouteContainer />
+
+            <div id="content">
+              <PromptsRouteContainer />
+              <NonIdealState
+                title="Loading"
+                icon={<Spinner className={Classes.LARGE} intent={Intent.NONE} value={0} />}
+              />
+            </div>
+          </>
         );
     }
   }
