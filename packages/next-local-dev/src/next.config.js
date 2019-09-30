@@ -2,7 +2,6 @@ const withCSS = require('@zeit/next-css');
 const sotahCore = require("@sotah-inc/core");
 
 module.exports = withCSS({
-  distDir: '../build',
   cssModules: true,
   cssLoaderOptions: {
     localIdentName: "[local]",
