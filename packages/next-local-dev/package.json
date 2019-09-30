@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@blueprintjs/core": "^3.18.1",
-    "@sotah-inc/client": "^1.0.91",
+    "@sotah-inc/client": "^1.0.92",
     "@sotah-inc/core": "^1.0.61",
     "@sotah-inc/server": "^1.0.61",
     "@zeit/next-css": "^1.0.1",
@@ -21,7 +21,7 @@
   "devDependencies": {
     "@types/http-status": "^0.2.30",
     "@types/node": "^12.7.8",
-    "@types/react": "^16.9.3",
+    "@types/react": "^16.9.4",
     "tslint": "^5.20.0",
     "typescript": "^3.6.3"
   },
