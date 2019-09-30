@@ -123,18 +123,11 @@ export class App extends React.Component<Props> {
         return this.renderUnauth();
       case AuthLevel.initial:
       default:
-        return (
-          <>
-            <TopbarRouteContainer />
-
-            <div id="content">
-              <PromptsRouteContainer />
-              <NonIdealState
-                title="Loading"
-                icon={<Spinner className={Classes.LARGE} intent={Intent.NONE} />}
-              />
-            </div>
-          </>
+        return this.renderContent(
+          <NonIdealState
+            title="Loading"
+            icon={<Spinner className={Classes.LARGE} intent={Intent.NONE} />}
+          />,
         );
     }
   }
@@ -146,26 +139,26 @@ export class App extends React.Component<Props> {
       case FetchLevel.success:
         return this.renderBootAuth();
       case FetchLevel.fetching:
-        return (
+        return this.renderContent(
           <NonIdealState
             title="Loading"
             icon={<Spinner className={Classes.LARGE} intent={Intent.PRIMARY} />}
-          />
+          />,
         );
       case FetchLevel.failure:
-        return (
+        return this.renderContent(
           <NonIdealState
             title="Failed to load"
             icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={1} />}
-          />
+          />,
         );
       case FetchLevel.initial:
       default:
-        return (
+        return this.renderContent(
           <NonIdealState
             title="Loading"
             icon={<Spinner className={Classes.LARGE} intent={Intent.NONE} value={0} />}
-          />
+          />,
         );
     }
   }
@@ -177,51 +170,48 @@ export class App extends React.Component<Props> {
       case FetchLevel.fetching:
       case FetchLevel.refetching:
       case FetchLevel.prompted:
-        return (
+        return this.renderContent(
           <NonIdealState
             title="Loading"
             icon={<Spinner className={Classes.LARGE} intent={Intent.PRIMARY} />}
-          />
+          />,
         );
       case FetchLevel.success:
         return this.renderBootAuthWithPreferences();
       case FetchLevel.failure:
-        return (
+        return this.renderContent(
           <NonIdealState
             title="Failed to load user preferences."
             icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={1} />}
-          />
+          />,
         );
       case FetchLevel.initial:
       default:
-        return (
+        return this.renderContent(
           <NonIdealState
             title="Loading"
             icon={<Spinner className={Classes.LARGE} intent={Intent.NONE} value={0} />}
-          />
+          />,
         );
     }
   }
 
   private renderBootAuthWithPreferences() {
-    return this.renderContent();
+    return this.renderContent(this.props.viewport);
   }
 
   private renderUnauth() {
-    return this.renderContent();
+    return this.renderContent(this.props.viewport);
   }
 
-  private renderContent() {
-    // props
-    const { viewport } = this.props;
-
+  private renderContent(content: ReactNode) {
     return (
       <>
         <TopbarRouteContainer />
 
         <div id="content">
           <PromptsRouteContainer />
-          {viewport}
+          {content}
         </div>
       </>
     );
