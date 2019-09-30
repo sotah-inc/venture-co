@@ -131,7 +131,7 @@ export class App extends React.Component<Props> {
               <PromptsRouteContainer />
               <NonIdealState
                 title="Loading"
-                icon={<Spinner className={Classes.LARGE} intent={Intent.NONE} value={0} />}
+                icon={<Spinner className={Classes.LARGE} intent={Intent.NONE} />}
               />
             </div>
           </>
