@@ -52,10 +52,15 @@ Region.getInitialProps = async ({ req, query }: NextPageContext): Promise<IIniti
     return {};
   }
 
+  const [boot, realms] = await Promise.all([
+    getBoot(),
+    getStatus(extractString("region_name", query)),
+  ]);
+
   return {
     data: {
-      boot: await getBoot(),
-      realms: await getStatus(extractString("region_name", query)),
+      boot,
+      realms,
     },
   };
 };
