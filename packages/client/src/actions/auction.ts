@@ -22,7 +22,7 @@ import { ActionsUnion, createAction } from "./helpers";
 export const REQUEST_AUCTIONS = "REQUEST_AUCTIONS";
 export const RECEIVE_AUCTIONS = "RECEIVE_AUCTIONS";
 const RequestAuctions = () => createAction(REQUEST_AUCTIONS);
-const ReceiveAuctions = (payload: IGetAuctionsResponse | null) =>
+export const ReceiveAuctions = (payload: IGetAuctionsResponse | null) =>
   createAction(RECEIVE_AUCTIONS, payload);
 type FetchAuctionsType = ReturnType<typeof RequestAuctions | typeof ReceiveAuctions>;
 export const FetchAuctions = (opts: IGetAuctionsOptions) => {
@@ -63,7 +63,7 @@ export const ItemFilterChange = (item: IItem | null) => createAction(ITEM_FILTER
 export const REQUEST_AUCTIONS_QUERY = "REQUEST_AUCTIONS_QUERY";
 export const RECEIVE_AUCTIONS_QUERY = "RECEIVE_AUCTIONS_QUERY";
 const RequestAuctionsQuery = () => createAction(REQUEST_AUCTIONS_QUERY);
-const ReceiveAuctionsQuery = (payload: IQueryAuctionsResponse | null) =>
+export const ReceiveAuctionsQuery = (payload: IQueryAuctionsResponse | null) =>
   createAction(RECEIVE_AUCTIONS_QUERY, payload);
 type QueryAuctionsType = ReturnType<typeof RequestAuctionsQuery | typeof ReceiveAuctionsQuery>;
 export const FetchAuctionsQuery = (opts: IQueryAuctionsOptions) => {
