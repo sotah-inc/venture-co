@@ -3,11 +3,10 @@ import React from "react";
 import { WithRouterProps } from "next/dist/client/with-router";
 import { withRouter } from "next/router";
 
-import { IRouteProps } from "../../../components/App/Data/Realm";
 import { RealmContainer } from "../../../containers/App/Data/Realm";
 import { extractString } from "../../../util";
 
-type Props = Readonly<IRouteProps & WithRouterProps>;
+type Props = Readonly<WithRouterProps>;
 
 function RouteContainer({ router }: Props) {
   return (
