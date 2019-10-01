@@ -3,11 +3,10 @@ import React from "react";
 import { WithRouterProps } from "next/dist/client/with-router";
 import { withRouter } from "next/router";
 
-import { IRouteProps } from "../../components/App/AuctionsLanding";
 import { AuctionsLandingContainer } from "../../containers/App/AuctionsLanding";
 import { extractString } from "../../util";
 
-type Props = Readonly<IRouteProps & WithRouterProps>;
+type Props = Readonly<WithRouterProps>;
 
 function RouteContainer({ router }: Props) {
   return (
