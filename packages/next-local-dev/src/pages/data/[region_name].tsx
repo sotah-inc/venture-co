@@ -46,7 +46,7 @@ export function Region({ data }: Readonly<IInitialProps>) {
     </Layout>
   );
 }
-2;
+
 Region.getInitialProps = async ({ req, query }: NextPageContext): Promise<IInitialProps> => {
   if (typeof req === "undefined") {
     return {};
