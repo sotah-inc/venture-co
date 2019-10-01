@@ -105,7 +105,7 @@ export class DataController {
     const realms = statusMessage
       .data!.realms.map<IStatusRealm>(realm => {
         const realmModificationDates = ((): IRealmModificationDates => {
-          if (!(req.params["regionName"] in modDatesMessage.data!)) {
+          if (typeof modDatesMessage.data === "undefined") {
             return {
               downloaded: 0,
               live_auctions_received: 0,
@@ -113,7 +113,7 @@ export class DataController {
             };
           }
 
-          if (!(realm.slug in modDatesMessage.data![req.params["regionName"]])) {
+          if (!(req.params["regionName"] in modDatesMessage.data)) {
             return {
               downloaded: 0,
               live_auctions_received: 0,
@@ -121,7 +121,15 @@ export class DataController {
             };
           }
 
-          return modDatesMessage.data![req.params["regionName"]][realm.slug];
+          if (!(realm.slug in modDatesMessage.data[req.params["regionName"]])) {
+            return {
+              downloaded: 0,
+              live_auctions_received: 0,
+              pricelist_histories_received: 0,
+            };
+          }
+
+          return modDatesMessage.data[req.params["regionName"]][realm.slug];
         })();
 
         return {
