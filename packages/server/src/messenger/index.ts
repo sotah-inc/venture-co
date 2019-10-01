@@ -149,7 +149,7 @@ export class Messenger {
     return this.request(subjects.boot);
   }
 
-  public getRealmModificationDates(): Promise<Message<IRealmModificationDatesResponse>> {
+  public getRealmModificationDates(): Promise<Message<IRealmModificationDatesResponse | null>> {
     return this.request(subjects.realmModificationDates);
   }
 
