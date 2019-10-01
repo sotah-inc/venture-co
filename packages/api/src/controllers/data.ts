@@ -105,7 +105,7 @@ export class DataController {
     const realms = statusMessage
       .data!.realms.map<IStatusRealm>(realm => {
         const realmModificationDates = ((): IRealmModificationDates => {
-          if (typeof modDatesMessage.data === "undefined") {
+          if (typeof modDatesMessage.data === "undefined" || modDatesMessage.data === null) {
             return {
               downloaded: 0,
               live_auctions_received: 0,
