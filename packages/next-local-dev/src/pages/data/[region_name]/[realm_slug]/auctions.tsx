@@ -4,11 +4,7 @@ import {
   ReceiveAuctions,
   ReceiveAuctionsQuery,
 } from "@sotah-inc/client/build/dist/actions/auction";
-import {
-  ReceiveGetBoot,
-  ReceiveGetPing,
-  ReceiveGetRealms,
-} from "@sotah-inc/client/build/dist/actions/main";
+import { LoadGetBoot, ReceiveGetPing } from "@sotah-inc/client/build/dist/actions/main";
 import {
   getAuctions,
   getBoot,
@@ -30,6 +26,8 @@ import {
   IGetBootResponse,
   IQueryAuctionsResponse,
   IStatusRealm,
+  RealmSlug,
+  RegionName,
 } from "@sotah-inc/core";
 import { NextPageContext } from "next";
 
@@ -37,6 +35,8 @@ import { Layout } from "../../../../components/Layout";
 
 interface IInitialProps {
   data?: {
+    regionName: RegionName;
+    realmSlug: RealmSlug;
     boot: IGetBootResponse | null;
     realms: IStatusRealm[] | null;
     queryAuctionsResults: IQueryAuctionsResponse | null;
@@ -56,11 +56,13 @@ export function Auctions({ data }: Readonly<IInitialProps>) {
         ReceiveAuctions(data.auctions),
       ),
       Main: runners.main(
-        runners.main(
-          runners.main(defaultMainState, ReceiveGetPing(true)),
-          ReceiveGetBoot(data.boot),
-        ),
-        ReceiveGetRealms(data.realms),
+        runners.main(defaultMainState, ReceiveGetPing(true)),
+        LoadGetBoot({
+          boot: data.boot,
+          realmSlug: data.realmSlug,
+          realms: data.realms,
+          regionName: data.regionName,
+        }),
       ),
     };
   })();
@@ -107,7 +109,9 @@ Auctions.getInitialProps = async ({ req, query }: NextPageContext): Promise<IIni
       auctions,
       boot,
       queryAuctionsResults,
+      realmSlug,
       realms,
+      regionName,
     },
   };
 };
