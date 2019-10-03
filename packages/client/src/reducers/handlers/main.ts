@@ -8,7 +8,8 @@ import {
   ReceiveGetRealms,
   ReceiveGetUserPreferences,
 } from "../../actions/main";
-import { FetchLevel, IMainState } from "../../types/main";
+import { IRealms } from "../../types/global";
+import { defaultMainState, FetchLevel, IMainState } from "../../types/main";
 import { FormatItemClassList, FormatRealmList, FormatRegionList } from "../../util";
 import { IKindHandlers, Runner } from "./index";
 
@@ -20,6 +21,7 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
           return { ...state, fetchBootLevel: FetchLevel.failure };
         }
 
+        const regions = FormatRegionList(action.payload.boot.regions);
         const currentRegion: IRegion = (() => {
           const foundRegion: IRegion | null = action.payload.boot.regions.reduce(
             (result: IRegion | null, v) => {
@@ -43,7 +45,14 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
           return foundRegion;
         })();
 
-        const regions = FormatRegionList(action.payload.boot.regions);
+        const realms: IRealms | [] = (() => {
+          if (typeof action.payload.realms === "undefined" || action.payload.realms === null) {
+            return defaultMainState.realms;
+          }
+
+          return FormatRealmList(action.payload.realms);
+        })();
+
         const itemClasses = FormatItemClassList(action.payload.boot.item_classes.classes);
 
         return {
@@ -53,6 +62,7 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
           fetchBootLevel: FetchLevel.success,
           itemClasses,
           professions: action.payload.boot.professions,
+          realms,
           regions,
         };
       },
