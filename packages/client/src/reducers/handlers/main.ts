@@ -9,7 +9,7 @@ import {
   ReceiveGetUserPreferences,
 } from "../../actions/main";
 import { IRealms } from "../../types/global";
-import { defaultMainState, FetchLevel, IMainState } from "../../types/main";
+import { FetchLevel, IMainState } from "../../types/main";
 import { FormatItemClassList, FormatRealmList, FormatRegionList } from "../../util";
 import { IKindHandlers, Runner } from "./index";
 
@@ -45,18 +45,50 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
           return foundRegion;
         })();
 
-        const realms: IRealms | [] = (() => {
+        const realms: IRealms = (() => {
           if (typeof action.payload.realms === "undefined" || action.payload.realms === null) {
-            return defaultMainState.realms;
+            return [];
           }
 
           return FormatRealmList(action.payload.realms);
+        })();
+        const currentRealm: IStatusRealm | null = (() => {
+          if (
+            typeof action.payload.realms === "undefined" ||
+            action.payload.realms === null ||
+            action.payload.realms.length === 0 ||
+            typeof action.payload.realmSlug === "undefined"
+          ) {
+            return null;
+          }
+
+          const foundRealm: IStatusRealm | null = action.payload.realms.reduce(
+            (result: IStatusRealm | null, v) => {
+              if (result !== null) {
+                return result;
+              }
+
+              if (v.name === action.payload.realmSlug) {
+                return v;
+              }
+
+              return null;
+            },
+            null,
+          );
+
+          if (foundRealm === null) {
+            return action.payload.realms[0];
+          }
+
+          return foundRealm;
         })();
 
         const itemClasses = FormatItemClassList(action.payload.boot.item_classes.classes);
 
         return {
           ...state,
+          currentRealm,
           currentRegion,
           expansions: action.payload.boot.expansions,
           fetchBootLevel: FetchLevel.success,
