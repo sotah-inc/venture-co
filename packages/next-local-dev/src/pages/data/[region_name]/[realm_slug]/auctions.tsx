@@ -56,7 +56,7 @@ export function Auctions({ data }: Readonly<IInitialProps>) {
         ReceiveAuctions(data.auctions),
       ),
       Main: runners.main(
-        runners.main(defaultMainState, ReceiveGetPing(true)),
+        defaultMainState,
         LoadGetBoot({
           boot: data.boot,
           realmSlug: data.realmSlug,
