@@ -68,7 +68,7 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
                 return result;
               }
 
-              if (v.name === action.payload.realmSlug) {
+              if (v.slug === action.payload.realmSlug) {
                 return v;
               }
 
@@ -92,6 +92,7 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
           currentRegion,
           expansions: action.payload.boot.expansions,
           fetchBootLevel: FetchLevel.success,
+          fetchPingLevel: FetchLevel.success,
           fetchRealmLevel: FetchLevel.success,
           itemClasses,
           professions: action.payload.boot.professions,
