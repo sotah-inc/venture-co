@@ -1,6 +1,7 @@
 import {
   IExpansion,
   IItem,
+  IItemClass,
   InventoryType,
   IQueryAuctionsItem,
   IRealm,
@@ -11,6 +12,7 @@ import {
 import moment from "moment";
 
 import { apiEndpoint } from "../api";
+import { IItemClasses, IItemClassWithSub, IRegions, ISubItemClasses } from "../types/global";
 
 const hostname: string = (() => {
   if (typeof window === "undefined") {
@@ -253,3 +255,30 @@ export const extractString = (key: string, params: IExtractStringMap): string =>
 
   return "";
 };
+
+export const FormatRegionList = (regionList: IRegion[]): IRegions =>
+  regionList.reduce((result, region) => ({ ...result, [region.name]: region }), {});
+
+export const FormatItemClassList = (itemClassList: IItemClass[]): IItemClasses =>
+  itemClassList.reduce((previousItemClasses: IItemClasses, itemClass) => {
+    const subClassesMap: ISubItemClasses = itemClass.subclasses.reduce(
+      (previousSubClasses: ISubItemClasses, subItemClass) => {
+        const nextSubClasses: ISubItemClasses = {
+          ...previousSubClasses,
+          [subItemClass.subclass]: subItemClass,
+        };
+
+        return nextSubClasses;
+      },
+      {},
+    );
+
+    const itemClassWithSub: IItemClassWithSub = { ...itemClass, subClassesMap };
+
+    const nextItemClasses: IItemClasses = {
+      ...previousItemClasses,
+      [itemClass.class]: itemClassWithSub,
+    };
+
+    return nextItemClasses;
+  }, {});

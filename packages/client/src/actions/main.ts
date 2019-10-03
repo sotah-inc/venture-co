@@ -4,6 +4,8 @@ import {
   IRegion,
   IStatusRealm,
   IUpdatePreferencesRequest,
+  RealmSlug,
+  RegionName,
 } from "@sotah-inc/core";
 import { Dispatch } from "redux";
 
@@ -114,6 +116,15 @@ export const FetchGetBoot = () => {
   };
 };
 
+export interface ILoadBootPayload {
+  data: IGetBootResponse | null;
+  regionName: RegionName;
+  realmSlug?: RealmSlug;
+}
+
+export const LOAD_GET_BOOT = "LOAD_GET_BOOT";
+export const LoadGetBoot = (payload: ILoadBootPayload) => createAction(LOAD_GET_BOOT, payload);
+
 export const REGION_CHANGE = "REGION_CHANGE";
 export const RegionChange = (payload: IRegion) => createAction(REGION_CHANGE, payload);
 
@@ -145,6 +156,7 @@ export const MainActions = {
   ChangeAuthLevel,
   ChangeIsLoginDialogOpen,
   ChangeIsRegisterDialogOpen,
+  LoadGetBoot,
   RealmChange,
   ReceiveGetBoot,
   ReceiveGetPing,

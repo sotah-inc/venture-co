@@ -1,26 +1,62 @@
 import { IRegion, IStatusRealm } from "@sotah-inc/core";
 
 import {
+  LoadGetBoot,
   MainActions,
   ReceiveGetBoot,
   ReceiveGetPing,
   ReceiveGetRealms,
   ReceiveGetUserPreferences,
 } from "../../actions/main";
-import {
-  IItemClasses,
-  IItemClassWithSub,
-  IRealms,
-  IRegions,
-  ISubItemClasses,
-} from "../../types/global";
+import { IRealms } from "../../types/global";
 import { FetchLevel, IMainState } from "../../types/main";
-
+import { FormatItemClassList, FormatRegionList } from "../../util";
 import { IKindHandlers, Runner } from "./index";
 
 export const handlers: IKindHandlers<IMainState, MainActions> = {
   boot: {
     get: {
+      load: (state: IMainState, action: ReturnType<typeof LoadGetBoot>) => {
+        if (action.payload.data === null) {
+          return { ...state, fetchBootLevel: FetchLevel.failure };
+        }
+
+        const currentRegion: IRegion = (() => {
+          const foundRegion: IRegion | null = action.payload.data.regions.reduce(
+            (result: IRegion | null, v) => {
+              if (result !== null) {
+                return result;
+              }
+
+              if (v.name === action.payload.regionName) {
+                return v;
+              }
+
+              return null;
+            },
+            null,
+          );
+
+          if (foundRegion === null) {
+            return action.payload.data.regions[0];
+          }
+
+          return foundRegion;
+        })();
+
+        const regions = FormatRegionList(action.payload.data.regions);
+        const itemClasses = FormatItemClassList(action.payload.data.item_classes.classes);
+
+        return {
+          ...state,
+          currentRegion,
+          expansions: action.payload.data.expansions,
+          fetchBootLevel: FetchLevel.success,
+          itemClasses,
+          professions: action.payload.data.professions,
+          regions,
+        };
+      },
       receive: (state: IMainState, action: ReturnType<typeof ReceiveGetBoot>) => {
         if (action.payload === null) {
           return { ...state, fetchBootLevel: FetchLevel.failure };
@@ -54,36 +90,8 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
           return foundRegion;
         })();
 
-        const regions: IRegions = action.payload.regions.reduce(
-          (result, region) => ({ ...result, [region.name]: region }),
-          {},
-        );
-
-        const itemClasses: IItemClasses = action.payload.item_classes.classes.reduce(
-          (previousItemClasses: IItemClasses, itemClass) => {
-            const subClassesMap: ISubItemClasses = itemClass.subclasses.reduce(
-              (previousSubClasses: ISubItemClasses, subItemClass) => {
-                const nextSubClasses: ISubItemClasses = {
-                  ...previousSubClasses,
-                  [subItemClass.subclass]: subItemClass,
-                };
-
-                return nextSubClasses;
-              },
-              {},
-            );
-
-            const itemClassWithSub: IItemClassWithSub = { ...itemClass, subClassesMap };
-
-            const nextItemClasses: IItemClasses = {
-              ...previousItemClasses,
-              [itemClass.class]: itemClassWithSub,
-            };
-
-            return nextItemClasses;
-          },
-          {},
-        );
+        const regions = FormatRegionList(action.payload.regions);
+        const itemClasses = FormatItemClassList(action.payload.item_classes.classes);
 
         return {
           ...state,
