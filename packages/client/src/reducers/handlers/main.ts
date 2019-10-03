@@ -92,6 +92,7 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
           currentRegion,
           expansions: action.payload.boot.expansions,
           fetchBootLevel: FetchLevel.success,
+          fetchRealmLevel: FetchLevel.success,
           itemClasses,
           professions: action.payload.boot.professions,
           realms,
