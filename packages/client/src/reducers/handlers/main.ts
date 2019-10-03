@@ -8,21 +8,20 @@ import {
   ReceiveGetRealms,
   ReceiveGetUserPreferences,
 } from "../../actions/main";
-import { IRealms } from "../../types/global";
 import { FetchLevel, IMainState } from "../../types/main";
-import { FormatItemClassList, FormatRegionList } from "../../util";
+import { FormatItemClassList, FormatRealmList, FormatRegionList } from "../../util";
 import { IKindHandlers, Runner } from "./index";
 
 export const handlers: IKindHandlers<IMainState, MainActions> = {
   boot: {
     get: {
       load: (state: IMainState, action: ReturnType<typeof LoadGetBoot>) => {
-        if (action.payload.data === null) {
+        if (action.payload.boot === null || action.payload.boot.regions.length === 0) {
           return { ...state, fetchBootLevel: FetchLevel.failure };
         }
 
         const currentRegion: IRegion = (() => {
-          const foundRegion: IRegion | null = action.payload.data.regions.reduce(
+          const foundRegion: IRegion | null = action.payload.boot.regions.reduce(
             (result: IRegion | null, v) => {
               if (result !== null) {
                 return result;
@@ -38,22 +37,22 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
           );
 
           if (foundRegion === null) {
-            return action.payload.data.regions[0];
+            return action.payload.boot.regions[0];
           }
 
           return foundRegion;
         })();
 
-        const regions = FormatRegionList(action.payload.data.regions);
-        const itemClasses = FormatItemClassList(action.payload.data.item_classes.classes);
+        const regions = FormatRegionList(action.payload.boot.regions);
+        const itemClasses = FormatItemClassList(action.payload.boot.item_classes.classes);
 
         return {
           ...state,
           currentRegion,
-          expansions: action.payload.data.expansions,
+          expansions: action.payload.boot.expansions,
           fetchBootLevel: FetchLevel.success,
           itemClasses,
-          professions: action.payload.data.professions,
+          professions: action.payload.boot.professions,
           regions,
         };
       },
@@ -167,10 +166,7 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
           return foundRealm;
         })();
 
-        const realms: IRealms = action.payload.reduce(
-          (result, realm) => ({ ...result, [realm.slug]: realm }),
-          {},
-        );
+        const realms = FormatRealmList(action.payload);
 
         return { ...state, fetchRealmLevel: FetchLevel.success, realms, currentRealm };
       },

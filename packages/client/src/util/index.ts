@@ -11,6 +11,7 @@ import {
 } from "@sotah-inc/core";
 import moment from "moment";
 
+import { IStatusRealm } from "@sotah-inc/core/build/dist/types/contracts/data";
 import { apiEndpoint } from "../api";
 import { IItemClasses, IItemClassWithSub, IRegions, ISubItemClasses } from "../types/global";
 
@@ -282,3 +283,6 @@ export const FormatItemClassList = (itemClassList: IItemClass[]): IItemClasses =
 
     return nextItemClasses;
   }, {});
+
+export const FormatRealmList = (realmList: IStatusRealm[]) =>
+  realmList.reduce((result, realm) => ({ ...result, [realm.slug]: realm }), {});

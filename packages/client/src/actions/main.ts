@@ -117,7 +117,8 @@ export const FetchGetBoot = () => {
 };
 
 export interface ILoadBootPayload {
-  data: IGetBootResponse | null;
+  boot: IGetBootResponse | null;
+  realms?: IStatusRealm[] | null;
   regionName: RegionName;
   realmSlug?: RealmSlug;
 }
