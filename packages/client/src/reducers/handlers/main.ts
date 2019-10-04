@@ -83,6 +83,20 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
 
           return foundRealm;
         })();
+        const fetchRealmLevel: FetchLevel = (() => {
+          if (
+            typeof action.payload.realmSlug === "undefined" ||
+            typeof action.payload.realms === "undefined"
+          ) {
+            return FetchLevel.initial;
+          }
+
+          if (action.payload.realms === null) {
+            return FetchLevel.failure;
+          }
+
+          return FetchLevel.success;
+        })();
 
         const itemClasses = FormatItemClassList(action.payload.boot.item_classes.classes);
 
@@ -93,7 +107,7 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
           expansions: action.payload.boot.expansions,
           fetchBootLevel: FetchLevel.success,
           fetchPingLevel: FetchLevel.success,
-          fetchRealmLevel: FetchLevel.success,
+          fetchRealmLevel,
           itemClasses,
           professions: action.payload.boot.professions,
           realms,
