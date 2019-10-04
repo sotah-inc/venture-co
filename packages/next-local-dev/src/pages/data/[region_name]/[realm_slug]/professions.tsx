@@ -1,20 +1,11 @@
 import React from "react";
 
 import { LoadGetBoot } from "@sotah-inc/client/build/dist/actions/main";
-import {
-  getAuctions,
-  getBoot,
-  getStatus,
-  queryAuctions,
-} from "@sotah-inc/client/build/dist/api/data";
+import { getBoot, getStatus } from "@sotah-inc/client/build/dist/api/data";
 import { runners } from "@sotah-inc/client/build/dist/reducers/handlers";
 // tslint:disable-next-line:max-line-length
-import { ProfessionsLandingRouteContainer } from "@sotah-inc/client/build/dist/route-containers/App/ProfessionsLanding";
-import {
-  defaultAuctionState,
-  defaultMainState,
-  IStoreState,
-} from "@sotah-inc/client/build/dist/types";
+import { PriceListsRouteContainer } from "@sotah-inc/client/build/dist/route-containers/App/Data/PriceLists";
+import { defaultMainState, IStoreState } from "@sotah-inc/client/build/dist/types";
 import { extractString } from "@sotah-inc/client/build/dist/util";
 import { IGetBootResponse, IStatusRealm, RealmSlug, RegionName } from "@sotah-inc/core";
 import { NextPageContext } from "next";
@@ -51,7 +42,7 @@ export function Professions({ data }: Readonly<IInitialProps>) {
 
   return (
     <Layout title="Secrets of the Auction House" predefinedState={predefinedState}>
-      <ProfessionsLandingRouteContainer />
+      <PriceListsRouteContainer />
     </Layout>
   );
 }
