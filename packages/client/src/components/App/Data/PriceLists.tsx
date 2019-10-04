@@ -69,9 +69,9 @@ export interface IRouteProps {
 export interface IRouteParams {
   region_name: string;
   realm_slug: string;
-  profession_name?: string;
-  expansion_name?: string;
-  pricelist_slug?: string;
+  profession_name: string;
+  expansion_name: string;
+  pricelist_slug: string;
 }
 
 export type IOwnProps = IRouteProps;
@@ -166,7 +166,7 @@ export class PriceLists extends React.Component<Props> {
       professions,
     } = this.props;
 
-    if (typeof profession_name !== "undefined") {
+    if (profession_name.length > 0) {
       const hasProfession = professions.reduce<boolean>((previousValue, currentValue) => {
         if (previousValue) {
           return previousValue;
@@ -270,8 +270,8 @@ export class PriceLists extends React.Component<Props> {
       return;
     }
 
-    if (typeof profession_name === "undefined") {
-      if (typeof pricelist_slug === "undefined") {
+    if (profession_name.length === 0) {
+      if (pricelist_slug.length === 0) {
         if (selectedProfession !== null || selectedExpansion !== null || selectedList !== null) {
           resetProfessionsSelections();
 
@@ -358,7 +358,7 @@ export class PriceLists extends React.Component<Props> {
         return;
     }
 
-    if (typeof expansion_name === "undefined") {
+    if (expansion_name.length === 0) {
       this.setTitle();
 
       return;
@@ -418,7 +418,7 @@ export class PriceLists extends React.Component<Props> {
       return;
     }
 
-    if (typeof pricelist_slug === "undefined") {
+    if (pricelist_slug.length === 0) {
       const preselectedList: IPricelistJson | null = (() => {
         const sorted = professionPricelists[selectedExpansion.name].sort((a, b) => {
           if (a.pricelist.name === b.pricelist.name) {
