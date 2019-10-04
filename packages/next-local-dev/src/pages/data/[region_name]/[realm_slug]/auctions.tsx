@@ -4,7 +4,7 @@ import {
   ReceiveAuctions,
   ReceiveAuctionsQuery,
 } from "@sotah-inc/client/build/dist/actions/auction";
-import { LoadGetBoot, ReceiveGetPing } from "@sotah-inc/client/build/dist/actions/main";
+import { LoadGetBoot } from "@sotah-inc/client/build/dist/actions/main";
 import {
   getAuctions,
   getBoot,
