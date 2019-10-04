@@ -17,8 +17,21 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
   boot: {
     get: {
       load: (state: IMainState, action: ReturnType<typeof LoadGetBoot>) => {
-        if (action.payload.boot === null || action.payload.boot.regions.length === 0) {
-          return { ...state, fetchBootLevel: FetchLevel.failure };
+        if (action.payload.boot === null) {
+          return {
+            ...state,
+            fetchBootLevel: FetchLevel.failure,
+            fetchPingLevel: FetchLevel.success,
+          };
+        }
+
+        if (action.payload.realms === null) {
+          return {
+            ...state,
+            fetchBootLevel: FetchLevel.success,
+            fetchPingLevel: FetchLevel.success,
+            fetchRealmLevel: FetchLevel.failure,
+          };
         }
 
         const regions = FormatRegionList(action.payload.boot.regions);
@@ -46,56 +59,28 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
         })();
 
         const realms: IRealms = (() => {
-          if (typeof action.payload.realms === "undefined" || action.payload.realms === null) {
+          if (action.payload.realms === null) {
             return [];
           }
 
           return FormatRealmList(action.payload.realms);
         })();
         const currentRealm: IStatusRealm | null = (() => {
-          if (
-            typeof action.payload.realms === "undefined" ||
-            action.payload.realms === null ||
-            action.payload.realms.length === 0 ||
-            typeof action.payload.realmSlug === "undefined"
-          ) {
-            return null;
-          }
-
-          const foundRealm: IStatusRealm | null = action.payload.realms.reduce(
-            (result: IStatusRealm | null, v) => {
-              if (result !== null) {
-                return result;
-              }
-
-              if (v.slug === action.payload.realmSlug) {
-                return v;
-              }
-
-              return null;
-            },
-            null,
-          );
-
-          if (foundRealm === null) {
+          if (typeof action.payload.realmSlug === "undefined") {
             return action.payload.realms[0];
           }
 
-          return foundRealm;
-        })();
-        const fetchRealmLevel: FetchLevel = (() => {
-          if (
-            typeof action.payload.realmSlug === "undefined" ||
-            typeof action.payload.realms === "undefined"
-          ) {
-            return FetchLevel.initial;
-          }
+          return action.payload.realms.reduce((result: IStatusRealm | null, v) => {
+            if (result !== null) {
+              return result;
+            }
 
-          if (action.payload.realms === null) {
-            return FetchLevel.failure;
-          }
+            if (v.slug === action.payload.realmSlug) {
+              return v;
+            }
 
-          return FetchLevel.success;
+            return null;
+          }, null);
         })();
 
         const itemClasses = FormatItemClassList(action.payload.boot.item_classes.classes);
@@ -107,7 +92,7 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
           expansions: action.payload.boot.expansions,
           fetchBootLevel: FetchLevel.success,
           fetchPingLevel: FetchLevel.success,
-          fetchRealmLevel,
+          fetchRealmLevel: FetchLevel.success,
           itemClasses,
           professions: action.payload.boot.professions,
           realms,
