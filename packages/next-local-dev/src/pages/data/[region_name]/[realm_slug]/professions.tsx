@@ -1,6 +1,6 @@
 import React from "react";
 
-import { LoadGetBoot, ReceiveGetPing } from "@sotah-inc/client/build/dist/actions/main";
+import { LoadGetBoot } from "@sotah-inc/client/build/dist/actions/main";
 import {
   getAuctions,
   getBoot,
@@ -9,7 +9,7 @@ import {
 } from "@sotah-inc/client/build/dist/api/data";
 import { runners } from "@sotah-inc/client/build/dist/reducers/handlers";
 // tslint:disable-next-line:max-line-length
-import { PriceListsRouteContainer } from "@sotah-inc/client/build/dist/route-containers/App/Data/PriceLists";
+import { ProfessionsLandingRouteContainer } from "@sotah-inc/client/build/dist/route-containers/App/ProfessionsLanding";
 import {
   defaultAuctionState,
   defaultMainState,
@@ -51,7 +51,7 @@ export function Professions({ data }: Readonly<IInitialProps>) {
 
   return (
     <Layout title="Secrets of the Auction House" predefinedState={predefinedState}>
-      <PriceListsRouteContainer />
+      <ProfessionsLandingRouteContainer />
     </Layout>
   );
 }
