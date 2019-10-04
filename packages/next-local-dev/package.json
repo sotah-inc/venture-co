@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@blueprintjs/core": "^3.18.1",
-    "@sotah-inc/client": "^1.0.124",
+    "@sotah-inc/client": "^1.0.125",
     "@sotah-inc/core": "^1.0.61",
     "@sotah-inc/server": "^1.0.63",
     "@zeit/next-css": "^1.0.1",
