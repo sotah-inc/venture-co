@@ -10,7 +10,7 @@ type Props = Readonly<IOwnProps & WithRouterProps>;
 function RouteContainer({ buttonProps, destination, router, prefix }: Props) {
   return (
     <LinkButton
-      locationPathname={router.pathname}
+      locationPathname={router.asPath}
       historyPush={(pushDestination: string) => router.push(pushDestination)}
       destination={destination}
       buttonProps={buttonProps}

@@ -203,7 +203,6 @@ export class Topbar extends React.Component<Props> {
         <LinkButtonRouteContainer
           destination={""}
           buttonProps={{ icon, text, minimal: true, disabled: true }}
-          prefix={true}
         />
       );
     }
@@ -212,7 +211,6 @@ export class Topbar extends React.Component<Props> {
       <LinkButtonRouteContainer
         destination={`/data/${currentRegion.name}/${currentRealm.slug}${destination}`}
         buttonProps={{ icon, text, minimal: true }}
-        prefix={true}
       />
     );
   }
