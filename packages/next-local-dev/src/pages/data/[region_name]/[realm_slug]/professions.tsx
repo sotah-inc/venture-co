@@ -1,12 +1,21 @@
 import React from "react";
 
 import { LoadGetBoot } from "@sotah-inc/client/build/dist/actions/main";
+import { ReceiveGetUnmetDemand } from "@sotah-inc/client/build/dist/actions/price-lists";
 import { getBoot, getStatus } from "@sotah-inc/client/build/dist/api/data";
+import {
+  getUnmetDemand,
+  IGetUnmetDemandResult,
+} from "@sotah-inc/client/build/dist/api/price-lists";
 import { runners } from "@sotah-inc/client/build/dist/reducers/handlers";
 // tslint:disable-next-line:max-line-length
 import { PriceListsRouteContainer } from "@sotah-inc/client/build/dist/route-containers/App/Data/PriceLists";
-import { defaultMainState, IStoreState } from "@sotah-inc/client/build/dist/types";
-import { extractString } from "@sotah-inc/client/build/dist/util";
+import {
+  defaultMainState,
+  defaultPriceListsState,
+  IStoreState,
+} from "@sotah-inc/client/build/dist/types";
+import { extractString, getPrimaryExpansion } from "@sotah-inc/client/build/dist/util";
 import { IGetBootResponse, IStatusRealm, RealmSlug, RegionName } from "@sotah-inc/core";
 import { NextPageContext } from "next";
 
@@ -18,6 +27,7 @@ interface IInitialProps {
     realmSlug: RealmSlug;
     boot: IGetBootResponse | null;
     realms: IStatusRealm[] | null;
+    unmetDemand: IGetUnmetDemandResult | null;
   };
 }
 
@@ -36,6 +46,10 @@ export function Professions({ data }: Readonly<IInitialProps>) {
           realms: data.realms,
           regionName: data.regionName,
         }),
+      ),
+      PriceLists: runners.pricelist(
+        defaultPriceListsState,
+        ReceiveGetUnmetDemand(data.unmetDemand),
       ),
     };
   })();
@@ -57,12 +71,27 @@ Professions.getInitialProps = async ({ req, query }: NextPageContext): Promise<I
 
   const [boot, realms] = await Promise.all([getBoot(), getStatus(regionName)]);
 
+  const unmetDemand: IGetUnmetDemandResult | null = await (async () => {
+    if (boot === null) {
+      return null;
+    }
+
+    return getUnmetDemand({
+      realm: realmSlug,
+      region: regionName,
+      request: {
+        expansion: getPrimaryExpansion(boot.expansions).name,
+      },
+    });
+  })();
+
   return {
     data: {
       boot,
       realmSlug,
       realms,
       regionName,
+      unmetDemand,
     },
   };
 };
