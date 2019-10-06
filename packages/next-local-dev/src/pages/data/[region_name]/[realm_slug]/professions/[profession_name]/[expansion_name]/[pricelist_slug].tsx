@@ -3,11 +3,17 @@ import React from "react";
 import { LoadGetBoot } from "@sotah-inc/client/build/dist/actions/main";
 import {
   ChangeSelectedProfession,
+  ReceiveGetItemsOwnership,
   ReceiveGetPricelist,
   ReceiveGetProfessionPricelists,
   ReceiveGetUnmetDemand,
 } from "@sotah-inc/client/build/dist/actions/price-lists";
-import { getBoot, getPriceList, getStatus } from "@sotah-inc/client/build/dist/api/data";
+import {
+  getBoot,
+  getPriceList,
+  getStatus,
+  queryOwnersByItems,
+} from "@sotah-inc/client/build/dist/api/data";
 import {
   getProfessionPricelists,
   getUnmetDemand,
@@ -27,6 +33,7 @@ import {
   IGetBootResponse,
   IGetPricelistResponse,
   IProfession,
+  IQueryOwnerItemsResponse,
   IStatusRealm,
   ItemId,
   RealmSlug,
@@ -46,6 +53,7 @@ interface IInitialProps {
     professionPricelists: IGetProfessionPricelistsResult;
     selectedProfession: IProfession | null;
     prices: IGetPricelistResponse | null;
+    owners: IQueryOwnerItemsResponse | null;
   };
 }
 
@@ -68,12 +76,15 @@ export function PricelistSlug({ data }: Readonly<IInitialProps>) {
       PriceLists: runners.pricelist(
         runners.pricelist(
           runners.pricelist(
-            runners.pricelist(defaultPriceListsState, ReceiveGetUnmetDemand(data.unmetDemand)),
-            ChangeSelectedProfession(data.selectedProfession),
+            runners.pricelist(
+              runners.pricelist(defaultPriceListsState, ReceiveGetUnmetDemand(data.unmetDemand)),
+              ChangeSelectedProfession(data.selectedProfession),
+            ),
+            ReceiveGetProfessionPricelists(data.professionPricelists),
           ),
-          ReceiveGetProfessionPricelists(data.professionPricelists),
+          ReceiveGetPricelist(data.prices),
         ),
-        ReceiveGetPricelist(data.prices),
+        ReceiveGetItemsOwnership(data.owners),
       ),
     };
   })();
@@ -139,9 +150,18 @@ PricelistSlug.getInitialProps = async ({ req, query }: NextPageContext): Promise
     return getPriceList({ regionName, realmSlug, itemIds });
   })();
 
+  const owners: IQueryOwnerItemsResponse | null = await (async () => {
+    if (itemIds.length === 0) {
+      return null;
+    }
+
+    return queryOwnersByItems({ regionName, realmSlug, items: itemIds });
+  })();
+
   return {
     data: {
       boot,
+      owners,
       prices,
       professionPricelists,
       realmSlug,
