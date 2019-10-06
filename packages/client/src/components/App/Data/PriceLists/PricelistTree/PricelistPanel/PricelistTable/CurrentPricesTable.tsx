@@ -38,15 +38,22 @@ type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
 
 export class CurrentPricesTable extends React.Component<Props> {
   public componentDidMount() {
-    const { reloadPrices, region, realm, list } = this.props;
+    const { reloadPrices, region, realm, list, getPricelistLevel } = this.props;
 
-    const itemIds = list.pricelist_entries!.map(v => v.item_id);
+    switch (getPricelistLevel) {
+      case FetchLevel.initial:
+        const itemIds = list.pricelist_entries!.map(v => v.item_id);
 
-    reloadPrices({
-      itemIds,
-      realmSlug: realm.slug,
-      regionName: region.name,
-    });
+        reloadPrices({
+          itemIds,
+          realmSlug: realm.slug,
+          regionName: region.name,
+        });
+
+        return;
+      default:
+        return;
+    }
   }
 
   public componentDidUpdate(prevProps: Props) {
