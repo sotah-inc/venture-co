@@ -1,10 +1,16 @@
 import React from "react";
 
 import { LoadGetBoot } from "@sotah-inc/client/build/dist/actions/main";
-import { ReceiveGetUnmetDemand } from "@sotah-inc/client/build/dist/actions/price-lists";
+import {
+  ChangeSelectedProfession,
+  ReceiveGetProfessionPricelists,
+  ReceiveGetUnmetDemand,
+} from "@sotah-inc/client/build/dist/actions/price-lists";
 import { getBoot, getStatus } from "@sotah-inc/client/build/dist/api/data";
 import {
+  getProfessionPricelists,
   getUnmetDemand,
+  IGetProfessionPricelistsResult,
   IGetUnmetDemandResult,
 } from "@sotah-inc/client/build/dist/api/price-lists";
 import { runners } from "@sotah-inc/client/build/dist/reducers/handlers";
@@ -16,7 +22,13 @@ import {
   IStoreState,
 } from "@sotah-inc/client/build/dist/types";
 import { extractString, getPrimaryExpansion } from "@sotah-inc/client/build/dist/util";
-import { IGetBootResponse, IStatusRealm, RealmSlug, RegionName } from "@sotah-inc/core";
+import {
+  IGetBootResponse,
+  IProfession,
+  IStatusRealm,
+  RealmSlug,
+  RegionName,
+} from "@sotah-inc/core";
 import { NextPageContext } from "next";
 
 import { Layout } from "../../../../../components/Layout";
@@ -28,6 +40,8 @@ interface IInitialProps {
     boot: IGetBootResponse | null;
     realms: IStatusRealm[] | null;
     unmetDemand: IGetUnmetDemandResult | null;
+    professionPricelists: IGetProfessionPricelistsResult;
+    selectedProfession: IProfession | null;
   };
 }
 
@@ -48,8 +62,11 @@ export function ProfessionName({ data }: Readonly<IInitialProps>) {
         }),
       ),
       PriceLists: runners.pricelist(
-        defaultPriceListsState,
-        ReceiveGetUnmetDemand(data.unmetDemand),
+        runners.pricelist(
+          runners.pricelist(defaultPriceListsState, ReceiveGetUnmetDemand(data.unmetDemand)),
+          ChangeSelectedProfession(data.selectedProfession),
+        ),
+        ReceiveGetProfessionPricelists(data.professionPricelists),
       ),
     };
   })();
@@ -71,6 +88,7 @@ ProfessionName.getInitialProps = async ({
 
   const regionName = extractString("region_name", query);
   const realmSlug = extractString("realm_slug", query);
+  const profession = extractString("profession_name", query);
 
   const [boot, realms] = await Promise.all([getBoot(), getStatus(regionName)]);
 
@@ -88,12 +106,31 @@ ProfessionName.getInitialProps = async ({
     });
   })();
 
+  const selectedProfession: IProfession | null = boot.professions.reduce((result, v) => {
+    if (result !== null) {
+      return result;
+    }
+
+    if (v.name === profession) {
+      return v;
+    }
+
+    return null;
+  }, null);
+
+  const professionPricelists = await getProfessionPricelists(profession);
+
+  // tslint:disable-next-line:no-console
+  console.log(professionPricelists);
+
   return {
     data: {
       boot,
+      professionPricelists,
       realmSlug,
       realms,
       regionName,
+      selectedProfession,
       unmetDemand,
     },
   };
