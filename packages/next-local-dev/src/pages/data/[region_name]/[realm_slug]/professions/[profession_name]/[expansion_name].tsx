@@ -117,9 +117,6 @@ ExpansionName.getInitialProps = async ({ req, query }: NextPageContext): Promise
 
   const professionPricelists = await getProfessionPricelists(profession);
 
-  // tslint:disable-next-line:no-console
-  console.log(professionPricelists);
-
   return {
     data: {
       boot,
