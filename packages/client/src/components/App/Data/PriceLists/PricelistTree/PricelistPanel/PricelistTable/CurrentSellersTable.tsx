@@ -52,15 +52,21 @@ export class CurrentSellersTable extends React.Component<Props, State> {
   public state: State = { currentPage: 0 };
 
   public componentDidMount() {
-    const { region, realm, queryOwnersByItems, list } = this.props;
+    const { region, realm, queryOwnersByItems, list, getItemsOwnershipLevel } = this.props;
 
-    const itemIds = list.pricelist_entries!.map(v => v.item_id);
+    switch (getItemsOwnershipLevel) {
+      case FetchLevel.initial:
+        const itemIds = list.pricelist_entries!.map(v => v.item_id);
 
-    queryOwnersByItems({
-      items: itemIds,
-      realmSlug: realm.slug,
-      regionName: region.name,
-    });
+        queryOwnersByItems({
+          items: itemIds,
+          realmSlug: realm.slug,
+          regionName: region.name,
+        });
+        return;
+      default:
+        return;
+    }
   }
 
   public componentDidUpdate(prevProps: Props) {
