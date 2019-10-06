@@ -53,6 +53,10 @@ export const priceLists = (state: State | undefined, action: PriceListsActions):
         selectedProfession: isProfessionPricelist ? state.selectedProfession : null,
       };
     case CHANGE_SELECTED_PROFESSION:
+      if (action.payload === null) {
+        return state;
+      }
+
       return { ...state, selectedProfession: action.payload };
     case CHANGE_IS_ADD_LIST_DIALOG_OPEN:
       return { ...state, isAddListDialogOpen: action.payload };

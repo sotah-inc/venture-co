@@ -116,7 +116,7 @@ export const ChangeSelectedList = (payload: IPricelistJson) =>
   createAction(CHANGE_SELECTED_LIST, payload);
 
 export const CHANGE_SELECTED_PROFESSION = "CHANGE_SELECTED_PROFESSION";
-export const ChangeSelectedProfession = (payload: IProfession) =>
+export const ChangeSelectedProfession = (payload: IProfession | null) =>
   createAction(CHANGE_SELECTED_PROFESSION, payload);
 
 export const CHANGE_SELECTED_EXPANSION = "CHANGE_SELECTED_EXPANSION";
