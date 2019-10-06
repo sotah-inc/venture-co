@@ -3,10 +3,11 @@ import React from "react";
 import { LoadGetBoot } from "@sotah-inc/client/build/dist/actions/main";
 import {
   ChangeSelectedProfession,
+  ReceiveGetPricelist,
   ReceiveGetProfessionPricelists,
   ReceiveGetUnmetDemand,
 } from "@sotah-inc/client/build/dist/actions/price-lists";
-import { getBoot, getStatus } from "@sotah-inc/client/build/dist/api/data";
+import { getBoot, getPriceList, getStatus } from "@sotah-inc/client/build/dist/api/data";
 import {
   getProfessionPricelists,
   getUnmetDemand,
@@ -24,8 +25,10 @@ import {
 import { extractString, getPrimaryExpansion } from "@sotah-inc/client/build/dist/util";
 import {
   IGetBootResponse,
+  IGetPricelistResponse,
   IProfession,
   IStatusRealm,
+  ItemId,
   RealmSlug,
   RegionName,
 } from "@sotah-inc/core";
@@ -42,6 +45,7 @@ interface IInitialProps {
     unmetDemand: IGetUnmetDemandResult | null;
     professionPricelists: IGetProfessionPricelistsResult;
     selectedProfession: IProfession | null;
+    prices: IGetPricelistResponse | null;
   };
 }
 
@@ -63,10 +67,13 @@ export function PricelistSlug({ data }: Readonly<IInitialProps>) {
       ),
       PriceLists: runners.pricelist(
         runners.pricelist(
-          runners.pricelist(defaultPriceListsState, ReceiveGetUnmetDemand(data.unmetDemand)),
-          ChangeSelectedProfession(data.selectedProfession),
+          runners.pricelist(
+            runners.pricelist(defaultPriceListsState, ReceiveGetUnmetDemand(data.unmetDemand)),
+            ChangeSelectedProfession(data.selectedProfession),
+          ),
+          ReceiveGetProfessionPricelists(data.professionPricelists),
         ),
-        ReceiveGetProfessionPricelists(data.professionPricelists),
+        ReceiveGetPricelist(data.prices),
       ),
     };
   })();
@@ -116,10 +123,26 @@ PricelistSlug.getInitialProps = async ({ req, query }: NextPageContext): Promise
   }, null);
 
   const professionPricelists = await getProfessionPricelists(profession);
+  const itemIds: ItemId[] = (() => {
+    if (professionPricelists.data === null) {
+      return [];
+    }
+
+    return Object.keys(professionPricelists.data.items).map(Number);
+  })();
+
+  const prices: IGetPricelistResponse | null = await (async () => {
+    if (itemIds.length === 0) {
+      return null;
+    }
+
+    return getPriceList({ regionName, realmSlug, itemIds });
+  })();
 
   return {
     data: {
       boot,
+      prices,
       professionPricelists,
       realmSlug,
       realms,
