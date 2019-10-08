@@ -1,5 +1,5 @@
 const withCSS = require('@zeit/next-css');
-const sotahCore = require("@sotah-inc/core");
+const sotahServer = require("@sotah-inc/server");
 
 module.exports = withCSS({
   cssModules: true,
@@ -7,9 +7,9 @@ module.exports = withCSS({
     localIdentName: "[local]",
   },
   publicRuntimeConfig: {
-    publicApiEndpoint: sotahCore.getEnvVar("API_ENDPOINT")
+    publicApiEndpoint: sotahServer.getConfig("public_api_endpoint", "PUBLIC_API_ENDPOINT")
   },
   serverRuntimeConfig: {
-    serverApiEndpoint: sotahCore.getEnvVar("API_ENDPOINT")
+    serverApiEndpoint: sotahServer.getConfig("server_api_endpoint", "SERVER_API_ENDPOINT")
   }
 });

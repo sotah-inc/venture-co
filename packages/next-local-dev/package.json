@@ -10,7 +10,7 @@
     "@blueprintjs/core": "^3.19.0",
     "@sotah-inc/client": "^1.0.126",
     "@sotah-inc/core": "^1.0.61",
-    "@sotah-inc/server": "^1.0.63",
+    "@sotah-inc/server": "^1.0.65",
     "@zeit/next-css": "^1.0.1",
     "babel-plugin-styled-components": "^1.10.6",
     "http-status": "^1.3.2",
