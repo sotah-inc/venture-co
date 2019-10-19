@@ -2,9 +2,12 @@ import {
   CHANGE_AUTH_LEVEL,
   CHANGE_IS_LOGIN_DIALOG_OPEN,
   CHANGE_IS_REGISTER_DIALOG_OPEN,
+  LOAD_ROOT_ENTRYPOINT,
   MainActions,
   REALM_CHANGE,
   RECEIVE_USER_RELOAD,
+  ReceiveGetBoot,
+  ReceiveGetPing,
   REGION_CHANGE,
   USER_LOGIN,
   USER_REGISTER,
@@ -54,6 +57,13 @@ export const main = (state: State | undefined, action: MainActions): State => {
       return { ...state, isLoginDialogOpen: action.payload };
     case CHANGE_IS_REGISTER_DIALOG_OPEN:
       return { ...state, isRegisterDialogOpen: action.payload };
+    case LOAD_ROOT_ENTRYPOINT:
+      return [ReceiveGetPing(action.payload.ping), ReceiveGetBoot(action.payload.boot)].reduce(
+        (current, proposedAction) => {
+          return runners.main(current, proposedAction);
+        },
+        state,
+      );
     default:
       return runners.main(state, action);
   }

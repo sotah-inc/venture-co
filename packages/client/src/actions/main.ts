@@ -153,11 +153,21 @@ export const CHANGE_IS_REGISTER_DIALOG_OPEN = "CHANGE_IS_REGISTER_DIALOG_OPEN";
 export const ChangeIsRegisterDialogOpen = (payload: boolean) =>
   createAction(CHANGE_IS_REGISTER_DIALOG_OPEN, payload);
 
+export interface ILoadRootEntrypoint {
+  boot: IGetBootResponse | null;
+  ping: boolean;
+}
+
+export const LOAD_ROOT_ENTRYPOINT = "LOAD_ROOT_ENTRYPOINT";
+export const LoadRootEntrypoint = (payload: ILoadRootEntrypoint) =>
+  createAction(LOAD_ROOT_ENTRYPOINT, payload);
+
 export const MainActions = {
   ChangeAuthLevel,
   ChangeIsLoginDialogOpen,
   ChangeIsRegisterDialogOpen,
   LoadGetBoot,
+  LoadRootEntrypoint,
   RealmChange,
   ReceiveGetBoot,
   ReceiveGetPing,
