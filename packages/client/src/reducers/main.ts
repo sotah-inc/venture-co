@@ -58,6 +58,10 @@ export const main = (state: State | undefined, action: MainActions): State => {
     case CHANGE_IS_REGISTER_DIALOG_OPEN:
       return { ...state, isRegisterDialogOpen: action.payload };
     case LOAD_ROOT_ENTRYPOINT:
+      if (typeof action.payload === "undefined") {
+        return state;
+      }
+
       return [ReceiveGetPing(action.payload.ping), ReceiveGetBoot(action.payload.boot)].reduce(
         (current, proposedAction) => {
           return runners.main(current, proposedAction);

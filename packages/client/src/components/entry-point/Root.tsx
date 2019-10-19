@@ -7,11 +7,11 @@ export interface IRouteProps {
 }
 
 export interface IDispatchProps {
-  loadRootEntrypoint: (payload: ILoadRootEntrypoint) => void;
+  loadRootEntrypoint: (payload?: ILoadRootEntrypoint) => void;
 }
 
 export interface IOwnProps {
-  rootEntrypointData: ILoadRootEntrypoint;
+  rootEntrypointData?: ILoadRootEntrypoint;
 }
 
 export type Props = Readonly<IDispatchProps & IOwnProps & IRouteProps>;
