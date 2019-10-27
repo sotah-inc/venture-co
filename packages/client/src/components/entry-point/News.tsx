@@ -4,11 +4,11 @@ import { Classes, H1, H4, Icon, IconName, Intent, NonIdealState, Spinner } from 
 import { IRegion } from "@sotah-inc/core";
 
 // tslint:disable-next-line:max-line-length
-import { DeletePostDialogRouteContainer } from "../../../route-containers/App/Content/DeletePostDialog";
-import { PostListRouteContainer } from "../../../route-containers/App/Content/PostList";
-import { AuthLevel } from "../../../types/main";
-import { setTitle } from "../../../util";
-import { CardCallout } from "../../util";
+import { DeletePostDialogRouteContainer } from "../../route-containers/App/Content/DeletePostDialog";
+import { PostListRouteContainer } from "../../route-containers/App/Content/PostList";
+import { AuthLevel } from "../../types/main";
+import { setTitle } from "../../util";
+import { CardCallout } from "../util";
 
 export interface IStateProps {
   currentRegion: IRegion | null;

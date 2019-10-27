@@ -3,7 +3,7 @@ import React from "react";
 import { WithRouterProps } from "next/dist/client/with-router";
 import { withRouter } from "next/router";
 
-import { NewsContainer } from "../../../containers/App/Content/News";
+import { NewsContainer } from "../../containers/entry-point/News";
 
 type Props = Readonly<WithRouterProps>;
 
