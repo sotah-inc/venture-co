@@ -1,6 +1,6 @@
 {
   "name": "@sotah-inc/client",
-  "version": "1.0.131",
+  "version": "1.0.132",
   "description": "SotAH Web Client SDK",
   "main": "./build/dist/index.js",
   "typings": "build/dist/index.d.ts",
@@ -16,7 +16,7 @@
     "build:ts:watch": "npm run -s build:ts -- --watch",
     "build:styles": "gulp -f ./build/dist/gulpfile.js --cwd . sass",
     "build:styles:watch": "gulp -f ./build/dist/gulpfile.js --cwd . sass:watch",
-    "prepublish": "npm run -s build"
+    "prepare": "npm run -s build"
   },
   "repository": {
     "type": "git",
