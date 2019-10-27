@@ -4,8 +4,8 @@ import { LoadRootEntrypoint } from "../../actions/main";
 import { Content, IDispatchProps, IOwnProps } from "../../components/entry-point/Content";
 import { IStoreState } from "../../types";
 
-const mapStateToProps = (_state: IStoreState): void => {
-  return;
+const mapStateToProps = (_state: IStoreState) => {
+  return {};
 };
 
 const mapDispatchToProps: IDispatchProps = {
