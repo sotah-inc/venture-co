@@ -3,43 +3,91 @@ import React from "react";
 import { Classes, H1, H4, Icon, IconName, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
 import { IRegion } from "@sotah-inc/core";
 
+import { ILoadRootEntrypoint } from "../../actions/main";
 // tslint:disable-next-line:max-line-length
 import { DeletePostDialogRouteContainer } from "../../route-containers/App/Content/DeletePostDialog";
 import { PostListRouteContainer } from "../../route-containers/App/Content/PostList";
-import { AuthLevel } from "../../types/main";
+import { AuthLevel, FetchLevel } from "../../types/main";
 import { setTitle } from "../../util";
 import { CardCallout } from "../util";
 
 export interface IStateProps {
   currentRegion: IRegion | null;
   authLevel: AuthLevel;
+  fetchPingLevel: FetchLevel;
+  fetchBootLevel: FetchLevel;
 }
 
 export interface IDispatchProps {
   changeIsRegisterDialogOpen: (isOpen: boolean) => void;
+  loadRootEntrypoint: (payload?: ILoadRootEntrypoint) => void;
 }
 
 export interface IRouteProps {
   historyPush: (destination: string) => void;
 }
 
-export type IOwnProps = IRouteProps;
+export interface IOwnProps {
+  rootEntrypointData?: ILoadRootEntrypoint;
+}
 
-type Props = Readonly<IOwnProps & IStateProps & IDispatchProps>;
+type Props = Readonly<IStateProps & IDispatchProps & IOwnProps & IRouteProps>;
 
 export class News extends React.Component<Props> {
   public componentDidMount() {
-    setTitle("News");
+    const { fetchBootLevel, fetchPingLevel, loadRootEntrypoint, rootEntrypointData } = this.props;
+
+    if (fetchPingLevel === FetchLevel.success && fetchBootLevel === FetchLevel.success) {
+      setTitle("News");
+
+      return;
+    }
+
+    const shouldLoad =
+      fetchPingLevel === FetchLevel.initial && fetchBootLevel === FetchLevel.initial;
+    if (shouldLoad && typeof rootEntrypointData !== "undefined") {
+      loadRootEntrypoint(rootEntrypointData);
+
+      return;
+    }
+  }
+
+  public componentDidUpdate(_prevProps: Props) {
+    const { fetchBootLevel, fetchPingLevel } = this.props;
+
+    if (fetchPingLevel === FetchLevel.success && fetchBootLevel === FetchLevel.success) {
+      setTitle("News");
+
+      return;
+    }
   }
 
   public render() {
-    const { currentRegion } = this.props;
+    const { currentRegion, fetchPingLevel, fetchBootLevel } = this.props;
+
+    if (fetchPingLevel !== FetchLevel.success) {
+      return (
+        <NonIdealState
+          title="Connecting..."
+          icon={<Spinner className={Classes.LARGE} intent={Intent.NONE} />}
+        />
+      );
+    }
+
+    if (fetchBootLevel !== FetchLevel.success) {
+      return (
+        <NonIdealState
+          title="Booting..."
+          icon={<Spinner className={Classes.LARGE} intent={Intent.NONE} />}
+        />
+      );
+    }
 
     if (currentRegion === null) {
       return (
         <NonIdealState
-          title="Loading region"
-          icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={0} />}
+          title="Loading region..."
+          icon={<Spinner className={Classes.LARGE} intent={Intent.NONE} />}
         />
       );
     }

@@ -159,7 +159,7 @@ export interface ILoadRootEntrypoint {
 }
 
 export const LOAD_ROOT_ENTRYPOINT = "LOAD_ROOT_ENTRYPOINT";
-export const LoadRootEntrypoint = (payload?: ILoadRootEntrypoint) =>
+export const LoadRootEntrypoint = (payload: ILoadRootEntrypoint) =>
   createAction(LOAD_ROOT_ENTRYPOINT, payload);
 
 export const MainActions = {
