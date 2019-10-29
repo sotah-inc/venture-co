@@ -22,9 +22,11 @@ export type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
 
 export class Init extends React.Component<Props> {
   public componentDidMount() {
-    const { loadRootEntrypoint, rootEntrypointData } = this.props;
+    const { fetchBootLevel, fetchPingLevel, loadRootEntrypoint, rootEntrypointData } = this.props;
 
-    if (typeof rootEntrypointData !== "undefined") {
+    const shouldLoad =
+      fetchPingLevel === FetchLevel.initial && fetchBootLevel === FetchLevel.initial;
+    if (shouldLoad && typeof rootEntrypointData !== "undefined") {
       loadRootEntrypoint(rootEntrypointData);
     }
   }
