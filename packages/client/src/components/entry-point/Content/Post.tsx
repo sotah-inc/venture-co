@@ -20,7 +20,7 @@ import moment from "moment";
 
 import { IDeletePostOptions } from "../../../actions/posts";
 // tslint:disable-next-line:max-line-length
-import { DeletePostDialogRouteContainer } from "../../../route-containers/App/Content/DeletePostDialog";
+import { DeletePostDialogRouteContainer } from "../../../route-containers/entry-point/Content/DeletePostDialog";
 import { FetchLevel } from "../../../types/main";
 import { setTitle } from "../../../util";
 import { MarkdownRenderer } from "../../util";

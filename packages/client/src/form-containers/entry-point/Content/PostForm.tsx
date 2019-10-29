@@ -1,7 +1,7 @@
 import { withFormik, WithFormikConfig } from "formik";
 import * as Yup from "yup";
 
-import { IFormValues, IOwnProps, PostForm } from "../../../components/App/Content/PostForm";
+import { IFormValues, IOwnProps, PostForm } from "../../../components/entry-point/Content/PostForm";
 import { PostRules } from "../../../validator-rules";
 
 const config: WithFormikConfig<IOwnProps, IFormValues> = {

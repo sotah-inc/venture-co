@@ -12,7 +12,7 @@ import {
 } from "@blueprintjs/core";
 import { IPostJson, IUpdatePostRequest, UserLevel } from "@sotah-inc/core";
 
-import { PostFormFormContainer } from "../../../form-containers/App/Content/PostForm";
+import { PostFormFormContainer } from "../../../form-containers/entry-point/Content/PostForm";
 import { IProfile } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
 import { setTitle } from "../../../util";

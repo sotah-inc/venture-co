@@ -6,7 +6,7 @@ import {
   DeletePostDialog,
   IDispatchProps,
   IStateProps,
-} from "../../../components/App/Content/DeletePostDialog";
+} from "../../../components/entry-point/Content/DeletePostDialog";
 import { IStoreState } from "../../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {

@@ -1,7 +1,11 @@
 import { connect } from "react-redux";
 
 import { ChangeIsDeletePostDialogOpen, FetchGetPosts } from "../../../actions/posts";
-import { IDispatchProps, IStateProps, PostList } from "../../../components/App/Content/PostList";
+import {
+  IDispatchProps,
+  IStateProps,
+  PostList,
+} from "../../../components/entry-point/Content/PostList";
 import { IStoreState } from "../../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {

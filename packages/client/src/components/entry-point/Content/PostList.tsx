@@ -53,6 +53,17 @@ export class PostList extends React.Component<Props> {
     );
   }
 
+  private static renderReadMoreButton(post: IPostJson) {
+    return (
+      <>
+        <LinkButtonRouteContainer
+          destination={`/content/news/${post.slug}`}
+          buttonProps={{ icon: "calendar", intent: Intent.PRIMARY, text: "Read More" }}
+        />
+      </>
+    );
+  }
+
   public componentDidMount() {
     const { getPostsLevel, refreshPosts } = this.props;
 
@@ -150,27 +161,16 @@ export class PostList extends React.Component<Props> {
     );
   }
 
-  private renderReadMoreButton(post: IPostJson) {
-    return (
-      <>
-        <LinkButtonRouteContainer
-          destination={`/content/news/${post.slug}`}
-          buttonProps={{ icon: "calendar", intent: Intent.PRIMARY, text: "Read More" }}
-        />
-      </>
-    );
-  }
-
   private renderActionButtons(post: IPostJson) {
     const { user, changeIsDeletePostDialogOpen } = this.props;
 
     if (user === null || user.level < UserLevel.Admin) {
-      return this.renderReadMoreButton(post);
+      return PostList.renderReadMoreButton(post);
     }
 
     return (
       <ButtonGroup>
-        {this.renderReadMoreButton(post)}
+        {PostList.renderReadMoreButton(post)}
         <LinkButtonRouteContainer
           destination={`/content/news/${post.slug}/edit`}
           buttonProps={{ icon: "edit" }}

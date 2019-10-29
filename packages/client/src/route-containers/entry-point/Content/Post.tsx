@@ -3,16 +3,15 @@ import React from "react";
 import { WithRouterProps } from "next/dist/client/with-router";
 import { withRouter } from "next/router";
 
-import { IRouteProps } from "../../../components/App/Content/NewsEditor";
-import { NewsEditorContainer } from "../../../containers/App/Content/NewsEditor";
+import { PostContainer } from "../../../containers/entry-point/Content/Post";
 import { extractString } from "../../../util";
 
-type Props = Readonly<IRouteProps & WithRouterProps>;
+type Props = Readonly<WithRouterProps>;
 
 function RouteContainer({ router }: Props) {
   return (
-    <NewsEditorContainer
-      browseToPost={post => router.push(`/content/news/${post.slug}`)}
+    <PostContainer
+      browseToPostEdit={post => router.push(`/content/news/${post.slug}/edit`)}
       browseToHome={() => router.push("")}
       browseToNews={() => router.push("/content/news")}
       routeParams={{ post_slug: extractString("post_slug", router.query) }}
@@ -20,4 +19,4 @@ function RouteContainer({ router }: Props) {
   );
 }
 
-export const NewsEditorRouteContainer = withRouter(RouteContainer);
+export const PostRouteContainer = withRouter(RouteContainer);

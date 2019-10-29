@@ -5,8 +5,8 @@ import { IRegion } from "@sotah-inc/core";
 
 import { ILoadRootEntrypoint } from "../../actions/main";
 // tslint:disable-next-line:max-line-length
-import { DeletePostDialogRouteContainer } from "../../route-containers/App/Content/DeletePostDialog";
-import { PostListRouteContainer } from "../../route-containers/App/Content/PostList";
+import { DeletePostDialogRouteContainer } from "../../route-containers/entry-point/Content/DeletePostDialog";
+import { PostListRouteContainer } from "../../route-containers/entry-point/Content/PostList";
 import { AuthLevel, FetchLevel } from "../../types/main";
 import { setTitle } from "../../util";
 import { CardCallout } from "../util";
