@@ -1,13 +1,13 @@
 import { connect } from "react-redux";
 
-import { LoadRootEntrypoint } from "../../actions/main";
+import { LoadRootEntrypoint } from "../../../actions/main";
 import {
-  Content,
   IDispatchProps,
+  Init,
   IOwnProps,
   IStateProps,
-} from "../../components/entry-point/Content";
-import { IStoreState } from "../../types";
+} from "../../../components/entry-point/util/Init";
+import { IStoreState } from "../../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const { fetchPingLevel, fetchBootLevel } = state.Main;
@@ -19,7 +19,7 @@ const mapDispatchToProps: IDispatchProps = {
   loadRootEntrypoint: LoadRootEntrypoint,
 };
 
-export const ContentContainer = connect<IStateProps, IDispatchProps, IOwnProps>(
+export const InitContainer = connect<IStateProps, IDispatchProps, IOwnProps>(
   mapStateToProps,
   mapDispatchToProps,
-)(Content);
+)(Init);
