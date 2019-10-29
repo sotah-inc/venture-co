@@ -3,18 +3,12 @@ import React from "react";
 import { WithRouterProps } from "next/dist/client/with-router";
 import { withRouter } from "next/router";
 
-import { IOwnProps } from "../../components/entry-point/News";
 import { NewsContainer } from "../../containers/entry-point/News";
 
-type Props = Readonly<WithRouterProps & IOwnProps>;
+type Props = Readonly<WithRouterProps>;
 
-function RouteContainer({ router, rootEntrypointData }: Props) {
-  return (
-    <NewsContainer
-      historyPush={destination => router.push(destination)}
-      rootEntrypointData={rootEntrypointData}
-    />
-  );
+function RouteContainer({ router }: Props) {
+  return <NewsContainer historyPush={destination => router.push(destination)} />;
 }
 
 export const NewsRouteContainer = withRouter(RouteContainer);
