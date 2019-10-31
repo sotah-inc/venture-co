@@ -29,7 +29,7 @@ export interface IDispatchProps {
   loadUserPreferences: (token: string) => void;
   changeAuthLevel: (authLevel: AuthLevel) => void;
   insertToast: (toast: IToastProps) => void;
-  loadRootEntrypoint: (payload?: ILoadRootEntrypoint) => void;
+  loadRootEntrypoint: (payload: ILoadRootEntrypoint) => void;
 }
 
 export interface IOwnProps {
@@ -54,6 +54,10 @@ export class App extends React.Component<Props> {
   }
   public componentDidMount() {
     const { loadRootEntrypoint, rootEntrypointData } = this.props;
+
+    if (typeof rootEntrypointData === "undefined") {
+      return;
+    }
 
     loadRootEntrypoint(rootEntrypointData);
   }
