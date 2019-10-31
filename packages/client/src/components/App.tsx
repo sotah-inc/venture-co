@@ -3,6 +3,7 @@ import React, { ReactNode } from "react";
 import { Classes, Intent, IToastProps, NonIdealState, Spinner } from "@blueprintjs/core";
 import { IPreferenceJson, IRegion, IStatusRealm } from "@sotah-inc/core";
 
+import { ILoadRootEntrypoint } from "../actions/main";
 import { PromptsRouteContainer } from "../route-containers/App/Prompts";
 import { TopbarRouteContainer } from "../route-containers/App/Topbar";
 import { IProfile } from "../types/global";
@@ -20,16 +21,16 @@ export interface IStateProps {
   userPreferences: IPreferenceJson | null;
   profile: IProfile | null;
   fetchBootLevel: FetchLevel;
+  rootEntrypointData?: ILoadRootEntrypoint;
 }
 
 export interface IDispatchProps {
-  onLoad: () => void;
   reloadUser: (token: string) => void;
   changeIsLoginDialogOpen: (isLoginDialogOpen: boolean) => void;
   loadUserPreferences: (token: string) => void;
   changeAuthLevel: (authLevel: AuthLevel) => void;
-  boot: () => void;
   insertToast: (toast: IToastProps) => void;
+  loadRootEntrypoint: (payload?: ILoadRootEntrypoint) => void;
 }
 
 export interface IOwnProps {
@@ -39,23 +40,22 @@ export interface IOwnProps {
 export type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
 
 export class App extends React.Component<Props> {
-  public didHandleUnauth: boolean = false;
+  private static renderContent(content: ReactNode) {
+    return (
+      <>
+        <TopbarRouteContainer />
 
+        <div id="content">
+          <PromptsRouteContainer />
+          {content}
+        </div>
+      </>
+    );
+  }
   public componentDidMount() {
-    const { onLoad, fetchPingLevel } = this.props;
+    const { loadRootEntrypoint, rootEntrypointData } = this.props;
 
-    switch (fetchPingLevel) {
-      case FetchLevel.initial:
-        onLoad();
-
-        break;
-      case FetchLevel.success:
-        this.handleConnected(this.props);
-
-        break;
-      default:
-        break;
-    }
+    loadRootEntrypoint(rootEntrypointData);
   }
 
   public componentDidUpdate(prevProps: Props) {
@@ -123,7 +123,7 @@ export class App extends React.Component<Props> {
         return this.renderUnauth();
       case AuthLevel.initial:
       default:
-        return this.renderContent(
+        return App.renderContent(
           <NonIdealState
             title="Loading"
             icon={<Spinner className={Classes.LARGE} intent={Intent.NONE} />}
@@ -139,14 +139,14 @@ export class App extends React.Component<Props> {
       case FetchLevel.success:
         return this.renderBootAuth();
       case FetchLevel.fetching:
-        return this.renderContent(
+        return App.renderContent(
           <NonIdealState
             title="Loading"
             icon={<Spinner className={Classes.LARGE} intent={Intent.PRIMARY} />}
           />,
         );
       case FetchLevel.failure:
-        return this.renderContent(
+        return App.renderContent(
           <NonIdealState
             title="Failed to load"
             icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={1} />}
@@ -154,7 +154,7 @@ export class App extends React.Component<Props> {
         );
       case FetchLevel.initial:
       default:
-        return this.renderContent(
+        return App.renderContent(
           <NonIdealState
             title="Loading"
             icon={<Spinner className={Classes.LARGE} intent={Intent.NONE} value={0} />}
@@ -170,7 +170,7 @@ export class App extends React.Component<Props> {
       case FetchLevel.fetching:
       case FetchLevel.refetching:
       case FetchLevel.prompted:
-        return this.renderContent(
+        return App.renderContent(
           <NonIdealState
             title="Loading"
             icon={<Spinner className={Classes.LARGE} intent={Intent.PRIMARY} />}
@@ -179,7 +179,7 @@ export class App extends React.Component<Props> {
       case FetchLevel.success:
         return this.renderBootAuthWithPreferences();
       case FetchLevel.failure:
-        return this.renderContent(
+        return App.renderContent(
           <NonIdealState
             title="Failed to load user preferences."
             icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={1} />}
@@ -187,7 +187,7 @@ export class App extends React.Component<Props> {
         );
       case FetchLevel.initial:
       default:
-        return this.renderContent(
+        return App.renderContent(
           <NonIdealState
             title="Loading"
             icon={<Spinner className={Classes.LARGE} intent={Intent.NONE} value={0} />}
@@ -197,24 +197,11 @@ export class App extends React.Component<Props> {
   }
 
   private renderBootAuthWithPreferences() {
-    return this.renderContent(this.props.viewport);
+    return App.renderContent(this.props.viewport);
   }
 
   private renderUnauth() {
-    return this.renderContent(this.props.viewport);
-  }
-
-  private renderContent(content: ReactNode) {
-    return (
-      <>
-        <TopbarRouteContainer />
-
-        <div id="content">
-          <PromptsRouteContainer />
-          {content}
-        </div>
-      </>
-    );
+    return App.renderContent(this.props.viewport);
   }
 
   private handleConnected(prevProps: Props) {
@@ -257,7 +244,6 @@ export class App extends React.Component<Props> {
   private handleUnauth(prevProps: Props) {
     const {
       fetchBootLevel,
-      boot,
       preloadedToken,
       changeIsLoginDialogOpen,
       isLoginDialogOpen,
@@ -265,10 +251,6 @@ export class App extends React.Component<Props> {
     } = this.props;
 
     switch (fetchBootLevel) {
-      case FetchLevel.initial:
-        boot();
-
-        return;
       case FetchLevel.failure:
         if (prevProps.fetchBootLevel === FetchLevel.fetching) {
           insertToast({
@@ -331,13 +313,9 @@ export class App extends React.Component<Props> {
   }
 
   private handleAuthWithPreferences(prevProps: Props) {
-    const { fetchBootLevel, boot, insertToast } = this.props;
+    const { fetchBootLevel, insertToast } = this.props;
 
     switch (fetchBootLevel) {
-      case FetchLevel.initial:
-        boot();
-
-        return;
       case FetchLevel.failure:
         if (prevProps.fetchBootLevel === FetchLevel.fetching) {
           insertToast({
