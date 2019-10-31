@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 import { applyMiddleware, createStore, Middleware, Store } from "redux";
 import thunk from "redux-thunk";
 
-import { USER_LOGIN, USER_REGISTER } from "./actions/main";
+import { ILoadRootEntrypoint, USER_LOGIN, USER_REGISTER } from "./actions/main";
 import { OvenContainer } from "./containers/util/Oven";
 import { rootReducer } from "./reducers";
 import { AppRouteContainer } from "./route-containers/App";
@@ -61,9 +61,10 @@ let store: StoreType | null = null;
 interface IProps {
   viewport: ReactNode;
   predefinedState?: IStoreState;
+  rootEntrypointData?: ILoadRootEntrypoint;
 }
 
-export const Boot = ({ viewport, predefinedState }: IProps) => {
+export const Boot = ({ viewport, predefinedState, rootEntrypointData }: IProps) => {
   if (store === null) {
     const preloadedState = typeof predefinedState === "undefined" ? defaultState : predefinedState;
 
@@ -78,7 +79,7 @@ export const Boot = ({ viewport, predefinedState }: IProps) => {
     <div className="pure-g">
       <div className="pure-u-1">
         <Provider store={store}>
-          <AppRouteContainer viewport={viewport} />
+          <AppRouteContainer viewport={viewport} rootEntrypointData={rootEntrypointData} />
           <OvenContainer />
         </Provider>
       </div>

@@ -21,7 +21,6 @@ export interface IStateProps {
   userPreferences: IPreferenceJson | null;
   profile: IProfile | null;
   fetchBootLevel: FetchLevel;
-  rootEntrypointData?: ILoadRootEntrypoint;
 }
 
 export interface IDispatchProps {
@@ -35,6 +34,7 @@ export interface IDispatchProps {
 
 export interface IOwnProps {
   viewport: ReactNode;
+  rootEntrypointData?: ILoadRootEntrypoint;
 }
 
 export type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
