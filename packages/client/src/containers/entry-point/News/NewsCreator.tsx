@@ -7,7 +7,7 @@ import {
   IOwnProps,
   IStateProps,
   NewsCreator,
-} from "../../../components/entry-point/Content/NewsCreator";
+} from "../../../components/entry-point/News/NewsCreator";
 import { IStoreState } from "../../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {

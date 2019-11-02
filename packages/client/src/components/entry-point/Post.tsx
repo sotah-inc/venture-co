@@ -18,12 +18,12 @@ import {
 import { IPostJson, IUserJson, UserLevel } from "@sotah-inc/core";
 import moment from "moment";
 
-import { IDeletePostOptions } from "../../../actions/posts";
+import { IDeletePostOptions } from "../../actions/posts";
 // tslint:disable-next-line:max-line-length
-import { DeletePostDialogRouteContainer } from "../../../route-containers/entry-point/Content/DeletePostDialog";
-import { FetchLevel } from "../../../types/main";
-import { setTitle } from "../../../util";
-import { MarkdownRenderer } from "../../util";
+import { DeletePostDialogRouteContainer } from "../../route-containers/entry-point/News/DeletePostDialog";
+import { FetchLevel } from "../../types/main";
+import { setTitle } from "../../util";
+import { MarkdownRenderer } from "../util";
 
 export interface IStateProps {
   currentPost: IPostJson | null;

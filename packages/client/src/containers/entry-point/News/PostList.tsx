@@ -5,7 +5,7 @@ import {
   IDispatchProps,
   IStateProps,
   PostList,
-} from "../../../components/entry-point/Content/PostList";
+} from "../../../components/entry-point/News/PostList";
 import { IStoreState } from "../../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
