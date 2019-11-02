@@ -8,7 +8,7 @@ import {
   LoadRootEntrypoint,
 } from "../actions/main";
 import { InsertToast } from "../actions/oven";
-import { App, IDispatchProps, IStateProps } from "../components/App";
+import { App, IDispatchProps, IOwnProps, IStateProps } from "../components/App";
 import { IStoreState } from "../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
@@ -49,7 +49,7 @@ const mapDispatchToProps: IDispatchProps = {
   reloadUser: FetchUserReload,
 };
 
-export const AppContainer = connect<IStateProps, IDispatchProps, {}>(
+export const AppContainer = connect<IStateProps, IDispatchProps, IOwnProps>(
   mapStateToProps,
   mapDispatchToProps,
 )(App);
