@@ -22,7 +22,7 @@ export interface IDispatchProps {
 }
 
 export interface IOwnProps {
-  posts?: IGetPostsResult;
+  posts: IGetPostsResult;
 }
 
 export interface IRouteProps {
@@ -37,10 +37,6 @@ export class News extends React.Component<Props> {
     const { loadNewsPosts, posts } = this.props;
 
     setTitle("News");
-
-    if (typeof posts === "undefined") {
-      return;
-    }
 
     loadNewsPosts(posts);
   }
