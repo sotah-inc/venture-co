@@ -52,6 +52,7 @@ export class App extends React.Component<Props> {
       </>
     );
   }
+
   public componentDidMount() {
     const { loadRootEntrypoint, rootEntrypointData } = this.props;
 
