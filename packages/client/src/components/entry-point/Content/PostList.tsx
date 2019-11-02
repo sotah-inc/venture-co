@@ -10,7 +10,6 @@ import { FetchLevel } from "../../../types/main";
 import { MarkdownRenderer } from "../../util";
 
 export interface IDispatchProps {
-  refreshPosts: () => void;
   changeIsDeletePostDialogOpen: (v: IDeletePostOptions) => void;
 }
 
@@ -62,34 +61,6 @@ export class PostList extends React.Component<Props> {
         />
       </>
     );
-  }
-
-  public componentDidMount() {
-    const { getPostsLevel, refreshPosts } = this.props;
-
-    switch (getPostsLevel) {
-      case FetchLevel.initial:
-      case FetchLevel.prompted:
-        refreshPosts();
-
-        return;
-      default:
-        return;
-    }
-  }
-
-  public componentDidUpdate() {
-    const { getPostsLevel, refreshPosts } = this.props;
-
-    switch (getPostsLevel) {
-      case FetchLevel.initial:
-      case FetchLevel.prompted:
-        refreshPosts();
-
-        return;
-      default:
-        return;
-    }
   }
 
   public render() {

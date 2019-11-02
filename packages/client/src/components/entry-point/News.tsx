@@ -3,6 +3,7 @@ import React from "react";
 import { Classes, H1, H4, Icon, IconName, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
 import { IRegion } from "@sotah-inc/core";
 
+import { IGetPostsResult } from "../../api/data";
 // tslint:disable-next-line:max-line-length
 import { DeletePostDialogRouteContainer } from "../../route-containers/entry-point/Content/DeletePostDialog";
 import { PostListRouteContainer } from "../../route-containers/entry-point/Content/PostList";
@@ -17,17 +18,31 @@ export interface IStateProps {
 
 export interface IDispatchProps {
   changeIsRegisterDialogOpen: (isOpen: boolean) => void;
+  loadNewsPosts: (payload: IGetPostsResult) => void;
+}
+
+export interface IOwnProps {
+  posts?: IGetPostsResult;
 }
 
 export interface IRouteProps {
   historyPush: (destination: string) => void;
 }
 
-type Props = Readonly<IStateProps & IDispatchProps & IRouteProps>;
+type Props = Readonly<IStateProps & IDispatchProps & IOwnProps & IRouteProps>;
 
 export class News extends React.Component<Props> {
   public componentDidMount() {
+    // props
+    const { loadNewsPosts, posts } = this.props;
+
     setTitle("News");
+
+    if (typeof posts === "undefined") {
+      return;
+    }
+
+    loadNewsPosts(posts);
   }
 
   public render() {

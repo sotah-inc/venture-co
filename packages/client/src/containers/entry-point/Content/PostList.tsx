@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 
-import { ChangeIsDeletePostDialogOpen, FetchGetPosts } from "../../../actions/posts";
+import { ChangeIsDeletePostDialogOpen } from "../../../actions/posts";
 import {
   IDispatchProps,
   IStateProps,
@@ -18,7 +18,6 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
 
 const mapDispatchToProps: IDispatchProps = {
   changeIsDeletePostDialogOpen: ChangeIsDeletePostDialogOpen,
-  refreshPosts: FetchGetPosts,
 };
 
 export const PostListContainer = connect<IStateProps, IDispatchProps, {}, IStoreState>(
