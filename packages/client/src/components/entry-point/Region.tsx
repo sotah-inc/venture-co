@@ -3,8 +3,8 @@ import React from "react";
 import { Classes, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
 import { IRegion, IStatusRealm } from "@sotah-inc/core";
 
-import { IRegions } from "../../../types/global";
-import { AuthLevel, FetchLevel } from "../../../types/main";
+import { IRegions } from "../../types/global";
+import { AuthLevel, FetchLevel } from "../../types/main";
 
 export interface IStateProps {
   currentRegion: IRegion | null;
