@@ -1,7 +1,13 @@
 import { connect } from "react-redux";
 
-import { ChangeIsDeletePostDialogOpen, ChangePost, FetchGetPost } from "../../actions/posts";
-import { IDispatchProps, IOwnProps, IStateProps, Post } from "../../components/entry-point/Post";
+import { ChangeIsDeletePostDialogOpen, ReceiveGetPost } from "../../actions/posts";
+import {
+  IDispatchProps,
+  IOwnProps,
+  IRouteProps,
+  IStateProps,
+  Post,
+} from "../../components/entry-point/Post";
 import { IStoreState } from "../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
@@ -14,11 +20,15 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
 
 const mapDispatchToProps: IDispatchProps = {
   changeIsDeletePostDialogOpen: ChangeIsDeletePostDialogOpen,
-  changePost: ChangePost,
-  getPost: FetchGetPost,
+  loadPost: ReceiveGetPost,
 };
 
-export const PostContainer = connect<IStateProps, IDispatchProps, IOwnProps, IStoreState>(
+export const PostContainer = connect<
+  IStateProps,
+  IDispatchProps,
+  IOwnProps & IRouteProps,
+  IStoreState
+>(
   mapStateToProps,
   mapDispatchToProps,
 )(Post);

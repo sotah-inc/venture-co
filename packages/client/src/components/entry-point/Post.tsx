@@ -15,7 +15,7 @@ import {
   NonIdealState,
   Spinner,
 } from "@blueprintjs/core";
-import { IPostJson, IUserJson, UserLevel } from "@sotah-inc/core";
+import { IGetPostResponse, IPostJson, IUserJson, UserLevel } from "@sotah-inc/core";
 import moment from "moment";
 
 import { IDeletePostOptions } from "../../actions/posts";
@@ -32,9 +32,12 @@ export interface IStateProps {
 }
 
 export interface IDispatchProps {
-  changePost: (v: IPostJson) => void;
-  getPost: (slug: string) => void;
   changeIsDeletePostDialogOpen: (v: IDeletePostOptions) => void;
+  loadPost: (payload: IGetPostResponse | null) => void;
+}
+
+export interface IOwnProps {
+  postPayload: IGetPostResponse | null;
 }
 
 export interface IRouteParams {
@@ -48,17 +51,29 @@ export interface IRouteProps {
   browseToPostEdit: (post: IPostJson) => void;
 }
 
-export type IOwnProps = IRouteProps;
-
-export type Props = Readonly<IDispatchProps & IStateProps & IOwnProps>;
+export type Props = Readonly<IDispatchProps & IStateProps & IOwnProps & IRouteProps>;
 
 export class Post extends React.Component<Props> {
   public componentDidMount() {
-    this.handle();
+    // props
+    const { loadPost, postPayload } = this.props;
+
+    loadPost(postPayload);
   }
 
-  public componentDidUpdate(prevProps: Props) {
-    this.handle(prevProps);
+  public componentDidUpdate() {
+    // props
+    const { getPostLevel, currentPost } = this.props;
+
+    if (getPostLevel !== FetchLevel.success) {
+      return;
+    }
+
+    if (currentPost === null) {
+      return;
+    }
+
+    setTitle(`${currentPost.title} - News`);
   }
 
   public render() {
@@ -115,54 +130,6 @@ export class Post extends React.Component<Props> {
         <Breadcrumbs items={breadcrumbs} />
       </div>
     );
-  }
-
-  private handle(prevProps?: Props) {
-    const {
-      routeParams: { post_slug },
-      getPostLevel,
-      getPost,
-      currentPost,
-    } = this.props;
-
-    if (typeof post_slug === "undefined") {
-      return;
-    }
-
-    switch (getPostLevel) {
-      case FetchLevel.success:
-        if (currentPost !== null && currentPost.slug !== post_slug) {
-          getPost(post_slug);
-
-          return;
-        }
-
-        if (currentPost === null) {
-          return;
-        }
-
-        break;
-      case FetchLevel.failure:
-        if (typeof prevProps !== "undefined" && prevProps.getPostLevel === FetchLevel.fetching) {
-          return;
-        }
-
-        if (currentPost === null || currentPost.slug !== post_slug) {
-          getPost(post_slug);
-
-          return;
-        }
-
-        return;
-      case FetchLevel.initial:
-        getPost(post_slug);
-
-        return;
-      default:
-        return;
-    }
-
-    setTitle(`${currentPost.title} - News`);
   }
 
   private renderContent() {

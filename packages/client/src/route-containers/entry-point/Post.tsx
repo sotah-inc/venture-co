@@ -3,18 +3,20 @@ import React from "react";
 import { WithRouterProps } from "next/dist/client/with-router";
 import { withRouter } from "next/router";
 
+import { IOwnProps } from "../../components/entry-point/Post";
 import { PostContainer } from "../../containers/entry-point/Post";
 import { extractString } from "../../util";
 
-type Props = Readonly<WithRouterProps>;
+type Props = Readonly<WithRouterProps & IOwnProps>;
 
-function RouteContainer({ router }: Props) {
+function RouteContainer({ router, postPayload }: Props) {
   return (
     <PostContainer
       browseToPostEdit={post => router.push(`/content/news/${post.slug}/edit`)}
       browseToHome={() => router.push("")}
       browseToNews={() => router.push("/content/news")}
       routeParams={{ post_slug: extractString("post_slug", router.query) }}
+      postPayload={postPayload}
     />
   );
 }
