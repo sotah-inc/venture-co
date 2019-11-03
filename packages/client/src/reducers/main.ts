@@ -2,12 +2,14 @@ import {
   CHANGE_AUTH_LEVEL,
   CHANGE_IS_LOGIN_DIALOG_OPEN,
   CHANGE_IS_REGISTER_DIALOG_OPEN,
+  LOAD_REGION_ENTRYPOINT,
   LOAD_ROOT_ENTRYPOINT,
   MainActions,
   REALM_CHANGE,
   RECEIVE_USER_RELOAD,
   ReceiveGetBoot,
   ReceiveGetPing,
+  ReceiveGetRealms,
   REGION_CHANGE,
   USER_LOGIN,
   USER_REGISTER,
@@ -64,6 +66,11 @@ export const main = (state: State | undefined, action: MainActions): State => {
         },
         state,
       );
+    case LOAD_REGION_ENTRYPOINT:
+      return {
+        ...runners.main(state, ReceiveGetRealms(action.payload.realms)),
+        currentRegion: action.payload.nextRegion,
+      };
     default:
       return runners.main(state, action);
   }
