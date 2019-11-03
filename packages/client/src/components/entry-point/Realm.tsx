@@ -3,9 +3,9 @@ import React from "react";
 import { Classes, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
 import { IRegion, IStatusRealm } from "@sotah-inc/core";
 
-import { IRealms, IRegions } from "../../../types/global";
-import { AuthLevel, FetchLevel } from "../../../types/main";
-import { setTitle } from "../../../util";
+import { IRealms, IRegions } from "../../types/global";
+import { AuthLevel, FetchLevel } from "../../types/main";
+import { setTitle } from "../../util";
 
 export interface IStateProps {
   fetchRealmLevel: FetchLevel;
