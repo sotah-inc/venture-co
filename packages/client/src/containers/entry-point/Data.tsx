@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 
-import { Data, IOwnProps, IStateProps } from "../../components/App/Data";
+import { Data, IOwnProps, IStateProps } from "../../components/entry-point/Data";
 import { IStoreState } from "../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
