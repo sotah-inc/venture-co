@@ -183,7 +183,7 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
           } = state.userPreferences;
 
           // defaulting to first realm in list if region is different from preferred region
-          if (state.currentRegion!.name !== preferredRegionName) {
+          if (state.currentRegion !== null && state.currentRegion.name !== preferredRegionName) {
             return action.payload[0];
           }
 
