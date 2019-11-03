@@ -3,16 +3,18 @@ import React from "react";
 import { WithRouterProps } from "next/dist/client/with-router";
 import { withRouter } from "next/router";
 
+import { IOwnProps } from "../../components/entry-point/Region";
 import { RegionContainer } from "../../containers/entry-point/Region";
 import { extractString } from "../../util";
 
-type Props = Readonly<WithRouterProps>;
+type Props = Readonly<WithRouterProps & IOwnProps>;
 
-function RouteContainer({ router }: Props) {
+function RouteContainer({ router, regionEntrypointData }: Props) {
   return (
     <RegionContainer
       routeParams={{ region_name: extractString("region_name", router.query) }}
       browseToRealmData={(region, realm) => router.push(`/data/${region.name}/${realm.slug}`)}
+      regionEntrypointData={regionEntrypointData}
     />
   );
 }

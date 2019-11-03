@@ -3,6 +3,7 @@ import React from "react";
 import { Classes, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
 import { IRegion, IStatusRealm } from "@sotah-inc/core";
 
+import { ILoadRegionEntrypoint } from "../../actions/main";
 import { IRegions } from "../../types/global";
 import { AuthLevel, FetchLevel } from "../../types/main";
 
@@ -16,7 +17,11 @@ export interface IStateProps {
 
 export interface IDispatchProps {
   onRegionChange: (region: IRegion) => void;
-  fetchRealms: (region: IRegion) => void;
+  loadRegionEntrypoint: (payload: ILoadRegionEntrypoint) => void;
+}
+
+export interface IOwnProps {
+  regionEntrypointData: ILoadRegionEntrypoint;
 }
 
 export interface IRouteProps {
@@ -28,79 +33,13 @@ export interface IRouteParams {
   region_name: string;
 }
 
-export type IOwnProps = IRouteProps;
-
-export type Props = Readonly<IOwnProps & IStateProps & IDispatchProps>;
+export type Props = Readonly<IStateProps & IDispatchProps & IOwnProps & IRouteProps>;
 
 export class Region extends React.Component<Props> {
   public componentDidMount() {
-    const {
-      routeParams: { region_name },
-      regions,
-      currentRegion,
-      onRegionChange,
-      fetchRealms,
-      fetchRealmLevel,
-    } = this.props;
+    const { loadRegionEntrypoint, regionEntrypointData } = this.props;
 
-    if (!(region_name in regions)) {
-      return;
-    }
-
-    if (currentRegion === null) {
-      onRegionChange(regions[region_name]);
-
-      return;
-    }
-
-    if (currentRegion.name !== region_name) {
-      onRegionChange(regions[region_name]);
-
-      return;
-    }
-
-    switch (fetchRealmLevel) {
-      case FetchLevel.initial:
-        fetchRealms(currentRegion);
-
-        return;
-      default:
-        return;
-    }
-  }
-
-  public componentDidUpdate(prevProps: Props) {
-    const {
-      currentRegion,
-      routeParams: { region_name },
-      fetchRealmLevel,
-      fetchRealms,
-    } = this.props;
-
-    if (currentRegion === null) {
-      return;
-    }
-
-    if (currentRegion.name !== region_name) {
-      return;
-    }
-
-    switch (fetchRealmLevel) {
-      case FetchLevel.initial:
-        fetchRealms(currentRegion);
-
-        return;
-      case FetchLevel.prompted:
-        if (prevProps.fetchRealmLevel === fetchRealmLevel) {
-          return;
-        }
-
-        fetchRealms(currentRegion);
-
-        return;
-      default:
-        return;
-    }
+    loadRegionEntrypoint(regionEntrypointData);
   }
 
   public render() {
