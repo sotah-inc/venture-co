@@ -164,7 +164,7 @@ export const LoadRootEntrypoint = (payload: ILoadRootEntrypoint) =>
 
 export interface ILoadRegionEntrypoint {
   realms: IStatusRealm[] | null;
-  nextRegion: IRegion | null;
+  nextRegionName: RegionName;
 }
 
 export const LOAD_REGION_ENTRYPOINT = "LOAD_REGION_ENTRYPOINT";
