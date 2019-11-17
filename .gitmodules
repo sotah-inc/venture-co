@@ -4,3 +4,6 @@
 [submodule "extern/venture-co-api"]
 	path = extern/venture-co-api
 	url = ssh://adrian@sotah.info@source.developers.google.com:2022/p/sotah-prod/r/venture-co-api
+[submodule "extern/infra"]
+	path = extern/infra
+	url = ssh://adrian@sotah.info@source.developers.google.com:2022/p/sotah-prod/r/infra
