@@ -23,18 +23,18 @@ import {
   SortKind,
 } from "@sotah-inc/core";
 
-import { IGetAuctionsOptions, IQueryAuctionsOptions } from "../../../api/data";
-import { CountToggleContainer } from "../../../containers/App/Data/AuctionList/CountToggle";
+import { IGetAuctionsOptions, IQueryAuctionsOptions } from "../../api/data";
+import { CountToggleContainer } from "../../containers/App/Data/AuctionList/CountToggle";
 // tslint:disable-next-line:max-line-length
-import { QueryAuctionsFilterContainer } from "../../../containers/App/Data/AuctionList/QueryAuctionsFilter";
-import { RealmToggleContainer } from "../../../containers/util/RealmToggle";
-import { RegionToggleContainer } from "../../../containers/util/RegionToggle";
+import { QueryAuctionsFilterContainer } from "../../containers/App/Data/AuctionList/QueryAuctionsFilter";
+import { RealmToggleContainer } from "../../containers/util/RealmToggle";
+import { RegionToggleContainer } from "../../containers/util/RegionToggle";
 // tslint:disable-next-line:max-line-length
-import { AuctionTableRouteContainer } from "../../../route-containers/App/Data/AuctionList/AuctionTable";
-import { IRealms, IRegions } from "../../../types/global";
-import { AuthLevel, FetchLevel } from "../../../types/main";
-import { didRealmChange, setTitle } from "../../../util";
-import { LastModified, Pagination } from "../../util";
+import { AuctionTableRouteContainer } from "../../route-containers/App/Data/AuctionList/AuctionTable";
+import { IRealms, IRegions } from "../../types/global";
+import { AuthLevel, FetchLevel } from "../../types/main";
+import { didRealmChange, setTitle } from "../../util";
+import { LastModified, Pagination } from "../util";
 
 type ListAuction = IAuction | null;
 

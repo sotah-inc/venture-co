@@ -1,9 +1,9 @@
 import { connect } from "react-redux";
 
-import { FetchAuctions, FetchAuctionsQuery, PageChange } from "../../../actions/auction";
-import { FetchGetRealms, RealmChange, RegionChange } from "../../../actions/main";
-import { AuctionList, IDispatchProps, IStateProps } from "../../../components/App/Data/AuctionList";
-import { IStoreState } from "../../../types";
+import { FetchAuctions, FetchAuctionsQuery, PageChange } from "../../actions/auction";
+import { FetchGetRealms, RealmChange, RegionChange } from "../../actions/main";
+import { AuctionList, IDispatchProps, IStateProps } from "../../components/entry-point/AuctionList";
+import { IStoreState } from "../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const {
