@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/sotah-inc/venture-co#readme",
   "publishConfig": {
-    "access": "public"
+    "access": "private"
   },
   "dependencies": {
     "@blueprintjs/core": "^3.18.1",
