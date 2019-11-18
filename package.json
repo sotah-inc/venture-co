@@ -5,12 +5,12 @@
     "packages/*"
   ],
   "devDependencies": {
-    "@blueprintjs/tslint-config": "^1.8.1",
-    "chokidar-cli": "^1.2.2",
-    "lerna": "^3.15.0",
-    "prettier": "^1.18.2",
-    "tslint": "^5.18.0",
-    "typescript": "^3.5.2"
+    "@blueprintjs/tslint-config": "^1.9.0",
+    "chokidar-cli": "^2.1.0",
+    "lerna": "^3.18.4",
+    "prettier": "^1.19.1",
+    "tslint": "^5.20.1",
+    "typescript": "^3.7.2"
   },
   "dependencies": {}
 }
