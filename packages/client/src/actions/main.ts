@@ -171,11 +171,22 @@ export const LOAD_REGION_ENTRYPOINT = "LOAD_REGION_ENTRYPOINT";
 export const LoadRegionEntrypoint = (payload: ILoadRegionEntrypoint) =>
   createAction(LOAD_REGION_ENTRYPOINT, payload);
 
+export interface ILoadRealmEntrypoint {
+  realms: IStatusRealm[] | null;
+  nextRegionName: RegionName;
+  nextRealmSlug: RealmSlug;
+}
+
+export const LOAD_REALM_ENTRYPOINT = "LOAD_REALM_ENTRYPOINT";
+export const LoadRealmEntrypoint = (payload: ILoadRealmEntrypoint) =>
+  createAction(LOAD_REALM_ENTRYPOINT, payload);
+
 export const MainActions = {
   ChangeAuthLevel,
   ChangeIsLoginDialogOpen,
   ChangeIsRegisterDialogOpen,
   LoadGetBoot,
+  LoadRealmEntrypoint,
   LoadRegionEntrypoint,
   LoadRootEntrypoint,
   RealmChange,
