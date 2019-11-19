@@ -7,3 +7,6 @@
 [submodule "extern/infra"]
 	path = extern/infra
 	url = ssh://adrian@sotah.info@source.developers.google.com:2022/p/sotah-prod/r/infra
+[submodule "extern/bilgewater-cartel"]
+	path = extern/bilgewater-cartel
+	url = ssh://adrian@sotah.info@source.developers.google.com:2022/p/sotah-prod/r/bilgewater-cartel
