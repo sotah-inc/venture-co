@@ -4,6 +4,7 @@ import { LoadRegionEntrypoint, RegionChange } from "../../actions/main";
 import {
   IDispatchProps,
   IOwnProps,
+  IRouteProps,
   IStateProps,
   Region,
 } from "../../components/entry-point/Region";
@@ -19,7 +20,12 @@ const mapDispatchToProps: IDispatchProps = {
   onRegionChange: RegionChange,
 };
 
-export const RegionContainer = connect<IStateProps, IDispatchProps, IOwnProps, IStoreState>(
+export const RegionContainer = connect<
+  IStateProps,
+  IDispatchProps,
+  IOwnProps & IRouteProps,
+  IStoreState
+>(
   mapStateToProps,
   mapDispatchToProps,
 )(Region);

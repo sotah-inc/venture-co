@@ -1,7 +1,13 @@
 import { connect } from "react-redux";
 
-import { FetchGetRealms, RealmChange, RegionChange } from "../../actions/main";
-import { IDispatchProps, IOwnProps, IStateProps, Realm } from "../../components/entry-point/Realm";
+import { LoadRealmEntrypoint } from "../../actions/main";
+import {
+  IDispatchProps,
+  IOwnProps,
+  IRouteProps,
+  IStateProps,
+  Realm,
+} from "../../components/entry-point/Realm";
 import { IStoreState } from "../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
@@ -10,12 +16,15 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
 };
 
 const mapDispatchToProps: IDispatchProps = {
-  fetchRealms: FetchGetRealms,
-  onRealmChange: RealmChange,
-  onRegionChange: RegionChange,
+  loadRealmEntrypoint: LoadRealmEntrypoint,
 };
 
-export const RealmContainer = connect<IStateProps, IDispatchProps, IOwnProps, IStoreState>(
+export const RealmContainer = connect<
+  IStateProps,
+  IDispatchProps,
+  IOwnProps & IRouteProps,
+  IStoreState
+>(
   mapStateToProps,
   mapDispatchToProps,
 )(Realm);

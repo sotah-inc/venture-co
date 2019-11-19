@@ -3,12 +3,13 @@ import React from "react";
 import { WithRouterProps } from "next/dist/client/with-router";
 import { withRouter } from "next/router";
 
+import { IOwnProps } from "../../components/entry-point/Realm";
 import { RealmContainer } from "../../containers/entry-point/Realm";
 import { extractString } from "../../util";
 
-type Props = Readonly<WithRouterProps>;
+type Props = Readonly<WithRouterProps & IOwnProps>;
 
-function RouteContainer({ router }: Props) {
+function RouteContainer({ router, realmEntrypointData }: Props) {
   return (
     <RealmContainer
       routeParams={{
@@ -18,6 +19,7 @@ function RouteContainer({ router }: Props) {
       redirectToRealmAuctions={(region, realm) =>
         router.replace(`/data/${region.name}/${realm.slug}/auctions`)
       }
+      realmEntrypointData={realmEntrypointData}
     />
   );
 }
