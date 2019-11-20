@@ -2,6 +2,8 @@ import { IRegion, IStatusRealm } from "@sotah-inc/core";
 
 import {
   LoadGetBoot,
+  LoadRealmEntrypoint,
+  LoadRegionEntrypoint,
   MainActions,
   ReceiveGetBoot,
   ReceiveGetPing,
@@ -11,7 +13,7 @@ import {
 import { IRealms } from "../../types/global";
 import { FetchLevel, IMainState } from "../../types/main";
 import { FormatItemClassList, FormatRealmList, FormatRegionList } from "../../util";
-import { IKindHandlers, Runner } from "./index";
+import { IKindHandlers, Runner, runners } from "./index";
 
 export const handlers: IKindHandlers<IMainState, MainActions> = {
   boot: {
@@ -147,6 +149,48 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
       },
       request: (state: IMainState) => {
         return { ...state, fetchBootLevel: FetchLevel.fetching };
+      },
+    },
+  },
+  entrypoint: {
+    realm: {
+      load: (state: IMainState, action: ReturnType<typeof LoadRealmEntrypoint>) => {
+        const currentRegion = Object.keys(state.regions).reduce<IRegion | null>((out, current) => {
+          if (out !== null) {
+            return out;
+          }
+
+          if (current === action.payload.nextRegionName) {
+            return state.regions[current];
+          }
+
+          return null;
+        }, null);
+
+        return {
+          ...runners.main(state, ReceiveGetRealms(action.payload.realms)),
+          currentRegion,
+        };
+      },
+    },
+    region: {
+      load: (state: IMainState, action: ReturnType<typeof LoadRegionEntrypoint>) => {
+        const currentRegion = Object.keys(state.regions).reduce<IRegion | null>((out, current) => {
+          if (out !== null) {
+            return out;
+          }
+
+          if (current === action.payload.nextRegionName) {
+            return state.regions[current];
+          }
+
+          return null;
+        }, null);
+
+        return {
+          ...runners.main(state, ReceiveGetRealms(action.payload.realms)),
+          currentRegion,
+        };
       },
     },
   },

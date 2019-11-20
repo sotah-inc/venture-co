@@ -1,16 +1,13 @@
-import { IRegion } from "@sotah-inc/core";
 import {
   CHANGE_AUTH_LEVEL,
   CHANGE_IS_LOGIN_DIALOG_OPEN,
   CHANGE_IS_REGISTER_DIALOG_OPEN,
-  LOAD_REGION_ENTRYPOINT,
   LOAD_ROOT_ENTRYPOINT,
   MainActions,
   REALM_CHANGE,
   RECEIVE_USER_RELOAD,
   ReceiveGetBoot,
   ReceiveGetPing,
-  ReceiveGetRealms,
   REGION_CHANGE,
   USER_LOGIN,
   USER_REGISTER,
@@ -67,23 +64,6 @@ export const main = (state: State | undefined, action: MainActions): State => {
         },
         state,
       );
-    case LOAD_REGION_ENTRYPOINT:
-      const currentRegion = Object.keys(state.regions).reduce<IRegion | null>((out, current) => {
-        if (out !== null) {
-          return out;
-        }
-
-        if (current === action.payload.nextRegionName) {
-          return state.regions[current];
-        }
-
-        return null;
-      }, null);
-
-      return {
-        ...runners.main(state, ReceiveGetRealms(action.payload.realms)),
-        currentRegion,
-      };
     default:
       return runners.main(state, action);
   }
