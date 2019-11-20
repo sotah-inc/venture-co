@@ -166,9 +166,27 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
 
           return null;
         }, null);
+        const currentRealm: IStatusRealm | null = (() => {
+          if (action.payload.realms === null) {
+            return null;
+          }
+
+          return action.payload.realms.reduce<IStatusRealm | null>((out, current) => {
+            if (out !== null) {
+              return out;
+            }
+
+            if (current.slug === action.payload.nextRealmSlug) {
+              return current;
+            }
+
+            return null;
+          }, null);
+        })();
 
         return {
           ...runners.main(state, ReceiveGetRealms(action.payload.realms)),
+          currentRealm,
           currentRegion,
         };
       },
