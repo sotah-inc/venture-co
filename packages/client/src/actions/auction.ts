@@ -87,11 +87,21 @@ export const RemoveAuctionsQuery = (payload: number) =>
 export const ACTIVESELECT_CHANGE = "ACTIVESELECT_CHANGE";
 export const ActiveSelectChange = (payload: boolean) => createAction(ACTIVESELECT_CHANGE, payload);
 
+export interface ILoadAuctionListEntrypoint {
+  auctions: IGetAuctionsResponse | null;
+  auctionsQuery: IQueryAuctionsResponse | null;
+}
+
+export const LOAD_AUCTIONLIST_ENTRYPOINT = "LOAD_AUCTIONLIST_ENTRYPOINT";
+export const LoadAuctionListEntrypoint = (payload: ILoadAuctionListEntrypoint) =>
+  createAction(LOAD_AUCTIONLIST_ENTRYPOINT, payload);
+
 export const AuctionActions = {
   ActiveSelectChange,
   AddAuctionsQuery,
   CountChange,
   ItemFilterChange,
+  LoadAuctionListEntrypoint,
   OwnerFilterChange,
   PageChange,
   ReceiveAuctions,

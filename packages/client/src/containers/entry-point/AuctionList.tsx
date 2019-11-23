@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 
-import { FetchAuctions, FetchAuctionsQuery, PageChange } from "../../actions/auction";
+import { FetchAuctions, FetchAuctionsQuery, LoadAuctionListEntrypoint, PageChange } from "../../actions/auction";
 import { LoadRealmEntrypoint } from "../../actions/main";
 import {
   AuctionList,
@@ -57,6 +57,7 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
 };
 
 const mapDispatchToProps: IDispatchProps = {
+  loadAuctionListEntrypoint: LoadAuctionListEntrypoint,
   loadRealmEntrypoint: LoadRealmEntrypoint,
   refreshAuctions: FetchAuctions,
   refreshAuctionsQuery: FetchAuctionsQuery,

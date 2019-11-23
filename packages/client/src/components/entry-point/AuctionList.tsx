@@ -21,6 +21,7 @@ import {
   SortKind,
 } from "@sotah-inc/core";
 import React from "react";
+import { ILoadAuctionListEntrypoint } from "../../actions/auction";
 import { ILoadRealmEntrypoint } from "../../actions/main";
 
 import { IGetAuctionsOptions, IQueryAuctionsOptions } from "../../api/data";
@@ -61,6 +62,7 @@ export interface IStateProps {
 
 export interface IDispatchProps {
   loadRealmEntrypoint: (payload: ILoadRealmEntrypoint) => void;
+  loadAuctionListEntrypoint: (payload: ILoadAuctionListEntrypoint) => void;
   refreshAuctions: (opts: IGetAuctionsOptions) => void;
   setCurrentPage: (page: number) => void;
   refreshAuctionsQuery: (opts: IQueryAuctionsOptions) => void;
@@ -78,15 +80,22 @@ export interface IRouteParams {
 
 export interface IOwnProps {
   realmEntrypointData: ILoadRealmEntrypoint;
+  auctionListEntrypointData: ILoadAuctionListEntrypoint;
 }
 
 type Props = Readonly<IStateProps & IDispatchProps & IOwnProps & IRouteProps>;
 
 export class AuctionList extends React.Component<Props> {
   public componentDidMount() {
-    const { loadRealmEntrypoint, realmEntrypointData } = this.props;
+    const {
+      auctionListEntrypointData,
+      loadAuctionListEntrypoint,
+      loadRealmEntrypoint,
+      realmEntrypointData,
+    } = this.props;
 
     loadRealmEntrypoint(realmEntrypointData);
+    loadAuctionListEntrypoint(auctionListEntrypointData);
   }
 
   public componentDidUpdate(prevProps: Props) {
@@ -357,57 +366,46 @@ export class AuctionList extends React.Component<Props> {
       return;
     }
 
-    switch (fetchAuctionsLevel) {
-      case FetchLevel.initial:
-        this.refreshAuctions();
-
-        return;
-      case FetchLevel.success:
-        const didOptionsChange: boolean = (() => {
-          if (didRealmChange(prevProps.currentRealm, currentRealm)) {
-            return true;
-          }
-
-          if (currentPage !== prevProps.currentPage) {
-            return true;
-          }
-
-          if (auctionsPerPage !== prevProps.auctionsPerPage) {
-            return true;
-          }
-
-          if (prevProps.sortDirection !== sortDirection) {
-            return true;
-          }
-
-          if (prevProps.sortKind !== this.props.sortKind) {
-            return true;
-          }
-
-          const didSelectedAuctionsQueryChange =
-            activeSelect &&
-            prevProps.selectedQueryAuctionResults.length !== selectedQueryAuctionResults.length;
-          if (didSelectedAuctionsQueryChange) {
-            return true;
-          }
-
-          if (prevProps.activeSelect !== activeSelect) {
-            return true;
-          }
-
-          return false;
-        })();
-
-        if (didOptionsChange) {
-          this.refreshAuctions();
-
-          return;
-        }
-
-        return;
-      default:
-        return;
+    if (fetchAuctionsLevel !== FetchLevel.success) {
+      return;
     }
+
+    const didOptionsChange: boolean = (() => {
+      if (didRealmChange(prevProps.currentRealm, currentRealm)) {
+        return true;
+      }
+
+      if (currentPage !== prevProps.currentPage) {
+        return true;
+      }
+
+      if (auctionsPerPage !== prevProps.auctionsPerPage) {
+        return true;
+      }
+
+      if (prevProps.sortDirection !== sortDirection) {
+        return true;
+      }
+
+      if (prevProps.sortKind !== this.props.sortKind) {
+        return true;
+      }
+
+      const didSelectedAuctionsQueryChange =
+        activeSelect &&
+        prevProps.selectedQueryAuctionResults.length !== selectedQueryAuctionResults.length;
+      if (didSelectedAuctionsQueryChange) {
+        return true;
+      }
+
+      return prevProps.activeSelect !== activeSelect;
+    })();
+
+    if (!didOptionsChange) {
+      return;
+    }
+
+    this.refreshAuctions();
   }
 
   private renderRefetchingSpinner() {
