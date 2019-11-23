@@ -16,6 +16,7 @@ import {
 } from "../actions/auction";
 import { defaultAuctionState, IAuctionState } from "../types/auction";
 import { FetchLevel } from "../types/main";
+import { runners } from "./handlers";
 
 type State = Readonly<IAuctionState>;
 
@@ -97,6 +98,6 @@ export const auction = (state: State | undefined, action: AuctionActions): State
     case ACTIVESELECT_CHANGE:
       return { ...state, activeSelect: action.payload };
     default:
-      return state;
+      return runners.auction(state, action);
   }
 };
