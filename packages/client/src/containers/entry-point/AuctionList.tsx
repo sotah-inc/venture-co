@@ -1,6 +1,11 @@
 import { connect } from "react-redux";
 
-import { FetchAuctions, FetchAuctionsQuery, LoadAuctionListEntrypoint, PageChange } from "../../actions/auction";
+import {
+  FetchAuctions,
+  FetchAuctionsQuery,
+  LoadAuctionListEntrypoint,
+  PageChange,
+} from "../../actions/auction";
 import { LoadRealmEntrypoint } from "../../actions/main";
 import {
   AuctionList,
