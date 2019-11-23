@@ -1,5 +1,3 @@
-import React from "react";
-
 import {
   Alignment,
   ButtonGroup,
@@ -22,6 +20,8 @@ import {
   SortDirection,
   SortKind,
 } from "@sotah-inc/core";
+import React from "react";
+import { ILoadRealmEntrypoint } from "../../actions/main";
 
 import { IGetAuctionsOptions, IQueryAuctionsOptions } from "../../api/data";
 import { CountToggleContainer } from "../../containers/App/Data/AuctionList/CountToggle";
@@ -60,9 +60,7 @@ export interface IStateProps {
 }
 
 export interface IDispatchProps {
-  fetchRealms: (region: IRegion) => void;
-  onRegionChange: (region: IRegion) => void;
-  onRealmChange: (realm: IStatusRealm) => void;
+  loadRealmEntrypoint: (payload: ILoadRealmEntrypoint) => void;
   refreshAuctions: (opts: IGetAuctionsOptions) => void;
   setCurrentPage: (page: number) => void;
   refreshAuctionsQuery: (opts: IQueryAuctionsOptions) => void;
@@ -78,141 +76,31 @@ export interface IRouteParams {
   realm_slug: string;
 }
 
-export type IOwnProps = IRouteProps;
+export interface IOwnProps {
+  realmEntrypointData: ILoadRealmEntrypoint;
+}
 
-type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
+type Props = Readonly<IStateProps & IDispatchProps & IOwnProps & IRouteProps>;
 
 export class AuctionList extends React.Component<Props> {
   public componentDidMount() {
-    const {
-      currentRegion,
-      routeParams: { region_name, realm_slug },
-      onRegionChange,
-      regions,
-      fetchRealmLevel,
-      fetchRealms,
-      fetchAuctionsLevel,
-      currentRealm,
-    } = this.props;
+    const { loadRealmEntrypoint, realmEntrypointData } = this.props;
 
-    if (currentRegion === null) {
-      return;
-    }
-
-    if (currentRegion.name !== region_name) {
-      if (region_name in regions) {
-        onRegionChange(regions[region_name]);
-
-        return;
-      }
-
-      return;
-    }
-
-    switch (fetchRealmLevel) {
-      case FetchLevel.initial:
-      case FetchLevel.prompted:
-        fetchRealms(currentRegion);
-
-        return;
-      case FetchLevel.success:
-        break;
-      default:
-        return;
-    }
-
-    if (currentRealm === null) {
-      return;
-    }
-
-    if (currentRealm.slug !== realm_slug) {
-      return;
-    }
-
-    switch (fetchAuctionsLevel) {
-      case FetchLevel.initial:
-        this.refreshAuctions();
-        this.refreshAuctionsQuery();
-
-        return;
-      default:
-        this.setTitle();
-
-        return;
-    }
+    loadRealmEntrypoint(realmEntrypointData);
   }
 
   public componentDidUpdate(prevProps: Props) {
     const {
       routeParams: { region_name, realm_slug },
-      fetchRealmLevel,
       currentRegion,
-      fetchRealms,
       currentRealm,
-      onRegionChange,
-      onRealmChange,
-      realms,
-      regions,
-      browseToRealmAuctions,
     } = this.props;
 
-    if (currentRegion === null) {
+    if (currentRegion === null || currentRegion.name !== region_name) {
       return;
     }
 
-    if (currentRegion.name !== region_name) {
-      switch (fetchRealmLevel) {
-        case FetchLevel.initial:
-          if (region_name in regions) {
-            onRegionChange(regions[region_name]);
-
-            return;
-          }
-
-          return;
-        case FetchLevel.prompted:
-          fetchRealms(currentRegion);
-
-          return;
-        case FetchLevel.success:
-          if (currentRealm === null) {
-            return;
-          }
-
-          this.setTitle();
-          browseToRealmAuctions(currentRegion, currentRealm);
-          this.refreshAuctions();
-          this.refreshAuctionsQuery();
-
-          return;
-        default:
-          return;
-      }
-    }
-
-    switch (fetchRealmLevel) {
-      case FetchLevel.initial:
-      case FetchLevel.prompted:
-        fetchRealms(currentRegion);
-
-        return;
-      case FetchLevel.success:
-        break;
-      default:
-        return;
-    }
-
-    if (currentRealm === null) {
-      return;
-    }
-
-    if (currentRealm.slug !== realm_slug) {
-      if (!(realm_slug in realms)) {
-        return;
-      }
-
-      onRealmChange(realms[realm_slug]);
-
+    if (currentRealm === null || currentRealm.slug !== realm_slug) {
       return;
     }
 
@@ -286,20 +174,6 @@ export class AuctionList extends React.Component<Props> {
         sortDirection,
         sortKind,
       },
-    });
-  }
-
-  private refreshAuctionsQuery() {
-    const { refreshAuctionsQuery, currentRealm, currentRegion } = this.props;
-
-    if (currentRealm === null || currentRegion === null) {
-      return;
-    }
-
-    refreshAuctionsQuery({
-      query: "",
-      realmSlug: currentRealm.slug,
-      regionName: currentRegion.name,
     });
   }
 

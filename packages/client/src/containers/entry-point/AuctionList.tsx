@@ -1,8 +1,14 @@
 import { connect } from "react-redux";
 
 import { FetchAuctions, FetchAuctionsQuery, PageChange } from "../../actions/auction";
-import { FetchGetRealms, RealmChange, RegionChange } from "../../actions/main";
-import { AuctionList, IDispatchProps, IStateProps } from "../../components/entry-point/AuctionList";
+import { LoadRealmEntrypoint } from "../../actions/main";
+import {
+  AuctionList,
+  IDispatchProps,
+  IOwnProps,
+  IRouteProps,
+  IStateProps,
+} from "../../components/entry-point/AuctionList";
 import { IStoreState } from "../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
@@ -51,15 +57,18 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
 };
 
 const mapDispatchToProps: IDispatchProps = {
-  fetchRealms: FetchGetRealms,
-  onRealmChange: RealmChange,
-  onRegionChange: RegionChange,
+  loadRealmEntrypoint: LoadRealmEntrypoint,
   refreshAuctions: FetchAuctions,
   refreshAuctionsQuery: FetchAuctionsQuery,
   setCurrentPage: PageChange,
 };
 
-export const AuctionsListContainer = connect<IStateProps, IDispatchProps, {}, IStoreState>(
+export const AuctionsListContainer = connect<
+  IStateProps,
+  IDispatchProps,
+  IOwnProps & IRouteProps,
+  IStoreState
+>(
   mapStateToProps,
   mapDispatchToProps,
 )(AuctionList);

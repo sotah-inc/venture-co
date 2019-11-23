@@ -1,14 +1,14 @@
-import React from "react";
-
 import { WithRouterProps } from "next/dist/client/with-router";
 import { withRouter } from "next/router";
+import React from "react";
 
+import { IOwnProps } from "../../components/entry-point/AuctionList";
 import { AuctionsListContainer } from "../../containers/entry-point/AuctionList";
 import { extractString } from "../../util";
 
-type Props = Readonly<WithRouterProps>;
+type Props = Readonly<WithRouterProps & IOwnProps>;
 
-function RouteContainer({ router }: Props) {
+function RouteContainer({ router, realmEntrypointData }: Props) {
   return (
     <AuctionsListContainer
       routeParams={{
@@ -18,6 +18,7 @@ function RouteContainer({ router }: Props) {
       browseToRealmAuctions={(region, realm) =>
         router.push(`/data/${region.name}/${realm.slug}/auctions`)
       }
+      realmEntrypointData={realmEntrypointData}
     />
   );
 }
