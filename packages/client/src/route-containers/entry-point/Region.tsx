@@ -12,7 +12,9 @@ function RouteContainer({ router, regionEntrypointData }: Props) {
   return (
     <RegionContainer
       routeParams={{ region_name: extractString("region_name", router.query) }}
-      browseToRealmData={(region, realm) => router.replace(`/data/${region.name}/${realm.slug}`)}
+      browseToRealmData={(region, realm) =>
+        router.replace("/data/[region_name]/[realm_slug]", `/data/${region.name}/${realm.slug}`)
+      }
       regionEntrypointData={regionEntrypointData}
     />
   );

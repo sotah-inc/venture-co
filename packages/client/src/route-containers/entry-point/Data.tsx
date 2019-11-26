@@ -8,7 +8,11 @@ import { DataContainer } from "../../containers/entry-point/Data";
 type Props = Readonly<WithRouterProps>;
 
 function RouteContainer({ router }: Props) {
-  return <DataContainer redirectToRegion={region => router.replace(`/data/${region.name}`)} />;
+  return (
+    <DataContainer
+      redirectToRegion={region => router.replace("/data/[region_name]", `/data/${region.name}`)}
+    />
+  );
 }
 
 export const DataRouteContainer = withRouter(RouteContainer);
