@@ -26,7 +26,7 @@ export interface IOwnProps {
 }
 
 export interface IRouteProps {
-  historyPush: (destination: string) => void;
+  historyPush: (destination: string, asDest?: string) => void;
 }
 
 type Props = Readonly<IStateProps & IDispatchProps & IOwnProps & IRouteProps>;
@@ -72,16 +72,18 @@ export class News extends React.Component<Props> {
               </div>
               <div className="pure-u-1-4 homepage-card-container">
                 {this.renderCard(
-                  `/data/auctions/${currentRegion.name}`,
+                  "/data/auctions/[region_name]",
                   "dollar",
                   "Browse Auctions",
+                  `/data/auctions/${currentRegion.name}`,
                 )}
               </div>
               <div className="pure-u-1-4 homepage-card-container">
                 {this.renderCard(
-                  `/data/professions/${currentRegion.name}`,
+                  "/data/professions/[region_name]",
                   "chart",
                   "Discover Professions",
+                  `/data/professions/${currentRegion.name}`,
                 )}
               </div>
               {this.renderUserCallout()}
@@ -94,10 +96,10 @@ export class News extends React.Component<Props> {
     );
   }
 
-  private renderCard(dest: string, icon: IconName, label: string) {
+  private renderCard(dest: string, icon: IconName, label: string, asDest?: string) {
     const { historyPush } = this.props;
 
-    return <CardCallout onClick={() => historyPush(dest)} icon={icon} label={label} />;
+    return <CardCallout onClick={() => historyPush(dest, asDest)} icon={icon} label={label} />;
   }
 
   private renderUserCallout() {
