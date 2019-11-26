@@ -8,7 +8,7 @@ import { extractString } from "../../util";
 
 type Props = Readonly<WithRouterProps & IOwnProps>;
 
-function RouteContainer({ router, realmEntrypointData, auctionListEntrypointData }: Props) {
+function RouteContainer({ router, realmEntrypointData, auctionListEntrypointData, loadId }: Props) {
   return (
     <AuctionsListContainer
       routeParams={{
@@ -23,6 +23,7 @@ function RouteContainer({ router, realmEntrypointData, auctionListEntrypointData
       }
       realmEntrypointData={realmEntrypointData}
       auctionListEntrypointData={auctionListEntrypointData}
+      loadId={loadId}
     />
   );
 }

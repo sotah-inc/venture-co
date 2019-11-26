@@ -80,6 +80,7 @@ export interface IRouteParams {
 export interface IOwnProps {
   realmEntrypointData: ILoadRealmEntrypoint;
   auctionListEntrypointData: ILoadAuctionListEntrypoint;
+  loadId: string;
 }
 
 type Props = Readonly<IStateProps & IDispatchProps & IOwnProps & IRouteProps>;
@@ -99,10 +100,22 @@ export class AuctionList extends React.Component<Props> {
 
   public componentDidUpdate(prevProps: Props) {
     const {
+      auctionListEntrypointData,
+      loadAuctionListEntrypoint,
+      loadRealmEntrypoint,
+      realmEntrypointData,
+      loadId,
       routeParams: { region_name, realm_slug },
       currentRegion,
       currentRealm,
     } = this.props;
+
+    if (prevProps.loadId !== loadId) {
+      loadRealmEntrypoint(realmEntrypointData);
+      loadAuctionListEntrypoint(auctionListEntrypointData);
+
+      return;
+    }
 
     if (currentRegion === null || currentRegion.name !== region_name) {
       return;
