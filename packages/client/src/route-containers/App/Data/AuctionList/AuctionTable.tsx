@@ -20,7 +20,7 @@ function RouteContainer({ router }: Props) {
           expansion.name,
           pricelist.slug,
         ].join("/");
-        (async () => router.push(`/${professionPricelistUrl}`))();
+        (async () => router.replace(`/${professionPricelistUrl}`))();
       }}
     />
   );

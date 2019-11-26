@@ -10,8 +10,8 @@ type Props = Readonly<WithRouterProps>;
 function RouteContainer({ router }: Props) {
   return (
     <ManageAccountContainer
-      browseToHome={() => router.push("/")}
-      browseToProfile={() => router.push("/profile")}
+      browseToHome={() => router.replace("/")}
+      browseToProfile={() => router.replace("/profile")}
     />
   );
 }

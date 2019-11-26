@@ -12,9 +12,9 @@ type Props = Readonly<WithRouterProps & IOwnProps>;
 function RouteContainer({ router, postPayload }: Props) {
   return (
     <PostContainer
-      browseToPostEdit={post => router.push(`/content/news/${post.slug}/edit`)}
-      browseToHome={() => router.push("")}
-      browseToNews={() => router.push("/content/news")}
+      browseToPostEdit={post => router.replace(`/content/news/${post.slug}/edit`)}
+      browseToHome={() => router.replace("")}
+      browseToNews={() => router.replace("/content/news")}
       routeParams={{ post_slug: extractString("post_slug", router.query) }}
       postPayload={postPayload}
     />

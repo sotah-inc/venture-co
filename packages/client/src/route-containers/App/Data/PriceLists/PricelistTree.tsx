@@ -20,7 +20,7 @@ function RouteContainer({ router }: Props) {
           expansion.name,
           pricelist.slug,
         ].join("/");
-        (async () => router.push(`/${professionPricelistUrl}`))();
+        (async () => router.replace(`/${professionPricelistUrl}`))();
       }}
       browseToUserPricelist={(region, realm, pricelist) => {
         const userPricelistUrl = [
@@ -31,14 +31,14 @@ function RouteContainer({ router }: Props) {
           "user",
           pricelist.slug,
         ].join("/");
-        (async () => router.push(`/${userPricelistUrl}`))();
+        (async () => router.replace(`/${userPricelistUrl}`))();
       }}
       browseToProfessions={(region, realm) => {
-        (async () => router.push(`/data/${region.name}/${realm.slug}/professions`))();
+        (async () => router.replace(`/data/${region.name}/${realm.slug}/professions`))();
       }}
       browseToProfession={(region, realm, profession) => {
         (async () =>
-          router.push(`/data/${region.name}/${realm.slug}/professions/${profession.name}`))();
+          router.replace(`/data/${region.name}/${realm.slug}/professions/${profession.name}`))();
       }}
       browseToProfessionExpansion={(region, realm, profession, expansion) => {
         const url = [
@@ -49,7 +49,7 @@ function RouteContainer({ router }: Props) {
           profession.name,
           expansion.name,
         ].join("/");
-        (async () => router.push(`/${url}`))();
+        (async () => router.replace(`/${url}`))();
       }}
     />
   );

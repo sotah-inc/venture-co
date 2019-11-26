@@ -46,7 +46,7 @@ function RouteContainer({ router }: Props) {
             urlParts.push(pricelist.slug);
           }
         }
-        (async () => router.push(`/${urlParts.join("/")}`))();
+        (async () => router.replace(`/${urlParts.join("/")}`))();
 
         return;
       }}

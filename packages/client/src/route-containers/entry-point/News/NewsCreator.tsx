@@ -10,9 +10,9 @@ type Props = Readonly<WithRouterProps>;
 function RouteContainer({ router }: Props) {
   return (
     <NewsCreatorContainer
-      browseToPost={post => router.push(`/content/news/${post.slug}`)}
-      browseToHome={() => router.push("")}
-      browseToNews={() => router.push("/content/news")}
+      browseToPost={post => router.replace(`/content/news/${post.slug}`)}
+      browseToHome={() => router.replace("")}
+      browseToNews={() => router.replace("/content/news")}
     />
   );
 }

@@ -9,7 +9,7 @@ import { NewsContainer } from "../../containers/entry-point/News";
 type Props = Readonly<WithRouterProps & IOwnProps>;
 
 function RouteContainer({ router, posts }: Props) {
-  return <NewsContainer historyPush={destination => router.push(destination)} posts={posts} />;
+  return <NewsContainer historyPush={destination => router.replace(destination)} posts={posts} />;
 }
 
 export const NewsRouteContainer = withRouter(RouteContainer);

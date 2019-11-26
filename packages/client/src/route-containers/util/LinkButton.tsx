@@ -11,7 +11,7 @@ function RouteContainer({ buttonProps, destination, router, prefix }: Props) {
   return (
     <LinkButton
       locationPathname={router.asPath}
-      historyPush={(pushDestination: string) => router.push(pushDestination)}
+      historyPush={(pushDestination: string) => router.replace(pushDestination)}
       destination={destination}
       buttonProps={buttonProps}
       prefix={prefix}
