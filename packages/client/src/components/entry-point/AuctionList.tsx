@@ -24,7 +24,7 @@ import React from "react";
 import { ILoadAuctionListEntrypoint } from "../../actions/auction";
 import { ILoadRealmEntrypoint } from "../../actions/main";
 
-import { IGetAuctionsOptions, IQueryAuctionsOptions } from "../../api/data";
+import { IGetAuctionsOptions } from "../../api/data";
 import { CountToggleContainer } from "../../containers/App/Data/AuctionList/CountToggle";
 // tslint:disable-next-line:max-line-length
 import { QueryAuctionsFilterContainer } from "../../containers/App/Data/AuctionList/QueryAuctionsFilter";
@@ -65,7 +65,6 @@ export interface IDispatchProps {
   loadAuctionListEntrypoint: (payload: ILoadAuctionListEntrypoint) => void;
   refreshAuctions: (opts: IGetAuctionsOptions) => void;
   setCurrentPage: (page: number) => void;
-  refreshAuctionsQuery: (opts: IQueryAuctionsOptions) => void;
 }
 
 export interface IRouteProps {
@@ -115,7 +114,6 @@ export class AuctionList extends React.Component<Props> {
 
     this.setTitle();
     this.refreshAuctionsTrigger(prevProps);
-    this.refreshAuctionsQueryTrigger(prevProps);
   }
 
   public render() {
@@ -330,20 +328,6 @@ export class AuctionList extends React.Component<Props> {
       default:
         return <>You should never see this!</>;
     }
-  }
-
-  private refreshAuctionsQueryTrigger(_prevProps: Props) {
-    const { currentRegion, currentRealm, refreshAuctionsQuery } = this.props;
-
-    if (currentRegion === null || currentRealm === null) {
-      return;
-    }
-
-    refreshAuctionsQuery({
-      query: "",
-      realmSlug: currentRealm.slug,
-      regionName: currentRegion.name,
-    });
   }
 
   private refreshAuctionsTrigger(prevProps: Props) {
