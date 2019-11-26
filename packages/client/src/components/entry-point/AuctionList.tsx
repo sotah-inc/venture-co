@@ -34,7 +34,7 @@ import { RegionToggleContainer } from "../../containers/util/RegionToggle";
 import { AuctionTableRouteContainer } from "../../route-containers/App/Data/AuctionList/AuctionTable";
 import { IRealms, IRegions } from "../../types/global";
 import { AuthLevel, FetchLevel } from "../../types/main";
-import { didRealmChange, setTitle } from "../../util";
+import { setTitle } from "../../util";
 import { LastModified, Pagination } from "../util";
 
 type ListAuction = IAuction | null;
@@ -332,14 +332,10 @@ export class AuctionList extends React.Component<Props> {
     }
   }
 
-  private refreshAuctionsQueryTrigger(prevProps: Props) {
+  private refreshAuctionsQueryTrigger(_prevProps: Props) {
     const { currentRegion, currentRealm, refreshAuctionsQuery } = this.props;
 
     if (currentRegion === null || currentRealm === null) {
-      return;
-    }
-
-    if (!didRealmChange(prevProps.currentRealm, currentRealm)) {
       return;
     }
 
@@ -371,10 +367,6 @@ export class AuctionList extends React.Component<Props> {
     }
 
     const didOptionsChange: boolean = (() => {
-      if (didRealmChange(prevProps.currentRealm, currentRealm)) {
-        return true;
-      }
-
       if (currentPage !== prevProps.currentPage) {
         return true;
       }
@@ -398,7 +390,11 @@ export class AuctionList extends React.Component<Props> {
         return true;
       }
 
-      return prevProps.activeSelect !== activeSelect;
+      if (prevProps.activeSelect !== activeSelect) {
+        return true;
+      }
+
+      return false;
     })();
 
     if (!didOptionsChange) {
