@@ -28,7 +28,12 @@ function RouteContainer({ router }: Props) {
           expansion.name,
           pricelist.slug,
         ];
-        (async () => router.replace(`/${urlParts.join("/")}`))();
+        (async () =>
+          router.replace(
+            // tslint:disable-next-line:max-line-length
+            "/data/[region_name]/[realm_slug]/professions/[profession_name]/[expansion_name]/[pricelist_slug]",
+            `/${urlParts.join("/")}`,
+          ))();
       }}
       browseOnRealmChange={(region, realm, profession, expansion, pricelist) => {
         const urlParts = ["data", region.name, realm.slug, "professions"];
