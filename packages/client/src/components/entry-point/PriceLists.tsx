@@ -1,0 +1,539 @@
+import React from "react";
+
+import { Classes, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
+import { IExpansion, IPricelistJson, IProfession, IRegion, IStatusRealm } from "@sotah-inc/core";
+
+// tslint:disable-next-line:max-line-length
+import { CreateEntryDialogContainer } from "../../containers/entry-point/PriceLists/CreateEntryDialog";
+import { ActionBarRouteContainer } from "../../route-containers/entry-point/PriceLists/ActionBar";
+// tslint:disable-next-line:max-line-length
+import { CreateListDialogRouteContainer } from "../../route-containers/entry-point/PriceLists/CreateListDialog";
+// tslint:disable-next-line:max-line-length
+import { DeleteListDialogRouteContainer } from "../../route-containers/entry-point/PriceLists/DeleteListDialog";
+// tslint:disable-next-line:max-line-length
+import { EditListDialogRouteContainer } from "../../route-containers/entry-point/PriceLists/EditListDialog";
+// tslint:disable-next-line:max-line-length
+import { PricelistTreeRouteContainer } from "../../route-containers/entry-point/PriceLists/PricelistTree";
+import { IRealms, IRegions } from "../../types/global";
+import { AuthLevel, FetchLevel } from "../../types/main";
+import { IExpansionProfessionPricelistMap } from "../../types/price-lists";
+import { setTitle } from "../../util";
+
+export interface IStateProps {
+  authLevel: AuthLevel;
+
+  currentRealm: IStatusRealm | null;
+  currentRegion: IRegion | null;
+  regions: IRegions;
+  fetchRealmLevel: FetchLevel;
+  realms: IRealms;
+  selectedProfession: IProfession | null;
+  selectedExpansion: IExpansion | null;
+  professions: IProfession[];
+  expansions: IExpansion[];
+  getProfessionPricelistsLevel: FetchLevel;
+  selectedList: IPricelistJson | null;
+  professionPricelists: IExpansionProfessionPricelistMap;
+  pricelists: IPricelistJson[];
+}
+
+export interface IDispatchProps {
+  changeIsLoginDialogOpen: (isLoginDialogOpen: boolean) => void;
+  changeSelectedExpansion: (expansion: IExpansion) => void;
+  changeSelectedList: (list: IPricelistJson) => void;
+  changeSelectedProfession: (profession: IProfession) => void;
+  fetchRealms: (region: IRegion) => void;
+  onRegionChange: (region: IRegion) => void;
+  onRealmChange: (realm: IStatusRealm) => void;
+  resetProfessionsSelections: () => void;
+}
+
+export interface IRouteProps {
+  routeParams: IRouteParams;
+  redirectToPricelist: (
+    region: IRegion,
+    realm: IStatusRealm,
+    profession: IProfession,
+    expansion: IExpansion,
+    pricelist: IPricelistJson,
+  ) => void;
+  browseOnRealmChange: (
+    region: IRegion,
+    realm: IStatusRealm,
+    profession: IProfession | null,
+    expansion: IExpansion | null,
+    pricelist: IPricelistJson | null,
+  ) => void;
+}
+
+export interface IRouteParams {
+  region_name: string;
+  realm_slug: string;
+  profession_name: string;
+  expansion_name: string;
+  pricelist_slug: string;
+}
+
+export type IOwnProps = IRouteProps;
+
+type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
+
+export class PriceLists extends React.Component<Props> {
+  public componentDidMount() {
+    const {
+      currentRegion,
+      routeParams: { region_name },
+      onRegionChange,
+      regions,
+    } = this.props;
+
+    if (currentRegion === null) {
+      return;
+    }
+
+    if (currentRegion.name !== region_name) {
+      if (region_name in regions) {
+        onRegionChange(regions[region_name]);
+
+        return;
+      }
+
+      return;
+    }
+
+    this.handleWithRegion();
+  }
+
+  public componentDidUpdate() {
+    const {
+      routeParams: { region_name },
+      currentRegion,
+      onRegionChange,
+      regions,
+      fetchRealmLevel,
+      fetchRealms,
+      currentRealm,
+      selectedProfession,
+      selectedExpansion,
+      selectedList,
+      browseOnRealmChange,
+    } = this.props;
+
+    if (currentRegion === null) {
+      return;
+    }
+
+    if (currentRegion.name !== region_name) {
+      switch (fetchRealmLevel) {
+        case FetchLevel.initial:
+          if (region_name in regions) {
+            onRegionChange(regions[region_name]);
+
+            return;
+          }
+
+          return;
+        case FetchLevel.prompted:
+          fetchRealms(currentRegion);
+
+          return;
+        case FetchLevel.success:
+          if (currentRealm === null) {
+            return;
+          }
+
+          browseOnRealmChange(
+            currentRegion,
+            currentRealm,
+            selectedProfession,
+            selectedExpansion,
+            selectedList,
+          );
+
+          return;
+        default:
+          return;
+      }
+    }
+
+    this.handleWithRegion();
+  }
+
+  public render() {
+    const {
+      authLevel,
+      routeParams: { profession_name },
+      professions,
+    } = this.props;
+
+    if (profession_name.length > 0) {
+      const hasProfession = professions.reduce<boolean>((previousValue, currentValue) => {
+        if (previousValue) {
+          return previousValue;
+        }
+
+        return currentValue.name === profession_name;
+      }, false);
+
+      if (!hasProfession) {
+        return (
+          <NonIdealState
+            title="Profession not found"
+            description={`Profession ${profession_name} could not be found`}
+            icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={1} />}
+          />
+        );
+      }
+    }
+
+    if (authLevel === AuthLevel.unauthenticated) {
+      return (
+        <>
+          <ActionBarRouteContainer />
+          <PricelistTreeRouteContainer />
+        </>
+      );
+    }
+
+    return (
+      <>
+        <CreateListDialogRouteContainer />
+        <CreateEntryDialogContainer />
+        <EditListDialogRouteContainer />
+        <DeleteListDialogRouteContainer />
+        <ActionBarRouteContainer />
+        <PricelistTreeRouteContainer />
+      </>
+    );
+  }
+
+  private handleWithRegion() {
+    const {
+      routeParams: { realm_slug },
+      fetchRealmLevel,
+      currentRegion,
+      fetchRealms,
+      currentRealm,
+      onRealmChange,
+      realms,
+    } = this.props;
+
+    if (currentRegion === null) {
+      return;
+    }
+
+    switch (fetchRealmLevel) {
+      case FetchLevel.initial:
+      case FetchLevel.prompted:
+        fetchRealms(currentRegion);
+
+        return;
+      case FetchLevel.success:
+        break;
+      default:
+        return;
+    }
+
+    if (currentRealm === null) {
+      return;
+    }
+
+    if (currentRealm.slug !== realm_slug) {
+      if (!(realm_slug in realms)) {
+        return;
+      }
+
+      onRealmChange(realms[realm_slug]);
+
+      return;
+    }
+
+    this.handleWithRealm();
+  }
+
+  private handleWithRealm() {
+    const {
+      routeParams: { profession_name, pricelist_slug },
+      currentRegion,
+      currentRealm,
+      selectedProfession,
+      selectedExpansion,
+      selectedList,
+      changeSelectedProfession,
+      professions,
+      resetProfessionsSelections,
+      pricelists,
+      changeSelectedList,
+    } = this.props;
+
+    if (currentRegion === null || currentRealm === null) {
+      return;
+    }
+
+    if (profession_name.length === 0) {
+      if (pricelist_slug.length === 0) {
+        if (selectedProfession !== null || selectedExpansion !== null || selectedList !== null) {
+          resetProfessionsSelections();
+
+          return;
+        }
+
+        return;
+      }
+
+      const foundList = pricelists.reduce<IPricelistJson | null>((prevValue, curValue) => {
+        if (prevValue !== null) {
+          return prevValue;
+        }
+
+        if (curValue.slug === pricelist_slug) {
+          return curValue;
+        }
+
+        return null;
+      }, null);
+      if (foundList === null) {
+        return;
+      }
+
+      if (selectedList === null || foundList.id !== selectedList.id) {
+        changeSelectedList(foundList);
+
+        return;
+      }
+
+      this.setTitle();
+
+      return;
+    }
+
+    if (selectedProfession === null || selectedProfession.name !== profession_name) {
+      const foundProfession = professions.reduce<IProfession | null>(
+        (previousValue, currentValue) => {
+          if (previousValue !== null) {
+            return previousValue;
+          }
+
+          if (currentValue.name === profession_name) {
+            return currentValue;
+          }
+
+          return null;
+        },
+        null,
+      );
+
+      if (foundProfession === null) {
+        return;
+      }
+
+      changeSelectedProfession(foundProfession);
+
+      return;
+    }
+
+    this.handleWithProfession();
+  }
+
+  private handleWithProfession() {
+    const {
+      routeParams: { expansion_name },
+      currentRegion,
+      currentRealm,
+      selectedProfession,
+      selectedExpansion,
+      expansions,
+      changeSelectedExpansion,
+      getProfessionPricelistsLevel,
+    } = this.props;
+
+    if (currentRegion === null || currentRealm === null || selectedProfession === null) {
+      return;
+    }
+
+    switch (getProfessionPricelistsLevel) {
+      case FetchLevel.success:
+        break;
+      default:
+        return;
+    }
+
+    if (expansion_name.length === 0) {
+      this.setTitle();
+
+      return;
+    }
+
+    if (selectedExpansion === null || selectedExpansion.name !== expansion_name) {
+      const foundExpansion = expansions.reduce<IExpansion | null>((previousValue, currentValue) => {
+        if (previousValue !== null) {
+          return previousValue;
+        }
+
+        if (currentValue.name === expansion_name) {
+          return currentValue;
+        }
+
+        return null;
+      }, null);
+
+      if (foundExpansion === null) {
+        return;
+      }
+
+      changeSelectedExpansion(foundExpansion);
+
+      return;
+    }
+
+    this.handleWithExpansion();
+  }
+
+  private handleWithExpansion() {
+    const {
+      routeParams: { pricelist_slug },
+      currentRegion,
+      currentRealm,
+      selectedProfession,
+      selectedExpansion,
+      selectedList,
+      professionPricelists,
+      changeSelectedList,
+      redirectToPricelist,
+    } = this.props;
+
+    if (
+      currentRegion === null ||
+      currentRealm === null ||
+      selectedProfession === null ||
+      selectedExpansion === null
+    ) {
+      return;
+    }
+
+    if (
+      !(selectedExpansion.name in professionPricelists) ||
+      professionPricelists[selectedExpansion.name].length === 0
+    ) {
+      return;
+    }
+
+    if (pricelist_slug.length === 0) {
+      const preselectedList: IPricelistJson | null = (() => {
+        const sorted = professionPricelists[selectedExpansion.name].sort((a, b) => {
+          if (a.pricelist.name === b.pricelist.name) {
+            return 0;
+          }
+
+          return a.pricelist.name > b.pricelist.name ? 1 : -1;
+        });
+
+        return sorted[0].pricelist;
+      })();
+
+      if (preselectedList === null) {
+        return;
+      }
+
+      redirectToPricelist(
+        currentRegion,
+        currentRealm,
+        selectedProfession,
+        selectedExpansion,
+        preselectedList,
+      );
+
+      return;
+    }
+
+    const foundList = professionPricelists[selectedExpansion.name].reduce<IPricelistJson | null>(
+      (prevValue, curValue) => {
+        if (prevValue !== null) {
+          return prevValue;
+        }
+
+        if (curValue.pricelist.slug === pricelist_slug) {
+          return curValue.pricelist;
+        }
+
+        return null;
+      },
+      null,
+    );
+    if (foundList === null) {
+      return;
+    }
+
+    if (selectedList === null || foundList.id !== selectedList.id) {
+      changeSelectedList(foundList);
+
+      return;
+    }
+
+    this.handleWithPricelist();
+  }
+
+  private handleWithPricelist() {
+    this.setTitle();
+  }
+
+  private setTitle() {
+    const {
+      currentRegion,
+      currentRealm,
+      selectedProfession,
+      selectedExpansion,
+      selectedList,
+    } = this.props;
+
+    if (currentRegion === null || currentRealm === null) {
+      return;
+    }
+
+    if (selectedProfession === null) {
+      if (selectedList === null) {
+        setTitle(`Professions - ${currentRegion.name.toUpperCase()} ${currentRealm.name}`);
+
+        return;
+      }
+
+      const userPricelistTitle = [
+        selectedList.name,
+        "Professions",
+        currentRegion.name.toUpperCase(),
+        currentRealm.name,
+      ].join(" - ");
+      setTitle(userPricelistTitle);
+
+      return;
+    }
+
+    if (selectedExpansion === null) {
+      setTitle(`
+                ${selectedProfession.label} - Professions - ${currentRegion.name.toUpperCase()} ${
+        currentRealm.name
+      }`);
+
+      return;
+    }
+
+    if (selectedList === null) {
+      setTitle(`
+                ${selectedExpansion.label} - ${
+        selectedProfession.label
+      } - Professions - ${currentRegion.name.toUpperCase()} ${currentRealm.name}`);
+
+      return;
+    }
+
+    const title = [
+      selectedList.name,
+      selectedExpansion.label,
+      selectedProfession.label,
+      "Professions",
+      currentRegion.name.toUpperCase(),
+      currentRealm.name,
+    ].join(" - ");
+    setTitle(title);
+  }
+}
