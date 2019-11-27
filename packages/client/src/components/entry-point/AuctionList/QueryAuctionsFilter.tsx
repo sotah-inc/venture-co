@@ -26,14 +26,14 @@ import {
 import { IItem, IQueryAuctionsItem, IRegion, IStatusRealm } from "@sotah-inc/core";
 import { debounce } from "lodash";
 
-import { IQueryAuctionsOptions } from "../../../../api/data";
-import { FetchLevel } from "../../../../types/main";
+import { IQueryAuctionsOptions } from "../../../api/data";
+import { FetchLevel } from "../../../types/main";
 import {
   getItemIconUrl,
   getItemTextValue,
   getSelectedResultIndex,
   qualityToColorClass,
-} from "../../../../util";
+} from "../../../util";
 
 const QueryAuctionResultSuggest = Suggest.ofType<IQueryAuctionsItem>();
 

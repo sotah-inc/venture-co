@@ -18,45 +18,46 @@ import {
   ItemRenderer,
   Suggest,
 } from "@blueprintjs/select";
-import { IItem, IRegion, IStatusRealm } from "@sotah-inc/core";
+import { IOwner, IRegion, IStatusRealm, OwnerName } from "@sotah-inc/core";
 
-import { FetchLevel } from "../../../../types/main";
+import { IGetOwnersOptions } from "../../../api/data";
+import { FetchLevel } from "../../../types/main";
 
-const ItemFilterSuggest = Suggest.ofType<IItem>();
+const OwnerFilterSuggest = Suggest.ofType<IOwner>();
 
 export interface IStateProps {
-  fetchItemsLevel: FetchLevel;
-  items: IItem[];
-  itemFilter: IItem | null;
+  fetchOwnersLevel: FetchLevel;
+  owners: IOwner[];
+  ownerFilter: OwnerName | null;
   currentRegion: IRegion | null;
   currentRealm: IStatusRealm | null;
 }
 
 export interface IDispatchProps {
-  onItemFilterChange: (item: IItem | null) => void;
-  refreshItems: (query: string) => void;
+  onOwnerFilterChange: (ownerName: OwnerName | null) => void;
+  refreshOwners: (opts: IGetOwnersOptions) => void;
 }
 
 type Props = Readonly<IStateProps & IDispatchProps>;
 
 type State = Readonly<{
-  itemFilterValue: string;
+  ownerFilterValue: string;
   timerId: NodeJS.Timer | null;
 }>;
 
-export class ItemFilter extends React.Component<Props, State> {
+export class OwnerFilter extends React.Component<Props, State> {
   public state: State = {
-    itemFilterValue: "",
+    ownerFilterValue: "",
     timerId: null,
   };
 
-  public itemPredicate: ItemPredicate<IItem> = (query: string, item: IItem) => {
+  public itemPredicate: ItemPredicate<IOwner> = (query: string, item: IOwner) => {
     query = query.toLowerCase();
     return item.name.toLowerCase().indexOf(query) >= 0;
   };
 
-  public itemRenderer: ItemRenderer<IItem> = (
-    item: IItem,
+  public itemRenderer: ItemRenderer<IOwner> = (
+    owner: IOwner,
     { handleClick, modifiers, index }: IItemRendererProps,
   ) => {
     if (!modifiers.matchesPredicate) {
@@ -71,19 +72,19 @@ export class ItemFilter extends React.Component<Props, State> {
         intent={intent}
         className={modifiers.active ? Classes.ACTIVE : ""}
         onClick={handleClick}
-        text={item.name}
+        text={owner.name}
       />
     );
   };
 
-  public itemListRenderer: ItemListRenderer<IItem> = (params: IItemListRendererProps<IItem>) => {
+  public itemListRenderer: ItemListRenderer<IOwner> = (params: IItemListRendererProps<IOwner>) => {
     const { items, itemsParentRef, renderItem } = params;
     const renderedItems = items.map(renderItem).filter(renderedItem => renderedItem !== null);
     if (renderedItems.length === 0) {
       return (
         <Menu ulRef={itemsParentRef}>
           <li>
-            <H6>Select Item</H6>
+            <H6>Select Owner</H6>
           </li>
           <li>
             <em>No results found.</em>
@@ -102,53 +103,62 @@ export class ItemFilter extends React.Component<Props, State> {
     );
   };
 
-  public onFilterSet(item: IItem) {
-    this.setState({ itemFilterValue: item.name });
-    this.props.onItemFilterChange(item);
+  public onFilterSet(owner: IOwner) {
+    this.setState({ ownerFilterValue: owner.name });
+    this.props.onOwnerFilterChange(owner.name);
   }
 
   public onFilterChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const { refreshItems } = this.props;
+    const { refreshOwners, currentRealm, currentRegion } = this.props;
     const { timerId } = this.state;
-    const itemFilterValue = e.target.value;
+    const ownerFilterValue = e.target.value;
 
     if (timerId !== null) {
       clearTimeout(timerId);
     }
 
-    const newTimerId = setTimeout(() => refreshItems(itemFilterValue), 0.25 * 1000);
-    this.setState({ itemFilterValue, timerId: newTimerId });
+    const newTimerId = setTimeout(() => {
+      refreshOwners({
+        query: ownerFilterValue,
+        realmSlug: currentRealm!.slug,
+        regionName: currentRegion!.name,
+      });
+    }, 0.25 * 1000);
+    this.setState({ ownerFilterValue, timerId: newTimerId });
   }
 
   public onFilterClear() {
-    const { onItemFilterChange, refreshItems } = this.props;
-
-    this.setState({ itemFilterValue: "" });
-    onItemFilterChange(null);
-    refreshItems("");
+    const { onOwnerFilterChange, refreshOwners, currentRealm, currentRegion } = this.props;
+    this.setState({ ownerFilterValue: "" });
+    onOwnerFilterChange(null);
+    refreshOwners({
+      query: "",
+      realmSlug: currentRealm!.slug,
+      regionName: currentRegion!.name,
+    });
   }
 
   public render() {
-    const { fetchItemsLevel, items } = this.props;
-    const { itemFilterValue } = this.state;
+    const { fetchOwnersLevel, owners } = this.props;
+    const { ownerFilterValue } = this.state;
 
-    const canClearFilter = itemFilterValue !== null && itemFilterValue !== "";
+    const canClearFilter = ownerFilterValue !== null && ownerFilterValue !== "";
 
-    switch (fetchItemsLevel) {
+    switch (fetchOwnersLevel) {
       case FetchLevel.success:
       case FetchLevel.refetching:
         return (
           <ControlGroup>
-            <ItemFilterSuggest
-              items={items}
+            <OwnerFilterSuggest
+              items={owners}
               itemRenderer={this.itemRenderer}
               itemListRenderer={this.itemListRenderer}
               itemPredicate={this.itemPredicate}
-              onItemSelect={this.onFilterSet}
+              onItemSelect={v => this.onFilterSet(v)}
               inputValueRenderer={v => v.name}
               inputProps={{
                 onChange: (e: React.ChangeEvent<HTMLInputElement>) => this.onFilterChange(e),
-                value: itemFilterValue,
+                value: ownerFilterValue,
               }}
             />
             <Button

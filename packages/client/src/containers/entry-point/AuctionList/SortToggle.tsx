@@ -1,13 +1,13 @@
 import { connect } from "react-redux";
 
-import { SortChange } from "../../../../actions/auction";
+import { SortChange } from "../../../actions/auction";
 import {
   IDispatchProps,
   IOwnProps,
   IStateProps,
   SortToggle,
-} from "../../../../components/App/Data/AuctionList/SortToggle";
-import { IStoreState } from "../../../../types";
+} from "../../../components/entry-point/AuctionList/SortToggle";
+import { IStoreState } from "../../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const { sortDirection, sortKind } = state.Auction;

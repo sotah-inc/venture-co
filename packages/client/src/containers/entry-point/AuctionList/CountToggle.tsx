@@ -1,12 +1,12 @@
 import { connect } from "react-redux";
 
-import { CountChange } from "../../../../actions/auction";
+import { CountChange } from "../../../actions/auction";
 import {
   CountToggle,
   IDispatchProps,
   IStateProps,
-} from "../../../../components/App/Data/AuctionList/CountToggle";
-import { IStoreState } from "../../../../types";
+} from "../../../components/entry-point/AuctionList/CountToggle";
+import { IStoreState } from "../../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const { auctionsPerPage } = state.Auction;

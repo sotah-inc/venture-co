@@ -3,7 +3,7 @@ import React from "react";
 import { WithRouterProps } from "next/dist/client/with-router";
 import { withRouter } from "next/router";
 
-import { AuctionTableContainer } from "../../../../containers/App/Data/AuctionList/AuctionTable";
+import { AuctionTableContainer } from "../../../containers/entry-point/AuctionList/AuctionTable";
 
 type Props = Readonly<WithRouterProps>;
 

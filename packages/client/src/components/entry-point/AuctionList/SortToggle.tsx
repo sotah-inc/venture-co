@@ -4,7 +4,7 @@ import { Button, Classes } from "@blueprintjs/core";
 import { IconName, IconNames } from "@blueprintjs/icons";
 import { SortDirection, SortKind } from "@sotah-inc/core";
 
-import { ISortChangeOptions } from "../../../../types/auction";
+import { ISortChangeOptions } from "../../../types/auction";
 
 export interface IStateProps {
   currentSortDirection: SortDirection;
