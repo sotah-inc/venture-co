@@ -209,7 +209,8 @@ export class Topbar extends React.Component<Props> {
 
     return (
       <LinkButtonRouteContainer
-        destination={`/data/${currentRegion.name}/${currentRealm.slug}${destination}`}
+        destination={`/data/[region_name]/[realm_slug]${destination}`}
+        asDestination={`/data/${currentRegion.name}/${currentRealm.slug}${destination}`}
         buttonProps={{ icon, text, minimal: true }}
       />
     );
