@@ -8,11 +8,12 @@ interface ILinkButtonButtonProps extends IButtonProps {
 
 export interface IRouteProps {
   locationPathname: string;
-  historyPush: (destination: string) => void;
+  historyPush: (destination: string, asDest?: string) => void;
 }
 
 export interface IOwnProps {
   destination: string;
+  asDestination?: string;
   buttonProps: ILinkButtonButtonProps;
   prefix?: boolean;
 }
@@ -20,7 +21,7 @@ export interface IOwnProps {
 type Props = Readonly<IOwnProps & IRouteProps>;
 
 export function LinkButton(props: Props) {
-  const { destination, locationPathname, historyPush, buttonProps, prefix } = props;
+  const { destination, locationPathname, historyPush, buttonProps, prefix, asDestination } = props;
 
   const active: boolean = (() => {
     if (typeof prefix === "undefined") {
@@ -30,5 +31,11 @@ export function LinkButton(props: Props) {
     return locationPathname.startsWith(destination);
   })();
 
-  return <Button active={active} onClick={() => historyPush(destination)} {...buttonProps} />;
+  return (
+    <Button
+      active={active}
+      onClick={() => historyPush(destination, asDestination)}
+      {...buttonProps}
+    />
+  );
 }
