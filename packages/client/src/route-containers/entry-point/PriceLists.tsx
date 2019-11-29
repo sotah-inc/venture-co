@@ -9,7 +9,7 @@ import { extractString } from "../../util";
 
 type Props = Readonly<WithRouterProps & IOwnProps>;
 
-function RouteContainer({ router, loadId }: Props) {
+function RouteContainer({ router, loadId, realmEntrypointData }: Props) {
   return (
     <PriceListsContainer
       routeParams={{
@@ -36,27 +36,8 @@ function RouteContainer({ router, loadId }: Props) {
             `/${urlParts.join("/")}`,
           ))();
       }}
-      browseOnRealmChange={(region, realm, profession, expansion, pricelist) => {
-        const urlParts = ["data", region.name, realm.slug, "professions"];
-        if (profession === null) {
-          if (pricelist !== null && pricelist.slug !== null) {
-            urlParts.push(...["user", pricelist.slug]);
-          }
-        } else {
-          urlParts.push(profession.name);
-
-          if (expansion !== null) {
-            urlParts.push(expansion.name);
-          }
-          if (pricelist !== null && pricelist.slug !== null) {
-            urlParts.push(pricelist.slug);
-          }
-        }
-        (async () => router.replace(`/${urlParts.join("/")}`))();
-
-        return;
-      }}
       loadId={loadId}
+      realmEntrypointData={realmEntrypointData}
     />
   );
 }

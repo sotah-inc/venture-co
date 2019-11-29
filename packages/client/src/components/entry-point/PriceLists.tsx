@@ -3,6 +3,7 @@ import React from "react";
 import { Classes, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
 import { IExpansion, IPricelistJson, IProfession, IRegion, IStatusRealm } from "@sotah-inc/core";
 
+import { ILoadRealmEntrypoint } from "../../actions/main";
 // tslint:disable-next-line:max-line-length
 import { CreateEntryDialogContainer } from "../../containers/entry-point/PriceLists/CreateEntryDialog";
 import { ActionBarRouteContainer } from "../../route-containers/entry-point/PriceLists/ActionBar";
@@ -42,10 +43,8 @@ export interface IDispatchProps {
   changeSelectedExpansion: (expansion: IExpansion) => void;
   changeSelectedList: (list: IPricelistJson) => void;
   changeSelectedProfession: (profession: IProfession) => void;
-  fetchRealms: (region: IRegion) => void;
-  onRegionChange: (region: IRegion) => void;
-  onRealmChange: (realm: IStatusRealm) => void;
   resetProfessionsSelections: () => void;
+  loadRealmEntrypoint: (payload: ILoadRealmEntrypoint) => void;
 }
 
 export interface IRouteProps {
@@ -56,13 +55,6 @@ export interface IRouteProps {
     profession: IProfession,
     expansion: IExpansion,
     pricelist: IPricelistJson,
-  ) => void;
-  browseOnRealmChange: (
-    region: IRegion,
-    realm: IStatusRealm,
-    profession: IProfession | null,
-    expansion: IExpansion | null,
-    pricelist: IPricelistJson | null,
   ) => void;
 }
 
@@ -76,89 +68,43 @@ export interface IRouteParams {
 
 export interface IOwnProps {
   loadId: string;
+  realmEntrypointData: ILoadRealmEntrypoint;
 }
 
 type Props = Readonly<IStateProps & IDispatchProps & IOwnProps & IRouteProps>;
 
 export class PriceLists extends React.Component<Props> {
   public componentDidMount() {
-    const {
-      currentRegion,
-      routeParams: { region_name },
-      onRegionChange,
-      regions,
-    } = this.props;
+    const { loadRealmEntrypoint, realmEntrypointData } = this.props;
 
-    if (currentRegion === null) {
-      return;
-    }
-
-    if (currentRegion.name !== region_name) {
-      if (region_name in regions) {
-        onRegionChange(regions[region_name]);
-
-        return;
-      }
-
-      return;
-    }
-
-    this.handleWithRegion();
+    loadRealmEntrypoint(realmEntrypointData);
   }
 
-  public componentDidUpdate() {
+  public componentDidUpdate(prevProps: Props) {
     const {
-      routeParams: { region_name },
+      routeParams: { region_name, realm_slug },
       currentRegion,
-      onRegionChange,
-      regions,
-      fetchRealmLevel,
-      fetchRealms,
       currentRealm,
-      selectedProfession,
-      selectedExpansion,
-      selectedList,
-      browseOnRealmChange,
+      loadId,
+      loadRealmEntrypoint,
+      realmEntrypointData,
     } = this.props;
 
-    if (currentRegion === null) {
+    if (prevProps.loadId !== loadId) {
+      loadRealmEntrypoint(realmEntrypointData);
+
       return;
     }
 
-    if (currentRegion.name !== region_name) {
-      switch (fetchRealmLevel) {
-        case FetchLevel.initial:
-          if (region_name in regions) {
-            onRegionChange(regions[region_name]);
-
-            return;
-          }
-
-          return;
-        case FetchLevel.prompted:
-          fetchRealms(currentRegion);
-
-          return;
-        case FetchLevel.success:
-          if (currentRealm === null) {
-            return;
-          }
-
-          browseOnRealmChange(
-            currentRegion,
-            currentRealm,
-            selectedProfession,
-            selectedExpansion,
-            selectedList,
-          );
-
-          return;
-        default:
-          return;
-      }
+    if (currentRegion === null || currentRegion.name !== region_name) {
+      return;
     }
 
-    this.handleWithRegion();
+    if (currentRealm === null || currentRealm.slug !== realm_slug) {
+      return;
+    }
+
+    this.handleWithRealm();
   }
 
   public render() {
@@ -209,55 +155,9 @@ export class PriceLists extends React.Component<Props> {
     );
   }
 
-  private handleWithRegion() {
-    const {
-      routeParams: { realm_slug },
-      fetchRealmLevel,
-      currentRegion,
-      fetchRealms,
-      currentRealm,
-      onRealmChange,
-      realms,
-    } = this.props;
-
-    if (currentRegion === null) {
-      return;
-    }
-
-    switch (fetchRealmLevel) {
-      case FetchLevel.initial:
-      case FetchLevel.prompted:
-        fetchRealms(currentRegion);
-
-        return;
-      case FetchLevel.success:
-        break;
-      default:
-        return;
-    }
-
-    if (currentRealm === null) {
-      return;
-    }
-
-    if (currentRealm.slug !== realm_slug) {
-      if (!(realm_slug in realms)) {
-        return;
-      }
-
-      onRealmChange(realms[realm_slug]);
-
-      return;
-    }
-
-    this.handleWithRealm();
-  }
-
   private handleWithRealm() {
     const {
       routeParams: { profession_name, pricelist_slug },
-      currentRegion,
-      currentRealm,
       selectedProfession,
       selectedExpansion,
       selectedList,
@@ -267,10 +167,6 @@ export class PriceLists extends React.Component<Props> {
       pricelists,
       changeSelectedList,
     } = this.props;
-
-    if (currentRegion === null || currentRealm === null) {
-      return;
-    }
 
     if (profession_name.length === 0) {
       if (pricelist_slug.length === 0) {

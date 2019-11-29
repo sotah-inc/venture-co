@@ -1,11 +1,6 @@
 import { connect } from "react-redux";
 
-import {
-  ChangeIsLoginDialogOpen,
-  FetchGetRealms,
-  RealmChange,
-  RegionChange,
-} from "../../actions/main";
+import { ChangeIsLoginDialogOpen, LoadRealmEntrypoint } from "../../actions/main";
 import {
   ChangeSelectedExpansion,
   ChangeSelectedList,
@@ -64,9 +59,7 @@ const mapDispatchToProps: IDispatchProps = {
   changeSelectedExpansion: ChangeSelectedExpansion,
   changeSelectedList: ChangeSelectedList,
   changeSelectedProfession: ChangeSelectedProfession,
-  fetchRealms: FetchGetRealms,
-  onRealmChange: RealmChange,
-  onRegionChange: RegionChange,
+  loadRealmEntrypoint: LoadRealmEntrypoint,
   resetProfessionsSelections: ResetProfessionsSelections,
 };
 
