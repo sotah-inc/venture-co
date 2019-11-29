@@ -12,7 +12,13 @@ import {
   ChangeSelectedProfession,
   ResetProfessionsSelections,
 } from "../../actions/price-lists";
-import { IDispatchProps, IStateProps, PriceLists } from "../../components/entry-point/PriceLists";
+import {
+  IDispatchProps,
+  IOwnProps,
+  IRouteProps,
+  IStateProps,
+  PriceLists,
+} from "../../components/entry-point/PriceLists";
 import { IStoreState } from "../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
@@ -64,7 +70,12 @@ const mapDispatchToProps: IDispatchProps = {
   resetProfessionsSelections: ResetProfessionsSelections,
 };
 
-export const PriceListsContainer = connect<IStateProps, IDispatchProps, {}, IStoreState>(
+export const PriceListsContainer = connect<
+  IStateProps,
+  IDispatchProps,
+  IOwnProps & IRouteProps,
+  IStoreState
+>(
   mapStateToProps,
   mapDispatchToProps,
 )(PriceLists);

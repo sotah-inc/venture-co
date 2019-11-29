@@ -74,9 +74,11 @@ export interface IRouteParams {
   pricelist_slug: string;
 }
 
-export type IOwnProps = IRouteProps;
+export interface IOwnProps {
+  loadId: string;
+}
 
-type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
+type Props = Readonly<IStateProps & IDispatchProps & IOwnProps & IRouteProps>;
 
 export class PriceLists extends React.Component<Props> {
   public componentDidMount() {

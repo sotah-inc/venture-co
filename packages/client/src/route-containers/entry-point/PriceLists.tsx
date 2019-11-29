@@ -3,12 +3,13 @@ import React from "react";
 import { WithRouterProps } from "next/dist/client/with-router";
 import { withRouter } from "next/router";
 
+import { IOwnProps } from "../../components/entry-point/PriceLists";
 import { PriceListsContainer } from "../../containers/entry-point/PriceLists";
 import { extractString } from "../../util";
 
-type Props = Readonly<WithRouterProps>;
+type Props = Readonly<WithRouterProps & IOwnProps>;
 
-function RouteContainer({ router }: Props) {
+function RouteContainer({ router, loadId }: Props) {
   return (
     <PriceListsContainer
       routeParams={{
@@ -55,6 +56,7 @@ function RouteContainer({ router }: Props) {
 
         return;
       }}
+      loadId={loadId}
     />
   );
 }
