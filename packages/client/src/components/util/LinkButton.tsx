@@ -23,12 +23,14 @@ type Props = Readonly<IOwnProps & IRouteProps>;
 export function LinkButton(props: Props) {
   const { destination, locationPathname, historyPush, buttonProps, prefix, asDestination } = props;
 
+  const comparisonDestination = typeof asDestination === "undefined" ? destination : asDestination;
+
   const active: boolean = (() => {
     if (typeof prefix === "undefined") {
-      return locationPathname === destination;
+      return locationPathname === comparisonDestination;
     }
 
-    return locationPathname.startsWith(destination);
+    return locationPathname.startsWith(comparisonDestination);
   })();
 
   return (

@@ -7,16 +7,19 @@ import { IOwnProps, LinkButton } from "../../components/util/LinkButton";
 
 type Props = Readonly<IOwnProps & WithRouterProps>;
 
-function RouteContainer({ buttonProps, destination, router, prefix }: Props) {
+function RouteContainer({ buttonProps, destination, router, prefix, asDestination }: Props) {
   return (
     <LinkButton
       locationPathname={router.asPath}
-      historyPush={(pushDestination: string, asDest?: string) =>
-        router.replace(pushDestination, asDest)
-      }
+      historyPush={(pushDestination: string, asDest?: string) => {
+        (async () => {
+          await router.replace(pushDestination, asDest);
+        })();
+      }}
       destination={destination}
       buttonProps={buttonProps}
       prefix={prefix}
+      asDestination={asDestination}
     />
   );
 }
