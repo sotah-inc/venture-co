@@ -33,7 +33,13 @@ import {
   ItemId,
   IValidationErrorResponse,
 } from "@sotah-inc/core";
-import { code, Messenger, Post, ProfessionPricelist } from "@sotah-inc/server";
+import {
+  code,
+  getEarliestRealmModifiedDate,
+  Messenger,
+  Post,
+  ProfessionPricelist,
+} from "@sotah-inc/server";
 // @ts-ignore
 import boll from "bollinger-bands";
 import HTTPStatus from "http-status";
@@ -102,6 +108,42 @@ export class DataController {
       return { status: HTTPStatus.INTERNAL_SERVER_ERROR, data: null };
     }
 
+    // gathering earliest downloaded realm-modification-date
+    const lastModifiedDate: moment.Moment | null = (() => {
+      if (modDatesMessage.data === null || typeof modDatesMessage.data === "undefined") {
+        return null;
+      }
+
+      const earliestRealmModified = getEarliestRealmModifiedDate(
+        req.params["region_name"],
+        modDatesMessage.data,
+      );
+      if (earliestRealmModified === null) {
+        return null;
+      }
+
+      return moment(earliestRealmModified).utc();
+    })();
+
+    // checking if-modified-since header
+    const ifModifiedSince = req.header("if-modified-since");
+    if (lastModifiedDate !== null && typeof ifModifiedSince !== "undefined") {
+      const ifModifiedSinceDate = moment(new Date(ifModifiedSince)).utc();
+      if (lastModifiedDate.isSameOrBefore(ifModifiedSinceDate)) {
+        // tslint:disable-next-line:no-console
+        console.log("serving cached request");
+
+        return {
+          data: null,
+          headers: {
+            "Cache-Control": ["public", `max-age=${60 * 30}`],
+            "Last-Modified": `${lastModifiedDate.format("ddd, DD MMM YYYY HH:mm:ss")} GMT`,
+          },
+          status: HTTPStatus.NOT_MODIFIED,
+        };
+      }
+    }
+
     const realms = statusMessage
       .data!.realms.map<IStatusRealm>(realm => {
         const realmModificationDates = ((): IRealmModificationDates => {
@@ -150,8 +192,20 @@ export class DataController {
         return 0;
       });
 
+    const headers = (() => {
+      if (lastModifiedDate === null) {
+        return;
+      }
+
+      return {
+        "Cache-Control": ["public", `max-age=${60 * 30}`],
+        "Last-Modified": `${lastModifiedDate.format("ddd, DD MMM YYYY HH:mm:ss")} GMT`,
+      };
+    })();
+
     return {
       data: { realms },
+      headers,
       status: HTTPStatus.OK,
     };
   };
@@ -449,11 +503,13 @@ export class DataController {
 
   public getPricelist: RequestHandler<IGetPricelistRequest, IGetPricelistResponse> = async req => {
     const { item_ids } = req.body;
-    const price_list = (await this.messenger.getPriceList({
-      item_ids,
-      realm_slug: req.params["realmSlug"],
-      region_name: req.params["regionName"],
-    })).data!.price_list;
+    const price_list = (
+      await this.messenger.getPriceList({
+        item_ids,
+        realm_slug: req.params["realmSlug"],
+        region_name: req.params["regionName"],
+      })
+    ).data!.price_list;
     const items = (await this.messenger.getItems(item_ids)).data!.items;
 
     return {
@@ -469,13 +525,15 @@ export class DataController {
     const { item_ids } = req.body;
     const currentUnixTimestamp = Math.floor(Date.now() / 1000);
     const lowerBounds = currentUnixTimestamp - 60 * 60 * 24 * 14;
-    let history = (await this.messenger.getPricelistHistories({
-      item_ids,
-      lower_bounds: lowerBounds,
-      realm_slug: req.params["realmSlug"],
-      region_name: req.params["regionName"],
-      upper_bounds: currentUnixTimestamp,
-    })).data!.history;
+    let history = (
+      await this.messenger.getPricelistHistories({
+        item_ids,
+        lower_bounds: lowerBounds,
+        realm_slug: req.params["realmSlug"],
+        region_name: req.params["regionName"],
+        upper_bounds: currentUnixTimestamp,
+      })
+    ).data!.history;
     const items = (await this.messenger.getItems(item_ids)).data!.items;
 
     // gathering unix timestamps for all items
