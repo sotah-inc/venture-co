@@ -21,7 +21,7 @@ export const gunzip = (data: Buffer): Promise<Buffer> => {
   });
 };
 
-export const getEarliestRealmModifiedDate = (
+export const getLatestRealmModifiedDate = (
   regionName: RegionName,
   res: IRealmModificationDatesResponse,
 ): Date | null => {
@@ -31,9 +31,9 @@ export const getEarliestRealmModifiedDate = (
 
   const realmModDates = res[regionName];
 
-  const earliestDownloaded = Object.values(realmModDates).reduce<number | null>(
+  const latestDownloaded = Object.values(realmModDates).reduce<number | null>(
     (result, modDates) => {
-      if (result === null || modDates.downloaded < result) {
+      if (result === null || modDates.downloaded > result) {
         return modDates.downloaded;
       }
 
@@ -42,11 +42,11 @@ export const getEarliestRealmModifiedDate = (
     null,
   );
 
-  if (earliestDownloaded === null) {
+  if (latestDownloaded === null) {
     return null;
   }
 
-  return moment(earliestDownloaded * 1000)
+  return moment(latestDownloaded * 1000)
     .utc()
     .toDate();
 };

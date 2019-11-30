@@ -35,7 +35,7 @@ import {
 } from "@sotah-inc/core";
 import {
   code,
-  getEarliestRealmModifiedDate,
+  getLatestRealmModifiedDate,
   Messenger,
   Post,
   ProfessionPricelist,
@@ -114,7 +114,7 @@ export class DataController {
         return null;
       }
 
-      const earliestRealmModified = getEarliestRealmModifiedDate(
+      const earliestRealmModified = getLatestRealmModifiedDate(
         req.params["region_name"],
         modDatesMessage.data,
       );
