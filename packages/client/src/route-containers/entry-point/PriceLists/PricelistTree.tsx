@@ -11,7 +11,7 @@ function RouteContainer({ router }: Props) {
   return (
     <PricelistTreeContainer
       browseToProfessionPricelist={(region, realm, profession, expansion, pricelist) => {
-        const professionPricelistUrl = [
+        const professionPricelistAsDest = [
           "data",
           region.name,
           realm.slug,
@@ -20,10 +20,22 @@ function RouteContainer({ router }: Props) {
           expansion.name,
           pricelist.slug,
         ].join("/");
-        (async () => router.replace(`/${professionPricelistUrl}`))();
+        const professionPricelistUrl = [
+          "data",
+          "[region_name]",
+          "[realm_slug]",
+          "professions",
+          "[profession_name]",
+          "[expansion_name]",
+          "[pricelist_slug]",
+        ].join("/");
+
+        (async () => {
+          await router.replace(`/${professionPricelistUrl}`, `/${professionPricelistAsDest}`);
+        })();
       }}
       browseToUserPricelist={(region, realm, pricelist) => {
-        const userPricelistUrl = [
+        const userPricelistAsDest = [
           "data",
           region.name,
           realm.slug,
@@ -31,17 +43,37 @@ function RouteContainer({ router }: Props) {
           "user",
           pricelist.slug,
         ].join("/");
-        (async () => router.replace(`/${userPricelistUrl}`))();
+        const userPricelistUrl = [
+          "data",
+          "[region_name]",
+          "[realm_slug]",
+          "professions",
+          "user",
+          "[pricelist_slug]",
+        ].join("/");
+
+        (async () => {
+          await router.replace(`/${userPricelistUrl}`, `/${userPricelistAsDest}`);
+        })();
       }}
       browseToProfessions={(region, realm) => {
-        (async () => router.replace(`/data/${region.name}/${realm.slug}/professions`))();
+        (async () => {
+          await router.replace(
+            "/data/[region_name]/[realm_slug]/professions",
+            `/data/${region.name}/${realm.slug}/professions`,
+          );
+        })();
       }}
       browseToProfession={(region, realm, profession) => {
-        (async () =>
-          router.replace(`/data/${region.name}/${realm.slug}/professions/${profession.name}`))();
+        (async () => {
+          await router.replace(
+            "/data/[region_name]/[realm_slug]/professions/[profession_name]",
+            `/data/${region.name}/${realm.slug}/professions/${profession.name}`,
+          );
+        })();
       }}
       browseToProfessionExpansion={(region, realm, profession, expansion) => {
-        const url = [
+        const asDest = [
           "data",
           region.name,
           realm.slug,
@@ -49,7 +81,18 @@ function RouteContainer({ router }: Props) {
           profession.name,
           expansion.name,
         ].join("/");
-        (async () => router.replace(`/${url}`))();
+        const url = [
+          "data",
+          "[region_name]",
+          "[realm_slug]",
+          "professions",
+          "[profession_name]",
+          "[expansion_name]",
+        ].join("/");
+
+        (async () => {
+          await router.replace(`/${url}`, `/${asDest}`);
+        })();
       }}
     />
   );
