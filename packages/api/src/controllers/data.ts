@@ -111,18 +111,27 @@ export class DataController {
     // gathering earliest downloaded realm-modification-date
     const lastModifiedDate: moment.Moment | null = (() => {
       if (modDatesMessage.data === null || typeof modDatesMessage.data === "undefined") {
+        // tslint:disable-next-line:no-console
+        console.log("modDatesMessage.data was null or undefined");
+
+        // tslint:disable-next-line:no-console
+        console.log(`data: ${modDatesMessage.rawData}`);
+
         return null;
       }
 
-      const earliestRealmModified = getLatestRealmModifiedDate(
+      const latestRealmModified = getLatestRealmModifiedDate(
         req.params["region_name"],
         modDatesMessage.data,
       );
-      if (earliestRealmModified === null) {
+      if (latestRealmModified === null) {
+        // tslint:disable-next-line:no-console
+        console.log("latestRealmModified was null");
+
         return null;
       }
 
-      return moment(earliestRealmModified).utc();
+      return moment(latestRealmModified).utc();
     })();
 
     // checking if-modified-since header
@@ -194,8 +203,14 @@ export class DataController {
 
     const headers = (() => {
       if (lastModifiedDate === null) {
+        // tslint:disable-next-line:no-console
+        console.log("serving blank headers");
+
         return;
       }
+
+      // tslint:disable-next-line:no-console
+      console.log("serving cache headers");
 
       return {
         "Cache-Control": ["public", `max-age=${60 * 30}`],
