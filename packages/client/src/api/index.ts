@@ -77,6 +77,7 @@ export const gather = async <T, A>(opts: IGatherOptions<T>): Promise<IGatherResu
 
   const response = await fetch(opts.url, {
     body,
+    cache: "force-cache",
     headers,
     method,
   });
@@ -109,6 +110,7 @@ export const gatherWithQuery = async <Q, A>(
   })();
 
   const response = await fetch(url, {
+    cache: "force-cache",
     headers,
     method,
   });
