@@ -57,6 +57,9 @@ export const getApp = async (opts: IOptions): Promise<express.Express | null> =>
   const messenger = new Messenger(natsConnection);
   await messenger.getBoot();
 
+  // tslint:disable-next-line:no-console
+  console.log(await messenger.getRealmModificationDates());
+
   // db init
   logger.info("Connecting to db", { dbHost, dbPassword });
   const dbConn = await (async () => {
