@@ -1,7 +1,15 @@
 import React from "react";
 
 import { Classes, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
-import { IExpansion, IPricelistJson, IProfession, IRegion, IStatusRealm } from "@sotah-inc/core";
+import {
+  ExpansionName,
+  IExpansion,
+  IPricelistJson,
+  IProfession,
+  IRegion,
+  IStatusRealm,
+  ProfessionName,
+} from "@sotah-inc/core";
 
 import { ILoadRealmEntrypoint } from "../../actions/main";
 import { ILoadPricelistsEntrypoint } from "../../actions/price-lists";
@@ -69,7 +77,11 @@ export interface IRouteParams {
 export interface IOwnProps {
   loadId: string;
   realmEntrypointData: ILoadRealmEntrypoint;
-  pricelistsEntrypointData: ILoadPricelistsEntrypoint;
+  pricelistsEntrypointData: {
+    professionName: ProfessionName;
+    expansionName: ExpansionName;
+    pricelistSlug: string;
+  };
 }
 
 type Props = Readonly<IStateProps & IDispatchProps & IOwnProps & IRouteProps>;
@@ -81,10 +93,16 @@ export class PriceLists extends React.Component<Props> {
       loadRealmEntrypoint,
       pricelistsEntrypointData,
       realmEntrypointData,
+      expansions,
+      professions,
     } = this.props;
 
     loadRealmEntrypoint(realmEntrypointData);
-    loadPricelistsEntrypoint(pricelistsEntrypointData);
+    loadPricelistsEntrypoint({
+      ...pricelistsEntrypointData,
+      expansions,
+      professions,
+    });
   }
 
   public componentDidUpdate(prevProps: Props) {
