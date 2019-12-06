@@ -1,4 +1,4 @@
-import { IItemsMap, IPricelistJson, IProfessionPricelistJson } from "@sotah-inc/core";
+import { IItemsMap, IPricelistJson, IProfession, IProfessionPricelistJson } from "@sotah-inc/core";
 
 import {
   ChangeSelectedExpansion,
@@ -27,9 +27,24 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
     pricelists: {
       load: (
         state: IPriceListsState,
-        _action: ReturnType<typeof LoadPricelistsEntrypoint>,
+        action: ReturnType<typeof LoadPricelistsEntrypoint>,
       ): IPriceListsState => {
-        return state;
+        const selectedProfession = action.payload.professions.reduce<IProfession | null>(
+          (previousValue, currentValue) => {
+            if (previousValue !== null) {
+              return previousValue;
+            }
+
+            if (currentValue.name === action.payload.professionName) {
+              return currentValue;
+            }
+
+            return null;
+          },
+          null,
+        );
+
+        return { ...state, selectedProfession };
       },
     },
   },

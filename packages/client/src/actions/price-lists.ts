@@ -266,6 +266,7 @@ export interface ILoadPricelistsEntrypoint {
   professionName: ProfessionName;
   expansionName: ExpansionName;
   pricelistSlug: string;
+  professions: IProfession[];
 }
 
 export const LOAD_PRICELISTS_ENTRYPOINT = "LOAD_PRICELISTS_ENTRYPOINT";

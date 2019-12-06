@@ -4,6 +4,7 @@ import { Classes, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
 import { IExpansion, IPricelistJson, IProfession, IRegion, IStatusRealm } from "@sotah-inc/core";
 
 import { ILoadRealmEntrypoint } from "../../actions/main";
+import { ILoadPricelistsEntrypoint } from "../../actions/price-lists";
 // tslint:disable-next-line:max-line-length
 import { CreateEntryDialogContainer } from "../../containers/entry-point/PriceLists/CreateEntryDialog";
 import { ActionBarRouteContainer } from "../../route-containers/entry-point/PriceLists/ActionBar";
@@ -42,9 +43,9 @@ export interface IDispatchProps {
   changeIsLoginDialogOpen: (isLoginDialogOpen: boolean) => void;
   changeSelectedExpansion: (expansion: IExpansion) => void;
   changeSelectedList: (list: IPricelistJson) => void;
-  changeSelectedProfession: (profession: IProfession) => void;
   resetProfessionsSelections: () => void;
   loadRealmEntrypoint: (payload: ILoadRealmEntrypoint) => void;
+  loadPricelistsEntrypoint: (payload: ILoadPricelistsEntrypoint) => void;
 }
 
 export interface IRouteProps {
@@ -69,15 +70,22 @@ export interface IRouteParams {
 export interface IOwnProps {
   loadId: string;
   realmEntrypointData: ILoadRealmEntrypoint;
+  pricelistsEntrypointData: ILoadPricelistsEntrypoint;
 }
 
 type Props = Readonly<IStateProps & IDispatchProps & IOwnProps & IRouteProps>;
 
 export class PriceLists extends React.Component<Props> {
   public componentDidMount() {
-    const { loadRealmEntrypoint, realmEntrypointData } = this.props;
+    const {
+      loadPricelistsEntrypoint,
+      loadRealmEntrypoint,
+      pricelistsEntrypointData,
+      realmEntrypointData,
+    } = this.props;
 
     loadRealmEntrypoint(realmEntrypointData);
+    loadPricelistsEntrypoint(pricelistsEntrypointData);
   }
 
   public componentDidUpdate(prevProps: Props) {
@@ -161,8 +169,6 @@ export class PriceLists extends React.Component<Props> {
       selectedProfession,
       selectedExpansion,
       selectedList,
-      changeSelectedProfession,
-      professions,
       resetProfessionsSelections,
       pricelists,
       changeSelectedList,
@@ -206,27 +212,6 @@ export class PriceLists extends React.Component<Props> {
     }
 
     if (selectedProfession === null || selectedProfession.name !== profession_name) {
-      const foundProfession = professions.reduce<IProfession | null>(
-        (previousValue, currentValue) => {
-          if (previousValue !== null) {
-            return previousValue;
-          }
-
-          if (currentValue.name === profession_name) {
-            return currentValue;
-          }
-
-          return null;
-        },
-        null,
-      );
-
-      if (foundProfession === null) {
-        return;
-      }
-
-      changeSelectedProfession(foundProfession);
-
       return;
     }
 

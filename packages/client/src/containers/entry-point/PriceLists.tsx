@@ -4,7 +4,7 @@ import { ChangeIsLoginDialogOpen, LoadRealmEntrypoint } from "../../actions/main
 import {
   ChangeSelectedExpansion,
   ChangeSelectedList,
-  ChangeSelectedProfession,
+  LoadPricelistsEntrypoint,
   ResetProfessionsSelections,
 } from "../../actions/price-lists";
 import {
@@ -58,7 +58,7 @@ const mapDispatchToProps: IDispatchProps = {
   changeIsLoginDialogOpen: ChangeIsLoginDialogOpen,
   changeSelectedExpansion: ChangeSelectedExpansion,
   changeSelectedList: ChangeSelectedList,
-  changeSelectedProfession: ChangeSelectedProfession,
+  loadPricelistsEntrypoint: LoadPricelistsEntrypoint,
   loadRealmEntrypoint: LoadRealmEntrypoint,
   resetProfessionsSelections: ResetProfessionsSelections,
 };
