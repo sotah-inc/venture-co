@@ -2,7 +2,6 @@ import { connect } from "react-redux";
 
 import { ChangeIsLoginDialogOpen, LoadRealmEntrypoint } from "../../actions/main";
 import {
-  ChangeSelectedExpansion,
   ChangeSelectedList,
   LoadPricelistsEntrypoint,
   ResetProfessionsSelections,
@@ -56,7 +55,6 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
 
 const mapDispatchToProps: IDispatchProps = {
   changeIsLoginDialogOpen: ChangeIsLoginDialogOpen,
-  changeSelectedExpansion: ChangeSelectedExpansion,
   changeSelectedList: ChangeSelectedList,
   loadPricelistsEntrypoint: LoadPricelistsEntrypoint,
   loadRealmEntrypoint: LoadRealmEntrypoint,
