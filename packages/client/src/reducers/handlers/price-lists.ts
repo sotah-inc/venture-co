@@ -2,6 +2,7 @@ import { IItemsMap, IPricelistJson, IProfessionPricelistJson } from "@sotah-inc/
 
 import {
   ChangeSelectedExpansion,
+  LoadPricelistsEntrypoint,
   PriceListsActions,
   ReceiveCreatePricelist,
   ReceiveCreateProfessionPricelist,
@@ -22,6 +23,16 @@ import { getPricelistIndex, getProfessionPricelistIndex } from "../helper";
 import { IKindHandlers, Runner } from "./index";
 
 export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
+  entrypoint: {
+    pricelists: {
+      load: (
+        state: IPriceListsState,
+        _action: ReturnType<typeof LoadPricelistsEntrypoint>,
+      ): IPriceListsState => {
+        return state;
+      },
+    },
+  },
   expansion: {
     selected: {
       change: (state: IPriceListsState, action: ReturnType<typeof ChangeSelectedExpansion>) => {
