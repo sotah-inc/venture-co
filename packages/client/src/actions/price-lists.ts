@@ -1,4 +1,5 @@
 import {
+  ExpansionName,
   ICreatePricelistRequest,
   ICreateProfessionPricelistRequest,
   IExpansion,
@@ -261,6 +262,16 @@ export const FetchGetItemsOwnership = (opts: IQueryOwnersByItemsOptions) => {
   };
 };
 
+export interface ILoadPricelistsEntrypoint {
+  professionName: ProfessionName;
+  expansionName: ExpansionName;
+  pricelistSlug: string;
+}
+
+export const LOAD_PRICELISTS_ENTRYPOINT = "LOAD_PRICELISTS_ENTRYPOINT";
+export const LoadPricelistsEntrypoint = (payload: ILoadPricelistsEntrypoint) =>
+  createAction(LOAD_PRICELISTS_ENTRYPOINT, payload);
+
 export const PriceListsActions = {
   AppendItems,
   ChangeEntryCreateLevel,
@@ -271,6 +282,7 @@ export const PriceListsActions = {
   ChangeSelectedExpansion,
   ChangeSelectedList,
   ChangeSelectedProfession,
+  LoadPricelistsEntrypoint,
   NavigateProfessionNode,
   ReceiveCreatePricelist,
   ReceiveCreateProfessionPricelist,
