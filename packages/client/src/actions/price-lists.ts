@@ -262,10 +262,13 @@ export const FetchGetItemsOwnership = (opts: IQueryOwnersByItemsOptions) => {
   };
 };
 
-export interface ILoadPricelistsEntrypoint {
-  professionName: ProfessionName;
-  expansionName: ExpansionName;
-  pricelistSlug: string;
+export interface ILoadPricelistsEntrypointFront {
+  professionName?: ProfessionName;
+  expansionName?: ExpansionName;
+  pricelistSlug?: string;
+}
+
+export interface ILoadPricelistsEntrypoint extends ILoadPricelistsEntrypointFront {
   professions: IProfession[];
   expansions: IExpansion[];
 }

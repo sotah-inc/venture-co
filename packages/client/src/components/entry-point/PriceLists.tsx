@@ -1,18 +1,13 @@
 import React from "react";
 
 import { Classes, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
-import {
-  ExpansionName,
-  IExpansion,
-  IPricelistJson,
-  IProfession,
-  IRegion,
-  IStatusRealm,
-  ProfessionName,
-} from "@sotah-inc/core";
+import { IExpansion, IPricelistJson, IProfession, IRegion, IStatusRealm } from "@sotah-inc/core";
 
 import { ILoadRealmEntrypoint } from "../../actions/main";
-import { ILoadPricelistsEntrypoint } from "../../actions/price-lists";
+import {
+  ILoadPricelistsEntrypoint,
+  ILoadPricelistsEntrypointFront,
+} from "../../actions/price-lists";
 // tslint:disable-next-line:max-line-length
 import { CreateEntryDialogContainer } from "../../containers/entry-point/PriceLists/CreateEntryDialog";
 import { ActionBarRouteContainer } from "../../route-containers/entry-point/PriceLists/ActionBar";
@@ -77,11 +72,7 @@ export interface IRouteParams {
 export interface IOwnProps {
   loadId: string;
   realmEntrypointData: ILoadRealmEntrypoint;
-  pricelistsEntrypointData: {
-    professionName: ProfessionName;
-    expansionName: ExpansionName;
-    pricelistSlug: string;
-  };
+  pricelistsEntrypointData: ILoadPricelistsEntrypointFront;
 }
 
 type Props = Readonly<IStateProps & IDispatchProps & IOwnProps & IRouteProps>;
