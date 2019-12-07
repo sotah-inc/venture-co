@@ -35,35 +35,47 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
         state: IPriceListsState,
         action: ReturnType<typeof LoadPricelistsEntrypoint>,
       ): IPriceListsState => {
-        const selectedProfession = action.payload.professions.reduce<IProfession | null>(
-          (previousValue, currentValue) => {
-            if (previousValue !== null) {
-              return previousValue;
-            }
-
-            if (currentValue.name === action.payload.professionName) {
-              return currentValue;
-            }
-
+        const selectedProfession: IProfession | null = (() => {
+          if (typeof action.payload === "undefined") {
             return null;
-          },
-          null,
-        );
+          }
 
-        const selectedExpansion = action.payload.expansions.reduce<IExpansion | null>(
-          (previousValue, currentValue) => {
-            if (previousValue !== null) {
-              return previousValue;
-            }
+          return action.payload.professions.reduce<IProfession | null>(
+            (previousValue, currentValue) => {
+              if (previousValue !== null) {
+                return previousValue;
+              }
 
-            if (currentValue.name === action.payload.expansionName) {
-              return currentValue;
-            }
+              if (currentValue.name === action.payload!.professionName) {
+                return currentValue;
+              }
 
+              return null;
+            },
+            null,
+          );
+        })();
+
+        const selectedExpansion: IExpansion | null = (() => {
+          if (typeof action.payload === "undefined") {
             return null;
-          },
-          null,
-        );
+          }
+
+          return action.payload.expansions.reduce<IExpansion | null>(
+            (previousValue, currentValue) => {
+              if (previousValue !== null) {
+                return previousValue;
+              }
+
+              if (currentValue.name === action.payload!.expansionName) {
+                return currentValue;
+              }
+
+              return null;
+            },
+            null,
+          );
+        })();
 
         return { ...state, selectedExpansion, selectedProfession };
       },

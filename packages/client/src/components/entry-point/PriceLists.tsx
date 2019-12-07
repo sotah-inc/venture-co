@@ -72,7 +72,7 @@ export interface IRouteParams {
 export interface IOwnProps {
   loadId: string;
   realmEntrypointData: ILoadRealmEntrypoint;
-  pricelistsEntrypointData: ILoadPricelistsEntrypointFront;
+  pricelistsEntrypointData?: ILoadPricelistsEntrypointFront;
 }
 
 type Props = Readonly<IStateProps & IDispatchProps & IOwnProps & IRouteProps>;
