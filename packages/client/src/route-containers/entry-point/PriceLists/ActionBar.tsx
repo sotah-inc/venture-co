@@ -11,22 +11,33 @@ function RouteContainer({ router }: Props) {
   return (
     <ActionBarContainer
       browseOnRealmChange={(region, realm, profession, expansion, list) => {
-        const urlParts = ["data", region.name, realm.slug, "professions"];
+        const urlParts: Array<[string, string]> = [
+          ["data", "data"],
+          ["[region_name]", region.name],
+          ["[realm_slug", realm.slug],
+          ["professions", "professions"],
+        ];
         if (profession === null) {
           if (list !== null && list.slug !== null) {
-            urlParts.push(...["user", list.slug]);
+            urlParts.push(["user", list.slug]);
           }
         } else {
-          urlParts.push(profession.name);
+          urlParts.push(["[profession_name]", profession.name]);
 
           if (expansion !== null) {
-            urlParts.push(expansion.name);
+            urlParts.push(["[expansion_name]", expansion.name]);
           }
           if (list !== null && list.slug !== null) {
-            urlParts.push(list.slug);
+            urlParts.push(["[pricelist_slug]", list.slug]);
           }
         }
-        (async () => router.replace(`/${urlParts.join("/")}`))();
+
+        const dest = urlParts.map(v => v[0]).join("/");
+        const asDest = urlParts.map(v => v[1]).join("/");
+
+        (async () => {
+          await router.replace(`/${dest}`, `/${asDest}`);
+        })();
       }}
     />
   );
