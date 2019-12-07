@@ -19,7 +19,12 @@ function RouteContainer({ router }: Props) {
           expansion.name,
           pricelist.slug,
         ].join("/");
-        (async () => router.replace(`/${professionPricelistUrl}`))();
+        (async () =>
+          router.replace(
+            // tslint:disable-next-line:max-line-length
+            "/data/[region_name]/[realm_slug]/professions/[profession_name]/[expansion_name]/[pricelist_slug]",
+            `/${professionPricelistUrl}`,
+          ))();
       }}
     />
   );

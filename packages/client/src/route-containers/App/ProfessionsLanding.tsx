@@ -12,7 +12,10 @@ function RouteContainer({ router }: Props) {
     <ProfessionsLandingContainer
       routeParams={router.query}
       browseToProfessions={(region, realm) =>
-        router.replace(`/data/${region.name}/${realm.slug}/professions`)
+        router.replace(
+          "/data/[region_name]/[realm_slug]/professions",
+          `/data/${region.name}/${realm.slug}/professions`,
+        )
       }
     />
   );

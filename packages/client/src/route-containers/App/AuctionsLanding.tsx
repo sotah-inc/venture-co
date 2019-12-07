@@ -13,7 +13,10 @@ function RouteContainer({ router }: Props) {
     <AuctionsLandingContainer
       routeParams={{ region_name: extractString("region_name", router.query) }}
       redirectToAuctions={(region, realm) =>
-        router.replace(`/data/${region.name}/${realm.slug}/auctions`)
+        router.replace(
+          "/data/[region_name]/[realm_slug]/auctions",
+          `/data/${region.name}/${realm.slug}/auctions`,
+        )
       }
     />
   );

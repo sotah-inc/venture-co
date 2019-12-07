@@ -12,7 +12,9 @@ type Props = Readonly<IRouteProps & WithRouterProps>;
 function RouteContainer({ router }: Props) {
   return (
     <NewsEditorContainer
-      browseToPost={post => router.replace(`/content/news/${post.slug}`)}
+      browseToPost={post =>
+        router.replace("/content/news/[post_slug]", `/content/news/${post.slug}`)
+      }
       browseToHome={() => router.replace("")}
       browseToNews={() => router.replace("/content/news")}
       routeParams={{ post_slug: extractString("post_slug", router.query) }}
