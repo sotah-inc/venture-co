@@ -3,7 +3,7 @@ import React from "react";
 import { Button, Callout, Dialog, Intent, IToastProps } from "@blueprintjs/core";
 import { IExpansion, IPricelistJson, IProfession, IRegion, IStatusRealm } from "@sotah-inc/core";
 
-import { IProfile } from "../../../types/global";
+import { IErrors, IProfile } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
 import { DialogActions, DialogBody } from "../../util";
 
@@ -11,6 +11,7 @@ export interface IStateProps {
   selectedList: IPricelistJson | null;
   profile: IProfile | null;
   isDeleteListDialogOpen: boolean;
+  deletePricelistErrors: IErrors;
   deletePricelistLevel: FetchLevel;
   selectedProfession: IProfession | null;
   selectedExpansion: IExpansion | null;
@@ -77,6 +78,14 @@ export class DeleteListDialog extends React.Component<Props> {
             selectedExpansion,
             selectedList,
           );
+
+          return;
+        case FetchLevel.failure:
+          insertToast({
+            icon: "warning-sign",
+            intent: Intent.DANGER,
+            message: "Failed to delete pricelist!",
+          });
 
           return;
         default:

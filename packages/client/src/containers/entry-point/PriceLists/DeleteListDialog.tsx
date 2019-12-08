@@ -18,6 +18,7 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
   const {
     selectedList,
     isDeleteListDialogOpen,
+    deletePricelistErrors,
     deletePricelistLevel,
     selectedProfession,
     selectedExpansion,
@@ -26,6 +27,7 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
   return {
     currentRealm,
     currentRegion,
+    deletePricelistErrors,
     deletePricelistLevel,
     isDeleteListDialogOpen,
     profile,

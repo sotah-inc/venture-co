@@ -33,6 +33,7 @@ export interface IPriceListsState {
   getPricelistsLevel: FetchLevel;
   items: IItemsMap;
   deletePricelistLevel: FetchLevel;
+  deletePricelistErrors: IErrors;
   selectedProfession: IProfession | null;
   professionPricelists: IExpansionProfessionPricelistMap;
   getProfessionPricelistsLevel: FetchLevel;
@@ -81,6 +82,7 @@ export interface IUpdatePricelistResponseOptions {
 export const defaultPriceListsState: IPriceListsState = {
   createPricelistErrors: {},
   createPricelistLevel: FetchLevel.initial,
+  deletePricelistErrors: {},
   deletePricelistLevel: FetchLevel.initial,
   entryCreateLevel: FetchLevel.initial,
   getItemsOwnershipLevel: FetchLevel.initial,

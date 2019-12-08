@@ -144,22 +144,29 @@ export const createProfessionPricelist = async (
   }
 };
 
+export interface IDeleteProfessionPricelistResult {
+  id: number;
+  errors: IValidationErrorResponse | null;
+}
+
 export const deleteProfessionPricelist = async (
   token: string,
   id: number,
-): Promise<number | null> => {
-  const res = await fetch(`${apiEndpoint}/user/profession-pricelists/${id}`, {
+): Promise<IDeleteProfessionPricelistResult> => {
+  const { status, json } = await fetch(`${apiEndpoint}/user/profession-pricelists/${id}`, {
     headers: new Headers({
       Authorization: `Bearer ${token}`,
       "content-type": "application/json",
     }),
     method: "DELETE",
   });
-  switch (res.status) {
+  switch (status) {
     case HTTPStatus.OK:
-      return id;
+      return { id, errors: null };
+    case HTTPStatus.INTERNAL_SERVER_ERROR:
+      return { id, errors: await json() };
     default:
-      return null;
+      return { id, errors: { error: `Unexpected status code: ${status}` } };
   }
 };
 

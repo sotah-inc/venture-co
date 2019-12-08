@@ -364,13 +364,17 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
         state: IPriceListsState,
         action: ReturnType<typeof ReceiveDeleteProfessionPricelist>,
       ) => {
-        if (action.payload === null) {
-          return { ...state, deletePricelistLevel: FetchLevel.failure };
+        if (action.payload.errors !== null) {
+          return {
+            ...state,
+            deletePricelistErrors: action.payload.errors,
+            deletePricelistLevel: FetchLevel.failure,
+          };
         }
 
         const expansionName = state.selectedExpansion!.name;
         const prevResult = state.professionPricelists[expansionName];
-        const deletedIndex = getProfessionPricelistIndex(prevResult, action.payload);
+        const deletedIndex = getProfessionPricelistIndex(prevResult, action.payload.id);
         const nextResult: IProfessionPricelistJson[] = (() => {
           if (deletedIndex === 0) {
             return [...prevResult.slice(1)];

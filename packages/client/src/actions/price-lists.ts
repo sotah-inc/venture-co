@@ -32,6 +32,7 @@ import {
   getUnmetDemand,
   ICreatePricelistResult,
   ICreateProfessionPricelistResult,
+  IDeleteProfessionPricelistResult,
   IGetProfessionPricelistsResult,
   IGetUnmetDemandOptions,
   IGetUnmetDemandResult,
@@ -166,7 +167,7 @@ export const REQUEST_DELETE_PROFESSIONPRICELIST = "REQUEST_DELETE_PROFESSIONPRIC
 export const RequestDeleteProfessionPricelist = () =>
   createAction(REQUEST_DELETE_PROFESSIONPRICELIST);
 export const RECEIVE_DELETE_PROFESSIONPRICELIST = "RECEIVE_DELETE_PROFESSIONPRICELIST";
-export const ReceiveDeleteProfessionPricelist = (payload: number | null) =>
+export const ReceiveDeleteProfessionPricelist = (payload: IDeleteProfessionPricelistResult) =>
   createAction(RECEIVE_DELETE_PROFESSIONPRICELIST, payload);
 type FetchDeleteProfessionPricelistType = ReturnType<
   typeof RequestDeleteProfessionPricelist | typeof ReceiveDeleteProfessionPricelist
