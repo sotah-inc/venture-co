@@ -12,16 +12,22 @@ function RouteContainer({ router }: Props) {
   return (
     <CreateListDialogContainer
       browseToProfessionPricelist={(region, realm, profession, expansion, pricelist) => {
-        const professionPricelistUrl = [
-          "data",
-          region.name,
-          realm.slug,
-          "professions",
-          profession.name,
-          expansion.name,
-          pricelist.slug,
-        ].join("/");
-        router.replace(`/${professionPricelistUrl}`);
+        const urlParts: Array<[string, string]> = [
+          ["data", "data"],
+          ["[region_name]", region.name],
+          ["[realm_slug]", realm.slug],
+          ["professions", "professions"],
+          ["[profession_name]", profession.name],
+          ["[expansion_name]", expansion.name],
+          ["[pricelist_slug]", pricelist.slug === null ? "" : pricelist.slug],
+        ];
+
+        const dest = urlParts.map(v => v[0]).join("/");
+        const asDest = urlParts.map(v => v[1]).join("/");
+
+        (async () => {
+          await router.replace(`/${dest}`, `/${asDest}`);
+        })();
       }}
     />
   );
