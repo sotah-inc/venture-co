@@ -12,18 +12,24 @@ function RouteContainer({ router }: Props) {
   return (
     <DeleteListDialogContainer
       browseOnDeletion={(region, realm, profession, expansion, list) => {
-        const urlParts = [
-          "data",
-          region.name,
-          realm.slug,
-          "professions",
-          profession.name,
-          expansion.name,
+        const urlParts: Array<[string, string]> = [
+          ["data", "data"],
+          ["[region_name]", region.name],
+          ["[realm_slug]", realm.slug],
+          ["professions", "professions"],
+          ["[profession_name]", profession.name],
+          ["[expansion_name]", expansion.name],
         ];
         if (list !== null && list.slug !== null) {
-          urlParts.push(list.slug);
+          urlParts.push(["[pricelist_slug]", list.slug]);
         }
-        (async () => router.replace(`/${urlParts.join("/")}`))();
+
+        const dest = urlParts.map(v => v[0]).join("/");
+        const asDest = urlParts.map(v => v[1]).join("/");
+
+        (async () => {
+          await router.replace(`/${dest}`, `/${asDest}`);
+        })();
       }}
     />
   );
