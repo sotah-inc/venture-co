@@ -43,6 +43,7 @@ export type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
 export class DeleteListDialog extends React.Component<Props> {
   public componentDidUpdate(prevProps: Props) {
     const {
+      deletePricelistErrors,
       deletePricelistLevel,
       currentRegion,
       currentRealm,
@@ -84,7 +85,7 @@ export class DeleteListDialog extends React.Component<Props> {
           insertToast({
             icon: "warning-sign",
             intent: Intent.DANGER,
-            message: "Failed to delete pricelist!",
+            message: `Failed to delete pricelist: ${Object.values(deletePricelistErrors)[0]}`,
           });
 
           return;
