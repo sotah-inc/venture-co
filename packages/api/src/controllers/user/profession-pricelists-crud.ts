@@ -112,15 +112,48 @@ export class ProfessionPricelistsCrudController {
       };
     }
 
-    if (professionPricelist.pricelist!.user!.id !== user.id) {
+    if (typeof professionPricelist.pricelist === "undefined") {
+      const validationErrors: IValidationErrorResponse = {
+        error: "Profession-pricelist pricelist was undefined.",
+      };
+
+      return {
+        data: validationErrors,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    if (typeof professionPricelist.pricelist.user === "undefined") {
+      const validationErrors: IValidationErrorResponse = {
+        error: "Profession-pricelist pricelist user was undefined.",
+      };
+
+      return {
+        data: validationErrors,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    if (professionPricelist.pricelist.user.id !== user.id) {
       return {
         data: null,
         status: HTTPStatus.UNAUTHORIZED,
       };
     }
 
+    if (typeof professionPricelist.pricelist.entries === "undefined") {
+      const validationErrors: IValidationErrorResponse = {
+        error: "Profession-pricelist pricelist entries was undefined.",
+      };
+
+      return {
+        data: validationErrors,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
     await Promise.all(
-      professionPricelist.pricelist!.entries!.map(v => this.dbConn.manager.remove(v)),
+      professionPricelist.pricelist.entries.map(v => this.dbConn.manager.remove(v)),
     );
     await this.dbConn.manager.remove(professionPricelist);
     await this.dbConn.manager.remove(professionPricelist.pricelist);
