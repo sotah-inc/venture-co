@@ -8,9 +8,13 @@ export class ProfessionPricelist {
   @PrimaryGeneratedColumn()
   public id: number | undefined;
 
-  @OneToOne(() => Pricelist, pricelist => pricelist.professionPricelist, {
-    eager: true,
-  })
+  @OneToOne(
+    () => Pricelist,
+    pricelist => pricelist.professionPricelist,
+    {
+      eager: true,
+    },
+  )
   @JoinColumn({ name: "pricelist_id" })
   public pricelist: Pricelist | undefined;
 
