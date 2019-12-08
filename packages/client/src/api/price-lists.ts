@@ -153,18 +153,16 @@ export const deleteProfessionPricelist = async (
   token: string,
   id: number,
 ): Promise<IDeleteProfessionPricelistResult> => {
-  const { status, json } = await fetch(`${apiEndpoint}/user/profession-pricelists/${id}`, {
-    headers: new Headers({
-      Authorization: `Bearer ${token}`,
-      "content-type": "application/json",
-    }),
+  const { body, status } = await gather<null, IValidationErrorResponse | null>({
+    headers: new Headers({ Authorization: `Bearer ${token}`, "content-type": "application/json" }),
     method: "DELETE",
+    url: `${apiEndpoint}/user/profession-pricelists/${id}`,
   });
   switch (status) {
     case HTTPStatus.OK:
       return { id, errors: null };
     case HTTPStatus.INTERNAL_SERVER_ERROR:
-      return { id, errors: await json() };
+      return { id, errors: body };
     default:
       return { id, errors: { error: `Unexpected status code: ${status}` } };
   }
