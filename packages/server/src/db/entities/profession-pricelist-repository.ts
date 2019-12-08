@@ -13,10 +13,8 @@ export class ProfessionPricelistRepository extends AbstractRepository<Profession
         "pricelist.id = :pricelist_id",
         { pricelist_id: pricelistId },
       )
-      .innerJoinAndSelect("pricelist.user", "user");
-
-    // tslint:disable-next-line:no-console
-    console.log(queryBuilder.getQuery());
+      .innerJoinAndSelect("pricelist.user", "pricelist.user")
+      .innerJoinAndSelect("pricelist.entries", "pricelist.entries");
 
     const professionPricelist = await queryBuilder.getOne();
 
