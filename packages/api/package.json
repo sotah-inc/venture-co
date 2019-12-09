@@ -15,7 +15,7 @@
     "build:ts": "tsc",
     "build:ts:watch": "npm run -s build:ts -- --watch",
     "prepublish": "npm run -s build",
-    "test": "ava -s ./build/dist/test/**/*.js",
+    "test": "ava -s --fail-fast ./build/dist/test/**/*.js",
     "test:watch": "npm run -s test -- -w",
     "test-coverage": "nyc --reporter=lcov npm -s test",
     "test-coverage-report": "nyc report",
