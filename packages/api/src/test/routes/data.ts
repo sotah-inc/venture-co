@@ -1,7 +1,7 @@
 import * as process from "process";
 import "reflect-metadata";
 
-import { IRegion, SortDirection, SortKind } from "@sotah-inc/core";
+import { SortDirection, SortKind } from "@sotah-inc/core";
 import test from "ava";
 import * as HttpStatus from "http-status";
 
@@ -20,21 +20,6 @@ const helper = async () => {
   return { request, messenger };
 };
 
-test("Regions Should return list of regions", async t => {
-  const { request } = await helper();
-
-  const tId = setTimeout(() => {
-    throw new Error("Timed out!");
-  }, 5 * 1000);
-
-  const res = await request.get("/regions");
-  clearTimeout(tId);
-
-  t.is(res.status, HttpStatus.OK, "Http status is OK");
-  const regions: IRegion[] = res.body;
-  t.true(regions.length > 0);
-});
-
 test("Status Should return status information", async t => {
   const { request, messenger } = await helper();
 
@@ -44,6 +29,9 @@ test("Status Should return status information", async t => {
 
   const { regions } = (await messenger.getBoot()).data!;
   t.true(regions.length > 0);
+
+  // tslint:disable-next-line:no-console
+  console.log(`/region/${regions[0].name}/realms`);
 
   const res = await request.get(`/region/${regions[0].name}/realms`);
   clearTimeout(tId);
@@ -61,7 +49,7 @@ test("Status Should return auction information", async t => {
   const { regions } = (await messenger.getBoot()).data!;
   const [region] = regions;
   const [realm] = (await messenger.getStatus(region.name)).data!.realms;
-  const res = await request.post(`/region/${region.name}/realm/${realm.slug}/auctions`).send({
+  const res = await request.get(`/region/${region.name}/realm/${realm.slug}/auctions`).send({
     count: 10,
     page: 0,
     sortDirection: SortDirection.none,
