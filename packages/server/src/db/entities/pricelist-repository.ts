@@ -34,6 +34,7 @@ export class PricelistRepository extends AbstractRepository<Pricelist> {
   public async getAllUserPricelists(userId: number): Promise<Pricelist[]> {
     return this.createQueryBuilder("pricelist")
       .innerJoinAndSelect("pricelist.user", "user", "user.id = :user_id", { user_id: userId })
+      .innerJoinAndSelect("pricelist.entries", "entries")
       .leftJoinAndSelect("pricelist.professionPricelist", "professionPricelist")
       .getMany();
   }
