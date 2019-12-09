@@ -38,12 +38,14 @@ export interface IDispatchProps {
 }
 
 export interface IRouteProps {
-  browseToProfessionPricelist: (
+  browseOnCreate: (
     region: IRegion,
     realm: IStatusRealm,
-    profession: IProfession,
-    expansion: IExpansion,
     pricelist: IPricelistJson,
+    professionData?: {
+      profession: IProfession;
+      expansion: IExpansion;
+    },
   ) => void;
 }
 
@@ -68,18 +70,12 @@ export class CreateListDialog extends React.Component<Props, State> {
       currentRealm,
       selectedProfession,
       selectedExpansion,
-      browseToProfessionPricelist,
+      browseOnCreate,
       insertToast,
     } = this.props;
     const { listDialogResetTrigger } = this.state;
 
-    if (
-      currentRegion === null ||
-      currentRealm === null ||
-      selectedProfession === null ||
-      selectedExpansion === null ||
-      selectedList === null
-    ) {
+    if (currentRegion === null || currentRealm === null || selectedList === null) {
       return;
     }
 
@@ -93,13 +89,15 @@ export class CreateListDialog extends React.Component<Props, State> {
           });
           this.setState({ listDialogResetTrigger: listDialogResetTrigger + 1 });
 
-          browseToProfessionPricelist(
-            currentRegion,
-            currentRealm,
-            selectedProfession,
-            selectedExpansion,
-            selectedList,
-          );
+          const professionData = (() => {
+            if (selectedProfession === null || selectedExpansion === null) {
+              return;
+            }
+
+            return { profession: selectedProfession, expansion: selectedExpansion };
+          })();
+
+          browseOnCreate(currentRegion, currentRealm, selectedList, professionData);
 
           break;
         default:
