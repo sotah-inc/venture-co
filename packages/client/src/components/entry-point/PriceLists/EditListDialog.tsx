@@ -37,12 +37,14 @@ export interface IDispatchProps {
 }
 
 export interface IRouteProps {
-  browseToProfessionPricelist: (
+  browseOnUpdate: (
     region: IRegion,
     realm: IStatusRealm,
-    profession: IProfession,
-    expansion: IExpansion,
     pricelist: IPricelistJson,
+    professionData?: {
+      profession: IProfession;
+      expansion: IExpansion;
+    },
   ) => void;
 }
 
@@ -65,18 +67,12 @@ export class EditListDialog extends React.Component<Props, State> {
       currentRealm,
       selectedProfession,
       selectedExpansion,
-      browseToProfessionPricelist,
+      browseOnUpdate,
       insertToast,
     } = this.props;
     const { listDialogResetTrigger } = this.state;
 
-    if (
-      currentRegion === null ||
-      currentRealm === null ||
-      selectedProfession === null ||
-      selectedExpansion === null ||
-      selectedList === null
-    ) {
+    if (currentRegion === null || currentRealm === null || selectedList === null) {
       return;
     }
 
@@ -90,13 +86,15 @@ export class EditListDialog extends React.Component<Props, State> {
           });
           this.setState({ listDialogResetTrigger: listDialogResetTrigger + 1 });
 
-          browseToProfessionPricelist(
-            currentRegion,
-            currentRealm,
-            selectedProfession,
-            selectedExpansion,
-            selectedList,
-          );
+          const professionData = (() => {
+            if (selectedProfession === null || selectedExpansion === null) {
+              return;
+            }
+
+            return { profession: selectedProfession, expansion: selectedExpansion };
+          })();
+
+          browseOnUpdate(currentRegion, currentRealm, selectedList, professionData);
 
           break;
         default:

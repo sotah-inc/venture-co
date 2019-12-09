@@ -9,22 +9,33 @@ type Props = Readonly<WithRouterProps>;
 function RouteContainer({ router }: Props) {
   return (
     <EditListDialogContainer
-      browseToProfessionPricelist={(region, realm, profession, expansion, pricelist) => {
-        const professionPricelistUrl = [
-          "data",
-          region.name,
-          realm.slug,
-          "professions",
-          profession.name,
-          expansion.name,
-          pricelist.slug,
-        ].join("/");
-        (async () =>
-          router.replace(
-            // tslint:disable-next-line:max-line-length
-            "/data/[region_name]/[realm_slug]/professions/[profession_name]/[expansion_name]/[pricelist_slug]",
-            `/${professionPricelistUrl}`,
-          ))();
+      browseOnUpdate={(region, realm, pricelist, professionData) => {
+        const urlParts: Array<[string, string]> = [
+          ["data", "data"],
+          ["[region_name]", region.name],
+          ["[realm_slug]", realm.slug],
+          ["professions", "professions"],
+        ];
+
+        if (pricelist.slug !== null) {
+          if (typeof professionData === "undefined") {
+            urlParts.push(["user", "user"]);
+          } else {
+            urlParts.push(
+              ["[profession_name]", professionData.profession.name],
+              ["[expansion_name]", professionData.expansion.name],
+            );
+          }
+
+          urlParts.push(["[pricelist_slug]", pricelist.slug]);
+        }
+
+        const dest = urlParts.map(v => v[0]).join("/");
+        const asDest = urlParts.map(v => v[1]).join("/");
+
+        (async () => {
+          await router.replace(`/${dest}`, `/${asDest}`);
+        })();
       }}
     />
   );
