@@ -17,9 +17,13 @@ function RouteContainer({ router }: Props) {
           ["[region_name]", region.name],
           ["[realm_slug]", realm.slug],
           ["professions", "professions"],
-          ["[profession_name]", profession.name],
-          ["[expansion_name]", expansion.name],
         ];
+        if (profession !== null) {
+          urlParts.push(["[profession_name]", profession.name]);
+        }
+        if (expansion !== null) {
+          urlParts.push(["[expansion_name]", expansion.name]);
+        }
         if (list !== null && list.slug !== null) {
           urlParts.push(["[pricelist_slug]", list.slug]);
         }

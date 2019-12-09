@@ -30,8 +30,8 @@ export interface IRouteProps {
   browseOnDeletion: (
     region: IRegion,
     realm: IStatusRealm,
-    profession: IProfession,
-    expansion: IExpansion,
+    profession: IProfession | null,
+    expansion: IExpansion | null,
     pricelist: IPricelistJson | null,
   ) => void;
 }
@@ -54,12 +54,7 @@ export class DeleteListDialog extends React.Component<Props> {
       insertToast,
     } = this.props;
 
-    if (
-      currentRegion === null ||
-      currentRealm === null ||
-      selectedProfession === null ||
-      selectedExpansion === null
-    ) {
+    if (currentRegion === null || currentRealm === null) {
       return;
     }
 
