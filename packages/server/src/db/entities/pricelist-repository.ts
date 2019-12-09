@@ -8,6 +8,7 @@ export class PricelistRepository extends AbstractRepository<Pricelist> {
     const pricelist = await this.repository
       .createQueryBuilder("pricelist")
       .innerJoinAndSelect("pricelist.user", "user", "user.id = :user_id", { user_id: userId })
+      .innerJoinAndSelect("pricelist.entries", "entries")
       .where({ id })
       .getOne();
 
