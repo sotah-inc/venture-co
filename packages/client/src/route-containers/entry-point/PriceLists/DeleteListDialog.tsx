@@ -11,21 +11,28 @@ type Props = Readonly<WithRouterProps>;
 function RouteContainer({ router }: Props) {
   return (
     <DeleteListDialogContainer
-      browseOnDeletion={(region, realm, profession, expansion, list) => {
+      browseOnDeletion={(region, realm, list, professionData) => {
         const urlParts: Array<[string, string]> = [
           ["data", "data"],
           ["[region_name]", region.name],
           ["[realm_slug]", realm.slug],
           ["professions", "professions"],
         ];
-        if (profession !== null) {
-          urlParts.push(["[profession_name]", profession.name]);
-        }
-        if (expansion !== null) {
-          urlParts.push(["[expansion_name]", expansion.name]);
-        }
-        if (list !== null && list.slug !== null) {
-          urlParts.push(["[pricelist_slug]", list.slug]);
+
+        if (typeof professionData === "undefined") {
+          if (list !== null && list.slug !== null) {
+            urlParts.push(["user", "user"]);
+            urlParts.push(["[pricelist_slug]", list.slug]);
+          }
+        } else {
+          urlParts.push(
+            ["[profession_name]", professionData.profession.name],
+            ["[expansion_name]", professionData.expansion.name],
+          );
+
+          if (list !== null && list.slug !== null) {
+            urlParts.push(["[pricelist_slug]", list.slug]);
+          }
         }
 
         const dest = urlParts.map(v => v[0]).join("/");

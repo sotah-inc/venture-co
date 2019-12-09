@@ -30,9 +30,11 @@ export interface IRouteProps {
   browseOnDeletion: (
     region: IRegion,
     realm: IStatusRealm,
-    profession: IProfession | null,
-    expansion: IExpansion | null,
     pricelist: IPricelistJson | null,
+    professionData?: {
+      profession: IProfession;
+      expansion: IExpansion;
+    },
   ) => void;
 }
 
@@ -67,13 +69,15 @@ export class DeleteListDialog extends React.Component<Props> {
             message: "Your pricelist has been deleted.",
           });
 
-          browseOnDeletion(
-            currentRegion,
-            currentRealm,
-            selectedProfession,
-            selectedExpansion,
-            selectedList,
-          );
+          const professionData = (() => {
+            if (selectedProfession === null || selectedExpansion === null) {
+              return;
+            }
+
+            return { profession: selectedProfession, expansion: selectedExpansion };
+          })();
+
+          browseOnDeletion(currentRegion, currentRealm, selectedList, professionData);
 
           return;
         case FetchLevel.failure:
