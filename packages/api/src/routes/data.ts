@@ -87,6 +87,12 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
       await handle(controller.getProfessionPricelists, req, res);
     }),
   );
+  router.get(
+    "/profession-pricelists/:profession/:expansion/:pricelist_slug",
+    wrap(async (req: Request, res: Response) => {
+      await handle(controller.getProfessionPricelist, req, res);
+    }),
+  );
 
   return router;
 };

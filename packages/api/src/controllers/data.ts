@@ -21,6 +21,7 @@ import {
   IPriceLimits,
   IPricelistHistoryMap,
   IPrices,
+  IProfessionPricelistJson,
   IQueryAuctionsItem,
   IQueryAuctionsRequest,
   IQueryAuctionsResponse,
@@ -39,6 +40,7 @@ import {
   Messenger,
   Post,
   ProfessionPricelist,
+  ProfessionPricelistRepository,
 } from "@sotah-inc/server";
 // @ts-ignore
 import boll from "bollinger-bands";
@@ -808,6 +810,63 @@ export class DataController {
     // dumping out a response
     return {
       data: { profession_pricelists: professionPricelists.map(v => v.toJson()), items },
+      status: HTTPStatus.OK,
+    };
+  };
+
+  public getProfessionPricelist: RequestHandler<
+    null,
+    IProfessionPricelistJson | IValidationErrorResponse | null
+  > = async req => {
+    const professionPricelist = await this.dbConn
+      .getCustomRepository(ProfessionPricelistRepository)
+      .getFromPricelistSlug(
+        req.params["profession"],
+        req.params["expansion"],
+        req.params["pricelist_slug"],
+      );
+    if (professionPricelist === null) {
+      return {
+        data: null,
+        status: HTTPStatus.NOT_FOUND,
+      };
+    }
+
+    if (typeof professionPricelist.pricelist === "undefined") {
+      const validationErrors: IValidationErrorResponse = {
+        error: "Profession-pricelist pricelist was undefined.",
+      };
+
+      return {
+        data: validationErrors,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    if (typeof professionPricelist.pricelist.user === "undefined") {
+      const validationErrors: IValidationErrorResponse = {
+        error: "Profession-pricelist pricelist user was undefined.",
+      };
+
+      return {
+        data: validationErrors,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    if (typeof professionPricelist.pricelist.entries === "undefined") {
+      const validationErrors: IValidationErrorResponse = {
+        error: "Profession-pricelist pricelist entries was undefined.",
+      };
+
+      return {
+        data: validationErrors,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    return {
+      data: professionPricelist.toJson(),
       status: HTTPStatus.OK,
     };
   };
