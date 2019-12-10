@@ -24,13 +24,7 @@ import {
 
 import { IGetPriceListHistoryOptions } from "../../api/data";
 import { FetchLevel } from "../../types/main";
-import {
-  currencyToText,
-  didRealmChange,
-  didRegionChange,
-  getColor,
-  unixTimestampToText,
-} from "../../util";
+import { currencyToText, getColor, unixTimestampToText } from "../../util";
 
 export interface IStateProps {
   items: IItemsMap;
@@ -38,7 +32,6 @@ export interface IStateProps {
   getPricelistHistoryLevel: FetchLevel;
   itemsPriceLimits: IItemPriceLimits;
   overallPriceLimits: IPriceLimits;
-  fetchRealmLevel: FetchLevel;
 }
 
 export interface IDispatchProps {
@@ -74,47 +67,16 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
     currentTabKind: TabKind.prices,
   };
 
-  public componentDidMount() {
-    const { region, realm, reloadPricelistHistory, itemIds } = this.props;
-
-    reloadPricelistHistory({
-      itemIds,
-      realmSlug: realm.slug,
-      regionName: region.name,
-    });
-  }
-
   public componentDidUpdate(prevProps: Props) {
-    const {
-      reloadPricelistHistory,
-      region,
-      realm,
-      getPricelistHistoryLevel,
-      itemIds,
-      fetchRealmLevel,
-    } = this.props;
+    const { reloadPricelistHistory, region, realm, getPricelistHistoryLevel, itemIds } = this.props;
 
-    switch (fetchRealmLevel) {
-      case FetchLevel.success:
-        break;
-      default:
-        return;
-    }
-
-    switch (getPricelistHistoryLevel) {
-      case FetchLevel.success:
-        break;
-      default:
-        return;
+    if (getPricelistHistoryLevel !== FetchLevel.success) {
+      return;
     }
 
     const newItemIds = itemIds.filter(v => prevProps.itemIds.indexOf(v) === -1);
     const missingItemIds = prevProps.itemIds.filter(v => itemIds.indexOf(v) === -1);
-    const shouldReloadPrices =
-      didRegionChange(prevProps.region, region) ||
-      didRealmChange(prevProps.realm, realm) ||
-      newItemIds.length > 0 ||
-      missingItemIds.length > 0;
+    const shouldReloadPrices = newItemIds.length > 0 || missingItemIds.length > 0;
     if (!shouldReloadPrices) {
       return;
     }
@@ -204,24 +166,6 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
   }
 
   private renderContent() {
-    const { fetchRealmLevel } = this.props;
-
-    switch (fetchRealmLevel) {
-      case FetchLevel.prompted:
-      case FetchLevel.fetching:
-      case FetchLevel.refetching:
-        return <Spinner intent={Intent.PRIMARY} />;
-      case FetchLevel.failure:
-        return <Spinner intent={Intent.DANGER} value={1} />;
-      case FetchLevel.success:
-        return this.renderContentWithRealms();
-      case FetchLevel.initial:
-      default:
-        return <Spinner intent={Intent.NONE} value={0} />;
-    }
-  }
-
-  private renderContentWithRealms() {
     const { pricelistHistoryMap, getPricelistHistoryLevel } = this.props;
 
     switch (getPricelistHistoryLevel) {
