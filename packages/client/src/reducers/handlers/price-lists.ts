@@ -110,7 +110,6 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           }
 
           return {
-            ...state,
             getPricelistLevel: FetchLevel.success,
             pricelistMap: action.payload.currentPrices.price_list,
           };
