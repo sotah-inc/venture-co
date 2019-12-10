@@ -67,17 +67,10 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
     currentTabKind: TabKind.prices,
   };
 
-  public componentDidUpdate(prevProps: Props) {
+  public componentDidUpdate() {
     const { reloadPricelistHistory, region, realm, getPricelistHistoryLevel, itemIds } = this.props;
 
-    if (getPricelistHistoryLevel !== FetchLevel.success) {
-      return;
-    }
-
-    const newItemIds = itemIds.filter(v => prevProps.itemIds.indexOf(v) === -1);
-    const missingItemIds = prevProps.itemIds.filter(v => itemIds.indexOf(v) === -1);
-    const shouldReloadPrices = newItemIds.length > 0 || missingItemIds.length > 0;
-    if (!shouldReloadPrices) {
+    if (getPricelistHistoryLevel !== FetchLevel.prompted) {
       return;
     }
 
