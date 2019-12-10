@@ -205,7 +205,7 @@ export const getProfessionPricelist = async (
     IProfessionPricelistJson | IValidationErrorResponse | null
   >({
     method: "GET",
-    url: `${apiEndpoint}/profession-pricelists/${profession}/${expansion}/${slug}`,
+    url: `${apiEndpoint}/user/profession-pricelists/${profession}/${expansion}/${slug}`,
   });
   switch (status) {
     case HTTPStatus.OK:
