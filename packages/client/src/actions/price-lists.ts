@@ -268,6 +268,8 @@ export interface ILoadPricelistsEntrypointFront {
   expansionName?: ExpansionName;
   pricelistSlug?: string;
   pricelistHistory?: IGetPricelistHistoriesResponse | null;
+  currentPrices?: IGetPricelistResponse | null;
+  currentSellers?: IQueryOwnerItemsResponse | null;
 }
 
 export interface ILoadPricelistsEntrypoint extends ILoadPricelistsEntrypointFront {

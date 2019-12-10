@@ -97,7 +97,51 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           };
         })();
 
-        return { ...state, selectedExpansion, selectedProfession, ...pricelistHistoryData };
+        const currentPricesData: Partial<IPriceListsState> = (() => {
+          if (
+            typeof action.payload === "undefined" ||
+            typeof action.payload.currentPrices === "undefined"
+          ) {
+            return {};
+          }
+
+          if (action.payload.currentPrices === null) {
+            return { getPricelistLevel: FetchLevel.failure };
+          }
+
+          return {
+            ...state,
+            getPricelistLevel: FetchLevel.success,
+            pricelistMap: action.payload.currentPrices.price_list,
+          };
+        })();
+
+        const itemsOwnershipData: Partial<IPriceListsState> = (() => {
+          if (
+            typeof action.payload === "undefined" ||
+            typeof action.payload.currentSellers === "undefined"
+          ) {
+            return {};
+          }
+
+          if (action.payload.currentSellers === null) {
+            return { getItemsOwnershipLevel: FetchLevel.failure };
+          }
+
+          return {
+            getItemsOwnershipLevel: FetchLevel.success,
+            itemsOwnershipMap: action.payload.currentSellers.ownership,
+          };
+        })();
+
+        return {
+          ...state,
+          selectedExpansion,
+          selectedProfession,
+          ...pricelistHistoryData,
+          ...itemsOwnershipData,
+          ...currentPricesData,
+        };
       },
     },
   },
