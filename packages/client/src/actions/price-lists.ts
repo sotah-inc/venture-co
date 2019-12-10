@@ -267,6 +267,7 @@ export interface ILoadPricelistsEntrypointFront {
   professionName?: ProfessionName;
   expansionName?: ExpansionName;
   pricelistSlug?: string;
+  pricelistHistory?: IGetPricelistHistoriesResponse | null;
 }
 
 export interface ILoadPricelistsEntrypoint extends ILoadPricelistsEntrypointFront {

@@ -77,7 +77,27 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           );
         })();
 
-        return { ...state, selectedExpansion, selectedProfession };
+        const pricelistHistoryData: Partial<IPriceListsState> = (() => {
+          if (
+            typeof action.payload === "undefined" ||
+            typeof action.payload.pricelistHistory === "undefined"
+          ) {
+            return {};
+          }
+
+          if (action.payload.pricelistHistory === null) {
+            return { getPricelistHistoryLevel: FetchLevel.failure };
+          }
+
+          return {
+            getPricelistHistoryLevel: FetchLevel.success,
+            itemsPriceLimits: action.payload.pricelistHistory.itemPriceLimits,
+            overallPriceLimits: action.payload.pricelistHistory.overallPriceLimits,
+            pricelistHistoryMap: action.payload.pricelistHistory.history,
+          };
+        })();
+
+        return { ...state, selectedExpansion, selectedProfession, ...pricelistHistoryData };
       },
     },
   },
