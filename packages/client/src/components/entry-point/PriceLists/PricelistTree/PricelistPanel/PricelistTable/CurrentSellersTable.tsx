@@ -21,7 +21,6 @@ import {
 
 import { IQueryOwnersByItemsOptions } from "../../../../../../api/data";
 import { FetchLevel } from "../../../../../../types/main";
-import { didRealmChange, didRegionChange } from "../../../../../../util";
 import { Currency, Pagination } from "../../../../../util";
 
 export interface IStateProps {
@@ -49,67 +48,28 @@ type State = Readonly<{
 const resultsPerPage = 5;
 
 export class CurrentSellersTable extends React.Component<Props, State> {
+  private static renderOwnershipRow(index: number, owner: OwnerName, ownership: IQueryOwnerItem) {
+    return (
+      <tr key={index}>
+        <td>{owner}</td>
+        <td>
+          <Currency amount={ownership.owned_value} />
+        </td>
+        <td>{ownership.owned_volume.toLocaleString()}</td>
+      </tr>
+    );
+  }
   public state: State = { currentPage: 0 };
 
-  public componentDidMount() {
-    const { region, realm, queryOwnersByItems, list, getItemsOwnershipLevel } = this.props;
+  public componentDidUpdate() {
+    const { queryOwnersByItems, region, realm, getItemsOwnershipLevel, list } = this.props;
 
-    switch (getItemsOwnershipLevel) {
-      case FetchLevel.initial:
-        const itemIds = list.pricelist_entries!.map(v => v.item_id);
-
-        queryOwnersByItems({
-          items: itemIds,
-          realmSlug: realm.slug,
-          regionName: region.name,
-        });
-        return;
-      default:
-        return;
-    }
-  }
-
-  public componentDidUpdate(prevProps: Props) {
-    const {
-      queryOwnersByItems,
-      region,
-      realm,
-      getItemsOwnershipLevel,
-      list,
-      fetchRealmLevel,
-    } = this.props;
-
-    switch (fetchRealmLevel) {
-      case FetchLevel.success:
-        break;
-      default:
-        return;
-    }
-
-    switch (getItemsOwnershipLevel) {
-      case FetchLevel.success:
-        break;
-      default:
-        return;
-    }
-
-    const previousItemIds = prevProps.list.pricelist_entries.map(v => v.item_id);
-    const itemIds = list.pricelist_entries.map(v => v.item_id);
-    const newItemIds = itemIds.filter(v => previousItemIds.indexOf(v) === -1);
-    const missingItemIds = previousItemIds.filter(v => itemIds.indexOf(v) === -1);
-
-    const shouldReloadPrices =
-      didRegionChange(prevProps.region, region) ||
-      didRealmChange(prevProps.realm, realm) ||
-      prevProps.list.id !== list.id ||
-      newItemIds.length > 0 ||
-      missingItemIds.length > 0;
-    if (!shouldReloadPrices) {
+    if (getItemsOwnershipLevel !== FetchLevel.prompted) {
       return;
     }
 
     queryOwnersByItems({
-      items: itemIds,
+      items: list.pricelist_entries.map(v => v.item_id),
       realmSlug: realm.slug,
       regionName: region.name,
     });
@@ -192,6 +152,13 @@ export class CurrentSellersTable extends React.Component<Props, State> {
 
     const pageCount = this.getPageCount();
 
+    const tableClasses = [
+      Classes.HTML_TABLE,
+      Classes.HTML_TABLE_BORDERED,
+      Classes.SMALL,
+      "ownership-table",
+    ];
+
     return (
       <>
         <Callout intent={Intent.PRIMARY}>
@@ -207,9 +174,7 @@ export class CurrentSellersTable extends React.Component<Props, State> {
             />
           </NavbarGroup>
         </Navbar>
-        <HTMLTable
-          className={`${Classes.HTML_TABLE} ${Classes.HTML_TABLE_BORDERED} ${Classes.SMALL} ownership-table`}
-        >
+        <HTMLTable className={tableClasses.join(" ")}>
           <thead>
             <tr>
               <th>Owner</th>
@@ -219,7 +184,7 @@ export class CurrentSellersTable extends React.Component<Props, State> {
           </thead>
           <tbody>
             {sortedOwnerNames.map((owner, i) =>
-              this.renderOwnershipRow(i, owner, ownership[owner]),
+              CurrentSellersTable.renderOwnershipRow(i, owner, ownership[owner]),
             )}
           </tbody>
         </HTMLTable>
@@ -227,18 +192,6 @@ export class CurrentSellersTable extends React.Component<Props, State> {
           Page {currentPage + 1} of {pageCount + 1}
         </p>
       </>
-    );
-  }
-
-  private renderOwnershipRow(index: number, owner: OwnerName, ownership: IQueryOwnerItem) {
-    return (
-      <tr key={index}>
-        <td>{owner}</td>
-        <td>
-          <Currency amount={ownership.owned_value} />
-        </td>
-        <td>{ownership.owned_volume.toLocaleString()}</td>
-      </tr>
     );
   }
 }

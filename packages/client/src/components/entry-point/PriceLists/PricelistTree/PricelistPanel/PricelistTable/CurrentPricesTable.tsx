@@ -14,7 +14,7 @@ import {
 import { IGetPriceListOptions } from "../../../../../../api/data";
 import { ItemPopoverContainer } from "../../../../../../containers/util/ItemPopover";
 import { FetchLevel } from "../../../../../../types/main";
-import { didRealmChange, didRegionChange, qualityToColorClass } from "../../../../../../util";
+import { qualityToColorClass } from "../../../../../../util";
 import { Currency } from "../../../../../util";
 
 export interface IStateProps {
@@ -37,58 +37,15 @@ export interface IOwnProps {
 type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
 
 export class CurrentPricesTable extends React.Component<Props> {
-  public componentDidMount() {
-    const { reloadPrices, region, realm, list, getPricelistLevel } = this.props;
+  public componentDidUpdate() {
+    const { reloadPrices, region, realm, getPricelistLevel, list } = this.props;
 
-    switch (getPricelistLevel) {
-      case FetchLevel.initial:
-        const itemIds = list.pricelist_entries!.map(v => v.item_id);
-
-        reloadPrices({
-          itemIds,
-          realmSlug: realm.slug,
-          regionName: region.name,
-        });
-
-        return;
-      default:
-        return;
-    }
-  }
-
-  public componentDidUpdate(prevProps: Props) {
-    const { reloadPrices, region, realm, getPricelistLevel, list, fetchRealmLevel } = this.props;
-
-    switch (fetchRealmLevel) {
-      case FetchLevel.success:
-        break;
-      default:
-        return;
-    }
-
-    switch (getPricelistLevel) {
-      case FetchLevel.success:
-        break;
-      default:
-        return;
-    }
-
-    const previousItemIds = prevProps.list.pricelist_entries.map(v => v.item_id);
-    const itemIds = list.pricelist_entries.map(v => v.item_id);
-    const newItemIds = itemIds.filter(v => previousItemIds.indexOf(v) === -1);
-    const missingItemIds = previousItemIds.filter(v => itemIds.indexOf(v) === -1);
-    const shouldReloadPrices =
-      didRegionChange(prevProps.region, region) ||
-      didRealmChange(prevProps.realm, realm) ||
-      prevProps.list.id !== list.id ||
-      newItemIds.length > 0 ||
-      missingItemIds.length > 0;
-    if (!shouldReloadPrices) {
+    if (getPricelistLevel !== FetchLevel.prompted) {
       return;
     }
 
     reloadPrices({
-      itemIds,
+      itemIds: list.pricelist_entries.map(v => v.item_id),
       realmSlug: realm.slug,
       regionName: region.name,
     });
@@ -171,10 +128,15 @@ export class CurrentPricesTable extends React.Component<Props> {
       return aResult > bResult ? -1 : 1;
     });
 
+    const classes = [
+      Classes.HTML_TABLE,
+      Classes.HTML_TABLE_BORDERED,
+      Classes.SMALL,
+      "price-list-table",
+    ];
+
     return (
-      <HTMLTable
-        className={`${Classes.HTML_TABLE} ${Classes.HTML_TABLE_BORDERED} ${Classes.SMALL} price-list-table`}
-      >
+      <HTMLTable className={classes.join(" ")}>
         <thead>
           <tr>
             <th>Item</th>
