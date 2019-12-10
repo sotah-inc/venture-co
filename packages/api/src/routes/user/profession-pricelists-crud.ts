@@ -27,5 +27,13 @@ export const getRouter = (dbConn: Connection): Router => {
     }),
   );
 
+  router.get(
+    "/:profession/:expansion/:pricelist_slug",
+    auth,
+    wrap(async (req: Request, res: Response) => {
+      await handle(controller.getProfessionPricelist, req, res);
+    }),
+  );
+
   return router;
 };
