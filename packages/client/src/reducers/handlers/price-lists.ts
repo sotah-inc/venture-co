@@ -77,7 +77,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           );
         })();
 
-        const pricelistHistoryData: Partial<IPriceListsState> = (() => {
+        const pricelistHistoryData = (() => {
           if (
             typeof action.payload === "undefined" ||
             typeof action.payload.pricelistHistory === "undefined"
@@ -91,6 +91,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
 
           return {
             getPricelistHistoryLevel: FetchLevel.success,
+            items: action.payload.pricelistHistory.items,
             itemsPriceLimits: action.payload.pricelistHistory.itemPriceLimits,
             overallPriceLimits: action.payload.pricelistHistory.overallPriceLimits,
             pricelistHistoryMap: action.payload.pricelistHistory.history,
@@ -111,6 +112,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
 
           return {
             getPricelistLevel: FetchLevel.success,
+            items: action.payload.currentPrices.items,
             pricelistMap: action.payload.currentPrices.price_list,
           };
         })();
@@ -133,13 +135,30 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           };
         })();
 
+        const resolveItems = (input?: { items?: IItemsMap }): IItemsMap => {
+          if (typeof input === "undefined") {
+            return {};
+          }
+
+          if (typeof input.items === "undefined") {
+            return {};
+          }
+
+          return input.items;
+        };
+
         return {
           ...state,
-          selectedExpansion,
-          selectedProfession,
           ...pricelistHistoryData,
           ...itemsOwnershipData,
           ...currentPricesData,
+          items: {
+            ...state.items,
+            ...resolveItems(pricelistHistoryData),
+            ...resolveItems(currentPricesData),
+          },
+          selectedExpansion,
+          selectedProfession,
         };
       },
     },
