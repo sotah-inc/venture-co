@@ -26,6 +26,28 @@ export interface IFormValues {
 export type Props = Readonly<IOwnProps & FormikProps<IFormValues>>;
 
 export class CreateEntryForm extends React.Component<Props> {
+  private static renderSelectedItem(item: IItem | null) {
+    if (item === null) {
+      return (
+        <p>
+          <em>No item selected.</em>
+        </p>
+      );
+    }
+
+    const className = qualityToColorClass(item.quality);
+    const textValue = getItemTextValue(item);
+    const itemIcon = getItemIconUrl(item);
+    if (itemIcon === null) {
+      return <p className={className}>{textValue}</p>;
+    }
+
+    return (
+      <H5 className={`${className} new-entry-item`}>
+        <img src={itemIcon} /> {textValue}
+      </H5>
+    );
+  }
   public render() {
     const {
       values,
@@ -70,7 +92,7 @@ export class CreateEntryForm extends React.Component<Props> {
             <div className="pure-u-1-2">
               <div style={{ paddingLeft: "5px" }}>
                 <FormGroup label="Selected item" intent={itemIntent}>
-                  {this.renderSelectedItem(values.item)}
+                  {CreateEntryForm.renderSelectedItem(values.item)}
                 </FormGroup>
               </div>
             </div>
@@ -125,28 +147,5 @@ export class CreateEntryForm extends React.Component<Props> {
     if (onItemSelect) {
       onItemSelect(item);
     }
-  }
-
-  private renderSelectedItem(item: IItem | null) {
-    if (item === null) {
-      return (
-        <p>
-          <em>No item selected.</em>
-        </p>
-      );
-    }
-
-    const className = qualityToColorClass(item.quality);
-    const textValue = getItemTextValue(item);
-    const itemIcon = getItemIconUrl(item);
-    if (itemIcon === null) {
-      return <p className={className}>{textValue}</p>;
-    }
-
-    return (
-      <H5 className={`${className} new-entry-item`}>
-        <img src={itemIcon} /> {textValue}
-      </H5>
-    );
   }
 }
