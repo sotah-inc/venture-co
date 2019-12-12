@@ -9,6 +9,7 @@ import {
   IGetProfessionPricelistsResponse,
   IGetUnmetDemandRequest,
   IGetUnmetDemandResponse,
+  IPricelistJson,
   IProfessionPricelistJson,
   IUpdatePricelistRequest,
   IUpdatePricelistResponse,
@@ -210,6 +211,28 @@ export const getProfessionPricelist = async (
   switch (status) {
     case HTTPStatus.OK:
       return { errors: null, data: body as IProfessionPricelistJson };
+    default:
+      return { data: null, errors: { failure: "Failed to fetch profession-pricelists" } };
+  }
+};
+
+export interface IGetPricelistResult {
+  errors: IValidationErrorResponse | null;
+  data: IPricelistJson | null;
+}
+
+export const getPricelist = async (
+  profession: ProfessionName,
+  expansion: ExpansionName,
+  slug: string,
+): Promise<IGetPricelistResult> => {
+  const { body, status } = await gather<null, IPricelistJson | IValidationErrorResponse | null>({
+    method: "GET",
+    url: `${apiEndpoint}/user/pricelists/${profession}/${expansion}/${slug}`,
+  });
+  switch (status) {
+    case HTTPStatus.OK:
+      return { errors: null, data: body as IPricelistJson };
     default:
       return { data: null, errors: { failure: "Failed to fetch profession-pricelists" } };
   }
