@@ -113,6 +113,34 @@ export class PricelistCrudController {
     };
   };
 
+  public getPricelistFromSlug: RequestHandler<
+    null,
+    IGetUserPricelistResponse | null
+  > = async req => {
+    const user = req.user as User;
+    const pricelist = await this.dbConn
+      .getCustomRepository(PricelistRepository)
+      .getFromPricelistSlug(
+        user.id!,
+        req.params["profession"],
+        req.params["expansion"],
+        req.params["pricelist_slug"],
+      );
+    if (pricelist === null) {
+      return {
+        data: null,
+        status: HTTPStatus.NOT_FOUND,
+      };
+    }
+    const itemIds = pricelist.entries!.map(v => v.itemId);
+    const items = (await this.messenger.getItems(itemIds)).data!.items;
+
+    return {
+      data: { items, pricelist: pricelist.toJson() },
+      status: HTTPStatus.OK,
+    };
+  };
+
   public updatePricelist: RequestHandler<
     IUpdatePricelistRequest,
     IUpdatePricelistResponse | IValidationErrorResponse | null

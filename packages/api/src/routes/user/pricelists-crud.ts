@@ -34,6 +34,14 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
     }),
   );
 
+  router.get(
+    "/:profession/:expansion/:pricelist_slug",
+    auth,
+    wrap(async (req: Request, res: Response) => {
+      await handle(controller.getPricelistFromSlug, req, res);
+    }),
+  );
+
   router.put(
     "/:id",
     auth,
