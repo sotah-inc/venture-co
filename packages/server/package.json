@@ -1,6 +1,6 @@
 {
   "name": "@sotah-inc/server",
-  "version": "1.0.79",
+  "version": "1.0.80",
   "description": "",
   "main": "./build/dist/index.js",
   "typings": "build/dist/index.d.ts",

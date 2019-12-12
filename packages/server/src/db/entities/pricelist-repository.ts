@@ -1,4 +1,3 @@
-import { ExpansionName, ProfessionName } from "@sotah-inc/core";
 import { AbstractRepository, EntityRepository } from "typeorm";
 
 import { Pricelist } from "./pricelist";
@@ -20,15 +19,10 @@ export class PricelistRepository extends AbstractRepository<Pricelist> {
     return pricelist;
   }
 
-  public async getFromPricelistSlug(
-    userId: number,
-    profession: ProfessionName,
-    expansion: ExpansionName,
-    slug: string,
-  ): Promise<Pricelist | null> {
+  public async getFromPricelistSlug(userId: number, slug: string): Promise<Pricelist | null> {
     const queryBuilder = this.repository
       .createQueryBuilder("pricelist")
-      .where({ name: profession, expansion, slug })
+      .where({ slug })
       .innerJoinAndSelect("pricelist.user", "user", "user.id = :user_id", { user_id: userId })
       .innerJoinAndSelect("pricelist.entries", "pricelist.entries");
 
