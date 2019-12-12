@@ -221,14 +221,10 @@ export interface IGetPricelistResult {
   data: IPricelistJson | null;
 }
 
-export const getPricelist = async (
-  profession: ProfessionName,
-  expansion: ExpansionName,
-  slug: string,
-): Promise<IGetPricelistResult> => {
+export const getPricelist = async (slug: string): Promise<IGetPricelistResult> => {
   const { body, status } = await gather<null, IPricelistJson | IValidationErrorResponse | null>({
     method: "GET",
-    url: `${apiEndpoint}/user/pricelists/${profession}/${expansion}/${slug}`,
+    url: `${apiEndpoint}/user/pricelists/${slug}`,
   });
   switch (status) {
     case HTTPStatus.OK:
