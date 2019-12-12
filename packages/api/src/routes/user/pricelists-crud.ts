@@ -27,7 +27,7 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
   );
 
   router.get(
-    "/:id",
+    "/:id([0-9]+)",
     auth,
     wrap(async (req: Request, res: Response) => {
       await handle(controller.getPricelist, req, res);
@@ -35,7 +35,7 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
   );
 
   router.get(
-    "/:profession/:expansion/:pricelist_slug",
+    "/:pricelist_slug",
     auth,
     wrap(async (req: Request, res: Response) => {
       await handle(controller.getPricelistFromSlug, req, res);

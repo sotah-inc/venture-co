@@ -120,12 +120,7 @@ export class PricelistCrudController {
     const user = req.user as User;
     const pricelist = await this.dbConn
       .getCustomRepository(PricelistRepository)
-      .getFromPricelistSlug(
-        user.id!,
-        req.params["profession"],
-        req.params["expansion"],
-        req.params["pricelist_slug"],
-      );
+      .getFromPricelistSlug(user.id!, req.params["profession"]);
     if (pricelist === null) {
       return {
         data: null,
