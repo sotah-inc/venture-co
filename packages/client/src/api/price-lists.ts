@@ -221,8 +221,15 @@ export interface IGetPricelistResult {
   data: IPricelistJson | null;
 }
 
-export const getPricelist = async (slug: string): Promise<IGetPricelistResult> => {
+export const getUserPricelist = async (
+  token: string,
+  slug: string,
+): Promise<IGetPricelistResult> => {
   const { body, status } = await gather<null, IPricelistJson | IValidationErrorResponse | null>({
+    headers: new Headers({
+      Authorization: `Bearer ${token}`,
+      "content-type": "application/json",
+    }),
     method: "GET",
     url: `${apiEndpoint}/user/pricelists/${slug}`,
   });
