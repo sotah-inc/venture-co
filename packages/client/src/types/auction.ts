@@ -1,17 +1,17 @@
 import {
   IAuction,
-  IItemsMap,
   IProfessionPricelistJson,
   IQueryAuctionsItem,
   SortDirection,
   SortKind,
 } from "@sotah-inc/core";
+import { IItemsData } from "./global";
 
 import { FetchLevel } from "./main";
 
 export interface IAuctionState {
   fetchAuctionsLevel: FetchLevel;
-  auctions: IAuction[];
+  auctions: IItemsData<IAuction[]>;
   currentPage: number;
   auctionsPerPage: number;
   totalResults: number;
@@ -21,7 +21,6 @@ export interface IAuctionState {
   queryAuctionResults: IQueryAuctionsItem[];
   selectedQueryAuctionResults: IQueryAuctionsItem[];
   activeSelect: boolean;
-  items: IItemsMap;
   relatedProfessionPricelists: IProfessionPricelistJson[];
 }
 
@@ -32,11 +31,10 @@ export interface ISortChangeOptions {
 
 export const defaultAuctionState: IAuctionState = {
   activeSelect: true,
-  auctions: [],
+  auctions: { data: [], items: {} },
   auctionsPerPage: 10,
   currentPage: 0,
   fetchAuctionsLevel: FetchLevel.initial,
-  items: {},
   queryAuctionResults: [],
   queryAuctionsLevel: FetchLevel.initial,
   relatedProfessionPricelists: [],

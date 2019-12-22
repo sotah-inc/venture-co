@@ -4,15 +4,12 @@ import { IItemsMap, IPricelistJson } from "@sotah-inc/core";
 
 import { getItemIconUrl } from "../../util";
 
-export interface IStateProps {
+export interface IOwnProps {
+  pricelist: IPricelistJson;
   items: IItemsMap;
 }
 
-export interface IOwnProps {
-  pricelist: IPricelistJson;
-}
-
-type Props = Readonly<IStateProps & IOwnProps>;
+type Props = Readonly<IOwnProps>;
 
 export class PricelistIcon extends React.Component<Props> {
   public render() {

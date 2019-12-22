@@ -28,9 +28,11 @@ export const handlers: IKindHandlers<IAuctionState, AuctionActions> = {
 
         return {
           ...state,
-          auctions,
+          auctions: {
+            data: auctions,
+            items: action.payload.auctions.items,
+          },
           fetchAuctionsLevel: FetchLevel.success,
-          items: action.payload.auctions.items,
           queryAuctionResults: action.payload.auctionsQuery.items,
           queryAuctionsLevel: FetchLevel.success,
           relatedProfessionPricelists: action.payload.auctions.professionPricelists,

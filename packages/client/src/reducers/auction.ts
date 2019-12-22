@@ -47,9 +47,11 @@ export const auction = (state: State | undefined, action: AuctionActions): State
 
       return {
         ...state,
-        auctions,
+        auctions: {
+          data: auctions,
+          items: action.payload.items,
+        },
         fetchAuctionsLevel: FetchLevel.success,
-        items: { ...action.payload.items },
         relatedProfessionPricelists: action.payload.professionPricelists,
         totalResults: action.payload.total,
       };

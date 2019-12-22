@@ -5,7 +5,6 @@ import {
   IAuction,
   IExpansion,
   IItem,
-  IItemsMap,
   IPricelistJson,
   IProfession,
   IProfessionPricelistJson,
@@ -16,18 +15,18 @@ import {
   SortKind,
 } from "@sotah-inc/core";
 
+import { PricelistIcon } from "../../../components/util/PricelistIcon";
 import { SortToggleContainer } from "../../../containers/entry-point/AuctionList/SortToggle";
 import { ItemPopoverContainer } from "../../../containers/util/ItemPopover";
-import { PricelistIconContainer } from "../../../containers/util/PricelistIcon";
+import { IItemsData } from "../../../types/global";
 import { getSelectedResultIndex, qualityToColorClass } from "../../../util";
 import { Currency, ProfessionIcon } from "../../util";
 
 type ListAuction = IAuction | null;
 
 export interface IStateProps {
-  auctions: ListAuction[];
+  auctions: IItemsData<ListAuction[]>;
   selectedItems: IQueryAuctionsItem[];
-  items: IItemsMap;
   relatedProfessionPricelists: IProfessionPricelistJson[];
   expansions: IExpansion[];
   professions: IProfession[];
@@ -86,9 +85,9 @@ export class AuctionTable extends React.Component<Props> {
   }
 
   public renderAuction(auction: IAuction | null, index: number) {
-    const { items } = this.props;
+    const { auctions } = this.props;
 
-    if (auction === null || !(auction.itemId in items)) {
+    if (auction === null || !(auction.itemId in auctions.items)) {
       return (
         <tr key={index}>
           <td>---</td>
@@ -101,7 +100,7 @@ export class AuctionTable extends React.Component<Props> {
       );
     }
 
-    const item = items[auction.itemId];
+    const item = auctions.items[auction.itemId];
 
     return (
       <React.Fragment key={index}>
@@ -156,7 +155,7 @@ export class AuctionTable extends React.Component<Props> {
             </th>
           </tr>
         </thead>
-        <tbody>{auctions.map((auction, index) => this.renderAuction(auction, index))}</tbody>
+        <tbody>{auctions.data.map((auction, index) => this.renderAuction(auction, index))}</tbody>
       </HTMLTable>
     );
   }
@@ -181,6 +180,7 @@ export class AuctionTable extends React.Component<Props> {
       currentRegion,
       currentRealm,
       browseToProfessionPricelist,
+      auctions,
     } = this.props;
 
     if (currentRegion === null || currentRealm === null) {
@@ -256,7 +256,9 @@ export class AuctionTable extends React.Component<Props> {
               <span style={{ color: expansion.label_color }}>{expansion.label}</span>
             </Button>
             <Button
-              icon={<PricelistIconContainer pricelist={professionPricelist.pricelist} />}
+              icon={
+                <PricelistIcon items={auctions.items} pricelist={professionPricelist.pricelist} />
+              }
               minimal={true}
               small={true}
               onClick={() =>

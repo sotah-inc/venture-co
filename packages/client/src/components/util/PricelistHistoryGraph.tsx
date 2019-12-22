@@ -26,7 +26,11 @@ import { IGetPriceListHistoryOptions } from "../../api/data";
 import { FetchLevel } from "../../types/main";
 import { currencyToText, getColor, unixTimestampToText } from "../../util";
 
-export interface IStateProps {
+export interface IOwnProps {
+  region: IRegion;
+  realm: IStatusRealm;
+  itemIds: ItemId[];
+  reloadPricelistHistory: (opts: IGetPriceListHistoryOptions) => void;
   items: IItemsMap;
   pricelistHistoryMap: IItemPricelistHistoryMap;
   getPricelistHistoryLevel: FetchLevel;
@@ -34,22 +38,12 @@ export interface IStateProps {
   overallPriceLimits: IPriceLimits;
 }
 
-export interface IDispatchProps {
-  reloadPricelistHistory: (opts: IGetPriceListHistoryOptions) => void;
-}
-
-export interface IOwnProps {
-  region: IRegion;
-  realm: IStatusRealm;
-  itemIds: ItemId[];
-}
-
 interface ILineItem {
   name: number;
   [dataKey: string]: number;
 }
 
-type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
+type Props = Readonly<IOwnProps>;
 
 type State = Readonly<{
   currentTabKind: string;

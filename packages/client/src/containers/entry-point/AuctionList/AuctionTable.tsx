@@ -10,19 +10,13 @@ import { IStoreState } from "../../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const { professions, expansions, currentRealm, currentRegion } = state.Main;
-  const {
-    auctions,
-    selectedQueryAuctionResults,
-    items,
-    relatedProfessionPricelists,
-  } = state.Auction;
+  const { auctions, selectedQueryAuctionResults, relatedProfessionPricelists } = state.Auction;
 
   return {
     auctions,
     currentRealm,
     currentRegion,
     expansions,
-    items,
     professions,
     relatedProfessionPricelists,
     selectedItems: selectedQueryAuctionResults,
