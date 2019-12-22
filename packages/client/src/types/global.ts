@@ -1,4 +1,12 @@
-import { IItemClass, IRegion, IStatusRealm, ISubItemClass, IUserJson } from "@sotah-inc/core";
+import {
+  IItemClass,
+  IItemsMap,
+  IRegion,
+  IStatusRealm,
+  ISubItemClass,
+  IUserJson,
+} from "@sotah-inc/core";
+import { FetchLevel } from "./main";
 
 export interface IRegions {
   [key: string]: IRegion;
@@ -30,4 +38,9 @@ export interface IItemClasses {
 
 export interface IItemClassWithSub extends IItemClass {
   subClassesMap: ISubItemClasses;
+}
+
+export interface IItemsData<T> {
+  items: IItemsMap;
+  data: T;
 }
