@@ -6,7 +6,6 @@ import {
   ISubItemClass,
   IUserJson,
 } from "@sotah-inc/core";
-import { FetchLevel } from "./main";
 
 export interface IRegions {
   [key: string]: IRegion;
