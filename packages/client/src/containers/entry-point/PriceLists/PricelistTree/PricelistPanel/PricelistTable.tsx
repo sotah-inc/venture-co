@@ -8,8 +8,8 @@ import {
 import { IStoreState } from "../../../../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
-  const { items } = state.PriceLists;
-  return { items };
+  const { items, pricelistHistoryMap, overallPriceLimits } = state.PriceLists;
+  return { items, pricelistHistoryMap, overallPriceLimits };
 };
 
 export const PricelistTableContainer = connect<IStateProps, {}, {}, IStoreState>(mapStateToProps)(

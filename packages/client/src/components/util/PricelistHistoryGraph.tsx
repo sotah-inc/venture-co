@@ -1,14 +1,11 @@
 import React from "react";
 
-import { Intent, Spinner, Tab, Tabs } from "@blueprintjs/core";
+import { Tab, Tabs } from "@blueprintjs/core";
 import {
-  IItemPriceLimits,
   IItemPricelistHistoryMap,
   IItemsMap,
   IPriceLimits,
   IPricelistHistoryMap,
-  IRegion,
-  IStatusRealm,
   ItemId,
 } from "@sotah-inc/core";
 import moment from "moment";
@@ -22,19 +19,11 @@ import {
   YAxis,
 } from "recharts";
 
-import { IGetPriceListHistoryOptions } from "../../api/data";
-import { FetchLevel } from "../../types/main";
 import { currencyToText, getColor, unixTimestampToText } from "../../util";
 
 export interface IOwnProps {
-  region: IRegion;
-  realm: IStatusRealm;
-  itemIds: ItemId[];
-  reloadPricelistHistory: (opts: IGetPriceListHistoryOptions) => void;
   items: IItemsMap;
   pricelistHistoryMap: IItemPricelistHistoryMap;
-  getPricelistHistoryLevel: FetchLevel;
-  itemsPriceLimits: IItemPriceLimits;
   overallPriceLimits: IPriceLimits;
 }
 
@@ -60,20 +49,6 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
   public state: State = {
     currentTabKind: TabKind.prices,
   };
-
-  public componentDidUpdate() {
-    const { reloadPricelistHistory, region, realm, getPricelistHistoryLevel, itemIds } = this.props;
-
-    if (getPricelistHistoryLevel !== FetchLevel.prompted) {
-      return;
-    }
-
-    reloadPricelistHistory({
-      itemIds,
-      realmSlug: realm.slug,
-      regionName: region.name,
-    });
-  }
 
   public render() {
     const { currentTabKind } = this.state;
@@ -153,19 +128,7 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
   }
 
   private renderContent() {
-    const { pricelistHistoryMap, getPricelistHistoryLevel } = this.props;
-
-    switch (getPricelistHistoryLevel) {
-      case FetchLevel.fetching:
-        return <Spinner intent={Intent.PRIMARY} />;
-      case FetchLevel.failure:
-        return <Spinner intent={Intent.DANGER} value={1} />;
-      case FetchLevel.success:
-        break;
-      case FetchLevel.initial:
-      default:
-        return <Spinner intent={Intent.NONE} value={1} />;
-    }
+    const { pricelistHistoryMap } = this.props;
 
     const data = Object.keys(pricelistHistoryMap).reduce<ILineItem[]>(
       (dataPreviousValue: ILineItem[], itemIdKey: string) => {

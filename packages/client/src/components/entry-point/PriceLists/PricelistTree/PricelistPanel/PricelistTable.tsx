@@ -1,7 +1,14 @@
 import React from "react";
 
 import { H2, H4 } from "@blueprintjs/core";
-import { IItemsMap, IPricelistJson, IRegion, IStatusRealm } from "@sotah-inc/core";
+import {
+  IItemPricelistHistoryMap,
+  IItemsMap,
+  IPriceLimits,
+  IPricelistJson,
+  IRegion,
+  IStatusRealm,
+} from "@sotah-inc/core";
 
 // tslint:disable-next-line:max-line-length
 import { CurrentPricesTableContainer } from "../../../../../containers/entry-point/PriceLists/PricelistTree/PricelistPanel/PricelistTable/CurrentPricesTable";
@@ -13,6 +20,8 @@ import { PricelistHistoryGraph } from "../../../../util/PricelistHistoryGraph";
 
 export interface IStateProps {
   items: IItemsMap;
+  pricelistHistoryMap: IItemPricelistHistoryMap;
+  overallPriceLimits: IPriceLimits;
 }
 
 export interface IOwnProps {
@@ -25,9 +34,7 @@ type Props = Readonly<IStateProps & IOwnProps>;
 
 export class PricelistTable extends React.Component<Props> {
   public render() {
-    const { list, region, realm } = this.props;
-
-    const itemIds = list.pricelist_entries.map(v => v.item_id);
+    const { list, region, realm, items, pricelistHistoryMap, overallPriceLimits } = this.props;
 
     return (
       <>
@@ -36,7 +43,13 @@ export class PricelistTable extends React.Component<Props> {
           {list.name}
         </H2>
         <H4>History</H4>
-        {<PricelistHistoryGraph itemIds={itemIds} region={region} realm={realm} />}
+        {
+          <PricelistHistoryGraph
+            items={items}
+            pricelistHistoryMap={pricelistHistoryMap}
+            overallPriceLimits={overallPriceLimits}
+          />
+        }
         {<CurrentPricesTableContainer list={list} region={region} realm={realm} />}
         {<CurrentSellersTableContainer list={list} region={region} realm={realm} />}
       </>
