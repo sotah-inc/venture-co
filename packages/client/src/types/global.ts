@@ -7,6 +7,8 @@ import {
   IUserJson,
 } from "@sotah-inc/core";
 
+import { FetchLevel } from "./main";
+
 export interface IRegions {
   [key: string]: IRegion;
 }
@@ -41,5 +43,14 @@ export interface IItemClassWithSub extends IItemClass {
 
 export interface IItemsData<T> {
   items: IItemsMap;
+  data: T;
+}
+
+export interface IFetchInfo {
+  level: FetchLevel;
+  errors: IErrors;
+}
+
+export interface IFetchData<T> extends IFetchInfo {
   data: T;
 }
