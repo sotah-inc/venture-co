@@ -15,13 +15,12 @@ import {
 } from "@sotah-inc/core";
 
 import { IUpdatePricelistResult } from "../api/price-lists";
-import { IErrors } from "./global";
+import { IErrors, IFetchInfo } from "./global";
 import { FetchLevel } from "./main";
 
 export interface IPriceListsState {
   pricelists: IPricelistJson[];
-  createPricelistLevel: FetchLevel;
-  createPricelistErrors: IErrors;
+  createPricelist: IFetchInfo;
   updatePricelistLevel: FetchLevel;
   updatePricelistErrors: IErrors;
   entryCreateLevel: FetchLevel;
@@ -80,8 +79,7 @@ export interface IUpdatePricelistResponseOptions {
 }
 
 export const defaultPriceListsState: IPriceListsState = {
-  createPricelistErrors: {},
-  createPricelistLevel: FetchLevel.initial,
+  createPricelist: { level: FetchLevel.initial, errors: {} },
   deletePricelistErrors: {},
   deletePricelistLevel: FetchLevel.initial,
   entryCreateLevel: FetchLevel.initial,

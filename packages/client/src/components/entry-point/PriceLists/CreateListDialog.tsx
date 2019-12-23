@@ -13,14 +13,13 @@ import {
 } from "@sotah-inc/core";
 
 import { ListDialogContainer } from "../../../containers/entry-point/PriceLists/util/ListDialog";
-import { IErrors, IProfile } from "../../../types/global";
+import { IFetchInfo, IProfile } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
 import { IOnCompleteOptions } from "./util/ListDialog";
 
 export interface IStateProps {
   isAddListDialogOpen: boolean;
-  createPricelistLevel: FetchLevel;
-  createPricelistErrors: IErrors;
+  createPricelist: IFetchInfo;
   profile: IProfile | null;
   selectedProfession: IProfession | null;
   selectedExpansion: IExpansion | null;
@@ -30,11 +29,14 @@ export interface IStateProps {
 }
 
 export interface IDispatchProps {
-  appendItems: (items: IItemsMap) => void;
-  changeIsAddListDialogOpen: (isDialogOpen: boolean) => void;
-  createPricelist: (token: string, request: ICreatePricelistRequest) => void;
-  createProfessionPricelist: (token: string, request: ICreateProfessionPricelistRequest) => void;
-  insertToast: (toast: IToastProps) => void;
+  AppendItems: (items: IItemsMap) => void;
+  ChangeIsAddListDialogOpen: (isDialogOpen: boolean) => void;
+  FetchCreatePricelist: (token: string, request: ICreatePricelistRequest) => void;
+  FetchCreateProfessionPricelist: (
+    token: string,
+    request: ICreateProfessionPricelistRequest,
+  ) => void;
+  InsertToast: (toast: IToastProps) => void;
 }
 
 export interface IRouteProps {
@@ -64,14 +66,14 @@ export class CreateListDialog extends React.Component<Props, State> {
 
   public componentDidUpdate(prevProps: Props) {
     const {
-      createPricelistLevel,
+      createPricelist,
       selectedList,
       currentRegion,
       currentRealm,
       selectedProfession,
       selectedExpansion,
       browseOnCreate,
-      insertToast,
+      InsertToast,
     } = this.props;
     const { listDialogResetTrigger } = this.state;
 
@@ -79,10 +81,10 @@ export class CreateListDialog extends React.Component<Props, State> {
       return;
     }
 
-    if (prevProps.createPricelistLevel !== createPricelistLevel) {
-      switch (createPricelistLevel) {
+    if (prevProps.createPricelist.level !== createPricelist.level) {
+      switch (createPricelist.level) {
         case FetchLevel.success:
-          insertToast({
+          InsertToast({
             icon: "info-sign",
             intent: Intent.SUCCESS,
             message: "Your pricelist has been created.",
@@ -109,9 +111,8 @@ export class CreateListDialog extends React.Component<Props, State> {
   public render() {
     const {
       isAddListDialogOpen,
-      changeIsAddListDialogOpen,
-      createPricelistErrors,
-      createPricelistLevel,
+      ChangeIsAddListDialogOpen,
+      createPricelist,
       selectedProfession,
     } = this.props;
     const { listDialogResetTrigger } = this.state;
@@ -124,10 +125,10 @@ export class CreateListDialog extends React.Component<Props, State> {
     return (
       <ListDialogContainer
         isOpen={isAddListDialogOpen}
-        onClose={() => changeIsAddListDialogOpen(!isAddListDialogOpen)}
+        onClose={() => ChangeIsAddListDialogOpen(!isAddListDialogOpen)}
         title={dialogTitle}
-        mutationErrors={createPricelistErrors}
-        mutatePricelistLevel={createPricelistLevel}
+        mutationErrors={createPricelist.errors}
+        mutatePricelistLevel={createPricelist.level}
         resetTrigger={listDialogResetTrigger}
         onComplete={(v: IOnCompleteOptions) => this.onListDialogComplete(v)}
       />
@@ -136,21 +137,21 @@ export class CreateListDialog extends React.Component<Props, State> {
 
   private onListDialogComplete({ name, slug, entries, items }: IOnCompleteOptions) {
     const {
-      createPricelist,
+      FetchCreatePricelist,
       profile,
-      appendItems,
+      AppendItems,
       selectedProfession,
-      createProfessionPricelist,
+      FetchCreateProfessionPricelist,
       selectedExpansion,
     } = this.props;
 
     if (selectedProfession === null) {
-      createPricelist(profile!.token, {
+      FetchCreatePricelist(profile!.token, {
         entries,
         pricelist: { name, slug },
       });
     } else {
-      createProfessionPricelist(profile!.token, {
+      FetchCreateProfessionPricelist(profile!.token, {
         entries,
         expansion_name: selectedExpansion!.name,
         pricelist: { name, slug },
@@ -158,6 +159,6 @@ export class CreateListDialog extends React.Component<Props, State> {
       });
     }
 
-    appendItems(items);
+    AppendItems(items);
   }
 }

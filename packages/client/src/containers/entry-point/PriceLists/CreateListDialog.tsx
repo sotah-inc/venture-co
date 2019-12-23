@@ -18,16 +18,14 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
   const { profile, currentRegion, currentRealm } = state.Main;
   const {
     isAddListDialogOpen,
-    createPricelistLevel,
-    createPricelistErrors,
+    createPricelist,
     selectedProfession,
     selectedExpansion,
     selectedList,
   } = state.PriceLists;
 
   return {
-    createPricelistErrors,
-    createPricelistLevel,
+    createPricelist,
     currentRealm,
     currentRegion,
     isAddListDialogOpen,
@@ -39,11 +37,11 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
 };
 
 const mapDispatchToProps: IDispatchProps = {
-  appendItems: AppendItems,
-  changeIsAddListDialogOpen: ChangeIsAddListDialogOpen,
-  createPricelist: FetchCreatePricelist,
-  createProfessionPricelist: FetchCreateProfessionPricelist,
-  insertToast: InsertToast,
+  AppendItems,
+  ChangeIsAddListDialogOpen,
+  FetchCreatePricelist,
+  FetchCreateProfessionPricelist,
+  InsertToast,
 };
 
 export const CreateListDialogContainer = connect<IStateProps, IDispatchProps, {}, IStoreState>(
