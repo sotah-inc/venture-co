@@ -15,12 +15,12 @@ import {
   SortKind,
 } from "@sotah-inc/core";
 
-import { PricelistIcon } from "../../../components/util/PricelistIcon";
 import { SortToggleContainer } from "../../../containers/entry-point/AuctionList/SortToggle";
 import { ItemPopoverContainer } from "../../../containers/util/ItemPopover";
 import { IItemsData } from "../../../types/global";
-import { getSelectedResultIndex, qualityToColorClass } from "../../../util";
+import { getItemFromPricelist, getSelectedResultIndex, qualityToColorClass } from "../../../util";
 import { Currency, ProfessionIcon } from "../../util";
+import { ItemIcon } from "../../util/ItemIcon";
 
 type ListAuction = IAuction | null;
 
@@ -173,6 +173,19 @@ export class AuctionTable extends React.Component<Props> {
     return forItem.map((v, i) => this.renderProfessionPricelist(i, v));
   }
 
+  private renderPricelistIcon(list: IPricelistJson) {
+    const {
+      auctions: { items },
+    } = this.props;
+
+    const item = getItemFromPricelist(items, list);
+    if (item === null) {
+      return null;
+    }
+
+    return <ItemIcon item={item} />;
+  }
+
   private renderProfessionPricelist(index: number, professionPricelist: IProfessionPricelistJson) {
     const {
       expansions,
@@ -180,7 +193,6 @@ export class AuctionTable extends React.Component<Props> {
       currentRegion,
       currentRealm,
       browseToProfessionPricelist,
-      auctions,
     } = this.props;
 
     if (currentRegion === null || currentRealm === null) {
@@ -256,9 +268,7 @@ export class AuctionTable extends React.Component<Props> {
               <span style={{ color: expansion.label_color }}>{expansion.label}</span>
             </Button>
             <Button
-              icon={
-                <PricelistIcon items={auctions.items} pricelist={professionPricelist.pricelist} />
-              }
+              icon={this.renderPricelistIcon(professionPricelist.pricelist)}
               minimal={true}
               small={true}
               onClick={() =>
