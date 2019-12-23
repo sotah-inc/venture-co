@@ -36,7 +36,7 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
   } = state.Auction;
   return {
     activeSelect,
-    auctions,
+    auctions: auctions.data,
     auctionsPerPage,
     authLevel,
     currentPage,

@@ -28,10 +28,15 @@ import { IProfessionNode } from "../../../../../actions/price-lists";
 
 import { IGetUnmetDemandOptions } from "../../../../../api/price-lists";
 import { ItemPopoverContainer } from "../../../../../containers/util/ItemPopover";
-import { PricelistIconContainer } from "../../../../../containers/util/PricelistIcon";
 import { FetchLevel } from "../../../../../types/main";
-import { didRealmChange, getPrimaryExpansion, qualityToColorClass } from "../../../../../util";
+import {
+  didRealmChange,
+  getItemFromPricelist,
+  getPrimaryExpansion,
+  qualityToColorClass,
+} from "../../../../../util";
 import { ProfessionIcon } from "../../../../util";
+import { ItemIcon } from "../../../../util/ItemIcon";
 
 export interface IStateProps {
   expansions: IExpansion[];
@@ -207,15 +212,20 @@ export class RealmSummaryPanel extends React.Component<Props> {
       );
     }
 
+    const classNames = [
+      Classes.HTML_TABLE,
+      Classes.HTML_TABLE_BORDERED,
+      Classes.SMALL,
+      "unmet-items-table",
+    ];
+
     return (
       <>
         <Callout intent={Intent.PRIMARY}>
           These items have <strong>0</strong> auctions posted on {region.name.toUpperCase()}-
           {realm.name}.
         </Callout>
-        <HTMLTable
-          className={`${Classes.HTML_TABLE} ${Classes.HTML_TABLE_BORDERED} ${Classes.SMALL} unmet-items-table`}
-        >
+        <HTMLTable className={classNames.join(" ")}>
           <thead>
             <tr>
               <th>Item</th>
@@ -274,10 +284,21 @@ export class RealmSummaryPanel extends React.Component<Props> {
   private renderPricelistCell(pricelist: IPricelistJson, profession: ProfessionName) {
     return (
       <>
-        <PricelistIconContainer pricelist={pricelist} />
+        {this.renderPricelistIcon(pricelist)}
         &nbsp;
         <a onClick={() => this.onPricelistClick(pricelist, profession)}>{pricelist.name}</a>
       </>
     );
+  }
+
+  private renderPricelistIcon(list: IPricelistJson) {
+    const { items } = this.props;
+
+    const item = getItemFromPricelist(items, list);
+    if (item === null) {
+      return null;
+    }
+
+    return <ItemIcon item={item} />;
   }
 }

@@ -2,7 +2,9 @@ import {
   IExpansion,
   IItem,
   IItemClass,
+  IItemsMap,
   InventoryType,
+  IPricelistJson,
   IQueryAuctionsItem,
   IRealm,
   IRegion,
@@ -286,3 +288,15 @@ export const FormatItemClassList = (itemClassList: IItemClass[]): IItemClasses =
 
 export const FormatRealmList = (realmList: IStatusRealm[]) =>
   realmList.reduce((result, realm) => ({ ...result, [realm.slug]: realm }), {});
+
+export const getItemFromPricelist = (items: IItemsMap, pricelist: IPricelistJson): IItem | null => {
+  if (pricelist.pricelist_entries.length === 0) {
+    return null;
+  }
+
+  if (!(pricelist.pricelist_entries[0].item_id in items)) {
+    return null;
+  }
+
+  return items[pricelist.pricelist_entries[0].item_id];
+};
