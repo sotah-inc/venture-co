@@ -3,6 +3,7 @@ import React from "react";
 import { Classes, Intent, ITreeNode, Spinner, Tree } from "@blueprintjs/core";
 import {
   IExpansion,
+  IItemsMap,
   IPricelistJson,
   IProfession,
   IRegion,
@@ -12,14 +13,16 @@ import {
 
 // tslint:disable-next-line:max-line-length
 import { TreeContentContainer } from "../../../containers/entry-point/PriceLists/PricelistTree/TreeContent";
-import { PricelistIconContainer } from "../../../containers/util/PricelistIcon";
 import { IProfile } from "../../../types/global";
 import { AuthLevel, FetchLevel } from "../../../types/main";
 import { IExpansionProfessionPricelistMap } from "../../../types/price-lists";
+import { getItemFromPricelist } from "../../../util";
 import { ProfessionIcon } from "../../util";
+import { ItemIcon } from "../../util/ItemIcon";
 
 export interface IStateProps {
   pricelists: IPricelistJson[];
+  items: IItemsMap;
   selectedList: IPricelistJson | null;
   currentRegion: IRegion | null;
   currentRealm: IStatusRealm | null;
@@ -320,13 +323,24 @@ export class PricelistTree extends React.Component<Props, IState> {
 
     const result: ITreeNode = {
       className: "pricelist-node",
-      icon: <PricelistIconContainer pricelist={v} />,
+      icon: this.renderPricelistIcon(v),
       id: `pricelist-${v.id}`,
       isSelected: selectedList !== null && selectedList.id === v.id,
       label: v.name,
     };
 
     return result;
+  }
+
+  private renderPricelistIcon(v: IPricelistJson) {
+    const { items } = this.props;
+
+    const item = getItemFromPricelist(items, v);
+    if (item === null) {
+      return null;
+    }
+
+    return <ItemIcon item={item} />;
   }
 
   private getPricelistNodes(): ITreeNode[] {
