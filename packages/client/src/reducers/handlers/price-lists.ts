@@ -225,7 +225,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
         return {
           ...state,
           createPricelist: {
-            errors: {},
+            ...state.createPricelist,
             level: FetchLevel.fetching,
           },
         };
@@ -294,8 +294,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
         if (action.payload.result.errors !== null) {
           return {
             ...state,
-            updatePricelistErrors: action.payload.result.errors,
-            updatePricelistLevel: FetchLevel.failure,
+            updatePricelist: { errors: action.payload.result.errors, level: FetchLevel.failure },
           };
         }
 
@@ -323,8 +322,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
             ...action.payload.meta,
             pricelists,
             selectedList,
-            updatePricelistErrors: {},
-            updatePricelistLevel: FetchLevel.success,
+            updatePricelist: { errors: {}, level: FetchLevel.success },
           };
         }
 
@@ -353,12 +351,14 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           ...action.payload.meta,
           professionPricelists,
           selectedList,
-          updatePricelistErrors: {},
-          updatePricelistLevel: FetchLevel.success,
+          updatePricelist: { errors: {}, level: FetchLevel.success },
         };
       },
       request: (state: IPriceListsState) => {
-        return { ...state, updatePricelistLevel: FetchLevel.fetching };
+        return {
+          ...state,
+          updatePricelist: { ...state.updatePricelist, level: FetchLevel.fetching },
+        };
       },
     },
   },
@@ -455,7 +455,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
         return {
           ...state,
           createPricelist: {
-            errors: {},
+            ...state.createPricelist,
             level: FetchLevel.fetching,
           },
         };
