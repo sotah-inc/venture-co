@@ -18,8 +18,7 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
   const {
     isEditListDialogOpen,
     items,
-    updatePricelistLevel,
-    updatePricelistErrors,
+    updatePricelist: { level: updatePricelistLevel, errors: updatePricelistErrors },
     selectedList,
     selectedExpansion,
     selectedProfession,

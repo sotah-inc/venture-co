@@ -10,7 +10,11 @@ import { IStoreState } from "../../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const { profile } = state.Main;
-  const { isAddEntryDialogOpen, updatePricelistLevel, selectedList } = state.PriceLists;
+  const {
+    isAddEntryDialogOpen,
+    updatePricelist: { level: updatePricelistLevel },
+    selectedList,
+  } = state.PriceLists;
   return {
     isAddEntryDialogOpen,
     profile,

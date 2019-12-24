@@ -21,8 +21,7 @@ import { FetchLevel } from "./main";
 export interface IPriceListsState {
   pricelists: IPricelistJson[];
   createPricelist: IFetchInfo;
-  updatePricelistLevel: FetchLevel;
-  updatePricelistErrors: IErrors;
+  updatePricelist: IFetchInfo;
   entryCreateLevel: FetchLevel;
   selectedList: IPricelistJson | null;
   isAddListDialogOpen: boolean;
@@ -107,6 +106,5 @@ export const defaultPriceListsState: IPriceListsState = {
   selectedProfession: null,
   unmetDemandItemIds: [],
   unmetDemandProfessionPricelists: [],
-  updatePricelistErrors: {},
-  updatePricelistLevel: FetchLevel.initial,
+  updatePricelist: { level: FetchLevel.initial, errors: {} },
 };
