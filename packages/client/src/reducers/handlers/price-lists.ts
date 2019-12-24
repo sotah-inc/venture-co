@@ -198,8 +198,10 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
         if (action.payload.errors !== null) {
           return {
             ...state,
-            createPricelistErrors: action.payload.errors,
-            createPricelistLevel: FetchLevel.failure,
+            createPricelist: {
+              errors: action.payload.errors,
+              level: FetchLevel.failure,
+            },
           };
         }
 
@@ -210,15 +212,23 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
 
         return {
           ...state,
-          createPricelistErrors: {},
-          createPricelistLevel: FetchLevel.success,
+          createPricelist: {
+            errors: {},
+            level: FetchLevel.success,
+          },
           isAddListDialogOpen: false,
           pricelists: [...state.pricelists, selectedList],
           selectedList,
         };
       },
       request: (state: IPriceListsState) => {
-        return { ...state, createPricelistLevel: FetchLevel.fetching };
+        return {
+          ...state,
+          createPricelist: {
+            errors: {},
+            level: FetchLevel.fetching,
+          },
+        };
       },
     },
     delete: {
@@ -399,8 +409,10 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
         if (action.payload.errors !== null) {
           return {
             ...state,
-            createPricelistErrors: action.payload.errors,
-            createPricelistLevel: FetchLevel.failure,
+            createPricelist: {
+              errors: action.payload.errors,
+              level: FetchLevel.failure,
+            },
           };
         }
 
@@ -430,15 +442,23 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
 
         return {
           ...state,
-          createPricelistErrors: {},
-          createPricelistLevel: FetchLevel.success,
+          createPricelist: {
+            errors: {},
+            level: FetchLevel.success,
+          },
           isAddListDialogOpen: false,
           professionPricelists,
           selectedList,
         };
       },
       request: (state: IPriceListsState) => {
-        return { ...state, createPricelistLevel: FetchLevel.fetching };
+        return {
+          ...state,
+          createPricelist: {
+            errors: {},
+            level: FetchLevel.fetching,
+          },
+        };
       },
     },
     delete: {
