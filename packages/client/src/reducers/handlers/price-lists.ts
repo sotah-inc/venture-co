@@ -234,7 +234,10 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
     delete: {
       receive: (state: IPriceListsState, action: ReturnType<typeof ReceiveDeletePricelist>) => {
         if (action.payload === null) {
-          return { ...state, deletePricelistLevel: FetchLevel.failure };
+          return {
+            ...state,
+            deletePricelist: { errors: {}, level: FetchLevel.failure },
+          };
         }
 
         const deletedIndex = getPricelistIndex(state.pricelists, action.payload);
@@ -259,14 +262,17 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
 
         return {
           ...state,
-          deletePricelistLevel: FetchLevel.success,
+          deletePricelist: { errors: {}, level: FetchLevel.success },
           isDeleteListDialogOpen: false,
           pricelists,
           selectedList,
         };
       },
       request: (state: IPriceListsState): IPriceListsState => {
-        return { ...state, deletePricelistLevel: FetchLevel.fetching };
+        return {
+          ...state,
+          deletePricelist: { ...state.deletePricelist, level: FetchLevel.fetching },
+        };
       },
     },
     get: {
@@ -469,8 +475,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
         if (action.payload.errors !== null) {
           return {
             ...state,
-            deletePricelistErrors: action.payload.errors,
-            deletePricelistLevel: FetchLevel.failure,
+            deletePricelist: { errors: action.payload.errors, level: FetchLevel.failure },
           };
         }
 
@@ -501,14 +506,17 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
 
         return {
           ...state,
-          deletePricelistLevel: FetchLevel.success,
+          deletePricelist: { errors: {}, level: FetchLevel.success },
           isDeleteListDialogOpen: false,
           professionPricelists,
           selectedList,
         };
       },
       request: (state: IPriceListsState) => {
-        return { ...state, deletePricelistLevel: FetchLevel.fetching };
+        return {
+          ...state,
+          deletePricelist: { ...state.deletePricelist, level: FetchLevel.fetching },
+        };
       },
     },
     update: {},

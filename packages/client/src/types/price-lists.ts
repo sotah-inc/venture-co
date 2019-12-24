@@ -15,7 +15,7 @@ import {
 } from "@sotah-inc/core";
 
 import { IUpdatePricelistResult } from "../api/price-lists";
-import { IErrors, IFetchInfo } from "./global";
+import { IFetchInfo } from "./global";
 import { FetchLevel } from "./main";
 
 export interface IPriceListsState {
@@ -30,8 +30,7 @@ export interface IPriceListsState {
   isAddEntryDialogOpen: boolean;
   getPricelistsLevel: FetchLevel;
   items: IItemsMap;
-  deletePricelistLevel: FetchLevel;
-  deletePricelistErrors: IErrors;
+  deletePricelist: IFetchInfo;
   selectedProfession: IProfession | null;
   professionPricelists: IExpansionProfessionPricelistMap;
   getProfessionPricelistsLevel: FetchLevel;
@@ -79,8 +78,7 @@ export interface IUpdatePricelistResponseOptions {
 
 export const defaultPriceListsState: IPriceListsState = {
   createPricelist: { level: FetchLevel.initial, errors: {} },
-  deletePricelistErrors: {},
-  deletePricelistLevel: FetchLevel.initial,
+  deletePricelist: { level: FetchLevel.initial, errors: {} },
   entryCreateLevel: FetchLevel.initial,
   getItemsOwnershipLevel: FetchLevel.initial,
   getPricelistHistoryLevel: FetchLevel.initial,
