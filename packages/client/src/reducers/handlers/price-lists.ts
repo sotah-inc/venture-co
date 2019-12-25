@@ -566,24 +566,32 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
   unmetdemand: {
     get: {
       receive: (state: IPriceListsState, action: ReturnType<typeof ReceiveGetUnmetDemand>) => {
-        if (action.payload === null) {
+        if (action.payload === null || action.payload.data === null) {
           return {
             ...state,
-            getUnmetDemandLevel: FetchLevel.failure,
+            unmetDemand: {
+              ...state.unmetDemand,
+              level: FetchLevel.failure,
+            },
           };
         }
 
         return {
           ...state,
-          getUnmetDemandLevel: FetchLevel.success,
-          unmetDemandItemIds: action.payload!.data!.unmetItemIds,
-          unmetDemandProfessionPricelists: action.payload!.data!.professionPricelists,
+          unmetDemand: {
+            data: action.payload.data,
+            errors: {},
+            level: FetchLevel.success,
+          },
         };
       },
       request: (state: IPriceListsState) => {
         return {
           ...state,
-          getUnmetDemandLevel: FetchLevel.fetching,
+          unmetDemand: {
+            ...state.unmetDemand,
+            level: FetchLevel.fetching,
+          },
         };
       },
     },

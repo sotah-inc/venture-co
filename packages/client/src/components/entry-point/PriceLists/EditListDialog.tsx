@@ -30,7 +30,6 @@ export interface IStateProps {
 }
 
 export interface IDispatchProps {
-  appendItems: (items: IItemsMap) => void;
   changeIsEditListDialogOpen: (isDialogOpen: boolean) => void;
   updatePricelist: (opts: IUpdatePricelistRequestOptions) => void;
   insertToast: (toast: IToastProps) => void;
@@ -140,8 +139,8 @@ export class EditListDialog extends React.Component<Props, State> {
     this.setState({ listDialogResetTrigger: listDialogResetTrigger + 1 });
   }
 
-  private onListDialogComplete({ name, entries, items, slug }: IOnCompleteOptions) {
-    const { updatePricelist, profile, selectedList, appendItems } = this.props;
+  private onListDialogComplete({ name, entries, slug }: IOnCompleteOptions) {
+    const { updatePricelist, profile, selectedList } = this.props;
 
     updatePricelist({
       id: selectedList!.id,
@@ -149,6 +148,5 @@ export class EditListDialog extends React.Component<Props, State> {
       request: { entries, pricelist: { name, slug } },
       token: profile!.token,
     });
-    appendItems(items);
   }
 }

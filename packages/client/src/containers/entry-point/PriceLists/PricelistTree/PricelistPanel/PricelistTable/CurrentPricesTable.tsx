@@ -12,8 +12,10 @@ import { IStoreState } from "../../../../../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const { fetchRealmLevel } = state.Main;
-  const { items, getPricelistLevel, pricelistMap } = state.PriceLists;
-  return { fetchRealmLevel, getPricelistLevel, items, pricelistMap };
+  const {
+    priceTable: { level: getPricelistLevel, data: pricelistMap },
+  } = state.PriceLists;
+  return { fetchRealmLevel, getPricelistLevel, items: {}, pricelistMap };
 };
 
 const mapDispatchToProps: IDispatchProps = {

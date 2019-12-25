@@ -5,7 +5,6 @@ import {
   ICreatePricelistRequest,
   ICreateProfessionPricelistRequest,
   IExpansion,
-  IItemsMap,
   IPricelistJson,
   IProfession,
   IRegion,
@@ -29,7 +28,6 @@ export interface IStateProps {
 }
 
 export interface IDispatchProps {
-  AppendItems: (items: IItemsMap) => void;
   ChangeIsAddListDialogOpen: (isDialogOpen: boolean) => void;
   FetchCreatePricelist: (token: string, request: ICreatePricelistRequest) => void;
   FetchCreateProfessionPricelist: (
@@ -135,11 +133,10 @@ export class CreateListDialog extends React.Component<Props, State> {
     );
   }
 
-  private onListDialogComplete({ name, slug, entries, items }: IOnCompleteOptions) {
+  private onListDialogComplete({ name, slug, entries }: IOnCompleteOptions) {
     const {
       FetchCreatePricelist,
       profile,
-      AppendItems,
       selectedProfession,
       FetchCreateProfessionPricelist,
       selectedExpansion,
@@ -158,7 +155,5 @@ export class CreateListDialog extends React.Component<Props, State> {
         profession_name: selectedProfession.name,
       });
     }
-
-    AppendItems(items);
   }
 }

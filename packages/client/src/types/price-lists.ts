@@ -1,13 +1,13 @@
 import {
   IExpansion,
   IGetPricelistHistoriesResponse,
+  IGetUnmetDemandResponse,
   IItemMarketPrices,
   IPricelistJson,
   IPriceListMap,
   IProfession,
   IProfessionPricelistJson,
   IQueryOwnerItemsMap,
-  ItemId,
   IUpdatePricelistRequest,
 } from "@sotah-inc/core";
 
@@ -27,9 +27,6 @@ export interface IPriceListsState {
   deletePricelist: IFetchInfo;
   selectedProfession: IProfession | null;
   selectedExpansion: IExpansion | null;
-  getUnmetDemandLevel: FetchLevel;
-  unmetDemandItemIds: ItemId[];
-  unmetDemandProfessionPricelists: IProfessionPricelistJson[];
   getItemsOwnershipLevel: FetchLevel;
   itemsOwnershipMap: IQueryOwnerItemsMap;
   itemsMarketPrices: IItemMarketPrices;
@@ -38,6 +35,7 @@ export interface IPriceListsState {
   pricelistHistory: IFetchData<IGetPricelistHistoriesResponse>;
   priceTable: IFetchData<IPriceListMap>;
   professionPricelists: IFetchData<IExpansionProfessionPricelistMap>;
+  unmetDemand: IFetchData<IGetUnmetDemandResponse>;
 }
 
 export interface IExpansionProfessionPricelistMap {
@@ -72,7 +70,6 @@ export const defaultPriceListsState: IPriceListsState = {
   deletePricelist: { level: FetchLevel.initial, errors: {} },
   entryCreateLevel: FetchLevel.initial,
   getItemsOwnershipLevel: FetchLevel.initial,
-  getUnmetDemandLevel: FetchLevel.initial,
   isAddEntryDialogOpen: false,
   isAddListDialogOpen: false,
   isDeleteListDialogOpen: false,
@@ -87,8 +84,6 @@ export const defaultPriceListsState: IPriceListsState = {
   selectedExpansion: null,
   selectedList: null,
   selectedProfession: null,
-  unmetDemandItemIds: [],
-  unmetDemandProfessionPricelists: [],
   updatePricelist: { level: FetchLevel.initial, errors: {} },
 
   priceTable: {
@@ -108,6 +103,15 @@ export const defaultPriceListsState: IPriceListsState = {
   },
   professionPricelists: {
     data: {},
+    errors: {},
+    level: FetchLevel.initial,
+  },
+  unmetDemand: {
+    data: {
+      items: {},
+      professionPricelists: [],
+      unmetItemIds: [],
+    },
     errors: {},
     level: FetchLevel.initial,
   },

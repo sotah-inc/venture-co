@@ -6,9 +6,8 @@ import {
 } from "../../../../components/entry-point/PriceLists/util/ListDialog";
 import { IStoreState } from "../../../../types";
 
-const mapStateToProps = (state: IStoreState): IStateProps => {
-  const { items } = state.PriceLists;
-  return { items };
+const mapStateToProps = (_state: IStoreState): IStateProps => {
+  return { items: {} };
 };
 
 export const ListDialogContainer = connect<IStateProps, {}, {}, IStoreState>(mapStateToProps)(

@@ -1,11 +1,7 @@
 import { connect } from "react-redux";
 
 import { InsertToast } from "../../../actions/oven";
-import {
-  AppendItems,
-  ChangeIsEditListDialogOpen,
-  FetchUpdatePricelist,
-} from "../../../actions/price-lists";
+import { ChangeIsEditListDialogOpen, FetchUpdatePricelist } from "../../../actions/price-lists";
 import {
   EditListDialog,
   IDispatchProps,
@@ -17,7 +13,6 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
   const { profile, currentRegion, currentRealm } = state.Main;
   const {
     isEditListDialogOpen,
-    items,
     updatePricelist: { level: updatePricelistLevel, errors: updatePricelistErrors },
     selectedList,
     selectedExpansion,
@@ -28,7 +23,7 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
     currentRealm,
     currentRegion,
     isEditListDialogOpen,
-    items,
+    items: {},
     profile,
     selectedExpansion,
     selectedList,
@@ -39,7 +34,6 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
 };
 
 const mapDispatchToProps: IDispatchProps = {
-  appendItems: AppendItems,
   changeIsEditListDialogOpen: ChangeIsEditListDialogOpen,
   insertToast: InsertToast,
   updatePricelist: FetchUpdatePricelist,

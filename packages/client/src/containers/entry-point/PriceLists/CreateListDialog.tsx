@@ -2,7 +2,6 @@ import { connect } from "react-redux";
 
 import { InsertToast } from "../../../actions/oven";
 import {
-  AppendItems,
   ChangeIsAddListDialogOpen,
   FetchCreatePricelist,
   FetchCreateProfessionPricelist,
@@ -37,7 +36,6 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
 };
 
 const mapDispatchToProps: IDispatchProps = {
-  AppendItems,
   ChangeIsAddListDialogOpen,
   FetchCreatePricelist,
   FetchCreateProfessionPricelist,

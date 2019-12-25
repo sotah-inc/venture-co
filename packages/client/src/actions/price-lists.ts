@@ -6,7 +6,6 @@ import {
   IGetPricelistHistoriesResponse,
   IGetPricelistResponse,
   IGetPricelistsResponse,
-  IItemsMap,
   IPricelistJson,
   IProfession,
   IQueryOwnerItemsResponse,

@@ -13,17 +13,15 @@ import { IStoreState } from "../../../../../types";
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const { expansions, professions } = state.Main;
   const {
-    unmetDemandItemIds,
-    unmetDemandProfessionPricelists,
-    getUnmetDemandLevel,
-    items,
-  } = state.PriceLists;
+    level: getUnmetDemandLevel,
+    data: { unmetItemIds, professionPricelists: unmetDemandProfessionPricelists },
+  } = state.PriceLists.unmetDemand;
   return {
     expansions,
     getUnmetDemandLevel,
-    items,
+    items: {},
     professions,
-    unmetDemandItemIds,
+    unmetDemandItemIds: unmetItemIds,
     unmetDemandProfessionPricelists,
   };
 };
