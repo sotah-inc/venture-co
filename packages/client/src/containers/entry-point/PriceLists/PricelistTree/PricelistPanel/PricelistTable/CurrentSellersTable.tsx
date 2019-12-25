@@ -12,7 +12,9 @@ import { IStoreState } from "../../../../../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const { fetchRealmLevel } = state.Main;
-  const { getItemsOwnershipLevel, itemsOwnershipMap } = state.PriceLists;
+  const {
+    itemsOwnership: { level: getItemsOwnershipLevel, data: itemsOwnershipMap },
+  } = state.PriceLists;
   return { fetchRealmLevel, getItemsOwnershipLevel, itemsOwnershipMap };
 };
 

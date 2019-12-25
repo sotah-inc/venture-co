@@ -5,6 +5,7 @@ import {
   IPriceListMap,
   IProfession,
   IProfessionPricelistJson,
+  IQueryOwnerItemsMap,
 } from "@sotah-inc/core";
 
 import {
@@ -121,27 +122,28 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           };
         })();
 
-        const itemsOwnershipData: Partial<IPriceListsState> = (() => {
+        const itemsOwnership: IFetchData<IQueryOwnerItemsMap> = (() => {
           if (
             typeof action.payload === "undefined" ||
             typeof action.payload.currentSellers === "undefined"
           ) {
-            return {};
+            return defaultPriceListsState.itemsOwnership;
           }
 
           if (action.payload.currentSellers === null) {
-            return { getItemsOwnershipLevel: FetchLevel.failure };
+            return { ...defaultPriceListsState.itemsOwnership, level: FetchLevel.failure };
           }
 
           return {
-            getItemsOwnershipLevel: FetchLevel.success,
-            itemsOwnershipMap: action.payload.currentSellers.ownership,
+            data: action.payload.currentSellers.ownership,
+            errors: {},
+            level: FetchLevel.success,
           };
         })();
 
         return {
           ...state,
-          ...itemsOwnershipData,
+          itemsOwnership,
           priceTable,
           pricelistHistory,
           selectedExpansion,
