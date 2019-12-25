@@ -141,9 +141,6 @@ export const CHANGE_IS_ADD_ENTRY_DIALOG_OPEN = "CHANGE_IS_ADD_ENTRY_DIALOG_OPEN"
 export const ChangeIsAddEntryDialogOpen = (payload: boolean) =>
   createAction(CHANGE_IS_ADD_ENTRY_DIALOG_OPEN, payload);
 
-export const APPEND_ITEMS = "APPEND_ITEMS";
-export const AppendItems = (payload: IItemsMap) => createAction(APPEND_ITEMS, payload);
-
 export const REQUEST_CREATE_PROFESSIONPRICELIST = "REQUEST_CREATE_PROFESSIONPRICELIST";
 export const RequestCreateProfessionPricelist = () =>
   createAction(REQUEST_CREATE_PROFESSIONPRICELIST);
@@ -282,7 +279,6 @@ export const LoadPricelistsEntrypoint = (payload?: ILoadPricelistsEntrypoint) =>
   createAction(LOAD_PRICELISTS_ENTRYPOINT, payload);
 
 export const PriceListsActions = {
-  AppendItems,
   ChangeEntryCreateLevel,
   ChangeIsAddEntryDialogOpen,
   ChangeIsAddListDialogOpen,

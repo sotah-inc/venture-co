@@ -1,7 +1,4 @@
-import { IItem } from "@sotah-inc/core";
-
 import {
-  APPEND_ITEMS,
   CHANGE_ENTRY_CREATELEVEL,
   CHANGE_IS_ADD_ENTRY_DIALOG_OPEN,
   CHANGE_IS_ADD_LIST_DIALOG_OPEN,
@@ -36,7 +33,7 @@ export const priceLists = (state: State | undefined, action: PriceListsActions):
     case CHANGE_SELECTED_LIST:
       const isProfessionPricelist: boolean = (() => {
         for (const expansionName of Object.keys(state.professionPricelists)) {
-          for (const v of state.professionPricelists[expansionName]) {
+          for (const v of state.professionPricelists.data[expansionName]) {
             if (v.pricelist.id === action.payload.id) {
               return true;
             }
@@ -66,14 +63,6 @@ export const priceLists = (state: State | undefined, action: PriceListsActions):
       return { ...state, isDeleteListDialogOpen: action.payload };
     case CHANGE_IS_ADD_ENTRY_DIALOG_OPEN:
       return { ...state, isAddEntryDialogOpen: action.payload };
-    case APPEND_ITEMS:
-      const appendingItems = { ...state.items };
-      for (const itemId of Object.keys(action.payload)) {
-        const item: IItem = action.payload[Number(itemId)];
-        appendingItems[item.id] = item;
-      }
-
-      return { ...state, items: appendingItems };
     case RESET_PROFESSIONS_SELECTIONS:
       return { ...state, selectedProfession: null, selectedExpansion: null, selectedList: null };
     default:

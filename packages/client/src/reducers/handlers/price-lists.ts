@@ -1,7 +1,7 @@
 import {
   IExpansion,
-  IItemsMap,
   IPricelistJson,
+  IPriceListMap,
   IProfession,
   IProfessionPricelistJson,
 } from "@sotah-inc/core";
@@ -22,8 +22,14 @@ import {
   ReceiveGetUnmetDemand,
   ReceiveUpdatePricelist,
 } from "../../actions/price-lists";
+import { IFetchData } from "../../types/global";
 import { FetchLevel } from "../../types/main";
-import { IExpansionProfessionPricelistMap, IPriceListsState } from "../../types/price-lists";
+import {
+  defaultPriceListsState,
+  IExpansionProfessionPricelistMap,
+  IPricelistHistoryData,
+  IPriceListsState,
+} from "../../types/price-lists";
 import { getPricelistIndex, getProfessionPricelistIndex } from "../helper";
 
 import { IKindHandlers, Runner } from "./index";
@@ -77,43 +83,45 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           );
         })();
 
-        const pricelistHistoryData = (() => {
+        const pricelistHistory: IFetchData<IPricelistHistoryData> = (() => {
           if (
             typeof action.payload === "undefined" ||
             typeof action.payload.pricelistHistory === "undefined"
           ) {
-            return {};
+            return defaultPriceListsState.pricelistHistory;
           }
 
           if (action.payload.pricelistHistory === null) {
-            return { getPricelistHistoryLevel: FetchLevel.failure };
+            return { ...defaultPriceListsState.pricelistHistory, level: FetchLevel.failure };
           }
 
           return {
-            getPricelistHistoryLevel: FetchLevel.success,
-            items: action.payload.pricelistHistory.items,
-            itemsPriceLimits: action.payload.pricelistHistory.itemPriceLimits,
-            overallPriceLimits: action.payload.pricelistHistory.overallPriceLimits,
-            pricelistHistoryMap: action.payload.pricelistHistory.history,
+            data: {
+              itemsPriceLimits: action.payload.pricelistHistory.itemPriceLimits,
+              overallPriceLimits: action.payload.pricelistHistory.overallPriceLimits,
+              pricelistHistoryMap: action.payload.pricelistHistory.history,
+            },
+            errors: {},
+            level: FetchLevel.success,
           };
         })();
 
-        const currentPricesData: Partial<IPriceListsState> = (() => {
+        const priceTable: IFetchData<IPriceListMap> = (() => {
           if (
             typeof action.payload === "undefined" ||
             typeof action.payload.currentPrices === "undefined"
           ) {
-            return {};
+            return defaultPriceListsState.priceTable;
           }
 
           if (action.payload.currentPrices === null) {
-            return { getPricelistLevel: FetchLevel.failure };
+            return { ...defaultPriceListsState.priceTable, level: FetchLevel.failure };
           }
 
           return {
-            getPricelistLevel: FetchLevel.success,
-            items: action.payload.currentPrices.items,
-            pricelistMap: action.payload.currentPrices.price_list,
+            data: action.payload.currentPrices.price_list,
+            errors: {},
+            level: FetchLevel.success,
           };
         })();
 
@@ -135,28 +143,11 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           };
         })();
 
-        const resolveItems = (input?: { items?: IItemsMap }): IItemsMap => {
-          if (typeof input === "undefined") {
-            return {};
-          }
-
-          if (typeof input.items === "undefined") {
-            return {};
-          }
-
-          return input.items;
-        };
-
         return {
           ...state,
-          ...pricelistHistoryData,
           ...itemsOwnershipData,
-          ...currentPricesData,
-          items: {
-            ...state.items,
-            ...resolveItems(pricelistHistoryData),
-            ...resolveItems(currentPricesData),
-          },
+          priceTable,
+          pricelistHistory,
           selectedExpansion,
           selectedProfession,
         };
@@ -217,7 +208,10 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
             level: FetchLevel.success,
           },
           isAddListDialogOpen: false,
-          pricelists: [...state.pricelists, selectedList],
+          pricelists: {
+            ...state.pricelists,
+            data: [...state.pricelists.data, selectedList],
+          },
           selectedList,
         };
       },
@@ -240,15 +234,15 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           };
         }
 
-        const deletedIndex = getPricelistIndex(state.pricelists, action.payload);
+        const deletedIndex = getPricelistIndex(state.pricelists.data, action.payload);
         const pricelists: IPricelistJson[] = (() => {
           if (deletedIndex === 0) {
-            return [...state.pricelists.slice(1)];
+            return [...state.pricelists.data.slice(1)];
           }
 
           return [
-            ...state.pricelists.slice(0, deletedIndex),
-            ...state.pricelists.slice(deletedIndex + 1),
+            ...state.pricelists.data.slice(0, deletedIndex),
+            ...state.pricelists.data.slice(deletedIndex + 1),
           ];
         })();
         const selectedList: IPricelistJson | null = (() => {
@@ -264,7 +258,10 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           ...state,
           deletePricelist: { errors: {}, level: FetchLevel.success },
           isDeleteListDialogOpen: false,
-          pricelists,
+          pricelists: {
+            ...state.pricelists,
+            data: pricelists,
+          },
           selectedList,
         };
       },
@@ -281,18 +278,20 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
         action: ReturnType<typeof ReceiveGetPricelist>,
       ): IPriceListsState => {
         if (action.payload === null) {
-          return { ...state, getPricelistLevel: FetchLevel.failure };
+          return { ...state, priceTable: { ...state.priceTable, level: FetchLevel.failure } };
         }
 
         return {
           ...state,
-          getPricelistLevel: FetchLevel.success,
-          items: { ...state.items, ...action.payload.items },
-          pricelistMap: action.payload.price_list,
+          priceTable: {
+            data: action.payload.price_list,
+            errors: {},
+            level: FetchLevel.success,
+          },
         };
       },
       request: (state: IPriceListsState): IPriceListsState => {
-        return { ...state, getPricelistLevel: FetchLevel.fetching };
+        return { ...state, priceTable: { ...state.priceTable, level: FetchLevel.fetching } };
       },
     },
     update: {
@@ -309,24 +308,24 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           pricelist_entries: action.payload.result.data!.entries,
         };
 
-        let replacedIndex = getPricelistIndex(state.pricelists, selectedList.id);
+        let replacedIndex = getPricelistIndex(state.pricelists.data, selectedList.id);
         if (replacedIndex !== -1) {
           const pricelists: IPricelistJson[] = (() => {
             if (replacedIndex === 0) {
-              return [selectedList, ...state.pricelists.slice(1)];
+              return [selectedList, ...state.pricelists.data.slice(1)];
             }
 
             return [
-              ...state.pricelists.slice(0, replacedIndex),
+              ...state.pricelists.data.slice(0, replacedIndex),
               selectedList,
-              ...state.pricelists.slice(replacedIndex + 1),
+              ...state.pricelists.data.slice(replacedIndex + 1),
             ];
           })();
 
           return {
             ...state,
             ...action.payload.meta,
-            pricelists,
+            pricelists: { ...state.pricelists, data: pricelists },
             selectedList,
             updatePricelist: { errors: {}, level: FetchLevel.success },
           };
@@ -334,7 +333,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
 
         const professionPricelists: IExpansionProfessionPricelistMap = (() => {
           const expansionName = state.selectedExpansion!.name;
-          const prevResult = state.professionPricelists[expansionName];
+          const prevResult = state.professionPricelists.data[expansionName];
           replacedIndex = getProfessionPricelistIndex(prevResult, selectedList.id);
 
           const professionPricelist: IProfessionPricelistJson = {
@@ -343,7 +342,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           };
 
           return {
-            ...state.professionPricelists,
+            ...state.professionPricelists.data,
             [expansionName]: [
               ...prevResult.slice(0, replacedIndex),
               professionPricelist,
@@ -355,7 +354,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
         return {
           ...state,
           ...action.payload.meta,
-          professionPricelists,
+          professionPricelists: { ...state.professionPricelists, data: professionPricelists },
           selectedList,
           updatePricelist: { errors: {}, level: FetchLevel.success },
         };
@@ -372,33 +371,43 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
     get: {
       receive: (state: IPriceListsState, action: ReturnType<typeof ReceiveGetPricelistHistory>) => {
         if (action.payload === null) {
-          return { ...state, getPricelistHistoryLevel: FetchLevel.failure };
+          return {
+            ...state,
+            pricelistHistory: { ...state.pricelistHistory, level: FetchLevel.failure },
+          };
         }
 
         return {
           ...state,
-          getPricelistHistoryLevel: FetchLevel.success,
-          itemsPriceLimits: action.payload.itemPriceLimits,
-          overallPriceLimits: action.payload.overallPriceLimits,
-          pricelistHistoryMap: action.payload.history,
+          pricelistHistory: {
+            data: {
+              itemsPriceLimits: action.payload.itemPriceLimits,
+              overallPriceLimits: action.payload.overallPriceLimits,
+              pricelistHistoryMap: action.payload.history,
+            },
+            errors: {},
+            level: FetchLevel.success,
+          },
         };
       },
       request: (state: IPriceListsState) => {
-        return { ...state, getPricelistHistoryLevel: FetchLevel.fetching };
+        return {
+          ...state,
+          pricelistHistory: { ...state.pricelistHistory, level: FetchLevel.fetching },
+        };
       },
     },
   },
   pricelists: {
     get: {
       receive: (state: IPriceListsState, action: ReturnType<typeof ReceiveGetPricelists>) => {
-        const items: IItemsMap = { ...state.items, ...action.payload.items };
-        const pricelists = action.payload.pricelists;
-
         return {
           ...state,
-          getPricelistsLevel: FetchLevel.success,
-          items,
-          pricelists,
+          pricelists: {
+            data: action.payload.pricelists,
+            errors: {},
+            level: FetchLevel.success,
+          },
         };
       },
       request: (state: IPriceListsState) => {
@@ -437,11 +446,11 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
               return [professionPricelist];
             }
 
-            return [...state.professionPricelists[expansionName], professionPricelist];
+            return [...state.professionPricelists.data[expansionName], professionPricelist];
           })();
 
           return {
-            ...state.professionPricelists,
+            ...state.professionPricelists.data,
             [expansionName]: result,
           };
         })();
@@ -453,7 +462,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
             level: FetchLevel.success,
           },
           isAddListDialogOpen: false,
-          professionPricelists,
+          professionPricelists: { ...state.professionPricelists, data: professionPricelists },
           selectedList,
         };
       },
@@ -480,7 +489,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
         }
 
         const expansionName = state.selectedExpansion!.name;
-        const prevResult = state.professionPricelists[expansionName];
+        const prevResult = state.professionPricelists.data[expansionName];
         const deletedIndex = getProfessionPricelistIndex(prevResult, action.payload.id);
         const nextResult: IProfessionPricelistJson[] = (() => {
           if (deletedIndex === 0) {
@@ -490,7 +499,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           return [...prevResult.slice(0, deletedIndex), ...prevResult.slice(deletedIndex + 1)];
         })();
         const professionPricelists: IExpansionProfessionPricelistMap = {
-          ...state.professionPricelists,
+          ...state.professionPricelists.data,
           [expansionName]: nextResult,
         };
         const selectedList: IPricelistJson | null = (() => {
@@ -508,7 +517,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           ...state,
           deletePricelist: { errors: {}, level: FetchLevel.success },
           isDeleteListDialogOpen: false,
-          professionPricelists,
+          professionPricelists: { ...state.professionPricelists, data: professionPricelists },
           selectedList,
         };
       },
@@ -528,7 +537,10 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
         action: ReturnType<typeof ReceiveGetProfessionPricelists>,
       ) => {
         if (action.payload.errors !== null) {
-          return { ...state, getProfessionPricelistsLevel: FetchLevel.failure };
+          return {
+            ...state,
+            professionPricelists: { ...state.professionPricelists, level: FetchLevel.failure },
+          };
         }
 
         const professionPricelists = action.payload.data!.profession_pricelists.reduce<
@@ -544,16 +556,17 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
 
         return {
           ...state,
-          getProfessionPricelistsLevel: FetchLevel.success,
-          items: { ...state.items, ...action.payload.data!.items },
-          professionPricelists,
+          professionPricelists: {
+            data: professionPricelists,
+            errors: {},
+            level: FetchLevel.success,
+          },
         };
       },
       request: (state: IPriceListsState) => {
         return {
           ...state,
-          getProfessionPricelistsLevel: FetchLevel.fetching,
-          professionPricelists: {},
+          professionPricelists: { ...state.professionPricelists, level: FetchLevel.fetching },
         };
       },
     },
@@ -571,7 +584,6 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
         return {
           ...state,
           getUnmetDemandLevel: FetchLevel.success,
-          items: { ...state.items, ...action.payload!.data!.items },
           unmetDemandItemIds: action.payload!.data!.unmetItemIds,
           unmetDemandProfessionPricelists: action.payload!.data!.professionPricelists,
         };

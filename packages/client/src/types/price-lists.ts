@@ -3,7 +3,6 @@ import {
   IItemMarketPrices,
   IItemPriceLimits,
   IItemPricelistHistoryMap,
-  IItemsMap,
   IPriceLimits,
   IPricelistJson,
   IPriceListMap,
@@ -15,11 +14,16 @@ import {
 } from "@sotah-inc/core";
 
 import { IUpdatePricelistResult } from "../api/price-lists";
-import { IFetchInfo } from "./global";
+import { IFetchData, IFetchInfo } from "./global";
 import { FetchLevel } from "./main";
 
+export interface IPricelistHistoryData {
+  itemsPriceLimits: IItemPriceLimits;
+  overallPriceLimits: IPriceLimits;
+  pricelistHistoryMap: IItemPricelistHistoryMap;
+}
+
 export interface IPriceListsState {
-  pricelists: IPricelistJson[];
   createPricelist: IFetchInfo;
   updatePricelist: IFetchInfo;
   entryCreateLevel: FetchLevel;
@@ -28,25 +32,20 @@ export interface IPriceListsState {
   isEditListDialogOpen: boolean;
   isDeleteListDialogOpen: boolean;
   isAddEntryDialogOpen: boolean;
-  getPricelistsLevel: FetchLevel;
-  items: IItemsMap;
   deletePricelist: IFetchInfo;
   selectedProfession: IProfession | null;
-  professionPricelists: IExpansionProfessionPricelistMap;
-  getProfessionPricelistsLevel: FetchLevel;
   selectedExpansion: IExpansion | null;
   getUnmetDemandLevel: FetchLevel;
   unmetDemandItemIds: ItemId[];
   unmetDemandProfessionPricelists: IProfessionPricelistJson[];
-  getPricelistLevel: FetchLevel;
-  pricelistMap: IPriceListMap;
-  getPricelistHistoryLevel: FetchLevel;
-  pricelistHistoryMap: IItemPricelistHistoryMap;
   getItemsOwnershipLevel: FetchLevel;
   itemsOwnershipMap: IQueryOwnerItemsMap;
-  itemsPriceLimits: IItemPriceLimits;
-  overallPriceLimits: IPriceLimits;
   itemsMarketPrices: IItemMarketPrices;
+
+  pricelists: IFetchData<IPricelistJson[]>;
+  pricelistHistory: IFetchData<IPricelistHistoryData>;
+  priceTable: IFetchData<IPriceListMap>;
+  professionPricelists: IFetchData<IExpansionProfessionPricelistMap>;
 }
 
 export interface IExpansionProfessionPricelistMap {
@@ -81,28 +80,42 @@ export const defaultPriceListsState: IPriceListsState = {
   deletePricelist: { level: FetchLevel.initial, errors: {} },
   entryCreateLevel: FetchLevel.initial,
   getItemsOwnershipLevel: FetchLevel.initial,
-  getPricelistHistoryLevel: FetchLevel.initial,
-  getPricelistLevel: FetchLevel.initial,
-  getPricelistsLevel: FetchLevel.initial,
-  getProfessionPricelistsLevel: FetchLevel.initial,
   getUnmetDemandLevel: FetchLevel.initial,
   isAddEntryDialogOpen: false,
   isAddListDialogOpen: false,
   isDeleteListDialogOpen: false,
   isEditListDialogOpen: false,
-  items: [],
   itemsMarketPrices: {},
   itemsOwnershipMap: {},
-  itemsPriceLimits: {},
-  overallPriceLimits: { lower: 0, upper: 0 },
-  pricelistHistoryMap: {},
-  pricelistMap: {},
-  pricelists: [],
-  professionPricelists: {},
+  pricelists: {
+    data: [],
+    errors: {},
+    level: FetchLevel.initial,
+  },
   selectedExpansion: null,
   selectedList: null,
   selectedProfession: null,
   unmetDemandItemIds: [],
   unmetDemandProfessionPricelists: [],
   updatePricelist: { level: FetchLevel.initial, errors: {} },
+
+  priceTable: {
+    data: {},
+    errors: {},
+    level: FetchLevel.initial,
+  },
+  pricelistHistory: {
+    data: {
+      itemsPriceLimits: {},
+      overallPriceLimits: { lower: 0, upper: 0 },
+      pricelistHistoryMap: {},
+    },
+    errors: {},
+    level: FetchLevel.initial,
+  },
+  professionPricelists: {
+    data: {},
+    errors: {},
+    level: FetchLevel.initial,
+  },
 };
