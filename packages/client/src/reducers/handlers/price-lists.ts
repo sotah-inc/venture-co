@@ -1,5 +1,6 @@
 import {
   IExpansion,
+  IGetPricelistHistoriesResponse,
   IPricelistJson,
   IPriceListMap,
   IProfession,
@@ -27,7 +28,6 @@ import { FetchLevel } from "../../types/main";
 import {
   defaultPriceListsState,
   IExpansionProfessionPricelistMap,
-  IPricelistHistoryData,
   IPriceListsState,
 } from "../../types/price-lists";
 import { getPricelistIndex, getProfessionPricelistIndex } from "../helper";
@@ -83,7 +83,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           );
         })();
 
-        const pricelistHistory: IFetchData<IPricelistHistoryData> = (() => {
+        const pricelistHistory: IFetchData<IGetPricelistHistoriesResponse> = (() => {
           if (
             typeof action.payload === "undefined" ||
             typeof action.payload.pricelistHistory === "undefined"
@@ -96,11 +96,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           }
 
           return {
-            data: {
-              itemsPriceLimits: action.payload.pricelistHistory.itemPriceLimits,
-              overallPriceLimits: action.payload.pricelistHistory.overallPriceLimits,
-              pricelistHistoryMap: action.payload.pricelistHistory.history,
-            },
+            data: action.payload.pricelistHistory,
             errors: {},
             level: FetchLevel.success,
           };
@@ -380,11 +376,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
         return {
           ...state,
           pricelistHistory: {
-            data: {
-              itemsPriceLimits: action.payload.itemPriceLimits,
-              overallPriceLimits: action.payload.overallPriceLimits,
-              pricelistHistoryMap: action.payload.history,
-            },
+            data: action.payload,
             errors: {},
             level: FetchLevel.success,
           },

@@ -1,9 +1,7 @@
 import {
   IExpansion,
+  IGetPricelistHistoriesResponse,
   IItemMarketPrices,
-  IItemPriceLimits,
-  IItemPricelistHistoryMap,
-  IPriceLimits,
   IPricelistJson,
   IPriceListMap,
   IProfession,
@@ -16,12 +14,6 @@ import {
 import { IUpdatePricelistResult } from "../api/price-lists";
 import { IFetchData, IFetchInfo } from "./global";
 import { FetchLevel } from "./main";
-
-export interface IPricelistHistoryData {
-  itemsPriceLimits: IItemPriceLimits;
-  overallPriceLimits: IPriceLimits;
-  pricelistHistoryMap: IItemPricelistHistoryMap;
-}
 
 export interface IPriceListsState {
   createPricelist: IFetchInfo;
@@ -43,7 +35,7 @@ export interface IPriceListsState {
   itemsMarketPrices: IItemMarketPrices;
 
   pricelists: IFetchData<IPricelistJson[]>;
-  pricelistHistory: IFetchData<IPricelistHistoryData>;
+  pricelistHistory: IFetchData<IGetPricelistHistoriesResponse>;
   priceTable: IFetchData<IPriceListMap>;
   professionPricelists: IFetchData<IExpansionProfessionPricelistMap>;
 }
@@ -106,9 +98,10 @@ export const defaultPriceListsState: IPriceListsState = {
   },
   pricelistHistory: {
     data: {
-      itemsPriceLimits: {},
+      history: {},
+      itemPriceLimits: {},
+      items: {},
       overallPriceLimits: { lower: 0, upper: 0 },
-      pricelistHistoryMap: {},
     },
     errors: {},
     level: FetchLevel.initial,
