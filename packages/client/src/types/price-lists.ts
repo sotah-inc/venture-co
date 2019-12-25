@@ -2,7 +2,6 @@ import {
   IExpansion,
   IGetPricelistHistoriesResponse,
   IGetUnmetDemandResponse,
-  IItemMarketPrices,
   IPricelistJson,
   IPriceListMap,
   IProfession,
@@ -27,7 +26,6 @@ export interface IPriceListsState {
   deletePricelist: IFetchInfo;
   selectedProfession: IProfession | null;
   selectedExpansion: IExpansion | null;
-  itemsMarketPrices: IItemMarketPrices;
 
   pricelists: IFetchData<IPricelistJson[]>;
   pricelistHistory: IFetchData<IGetPricelistHistoriesResponse>;
@@ -72,7 +70,6 @@ export const defaultPriceListsState: IPriceListsState = {
   isAddListDialogOpen: false,
   isDeleteListDialogOpen: false,
   isEditListDialogOpen: false,
-  itemsMarketPrices: {},
   pricelists: {
     data: [],
     errors: {},
