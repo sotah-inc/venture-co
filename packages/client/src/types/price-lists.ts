@@ -26,7 +26,6 @@ export interface IPriceListsState {
   deletePricelist: IFetchInfo;
   selectedProfession: IProfession | null;
   selectedExpansion: IExpansion | null;
-
   pricelists: IFetchData<IPricelistJson[]>;
   pricelistHistory: IFetchData<IGetPricelistHistoriesResponse>;
   priceTable: IFetchData<IPriceListMap>;
@@ -70,16 +69,6 @@ export const defaultPriceListsState: IPriceListsState = {
   isAddListDialogOpen: false,
   isDeleteListDialogOpen: false,
   isEditListDialogOpen: false,
-  pricelists: {
-    data: [],
-    errors: {},
-    level: FetchLevel.initial,
-  },
-  selectedExpansion: null,
-  selectedList: null,
-  selectedProfession: null,
-  updatePricelist: { level: FetchLevel.initial, errors: {} },
-
   itemsOwnership: {
     data: {},
     errors: {},
@@ -100,11 +89,19 @@ export const defaultPriceListsState: IPriceListsState = {
     errors: {},
     level: FetchLevel.initial,
   },
+  pricelists: {
+    data: [],
+    errors: {},
+    level: FetchLevel.initial,
+  },
   professionPricelists: {
     data: {},
     errors: {},
     level: FetchLevel.initial,
   },
+  selectedExpansion: null,
+  selectedList: null,
+  selectedProfession: null,
   unmetDemand: {
     data: {
       items: {},
@@ -114,4 +111,5 @@ export const defaultPriceListsState: IPriceListsState = {
     errors: {},
     level: FetchLevel.initial,
   },
+  updatePricelist: { level: FetchLevel.initial, errors: {} },
 };
