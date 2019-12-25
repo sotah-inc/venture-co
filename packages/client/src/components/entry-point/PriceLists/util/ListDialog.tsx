@@ -315,16 +315,18 @@ export class ListDialog extends React.Component<Props, State> {
     this.setState({ entries: [...entries.slice(0, index), ...entries.slice(index + 1)] });
   }
 
-  private getItem(id: ItemId) {
+  private getItem(id: ItemId): IItem | null {
     const { items } = this.props;
     const { entriesItems } = this.state;
 
-    if (id in items) {
-      return items[id];
+    let foundItem = items[id];
+    if (typeof foundItem !== "undefined") {
+      return foundItem;
     }
 
-    if (id in entriesItems) {
-      return entriesItems[id];
+    foundItem = entriesItems[id];
+    if (typeof foundItem !== "undefined") {
+      return foundItem;
     }
 
     return null;

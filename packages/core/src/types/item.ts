@@ -166,5 +166,5 @@ export interface IItem {
 }
 
 export interface IItemsMap {
-  [key: number]: IItem;
+  [key: number]: IItem | undefined;
 }

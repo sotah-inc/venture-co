@@ -2,6 +2,7 @@ import React from "react";
 
 import { Tab, Tabs } from "@blueprintjs/core";
 import {
+  IItem,
   IItemPricelistHistoryMap,
   IItemsMap,
   IPriceLimits,
@@ -207,11 +208,12 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
     );
   }
 
-  private getItem(itemId: ItemId) {
+  private getItem(itemId: ItemId): IItem | null {
     const { items } = this.props;
 
-    if (itemId in items) {
-      return items[itemId];
+    const foundItem = items[itemId];
+    if (typeof foundItem === "undefined") {
+      return null;
     }
 
     return null;

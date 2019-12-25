@@ -294,9 +294,10 @@ export const getItemFromPricelist = (items: IItemsMap, pricelist: IPricelistJson
     return null;
   }
 
-  if (!(pricelist.pricelist_entries[0].item_id in items)) {
+  const foundItem = items[pricelist.pricelist_entries[0].item_id];
+  if (typeof foundItem === "undefined") {
     return null;
   }
 
-  return items[pricelist.pricelist_entries[0].item_id];
+  return foundItem;
 };

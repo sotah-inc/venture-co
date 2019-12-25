@@ -1,5 +1,3 @@
-import React from "react";
-
 import { Button, ButtonGroup, Classes, HTMLTable } from "@blueprintjs/core";
 import {
   IAuction,
@@ -11,9 +9,10 @@ import {
   IQueryAuctionsItem,
   IRegion,
   IStatusRealm,
-  ItemId,
+  ItemQuality,
   SortKind,
 } from "@sotah-inc/core";
+import React from "react";
 
 import { SortToggleContainer } from "../../../containers/entry-point/AuctionList/SortToggle";
 import { ItemPopoverContainer } from "../../../containers/util/ItemPopover";
@@ -105,7 +104,7 @@ export class AuctionTable extends React.Component<Props> {
     return (
       <React.Fragment key={index}>
         <tr>
-          <td className={qualityToColorClass(item.quality)}>{this.renderItemPopover(item)}</td>
+          {this.renderItemCell(auction.itemId, item)}
           <td className="quantity-container">{auction.quantity}</td>
           <td className="currency-container">
             <Currency amount={auction.buyout} hideCopper={true} />
@@ -116,9 +115,17 @@ export class AuctionTable extends React.Component<Props> {
           <td className="auclist-container">{auction.aucList.length}</td>
           <td className="owner-container">{auction.owner}</td>
         </tr>
-        {this.renderRelatedProfessionPricelists(item.id)}
+        {this.renderRelatedProfessionPricelists(item)}
       </React.Fragment>
     );
+  }
+
+  public renderItemCell(itemId: number, item: IItem | undefined) {
+    if (typeof item === "undefined") {
+      return <td className={qualityToColorClass(ItemQuality.Common)}>{itemId}</td>;
+    }
+
+    return <td className={qualityToColorClass(item.quality)}>{this.renderItemPopover(item)}</td>;
   }
 
   public render() {
@@ -160,11 +167,15 @@ export class AuctionTable extends React.Component<Props> {
     );
   }
 
-  private renderRelatedProfessionPricelists(itemId: ItemId) {
+  private renderRelatedProfessionPricelists(item: IItem | undefined) {
     const { relatedProfessionPricelists } = this.props;
 
+    if (typeof item === "undefined") {
+      return null;
+    }
+
     const forItem = relatedProfessionPricelists.filter(
-      v => v.pricelist.pricelist_entries.filter(y => y.item_id === itemId).length > 0,
+      v => v.pricelist.pricelist_entries.filter(y => y.item_id === item.id).length > 0,
     );
     if (forItem.length === 0) {
       return null;

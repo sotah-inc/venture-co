@@ -20,6 +20,7 @@ import {
   IRegion,
   IStatusRealm,
   ItemId,
+  ItemQuality,
   ProfessionName,
   RealmPopulation,
 } from "@sotah-inc/core";
@@ -194,9 +195,9 @@ export class RealmSummaryPanel extends React.Component<Props> {
       }
 
       const aItemValue: string =
-        a.entry.item_id in items ? items[a.entry.item_id].name : a.entry.item_id.toString();
+        a.entry.item_id in items ? items[a.entry.item_id]!.name : a.entry.item_id.toString();
       const bItemValue: string =
-        b.entry.item_id in items ? items[b.entry.item_id].name : b.entry.item_id.toString();
+        b.entry.item_id in items ? items[b.entry.item_id]!.name : b.entry.item_id.toString();
       if (aItemValue !== bItemValue) {
         return aItemValue > bItemValue ? 1 : -1;
       }
@@ -255,6 +256,18 @@ export class RealmSummaryPanel extends React.Component<Props> {
     );
     const { item_id } = entry;
     const item = items[item_id];
+
+    if (typeof item === "undefined") {
+      return (
+        <tr key={index}>
+          <td className={qualityToColorClass(ItemQuality.Common)}>{item_id}</td>
+          <td>{this.renderProfession(profession)}</td>
+          <td>
+            {this.renderPricelistCell(professionPricelist.pricelist!, professionPricelist.name)}
+          </td>
+        </tr>
+      );
+    }
 
     return (
       <tr key={index}>

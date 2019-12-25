@@ -2,6 +2,7 @@ import React from "react";
 
 import { Classes, H4, HTMLTable, Intent, Spinner } from "@blueprintjs/core";
 import {
+  IItem,
   IItemsMap,
   IPricelistEntryJson,
   IPricelistJson,
@@ -60,11 +61,12 @@ export class CurrentPricesTable extends React.Component<Props> {
     );
   }
 
-  private getItem(itemId: ItemId) {
+  private getItem(itemId: ItemId): IItem | null {
     const { items } = this.props;
 
-    if (itemId in items) {
-      return items[itemId];
+    const foundItem = items[itemId];
+    if (typeof foundItem !== "undefined") {
+      return foundItem;
     }
 
     return null;
