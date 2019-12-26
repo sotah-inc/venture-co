@@ -68,14 +68,19 @@ export class CreateEntryDialog extends React.Component<Props, IState> {
 
   private onCreateEntryFormComplete(entry: IPricelistEntryJson) {
     const { selectedList, updatePricelist, profile } = this.props;
+
+    if (selectedList === null || profile === null) {
+      return;
+    }
+
     updatePricelist({
-      id: selectedList!.id,
+      id: selectedList.id,
       meta: { isAddEntryDialogOpen: false },
       request: {
-        entries: [...selectedList!.pricelist_entries!, entry],
-        pricelist: { name: selectedList!.name, slug: selectedList!.slug! },
+        entries: [...selectedList.pricelist_entries!, entry],
+        pricelist: { name: selectedList.name, slug: selectedList.slug! },
       },
-      token: profile!.token,
+      token: profile.token,
     });
   }
 
