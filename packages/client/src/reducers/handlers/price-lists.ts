@@ -385,7 +385,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
         };
       },
       request: (state: IPriceListsState) => {
-        return { ...state, getPricelistsLevel: FetchLevel.fetching };
+        return { ...state, pricelists: { ...state.pricelists, level: FetchLevel.fetching } };
       },
     },
   },
