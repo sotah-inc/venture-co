@@ -16,6 +16,7 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
       },
     },
   } = state.PriceLists;
+
   return { items, pricelistHistoryMap, overallPriceLimits };
 };
 
