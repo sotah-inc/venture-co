@@ -12,8 +12,6 @@ import {
 
 // tslint:disable-next-line:max-line-length
 import { CurrentPricesTableContainer } from "../../../../../containers/entry-point/PriceLists/PricelistTree/PricelistPanel/PricelistTable/CurrentPricesTable";
-// tslint:disable-next-line:max-line-length
-import { CurrentSellersTableContainer } from "../../../../../containers/entry-point/PriceLists/PricelistTree/PricelistPanel/PricelistTable/CurrentSellersTable";
 import { getItemFromPricelist } from "../../../../../util";
 import { ItemIcon } from "../../../../util/ItemIcon";
 import { PricelistHistoryGraph } from "../../../../util/PricelistHistoryGraph";
@@ -51,7 +49,6 @@ export class PricelistTable extends React.Component<Props> {
           />
         }
         {<CurrentPricesTableContainer list={list} region={region} realm={realm} />}
-        {<CurrentSellersTableContainer list={list} region={region} realm={realm} />}
       </>
     );
   }

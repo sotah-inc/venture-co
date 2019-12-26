@@ -6,7 +6,6 @@ import {
   IPriceListMap,
   IProfession,
   IProfessionPricelistJson,
-  IQueryOwnerItemsMap,
   IUpdatePricelistRequest,
 } from "@sotah-inc/core";
 
@@ -31,7 +30,6 @@ export interface IPriceListsState {
   priceTable: IFetchData<IPriceListMap>;
   professionPricelists: IFetchData<IExpansionProfessionPricelistMap>;
   unmetDemand: IFetchData<IGetUnmetDemandResponse>;
-  itemsOwnership: IFetchData<IQueryOwnerItemsMap>;
 }
 
 export interface IExpansionProfessionPricelistMap {
@@ -69,11 +67,6 @@ export const defaultPriceListsState: IPriceListsState = {
   isAddListDialogOpen: false,
   isDeleteListDialogOpen: false,
   isEditListDialogOpen: false,
-  itemsOwnership: {
-    data: {},
-    errors: {},
-    level: FetchLevel.initial,
-  },
   priceTable: {
     data: {},
     errors: {},

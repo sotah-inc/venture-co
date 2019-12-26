@@ -5,7 +5,6 @@ import {
   IPriceListMap,
   IProfession,
   IProfessionPricelistJson,
-  IQueryOwnerItemsMap,
 } from "@sotah-inc/core";
 
 import {
@@ -16,7 +15,6 @@ import {
   ReceiveCreateProfessionPricelist,
   ReceiveDeletePricelist,
   ReceiveDeleteProfessionPricelist,
-  ReceiveGetItemsOwnership,
   ReceiveGetPricelist,
   ReceiveGetPricelistHistory,
   ReceiveGetPricelists,
@@ -122,28 +120,8 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           };
         })();
 
-        const itemsOwnership: IFetchData<IQueryOwnerItemsMap> = (() => {
-          if (
-            typeof action.payload === "undefined" ||
-            typeof action.payload.currentSellers === "undefined"
-          ) {
-            return defaultPriceListsState.itemsOwnership;
-          }
-
-          if (action.payload.currentSellers === null) {
-            return { ...defaultPriceListsState.itemsOwnership, level: FetchLevel.failure };
-          }
-
-          return {
-            data: action.payload.currentSellers.ownership,
-            errors: {},
-            level: FetchLevel.success,
-          };
-        })();
-
         return {
           ...state,
-          itemsOwnership,
           priceTable,
           pricelistHistory,
           selectedExpansion,
@@ -160,24 +138,6 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           selectedExpansion: action.payload,
           selectedList: null,
         };
-      },
-    },
-  },
-  itemsownership: {
-    get: {
-      receive: (state: IPriceListsState, action: ReturnType<typeof ReceiveGetItemsOwnership>) => {
-        if (action.payload === null) {
-          return { ...state, getItemsOwnershipLevel: FetchLevel.failure };
-        }
-
-        return {
-          ...state,
-          getItemsOwnershipLevel: FetchLevel.success,
-          itemsOwnershipMap: action.payload.ownership,
-        };
-      },
-      request: (state: IPriceListsState) => {
-        return { ...state, getItemsOwnershipLevel: FetchLevel.fetching };
       },
     },
   },

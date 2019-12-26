@@ -15,11 +15,8 @@ import {
   IQueryAuctionsResponse,
   IQueryItemsRequest,
   IQueryItemsResponse,
-  IQueryOwnerItemsRequest,
-  IQueryOwnerItemsResponse,
   IStatusRealm,
   ItemId,
-  RealmSlug,
   RegionName,
 } from "@sotah-inc/core";
 import * as HTTPStatus from "http-status";
@@ -176,28 +173,6 @@ export const getPriceListHistory = async (
     }),
     method: "POST",
     url: `${apiEndpoint}/region/${regionName}/realm/${realmSlug}/price-list-history`,
-  });
-  if (status !== HTTPStatus.OK) {
-    return null;
-  }
-
-  return body;
-};
-
-export interface IQueryOwnersByItemsOptions {
-  regionName: RegionName;
-  realmSlug: RealmSlug;
-  items: ItemId[];
-}
-
-export const queryOwnersByItems = async (
-  opts: IQueryOwnersByItemsOptions,
-): Promise<IQueryOwnerItemsResponse | null> => {
-  const { regionName, realmSlug, items } = opts;
-  const { body, status } = await gather<IQueryOwnerItemsRequest, IQueryOwnerItemsResponse>({
-    body: { items },
-    method: "POST",
-    url: `${apiEndpoint}/region/${regionName}/realm/${realmSlug}/query-owner-items`,
   });
   if (status !== HTTPStatus.OK) {
     return null;
