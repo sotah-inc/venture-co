@@ -109,23 +109,6 @@ export interface IGetPricelistHistoriesResponse {
   history: IItemPricelistHistoryMap;
 }
 
-export interface IQueryOwnerItemsRequest {
-  region_name: RegionName;
-  realm_slug: RealmSlug;
-  items: ItemId[];
-}
-
-export interface IQueryOwnerItemsResponse {
-  total_value: number;
-  total_volume: number;
-  ownership: {
-    [ownerName: string]: {
-      owned_value: number;
-      owned_volume: number;
-    };
-  };
-}
-
 export interface IQueryRealmModificationDatesRequest {
   region_name: RegionName;
   realm_slug: RealmSlug;

@@ -15,8 +15,6 @@ import {
   IGetPricelistResponse,
   IGetSessionSecretResponse,
   IQueryItemsResponse,
-  IQueryOwnerItemsRequest,
-  IQueryOwnerItemsResponse,
   IQueryOwnersRequest,
   IQueryOwnersResponse,
   IQueryRealmModificationDatesRequest,
@@ -41,7 +39,6 @@ export enum subjects {
   items = "items",
   boot = "boot",
   sessionSecret = "sessionSecret",
-  ownersQueryByItems = "ownersQueryByItems",
   queryRealmModificationDates = "queryRealmModificationDates",
   realmModificationDates = "realmModificationDates",
 }
@@ -179,12 +176,6 @@ export class Messenger {
     req: IQueryRealmModificationDatesRequest,
   ): Promise<Message<IQueryRealmModificationDatesResponse>> {
     return this.request(subjects.queryRealmModificationDates, { body: JSON.stringify(req) });
-  }
-
-  public queryOwnerItems(
-    request: IQueryOwnerItemsRequest,
-  ): Promise<Message<IQueryOwnerItemsResponse>> {
-    return this.request(subjects.ownersQueryByItems, { body: JSON.stringify(request) });
   }
 
   public request<T>(subject: string, opts?: IRequestOptions): Promise<Message<T>> {
