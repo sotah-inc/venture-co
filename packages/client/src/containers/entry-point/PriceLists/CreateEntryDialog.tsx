@@ -15,6 +15,7 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
     updatePricelist: { level: updatePricelistLevel },
     selectedList,
   } = state.PriceLists;
+
   return {
     isAddEntryDialogOpen,
     profile,
