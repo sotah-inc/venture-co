@@ -10,7 +10,7 @@ import {
 } from "@sotah-inc/core";
 
 import { IUpdatePricelistResult } from "../api/price-lists";
-import { IFetchData, IFetchInfo } from "./global";
+import { IFetchData, IFetchInfo, IItemsData } from "./global";
 import { FetchLevel } from "./main";
 
 export interface IPriceListsState {
@@ -27,7 +27,7 @@ export interface IPriceListsState {
   selectedExpansion: IExpansion | null;
   pricelists: IFetchData<IPricelistJson[]>;
   pricelistHistory: IFetchData<IGetPricelistHistoriesResponse>;
-  priceTable: IFetchData<IPriceListMap>;
+  priceTable: IFetchData<IItemsData<IPriceListMap>>;
   professionPricelists: IFetchData<IExpansionProfessionPricelistMap>;
   unmetDemand: IFetchData<IGetUnmetDemandResponse>;
 }
@@ -68,7 +68,10 @@ export const defaultPriceListsState: IPriceListsState = {
   isDeleteListDialogOpen: false,
   isEditListDialogOpen: false,
   priceTable: {
-    data: {},
+    data: {
+      data: {},
+      items: {},
+    },
     errors: {},
     level: FetchLevel.initial,
   },

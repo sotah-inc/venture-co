@@ -22,7 +22,7 @@ import {
   ReceiveGetUnmetDemand,
   ReceiveUpdatePricelist,
 } from "../../actions/price-lists";
-import { IFetchData } from "../../types/global";
+import { IFetchData, IItemsData } from "../../types/global";
 import { FetchLevel } from "../../types/main";
 import {
   defaultPriceListsState,
@@ -101,7 +101,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           };
         })();
 
-        const priceTable: IFetchData<IPriceListMap> = (() => {
+        const priceTable: IFetchData<IItemsData<IPriceListMap>> = (() => {
           if (
             typeof action.payload === "undefined" ||
             typeof action.payload.currentPrices === "undefined"
@@ -114,7 +114,10 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           }
 
           return {
-            data: action.payload.currentPrices.price_list,
+            data: {
+              data: action.payload.currentPrices.price_list,
+              items: action.payload.currentPrices.items,
+            },
             errors: {},
             level: FetchLevel.success,
           };
@@ -242,7 +245,10 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
         return {
           ...state,
           priceTable: {
-            data: action.payload.price_list,
+            data: {
+              data: action.payload.price_list,
+              items: action.payload.items,
+            },
             errors: {},
             level: FetchLevel.success,
           },
