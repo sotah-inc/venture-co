@@ -186,21 +186,7 @@ export const getSelectedResultIndex = (
     const selectedItem = selectedItems[i];
 
     if (selectedItem.item !== null) {
-      if (result.owner !== null) {
-        continue;
-      }
-
       if (result.item !== null && result.item.id === selectedItem.item.id) {
-        return Number(i);
-      }
-    }
-
-    if (selectedItem.owner !== null) {
-      if (result.item !== null) {
-        continue;
-      }
-
-      if (result.owner !== null && result.owner.name === selectedItem.owner.name) {
         return Number(i);
       }
     }

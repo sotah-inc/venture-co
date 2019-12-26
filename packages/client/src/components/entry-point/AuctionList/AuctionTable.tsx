@@ -65,7 +65,6 @@ export class AuctionTable extends React.Component<Props> {
   public onItemClick(item: IItem) {
     const result: IQueryAuctionsItem = {
       item,
-      owner: null,
       rank: 0,
       target: "",
     };
@@ -113,7 +112,6 @@ export class AuctionTable extends React.Component<Props> {
             <Currency amount={auction.buyoutPer} hideCopper={true} />
           </td>
           <td className="auclist-container">{auction.aucList.length}</td>
-          <td className="owner-container">{auction.owner}</td>
         </tr>
         {this.renderRelatedProfessionPricelists(item)}
       </React.Fragment>
@@ -156,9 +154,6 @@ export class AuctionTable extends React.Component<Props> {
             </th>
             <th>
               <SortToggleContainer label="Auctions" sortKind={SortKind.auctions} />
-            </th>
-            <th>
-              <SortToggleContainer label="Owner" sortKind={SortKind.owner} />
             </th>
           </tr>
         </thead>

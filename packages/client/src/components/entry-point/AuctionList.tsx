@@ -16,7 +16,6 @@ import {
   IRegion,
   IStatusRealm,
   ItemId,
-  OwnerName,
   SortDirection,
   SortKind,
 } from "@sotah-inc/core";
@@ -177,9 +176,6 @@ export class AuctionList extends React.Component<Props> {
       return;
     }
 
-    const ownerFilters: OwnerName[] = selectedQueryAuctionResults
-      .filter(v => v.owner !== null)
-      .map(v => v.owner!.name);
     const itemFilters: ItemId[] = selectedQueryAuctionResults
       .filter(v => v.item !== null)
       .map(v => v.item!.id);
@@ -189,7 +185,6 @@ export class AuctionList extends React.Component<Props> {
       request: {
         count: auctionsPerPage,
         itemFilters,
-        ownerFilters,
         page: currentPage,
         sortDirection,
         sortKind,
