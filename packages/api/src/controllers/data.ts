@@ -27,8 +27,6 @@ import {
   IQueryAuctionsResponse,
   IQueryItemsRequest,
   IQueryItemsResponse,
-  IQueryOwnerItemsRequest,
-  IQueryOwnerItemsResponse,
   IRealmModificationDates,
   IStatusRealm,
   ItemId,
@@ -406,7 +404,7 @@ export class DataController {
     let items: IQueryAuctionsItem[] = [
       ...itemsQueryMessage.data!.items.map(v => {
         const result: IQueryAuctionsItem = {
-          item: v.item_id in foundItems ? foundItems[v.item_id] : null,
+          item: v.item_id in foundItems ? foundItems[v.item_id]! : null,
           owner: null,
           rank: v.rank,
           target: v.target,
@@ -435,23 +433,6 @@ export class DataController {
 
     return {
       data: { items },
-      status: HTTPStatus.OK,
-    };
-  };
-
-  public queryOwnerItems: RequestHandler<
-    IQueryOwnerItemsRequest,
-    IQueryOwnerItemsResponse
-  > = async req => {
-    const { items } = req.body;
-    const msg = await this.messenger.queryOwnerItems({
-      items,
-      realm_slug: req.params["realmSlug"],
-      region_name: req.params["regionName"],
-    });
-
-    return {
-      data: msg.data!,
       status: HTTPStatus.OK,
     };
   };
@@ -487,7 +468,7 @@ export class DataController {
     const data: IQueryItemsResponse = {
       items: itemsQueryMessage.data!.items.map(v => {
         return {
-          item: v.item_id in foundItems ? foundItems[v.item_id] : null,
+          item: v.item_id in foundItems ? foundItems[v.item_id]! : null,
           rank: v.rank,
           target: v.target,
         };

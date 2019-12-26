@@ -58,12 +58,6 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
     }),
   );
   router.post(
-    "/region/:regionName/realm/:realmSlug/query-owner-items",
-    wrap(async (req: Request, res: Response) => {
-      await handle(controller.queryOwnerItems, req, res);
-    }),
-  );
-  router.post(
     "/region/:regionName/realm/:realmSlug/price-list",
     wrap(async (req: Request, res: Response) => {
       await handle(controller.getPricelist, req, res);
