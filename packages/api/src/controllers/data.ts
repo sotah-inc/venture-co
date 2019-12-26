@@ -269,13 +269,12 @@ export class DataController {
         status: HTTPStatus.BAD_REQUEST,
       };
     }
-    const { count, page, sortDirection, sortKind, ownerFilters, itemFilters } = result;
+    const { count, page, sortDirection, sortKind, itemFilters } = result;
 
     // gathering auctions
     const msg = await this.messenger.getAuctions({
       count,
       item_filters: itemFilters,
-      owner_filters: ownerFilters,
       page,
       realm_slug: req.params["realmSlug"],
       region_name: req.params["regionName"],
@@ -381,7 +380,6 @@ export class DataController {
     let items: IQueryAuctionsItem[] = itemsQueryMessage.data!.items.map(v => {
       const result: IQueryAuctionsItem = {
         item: v.item_id in foundItems ? foundItems[v.item_id]! : null,
-        owner: null,
         rank: v.rank,
         target: v.target,
       };
