@@ -71,25 +71,6 @@ export interface IQueryAuctionsResponse {
   items: IQueryAuctionsItem[];
 }
 
-export interface IQueryOwnerItemsRequest {
-  items: ItemId[];
-}
-
-export interface IQueryOwnerItem {
-  owned_value: number;
-  owned_volume: number;
-}
-
-export interface IQueryOwnerItemsMap {
-  [ownerName: string]: IQueryOwnerItem;
-}
-
-export interface IQueryOwnerItemsResponse {
-  total_value: number;
-  total_volume: number;
-  ownership: IQueryOwnerItemsMap;
-}
-
 export interface IQueryItemsRequest {
   query: string;
 }
