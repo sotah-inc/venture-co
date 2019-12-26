@@ -436,7 +436,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
         const professionPricelists: IExpansionProfessionPricelistMap = (() => {
           const expansionName = state.selectedExpansion!.name;
           const result: IProfessionPricelistJson[] = (() => {
-            if (!(expansionName in state.professionPricelists)) {
+            if (!(expansionName in state.professionPricelists.data)) {
               return [professionPricelist];
             }
 
