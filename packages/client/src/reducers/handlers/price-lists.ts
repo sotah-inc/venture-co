@@ -352,8 +352,12 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           ...state,
           pricelistHistory: {
             data: {
-              data: action.payload,
-              items: {},
+              data: {
+                history: action.payload.history,
+                itemPriceLimits: action.payload.itemPriceLimits,
+                overallPriceLimits: action.payload.overallPriceLimits,
+              },
+              items: action.payload.items,
             },
             errors: {},
             level: FetchLevel.success,
