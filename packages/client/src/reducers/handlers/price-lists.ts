@@ -82,7 +82,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           );
         })();
 
-        const pricelistHistory: IFetchData<IGetPricelistHistoriesResponse> = (() => {
+        const pricelistHistory: IFetchData<IItemsData<IGetPricelistHistoriesResponse>> = (() => {
           if (
             typeof action.payload === "undefined" ||
             typeof action.payload.pricelistHistory === "undefined"
@@ -95,7 +95,10 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           }
 
           return {
-            data: action.payload.pricelistHistory,
+            data: {
+              data: action.payload.pricelistHistory,
+              items: {},
+            },
             errors: {},
             level: FetchLevel.success,
           };
@@ -344,7 +347,10 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
         return {
           ...state,
           pricelistHistory: {
-            data: action.payload,
+            data: {
+              data: action.payload,
+              items: {},
+            },
             errors: {},
             level: FetchLevel.success,
           },
