@@ -118,7 +118,6 @@ export const AuctionsQueryParamsRules = yup
       .integer("Count must be an integer")
       .required("Count is required"),
     itemFilters: yup.array(yup.number().integer("Item-id must be an integer")),
-    ownerFilters: yup.array(yup.string().required("Owner-name is required")),
     page: yup
       .number()
       .integer("Page must be an integer")
