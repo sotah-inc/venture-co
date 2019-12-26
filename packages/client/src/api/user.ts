@@ -14,6 +14,7 @@ import {
   IValidationErrorResponse,
 } from "@sotah-inc/core";
 import * as HTTPStatus from "http-status";
+
 import { apiEndpoint, gather } from "./index";
 
 interface IRegisterUserResult {
