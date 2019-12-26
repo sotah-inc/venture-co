@@ -216,7 +216,7 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
       return null;
     }
 
-    return null;
+    return foundItem;
   }
 
   private getDataKey(itemId: ItemId) {
