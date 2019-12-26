@@ -2,8 +2,6 @@ import {
   IGetAuctionsRequest,
   IGetAuctionsResponse,
   IGetBootResponse,
-  IGetOwnersRequest,
-  IGetOwnersResponse,
   IGetPostsResponse,
   IGetPricelistHistoriesRequest,
   IGetPricelistHistoriesResponse,
@@ -68,26 +66,6 @@ export const getAuctions = async (
     method: "GET",
     query: request,
     url: `${apiEndpoint}/region/${regionName}/realm/${realmSlug}/auctions`,
-  });
-  if (status !== HTTPStatus.OK) {
-    return null;
-  }
-
-  return body;
-};
-
-export interface IGetOwnersOptions {
-  regionName: string;
-  realmSlug: string;
-  query: string;
-}
-
-export const getOwners = async (opts: IGetOwnersOptions): Promise<IGetOwnersResponse | null> => {
-  const { regionName, realmSlug, query } = opts;
-  const { body, status } = await gather<IGetOwnersRequest, IGetOwnersResponse>({
-    body: { query },
-    method: "POST",
-    url: `${apiEndpoint}/region/${regionName}/realm/${realmSlug}/owners`,
   });
   if (status !== HTTPStatus.OK) {
     return null;

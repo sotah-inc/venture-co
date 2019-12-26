@@ -1,18 +1,14 @@
 import {
   IGetAuctionsResponse,
-  IGetOwnersResponse,
   IItem,
   IQueryAuctionsItem,
   IQueryAuctionsResponse,
-  OwnerName,
 } from "@sotah-inc/core";
 import { Dispatch } from "redux";
 
 import {
   getAuctions,
-  getOwners,
   IGetAuctionsOptions,
-  IGetOwnersOptions,
   IQueryAuctionsOptions,
   queryAuctions,
 } from "../api/data";
@@ -40,22 +36,6 @@ export const CountChange = (payload: number) => createAction(COUNT_CHANGE, paylo
 
 export const SORT_CHANGE = "SORT_CHANGE";
 export const SortChange = (payload: ISortChangeOptions) => createAction(SORT_CHANGE, payload);
-
-export const REQUEST_OWNERS = "REQUEST_OWNERS";
-export const RECEIVE_OWNERS = "RECEIVE_OWNERS";
-const RequestOwners = () => createAction(REQUEST_OWNERS);
-const ReceiveOwners = (payload: IGetOwnersResponse | null) => createAction(RECEIVE_OWNERS, payload);
-type FetchOwnersType = ReturnType<typeof RequestOwners | typeof ReceiveOwners>;
-export const FetchOwners = (opts: IGetOwnersOptions) => {
-  return async (dispatch: Dispatch<FetchOwnersType>) => {
-    dispatch(RequestOwners());
-    dispatch(ReceiveOwners(await getOwners(opts)));
-  };
-};
-
-export const OWNER_FILTER_CHANGE = "OWNER_FILTER_CHANGE";
-export const OwnerFilterChange = (payload: OwnerName | null) =>
-  createAction(OWNER_FILTER_CHANGE, payload);
 
 export const ITEM_FILTER_CHANGE = "ITEM_FILTER_CHANGE";
 export const ItemFilterChange = (item: IItem | null) => createAction(ITEM_FILTER_CHANGE, item);
@@ -102,16 +82,13 @@ export const AuctionActions = {
   CountChange,
   ItemFilterChange,
   LoadAuctionListEntrypoint,
-  OwnerFilterChange,
   PageChange,
   ReceiveAuctions,
   ReceiveAuctionsQuery,
-  ReceiveOwners,
   RefreshAuctionsQuery,
   RemoveAuctionsQuery,
   RequestAuctions,
   RequestAuctionsQuery,
-  RequestOwners,
   SortChange,
 };
 
