@@ -1,13 +1,15 @@
 import {
   IExpansion,
   IGetUnmetDemandResponse,
+  IItemPriceLimits,
+  IItemPricelistHistoryMap,
+  IPriceLimits,
   IPricelistJson,
   IPriceListMap,
   IProfession,
   IProfessionPricelistJson,
   IUpdatePricelistRequest,
 } from "@sotah-inc/core";
-import { IItemPriceLimits, IItemPricelistHistoryMap, IPriceLimits } from "../../../core/src/types";
 
 import { IUpdatePricelistResult } from "../api/price-lists";
 import { IFetchData, IFetchInfo, IItemsData } from "./global";
