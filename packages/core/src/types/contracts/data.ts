@@ -1,4 +1,4 @@
-import { IAuction, IOwner, OwnerName } from "../auction";
+import { IAuction } from "../auction";
 import { IPostJson, IProfessionPricelistJson } from "../entities";
 import { ExpansionName, IExpansion } from "../expansion";
 import { SortDirection, SortKind } from "../index";
@@ -36,7 +36,6 @@ export interface IGetAuctionsRequest {
   page: number;
   sortKind: SortKind;
   sortDirection: SortDirection;
-  ownerFilters: OwnerName[];
   itemFilters: ItemId[];
 }
 
@@ -55,7 +54,6 @@ export interface IQueryAuctionsRequest {
 export interface IQueryAuctionsItem {
   target: string;
   item: IItem | null;
-  owner: IOwner | null;
   rank: number;
 }
 
