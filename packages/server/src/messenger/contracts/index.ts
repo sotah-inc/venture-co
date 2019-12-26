@@ -3,7 +3,6 @@ import {
   IExpansion,
   IItemClass,
   IItemsMap,
-  IOwner,
   IPricelistHistoryMap,
   IPriceListMap,
   IProfession,
@@ -44,16 +43,6 @@ export interface IGetPricelistResponse {
   price_list: IPriceListMap;
 }
 
-export interface IGetOwnersRequest {
-  query: string;
-  region_name: RegionName;
-  realm_slug: RealmSlug;
-}
-
-export interface IGetOwnersResponse {
-  owners: OwnerName[];
-}
-
 export interface IGetSessionSecretResponse {
   session_secret: string;
 }
@@ -62,20 +51,6 @@ export interface IQueryItemsResponse {
   items: Array<{
     item_id: ItemId;
     target: string;
-    rank: number;
-  }>;
-}
-
-export interface IQueryOwnersRequest {
-  query: string;
-  region_name: RegionName;
-  realm_slug: RealmSlug;
-}
-
-export interface IQueryOwnersResponse {
-  items: Array<{
-    target: string;
-    owner: IOwner;
     rank: number;
   }>;
 }

@@ -7,16 +7,12 @@ import {
   IGetAuctionsResponse,
   IGetBootResponse,
   IGetItemsResponse,
-  IGetOwnersRequest,
-  IGetOwnersResponse,
   IGetPricelistHistoriesRequest,
   IGetPricelistHistoriesResponse,
   IGetPricelistRequest,
   IGetPricelistResponse,
   IGetSessionSecretResponse,
   IQueryItemsResponse,
-  IQueryOwnersRequest,
-  IQueryOwnersResponse,
   IQueryRealmModificationDatesRequest,
   IQueryRealmModificationDatesResponse,
   IRealmModificationDatesResponse,
@@ -30,8 +26,6 @@ export enum subjects {
   status = "status",
   genericTestErrors = "genericTestErrors",
   auctions = "auctions",
-  owners = "owners",
-  ownersQuery = "ownersQuery",
   itemsQuery = "itemsQuery",
   auctionsQuery = "auctionsQuery",
   priceList = "priceList",
@@ -96,16 +90,8 @@ export class Messenger {
     };
   }
 
-  public getOwners(request: IGetOwnersRequest): Promise<Message<IGetOwnersResponse>> {
-    return this.request(subjects.owners, { body: JSON.stringify(request) });
-  }
-
   public queryItems(query: string): Promise<Message<IQueryItemsResponse>> {
     return this.request(subjects.itemsQuery, { body: JSON.stringify({ query }) });
-  }
-
-  public queryOwners(request: IQueryOwnersRequest): Promise<Message<IQueryOwnersResponse>> {
-    return this.request(subjects.ownersQuery, { body: JSON.stringify(request) });
   }
 
   public async getPriceList(
