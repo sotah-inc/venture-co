@@ -48,14 +48,6 @@ export interface IGetAuctionsResponse {
   professionPricelists: IProfessionPricelistJson[];
 }
 
-export interface IGetOwnersRequest {
-  query: string;
-}
-
-export interface IGetOwnersResponse {
-  owners: OwnerName[];
-}
-
 export interface IQueryAuctionsRequest {
   query: string;
 }
