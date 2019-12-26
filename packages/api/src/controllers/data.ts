@@ -4,8 +4,6 @@ import {
   IGetAuctionsRequest,
   IGetAuctionsResponse,
   IGetBootResponse,
-  IGetOwnersRequest,
-  IGetOwnersResponse,
   IGetPostResponse,
   IGetPostsResponse,
   IGetPricelistHistoriesRequest,
@@ -355,35 +353,14 @@ export class DataController {
     };
   };
 
-  public getOwners: RequestHandler<IGetOwnersRequest, IGetOwnersResponse> = async req => {
-    const { query } = req.body;
-    const msg = await this.messenger.getOwners({
-      query,
-      realm_slug: req.params["realmSlug"],
-      region_name: req.params["regionName"],
-    });
-
-    return {
-      data: msg.data!,
-      status: HTTPStatus.OK,
-    };
-  };
-
   public queryAuctions: RequestHandler<
     IQueryAuctionsRequest,
     IQueryAuctionsResponse | IErrorResponse
   > = async req => {
     const { query } = req.body;
 
-    const [itemsQueryMessage, ownersQueryMessage] = await Promise.all([
-      this.messenger.queryItems(query),
-      this.messenger.queryOwners({
-        query,
-        realm_slug: req.params["realmSlug"],
-        region_name: req.params["regionName"],
-      }),
-    ]);
-    if (itemsQueryMessage.code !== code.ok || ownersQueryMessage.code !== code.ok) {
+    const itemsQueryMessage = await this.messenger.queryItems(query);
+    if (itemsQueryMessage.code !== code.ok) {
       return {
         data: { error: itemsQueryMessage.error!.message },
         status: HTTPStatus.INTERNAL_SERVER_ERROR,
@@ -401,23 +378,16 @@ export class DataController {
     }
     const foundItems = getItemsMessage.data!.items;
 
-    let items: IQueryAuctionsItem[] = [
-      ...itemsQueryMessage.data!.items.map(v => {
-        const result: IQueryAuctionsItem = {
-          item: v.item_id in foundItems ? foundItems[v.item_id]! : null,
-          owner: null,
-          rank: v.rank,
-          target: v.target,
-        };
+    let items: IQueryAuctionsItem[] = itemsQueryMessage.data!.items.map(v => {
+      const result: IQueryAuctionsItem = {
+        item: v.item_id in foundItems ? foundItems[v.item_id]! : null,
+        owner: null,
+        rank: v.rank,
+        target: v.target,
+      };
 
-        return result;
-      }),
-      ...ownersQueryMessage.data!.items.map(v => {
-        const result: IQueryAuctionsItem = { ...v, item: null };
-
-        return result;
-      }),
-    ];
+      return result;
+    });
     items = items.sort((a, b) => {
       if (a.rank !== b.rank) {
         return a.rank > b.rank ? 1 : -1;
