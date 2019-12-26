@@ -93,7 +93,6 @@ export class AuctionTable extends React.Component<Props> {
           <td>---</td>
           <td>---</td>
           <td>---</td>
-          <td>---</td>
         </tr>
       );
     }
