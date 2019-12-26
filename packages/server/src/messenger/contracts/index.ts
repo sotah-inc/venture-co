@@ -9,7 +9,6 @@ import {
   IRealmModificationDates,
   IRegion,
   ItemId,
-  OwnerName,
   RealmSlug,
   RegionName,
   SortDirection,
@@ -23,7 +22,6 @@ export interface IGetAuctionsRequest {
   count: number;
   sort_kind: SortKind;
   sort_direction: SortDirection;
-  owner_filters: OwnerName[];
   item_filters: ItemId[];
 }
 
