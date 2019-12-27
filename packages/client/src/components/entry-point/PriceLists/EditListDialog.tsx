@@ -93,7 +93,10 @@ export class EditListDialog extends React.Component<Props, State> {
             return { profession: selectedProfession, expansion: selectedExpansion };
           })();
 
-          browseOnUpdate(currentRegion, currentRealm, selectedList, professionData);
+          const shouldBrowse = prevProps.selectedList!.slug! !== selectedList.slug!;
+          if (shouldBrowse) {
+            browseOnUpdate(currentRegion, currentRealm, selectedList, professionData);
+          }
 
           break;
         default:
