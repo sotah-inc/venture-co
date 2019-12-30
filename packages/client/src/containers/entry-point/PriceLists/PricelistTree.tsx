@@ -12,7 +12,10 @@ import { IStoreState } from "../../../types";
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const { currentRealm, professions, currentRegion, expansions, authLevel, profile } = state.Main;
   const {
-    pricelists: { level: getPricelistsLevel, data: pricelists },
+    pricelists: {
+      level: getPricelistsLevel,
+      data: { data: pricelists },
+    },
     selectedList,
     selectedProfession,
     professionPricelists: { level: getProfessionPricelistsLevel, data: professionPricelists },

@@ -31,7 +31,9 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
     selectedExpansion,
     selectedList,
     professionPricelists: { level: getProfessionPricelistsLevel, data: professionPricelists },
-    pricelists: { data: pricelists },
+    pricelists: {
+      data: { data: pricelists },
+    },
   } = state.PriceLists;
 
   return {

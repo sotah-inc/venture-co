@@ -178,7 +178,10 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           isAddListDialogOpen: false,
           pricelists: {
             ...state.pricelists,
-            data: [...state.pricelists.data, selectedList],
+            data: {
+              ...state.pricelists.data,
+              data: [...state.pricelists.data.data, selectedList],
+            },
           },
           selectedList,
         };
@@ -202,15 +205,15 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           };
         }
 
-        const deletedIndex = getPricelistIndex(state.pricelists.data, action.payload);
+        const deletedIndex = getPricelistIndex(state.pricelists.data.data, action.payload);
         const pricelists: IPricelistJson[] = (() => {
           if (deletedIndex === 0) {
-            return [...state.pricelists.data.slice(1)];
+            return [...state.pricelists.data.data.slice(1)];
           }
 
           return [
-            ...state.pricelists.data.slice(0, deletedIndex),
-            ...state.pricelists.data.slice(deletedIndex + 1),
+            ...state.pricelists.data.data.slice(0, deletedIndex),
+            ...state.pricelists.data.data.slice(deletedIndex + 1),
           ];
         })();
         const selectedList: IPricelistJson | null = (() => {
@@ -228,7 +231,10 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           isDeleteListDialogOpen: false,
           pricelists: {
             ...state.pricelists,
-            data: pricelists,
+            data: {
+              ...state.pricelists.data,
+              data: pricelists,
+            },
           },
           selectedList,
         };
@@ -279,24 +285,27 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           pricelist_entries: action.payload.result.data!.entries,
         };
 
-        let replacedIndex = getPricelistIndex(state.pricelists.data, selectedList.id);
+        let replacedIndex = getPricelistIndex(state.pricelists.data.data, selectedList.id);
         if (replacedIndex !== -1) {
           const pricelists: IPricelistJson[] = (() => {
             if (replacedIndex === 0) {
-              return [selectedList, ...state.pricelists.data.slice(1)];
+              return [selectedList, ...state.pricelists.data.data.slice(1)];
             }
 
             return [
-              ...state.pricelists.data.slice(0, replacedIndex),
+              ...state.pricelists.data.data.slice(0, replacedIndex),
               selectedList,
-              ...state.pricelists.data.slice(replacedIndex + 1),
+              ...state.pricelists.data.data.slice(replacedIndex + 1),
             ];
           })();
 
           return {
             ...state,
             ...action.payload.meta,
-            pricelists: { ...state.pricelists, data: pricelists },
+            pricelists: {
+              ...state.pricelists,
+              data: { ...state.pricelists.data, data: pricelists },
+            },
             selectedList,
             updatePricelist: { errors: {}, level: FetchLevel.success },
           };
@@ -378,7 +387,10 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
         return {
           ...state,
           pricelists: {
-            data: action.payload.pricelists,
+            data: {
+              ...state.pricelists.data,
+              data: action.payload.pricelists,
+            },
             errors: {},
             level: FetchLevel.success,
           },

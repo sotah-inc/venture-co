@@ -38,7 +38,7 @@ export interface IPriceListsState {
   deletePricelist: IFetchInfo;
   selectedProfession: IProfession | null;
   selectedExpansion: IExpansion | null;
-  pricelists: IFetchData<IPricelistJson[]>;
+  pricelists: IFetchData<IItemsData<IPricelistJson[]>>;
   pricelistHistory: IFetchData<IItemsData<IPricelistHistoryState>>;
   priceTable: IFetchData<IItemsData<IPriceListMap>>;
   professionPricelists: IFetchData<IExpansionProfessionPricelistMap>;
@@ -101,7 +101,10 @@ export const defaultPriceListsState: IPriceListsState = {
     level: FetchLevel.initial,
   },
   pricelists: {
-    data: [],
+    data: {
+      data: [],
+      items: {},
+    },
     errors: {},
     level: FetchLevel.initial,
   },
