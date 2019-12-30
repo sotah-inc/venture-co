@@ -41,7 +41,7 @@ export interface IPriceListsState {
   pricelists: IFetchData<IItemsData<IPricelistJson[]>>;
   pricelistHistory: IFetchData<IItemsData<IPricelistHistoryState>>;
   priceTable: IFetchData<IItemsData<IPriceListMap>>;
-  professionPricelists: IFetchData<IExpansionProfessionPricelistMap>;
+  professionPricelists: IFetchData<IItemsData<IExpansionProfessionPricelistMap>>;
   unmetDemand: IFetchData<IItemsData<IUnmetDemandState>>;
 }
 
@@ -109,7 +109,10 @@ export const defaultPriceListsState: IPriceListsState = {
     level: FetchLevel.initial,
   },
   professionPricelists: {
-    data: {},
+    data: {
+      data: {},
+      items: {},
+    },
     errors: {},
     level: FetchLevel.initial,
   },

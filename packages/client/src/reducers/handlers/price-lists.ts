@@ -313,7 +313,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
 
         const professionPricelists: IExpansionProfessionPricelistMap = (() => {
           const expansionName = state.selectedExpansion!.name;
-          const prevResult = state.professionPricelists.data[expansionName];
+          const prevResult = state.professionPricelists.data.data[expansionName];
           replacedIndex = getProfessionPricelistIndex(prevResult, selectedList.id);
 
           const professionPricelist: IProfessionPricelistJson = {
@@ -322,7 +322,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           };
 
           return {
-            ...state.professionPricelists.data,
+            ...state.professionPricelists.data.data,
             [expansionName]: [
               ...prevResult.slice(0, replacedIndex),
               professionPricelist,
@@ -334,7 +334,10 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
         return {
           ...state,
           ...action.payload.meta,
-          professionPricelists: { ...state.professionPricelists, data: professionPricelists },
+          professionPricelists: {
+            ...state.professionPricelists,
+            data: { ...state.professionPricelists.data, professionPricelists },
+          },
           selectedList,
           updatePricelist: { errors: {}, level: FetchLevel.success },
         };
@@ -390,6 +393,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
             data: {
               ...state.pricelists.data,
               data: action.payload.pricelists,
+              items: action.payload.items,
             },
             errors: {},
             level: FetchLevel.success,
@@ -432,11 +436,11 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
               return [professionPricelist];
             }
 
-            return [...state.professionPricelists.data[expansionName], professionPricelist];
+            return [...state.professionPricelists.data.data[expansionName], professionPricelist];
           })();
 
           return {
-            ...state.professionPricelists.data,
+            ...state.professionPricelists.data.data,
             [expansionName]: result,
           };
         })();
@@ -448,7 +452,10 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
             level: FetchLevel.success,
           },
           isAddListDialogOpen: false,
-          professionPricelists: { ...state.professionPricelists, data: professionPricelists },
+          professionPricelists: {
+            ...state.professionPricelists,
+            data: { ...state.professionPricelists.data, professionPricelists },
+          },
           selectedList,
         };
       },
@@ -475,7 +482,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
         }
 
         const expansionName = state.selectedExpansion!.name;
-        const prevResult = state.professionPricelists.data[expansionName];
+        const prevResult = state.professionPricelists.data.data[expansionName];
         const deletedIndex = getProfessionPricelistIndex(prevResult, action.payload.id);
         const nextResult: IProfessionPricelistJson[] = (() => {
           if (deletedIndex === 0) {
@@ -485,7 +492,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           return [...prevResult.slice(0, deletedIndex), ...prevResult.slice(deletedIndex + 1)];
         })();
         const professionPricelists: IExpansionProfessionPricelistMap = {
-          ...state.professionPricelists.data,
+          ...state.professionPricelists.data.data,
           [expansionName]: nextResult,
         };
         const selectedList: IPricelistJson | null = (() => {
@@ -503,7 +510,10 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           ...state,
           deletePricelist: { errors: {}, level: FetchLevel.success },
           isDeleteListDialogOpen: false,
-          professionPricelists: { ...state.professionPricelists, data: professionPricelists },
+          professionPricelists: {
+            ...state.professionPricelists,
+            data: { ...state.professionPricelists.data, professionPricelists },
+          },
           selectedList,
         };
       },
@@ -543,7 +553,11 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
         return {
           ...state,
           professionPricelists: {
-            data: professionPricelists,
+            data: {
+              ...state.professionPricelists.data,
+              data: professionPricelists,
+              items: action.payload.data!.items!,
+            },
             errors: {},
             level: FetchLevel.success,
           },

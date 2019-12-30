@@ -33,7 +33,7 @@ export const priceLists = (state: State | undefined, action: PriceListsActions):
     case CHANGE_SELECTED_LIST:
       const isProfessionPricelist: boolean = (() => {
         for (const expansionName of Object.keys(state.professionPricelists.data)) {
-          for (const v of state.professionPricelists.data[expansionName]) {
+          for (const v of state.professionPricelists.data.data[expansionName]) {
             if (v.pricelist.id === action.payload.id) {
               return true;
             }

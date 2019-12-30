@@ -14,13 +14,18 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
   const {
     pricelists: {
       level: getPricelistsLevel,
-      data: { data: pricelists, items },
+      data: { data: pricelists, items: pricelistItems },
     },
     selectedList,
     selectedProfession,
-    professionPricelists: { level: getProfessionPricelistsLevel, data: professionPricelists },
+    professionPricelists: {
+      level: getProfessionPricelistsLevel,
+      data: { data: professionPricelists, items: professionPricelistItems },
+    },
     selectedExpansion,
   } = state.PriceLists;
+
+  const items = { ...pricelistItems, ...professionPricelistItems };
 
   return {
     authLevel,
