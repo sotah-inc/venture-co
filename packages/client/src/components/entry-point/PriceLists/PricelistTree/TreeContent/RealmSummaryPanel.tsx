@@ -26,7 +26,6 @@ import {
 } from "@sotah-inc/core";
 
 import { IProfessionNode } from "../../../../../actions/price-lists";
-
 import { IGetUnmetDemandOptions } from "../../../../../api/price-lists";
 import { ItemPopoverContainer } from "../../../../../containers/util/ItemPopover";
 import { FetchLevel } from "../../../../../types/main";
@@ -66,6 +65,17 @@ interface ICollapsedResultItem {
 }
 
 export class RealmSummaryPanel extends React.Component<Props> {
+  private static renderProfession(profession: IProfession | null) {
+    if (profession === null) {
+      return null;
+    }
+
+    return (
+      <>
+        <ProfessionIcon profession={profession} /> {profession.label}
+      </>
+    );
+  }
   public componentDidMount() {
     const { refreshUnmetDemand, region, realm, expansions, getUnmetDemandLevel } = this.props;
 
@@ -261,7 +271,7 @@ export class RealmSummaryPanel extends React.Component<Props> {
       return (
         <tr key={index}>
           <td className={qualityToColorClass(ItemQuality.Common)}>{item_id}</td>
-          <td>{this.renderProfession(profession)}</td>
+          <td>{RealmSummaryPanel.renderProfession(profession)}</td>
           <td>
             {this.renderPricelistCell(professionPricelist.pricelist!, professionPricelist.name)}
           </td>
@@ -274,23 +284,11 @@ export class RealmSummaryPanel extends React.Component<Props> {
         <td className={qualityToColorClass(item.quality)}>
           <ItemPopoverContainer item={item} />
         </td>
-        <td>{this.renderProfession(profession)}</td>
+        <td>{RealmSummaryPanel.renderProfession(profession)}</td>
         <td>
           {this.renderPricelistCell(professionPricelist.pricelist!, professionPricelist.name)}
         </td>
       </tr>
-    );
-  }
-
-  private renderProfession(profession: IProfession | null) {
-    if (profession === null) {
-      return null;
-    }
-
-    return (
-      <>
-        <ProfessionIcon profession={profession} /> {profession.label}
-      </>
     );
   }
 

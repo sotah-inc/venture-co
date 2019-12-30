@@ -14,12 +14,15 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
   const { expansions, professions } = state.Main;
   const {
     level: getUnmetDemandLevel,
-    data: { unmetItemIds, professionPricelists: unmetDemandProfessionPricelists },
+    data: {
+      data: { unmetItemIds, professionPricelists: unmetDemandProfessionPricelists },
+      items,
+    },
   } = state.PriceLists.unmetDemand;
   return {
     expansions,
     getUnmetDemandLevel,
-    items: {},
+    items,
     professions,
     unmetDemandItemIds: unmetItemIds,
     unmetDemandProfessionPricelists,

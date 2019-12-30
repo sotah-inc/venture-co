@@ -561,7 +561,13 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
         return {
           ...state,
           unmetDemand: {
-            data: action.payload.data,
+            data: {
+              data: {
+                professionPricelists: action.payload.data.professionPricelists,
+                unmetItemIds: action.payload.data.unmetItemIds,
+              },
+              items: action.payload.data.items,
+            },
             errors: {},
             level: FetchLevel.success,
           },

@@ -1,6 +1,5 @@
 import {
   IExpansion,
-  IGetUnmetDemandResponse,
   IItemPriceLimits,
   IItemPricelistHistoryMap,
   IPriceLimits,
@@ -8,6 +7,7 @@ import {
   IPriceListMap,
   IProfession,
   IProfessionPricelistJson,
+  ItemId,
   IUpdatePricelistRequest,
 } from "@sotah-inc/core";
 
@@ -19,6 +19,11 @@ export interface IPricelistHistoryState {
   history: IItemPricelistHistoryMap;
   itemPriceLimits: IItemPriceLimits;
   overallPriceLimits: IPriceLimits;
+}
+
+export interface IUnmetDemandState {
+  professionPricelists: IProfessionPricelistJson[];
+  unmetItemIds: ItemId[];
 }
 
 export interface IPriceListsState {
@@ -37,7 +42,7 @@ export interface IPriceListsState {
   pricelistHistory: IFetchData<IItemsData<IPricelistHistoryState>>;
   priceTable: IFetchData<IItemsData<IPriceListMap>>;
   professionPricelists: IFetchData<IExpansionProfessionPricelistMap>;
-  unmetDemand: IFetchData<IGetUnmetDemandResponse>;
+  unmetDemand: IFetchData<IItemsData<IUnmetDemandState>>;
 }
 
 export interface IExpansionProfessionPricelistMap {
@@ -110,9 +115,11 @@ export const defaultPriceListsState: IPriceListsState = {
   selectedProfession: null,
   unmetDemand: {
     data: {
+      data: {
+        professionPricelists: [],
+        unmetItemIds: [],
+      },
       items: {},
-      professionPricelists: [],
-      unmetItemIds: [],
     },
     errors: {},
     level: FetchLevel.initial,
