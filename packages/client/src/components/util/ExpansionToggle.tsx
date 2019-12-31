@@ -95,7 +95,11 @@ export class ExpansionToggle extends React.Component<Props> {
         resetOnSelect={true}
         resetOnClose={true}
       >
-        <Button text={highlightedItem.label} rightIcon="double-caret-vertical" />
+        <Button
+          style={{ color: highlightedItem.label_color }}
+          text={highlightedItem.label}
+          rightIcon="double-caret-vertical"
+        />
       </ExpansionToggleSelect>
     );
   }

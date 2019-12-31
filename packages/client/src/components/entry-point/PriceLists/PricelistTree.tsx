@@ -141,7 +141,7 @@ export class PricelistTree extends React.Component<Props, IState> {
   }
 
   public render() {
-    const { authLevel, currentRealm, currentRegion, selectedExpansion } = this.props;
+    const { authLevel, currentRealm, currentRegion } = this.props;
     const { topOpenMap } = this.state;
 
     const nodes: ITreeNode[] = [];
@@ -166,14 +166,7 @@ export class PricelistTree extends React.Component<Props, IState> {
     }
 
     // appending profession-pricelists
-    nodes.push({
-      childNodes: this.getProfessionNodes(),
-      hasCaret: true,
-      icon: "list",
-      id: `top-${TopOpenKey.professions}`,
-      isExpanded: topOpenMap[TopOpenKey.professions],
-      label: selectedExpansion === null ? "Professions" : `${selectedExpansion.label} Professions`,
-    });
+    nodes.push(this.getLeadProfessionsNode());
 
     return (
       <div style={{ marginTop: "10px" }}>
@@ -193,6 +186,31 @@ export class PricelistTree extends React.Component<Props, IState> {
         </div>
       </div>
     );
+  }
+
+  private getLeadProfessionsNode(): ITreeNode {
+    const { selectedExpansion } = this.props;
+    const { topOpenMap } = this.state;
+
+    if (selectedExpansion === null) {
+      return {
+        childNodes: this.getProfessionNodes(),
+        hasCaret: true,
+        icon: "list",
+        id: `top-${TopOpenKey.professions}`,
+        isExpanded: topOpenMap[TopOpenKey.professions],
+        label: "Professions",
+      };
+    }
+
+    return {
+      childNodes: this.getProfessionNodes(),
+      hasCaret: true,
+      icon: "list",
+      id: `top-${TopOpenKey.professions}`,
+      isExpanded: topOpenMap[TopOpenKey.professions],
+      label: <span style={{ color: selectedExpansion.label_color }}>Professions</span>,
+    };
   }
 
   private isSummarySelected() {
