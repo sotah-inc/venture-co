@@ -27,7 +27,9 @@ type Props = Readonly<IStateProps & IOwnProps>;
 export class ExpansionToggle extends React.Component<Props> {
   public itemPredicate: ItemPredicate<IExpansion> = (query: string, item: IExpansion) => {
     query = query.toLowerCase();
-    return item.label.toLowerCase().indexOf(query) >= 0;
+    return (
+      item.label.toLowerCase().indexOf(query) >= 0 || item.name.toLowerCase().indexOf(query) >= 0
+    );
   };
 
   public itemRenderer: ItemRenderer<IExpansion> = (
@@ -51,6 +53,7 @@ export class ExpansionToggle extends React.Component<Props> {
         className={modifiers.active ? Classes.ACTIVE : ""}
         onClick={handleClick}
         text={item.label}
+        label={item.name}
       />
     );
   };
