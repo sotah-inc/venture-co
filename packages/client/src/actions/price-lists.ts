@@ -109,18 +109,6 @@ export const CHANGE_ENTRY_CREATELEVEL = "CHANGE_ENTRY_CREATELEVEL";
 export const ChangeEntryCreateLevel = (payload: FetchLevel) =>
   createAction(CHANGE_ENTRY_CREATELEVEL, payload);
 
-export const CHANGE_SELECTED_LIST = "CHANGE_SELECTED_LIST";
-export const ChangeSelectedList = (payload: IPricelistJson) =>
-  createAction(CHANGE_SELECTED_LIST, payload);
-
-export const CHANGE_SELECTED_PROFESSION = "CHANGE_SELECTED_PROFESSION";
-export const ChangeSelectedProfession = (payload: IProfession | null) =>
-  createAction(CHANGE_SELECTED_PROFESSION, payload);
-
-export const CHANGE_SELECTED_EXPANSION = "CHANGE_SELECTED_EXPANSION";
-export const ChangeSelectedExpansion = (payload: IExpansion) =>
-  createAction(CHANGE_SELECTED_EXPANSION, payload);
-
 export const CHANGE_IS_ADD_LIST_DIALOG_OPEN = "CHANGE_IS_ADD_LIST_DIALOG_OPEN";
 export const ChangeIsAddListDialogOpen = (payload: boolean) =>
   createAction(CHANGE_IS_ADD_LIST_DIALOG_OPEN, payload);
@@ -247,6 +235,7 @@ export interface ILoadPricelistsEntrypointFront {
   pricelistSlug?: string;
   pricelistHistory?: IGetPricelistHistoriesResponse | null;
   currentPrices?: IGetPricelistResponse | null;
+  selectedList?: IPricelistJson | null;
 }
 
 export interface ILoadPricelistsEntrypoint extends ILoadPricelistsEntrypointFront {
@@ -264,9 +253,6 @@ export const PriceListsActions = {
   ChangeIsAddListDialogOpen,
   ChangeIsDeleteListDialogOpen,
   ChangeIsEditListDialogOpen,
-  ChangeSelectedExpansion,
-  ChangeSelectedList,
-  ChangeSelectedProfession,
   LoadPricelistsEntrypoint,
   NavigateProfessionNode,
   ReceiveCreatePricelist,

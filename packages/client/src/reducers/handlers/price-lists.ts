@@ -7,7 +7,6 @@ import {
 } from "@sotah-inc/core";
 
 import {
-  ChangeSelectedExpansion,
   LoadPricelistsEntrypoint,
   PriceListsActions,
   ReceiveCreatePricelist,
@@ -82,6 +81,17 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           );
         })();
 
+        const selectedList: IPricelistJson | null = (() => {
+          if (
+            typeof action.payload === "undefined" ||
+            typeof action.payload.selectedList === "undefined"
+          ) {
+            return null;
+          }
+
+          return action.payload.selectedList;
+        })();
+
         const pricelistHistory: IFetchData<IItemsData<IPricelistHistoryState>> = (() => {
           if (
             typeof action.payload === "undefined" ||
@@ -135,18 +145,8 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           priceTable,
           pricelistHistory,
           selectedExpansion,
+          selectedList,
           selectedProfession,
-        };
-      },
-    },
-  },
-  expansion: {
-    selected: {
-      change: (state: IPriceListsState, action: ReturnType<typeof ChangeSelectedExpansion>) => {
-        return {
-          ...state,
-          selectedExpansion: action.payload,
-          selectedList: null,
         };
       },
     },
