@@ -147,10 +147,14 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
             return defaultPriceListsState.professionPricelists;
           }
 
+          if (action.payload.professionPricelists.data === null) {
+            return { ...defaultPriceListsState.professionPricelists, level: FetchLevel.failure };
+          }
+
           return {
             data: {
-              data: action.payload.professionPricelists.data,
-              items: action.payload.professionPricelists.items,
+              data: action.payload.professionPricelists.data.profession_pricelists,
+              items: action.payload.professionPricelists.data.items,
             },
             errors: {},
             level: FetchLevel.initial,

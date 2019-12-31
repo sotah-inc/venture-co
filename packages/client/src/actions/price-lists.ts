@@ -8,7 +8,6 @@ import {
   IGetPricelistsResponse,
   IPricelistJson,
   IProfession,
-  IProfessionPricelistJson,
   ProfessionName,
 } from "@sotah-inc/core";
 import { Dispatch } from "redux";
@@ -35,7 +34,6 @@ import {
   IGetUnmetDemandResult,
   updatePricelist,
 } from "../api/price-lists";
-import { IItemsData } from "../types/global";
 import { FetchLevel } from "../types/main";
 import {
   IUpdatePricelistRequestOptions,
@@ -240,7 +238,7 @@ export interface ILoadPricelistsEntrypointFront {
   pricelistHistory?: IGetPricelistHistoriesResponse | null;
   currentPrices?: IGetPricelistResponse | null;
   selectedList?: IPricelistJson | null;
-  professionPricelists?: IItemsData<IProfessionPricelistJson[]>;
+  professionPricelists?: IGetProfessionPricelistsResult;
 }
 
 export interface ILoadPricelistsEntrypoint extends ILoadPricelistsEntrypointFront {
