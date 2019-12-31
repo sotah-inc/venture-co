@@ -293,17 +293,7 @@ export class PricelistTree extends React.Component<Props, IState> {
     }
 
     const result = professionPricelists[selectedExpansion.name];
-    if (typeof result === "undefined") {
-      return [
-        {
-          icon: <Spinner size={20} value={0} intent={Intent.NONE} />,
-          id: "loading-0",
-          label: <span style={{ marginLeft: "5px" }}>Loading</span>,
-        },
-      ];
-    }
-
-    if (result.length === 0) {
+    if (typeof result === "undefined" || result.length === 0) {
       return [{ id: "none-none", label: <em>None found.</em> }];
     }
 
