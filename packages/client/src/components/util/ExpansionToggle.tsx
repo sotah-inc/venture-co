@@ -18,11 +18,11 @@ export interface IStateProps {
   selectedExpansion: IExpansion | null;
 }
 
-export interface IRouteProps {
+export interface IOwnProps {
   onExpansionChange: (expansion: IExpansion) => void;
 }
 
-type Props = Readonly<IStateProps & IRouteProps>;
+type Props = Readonly<IStateProps & IOwnProps>;
 
 export class ExpansionToggle extends React.Component<Props> {
   public itemPredicate: ItemPredicate<IExpansion> = (query: string, item: IExpansion) => {
