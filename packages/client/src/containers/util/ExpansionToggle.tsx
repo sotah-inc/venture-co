@@ -12,6 +12,6 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
   };
 };
 
-export const RealmToggleContainer = connect<IStateProps, {}, IOwnProps>(mapStateToProps)(
+export const ExpansionToggleContainer = connect<IStateProps, {}, IOwnProps>(mapStateToProps)(
   ExpansionToggle,
 );
