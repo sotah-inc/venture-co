@@ -54,6 +54,7 @@ export class ExpansionToggle extends React.Component<Props> {
         onClick={handleClick}
         text={item.label}
         label={item.name}
+        style={{ color: item.label_color }}
       />
     );
   };
