@@ -1,0 +1,98 @@
+import React from "react";
+
+import { Button, Classes, H6, Intent, Menu, MenuItem } from "@blueprintjs/core";
+import {
+  IItemListRendererProps,
+  IItemRendererProps,
+  ItemListRenderer,
+  ItemPredicate,
+  ItemRenderer,
+  Select,
+} from "@blueprintjs/select";
+import { IExpansion } from "@sotah-inc/core";
+
+const ExpansionToggleSelect = Select.ofType<IExpansion>();
+
+export interface IStateProps {
+  expansions: IExpansion[];
+  selectedExpansion: IExpansion | null;
+}
+
+export interface IRouteProps {
+  onExpansionChange: (expansion: IExpansion) => void;
+}
+
+type Props = Readonly<IStateProps & IRouteProps>;
+
+export class ExpansionToggle extends React.Component<Props> {
+  public itemPredicate: ItemPredicate<IExpansion> = (query: string, item: IExpansion) => {
+    query = query.toLowerCase();
+    return item.label.toLowerCase().indexOf(query) >= 0;
+  };
+
+  public itemRenderer: ItemRenderer<IExpansion> = (
+    item: IExpansion,
+    { handleClick, modifiers, index }: IItemRendererProps,
+  ) => {
+    if (!modifiers.matchesPredicate) {
+      return null;
+    }
+
+    const { selectedExpansion } = this.props;
+    const intent =
+      selectedExpansion !== null && item.name === selectedExpansion.name
+        ? Intent.PRIMARY
+        : Intent.NONE;
+
+    return (
+      <MenuItem
+        key={index}
+        intent={intent}
+        className={modifiers.active ? Classes.ACTIVE : ""}
+        onClick={handleClick}
+        text={item.label}
+      />
+    );
+  };
+
+  public itemListRenderer: ItemListRenderer<IExpansion> = (
+    params: IItemListRendererProps<IExpansion>,
+  ) => {
+    const { items, itemsParentRef, renderItem } = params;
+    const renderedItems = items.map(renderItem).filter(renderedItem => renderedItem !== null);
+    return (
+      <Menu ulRef={itemsParentRef}>
+        <li>
+          <H6>Select Expansion</H6>
+        </li>
+        {renderedItems}
+      </Menu>
+    );
+  };
+
+  public render() {
+    const { expansions, selectedExpansion, onExpansionChange } = this.props;
+
+    const highlightedItem: IExpansion = (() => {
+      if (selectedExpansion !== null) {
+        return selectedExpansion;
+      }
+
+      return expansions[0];
+    })();
+
+    return (
+      <ExpansionToggleSelect
+        items={expansions}
+        itemRenderer={this.itemRenderer}
+        itemListRenderer={this.itemListRenderer}
+        itemPredicate={this.itemPredicate}
+        onItemSelect={onExpansionChange}
+        resetOnSelect={true}
+        resetOnClose={true}
+      >
+        <Button text={highlightedItem.label} rightIcon="double-caret-vertical" />
+      </ExpansionToggleSelect>
+    );
+  }
+}
