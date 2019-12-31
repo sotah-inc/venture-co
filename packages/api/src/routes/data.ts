@@ -70,7 +70,7 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
     }),
   );
   router.get(
-    "/profession-pricelists/:profession_name",
+    "/profession-pricelists/:profession/:expansion",
     wrap(async (req: Request, res: Response) => {
       await handle(controller.getProfessionPricelists, req, res);
     }),

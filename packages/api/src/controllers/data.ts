@@ -738,7 +738,7 @@ export class DataController {
   > = async req => {
     // gathering profession-pricelists
     const professionPricelists = await this.dbConn.getRepository(ProfessionPricelist).find({
-      where: { name: req.params["profession_name"] },
+      where: { name: req.params["profession"], expansion: req.params["expansion"] },
     });
 
     // gathering related items
