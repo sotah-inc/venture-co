@@ -168,10 +168,13 @@ export const ReceiveGetProfessionPricelists = (payload: IGetProfessionPricelists
 type FetchProfessionPricelistsType = ReturnType<
   typeof RequestGetProfessionPricelists | typeof ReceiveGetProfessionPricelists
 >;
-export const FetchGetProfessionPricelists = (profession: ProfessionName) => {
+export const FetchGetProfessionPricelists = (
+  profession: ProfessionName,
+  expansion: ExpansionName,
+) => {
   return async (dispatch: Dispatch<FetchProfessionPricelistsType>) => {
     dispatch(RequestGetProfessionPricelists());
-    dispatch(ReceiveGetProfessionPricelists(await getProfessionPricelists(profession)));
+    dispatch(ReceiveGetProfessionPricelists(await getProfessionPricelists(profession, expansion)));
   };
 };
 

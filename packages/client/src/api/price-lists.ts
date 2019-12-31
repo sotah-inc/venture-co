@@ -178,10 +178,11 @@ export interface IGetProfessionPricelistsResult {
 
 export const getProfessionPricelists = async (
   profession: ProfessionName,
+  expansion: ExpansionName,
 ): Promise<IGetProfessionPricelistsResult> => {
   const { body, status } = await gather<null, IGetProfessionPricelistsResponse>({
     method: "GET",
-    url: `${apiEndpoint}/profession-pricelists/${profession}`,
+    url: `${apiEndpoint}/profession-pricelists/${profession}/${expansion}`,
   });
   switch (status) {
     case HTTPStatus.OK:

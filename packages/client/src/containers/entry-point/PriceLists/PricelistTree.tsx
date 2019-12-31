@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 
-import { FetchGetPricelists, FetchGetProfessionPricelists } from "../../../actions/price-lists";
+import { FetchGetPricelists } from "../../../actions/price-lists";
 import {
   IDispatchProps,
   IOwnProps,
@@ -47,7 +47,6 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
 
 const mapDispatchToProps: IDispatchProps = {
   refreshPricelists: FetchGetPricelists,
-  refreshProfessionPricelists: FetchGetProfessionPricelists,
 };
 
 export const PricelistTreeContainer = connect<IStateProps, IDispatchProps, IOwnProps, IStoreState>(

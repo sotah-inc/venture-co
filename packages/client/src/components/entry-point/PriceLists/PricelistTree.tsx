@@ -8,7 +8,6 @@ import {
   IProfession,
   IRegion,
   IStatusRealm,
-  ProfessionName,
 } from "@sotah-inc/core";
 
 // tslint:disable-next-line:max-line-length
@@ -38,7 +37,6 @@ export interface IStateProps {
 }
 
 export interface IDispatchProps {
-  refreshProfessionPricelists: (profession: ProfessionName) => void;
   refreshPricelists: (token: string) => void;
 }
 
@@ -108,23 +106,8 @@ export class PricelistTree extends React.Component<Props, IState> {
     }
   }
 
-  public componentDidUpdate(prevProps: Props) {
-    const {
-      refreshPricelists,
-      profile,
-      selectedProfession,
-      refreshProfessionPricelists,
-      getPricelistsLevel,
-    } = this.props;
-
-    if (selectedProfession !== null) {
-      const shouldRefreshProfessionPricelists =
-        prevProps.selectedProfession === null ||
-        prevProps.selectedProfession.name !== selectedProfession.name;
-      if (shouldRefreshProfessionPricelists) {
-        refreshProfessionPricelists(selectedProfession.name);
-      }
-    }
+  public componentDidUpdate(_prevProps: Props) {
+    const { refreshPricelists, profile, getPricelistsLevel } = this.props;
 
     if (profile === null) {
       return;
