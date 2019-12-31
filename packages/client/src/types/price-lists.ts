@@ -41,12 +41,8 @@ export interface IPriceListsState {
   pricelists: IFetchData<IItemsData<IPricelistJson[]>>;
   pricelistHistory: IFetchData<IItemsData<IPricelistHistoryState>>;
   priceTable: IFetchData<IItemsData<IPriceListMap>>;
-  professionPricelists: IFetchData<IItemsData<IExpansionProfessionPricelistMap>>;
+  professionPricelists: IFetchData<IItemsData<IProfessionPricelistJson[]>>;
   unmetDemand: IFetchData<IItemsData<IUnmetDemandState>>;
-}
-
-export interface IExpansionProfessionPricelistMap {
-  [key: string]: IProfessionPricelistJson[] | undefined;
 }
 
 export enum ListDialogStep {
@@ -110,7 +106,7 @@ export const defaultPriceListsState: IPriceListsState = {
   },
   professionPricelists: {
     data: {
-      data: {},
+      data: [],
       items: {},
     },
     errors: {},

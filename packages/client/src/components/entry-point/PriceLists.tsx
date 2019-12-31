@@ -1,7 +1,14 @@
 import React from "react";
 
 import { Classes, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
-import { IExpansion, IPricelistJson, IProfession, IRegion, IStatusRealm } from "@sotah-inc/core";
+import {
+  IExpansion,
+  IPricelistJson,
+  IProfession,
+  IProfessionPricelistJson,
+  IRegion,
+  IStatusRealm,
+} from "@sotah-inc/core";
 
 import { ILoadRealmEntrypoint } from "../../actions/main";
 import {
@@ -21,7 +28,6 @@ import { EditListDialogRouteContainer } from "../../route-containers/entry-point
 import { PricelistTreeRouteContainer } from "../../route-containers/entry-point/PriceLists/PricelistTree";
 import { IRealms, IRegions } from "../../types/global";
 import { AuthLevel, FetchLevel } from "../../types/main";
-import { IExpansionProfessionPricelistMap } from "../../types/price-lists";
 import { setTitle } from "../../util";
 
 export interface IStateProps {
@@ -38,7 +44,7 @@ export interface IStateProps {
   expansions: IExpansion[];
   getProfessionPricelistsLevel: FetchLevel;
   selectedList: IPricelistJson | null;
-  professionPricelists: IExpansionProfessionPricelistMap;
+  professionPricelists: IProfessionPricelistJson[];
   pricelists: IPricelistJson[];
 }
 
@@ -286,18 +292,13 @@ export class PriceLists extends React.Component<Props> {
       return;
     }
 
-    const expansionProfessionPricelists = professionPricelists[selectedExpansion.name];
-
-    if (
-      typeof expansionProfessionPricelists === "undefined" ||
-      expansionProfessionPricelists.length === 0
-    ) {
+    if (professionPricelists.length === 0) {
       return;
     }
 
     if (pricelist_slug.length === 0) {
       const preselectedList: IPricelistJson | null = (() => {
-        const sorted = expansionProfessionPricelists.sort((a, b) => {
+        const sorted = professionPricelists.sort((a, b) => {
           if (a.pricelist.name === b.pricelist.name) {
             return 0;
           }
@@ -323,20 +324,17 @@ export class PriceLists extends React.Component<Props> {
       return;
     }
 
-    const foundList = expansionProfessionPricelists.reduce<IPricelistJson | null>(
-      (prevValue, curValue) => {
-        if (prevValue !== null) {
-          return prevValue;
-        }
+    const foundList = professionPricelists.reduce<IPricelistJson | null>((prevValue, curValue) => {
+      if (prevValue !== null) {
+        return prevValue;
+      }
 
-        if (curValue.pricelist.slug === pricelist_slug) {
-          return curValue.pricelist;
-        }
+      if (curValue.pricelist.slug === pricelist_slug) {
+        return curValue.pricelist;
+      }
 
-        return null;
-      },
-      null,
-    );
+      return null;
+    }, null);
     if (foundList === null) {
       return;
     }

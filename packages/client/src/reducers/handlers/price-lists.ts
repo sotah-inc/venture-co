@@ -24,7 +24,6 @@ import { IFetchData, IItemsData } from "../../types/global";
 import { FetchLevel } from "../../types/main";
 import {
   defaultPriceListsState,
-  IExpansionProfessionPricelistMap,
   IPricelistHistoryState,
   IPriceListsState,
 } from "../../types/price-lists";
@@ -140,10 +139,29 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           };
         })();
 
+        const professionPricelists: IFetchData<IItemsData<IProfessionPricelistJson[]>> = (() => {
+          if (
+            typeof action.payload === "undefined" ||
+            typeof action.payload.professionPricelists === "undefined"
+          ) {
+            return defaultPriceListsState.professionPricelists;
+          }
+
+          return {
+            data: {
+              data: action.payload.professionPricelists.data,
+              items: action.payload.professionPricelists.items,
+            },
+            errors: {},
+            level: FetchLevel.initial,
+          };
+        })();
+
         return {
           ...state,
           priceTable,
           pricelistHistory,
+          professionPricelists,
           selectedExpansion,
           selectedList,
           selectedProfession,
@@ -311,28 +329,22 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           };
         }
 
-        const professionPricelists: IExpansionProfessionPricelistMap = (() => {
-          const expansionName = state.selectedExpansion!.name;
-          const prevResult = state.professionPricelists.data.data[expansionName];
-          if (typeof prevResult === "undefined") {
-            return state.professionPricelists.data.data;
-          }
-
-          replacedIndex = getProfessionPricelistIndex(prevResult, selectedList.id);
+        const professionPricelists: IProfessionPricelistJson[] = (() => {
+          replacedIndex = getProfessionPricelistIndex(
+            state.professionPricelists.data.data,
+            selectedList.id,
+          );
 
           const professionPricelist: IProfessionPricelistJson = {
-            ...prevResult[replacedIndex],
+            ...state.professionPricelists.data.data[replacedIndex],
             pricelist: selectedList,
           };
 
-          return {
-            ...state.professionPricelists.data.data,
-            [expansionName]: [
-              ...prevResult.slice(0, replacedIndex),
-              professionPricelist,
-              ...prevResult.slice(replacedIndex + 1),
-            ],
-          };
+          return [
+            ...state.professionPricelists.data.data.slice(0, replacedIndex),
+            professionPricelist,
+            ...state.professionPricelists.data.data.slice(replacedIndex + 1),
+          ];
         })();
 
         return {
@@ -433,21 +445,8 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           ...action.payload.data!.profession_pricelist,
           pricelist: selectedList,
         };
-        const professionPricelists: IExpansionProfessionPricelistMap = (() => {
-          const expansionName = state.selectedExpansion!.name;
-          const result: IProfessionPricelistJson[] = (() => {
-            const foundProfessionPricelists = state.professionPricelists.data.data[expansionName];
-            if (typeof foundProfessionPricelists === "undefined") {
-              return [professionPricelist];
-            }
-
-            return [...foundProfessionPricelists, professionPricelist];
-          })();
-
-          return {
-            ...state.professionPricelists.data.data,
-            [expansionName]: result,
-          };
+        const professionPricelists: IProfessionPricelistJson[] = (() => {
+          return [...state.professionPricelists.data.data, professionPricelist];
         })();
 
         return {
@@ -485,34 +484,20 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
             deletePricelist: { errors: action.payload.errors, level: FetchLevel.failure },
           };
         }
-
-        const expansionName = state.selectedExpansion!.name;
-        const prevResult = state.professionPricelists.data.data[expansionName];
-
-        if (typeof prevResult === "undefined") {
-          return {
-            ...state,
-            deletePricelist: {
-              errors: {
-                error: `Expansion ${expansionName} not found in profession-pricelists data`,
-              },
-              level: FetchLevel.failure,
-            },
-          };
-        }
-
-        const deletedIndex = getProfessionPricelistIndex(prevResult, action.payload.id);
+        const deletedIndex = getProfessionPricelistIndex(
+          state.professionPricelists.data.data,
+          action.payload.id,
+        );
         const nextResult: IProfessionPricelistJson[] = (() => {
           if (deletedIndex === 0) {
-            return [...prevResult.slice(1)];
+            return [...state.professionPricelists.data.data.slice(1)];
           }
 
-          return [...prevResult.slice(0, deletedIndex), ...prevResult.slice(deletedIndex + 1)];
+          return [
+            ...state.professionPricelists.data.data.slice(0, deletedIndex),
+            ...state.professionPricelists.data.data.slice(deletedIndex + 1),
+          ];
         })();
-        const professionPricelists: IExpansionProfessionPricelistMap = {
-          ...state.professionPricelists.data.data,
-          [expansionName]: nextResult,
-        };
         const selectedList: IPricelistJson | null = (() => {
           if (nextResult.length === 0) {
             return null;
@@ -530,7 +515,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           isDeleteListDialogOpen: false,
           professionPricelists: {
             ...state.professionPricelists,
-            data: { ...state.professionPricelists.data, professionPricelists },
+            data: { ...state.professionPricelists.data, data: nextResult },
           },
           selectedList,
         };
@@ -557,24 +542,12 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           };
         }
 
-        const professionPricelists = action.payload.data!.profession_pricelists.reduce<
-          IExpansionProfessionPricelistMap
-        >((result: IExpansionProfessionPricelistMap, v: IProfessionPricelistJson) => {
-          if (typeof result[v.expansion] === "undefined") {
-            result[v.expansion] = [];
-          }
-
-          result[v.expansion]!.push(v);
-
-          return result;
-        }, {});
-
         return {
           ...state,
           professionPricelists: {
             data: {
               ...state.professionPricelists.data,
-              data: professionPricelists,
+              data: action.payload.data!.profession_pricelists,
               items: action.payload.data!.items!,
             },
             errors: {},

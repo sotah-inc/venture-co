@@ -1,7 +1,5 @@
 import { IPricelistJson, IProfessionPricelistJson } from "@sotah-inc/core";
 
-import { IPriceListsState } from "../types/price-lists";
-
 export const getPricelistIndex = (pricelists: IPricelistJson[], id: number): number => {
   for (let i = 0; i < pricelists.length; i++) {
     const pricelist = pricelists[i];
@@ -25,24 +23,4 @@ export const getProfessionPricelistIndex = (
   }
 
   return -1;
-};
-
-export const getProfessionPricelist = (
-  state: IPriceListsState,
-  pricelist: IPricelistJson,
-): IProfessionPricelistJson | null => {
-  for (const expansionName of Object.keys(state.professionPricelists.data.data)) {
-    const professionPricelists = state.professionPricelists.data.data[expansionName];
-    if (typeof professionPricelists === "undefined") {
-      return null;
-    }
-
-    for (const professionPricelist of professionPricelists) {
-      if (professionPricelist.pricelist.id === pricelist.id) {
-        return professionPricelist;
-      }
-    }
-  }
-
-  return null;
 };

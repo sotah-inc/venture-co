@@ -6,6 +6,7 @@ import {
   IItemsMap,
   IPricelistJson,
   IProfession,
+  IProfessionPricelistJson,
   IRegion,
   IStatusRealm,
 } from "@sotah-inc/core";
@@ -14,7 +15,6 @@ import {
 import { TreeContentContainer } from "../../../containers/entry-point/PriceLists/PricelistTree/TreeContent";
 import { IProfile } from "../../../types/global";
 import { AuthLevel, FetchLevel } from "../../../types/main";
-import { IExpansionProfessionPricelistMap } from "../../../types/price-lists";
 import { getItemFromPricelist } from "../../../util";
 import { ProfessionIcon } from "../../util";
 import { ItemIcon } from "../../util/ItemIcon";
@@ -28,7 +28,7 @@ export interface IStateProps {
   professions: IProfession[];
   selectedProfession: IProfession | null;
   getProfessionPricelistsLevel: FetchLevel;
-  professionPricelists: IExpansionProfessionPricelistMap;
+  professionPricelists: IProfessionPricelistJson[];
   expansions: IExpansion[];
   selectedExpansion: IExpansion | null;
   authLevel: AuthLevel;
@@ -269,18 +269,9 @@ export class PricelistTree extends React.Component<Props, IState> {
   }
 
   private getProfessionPricelistNodes(): ITreeNode[] {
-    const { professionPricelists, selectedExpansion } = this.props;
+    const { professionPricelists } = this.props;
 
-    if (selectedExpansion === null) {
-      return [];
-    }
-
-    const result = professionPricelists[selectedExpansion.name];
-    if (typeof result === "undefined" || result.length === 0) {
-      return [{ id: "none-none", label: <em>None found.</em> }];
-    }
-
-    const pricelistNodes = result.map(v => this.getPricelistNode(v.pricelist!));
+    const pricelistNodes = professionPricelists.map(v => this.getPricelistNode(v.pricelist!));
     return pricelistNodes.sort((a, b) => {
       if (a.label === b.label) {
         return 0;
@@ -367,12 +358,7 @@ export class PricelistTree extends React.Component<Props, IState> {
       return;
     }
 
-    const expansionProfessionPricelists = professionPricelists[selectedExpansion.name];
-    if (typeof expansionProfessionPricelists === "undefined") {
-      return;
-    }
-
-    const foundProfessionPricelist = expansionProfessionPricelists.reduce<IPricelistJson | null>(
+    const foundProfessionPricelist = professionPricelists.reduce<IPricelistJson | null>(
       (previousValue, currentValue) => {
         if (previousValue !== null) {
           return previousValue;
