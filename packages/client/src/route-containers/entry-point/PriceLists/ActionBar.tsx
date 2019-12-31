@@ -10,7 +10,7 @@ type Props = Readonly<WithRouterProps>;
 function RouteContainer({ router }: Props) {
   return (
     <ActionBarContainer
-      browseOnRealmChange={(region, realm, profession, expansion, list) => {
+      browseOnChange={(region, realm, profession, expansion, list) => {
         const urlParts: Array<[string, string]> = [
           ["data", "data"],
           ["[region_name]", region.name],

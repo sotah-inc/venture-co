@@ -21,6 +21,7 @@ import {
   UserLevel,
 } from "@sotah-inc/core";
 
+import { ExpansionToggleContainer } from "../../../containers/util/ExpansionToggle";
 import { RealmToggleContainer } from "../../../containers/util/RealmToggle";
 import { RegionToggleContainer } from "../../../containers/util/RegionToggle";
 import { IProfile } from "../../../types/global";
@@ -46,7 +47,7 @@ export interface IDispatchProps {
 }
 
 export interface IRouteProps {
-  browseOnRealmChange: (
+  browseOnChange: (
     region: IRegion,
     realm: IStatusRealm,
     profession: IProfession | null,
@@ -66,6 +67,9 @@ export class ActionBar extends React.Component<Props> {
         <NavbarGroup align={Alignment.LEFT}>{this.renderButtons()}</NavbarGroup>
         <NavbarGroup align={Alignment.RIGHT}>
           <ButtonGroup>
+            <ExpansionToggleContainer
+              onExpansionChange={expansion => this.onExpansionChange(expansion)}
+            />
             <RealmToggleContainer onRealmChange={(v: IStatusRealm) => this.onRealmChange(v)} />
             <RegionToggleContainer />
           </ButtonGroup>
@@ -74,9 +78,25 @@ export class ActionBar extends React.Component<Props> {
     );
   }
 
+  private onExpansionChange(expansion: IExpansion) {
+    const {
+      browseOnChange,
+      currentRegion,
+      currentRealm,
+      selectedProfession,
+      selectedList,
+    } = this.props;
+
+    if (currentRegion === null || currentRealm === null) {
+      return;
+    }
+
+    browseOnChange(currentRegion, currentRealm, selectedProfession, expansion, selectedList);
+  }
+
   private onRealmChange(realm: IStatusRealm) {
     const {
-      browseOnRealmChange,
+      browseOnChange,
       currentRegion,
       selectedProfession,
       selectedList,
@@ -87,7 +107,7 @@ export class ActionBar extends React.Component<Props> {
       return;
     }
 
-    browseOnRealmChange(currentRegion, realm, selectedProfession, selectedExpansion, selectedList);
+    browseOnChange(currentRegion, realm, selectedProfession, selectedExpansion, selectedList);
   }
 
   private renderListButtons() {
