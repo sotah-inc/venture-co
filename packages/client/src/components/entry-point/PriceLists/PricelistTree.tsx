@@ -50,7 +50,6 @@ export interface IRouteProps {
     pricelist: IPricelistJson,
   ) => void;
   browseToProfessions: (region: IRegion, realm: IStatusRealm) => void;
-  browseToProfession: (region: IRegion, realm: IStatusRealm, profession: IProfession) => void;
   browseToProfessionExpansion: (
     region: IRegion,
     realm: IStatusRealm,
@@ -392,14 +391,13 @@ export class PricelistTree extends React.Component<Props, IState> {
   private onProfessionNodeClick(id: string) {
     const {
       professions,
-      selectedProfession,
-      browseToProfessions,
       currentRegion,
       currentRealm,
-      browseToProfession,
+      browseToProfessionExpansion,
+      selectedExpansion,
     } = this.props;
 
-    if (currentRegion === null || currentRealm === null) {
+    if (currentRegion === null || currentRealm === null || selectedExpansion === null) {
       return;
     }
 
@@ -415,16 +413,11 @@ export class PricelistTree extends React.Component<Props, IState> {
       return null;
     }, null);
 
-    if (
-      profession === null ||
-      (selectedProfession !== null && profession.name === selectedProfession.name)
-    ) {
-      browseToProfessions(currentRegion, currentRealm);
-
+    if (profession === null) {
       return;
     }
 
-    browseToProfession(currentRegion, currentRealm, profession);
+    browseToProfessionExpansion(currentRegion, currentRealm, profession, selectedExpansion);
   }
 
   private onTopNodeClick(id: TopOpenKey) {
@@ -444,39 +437,6 @@ export class PricelistTree extends React.Component<Props, IState> {
     this.setState({ topOpenMap: { ...topOpenMap, [id]: !topOpenMap[id] } });
   }
 
-  private onExpansionClick(id: string) {
-    const {
-      expansions,
-      currentRegion,
-      currentRealm,
-      browseToProfessionExpansion,
-      selectedProfession,
-    } = this.props;
-
-    const expansion = expansions.reduce<IExpansion | null>((result, v) => {
-      if (result !== null) {
-        return result;
-      }
-
-      if (v.name === id) {
-        return v;
-      }
-
-      return null;
-    }, null);
-
-    if (
-      expansion === null ||
-      currentRegion === null ||
-      currentRealm === null ||
-      selectedProfession === null
-    ) {
-      return;
-    }
-
-    browseToProfessionExpansion(currentRegion, currentRealm, selectedProfession, expansion);
-  }
-
   private onNodeClick(node: ITreeNode) {
     const separatorIndex = node.id.toString().indexOf("-");
     if (separatorIndex === -1) {
@@ -488,7 +448,6 @@ export class PricelistTree extends React.Component<Props, IState> {
       node.id.toString().substr(separatorIndex + 1),
     ];
     const nodeClickMap: INodeClickMap = {
-      expansion: (v: string) => this.onExpansionClick(v),
       pricelist: (v: string) => this.onPricelistNodeClick(v),
       profession: (v: string) => this.onProfessionNodeClick(v),
       top: (v: string) => this.onTopNodeClick(v as TopOpenKey),

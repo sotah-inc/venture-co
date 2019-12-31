@@ -64,14 +64,6 @@ function RouteContainer({ router }: Props) {
           );
         })();
       }}
-      browseToProfession={(region, realm, profession) => {
-        (async () => {
-          await router.replace(
-            "/data/[region_name]/[realm_slug]/professions/[profession_name]",
-            `/data/${region.name}/${realm.slug}/professions/${profession.name}`,
-          );
-        })();
-      }}
       browseToProfessionExpansion={(region, realm, profession, expansion) => {
         const asDest = [
           "data",
