@@ -286,16 +286,18 @@ export class PriceLists extends React.Component<Props> {
       return;
     }
 
+    const expansionProfessionPricelists = professionPricelists[selectedExpansion.name];
+
     if (
-      !(selectedExpansion.name in professionPricelists) ||
-      professionPricelists[selectedExpansion.name].length === 0
+      typeof expansionProfessionPricelists === "undefined" ||
+      expansionProfessionPricelists.length === 0
     ) {
       return;
     }
 
     if (pricelist_slug.length === 0) {
       const preselectedList: IPricelistJson | null = (() => {
-        const sorted = professionPricelists[selectedExpansion.name].sort((a, b) => {
+        const sorted = expansionProfessionPricelists.sort((a, b) => {
           if (a.pricelist.name === b.pricelist.name) {
             return 0;
           }
@@ -321,7 +323,7 @@ export class PriceLists extends React.Component<Props> {
       return;
     }
 
-    const foundList = professionPricelists[selectedExpansion.name].reduce<IPricelistJson | null>(
+    const foundList = expansionProfessionPricelists.reduce<IPricelistJson | null>(
       (prevValue, curValue) => {
         if (prevValue !== null) {
           return prevValue;

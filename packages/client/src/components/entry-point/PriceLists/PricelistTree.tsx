@@ -257,7 +257,7 @@ export class PricelistTree extends React.Component<Props, IState> {
 
         break;
       case FetchLevel.success:
-        result.childNodes = this.getExpansionNodes();
+        result.childNodes = this.getProfessionPricelistNodes();
 
         break;
       default:
@@ -267,44 +267,25 @@ export class PricelistTree extends React.Component<Props, IState> {
     return result;
   }
 
-  private getExpansionNodes(): ITreeNode[] {
-    const { expansions, selectedExpansion } = this.props;
-
-    return expansions.map(v => {
-      const isSelected = selectedExpansion !== null && selectedExpansion.name === v.name;
-      const result: ITreeNode = {
-        childNodes: this.getProfessionPricelistNodes(v),
-        className: "expansion-node",
-        hasCaret: false,
-        id: `expansion-${v.name}`,
-        isExpanded: isSelected,
-        isSelected,
-        label: <span style={{ color: v.label_color }}>{v.label}</span>,
-      };
-
-      return result;
-    });
-  }
-
-  private getProfessionPricelistNodes(expansion: IExpansion): ITreeNode[] {
+  private getProfessionPricelistNodes(): ITreeNode[] {
     const { professionPricelists, selectedExpansion } = this.props;
 
-    const isSelected = selectedExpansion !== null && expansion.name === selectedExpansion.name;
-
-    if (expansion === null || !(expansion.name in professionPricelists)) {
-      if (!isSelected) {
-        return [];
-      }
-
-      return [{ id: "none-none", label: <em>None found.</em> }];
+    if (selectedExpansion === null) {
+      return [];
     }
 
-    const result = professionPricelists[expansion.name];
-    if (result.length === 0) {
-      if (!isSelected) {
-        return [];
-      }
+    const result = professionPricelists[selectedExpansion.name];
+    if (typeof result === "undefined") {
+      return [
+        {
+          icon: <Spinner size={20} value={0} intent={Intent.NONE} />,
+          id: "loading-0",
+          label: <span style={{ marginLeft: "5px" }}>Loading</span>,
+        },
+      ];
+    }
 
+    if (result.length === 0) {
       return [{ id: "none-none", label: <em>None found.</em> }];
     }
 
@@ -395,11 +376,11 @@ export class PricelistTree extends React.Component<Props, IState> {
       return;
     }
 
-    if (!(selectedExpansion.name in professionPricelists)) {
+    const expansionProfessionPricelists = professionPricelists[selectedExpansion.name];
+    if (typeof expansionProfessionPricelists === "undefined") {
       return;
     }
 
-    const expansionProfessionPricelists = professionPricelists[selectedExpansion.name];
     const foundProfessionPricelist = expansionProfessionPricelists.reduce<IPricelistJson | null>(
       (previousValue, currentValue) => {
         if (previousValue !== null) {

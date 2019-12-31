@@ -33,6 +33,10 @@ export const getProfessionPricelist = (
 ): IProfessionPricelistJson | null => {
   for (const expansionName of Object.keys(state.professionPricelists.data.data)) {
     const professionPricelists = state.professionPricelists.data.data[expansionName];
+    if (typeof professionPricelists === "undefined") {
+      return null;
+    }
+
     for (const professionPricelist of professionPricelists) {
       if (professionPricelist.pricelist.id === pricelist.id) {
         return professionPricelist;

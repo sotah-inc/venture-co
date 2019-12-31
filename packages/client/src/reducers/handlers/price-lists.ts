@@ -314,6 +314,10 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
         const professionPricelists: IExpansionProfessionPricelistMap = (() => {
           const expansionName = state.selectedExpansion!.name;
           const prevResult = state.professionPricelists.data.data[expansionName];
+          if (typeof prevResult === "undefined") {
+            return state.professionPricelists.data.data;
+          }
+
           replacedIndex = getProfessionPricelistIndex(prevResult, selectedList.id);
 
           const professionPricelist: IProfessionPricelistJson = {
@@ -432,11 +436,12 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
         const professionPricelists: IExpansionProfessionPricelistMap = (() => {
           const expansionName = state.selectedExpansion!.name;
           const result: IProfessionPricelistJson[] = (() => {
-            if (!(expansionName in state.professionPricelists.data)) {
+            const foundProfessionPricelists = state.professionPricelists.data.data[expansionName];
+            if (typeof foundProfessionPricelists === "undefined") {
               return [professionPricelist];
             }
 
-            return [...state.professionPricelists.data.data[expansionName], professionPricelist];
+            return [...foundProfessionPricelists, professionPricelist];
           })();
 
           return {
@@ -483,6 +488,19 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
 
         const expansionName = state.selectedExpansion!.name;
         const prevResult = state.professionPricelists.data.data[expansionName];
+
+        if (typeof prevResult === "undefined") {
+          return {
+            ...state,
+            deletePricelist: {
+              errors: {
+                error: `Expansion ${expansionName} not found in profession-pricelists data`,
+              },
+              level: FetchLevel.failure,
+            },
+          };
+        }
+
         const deletedIndex = getProfessionPricelistIndex(prevResult, action.payload.id);
         const nextResult: IProfessionPricelistJson[] = (() => {
           if (deletedIndex === 0) {
@@ -542,10 +560,11 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
         const professionPricelists = action.payload.data!.profession_pricelists.reduce<
           IExpansionProfessionPricelistMap
         >((result: IExpansionProfessionPricelistMap, v: IProfessionPricelistJson) => {
-          if (!(v.expansion in result)) {
+          if (typeof result[v.expansion] === "undefined") {
             result[v.expansion] = [];
           }
-          result[v.expansion].push(v);
+
+          result[v.expansion]!.push(v);
 
           return result;
         }, {});

@@ -46,7 +46,7 @@ export interface IPriceListsState {
 }
 
 export interface IExpansionProfessionPricelistMap {
-  [key: string]: IProfessionPricelistJson[];
+  [key: string]: IProfessionPricelistJson[] | undefined;
 }
 
 export enum ListDialogStep {
