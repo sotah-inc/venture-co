@@ -104,10 +104,19 @@ export class PriceLists extends React.Component<Props> {
       loadId,
       loadRealmEntrypoint,
       realmEntrypointData,
+      expansions,
+      professions,
+      pricelistsEntrypointData,
+      loadPricelistsEntrypoint,
     } = this.props;
 
     if (prevProps.loadId !== loadId) {
       loadRealmEntrypoint(realmEntrypointData);
+      loadPricelistsEntrypoint({
+        ...pricelistsEntrypointData,
+        expansions,
+        professions,
+      });
 
       return;
     }
