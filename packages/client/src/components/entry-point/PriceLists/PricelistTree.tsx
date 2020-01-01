@@ -191,7 +191,7 @@ export class PricelistTree extends React.Component<Props, IState> {
       icon: "list",
       id: `top-${TopOpenKey.professions}`,
       isExpanded: topOpenMap[TopOpenKey.professions],
-      label: <span style={{ color: selectedExpansion.label_color }}>Professions</span>,
+      label: "Professions",
     };
   }
 
