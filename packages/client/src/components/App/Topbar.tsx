@@ -12,17 +12,20 @@ import {
   NavbarHeading,
   Tooltip,
 } from "@blueprintjs/core";
-import { IRegion, IStatusRealm, IUserJson } from "@sotah-inc/core";
+import { IExpansion, IRegion, IStatusRealm, IUserJson } from "@sotah-inc/core";
 
 import { LoginContainer } from "../../containers/App/Login";
 import { RegisterContainer } from "../../containers/App/Register";
 import { NewsButtonRouteContainer } from "../../route-containers/App/Topbar/NewsButton";
 import { LinkButtonRouteContainer } from "../../route-containers/util/LinkButton";
+import { getPrimaryExpansion } from "../../util";
+import { toExpansion } from "../../util/routes";
 
 export interface IStateProps {
   user: IUserJson | null;
   currentRealm: IStatusRealm | null;
   currentRegion: IRegion | null;
+  expansions: IExpansion[];
 }
 
 export interface IRouteProps {
@@ -190,8 +193,45 @@ export class Topbar extends React.Component<Props> {
       <>
         {this.renderRegionRealmButton("/auctions", "dollar", "Auctions")}
         <NavbarDivider />
-        {this.renderRegionRealmButton("/professions", "polygon-filter", "Professions")}
+        {this.renderProfessionsButton()}
       </>
+    );
+  }
+
+  private renderProfessionsButton() {
+    const { expansions, currentRegion, currentRealm } = this.props;
+
+    if (currentRegion === null || currentRealm === null) {
+      return null;
+    }
+
+    if (expansions.length === 0) {
+      return (
+        <LinkButtonRouteContainer
+          destination={""}
+          buttonProps={{
+            disabled: true,
+            icon: "polygon-filter",
+            minimal: true,
+            text: "Professions",
+          }}
+        />
+      );
+    }
+
+    const expansion = getPrimaryExpansion(expansions);
+    const { asDest, url } = toExpansion(currentRegion, currentRealm, expansion);
+
+    return (
+      <LinkButtonRouteContainer
+        destination={`/${url}`}
+        asDestination={`/${asDest}`}
+        buttonProps={{
+          icon: "polygon-filter",
+          minimal: true,
+          text: "Professions",
+        }}
+      />
     );
   }
 
