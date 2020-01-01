@@ -6,6 +6,7 @@ import { withRouter } from "next/router";
 import { IOwnProps } from "../../components/entry-point/PriceLists";
 import { PriceListsContainer } from "../../containers/entry-point/PriceLists";
 import { extractString } from "../../util";
+import { toProfessionPricelist } from "../../util/routes";
 
 type Props = Readonly<WithRouterProps & IOwnProps>;
 
@@ -20,21 +21,17 @@ function RouteContainer({ router, loadId, realmEntrypointData, pricelistsEntrypo
         region_name: extractString("region_name", router.query),
       }}
       redirectToPricelist={(region, realm, profession, expansion, pricelist) => {
-        const urlParts = [
-          "data",
-          region.name,
-          realm.slug,
-          "professions",
-          profession.name,
-          expansion.name,
-          pricelist.slug,
-        ];
-        (async () =>
-          router.replace(
-            // tslint:disable-next-line:max-line-length
-            "/data/[region_name]/[realm_slug]/professions/[profession_name]/[expansion_name]/[pricelist_slug]",
-            `/${urlParts.join("/")}`,
-          ))();
+        const { asDest, url } = toProfessionPricelist(
+          region,
+          realm,
+          expansion,
+          profession,
+          pricelist,
+        );
+
+        (async () => {
+          await router.replace(`/${url}`, `/${asDest}`);
+        })();
       }}
       loadId={loadId}
       realmEntrypointData={realmEntrypointData}
