@@ -4,6 +4,12 @@ import { WithRouterProps } from "next/dist/client/with-router";
 import { withRouter } from "next/router";
 
 import { PricelistTreeContainer } from "../../../containers/entry-point/PriceLists/PricelistTree";
+import {
+  toExpansion,
+  toProfession,
+  toProfessionPricelist,
+  toUserPricelist,
+} from "../../../util/routes";
 
 type Props = Readonly<WithRouterProps>;
 
@@ -11,76 +17,34 @@ function RouteContainer({ router }: Props) {
   return (
     <PricelistTreeContainer
       browseToUserPricelist={(region, realm, pricelist) => {
-        const userPricelistAsDest = [
-          "data",
-          region.name,
-          realm.slug,
-          "user",
-          "professions",
-          pricelist.slug,
-        ].join("/");
-        const userPricelistUrl = [
-          "data",
-          "[region_name]",
-          "[realm_slug]",
-          "user",
-          "professions",
-          "[pricelist_slug]",
-        ].join("/");
+        const { url, asDest } = toUserPricelist(region, realm, pricelist);
 
         (async () => {
-          await router.replace(`/${userPricelistUrl}`, `/${userPricelistAsDest}`);
+          await router.replace(`/${url}`, `/${asDest}`);
         })();
       }}
       browseToExpansion={(region, realm, expansion) => {
+        const { url, asDest } = toExpansion(region, realm, expansion);
+
         (async () => {
-          await router.replace(
-            "/data/[region_name]/[realm_slug]/[expansion_name]/professions",
-            `/data/${region.name}/${realm.slug}/${expansion.name}/professions`,
-          );
+          await router.replace(`/${url}`, `/${asDest}`);
         })();
       }}
       browseToProfession={(region, realm, expansion, profession) => {
-        const asDest = [
-          "data",
-          region.name,
-          realm.slug,
-          expansion.name,
-          "professions",
-          profession.name,
-        ].join("/");
-        const url = [
-          "data",
-          "[region_name]",
-          "[realm_slug]",
-          "[expansion_name]",
-          "professions",
-          "[profession_name]",
-        ].join("/");
+        const { url, asDest } = toProfession(region, realm, expansion, profession);
 
         (async () => {
           await router.replace(`/${url}`, `/${asDest}`);
         })();
       }}
       browseToProfessionPricelist={(region, realm, expansion, profession, pricelist) => {
-        const asDest = [
-          "data",
-          region.name,
-          realm.slug,
-          expansion.name,
-          "professions",
-          profession.name,
-          pricelist.slug,
-        ].join("/");
-        const url = [
-          "data",
-          "[region_name]",
-          "[realm_slug]",
-          "[expansion_name]",
-          "professions",
-          "[profession_name]",
-          "[pricelist_slug]",
-        ].join("/");
+        const { url, asDest } = toProfessionPricelist(
+          region,
+          realm,
+          expansion,
+          profession,
+          pricelist,
+        );
 
         (async () => {
           await router.replace(`/${url}`, `/${asDest}`);
