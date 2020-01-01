@@ -42,8 +42,8 @@ export interface IRouteProps {
   browseToProfessionPricelist: (
     region: IRegion,
     realm: IStatusRealm,
-    profession: IProfession,
     expansion: IExpansion,
+    profession: IProfession,
     pricelist: IPricelistJson,
   ) => void;
 }
@@ -248,8 +248,8 @@ export class AuctionTable extends React.Component<Props> {
                 browseToProfessionPricelist(
                   currentRegion,
                   currentRealm,
-                  profession,
                   expansion,
+                  profession,
                   professionPricelist.pricelist,
                 )
               }
@@ -264,8 +264,8 @@ export class AuctionTable extends React.Component<Props> {
                 browseToProfessionPricelist(
                   currentRegion,
                   currentRealm,
-                  profession,
                   expansion,
+                  profession,
                   professionPricelist.pricelist,
                 )
               }
@@ -280,8 +280,8 @@ export class AuctionTable extends React.Component<Props> {
                 browseToProfessionPricelist(
                   currentRegion,
                   currentRealm,
-                  profession,
                   expansion,
+                  profession,
                   professionPricelist.pricelist,
                 )
               }
