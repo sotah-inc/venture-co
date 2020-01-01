@@ -25,7 +25,6 @@ import {
   RealmPopulation,
 } from "@sotah-inc/core";
 
-import { IProfessionNode } from "../../../../../actions/price-lists";
 import { IGetUnmetDemandOptions } from "../../../../../api/price-lists";
 import { ItemPopoverContainer } from "../../../../../containers/util/ItemPopover";
 import { FetchLevel } from "../../../../../types/main";
@@ -49,7 +48,6 @@ export interface IStateProps {
 
 export interface IDispatchProps {
   refreshUnmetDemand: (opts: IGetUnmetDemandOptions) => void;
-  navigateProfessionNode: (node: IProfessionNode) => void;
 }
 
 export interface IOwnProps {
@@ -144,7 +142,7 @@ export class RealmSummaryPanel extends React.Component<Props> {
   }
 
   public onPricelistClick(pricelist: IPricelistJson, professionName: ProfessionName) {
-    const { expansions, professions, navigateProfessionNode } = this.props;
+    const { expansions, professions } = this.props;
 
     const profession: IProfession = professions.reduce((currentValue, v) => {
       if (v.name === professionName) {
@@ -154,7 +152,8 @@ export class RealmSummaryPanel extends React.Component<Props> {
       return currentValue;
     }, professions[0]);
 
-    navigateProfessionNode({ expansion: getPrimaryExpansion(expansions), pricelist, profession });
+    // tslint:disable-next-line:no-console
+    console.log("RealmSummaryPanel.onPricelistClick()", profession, pricelist, expansions);
   }
 
   private renderUnmetDemand() {

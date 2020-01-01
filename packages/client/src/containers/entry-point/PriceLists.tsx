@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 
 import { ChangeIsLoginDialogOpen, LoadRealmEntrypoint } from "../../actions/main";
-import { LoadPricelistsEntrypoint, ResetProfessionsSelections } from "../../actions/price-lists";
+import { LoadPricelistsEntrypoint } from "../../actions/price-lists";
 import {
   IDispatchProps,
   IOwnProps,
@@ -57,7 +57,6 @@ const mapDispatchToProps: IDispatchProps = {
   changeIsLoginDialogOpen: ChangeIsLoginDialogOpen,
   loadPricelistsEntrypoint: LoadPricelistsEntrypoint,
   loadRealmEntrypoint: LoadRealmEntrypoint,
-  resetProfessionsSelections: ResetProfessionsSelections,
 };
 
 export const PriceListsContainer = connect<

@@ -27,8 +27,8 @@ import {
   IPricelistHistoryState,
   IPriceListsState,
 } from "../../types/price-lists";
+import { getPrimaryExpansion } from "../../util";
 import { getPricelistIndex, getProfessionPricelistIndex } from "../helper";
-
 import { IKindHandlers, Runner } from "./index";
 
 export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
@@ -64,7 +64,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
             return null;
           }
 
-          return action.payload.expansions.reduce<IExpansion | null>(
+          const foundExpansion = action.payload.expansions.reduce<IExpansion | null>(
             (previousValue, currentValue) => {
               if (previousValue !== null) {
                 return previousValue;
@@ -78,6 +78,11 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
             },
             null,
           );
+          if (foundExpansion !== null) {
+            return foundExpansion;
+          }
+
+          return getPrimaryExpansion(action.payload.expansions);
         })();
 
         const selectedList: IPricelistJson | null = (() => {

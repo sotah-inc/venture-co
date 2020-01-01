@@ -177,9 +177,6 @@ export const FetchGetProfessionPricelists = (
   };
 };
 
-export const RESET_PROFESSIONS_SELECTIONS = "RESET_PROFESSIONS_SELECTIONS";
-export const ResetProfessionsSelections = () => createAction(RESET_PROFESSIONS_SELECTIONS);
-
 export const REQUEST_GET_UNMETDEMAND = "REQUEST_GET_UNMETDEMAND";
 export const RequestGetUnmetDemand = () => createAction(REQUEST_GET_UNMETDEMAND);
 export const RECEIVE_GET_UNMETDEMAND = "RECEIVE_GET_UNMETDEMAND";
@@ -192,16 +189,6 @@ export const FetchGetUnmetDemand = (opts: IGetUnmetDemandOptions) => {
     dispatch(ReceiveGetUnmetDemand(await getUnmetDemand(opts)));
   };
 };
-
-export interface IProfessionNode {
-  pricelist: IPricelistJson;
-  expansion: IExpansion;
-  profession: IProfession;
-}
-
-export const NAVIGATE_PROFESSIONNODE = "NAVIGATE_PROFESSIONNODE";
-export const NavigateProfessionNode = (payload: IProfessionNode) =>
-  createAction(NAVIGATE_PROFESSIONNODE, payload);
 
 export const REQUEST_GET_PRICELIST = "REQUEST_GET_PRICELIST";
 export const RequestGetPricelist = () => createAction(REQUEST_GET_PRICELIST);
@@ -257,7 +244,6 @@ export const PriceListsActions = {
   ChangeIsDeleteListDialogOpen,
   ChangeIsEditListDialogOpen,
   LoadPricelistsEntrypoint,
-  NavigateProfessionNode,
   ReceiveCreatePricelist,
   ReceiveCreateProfessionPricelist,
   ReceiveDeletePricelist,
@@ -278,7 +264,6 @@ export const PriceListsActions = {
   RequestGetProfessionPricelists,
   RequestGetUnmetDemand,
   RequestUpdatePricelist,
-  ResetProfessionsSelections,
 };
 
 export type PriceListsActions = ActionsUnion<typeof PriceListsActions>;

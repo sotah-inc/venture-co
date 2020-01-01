@@ -50,7 +50,6 @@ export interface IStateProps {
 
 export interface IDispatchProps {
   changeIsLoginDialogOpen: (isLoginDialogOpen: boolean) => void;
-  resetProfessionsSelections: () => void;
   loadRealmEntrypoint: (payload: ILoadRealmEntrypoint) => void;
   loadPricelistsEntrypoint: (payload: ILoadPricelistsEntrypoint) => void;
 }
@@ -189,23 +188,11 @@ export class PriceLists extends React.Component<Props> {
     const {
       routeParams: { profession_name, pricelist_slug },
       selectedProfession,
-      selectedExpansion,
       selectedList,
-      resetProfessionsSelections,
       pricelists,
     } = this.props;
 
     if (profession_name.length === 0) {
-      if (pricelist_slug.length === 0) {
-        if (selectedProfession !== null || selectedExpansion !== null || selectedList !== null) {
-          resetProfessionsSelections();
-
-          return;
-        }
-
-        return;
-      }
-
       const foundList = pricelists.reduce<IPricelistJson | null>((prevValue, curValue) => {
         if (prevValue !== null) {
           return prevValue;
