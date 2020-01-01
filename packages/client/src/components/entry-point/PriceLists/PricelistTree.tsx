@@ -42,19 +42,19 @@ export interface IDispatchProps {
 
 export interface IRouteProps {
   browseToUserPricelist: (region: IRegion, realm: IStatusRealm, pricelist: IPricelistJson) => void;
+  browseToExpansion: (region: IRegion, realm: IStatusRealm, expansion: IExpansion) => void;
+  browseToProfession: (
+    region: IRegion,
+    realm: IStatusRealm,
+    expansion: IExpansion,
+    profession: IProfession,
+  ) => void;
   browseToProfessionPricelist: (
     region: IRegion,
     realm: IStatusRealm,
-    profession: IProfession,
     expansion: IExpansion,
+    profession: IProfession,
     pricelist: IPricelistJson,
-  ) => void;
-  browseToProfessions: (region: IRegion, realm: IStatusRealm) => void;
-  browseToProfessionExpansion: (
-    region: IRegion,
-    realm: IStatusRealm,
-    profession: IProfession,
-    expansion: IExpansion,
   ) => void;
 }
 
@@ -382,8 +382,8 @@ export class PricelistTree extends React.Component<Props, IState> {
     browseToProfessionPricelist(
       currentRegion,
       currentRealm,
-      selectedProfession,
       selectedExpansion,
+      selectedProfession,
       foundProfessionPricelist,
     );
   }
@@ -393,7 +393,7 @@ export class PricelistTree extends React.Component<Props, IState> {
       professions,
       currentRegion,
       currentRealm,
-      browseToProfessionExpansion,
+      browseToProfession,
       selectedExpansion,
     } = this.props;
 
@@ -417,19 +417,19 @@ export class PricelistTree extends React.Component<Props, IState> {
       return;
     }
 
-    browseToProfessionExpansion(currentRegion, currentRealm, profession, selectedExpansion);
+    browseToProfession(currentRegion, currentRealm, selectedExpansion, profession);
   }
 
   private onTopNodeClick(id: TopOpenKey) {
-    const { browseToProfessions, currentRegion, currentRealm } = this.props;
+    const { browseToExpansion, currentRegion, currentRealm, selectedExpansion } = this.props;
     const { topOpenMap } = this.state;
 
-    if (currentRegion === null || currentRealm === null) {
+    if (currentRegion === null || currentRealm === null || selectedExpansion === null) {
       return;
     }
 
     if (id === TopOpenKey.summary) {
-      browseToProfessions(currentRegion, currentRealm);
+      browseToExpansion(currentRegion, currentRealm, selectedExpansion);
 
       return;
     }
