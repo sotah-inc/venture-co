@@ -162,7 +162,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
               items: action.payload.professionPricelists.data.items,
             },
             errors: {},
-            level: FetchLevel.initial,
+            level: FetchLevel.success,
           };
         })();
 
