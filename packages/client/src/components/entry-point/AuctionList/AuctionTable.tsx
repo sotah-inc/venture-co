@@ -39,6 +39,13 @@ export interface IDispatchProps {
 }
 
 export interface IRouteProps {
+  browseToExpansion: (region: IRegion, realm: IStatusRealm, expansion: IExpansion) => void;
+  browseToProfession: (
+    region: IRegion,
+    realm: IStatusRealm,
+    expansion: IExpansion,
+    profession: IProfession,
+  ) => void;
   browseToProfessionPricelist: (
     region: IRegion,
     realm: IStatusRealm,
@@ -198,6 +205,8 @@ export class AuctionTable extends React.Component<Props> {
       currentRegion,
       currentRealm,
       browseToProfessionPricelist,
+      browseToExpansion,
+      browseToProfession,
     } = this.props;
 
     if (currentRegion === null || currentRealm === null) {
@@ -244,33 +253,17 @@ export class AuctionTable extends React.Component<Props> {
               rightIcon="chevron-right"
               minimal={true}
               small={true}
-              onClick={() =>
-                browseToProfessionPricelist(
-                  currentRegion,
-                  currentRealm,
-                  expansion,
-                  profession,
-                  professionPricelist.pricelist,
-                )
-              }
+              onClick={() => browseToExpansion(currentRegion, currentRealm, expansion)}
             >
-              <ProfessionIcon profession={profession} /> {profession.label}
+              <span style={{ color: expansion.label_color }}>{expansion.label}</span>
             </Button>
             <Button
               rightIcon="chevron-right"
               minimal={true}
               small={true}
-              onClick={() =>
-                browseToProfessionPricelist(
-                  currentRegion,
-                  currentRealm,
-                  expansion,
-                  profession,
-                  professionPricelist.pricelist,
-                )
-              }
+              onClick={() => browseToProfession(currentRegion, currentRealm, expansion, profession)}
             >
-              <span style={{ color: expansion.label_color }}>{expansion.label}</span>
+              <ProfessionIcon profession={profession} /> {profession.label}
             </Button>
             <Button
               icon={this.renderPricelistIcon(professionPricelist.pricelist)}
