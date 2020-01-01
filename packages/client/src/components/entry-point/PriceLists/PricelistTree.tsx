@@ -270,6 +270,10 @@ export class PricelistTree extends React.Component<Props, IState> {
   private getProfessionPricelistNodes(): ITreeNode[] {
     const { professionPricelists } = this.props;
 
+    if (professionPricelists.length === 0) {
+      return [{ id: "none-none", label: <em>None found.</em> }];
+    }
+
     const pricelistNodes = professionPricelists.map(v => this.getPricelistNode(v.pricelist!));
     return pricelistNodes.sort((a, b) => {
       if (a.label === b.label) {
