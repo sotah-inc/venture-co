@@ -231,6 +231,7 @@ export class Topbar extends React.Component<Props> {
           minimal: true,
           text: "Professions",
         }}
+        prefix={true}
       />
     );
   }
