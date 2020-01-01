@@ -4,39 +4,38 @@ import { WithRouterProps } from "next/dist/client/with-router";
 import { withRouter } from "next/router";
 
 import { ActionBarContainer } from "../../../containers/entry-point/PriceLists/ActionBar";
+import { toExpansion, toProfession, toProfessionPricelist } from "../../../util/routes";
 
 type Props = Readonly<WithRouterProps>;
 
 function RouteContainer({ router }: Props) {
   return (
     <ActionBarContainer
-      browseOnChange={(region, realm, profession, expansion, list) => {
-        const urlParts: Array<[string, string]> = [
-          ["data", "data"],
-          ["[region_name]", region.name],
-          ["[realm_slug]", realm.slug],
-          ["professions", "professions"],
-        ];
-        if (profession === null) {
-          if (list !== null && list.slug !== null) {
-            urlParts.push(["user", list.slug]);
-          }
-        } else {
-          urlParts.push(["[profession_name]", profession.name]);
-
-          if (expansion !== null) {
-            urlParts.push(["[expansion_name]", expansion.name]);
-          }
-          if (list !== null && list.slug !== null) {
-            urlParts.push(["[pricelist_slug]", list.slug]);
-          }
-        }
-
-        const dest = urlParts.map(v => v[0]).join("/");
-        const asDest = urlParts.map(v => v[1]).join("/");
+      browseToExpansion={(region, realm, expansion) => {
+        const { url, asDest } = toExpansion(region, realm, expansion);
 
         (async () => {
-          await router.replace(`/${dest}`, `/${asDest}`);
+          await router.replace(`/${url}`, `/${asDest}`);
+        })();
+      }}
+      browseToProfession={(region, realm, expansion, profession) => {
+        const { url, asDest } = toProfession(region, realm, expansion, profession);
+
+        (async () => {
+          await router.replace(`/${url}`, `/${asDest}`);
+        })();
+      }}
+      browseToProfessionPricelist={(region, realm, expansion, profession, pricelist) => {
+        const { url, asDest } = toProfessionPricelist(
+          region,
+          realm,
+          expansion,
+          profession,
+          pricelist,
+        );
+
+        (async () => {
+          await router.replace(`/${url}`, `/${asDest}`);
         })();
       }}
     />

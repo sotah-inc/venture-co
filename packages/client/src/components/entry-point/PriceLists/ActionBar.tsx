@@ -47,12 +47,19 @@ export interface IDispatchProps {
 }
 
 export interface IRouteProps {
-  browseOnChange: (
+  browseToExpansion: (region: IRegion, realm: IStatusRealm, expansion: IExpansion) => void;
+  browseToProfession: (
     region: IRegion,
     realm: IStatusRealm,
-    profession: IProfession | null,
-    expansion: IExpansion | null,
-    list: IPricelistJson | null,
+    expansion: IExpansion,
+    profession: IProfession,
+  ) => void;
+  browseToProfessionPricelist: (
+    region: IRegion,
+    realm: IStatusRealm,
+    expansion: IExpansion,
+    profession: IProfession,
+    list: IPricelistJson,
   ) => void;
 }
 
@@ -80,34 +87,62 @@ export class ActionBar extends React.Component<Props> {
 
   private onExpansionChange(expansion: IExpansion) {
     const {
-      browseOnChange,
+      browseToExpansion,
+      browseToProfession,
       currentRegion,
       currentRealm,
       selectedProfession,
-      selectedList,
     } = this.props;
 
     if (currentRegion === null || currentRealm === null) {
       return;
     }
 
-    browseOnChange(currentRegion, currentRealm, selectedProfession, expansion, selectedList);
+    if (selectedProfession === null) {
+      browseToExpansion(currentRegion, currentRealm, expansion);
+
+      return;
+    }
+
+    browseToProfession(currentRegion, currentRealm, expansion, selectedProfession);
   }
 
   private onRealmChange(realm: IStatusRealm) {
     const {
-      browseOnChange,
+      browseToProfessionPricelist,
+      browseToProfession,
+      browseToExpansion,
       currentRegion,
       selectedProfession,
       selectedList,
       selectedExpansion,
     } = this.props;
 
-    if (currentRegion === null) {
+    if (currentRegion === null || selectedExpansion === null) {
       return;
     }
 
-    browseOnChange(currentRegion, realm, selectedProfession, selectedExpansion, selectedList);
+    if (selectedProfession !== null && selectedList !== null) {
+      browseToProfessionPricelist(
+        currentRegion,
+        realm,
+        selectedExpansion,
+        selectedProfession,
+        selectedList,
+      );
+
+      return;
+    }
+
+    if (selectedProfession !== null && selectedList === null) {
+      browseToProfession(currentRegion, realm, selectedExpansion, selectedProfession);
+
+      return;
+    }
+
+    if (selectedProfession === null && selectedList === null) {
+      browseToExpansion(currentRegion, realm, selectedExpansion);
+    }
   }
 
   private renderListButtons() {
