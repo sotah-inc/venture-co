@@ -17,7 +17,6 @@ import {
   ReceiveGetPricelistHistory,
   ReceiveGetPricelists,
   ReceiveGetProfessionPricelists,
-  ReceiveGetUnmetDemand,
   ReceiveUpdatePricelist,
 } from "../../actions/price-lists";
 import { IFetchData, IItemsData } from "../../types/global";
@@ -26,6 +25,7 @@ import {
   defaultPriceListsState,
   IPricelistHistoryState,
   IPriceListsState,
+  IUnmetDemandState,
 } from "../../types/price-lists";
 import { getPrimaryExpansion } from "../../util";
 import { getPricelistIndex, getProfessionPricelistIndex } from "../helper";
@@ -166,6 +166,31 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           };
         })();
 
+        const unmetDemand: IFetchData<IItemsData<IUnmetDemandState>> = (() => {
+          if (
+            typeof action.payload === "undefined" ||
+            typeof action.payload.unmetDemand === "undefined"
+          ) {
+            return defaultPriceListsState.unmetDemand;
+          }
+
+          if (action.payload.unmetDemand === null) {
+            return { ...defaultPriceListsState.unmetDemand, level: FetchLevel.failure };
+          }
+
+          return {
+            data: {
+              data: {
+                professionPricelists: action.payload.unmetDemand.professionPricelists,
+                unmetItemIds: action.payload.unmetDemand.unmetItemIds,
+              },
+              items: action.payload.unmetDemand.items,
+            },
+            errors: {},
+            level: FetchLevel.success,
+          };
+        })();
+
         return {
           ...state,
           priceTable,
@@ -174,6 +199,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           selectedExpansion,
           selectedList,
           selectedProfession,
+          unmetDemand,
         };
       },
     },
@@ -568,45 +594,6 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
         return {
           ...state,
           professionPricelists: { ...state.professionPricelists, level: FetchLevel.fetching },
-        };
-      },
-    },
-  },
-  unmetdemand: {
-    get: {
-      receive: (state: IPriceListsState, action: ReturnType<typeof ReceiveGetUnmetDemand>) => {
-        if (action.payload === null || action.payload.data === null) {
-          return {
-            ...state,
-            unmetDemand: {
-              ...state.unmetDemand,
-              level: FetchLevel.failure,
-            },
-          };
-        }
-
-        return {
-          ...state,
-          unmetDemand: {
-            data: {
-              data: {
-                professionPricelists: action.payload.data.professionPricelists,
-                unmetItemIds: action.payload.data.unmetItemIds,
-              },
-              items: action.payload.data.items,
-            },
-            errors: {},
-            level: FetchLevel.success,
-          },
-        };
-      },
-      request: (state: IPriceListsState) => {
-        return {
-          ...state,
-          unmetDemand: {
-            ...state.unmetDemand,
-            level: FetchLevel.fetching,
-          },
         };
       },
     },

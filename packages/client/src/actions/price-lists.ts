@@ -6,6 +6,7 @@ import {
   IGetPricelistHistoriesResponse,
   IGetPricelistResponse,
   IGetPricelistsResponse,
+  IGetUnmetDemandResponse,
   IPricelistJson,
   IProfession,
   ProfessionName,
@@ -25,13 +26,10 @@ import {
   deleteProfessionPricelist,
   getPricelists,
   getProfessionPricelists,
-  getUnmetDemand,
   ICreatePricelistResult,
   ICreateProfessionPricelistResult,
   IDeleteProfessionPricelistResult,
   IGetProfessionPricelistsResult,
-  IGetUnmetDemandOptions,
-  IGetUnmetDemandResult,
   updatePricelist,
 } from "../api/price-lists";
 import { FetchLevel } from "../types/main";
@@ -177,19 +175,6 @@ export const FetchGetProfessionPricelists = (
   };
 };
 
-export const REQUEST_GET_UNMETDEMAND = "REQUEST_GET_UNMETDEMAND";
-export const RequestGetUnmetDemand = () => createAction(REQUEST_GET_UNMETDEMAND);
-export const RECEIVE_GET_UNMETDEMAND = "RECEIVE_GET_UNMETDEMAND";
-export const ReceiveGetUnmetDemand = (payload: IGetUnmetDemandResult | null) =>
-  createAction(RECEIVE_GET_UNMETDEMAND, payload);
-type FetchUnmetDemandType = ReturnType<typeof RequestGetUnmetDemand | typeof ReceiveGetUnmetDemand>;
-export const FetchGetUnmetDemand = (opts: IGetUnmetDemandOptions) => {
-  return async (dispatch: Dispatch<FetchUnmetDemandType>) => {
-    dispatch(RequestGetUnmetDemand());
-    dispatch(ReceiveGetUnmetDemand(await getUnmetDemand(opts)));
-  };
-};
-
 export const REQUEST_GET_PRICELIST = "REQUEST_GET_PRICELIST";
 export const RequestGetPricelist = () => createAction(REQUEST_GET_PRICELIST);
 export const RECEIVE_GET_PRICELIST = "RECEIVE_GET_PRICELIST";
@@ -226,6 +211,7 @@ export interface ILoadPricelistsEntrypointFront {
   currentPrices?: IGetPricelistResponse | null;
   selectedList?: IPricelistJson | null;
   professionPricelists?: IGetProfessionPricelistsResult;
+  unmetDemand?: IGetUnmetDemandResponse | null;
 }
 
 export interface ILoadPricelistsEntrypoint extends ILoadPricelistsEntrypointFront {
@@ -252,7 +238,6 @@ export const PriceListsActions = {
   ReceiveGetPricelistHistory,
   ReceiveGetPricelists,
   ReceiveGetProfessionPricelists,
-  ReceiveGetUnmetDemand,
   ReceiveUpdatePricelist,
   RequestCreatePricelist,
   RequestCreateProfessionPricelist,
@@ -262,7 +247,6 @@ export const PriceListsActions = {
   RequestGetPricelistHistory,
   RequestGetPricelists,
   RequestGetProfessionPricelists,
-  RequestGetUnmetDemand,
   RequestUpdatePricelist,
 };
 
