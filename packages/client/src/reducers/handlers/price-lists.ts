@@ -174,17 +174,17 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
             return defaultPriceListsState.unmetDemand;
           }
 
-          if (action.payload.unmetDemand === null) {
+          if (action.payload.unmetDemand.data === null) {
             return { ...defaultPriceListsState.unmetDemand, level: FetchLevel.failure };
           }
 
           return {
             data: {
               data: {
-                professionPricelists: action.payload.unmetDemand.professionPricelists,
-                unmetItemIds: action.payload.unmetDemand.unmetItemIds,
+                professionPricelists: action.payload.unmetDemand.data.professionPricelists,
+                unmetItemIds: action.payload.unmetDemand.data.unmetItemIds,
               },
-              items: action.payload.unmetDemand.items,
+              items: action.payload.unmetDemand.data.items,
             },
             errors: {},
             level: FetchLevel.success,

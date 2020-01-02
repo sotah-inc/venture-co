@@ -6,7 +6,6 @@ import {
   IGetPricelistHistoriesResponse,
   IGetPricelistResponse,
   IGetPricelistsResponse,
-  IGetUnmetDemandResponse,
   IPricelistJson,
   IProfession,
   ProfessionName,
@@ -30,6 +29,7 @@ import {
   ICreateProfessionPricelistResult,
   IDeleteProfessionPricelistResult,
   IGetProfessionPricelistsResult,
+  IGetUnmetDemandResult,
   updatePricelist,
 } from "../api/price-lists";
 import { FetchLevel } from "../types/main";
@@ -211,7 +211,7 @@ export interface ILoadPricelistsEntrypointFront {
   currentPrices?: IGetPricelistResponse | null;
   selectedList?: IPricelistJson | null;
   professionPricelists?: IGetProfessionPricelistsResult;
-  unmetDemand?: IGetUnmetDemandResponse | null;
+  unmetDemand?: IGetUnmetDemandResult;
 }
 
 export interface ILoadPricelistsEntrypoint extends ILoadPricelistsEntrypointFront {
