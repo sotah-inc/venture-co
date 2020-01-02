@@ -25,29 +25,19 @@ import {
   RealmPopulation,
 } from "@sotah-inc/core";
 
-import { IGetUnmetDemandOptions } from "../../../../../api/price-lists";
 import { ItemPopoverContainer } from "../../../../../containers/util/ItemPopover";
 import { FetchLevel } from "../../../../../types/main";
-import {
-  didRealmChange,
-  getItemFromPricelist,
-  getPrimaryExpansion,
-  qualityToColorClass,
-} from "../../../../../util";
+import { getItemFromPricelist, qualityToColorClass } from "../../../../../util";
 import { ProfessionIcon } from "../../../../util";
 import { ItemIcon } from "../../../../util/ItemIcon";
 
 export interface IStateProps {
-  expansions: IExpansion[];
   unmetDemandItemIds: ItemId[];
   unmetDemandProfessionPricelists: IProfessionPricelistJson[];
   professions: IProfession[];
   getUnmetDemandLevel: FetchLevel;
   items: IItemsMap;
-}
-
-export interface IDispatchProps {
-  refreshUnmetDemand: (opts: IGetUnmetDemandOptions) => void;
+  selectedExpansion: IExpansion | null;
 }
 
 export interface IOwnProps {
@@ -55,7 +45,7 @@ export interface IOwnProps {
   region: IRegion;
 }
 
-export type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
+export type Props = Readonly<IStateProps & IOwnProps>;
 
 interface ICollapsedResultItem {
   entry: IPricelistEntryJson;
@@ -74,51 +64,9 @@ export class RealmSummaryPanel extends React.Component<Props> {
       </>
     );
   }
-  public componentDidMount() {
-    const { refreshUnmetDemand, region, realm, expansions, getUnmetDemandLevel } = this.props;
-
-    switch (getUnmetDemandLevel) {
-      case FetchLevel.initial:
-        break;
-      default:
-        return;
-    }
-
-    refreshUnmetDemand({
-      realm: realm.slug,
-      region: region.name,
-      request: {
-        expansion: getPrimaryExpansion(expansions).name,
-      },
-    });
-  }
-
-  public componentDidUpdate(prevProps: Props) {
-    const { refreshUnmetDemand, region, realm, expansions, getUnmetDemandLevel } = this.props;
-
-    switch (getUnmetDemandLevel) {
-      case FetchLevel.initial:
-      case FetchLevel.success:
-        break;
-      default:
-        return;
-    }
-
-    if (!didRealmChange(prevProps.realm, realm)) {
-      return;
-    }
-
-    refreshUnmetDemand({
-      realm: realm.slug,
-      region: region.name,
-      request: {
-        expansion: getPrimaryExpansion(expansions).name,
-      },
-    });
-  }
 
   public render() {
-    const { realm, region, expansions } = this.props;
+    const { realm, region } = this.props;
 
     let population = realm.population;
     if (population === RealmPopulation.na) {
@@ -133,16 +81,13 @@ export class RealmSummaryPanel extends React.Component<Props> {
             {region.name.toUpperCase()}-{realm.name} is a <em>{population} population</em> realm
           </p>
         </Callout>
-        <Card>
-          <H5>Unmet Demand for {getPrimaryExpansion(expansions).label} Professions</H5>
-          {this.renderUnmetDemand()}
-        </Card>
+        <Card>{this.renderUnmetDemand()}</Card>
       </>
     );
   }
 
   public onPricelistClick(pricelist: IPricelistJson, professionName: ProfessionName) {
-    const { expansions, professions } = this.props;
+    const { professions } = this.props;
 
     const profession: IProfession = professions.reduce((currentValue, v) => {
       if (v.name === professionName) {
@@ -153,10 +98,25 @@ export class RealmSummaryPanel extends React.Component<Props> {
     }, professions[0]);
 
     // tslint:disable-next-line:no-console
-    console.log("RealmSummaryPanel.onPricelistClick()", profession, pricelist, expansions);
+    console.log("RealmSummaryPanel.onPricelistClick()", profession, pricelist);
   }
 
   private renderUnmetDemand() {
+    const { selectedExpansion } = this.props;
+
+    if (selectedExpansion === null) {
+      return null;
+    }
+
+    return (
+      <>
+        <H5>Unmet Demand for {selectedExpansion.label} Professions</H5>
+        {this.renderUnmetDemandContent()}
+      </>
+    );
+  }
+
+  private renderUnmetDemandContent() {
     const { getUnmetDemandLevel } = this.props;
 
     switch (getUnmetDemandLevel) {

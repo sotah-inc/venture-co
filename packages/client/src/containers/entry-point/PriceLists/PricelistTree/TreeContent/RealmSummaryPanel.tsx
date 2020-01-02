@@ -1,8 +1,6 @@
 import { connect } from "react-redux";
 
-import { FetchGetUnmetDemand } from "../../../../../actions/price-lists";
 import {
-  IDispatchProps,
   IOwnProps,
   IStateProps,
   RealmSummaryPanel,
@@ -11,34 +9,28 @@ import {
 import { IStoreState } from "../../../../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
-  const { expansions, professions } = state.Main;
+  const { professions } = state.Main;
   const {
-    level: getUnmetDemandLevel,
-    data: {
-      data: { unmetItemIds, professionPricelists: unmetDemandProfessionPricelists },
-      items,
+    selectedExpansion,
+    unmetDemand: {
+      level: getUnmetDemandLevel,
+      data: {
+        data: { unmetItemIds, professionPricelists: unmetDemandProfessionPricelists },
+        items,
+      },
     },
-  } = state.PriceLists.unmetDemand;
+  } = state.PriceLists;
+
   return {
-    expansions,
     getUnmetDemandLevel,
     items,
     professions,
+    selectedExpansion,
     unmetDemandItemIds: unmetItemIds,
     unmetDemandProfessionPricelists,
   };
 };
 
-const mapDispatchToProps: IDispatchProps = {
-  refreshUnmetDemand: FetchGetUnmetDemand,
-};
-
-export const RealmSummaryPanelContainer = connect<
-  IStateProps,
-  IDispatchProps,
-  IOwnProps,
-  IStoreState
->(
+export const RealmSummaryPanelContainer = connect<IStateProps, {}, IOwnProps, IStoreState>(
   mapStateToProps,
-  mapDispatchToProps,
 )(RealmSummaryPanel);
