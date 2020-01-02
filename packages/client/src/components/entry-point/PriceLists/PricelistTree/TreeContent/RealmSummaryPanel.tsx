@@ -126,7 +126,7 @@ export class RealmSummaryPanel extends React.Component<Props> {
         return (
           <NonIdealState
             title="Loading"
-            icon={<Spinner className={Classes.LARGE} intent={Intent.PRIMARY} />}
+            icon={<Spinner className={Classes.LARGE} intent={Intent.NONE} value={0} />}
           />
         );
     }
