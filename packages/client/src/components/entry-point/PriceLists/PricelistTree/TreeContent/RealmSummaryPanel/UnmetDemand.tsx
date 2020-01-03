@@ -1,6 +1,17 @@
 import React from "react";
 
-import { Callout, Classes, H5, HTMLTable, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
+import {
+  Alignment,
+  Callout,
+  Classes,
+  H5,
+  HTMLTable,
+  Intent,
+  Navbar,
+  NavbarGroup,
+  NonIdealState,
+  Spinner,
+} from "@blueprintjs/core";
 import {
   IExpansion,
   IItemsMap,
@@ -18,7 +29,7 @@ import {
 import { ItemPopoverContainer } from "../../../../../../containers/util/ItemPopover";
 import { FetchLevel } from "../../../../../../types/main";
 import { getItemFromPricelist, qualityToColorClass } from "../../../../../../util";
-import { ProfessionIcon } from "../../../../../util";
+import { Pagination, ProfessionIcon } from "../../../../../util";
 import { ItemIcon } from "../../../../../util/ItemIcon";
 
 export interface IStateProps {
@@ -62,7 +73,6 @@ export class UnmetDemand extends React.Component<Props, IState> {
 
   public render() {
     const { selectedExpansion } = this.props;
-    const { page } = this.state;
 
     if (selectedExpansion === null) {
       return null;
@@ -71,9 +81,6 @@ export class UnmetDemand extends React.Component<Props, IState> {
     return (
       <>
         <H5>Unmet Demand for {selectedExpansion.label} Professions</H5>
-        <button type="button" onClick={() => this.setState({ ...this.state, page: page + 1 })}>
-          Clicky
-        </button>
         {this.renderUnmetDemandContent()}
       </>
     );
@@ -185,10 +192,20 @@ export class UnmetDemand extends React.Component<Props, IState> {
 
     return (
       <>
-        <Callout intent={Intent.PRIMARY}>
+        <Callout intent={Intent.PRIMARY} style={{ marginBottom: "10px" }}>
           These items have <strong>0</strong> auctions posted on {currentRegion.name.toUpperCase()}-
           {currentRealm.name}.
         </Callout>
+        <Navbar>
+          <NavbarGroup align={Alignment.LEFT}>
+            <Pagination
+              pageCount={foundCollapsedResults.length}
+              currentPage={page}
+              pagesShown={5}
+              onPageChange={pageTarget => this.setState({ page: pageTarget })}
+            />
+          </NavbarGroup>
+        </Navbar>
         {this.renderResultsTable(foundCollapsedResults)}
       </>
     );
