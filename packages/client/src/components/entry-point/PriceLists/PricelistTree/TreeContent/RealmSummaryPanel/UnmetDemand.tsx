@@ -34,12 +34,16 @@ export interface IStateProps {
 
 export type Props = Readonly<IStateProps>;
 
+interface IState {
+  page: number;
+}
+
 interface ICollapsedResultItem {
   entry: IPricelistEntryJson;
   professionPricelist: IProfessionPricelistJson;
 }
 
-export class UnmetDemand extends React.Component<Props> {
+export class UnmetDemand extends React.Component<Props, IState> {
   private static renderProfession(profession: IProfession | null) {
     if (profession === null) {
       return null;
@@ -52,8 +56,13 @@ export class UnmetDemand extends React.Component<Props> {
     );
   }
 
+  public state = {
+    page: 0,
+  };
+
   public render() {
     const { selectedExpansion } = this.props;
+    const { page } = this.state;
 
     if (selectedExpansion === null) {
       return null;
@@ -62,6 +71,9 @@ export class UnmetDemand extends React.Component<Props> {
     return (
       <>
         <H5>Unmet Demand for {selectedExpansion.label} Professions</H5>
+        <button type="button" onClick={() => this.setState({ ...this.state, page: page + 1 })}>
+          Clicky
+        </button>
         {this.renderUnmetDemandContent()}
       </>
     );
@@ -106,6 +118,7 @@ export class UnmetDemand extends React.Component<Props> {
       unmetDemandItemIds,
       items,
     } = this.props;
+    const { page } = this.state;
 
     if (currentRealm === null || currentRegion === null) {
       return null;
@@ -152,6 +165,36 @@ export class UnmetDemand extends React.Component<Props> {
       );
     }
 
+    const perPage = 10;
+    const groupedCollapsedResults: ICollapsedResultItem[][] = collapsedResult.reduce<
+      ICollapsedResultItem[][]
+    >((grouped, resultItem, i) => {
+      const currentPage = (i - (i % perPage)) / perPage;
+      if (Object.keys(grouped).indexOf(currentPage.toString()) === -1) {
+        grouped[currentPage] = [];
+      }
+
+      grouped[currentPage].push(resultItem);
+
+      return grouped;
+    }, []);
+    const foundCollapsedResults: ICollapsedResultItem[] | undefined = groupedCollapsedResults[page];
+    if (typeof foundCollapsedResults === "undefined") {
+      return null;
+    }
+
+    return (
+      <>
+        <Callout intent={Intent.PRIMARY}>
+          These items have <strong>0</strong> auctions posted on {currentRegion.name.toUpperCase()}-
+          {currentRealm.name}.
+        </Callout>
+        {this.renderResultsTable(foundCollapsedResults)}
+      </>
+    );
+  }
+
+  private renderResultsTable(collapsedResult: ICollapsedResultItem[]) {
     const classNames = [
       Classes.HTML_TABLE,
       Classes.HTML_TABLE_BORDERED,
@@ -160,22 +203,16 @@ export class UnmetDemand extends React.Component<Props> {
     ];
 
     return (
-      <>
-        <Callout intent={Intent.PRIMARY}>
-          These items have <strong>0</strong> auctions posted on {currentRegion.name.toUpperCase()}-
-          {currentRealm.name}.
-        </Callout>
-        <HTMLTable className={classNames.join(" ")}>
-          <thead>
-            <tr>
-              <th>Item</th>
-              <th>Profession</th>
-              <th>Pricelist</th>
-            </tr>
-          </thead>
-          <tbody>{collapsedResult.map((v, i) => this.renderItemRow(i, v))}</tbody>
-        </HTMLTable>
-      </>
+      <HTMLTable className={classNames.join(" ")}>
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Profession</th>
+            <th>Pricelist</th>
+          </tr>
+        </thead>
+        <tbody>{collapsedResult.map((v, i) => this.renderItemRow(i, v))}</tbody>
+      </HTMLTable>
     );
   }
 
