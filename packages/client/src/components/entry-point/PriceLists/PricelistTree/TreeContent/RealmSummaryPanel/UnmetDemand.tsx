@@ -199,7 +199,7 @@ export class UnmetDemand extends React.Component<Props, IState> {
         <Navbar>
           <NavbarGroup align={Alignment.LEFT}>
             <Pagination
-              pageCount={foundCollapsedResults.length}
+              pageCount={groupedCollapsedResults.length - 1}
               currentPage={page}
               pagesShown={5}
               onPageChange={pageTarget => this.setState({ page: pageTarget })}
