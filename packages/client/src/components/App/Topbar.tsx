@@ -18,7 +18,6 @@ import { LoginContainer } from "../../containers/App/Login";
 import { RegisterContainer } from "../../containers/App/Register";
 import { NewsButtonRouteContainer } from "../../route-containers/App/Topbar/NewsButton";
 import { LinkButtonRouteContainer } from "../../route-containers/util/LinkButton";
-import { getPrimaryExpansion } from "../../util";
 import { toExpansion } from "../../util/routes";
 
 export interface IStateProps {
@@ -26,6 +25,7 @@ export interface IStateProps {
   currentRealm: IStatusRealm | null;
   currentRegion: IRegion | null;
   expansions: IExpansion[];
+  selectedExpansion: IExpansion | null;
 }
 
 export interface IRouteProps {
@@ -199,9 +199,9 @@ export class Topbar extends React.Component<Props> {
   }
 
   private renderProfessionsButton() {
-    const { expansions, currentRegion, currentRealm } = this.props;
+    const { expansions, currentRegion, currentRealm, selectedExpansion } = this.props;
 
-    if (currentRegion === null || currentRealm === null) {
+    if (currentRegion === null || currentRealm === null || selectedExpansion === null) {
       return null;
     }
 
@@ -219,8 +219,7 @@ export class Topbar extends React.Component<Props> {
       );
     }
 
-    const expansion = getPrimaryExpansion(expansions);
-    const { asDest, url } = toExpansion(currentRegion, currentRealm, expansion);
+    const { asDest, url } = toExpansion(currentRegion, currentRealm, selectedExpansion);
 
     return (
       <LinkButtonRouteContainer

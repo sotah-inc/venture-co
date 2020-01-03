@@ -5,9 +5,11 @@ import { IStoreState } from "../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const { profile, currentRealm, currentRegion, expansions } = state.Main;
+  const { selectedExpansion } = state.PriceLists;
+
   const user = profile === null ? null : profile.user;
 
-  return { user, currentRealm, currentRegion, expansions };
+  return { user, currentRealm, currentRegion, expansions, selectedExpansion };
 };
 
 export const TopbarContainer = connect<IStateProps, {}, IOwnProps, IStoreState>(mapStateToProps)(
