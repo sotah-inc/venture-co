@@ -4,7 +4,7 @@ import { defaultOvenState, IOvenState } from "../types/oven";
 type State = Readonly<IOvenState>;
 
 export const oven = (state: State | undefined, action: OvenActions): State => {
-  if (state === undefined) {
+  if (typeof state === "undefined") {
     return defaultOvenState;
   }
 
@@ -13,5 +13,5 @@ export const oven = (state: State | undefined, action: OvenActions): State => {
       return { ...state, index: state.index + 1, toast: action.payload };
   }
 
-  return state;
+  return state!;
 };

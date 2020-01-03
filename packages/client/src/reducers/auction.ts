@@ -21,7 +21,7 @@ import { runners } from "./handlers";
 type State = Readonly<IAuctionState>;
 
 export const auction = (state: State | undefined, action: AuctionActions): State => {
-  if (state === undefined) {
+  if (typeof state === "undefined") {
     return defaultAuctionState;
   }
 

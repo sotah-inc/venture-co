@@ -18,7 +18,7 @@ import { runners } from "./handlers";
 type State = Readonly<IMainState>;
 
 export const main = (state: State | undefined, action: MainActions): State => {
-  if (state === undefined) {
+  if (typeof state === "undefined") {
     return defaultMainState;
   }
 

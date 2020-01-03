@@ -5,7 +5,7 @@ import { runners } from "./handlers";
 type State = Readonly<IPriceListsState>;
 
 export const priceLists = (state: State | undefined, action: PriceListsActions): State => {
-  if (state === undefined) {
+  if (typeof state === "undefined") {
     return defaultPriceListsState;
   }
 

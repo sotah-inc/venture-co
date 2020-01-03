@@ -5,7 +5,7 @@ import { runners } from "./handlers";
 type State = Readonly<IPostsState>;
 
 export const posts = (state: State | undefined, action: PostsActions): State => {
-  if (state === undefined) {
+  if (typeof state === "undefined") {
     return defaultPostsState;
   }
 

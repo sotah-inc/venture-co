@@ -5,7 +5,7 @@ import { runners } from "./handlers";
 type State = Readonly<IProfileState>;
 
 export const profile = (state: State | undefined, action: ProfileActions): State => {
-  if (state === undefined) {
+  if (typeof state === "undefined") {
     return defaultProfileState;
   }
 
