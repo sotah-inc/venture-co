@@ -9,7 +9,7 @@ interface IProps {
   onPageChange: (page: number) => void;
 }
 
-export const Pagination: React.SFC<IProps> = (props: IProps) => {
+export function Pagination(props: IProps) {
   const { currentPage, pageCount, onPageChange } = props;
   let { pagesShown } = props;
   if (pageCount < pagesShown) {
@@ -97,4 +97,4 @@ export const Pagination: React.SFC<IProps> = (props: IProps) => {
       </ButtonGroup>
     </>
   );
-};
+}
