@@ -20,7 +20,7 @@ import {
 } from "@sotah-inc/core";
 import * as HTTPStatus from "http-status";
 
-import { apiEndpoint, gather } from "./index";
+import { getApiEndpoint, gather } from "./index";
 
 export interface ICreatePricelistResult {
   errors: IValidationErrorResponse | null;
@@ -41,7 +41,7 @@ export const createPricelist = async (
       "content-type": "application/json",
     }),
     method: "POST",
-    url: `${apiEndpoint}/user/pricelists`,
+    url: `${getApiEndpoint()}/user/pricelists`,
   });
   switch (status) {
     case HTTPStatus.CREATED:
@@ -74,7 +74,7 @@ export const updatePricelist = async (
       "content-type": "application/json",
     }),
     method: "PUT",
-    url: `${apiEndpoint}/user/pricelists/${id}`,
+    url: `${getApiEndpoint()}/user/pricelists/${id}`,
   });
   switch (status) {
     case HTTPStatus.OK:
@@ -93,7 +93,7 @@ export const getPricelists = async (token: string): Promise<IGetPricelistsRespon
       Authorization: `Bearer ${token}`,
       "content-type": "application/json",
     }),
-    url: `${apiEndpoint}/user/pricelists`,
+    url: `${getApiEndpoint()}/user/pricelists`,
   });
 
   return body!;
@@ -106,7 +106,7 @@ export const deletePricelist = async (token: string, id: number): Promise<number
       "content-type": "application/json",
     }),
     method: "DELETE",
-    url: `${apiEndpoint}/user/pricelists/${id}`,
+    url: `${getApiEndpoint()}/user/pricelists/${id}`,
   });
   switch (status) {
     case HTTPStatus.OK:
@@ -134,7 +134,7 @@ export const createProfessionPricelist = async (
       "content-type": "application/json",
     }),
     method: "POST",
-    url: `${apiEndpoint}/user/profession-pricelists`,
+    url: `${getApiEndpoint()}/user/profession-pricelists`,
   });
   switch (status) {
     case HTTPStatus.CREATED:
@@ -159,7 +159,7 @@ export const deleteProfessionPricelist = async (
   const { body, status } = await gather<null, IValidationErrorResponse | null>({
     headers: new Headers({ Authorization: `Bearer ${token}`, "content-type": "application/json" }),
     method: "DELETE",
-    url: `${apiEndpoint}/user/profession-pricelists/${id}`,
+    url: `${getApiEndpoint()}/user/profession-pricelists/${id}`,
   });
   switch (status) {
     case HTTPStatus.OK:
@@ -182,7 +182,7 @@ export const getProfessionPricelists = async (
 ): Promise<IGetProfessionPricelistsResult> => {
   const { body, status } = await gather<null, IGetProfessionPricelistsResponse>({
     method: "GET",
-    url: `${apiEndpoint}/profession-pricelists/${profession}/${expansion}`,
+    url: `${getApiEndpoint()}/profession-pricelists/${profession}/${expansion}`,
   });
   switch (status) {
     case HTTPStatus.OK:
@@ -207,7 +207,7 @@ export const getProfessionPricelist = async (
     IProfessionPricelistJson | IValidationErrorResponse | null
   >({
     method: "GET",
-    url: `${apiEndpoint}/profession-pricelists/${profession}/${expansion}/${slug}`,
+    url: `${getApiEndpoint()}/profession-pricelists/${profession}/${expansion}/${slug}`,
   });
   switch (status) {
     case HTTPStatus.OK:
@@ -232,7 +232,7 @@ export const getUserPricelist = async (
       "content-type": "application/json",
     }),
     method: "GET",
-    url: `${apiEndpoint}/user/pricelists/${slug}`,
+    url: `${getApiEndpoint()}/user/pricelists/${slug}`,
   });
   switch (status) {
     case HTTPStatus.OK:
@@ -263,7 +263,7 @@ export const getUnmetDemand = async (
     body: opts.request,
     headers: new Headers({ "content-type": "application/json" }),
     method: "POST",
-    url: `${apiEndpoint}/region/${opts.region}/realm/${opts.realm}/unmet-demand`,
+    url: `${getApiEndpoint()}/region/${opts.region}/realm/${opts.realm}/unmet-demand`,
   });
   switch (status) {
     case HTTPStatus.OK:

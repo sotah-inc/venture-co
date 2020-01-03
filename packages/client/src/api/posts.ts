@@ -10,7 +10,7 @@ import {
 } from "@sotah-inc/core";
 import * as HTTPStatus from "http-status";
 
-import { apiEndpoint, gather } from "./index";
+import { getApiEndpoint, gather } from "./index";
 
 export interface ICreatePostResult {
   post: IPostJson | null;
@@ -34,7 +34,7 @@ export const createPost = async (
       "content-type": "application/json",
     }),
     method: "POST",
-    url: `${apiEndpoint}/user/posts`,
+    url: `${getApiEndpoint()}/user/posts`,
   });
   if (status === HTTPStatus.UNAUTHORIZED) {
     return { error: "Unauthorized", post: null };
@@ -76,7 +76,7 @@ export const updatePost = async (
       "content-type": "application/json",
     }),
     method: "PUT",
-    url: `${apiEndpoint}/user/posts/${id}`,
+    url: `${getApiEndpoint()}/user/posts/${id}`,
   });
   if (status === HTTPStatus.UNAUTHORIZED) {
     return { error: "Unauthorized", post: null };
@@ -100,7 +100,7 @@ export const getPost = async (slug: string): Promise<IGetPostResponse | null> =>
     headers: new Headers({
       "content-type": "application/json",
     }),
-    url: `${apiEndpoint}/posts/${slug}`,
+    url: `${getApiEndpoint()}/posts/${slug}`,
   });
   switch (status) {
     case HTTPStatus.OK:
@@ -119,7 +119,7 @@ export const deletePost = async (token: string, id: number): Promise<number | nu
       "content-type": "application/json",
     }),
     method: "DELETE",
-    url: `${apiEndpoint}/user/posts/${id}`,
+    url: `${getApiEndpoint()}/user/posts/${id}`,
   });
   switch (status) {
     case HTTPStatus.OK:

@@ -15,7 +15,7 @@ import {
 } from "@sotah-inc/core";
 import * as HTTPStatus from "http-status";
 
-import { apiEndpoint, gather } from "./index";
+import { getApiEndpoint, gather } from "./index";
 
 interface IRegisterUserResult {
   data: ICreateUserResponse | null;
@@ -32,7 +32,7 @@ export const registerUser = async (
   >({
     body: { email, password },
     method: "POST",
-    url: `${apiEndpoint}/users`,
+    url: `${getApiEndpoint()}/users`,
   });
   switch (status) {
     case HTTPStatus.CREATED:
@@ -55,7 +55,7 @@ export const loginUser = async (email: string, password: string): Promise<ILogin
   const { body, status } = await gather<ILoginRequest, ILoginResponse | IValidationErrorResponse>({
     body: { email, password },
     method: "POST",
-    url: `${apiEndpoint}/login`,
+    url: `${getApiEndpoint()}/login`,
   });
   switch (status) {
     case HTTPStatus.OK:
@@ -75,7 +75,7 @@ export interface IReloadUserResponse {
 }
 
 export const reloadUser = async (token: string): Promise<IReloadUserResponse> => {
-  const res = await fetch(`${apiEndpoint}/user`, {
+  const res = await fetch(`${getApiEndpoint()}/user`, {
     headers: new Headers({
       Authorization: `Bearer ${token}`,
       "content-type": "application/json",
@@ -100,7 +100,7 @@ export const getPreferences = async (token: string): Promise<IGetPreferencesResu
       Authorization: `Bearer ${token}`,
       "content-type": "application/json",
     }),
-    url: `${apiEndpoint}/user/preferences`,
+    url: `${getApiEndpoint()}/user/preferences`,
   });
   switch (status) {
     case HTTPStatus.UNAUTHORIZED:
@@ -133,7 +133,7 @@ export const createPreferences = async (
       "content-type": "application/json",
     }),
     method: "POST",
-    url: `${apiEndpoint}/user/preferences`,
+    url: `${getApiEndpoint()}/user/preferences`,
   });
   if (status === HTTPStatus.UNAUTHORIZED) {
     return { error: "Unauthorized", preference: null };
@@ -158,7 +158,7 @@ export const updatePreferences = async (
       "content-type": "application/json",
     }),
     method: "PUT",
-    url: `${apiEndpoint}/user/preferences`,
+    url: `${getApiEndpoint()}/user/preferences`,
   });
   if (status === HTTPStatus.UNAUTHORIZED) {
     return { error: "Unauthorized", data: null };

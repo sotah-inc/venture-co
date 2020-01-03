@@ -21,7 +21,7 @@ const hostname: string = (() => {
 })();
 
 const defaultApiEndpoint = "https://api.sotah.info";
-export const apiEndpoint: string = (() => {
+export const getApiEndpoint: () => string = () => {
   const { publicRuntimeConfig, serverRuntimeConfig }: IConfig = getConfig();
   if (
     typeof serverRuntimeConfig !== "undefined" &&
@@ -42,7 +42,7 @@ export const apiEndpoint: string = (() => {
   }
 
   return defaultApiEndpoint;
-})();
+};
 
 export interface IGatherOptions<T> {
   headers?: Headers;

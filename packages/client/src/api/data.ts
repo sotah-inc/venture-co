@@ -19,11 +19,11 @@ import {
 } from "@sotah-inc/core";
 import * as HTTPStatus from "http-status";
 
-import { apiEndpoint, gather, gatherWithQuery } from "./index";
+import { gather, gatherWithQuery, getApiEndpoint } from "./index";
 
 export const getPing = async (): Promise<boolean> => {
   try {
-    await fetch(`${apiEndpoint}/ping`);
+    await fetch(`${getApiEndpoint()}/ping`);
     return true;
   } catch (err) {
     return false;
@@ -32,7 +32,7 @@ export const getPing = async (): Promise<boolean> => {
 
 export const getBoot = async (): Promise<IGetBootResponse | null> => {
   const { body, status } = await gather<null, IGetBootResponse>({
-    url: `${apiEndpoint}/boot`,
+    url: `${getApiEndpoint()}/boot`,
   });
   if (status !== HTTPStatus.OK) {
     return null;
@@ -43,7 +43,7 @@ export const getBoot = async (): Promise<IGetBootResponse | null> => {
 
 export const getStatus = async (regionName: RegionName): Promise<IStatusRealm[] | null> => {
   const { body, status } = await gather<null, IGetRealmsResponse>({
-    url: `${apiEndpoint}/region/${regionName}/realms`,
+    url: `${getApiEndpoint()}/region/${regionName}/realms`,
   });
   if (status !== HTTPStatus.OK) {
     return null;
@@ -65,7 +65,7 @@ export const getAuctions = async (
   const { body, status } = await gatherWithQuery<IGetAuctionsRequest, IGetAuctionsResponse>({
     method: "GET",
     query: request,
-    url: `${apiEndpoint}/region/${regionName}/realm/${realmSlug}/auctions`,
+    url: `${getApiEndpoint()}/region/${regionName}/realm/${realmSlug}/auctions`,
   });
   if (status !== HTTPStatus.OK) {
     return null;
@@ -78,7 +78,7 @@ export const getItems = async (query: string): Promise<IQueryItemsResponse | nul
   const { body, status } = await gather<IQueryItemsRequest, IQueryItemsResponse>({
     body: { query },
     method: "POST",
-    url: `${apiEndpoint}/items`,
+    url: `${getApiEndpoint()}/items`,
   });
   if (status !== HTTPStatus.OK) {
     return null;
@@ -100,7 +100,7 @@ export const queryAuctions = async (
   const { body, status } = await gather<IQueryAuctionsRequest, IQueryAuctionsResponse>({
     body: { query },
     method: "POST",
-    url: `${apiEndpoint}/region/${regionName}/realm/${realmSlug}/query-auctions`,
+    url: `${getApiEndpoint()}/region/${regionName}/realm/${realmSlug}/query-auctions`,
   });
   if (status !== HTTPStatus.OK) {
     return null;
@@ -122,7 +122,7 @@ export const getPriceList = async (
   const { body, status } = await gather<IGetPricelistRequest, IGetPricelistResponse>({
     body: { item_ids: itemIds },
     method: "POST",
-    url: `${apiEndpoint}/region/${regionName}/realm/${realmSlug}/price-list`,
+    url: `${getApiEndpoint()}/region/${regionName}/realm/${realmSlug}/price-list`,
   });
   if (status !== HTTPStatus.OK) {
     return null;
@@ -150,7 +150,7 @@ export const getPriceListHistory = async (
       "content-type": "application/json",
     }),
     method: "POST",
-    url: `${apiEndpoint}/region/${regionName}/realm/${realmSlug}/price-list-history`,
+    url: `${getApiEndpoint()}/region/${regionName}/realm/${realmSlug}/price-list-history`,
   });
   if (status !== HTTPStatus.OK) {
     return null;
@@ -168,7 +168,7 @@ export const getPosts = async (): Promise<IGetPostsResult> => {
   const { body, status } = await gather<null, IGetPostsResponse>({
     headers: new Headers({ "content-type": "application/json" }),
     method: "GET",
-    url: `${apiEndpoint}/posts`,
+    url: `${getApiEndpoint()}/posts`,
   });
 
   switch (status) {

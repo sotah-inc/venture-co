@@ -14,7 +14,7 @@ import {
 import moment from "moment";
 
 import { IStatusRealm } from "@sotah-inc/core/build/dist/types/contracts/data";
-import { apiEndpoint } from "../api";
+import { getApiEndpoint } from "../api";
 import { IItemClasses, IItemClassWithSub, IRegions, ISubItemClasses } from "../types/global";
 
 const hostname: string = (() => {
@@ -105,7 +105,7 @@ export const getItemIconUrl = (item: IItem): string | null => {
     return null;
   }
 
-  return `${apiEndpoint}/item-icons/${item.icon}.jpg`;
+  return `${getApiEndpoint()}/item-icons/${item.icon}.jpg`;
 };
 
 export const getItemTextValue = (item: IItem): string => {

@@ -7,7 +7,7 @@ import * as HTTPStatus from "http-status";
 
 import { IErrors } from "../types/global";
 
-import { apiEndpoint, gather } from "./index";
+import { getApiEndpoint, gather } from "./index";
 
 export interface IUpdateProfileResult {
   email: string | null;
@@ -29,7 +29,7 @@ export const updateProfile = async (
       "content-type": "application/json",
     }),
     method: "PUT",
-    url: `${apiEndpoint}/user/profile`,
+    url: `${getApiEndpoint()}/user/profile`,
   });
   if (status === HTTPStatus.UNAUTHORIZED) {
     return { error: "Unauthorized", email: null };
