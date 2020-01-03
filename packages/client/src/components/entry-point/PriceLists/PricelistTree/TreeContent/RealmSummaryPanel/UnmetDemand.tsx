@@ -80,7 +80,11 @@ export class UnmetDemand extends React.Component<Props, IState> {
 
     return (
       <>
-        <H5>Unmet Demand for {selectedExpansion.label} Professions</H5>
+        <H5>
+          Unmet Demand for{" "}
+          <span style={{ color: selectedExpansion.label_color }}>{selectedExpansion.label}</span>{" "}
+          Professions
+        </H5>
         {this.renderUnmetDemandContent()}
       </>
     );
