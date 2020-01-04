@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Tab, Tabs } from "@blueprintjs/core";
+import { Alignment, ControlGroup, Switch, Tab, Tabs } from "@blueprintjs/core";
 import {
   IItemPricelistHistoryMap,
   IItemsMap,
@@ -9,17 +9,10 @@ import {
   ItemId,
 } from "@sotah-inc/core";
 import moment from "moment";
-import {
-  CartesianGrid,
-  Legend,
-  Line,
-  LineChart,
-  ResponsiveContainer,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { CartesianGrid, Line, LineChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
 import { currencyToText, getColor, unixTimestampToText } from "../../util";
+import { ItemIcon } from "./ItemIcon";
 
 export interface IOwnProps {
   items: IItemsMap;
@@ -188,22 +181,79 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
     });
 
     return (
-      <ResponsiveContainer width="100%" height={250}>
-        <LineChart data={data}>
-          <CartesianGrid vertical={false} strokeWidth={0.25} strokeOpacity={0.25} />
-          <XAxis
-            dataKey="name"
-            tickFormatter={unixTimestampToText}
-            domain={[roundedTwoWeeksAgoDate.unix(), roundedNowDate.unix()]}
-            type="number"
-            ticks={xAxisTicks}
-            tick={{ fill: "#fff" }}
-          />
-          {this.renderYAxis()}
-          <Legend />
-          {this.renderLines()}
-        </LineChart>
-      </ResponsiveContainer>
+      <>
+        <ResponsiveContainer width="100%" height={250}>
+          <LineChart data={data}>
+            <CartesianGrid vertical={false} strokeWidth={0.25} strokeOpacity={0.25} />
+            <XAxis
+              dataKey="name"
+              tickFormatter={unixTimestampToText}
+              domain={[roundedTwoWeeksAgoDate.unix(), roundedNowDate.unix()]}
+              type="number"
+              ticks={xAxisTicks}
+              tick={{ fill: "#fff" }}
+            />
+            {this.renderYAxis()}
+            {this.renderLines()}
+          </LineChart>
+        </ResponsiveContainer>
+        {this.renderLegend()}
+      </>
+    );
+  }
+
+  private renderLegend() {
+    const { pricelistHistoryMap } = this.props;
+
+    const itemIds: ItemId[] = Object.keys(pricelistHistoryMap).map(Number);
+
+    const groupedItemIds = itemIds.reduce<ItemId[][]>((result, v, i) => {
+      const column = i % 3;
+      if (Object.keys(result).indexOf(column.toString()) === -1) {
+        result[column] = [];
+      }
+
+      result[column].push(v);
+
+      return result;
+    }, []);
+
+    return (
+      <div className="pure-g pricelist-history-graph-legend">
+        {groupedItemIds.map((v, i) => this.renderLegendColumn(v, i))}
+      </div>
+    );
+  }
+
+  private renderLegendColumn(itemIds: ItemId[], index: number) {
+    return (
+      <div className="pure-u-1-3" key={index}>
+        <div style={index < 2 ? { marginRight: "5px" } : {}}>
+          <ControlGroup vertical={true}>
+            {itemIds.map((v, i) => (
+              <Switch key={i} alignIndicator={Alignment.RIGHT}>
+                {this.renderLegendItem(v)}
+              </Switch>
+            ))}
+          </ControlGroup>
+        </div>
+      </div>
+    );
+  }
+
+  private renderLegendItem(itemId: ItemId) {
+    const { items } = this.props;
+
+    const foundItem = items[itemId];
+
+    if (typeof foundItem === "undefined") {
+      return itemId;
+    }
+
+    return (
+      <>
+        <ItemIcon item={foundItem} /> {foundItem.name}
+      </>
     );
   }
 
