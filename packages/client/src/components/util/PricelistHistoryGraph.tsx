@@ -207,13 +207,13 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
 
     const itemIds: ItemId[] = Object.keys(pricelistHistoryMap).map(Number);
 
-    const groupedItemIds = itemIds.reduce<ItemId[][]>((result, v, i) => {
+    const groupedItemIds = itemIds.reduce<Array<Array<[ItemId, number]>>>((result, v, i) => {
       const column = i % 3;
       if (Object.keys(result).indexOf(column.toString()) === -1) {
         result[column] = [];
       }
 
-      result[column].push(v);
+      result[column].push([v, i]);
 
       return result;
     }, []);
@@ -225,14 +225,14 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
     );
   }
 
-  private renderLegendColumn(itemIds: ItemId[], index: number) {
+  private renderLegendColumn(itemIdIndexTuples: Array<[ItemId, number]>, index: number) {
     return (
       <div className="pure-u-1-3" key={index}>
         <div style={index < 2 ? { marginRight: "5px" } : {}}>
           <ControlGroup vertical={true}>
-            {itemIds.map((v, i) => (
-              <Switch key={i} alignIndicator={Alignment.RIGHT}>
-                {this.renderLegendItem(v)}
+            {itemIdIndexTuples.map((v, i) => (
+              <Switch key={i} alignIndicator={Alignment.RIGHT} checked={true}>
+                {this.renderLegendItem(...v)}
               </Switch>
             ))}
           </ControlGroup>
@@ -241,7 +241,7 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
     );
   }
 
-  private renderLegendItem(itemId: ItemId) {
+  private renderLegendItem(itemId: ItemId, originalIndex: number) {
     const { items } = this.props;
 
     const foundItem = items[itemId];
@@ -252,7 +252,8 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
 
     return (
       <>
-        <ItemIcon item={foundItem} /> {foundItem.name}
+        <ItemIcon item={foundItem} />{" "}
+        <span style={{ color: getColor(originalIndex) }}>{foundItem.name}</span>
       </>
     );
   }
