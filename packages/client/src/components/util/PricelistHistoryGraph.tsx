@@ -2,7 +2,6 @@ import React from "react";
 
 import { Tab, Tabs } from "@blueprintjs/core";
 import {
-  IItem,
   IItemPricelistHistoryMap,
   IItemsMap,
   IPriceLimits,
@@ -208,17 +207,6 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
     );
   }
 
-  private getItem(itemId: ItemId): IItem | null {
-    const { items } = this.props;
-
-    const foundItem = items[itemId];
-    if (typeof foundItem === "undefined") {
-      return null;
-    }
-
-    return foundItem;
-  }
-
   private getDataKey(itemId: ItemId) {
     const { currentTabKind } = this.state;
 
@@ -232,16 +220,12 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
   }
 
   private renderLine(index: number, itemId: ItemId) {
-    let name: string = itemId.toString();
-    const item = this.getItem(itemId);
-    if (item !== null) {
-      name = item.name;
-    }
+    const { items } = this.props;
 
     return (
       <Line
         key={index}
-        name={name}
+        name={items[itemId]?.name ?? itemId.toString()}
         dataKey={this.getDataKey(itemId)}
         stroke={getColor(index)}
         dot={false}
