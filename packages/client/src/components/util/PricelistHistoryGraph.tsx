@@ -201,7 +201,7 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
           />
           {this.renderYAxis()}
           <Legend />
-          {this.renderLines(pricelistHistoryMap)}
+          {this.renderLines()}
         </LineChart>
       </ResponsiveContainer>
     );
@@ -235,7 +235,9 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
     );
   }
 
-  private renderLines(data: IItemPricelistHistoryMap) {
+  private renderLines() {
+    const { pricelistHistoryMap: data } = this.props;
+
     return Object.keys(data).map((itemIdKey: string, index: number) =>
       this.renderLine(index, Number(itemIdKey)),
     );
