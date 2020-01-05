@@ -29,6 +29,7 @@ export interface IOwnProps {
 
   onItemClick?: () => void;
   itemTextFormatter?: (itemText: string) => string;
+  position?: Position;
 }
 
 type Props = Readonly<IStateProps & IOwnProps>;
@@ -364,14 +365,14 @@ export class ItemPopover extends React.Component<Props> {
   }
 
   public render() {
-    const { item, itemClasses } = this.props;
+    const { item, itemClasses, position } = this.props;
 
     return (
       <Popover
         content={renderPopoverContent(item, itemClasses)}
         target={this.renderPopoverTarget(item)}
         interactionKind={PopoverInteractionKind.HOVER}
-        position={Position.RIGHT}
+        position={position ?? Position.RIGHT}
       />
     );
   }
