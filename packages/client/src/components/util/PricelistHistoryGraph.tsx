@@ -228,7 +228,7 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
   private renderLegendColumn(itemIdIndexTuples: Array<[ItemId, number]>, index: number) {
     return (
       <div className="pure-u-1-3" key={index}>
-        <div style={index < 2 ? { marginRight: "5px" } : {}}>
+        <div style={index < 2 ? { marginRight: "10px" } : {}}>
           <ControlGroup vertical={true}>
             {itemIdIndexTuples.map((v, i) => (
               <Switch key={i} alignIndicator={Alignment.RIGHT} checked={true}>
