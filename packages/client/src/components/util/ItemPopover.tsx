@@ -24,11 +24,13 @@ export interface IStateProps {
   itemClasses: IItemClasses;
 }
 
+type ItemTextFormatterResult = string | React.ReactNode;
+
 export interface IOwnProps {
   item: IItem;
 
   onItemClick?: () => void;
-  itemTextFormatter?: (itemText: string) => string;
+  itemTextFormatter?: (itemText: string) => ItemTextFormatterResult;
   position?: Position;
 }
 
