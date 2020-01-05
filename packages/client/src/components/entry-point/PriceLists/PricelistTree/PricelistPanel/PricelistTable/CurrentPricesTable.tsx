@@ -12,7 +12,6 @@ import {
   ItemId,
 } from "@sotah-inc/core";
 
-import { IGetPriceListOptions } from "../../../../../../api/data";
 import { ItemPopoverContainer } from "../../../../../../containers/util/ItemPopover";
 import { FetchLevel } from "../../../../../../types/main";
 import { qualityToColorClass } from "../../../../../../util";
@@ -25,33 +24,15 @@ export interface IStateProps {
   fetchRealmLevel: FetchLevel;
 }
 
-export interface IDispatchProps {
-  reloadPrices: (opts: IGetPriceListOptions) => void;
-}
-
 export interface IOwnProps {
   list: IPricelistJson;
   region: IRegion;
   realm: IStatusRealm;
 }
 
-type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
+type Props = Readonly<IStateProps & IOwnProps>;
 
 export class CurrentPricesTable extends React.Component<Props> {
-  public componentDidUpdate() {
-    const { reloadPrices, region, realm, getPricelistLevel, list } = this.props;
-
-    if (getPricelistLevel !== FetchLevel.prompted) {
-      return;
-    }
-
-    reloadPrices({
-      itemIds: list.pricelist_entries.map(v => v.item_id),
-      realmSlug: realm.slug,
-      regionName: region.name,
-    });
-  }
-
   public render() {
     return (
       <>

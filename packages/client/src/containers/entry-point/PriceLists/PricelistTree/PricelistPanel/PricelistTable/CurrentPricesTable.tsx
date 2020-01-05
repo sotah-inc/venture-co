@@ -1,9 +1,7 @@
 import { connect } from "react-redux";
 
-import { FetchGetPricelist } from "../../../../../../actions/price-lists";
 import {
   CurrentPricesTable,
-  IDispatchProps,
   IOwnProps,
   IStateProps,
   // tslint:disable-next-line:max-line-length
@@ -21,16 +19,6 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
   return { fetchRealmLevel, getPricelistLevel, items, pricelistMap };
 };
 
-const mapDispatchToProps: IDispatchProps = {
-  reloadPrices: FetchGetPricelist,
-};
-
-export const CurrentPricesTableContainer = connect<
-  IStateProps,
-  IDispatchProps,
-  IOwnProps,
-  IStoreState
->(
+export const CurrentPricesTableContainer = connect<IStateProps, IOwnProps, {}, IStoreState>(
   mapStateToProps,
-  mapDispatchToProps,
 )(CurrentPricesTable);
