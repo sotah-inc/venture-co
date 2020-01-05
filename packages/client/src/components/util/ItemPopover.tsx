@@ -302,7 +302,7 @@ const renderPopoverContent = (item: IItem, itemClasses: IItemClasses) => {
       <div className="pure-g">
         <div className="pure-u-1-5">
           <p className={itemTextClass} style={{ paddingBottom: "17px", marginBottom: 0 }}>
-            <img src={itemIconUrl} className="item-icon" />
+            <img src={itemIconUrl} className="item-icon" alt="" />
           </p>
         </div>
         <div className="pure-u-4-5">
@@ -356,7 +356,7 @@ export class ItemPopover extends React.Component<Props> {
 
     return (
       <>
-        <img src={itemIconUrl} className="item-icon" />{" "}
+        <img src={itemIconUrl} className="item-icon" alt="" />{" "}
         <a onClick={() => this.onItemClick()}>{itemText}</a>
       </>
     );

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Tab, Tabs, Tag } from "@blueprintjs/core";
+import { Position, Tab, Tabs, Tag } from "@blueprintjs/core";
 import {
   IItemPricelistHistoryMap,
   IItemsMap,
@@ -11,8 +11,8 @@ import {
 import moment from "moment";
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
+import { ItemPopoverContainer } from "../../containers/util/ItemPopover";
 import { currencyToText, getColor, unixTimestampToText } from "../../util";
-import { ItemIcon } from "./ItemIcon";
 
 export interface IOwnProps {
   items: IItemsMap;
@@ -230,7 +230,13 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
       <div className="pure-u-1-3" key={index}>
         <div style={index < 2 ? { marginRight: "10px" } : {}}>
           {itemIdIndexTuples.map(([itemId, originalIndex], i) => (
-            <Tag fill={true} key={i} minimal={true} interactive={true} large={true}>
+            <Tag
+              fill={true}
+              key={i}
+              minimal={true}
+              interactive={true}
+              style={{ marginBottom: "5px" }}
+            >
               {this.renderLegendItem(itemId, originalIndex)}
             </Tag>
           ))}
@@ -249,10 +255,15 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
     }
 
     return (
-      <>
-        <ItemIcon item={foundItem} />{" "}
-        <span style={{ color: getColor(originalIndex) }}>{foundItem.name}</span>
-      </>
+      <ItemPopoverContainer
+        item={foundItem}
+        itemTextFormatter={text => <span style={{ color: getColor(originalIndex) }}>{text}</span>}
+        position={Position.BOTTOM}
+        onItemClick={() => {
+          // tslint:disable-next-line:no-console
+          console.log("ItemPopoverContainer.onItemClick()", foundItem);
+        }}
+      />
     );
   }
 
