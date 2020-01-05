@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Alignment, ControlGroup, Switch, Tab, Tabs } from "@blueprintjs/core";
+import { Tab, Tabs, Tag } from "@blueprintjs/core";
 import {
   IItemPricelistHistoryMap,
   IItemsMap,
@@ -229,13 +229,11 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
     return (
       <div className="pure-u-1-3" key={index}>
         <div style={index < 2 ? { marginRight: "10px" } : {}}>
-          <ControlGroup vertical={true}>
-            {itemIdIndexTuples.map((v, i) => (
-              <Switch key={i} alignIndicator={Alignment.RIGHT} checked={true}>
-                {this.renderLegendItem(...v)}
-              </Switch>
-            ))}
-          </ControlGroup>
+          {itemIdIndexTuples.map(([itemId, originalIndex], i) => (
+            <Tag fill={true} key={i} minimal={true} interactive={true} large={true}>
+              {this.renderLegendItem(itemId, originalIndex)}
+            </Tag>
+          ))}
         </div>
       </div>
     );
