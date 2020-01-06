@@ -47,9 +47,8 @@ export const currencyToText = (amount: number): string => {
   const copperOutput = copper > 0 ? `${copper.toFixed()}c` : null;
   const silverOutput = silver > 0 ? `${silver.toFixed()}s` : null;
   const goldOutput = gold > 0 ? `${Number(gold.toFixed(0)).toLocaleString()}g` : null;
-  const output = [goldOutput, silverOutput, copperOutput].filter(v => v !== null).join(" ");
 
-  return output;
+  return [goldOutput, silverOutput, copperOutput].filter(v => v !== null).join(" ");
 };
 
 export const unixTimestampToText = (unixTimestamp: number): string => {
@@ -59,16 +58,17 @@ export const unixTimestampToText = (unixTimestamp: number): string => {
 
 export const getColor = (index: number): string => {
   const choices = [
-    "#2965CC",
-    "#29A634",
+    "#AD99FF",
+    "#669EFF",
+    "#43BF4D",
     "#D99E0B",
-    "#D13913",
-    "#8F398F",
-    "#00B3A4",
-    "#DB2C6F",
-    "#9BBF30",
-    "#96622D",
-    "#7157D9",
+    "#FF6E4A",
+    "#C274C2",
+    "#2EE6D6",
+    "#FF66A1",
+    "#D1F26D",
+    "#C99765",
+    "#669EFF",
   ];
 
   return choices[index % choices.length];
@@ -200,11 +200,7 @@ export const didRegionChange = (prevRegion: IRegion | null, currentRegion: IRegi
     return true;
   }
 
-  if (prevRegion.name === currentRegion.name) {
-    return false;
-  }
-
-  return true;
+  return prevRegion.name !== currentRegion.name;
 };
 
 export const didRealmChange = (prevRealm: IRealm | null, currentRealm: IRealm): boolean => {
@@ -212,11 +208,9 @@ export const didRealmChange = (prevRealm: IRealm | null, currentRealm: IRealm): 
     return true;
   }
 
-  if (prevRealm.regionName === currentRealm.regionName && prevRealm.slug === currentRealm.slug) {
-    return false;
-  }
-
-  return true;
+  return !(
+    prevRealm.regionName === currentRealm.regionName && prevRealm.slug === currentRealm.slug
+  );
 };
 
 export const getPrimaryExpansion = (expansions: IExpansion[]): IExpansion => {

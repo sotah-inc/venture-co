@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Position, Tab, Tabs, Tag } from "@blueprintjs/core";
+import { Intent, Position, Tab, Tabs, Tag } from "@blueprintjs/core";
 import {
   IItemPricelistHistoryMap,
   IItemsMap,
@@ -236,6 +236,7 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
               minimal={true}
               interactive={true}
               style={{ marginBottom: "5px" }}
+              intent={Intent.PRIMARY}
             >
               {this.renderLegendItem(itemId, originalIndex)}
             </Tag>
