@@ -29,6 +29,7 @@ type Props = Readonly<IOwnProps>;
 
 type State = Readonly<{
   currentTabKind: string;
+  highlightedItemId: ItemId | null;
 }>;
 
 enum TabKind {
@@ -41,6 +42,7 @@ const zeroGraphValue = 0.1;
 export class PricelistHistoryGraph extends React.Component<Props, State> {
   public state: State = {
     currentTabKind: TabKind.prices,
+    highlightedItemId: null,
   };
 
   public render() {
@@ -238,12 +240,10 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
               style={{ marginBottom: "5px" }}
               intent={Intent.PRIMARY}
               onMouseEnter={() => {
-                // tslint:disable-next-line:no-console
-                console.log("onMouseEnter()");
+                this.setState({ ...this.state, highlightedItemId: itemId });
               }}
               onMouseLeave={() => {
-                // tslint:disable-next-line:no-console
-                console.log("onMouseLeave()");
+                this.setState({ ...this.state, highlightedItemId: null });
               }}
             >
               {this.renderLegendItem(itemId, originalIndex)}
@@ -290,13 +290,23 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
 
   private renderLine(index: number, itemId: ItemId) {
     const { items } = this.props;
+    const { highlightedItemId } = this.state;
+
+    const { stroke, strokeWidth } = (() => {
+      if (highlightedItemId === null || highlightedItemId === itemId) {
+        return { stroke: getColor(index), strokeWidth: highlightedItemId === itemId ? 5 : 1 };
+      }
+
+      return { stroke: "#5C7080", strokeWidth: 1 };
+    })();
 
     return (
       <Line
         key={index}
         name={items[itemId]?.name ?? itemId.toString()}
         dataKey={this.getDataKey(itemId)}
-        stroke={getColor(index)}
+        stroke={stroke}
+        strokeWidth={strokeWidth}
         dot={false}
         animationDuration={500}
         animationEasing={"ease-in-out"}
