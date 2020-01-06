@@ -237,6 +237,14 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
               interactive={true}
               style={{ marginBottom: "5px" }}
               intent={Intent.PRIMARY}
+              onMouseEnter={() => {
+                // tslint:disable-next-line:no-console
+                console.log("onMouseEnter()");
+              }}
+              onMouseLeave={() => {
+                // tslint:disable-next-line:no-console
+                console.log("onMouseLeave()");
+              }}
             >
               {this.renderLegendItem(itemId, originalIndex)}
             </Tag>
