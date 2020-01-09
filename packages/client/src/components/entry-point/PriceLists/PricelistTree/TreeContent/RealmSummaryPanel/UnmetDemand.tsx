@@ -302,7 +302,7 @@ export class UnmetDemand extends React.Component<Props, IState> {
     return (
       <tr key={index}>
         <td className={qualityToColorClass(item.quality)}>
-          <ItemPopoverContainer item={item} />
+          <ItemPopoverContainer interactive={false} item={item} />
         </td>
         <td>{UnmetDemand.renderProfession(profession)}</td>
         <td>

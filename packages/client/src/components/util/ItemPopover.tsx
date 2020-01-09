@@ -32,6 +32,7 @@ export interface IOwnProps {
   onItemClick?: () => void;
   itemTextFormatter?: (itemText: string) => ItemTextFormatterResult;
   position?: Position;
+  interactive?: boolean;
 }
 
 type Props = Readonly<IStateProps & IOwnProps>;
@@ -348,18 +349,28 @@ export class ItemPopover extends React.Component<Props> {
   }
 
   public renderDisplay(item: IItem) {
-    const itemText = this.itemTextFormatter(getItemTextValue(item));
     const itemIconUrl = getItemIconUrl(item);
     if (itemIconUrl === null) {
-      return <a onClick={() => this.onItemClick()}>{itemText}</a>;
+      return this.renderLink(item);
     }
 
     return (
       <>
-        <img src={itemIconUrl} className="item-icon" alt="" />{" "}
-        <a onClick={() => this.onItemClick()}>{itemText}</a>
+        <img src={itemIconUrl} className="item-icon" alt="" /> {this.renderLink(item)}
       </>
     );
+  }
+
+  public renderLink(item: IItem) {
+    const { interactive } = this.props;
+
+    const itemText = this.itemTextFormatter(getItemTextValue(item));
+
+    if (typeof interactive === "undefined" || interactive) {
+      return <a onClick={() => this.onItemClick()}>{itemText}</a>;
+    }
+
+    return itemText;
   }
 
   public renderPopoverTarget(item: IItem) {
