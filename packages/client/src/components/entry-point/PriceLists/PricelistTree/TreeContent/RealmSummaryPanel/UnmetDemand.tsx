@@ -43,7 +43,17 @@ export interface IStateProps {
   currentRealm: IStatusRealm | null;
 }
 
-export type Props = Readonly<IStateProps>;
+export interface IRouteProps {
+  browseToProfessionPricelist: (
+    region: IRegion,
+    realm: IStatusRealm,
+    expansion: IExpansion,
+    profession: IProfession,
+    pricelist: IPricelistJson,
+  ) => void;
+}
+
+export type Props = Readonly<IStateProps & IRouteProps>;
 
 interface IState {
   page: number;
@@ -91,18 +101,41 @@ export class UnmetDemand extends React.Component<Props, IState> {
   }
 
   public onPricelistClick(pricelist: IPricelistJson, professionName: ProfessionName) {
-    const { professions } = this.props;
+    const {
+      browseToProfessionPricelist,
+      professions,
+      currentRegion,
+      currentRealm,
+      selectedExpansion,
+    } = this.props;
 
-    const profession: IProfession = professions.reduce((currentValue, v) => {
+    if (currentRegion === null || currentRealm === null || selectedExpansion === null) {
+      return;
+    }
+
+    const profession = professions.reduce<IProfession | null>((currentValue, v) => {
+      if (currentValue !== null) {
+        return currentValue;
+      }
+
       if (v.name === professionName) {
         return v;
       }
 
       return currentValue;
-    }, professions[0]);
+    }, null);
 
-    // tslint:disable-next-line:no-console
-    console.log("RealmSummaryPanel.onPricelistClick()", profession, pricelist);
+    if (profession === null) {
+      return;
+    }
+
+    browseToProfessionPricelist(
+      currentRegion,
+      currentRealm,
+      selectedExpansion,
+      profession,
+      pricelist,
+    );
   }
 
   private renderUnmetDemandContent() {

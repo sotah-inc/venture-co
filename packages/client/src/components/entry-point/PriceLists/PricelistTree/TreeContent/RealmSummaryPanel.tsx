@@ -3,7 +3,7 @@ import React from "react";
 import { Callout, Card, Classes, H5, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
 import { IRegion, IStatusRealm, RealmPopulation } from "@sotah-inc/core";
 
-import { UnmetDemandContainer } from "../../../../../containers/entry-point/PriceLists/PricelistTree/TreeContent/RealmSummaryPanel/UnmetDemand";
+import { UnmetDemandRouteContainer } from "../../../../../route-containers/entry-point/PriceLists/PricelistTree/TreeContent/RealmSummaryPanel/UnmetDemand";
 
 export interface IStateProps {
   currentRegion: IRegion | null;
@@ -26,7 +26,7 @@ export class RealmSummaryPanel extends React.Component<Props> {
               icon={<Spinner className={Classes.LARGE} intent={Intent.NONE} value={0} />}
             />
           </Callout>
-          <Card>{<UnmetDemandContainer />}</Card>
+          <Card>{<UnmetDemandRouteContainer />}</Card>
         </>
       );
     }
@@ -45,7 +45,7 @@ export class RealmSummaryPanel extends React.Component<Props> {
             <em>{population} population</em> realm
           </p>
         </Callout>
-        <Card>{<UnmetDemandContainer />}</Card>
+        <Card>{<UnmetDemandRouteContainer />}</Card>
       </>
     );
   }

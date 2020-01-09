@@ -1,6 +1,7 @@
 import { connect } from "react-redux";
 
 import {
+  IRouteProps,
   IStateProps,
   UnmetDemand,
 } from "../../../../../../components/entry-point/PriceLists/PricelistTree/TreeContent/RealmSummaryPanel/UnmetDemand";
@@ -31,6 +32,6 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
   };
 };
 
-export const UnmetDemandContainer = connect<IStateProps, {}, {}, IStoreState>(mapStateToProps)(
-  UnmetDemand,
-);
+export const UnmetDemandContainer = connect<IStateProps, {}, IRouteProps, IStoreState>(
+  mapStateToProps,
+)(UnmetDemand);
