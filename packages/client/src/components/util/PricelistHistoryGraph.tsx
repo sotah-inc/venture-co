@@ -1,6 +1,7 @@
 import React from "react";
 
 import { Intent, Position, Tab, Tabs, Tag } from "@blueprintjs/core";
+import { IconName, IconNames } from "@blueprintjs/icons";
 import {
   IItemPricelistHistoryMap,
   IItemsMap,
@@ -35,6 +36,7 @@ enum TabKind {
 type State = Readonly<{
   currentTabKind: TabKind;
   highlightedItemId: ItemId | null;
+  selectedItems: ItemId[];
 }>;
 
 const zeroGraphValue = 0.1;
@@ -43,6 +45,7 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
   public state: State = {
     currentTabKind: TabKind.prices,
     highlightedItemId: null,
+    selectedItems: [],
   };
 
   public render() {
@@ -221,9 +224,36 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
     }, []);
 
     return (
-      <div className="pure-g pricelist-history-graph-legend">
-        {groupedItemIds.map((v, i) => this.renderLegendColumn(v, i))}
-      </div>
+      <>
+        <div className="pure-g">
+          <div className="pure-u-1-3">
+            <div style={{ marginRight: "10px" }}>{this.renderSelectAll()}</div>
+          </div>
+        </div>
+        <div className="pure-g pricelist-history-graph-legend">
+          {groupedItemIds.map((v, i) => this.renderLegendColumn(v, i))}
+        </div>
+      </>
+    );
+  }
+
+  private renderSelectAll() {
+    const { selectedItems } = this.state;
+
+    const icon: IconName =
+      selectedItems.length > 0 ? IconNames.DOUBLE_CHEVRON_DOWN : IconNames.DOUBLE_CHEVRON_UP;
+
+    return (
+      <Tag
+        fill={true}
+        minimal={true}
+        interactive={true}
+        style={{ marginBottom: "5px" }}
+        intent={Intent.PRIMARY}
+        icon={icon}
+      >
+        Select All
+      </Tag>
     );
   }
 
