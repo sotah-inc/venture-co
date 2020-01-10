@@ -27,15 +27,15 @@ interface ILineItem {
 
 type Props = Readonly<IOwnProps>;
 
-type State = Readonly<{
-  currentTabKind: string;
-  highlightedItemId: ItemId | null;
-}>;
-
 enum TabKind {
   prices = "prices",
   volume = "volume",
 }
+
+type State = Readonly<{
+  currentTabKind: TabKind;
+  highlightedItemId: ItemId | null;
+}>;
 
 const zeroGraphValue = 0.1;
 
@@ -54,7 +54,7 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
           <Tabs
             id="history-tabs"
             selectedTabId={currentTabKind}
-            onChange={tabKind => this.setState({ currentTabKind: tabKind.toString() })}
+            onChange={(tabKind: TabKind) => this.setState({ currentTabKind: tabKind })}
           >
             <Tab id={TabKind.prices} title="Prices" />
             <Tab id={TabKind.volume} title="Volume" />
