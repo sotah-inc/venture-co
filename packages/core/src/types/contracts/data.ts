@@ -1,7 +1,7 @@
 import { IAuction } from "../auction";
 import { IPostJson, IProfessionPricelistJson } from "../entities";
 import { ExpansionName, IExpansion } from "../expansion";
-import { SortDirection, SortKind } from "../index";
+import { IPricesFlagged, SortDirection, SortKind } from "../index";
 import { IItem, IItemsMap, ItemId } from "../item";
 import { IItemClass } from "../item-class";
 import {
@@ -91,7 +91,7 @@ export interface IGetPricelistHistoriesRequest {
 }
 
 export interface IGetPricelistHistoriesResponse {
-  history: IItemPricelistHistoryMap;
+  history: IItemPricelistHistoryMap<IPricesFlagged>;
   items: IItemsMap;
   itemPriceLimits: IItemPriceLimits;
   overallPriceLimits: IPriceLimits;

@@ -6,16 +6,20 @@ export interface IPrices {
   volume: number;
 }
 
+export interface IPricesFlagged extends IPrices {
+  is_blank: boolean;
+}
+
 export interface IPriceListMap {
   [itemId: number]: IPrices;
 }
 
-export interface IItemPricelistHistoryMap {
-  [itemId: number]: IPricelistHistoryMap;
+export interface IItemPricelistHistoryMap<T extends IPrices> {
+  [itemId: number]: IPricelistHistoryMap<T>;
 }
 
-export interface IPricelistHistoryMap {
-  [unixTimestamp: number]: IPrices;
+export interface IPricelistHistoryMap<T extends IPrices> {
+  [unixTimestamp: number]: T;
 }
 
 export interface IPriceLimits {
