@@ -5,6 +5,7 @@ import {
   IItemsMap,
   IPricelistHistoryMap,
   IPriceListMap,
+  IPrices,
   IProfession,
   IRealmModificationDates,
   IRegion,
@@ -75,7 +76,7 @@ export interface IGetPricelistHistoriesRequest {
 }
 
 export interface IItemPricelistHistoryMap {
-  [itemId: number]: IPricelistHistoryMap;
+  [itemId: number]: IPricelistHistoryMap<IPrices>;
 }
 
 export interface IGetPricelistHistoriesResponse {
