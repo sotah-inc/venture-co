@@ -191,8 +191,17 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           };
         })();
 
+        const loadId: string = (() => {
+          if (typeof action.payload === "undefined") {
+            return defaultPriceListsState.loadId;
+          }
+
+          return action.payload.loadId;
+        })();
+
         return {
           ...state,
+          loadId,
           priceTable,
           pricelistHistory,
           professionPricelists,

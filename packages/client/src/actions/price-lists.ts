@@ -212,6 +212,7 @@ export interface ILoadPricelistsEntrypointFront {
   selectedList?: IPricelistJson | null;
   professionPricelists?: IGetProfessionPricelistsResult;
   unmetDemand?: IGetUnmetDemandResult;
+  loadId: string;
 }
 
 export interface ILoadPricelistsEntrypoint extends ILoadPricelistsEntrypointFront {

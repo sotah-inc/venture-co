@@ -43,6 +43,7 @@ export interface IPriceListsState {
   priceTable: IFetchData<IItemsData<IPriceListMap>>;
   professionPricelists: IFetchData<IItemsData<IProfessionPricelistJson[]>>;
   unmetDemand: IFetchData<IItemsData<IUnmetDemandState>>;
+  loadId: string;
 }
 
 export enum ListDialogStep {
@@ -76,6 +77,7 @@ export const defaultPriceListsState: IPriceListsState = {
   isAddListDialogOpen: false,
   isDeleteListDialogOpen: false,
   isEditListDialogOpen: false,
+  loadId: "",
   priceTable: {
     data: {
       data: {},
