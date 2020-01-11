@@ -298,7 +298,13 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
     const { pricelistHistoryMap } = this.props;
     const { selectedItems } = this.state;
 
-    const hasData = Object.keys(pricelistHistoryMap).indexOf(itemId.toString()) > -1;
+    const hasData = Object.keys(pricelistHistoryMap[itemId]).reduce<boolean>((result, v) => {
+      if (result) {
+        return result;
+      }
+
+      return !pricelistHistoryMap[itemId][Number(v)].is_blank;
+    }, false);
 
     const { intent, rightIcon, interactive } = (() => {
       if (!hasData) {
