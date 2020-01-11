@@ -2,6 +2,7 @@ import React from "react";
 
 import { H2, H4 } from "@blueprintjs/core";
 import {
+  IItemPriceLimits,
   IItemPricelistHistoryMap,
   IItemsMap,
   IPriceLimits,
@@ -21,6 +22,7 @@ export interface IStateProps {
   items: IItemsMap;
   pricelistHistoryMap: IItemPricelistHistoryMap<IPricesFlagged>;
   overallPriceLimits: IPriceLimits;
+  itemPriceLimits: IItemPriceLimits;
   loadId: string;
 }
 
@@ -42,6 +44,7 @@ export class PricelistTable extends React.Component<Props> {
       pricelistHistoryMap,
       overallPriceLimits,
       loadId,
+      itemPriceLimits,
     } = this.props;
 
     return (
@@ -57,6 +60,7 @@ export class PricelistTable extends React.Component<Props> {
             pricelistHistoryMap={pricelistHistoryMap}
             overallPriceLimits={overallPriceLimits}
             loadId={loadId}
+            itemPriceLimits={itemPriceLimits}
           />
         }
         {<CurrentPricesTableContainer list={list} region={region} realm={realm} />}

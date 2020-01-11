@@ -3,6 +3,7 @@ import React from "react";
 import { IconName, Intent, Position, Tab, Tabs, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import {
+  IItemPriceLimits,
   IItemPricelistHistoryMap,
   IItemsMap,
   IPriceLimits,
@@ -20,6 +21,7 @@ export interface IOwnProps {
   items: IItemsMap;
   pricelistHistoryMap: IItemPricelistHistoryMap<IPricesFlagged>;
   overallPriceLimits: IPriceLimits;
+  itemPriceLimits: IItemPriceLimits;
   loadId: string;
 }
 
@@ -87,8 +89,8 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
   }
 
   private renderYAxis() {
-    const { overallPriceLimits } = this.props;
-    const { currentTabKind } = this.state;
+    const { overallPriceLimits, itemPriceLimits } = this.props;
+    const { currentTabKind, selectedItems } = this.state;
 
     switch (currentTabKind) {
       case TabKind.volume:
@@ -130,10 +132,51 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
         );
       case TabKind.prices:
       default:
+        const preferredLimits: IPriceLimits = (() => {
+          if (selectedItems.size === 0) {
+            return overallPriceLimits;
+          }
+
+          return Array.from(selectedItems)
+            .map<IPriceLimits>(v => {
+              let { lower, upper } = itemPriceLimits[Number(v)];
+
+              lower = Math.pow(10, Math.floor(Math.log10(lower)));
+              if (lower === 0) {
+                lower = zeroGraphValue;
+              }
+
+              if (upper <= 1) {
+                upper = 10;
+              }
+              upper = Math.pow(10, Math.ceil(Math.log10(upper)));
+
+              return { lower, upper };
+            })
+            .reduce<IPriceLimits>(
+              (result, v) => {
+                if (result.lower === zeroGraphValue || v.lower < result.lower) {
+                  result.lower = v.lower;
+                }
+
+                if (v.upper > result.upper) {
+                  result.upper = v.upper;
+                }
+
+                return result;
+              },
+              { lower: zeroGraphValue, upper: 0 },
+            );
+        })();
+
+        if (preferredLimits.upper > overallPriceLimits.upper) {
+          preferredLimits.upper = overallPriceLimits.upper;
+        }
+
         return (
           <YAxis
             tickFormatter={v => currencyToText(v * 10 * 10)}
-            domain={[overallPriceLimits.lower / 10 / 10, overallPriceLimits.upper / 10 / 10]}
+            domain={[preferredLimits.lower / 10 / 10, preferredLimits.upper / 10 / 10]}
             tick={{ fill: "#fff" }}
             scale="log"
             allowDataOverflow={true}
@@ -412,7 +455,7 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
 
   private renderLine(index: number, itemId: ItemId) {
     const { items } = this.props;
-    const { highlightedItemId } = this.state;
+    const { highlightedItemId, selectedItems } = this.state;
 
     const { stroke, strokeWidth } = (() => {
       if (highlightedItemId === null || highlightedItemId === itemId) {
@@ -428,6 +471,8 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
       };
     })();
 
+    const opacity = selectedItems.size === 0 || selectedItems.has(itemId) ? 1 : 0;
+
     return (
       <Line
         key={index}
@@ -438,18 +483,16 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
         dot={false}
         animationDuration={500}
         animationEasing={"ease-in-out"}
+        opacity={opacity}
       />
     );
   }
 
   private renderLines() {
     const { pricelistHistoryMap: data } = this.props;
-    const { selectedItems } = this.state;
 
-    return Object.keys(data)
-      .filter(itemIdKey => {
-        return selectedItems.size === 0 || selectedItems.has(Number(itemIdKey));
-      })
-      .map((itemIdKey: string, index: number) => this.renderLine(index, Number(itemIdKey)));
+    return Object.keys(data).map((itemIdKey: string, index: number) =>
+      this.renderLine(index, Number(itemIdKey)),
+    );
   }
 }

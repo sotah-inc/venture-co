@@ -12,13 +12,13 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
     loadId,
     pricelistHistory: {
       data: {
-        data: { history: pricelistHistoryMap, overallPriceLimits },
+        data: { history: pricelistHistoryMap, overallPriceLimits, itemPriceLimits },
         items,
       },
     },
   } = state.PriceLists;
 
-  return { items, loadId, pricelistHistoryMap, overallPriceLimits };
+  return { items, loadId, pricelistHistoryMap, overallPriceLimits, itemPriceLimits };
 };
 
 export const PricelistTableContainer = connect<IStateProps, {}, {}, IStoreState>(mapStateToProps)(
