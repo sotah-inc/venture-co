@@ -39,10 +39,6 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
         action: ReturnType<typeof LoadPricelistsEntrypoint>,
       ): IPriceListsState => {
         const selectedProfession: IProfession | null = (() => {
-          if (typeof action.payload === "undefined") {
-            return null;
-          }
-
           return action.payload.professions.reduce<IProfession | null>(
             (previousValue, currentValue) => {
               if (previousValue !== null) {
@@ -60,10 +56,6 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
         })();
 
         const selectedExpansion: IExpansion | null = (() => {
-          if (typeof action.payload === "undefined") {
-            return null;
-          }
-
           const foundExpansion = action.payload.expansions.reduce<IExpansion | null>(
             (previousValue, currentValue) => {
               if (previousValue !== null) {
@@ -86,10 +78,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
         })();
 
         const selectedList: IPricelistJson | null = (() => {
-          if (
-            typeof action.payload === "undefined" ||
-            typeof action.payload.selectedList === "undefined"
-          ) {
+          if (typeof action.payload.selectedList === "undefined") {
             return null;
           }
 
@@ -97,10 +86,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
         })();
 
         const pricelistHistory: IFetchData<IItemsData<IPricelistHistoryState>> = (() => {
-          if (
-            typeof action.payload === "undefined" ||
-            typeof action.payload.pricelistHistory === "undefined"
-          ) {
+          if (typeof action.payload.pricelistHistory === "undefined") {
             return defaultPriceListsState.pricelistHistory;
           }
 
@@ -123,10 +109,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
         })();
 
         const priceTable: IFetchData<IItemsData<IPriceListMap>> = (() => {
-          if (
-            typeof action.payload === "undefined" ||
-            typeof action.payload.currentPrices === "undefined"
-          ) {
+          if (typeof action.payload.currentPrices === "undefined") {
             return defaultPriceListsState.priceTable;
           }
 
@@ -145,10 +128,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
         })();
 
         const professionPricelists: IFetchData<IItemsData<IProfessionPricelistJson[]>> = (() => {
-          if (
-            typeof action.payload === "undefined" ||
-            typeof action.payload.professionPricelists === "undefined"
-          ) {
+          if (typeof action.payload.professionPricelists === "undefined") {
             return defaultPriceListsState.professionPricelists;
           }
 
@@ -167,10 +147,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
         })();
 
         const unmetDemand: IFetchData<IItemsData<IUnmetDemandState>> = (() => {
-          if (
-            typeof action.payload === "undefined" ||
-            typeof action.payload.unmetDemand === "undefined"
-          ) {
+          if (typeof action.payload.unmetDemand === "undefined") {
             return defaultPriceListsState.unmetDemand;
           }
 
@@ -191,13 +168,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           };
         })();
 
-        const loadId: string = (() => {
-          if (typeof action.payload === "undefined") {
-            return defaultPriceListsState.loadId;
-          }
-
-          return action.payload.loadId;
-        })();
+        const loadId = action.payload.loadId;
 
         return {
           ...state,

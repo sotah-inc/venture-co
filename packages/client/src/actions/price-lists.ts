@@ -221,7 +221,7 @@ export interface ILoadPricelistsEntrypoint extends ILoadPricelistsEntrypointFron
 }
 
 export const LOAD_PRICELISTS_ENTRYPOINT = "LOAD_PRICELISTS_ENTRYPOINT";
-export const LoadPricelistsEntrypoint = (payload?: ILoadPricelistsEntrypoint) =>
+export const LoadPricelistsEntrypoint = (payload: ILoadPricelistsEntrypoint) =>
   createAction(LOAD_PRICELISTS_ENTRYPOINT, payload);
 
 export const PriceListsActions = {
