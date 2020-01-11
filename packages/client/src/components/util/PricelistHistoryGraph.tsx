@@ -321,9 +321,6 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
       return new Set<ItemId>([...Array.from(selectedItems), itemId]);
     })();
 
-    // tslint:disable-next-line:no-console
-    console.log(nextSelectedItems);
-
     this.setState({ ...this.state, selectedItems: nextSelectedItems });
   }
 
