@@ -339,7 +339,7 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
 
   private renderLegendColumnTag(itemId: ItemId, originalIndex: number, i: number) {
     const { pricelistHistoryMap } = this.props;
-    const { selectedItems } = this.state;
+    const { selectedItems, highlightedItemId } = this.state;
 
     const hasData = Object.keys(pricelistHistoryMap[itemId]).reduce<boolean>((result, v) => {
       if (result) {
@@ -374,6 +374,7 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
         style={{ marginBottom: "5px" }}
         intent={intent}
         rightIcon={rightIcon}
+        active={highlightedItemId !== null && highlightedItemId === itemId}
         onMouseEnter={() => {
           if (!hasData) {
             return;
