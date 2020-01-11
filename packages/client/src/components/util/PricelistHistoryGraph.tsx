@@ -90,7 +90,7 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
 
   private renderYAxis() {
     const { overallPriceLimits, itemPriceLimits } = this.props;
-    const { currentTabKind, selectedItems } = this.state;
+    const { currentTabKind, selectedItems, highlightedItemId } = this.state;
 
     switch (currentTabKind) {
       case TabKind.volume:
@@ -137,7 +137,12 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
             return overallPriceLimits;
           }
 
-          return Array.from(selectedItems)
+          const activeItemIds =
+            highlightedItemId === null
+              ? Array.from(selectedItems)
+              : [...Array.from(selectedItems), highlightedItemId];
+
+          return activeItemIds
             .map<IPriceLimits>(v => {
               let { lower, upper } = itemPriceLimits[Number(v)];
 
