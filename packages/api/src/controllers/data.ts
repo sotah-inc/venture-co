@@ -19,6 +19,7 @@ import {
   IPriceLimits,
   IPricelistHistoryMap,
   IPrices,
+  IPricesFlagged,
   IProfessionPricelistJson,
   IQueryAuctionsItem,
   IQueryAuctionsRequest,
@@ -473,7 +474,7 @@ export class DataController {
     const { item_ids } = req.body;
     const currentUnixTimestamp = Math.floor(Date.now() / 1000);
     const lowerBounds = currentUnixTimestamp - 60 * 60 * 24 * 14;
-    let history = (
+    const foundHistory = (
       await this.messenger.getPricelistHistories({
         item_ids,
         lower_bounds: lowerBounds,
@@ -487,11 +488,11 @@ export class DataController {
     // gathering unix timestamps for all items
     const historyUnixTimestamps: number[] = item_ids.reduce(
       (previousHistoryUnixTimestamps: number[], itemId) => {
-        if (!(itemId in history)) {
+        if (!(itemId in foundHistory)) {
           return previousHistoryUnixTimestamps;
         }
 
-        const itemUnixTimestamps = Object.keys(history[itemId]).map(Number);
+        const itemUnixTimestamps = Object.keys(foundHistory[itemId]).map(Number);
         for (const itemUnixTimestamp of itemUnixTimestamps) {
           if (previousHistoryUnixTimestamps.indexOf(itemUnixTimestamp) > -1) {
             continue;
@@ -506,13 +507,16 @@ export class DataController {
     );
 
     // normalizing all histories to have zeroed data where missing
-    history = item_ids.reduce((previousHistory: IItemPricelistHistoryMap, itemId) => {
-      // generating a full zeroed pricelist-history for this item
-      if (!(itemId in history)) {
-        const blankItemHistory: IPricelistHistoryMap = historyUnixTimestamps.reduce(
-          (previousBlankItemHistory: IPricelistHistoryMap, unixTimestamp) => {
-            const blankPrices: IPrices = {
+    const historyResult = item_ids.reduce<IItemPricelistHistoryMap<IPricesFlagged>>(
+      (previousHistory, itemId) => {
+        // generating a full zeroed pricelist-history for this item
+        if (!(itemId in foundHistory)) {
+          const blankItemHistory = historyUnixTimestamps.reduce<
+            IPricelistHistoryMap<IPricesFlagged>
+          >((previousBlankItemHistory, unixTimestamp) => {
+            const blankPrices: IPricesFlagged = {
               average_buyout_per: 0,
+              is_blank: true,
               max_buyout_per: 0,
               median_buyout_per: 0,
               min_buyout_per: 0,
@@ -523,48 +527,52 @@ export class DataController {
               ...previousBlankItemHistory,
               [unixTimestamp]: blankPrices,
             };
+          }, {});
+
+          return {
+            ...previousHistory,
+            [itemId]: blankItemHistory,
+          };
+        }
+
+        // reforming the item-history with zeroed blank prices where none found
+        const currentItemHistory = foundHistory[itemId];
+        const newItemHistory = historyUnixTimestamps.reduce<IPricelistHistoryMap<IPricesFlagged>>(
+          (previousNewItemHistory, unixTimestamp) => {
+            if (!(unixTimestamp in currentItemHistory)) {
+              const blankPrices: IPricesFlagged = {
+                average_buyout_per: 0,
+                is_blank: true,
+                max_buyout_per: 0,
+                median_buyout_per: 0,
+                min_buyout_per: 0,
+                volume: 0,
+              };
+
+              return {
+                ...previousNewItemHistory,
+                [unixTimestamp]: blankPrices,
+              };
+            }
+
+            return {
+              ...previousNewItemHistory,
+              [unixTimestamp]: {
+                ...currentItemHistory[unixTimestamp],
+                is_blank: false,
+              },
+            };
           },
           {},
         );
 
         return {
           ...previousHistory,
-          [itemId]: blankItemHistory,
+          [itemId]: newItemHistory,
         };
-      }
-
-      // reforming the item-history with zeroed blank prices where none found
-      const currentItemHistory = history[itemId];
-      const newItemHistory: IPricelistHistoryMap = historyUnixTimestamps.reduce(
-        (previousNewItemHistory: IPricelistHistoryMap, unixTimestamp) => {
-          if (!(unixTimestamp in currentItemHistory)) {
-            const blankPrices: IPrices = {
-              average_buyout_per: 0,
-              max_buyout_per: 0,
-              median_buyout_per: 0,
-              min_buyout_per: 0,
-              volume: 0,
-            };
-
-            return {
-              ...previousNewItemHistory,
-              [unixTimestamp]: blankPrices,
-            };
-          }
-
-          return {
-            ...previousNewItemHistory,
-            [unixTimestamp]: currentItemHistory[unixTimestamp],
-          };
-        },
-        {},
-      );
-
-      return {
-        ...previousHistory,
-        [itemId]: newItemHistory,
-      };
-    }, {});
+      },
+      {},
+    );
 
     const itemPriceLimits: IItemPriceLimits = item_ids.reduce((previousItemPriceLimits, itemId) => {
       const out: IPriceLimits = {
@@ -572,14 +580,14 @@ export class DataController {
         upper: 0,
       };
 
-      if (!(itemId in history)) {
+      if (!(itemId in historyResult)) {
         return {
           ...previousItemPriceLimits,
           [itemId]: out,
         };
       }
 
-      const itemPriceHistory: IPricelistHistoryMap = history[itemId];
+      const itemPriceHistory = historyResult[itemId];
       const itemPrices = Object.keys(itemPriceHistory).map<IPrices>(
         (v: string) => itemPriceHistory[Number(v)],
       );
@@ -656,7 +664,7 @@ export class DataController {
     }, 0);
 
     return {
-      data: { history, items, itemPriceLimits, overallPriceLimits },
+      data: { history: historyResult, items, itemPriceLimits, overallPriceLimits },
       status: HTTPStatus.OK,
     };
   };
