@@ -20,6 +20,7 @@ export interface IStateProps {
   items: IItemsMap;
   pricelistHistoryMap: IItemPricelistHistoryMap;
   overallPriceLimits: IPriceLimits;
+  loadId: string;
 }
 
 export interface IOwnProps {
@@ -32,7 +33,15 @@ type Props = Readonly<IStateProps & IOwnProps>;
 
 export class PricelistTable extends React.Component<Props> {
   public render() {
-    const { list, region, realm, items, pricelistHistoryMap, overallPriceLimits } = this.props;
+    const {
+      list,
+      region,
+      realm,
+      items,
+      pricelistHistoryMap,
+      overallPriceLimits,
+      loadId,
+    } = this.props;
 
     return (
       <>
@@ -46,6 +55,7 @@ export class PricelistTable extends React.Component<Props> {
             items={items}
             pricelistHistoryMap={pricelistHistoryMap}
             overallPriceLimits={overallPriceLimits}
+            loadId={loadId}
           />
         }
         {<CurrentPricesTableContainer list={list} region={region} realm={realm} />}

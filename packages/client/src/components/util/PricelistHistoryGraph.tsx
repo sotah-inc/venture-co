@@ -19,6 +19,7 @@ export interface IOwnProps {
   items: IItemsMap;
   pricelistHistoryMap: IItemPricelistHistoryMap;
   overallPriceLimits: IPriceLimits;
+  loadId: string;
 }
 
 interface ILineItem {
@@ -47,6 +48,22 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
     highlightedItemId: null,
     selectedItems: new Set<ItemId>(),
   };
+
+  public componentDidMount() {
+    this.setState({
+      currentTabKind: TabKind.prices,
+      highlightedItemId: null,
+      selectedItems: new Set<ItemId>(),
+    });
+  }
+
+  public componentDidUpdate(prevProps: Props): void {
+    const { loadId } = this.props;
+
+    if (prevProps.loadId !== loadId) {
+      this.setState({ ...this.state, selectedItems: new Set<ItemId>() });
+    }
+  }
 
   public render() {
     const { currentTabKind } = this.state;

@@ -9,6 +9,7 @@ import { IStoreState } from "../../../../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const {
+    loadId,
     pricelistHistory: {
       data: {
         data: { history: pricelistHistoryMap, overallPriceLimits },
@@ -17,7 +18,7 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
     },
   } = state.PriceLists;
 
-  return { items, pricelistHistoryMap, overallPriceLimits };
+  return { items, loadId, pricelistHistoryMap, overallPriceLimits };
 };
 
 export const PricelistTableContainer = connect<IStateProps, {}, {}, IStoreState>(mapStateToProps)(
