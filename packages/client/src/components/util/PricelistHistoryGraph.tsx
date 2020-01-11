@@ -412,7 +412,7 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
 
   private renderLine(index: number, itemId: ItemId) {
     const { items } = this.props;
-    const { highlightedItemId, selectedItems } = this.state;
+    const { highlightedItemId } = this.state;
 
     const { stroke, strokeWidth } = (() => {
       if (highlightedItemId === null || highlightedItemId === itemId) {
@@ -428,8 +428,6 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
       };
     })();
 
-    const opacity = selectedItems.size === 0 || selectedItems.has(itemId) ? 1 : 0;
-
     return (
       <Line
         key={index}
@@ -440,16 +438,18 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
         dot={false}
         animationDuration={500}
         animationEasing={"ease-in-out"}
-        opacity={opacity}
       />
     );
   }
 
   private renderLines() {
     const { pricelistHistoryMap: data } = this.props;
+    const { selectedItems } = this.state;
 
-    return Object.keys(data).map((itemIdKey: string, index: number) =>
-      this.renderLine(index, Number(itemIdKey)),
-    );
+    return Object.keys(data)
+      .filter(itemIdKey => {
+        return selectedItems.size === 0 || selectedItems.has(Number(itemIdKey));
+      })
+      .map((itemIdKey: string, index: number) => this.renderLine(index, Number(itemIdKey)));
   }
 }
