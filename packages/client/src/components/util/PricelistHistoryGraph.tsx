@@ -1,12 +1,13 @@
 import React from "react";
 
-import { Intent, Position, Tab, Tabs, Tag } from "@blueprintjs/core";
+import { IconName, Intent, Position, Tab, Tabs, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import {
   IItemPricelistHistoryMap,
   IItemsMap,
   IPriceLimits,
   IPricelistHistoryMap,
+  IPricesFlagged,
   ItemId,
 } from "@sotah-inc/core";
 import moment from "moment";
@@ -17,7 +18,7 @@ import { currencyToText, getColor, unixTimestampToText } from "../../util";
 
 export interface IOwnProps {
   items: IItemsMap;
-  pricelistHistoryMap: IItemPricelistHistoryMap;
+  pricelistHistoryMap: IItemPricelistHistoryMap<IPricesFlagged>;
   overallPriceLimits: IPriceLimits;
   loadId: string;
 }
@@ -147,7 +148,8 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
 
     const data = Object.keys(pricelistHistoryMap).reduce<ILineItem[]>(
       (dataPreviousValue: ILineItem[], itemIdKey: string) => {
-        const itemPricelistHistory: IPricelistHistoryMap = pricelistHistoryMap[Number(itemIdKey)];
+        const itemPricelistHistory: IPricelistHistoryMap<IPricesFlagged> =
+          pricelistHistoryMap[Number(itemIdKey)];
         const itemId = Number(itemIdKey);
 
         return Object.keys(itemPricelistHistory).reduce(
@@ -284,31 +286,59 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
     return (
       <div className="pure-u-1-3" key={index}>
         <div style={index < 2 ? { marginRight: "10px" } : {}}>
-          {itemIdIndexTuples.map(([itemId, originalIndex], i) => (
-            <Tag
-              fill={true}
-              key={i}
-              minimal={true}
-              interactive={true}
-              style={{ marginBottom: "5px" }}
-              intent={Intent.PRIMARY}
-              onMouseEnter={() => {
-                this.setState({ ...this.state, highlightedItemId: itemId });
-              }}
-              onMouseLeave={() => {
-                this.setState({ ...this.state, highlightedItemId: null });
-              }}
-              onClick={() => this.onLegendItemClick(itemId)}
-            >
-              {this.renderLegendItem(itemId, originalIndex)}
-            </Tag>
-          ))}
+          {itemIdIndexTuples.map(([itemId, originalIndex], i) =>
+            this.renderLegendColumnTag(itemId, originalIndex, i),
+          )}
         </div>
       </div>
     );
   }
 
-  private renderLegendItem(itemId: ItemId, originalIndex: number) {
+  private renderLegendColumnTag(itemId: ItemId, originalIndex: number, i: number) {
+    const { pricelistHistoryMap } = this.props;
+    const { selectedItems } = this.state;
+
+    const hasData = Object.keys(pricelistHistoryMap).indexOf(itemId.toString()) > -1;
+
+    const { intent, rightIcon, interactive } = (() => {
+      if (!hasData) {
+        return {
+          intent: Intent.NONE,
+          interactive: false,
+          rightIcon: IconNames.EYE_OFF as IconName,
+        };
+      }
+
+      if (selectedItems.size === 0 || selectedItems.has(itemId)) {
+        return { intent: Intent.PRIMARY, rightIcon: null, interactive: true };
+      }
+
+      return { intent: Intent.NONE, rightIcon: null, interactive: true };
+    })();
+
+    return (
+      <Tag
+        fill={true}
+        key={i}
+        minimal={true}
+        interactive={interactive}
+        style={{ marginBottom: "5px" }}
+        intent={intent}
+        rightIcon={rightIcon}
+        onMouseEnter={() => {
+          this.setState({ ...this.state, highlightedItemId: itemId });
+        }}
+        onMouseLeave={() => {
+          this.setState({ ...this.state, highlightedItemId: null });
+        }}
+        onClick={() => this.onLegendItemClick(itemId)}
+      >
+        {this.renderLegendItem(itemId, originalIndex, hasData)}
+      </Tag>
+    );
+  }
+
+  private renderLegendItem(itemId: ItemId, originalIndex: number, hasData: boolean) {
     const { items } = this.props;
 
     const foundItem = items[itemId];
@@ -322,7 +352,14 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
         item={foundItem}
         itemTextFormatter={text => <span style={{ color: getColor(originalIndex) }}>{text}</span>}
         position={Position.BOTTOM}
-        onItemClick={() => this.onLegendItemClick(foundItem.id)}
+        onItemClick={() => {
+          if (!hasData) {
+            return;
+          }
+
+          this.onLegendItemClick(foundItem.id);
+        }}
+        interactive={hasData}
       />
     );
   }

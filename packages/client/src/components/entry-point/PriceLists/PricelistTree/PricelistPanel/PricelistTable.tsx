@@ -6,6 +6,7 @@ import {
   IItemsMap,
   IPriceLimits,
   IPricelistJson,
+  IPricesFlagged,
   IRegion,
   IStatusRealm,
 } from "@sotah-inc/core";
@@ -18,7 +19,7 @@ import { PricelistHistoryGraph } from "../../../../util/PricelistHistoryGraph";
 
 export interface IStateProps {
   items: IItemsMap;
-  pricelistHistoryMap: IItemPricelistHistoryMap;
+  pricelistHistoryMap: IItemPricelistHistoryMap<IPricesFlagged>;
   overallPriceLimits: IPriceLimits;
   loadId: string;
 }

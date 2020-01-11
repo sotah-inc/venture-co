@@ -5,6 +5,7 @@ import {
   IPriceLimits,
   IPricelistJson,
   IPriceListMap,
+  IPricesFlagged,
   IProfession,
   IProfessionPricelistJson,
   ItemId,
@@ -16,7 +17,7 @@ import { IFetchData, IFetchInfo, IItemsData } from "./global";
 import { FetchLevel } from "./main";
 
 export interface IPricelistHistoryState {
-  history: IItemPricelistHistoryMap;
+  history: IItemPricelistHistoryMap<IPricesFlagged>;
   itemPriceLimits: IItemPriceLimits;
   overallPriceLimits: IPriceLimits;
 }
