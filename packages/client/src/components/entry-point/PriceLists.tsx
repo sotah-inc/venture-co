@@ -74,9 +74,8 @@ export interface IRouteParams {
 }
 
 export interface IOwnProps {
-  loadId: string;
   realmEntrypointData: ILoadRealmEntrypoint;
-  pricelistsEntrypointData?: ILoadPricelistsEntrypointFront;
+  pricelistsEntrypointData: ILoadPricelistsEntrypointFront;
 }
 
 type Props = Readonly<IStateProps & IDispatchProps & IOwnProps & IRouteProps>;
@@ -90,14 +89,12 @@ export class PriceLists extends React.Component<Props> {
       realmEntrypointData,
       expansions,
       professions,
-      loadId,
     } = this.props;
 
     loadRealmEntrypoint(realmEntrypointData);
     loadPricelistsEntrypoint({
       ...pricelistsEntrypointData,
       expansions,
-      loadId,
       professions,
     });
   }
@@ -107,7 +104,6 @@ export class PriceLists extends React.Component<Props> {
       routeParams: { region_name, realm_slug },
       currentRegion,
       currentRealm,
-      loadId,
       loadRealmEntrypoint,
       realmEntrypointData,
       expansions,
@@ -116,12 +112,11 @@ export class PriceLists extends React.Component<Props> {
       loadPricelistsEntrypoint,
     } = this.props;
 
-    if (prevProps.loadId !== loadId) {
+    if (prevProps.pricelistsEntrypointData.loadId !== pricelistsEntrypointData.loadId) {
       loadRealmEntrypoint(realmEntrypointData);
       loadPricelistsEntrypoint({
         ...pricelistsEntrypointData,
         expansions,
-        loadId,
         professions,
       });
 

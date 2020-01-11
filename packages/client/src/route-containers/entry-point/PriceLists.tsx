@@ -10,7 +10,7 @@ import { toProfessionPricelist } from "../../util/routes";
 
 type Props = Readonly<WithRouterProps & IOwnProps>;
 
-function RouteContainer({ router, loadId, realmEntrypointData, pricelistsEntrypointData }: Props) {
+function RouteContainer({ router, realmEntrypointData, pricelistsEntrypointData }: Props) {
   return (
     <PriceListsContainer
       routeParams={{
@@ -33,7 +33,6 @@ function RouteContainer({ router, loadId, realmEntrypointData, pricelistsEntrypo
           await router.replace(`/${url}`, `/${asDest}`);
         })();
       }}
-      loadId={loadId}
       realmEntrypointData={realmEntrypointData}
       pricelistsEntrypointData={pricelistsEntrypointData}
     />
