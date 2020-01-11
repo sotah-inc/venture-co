@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Intent, Position, Tab, Tabs, Tag } from "@blueprintjs/core";
-import { IconName, IconNames } from "@blueprintjs/icons";
+import { IconNames } from "@blueprintjs/icons";
 import {
   IItemPricelistHistoryMap,
   IItemsMap,
@@ -36,7 +36,7 @@ enum TabKind {
 type State = Readonly<{
   currentTabKind: TabKind;
   highlightedItemId: ItemId | null;
-  selectedItems: ItemId[];
+  selectedItems: Set<ItemId>;
 }>;
 
 const zeroGraphValue = 0.1;
@@ -45,7 +45,7 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
   public state: State = {
     currentTabKind: TabKind.prices,
     highlightedItemId: null,
-    selectedItems: [],
+    selectedItems: new Set<ItemId>(),
   };
 
   public render() {
@@ -240,17 +240,23 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
   private renderSelectAll() {
     const { selectedItems } = this.state;
 
-    const icon: IconName =
-      selectedItems.length > 0 ? IconNames.DOUBLE_CHEVRON_DOWN : IconNames.DOUBLE_CHEVRON_UP;
+    const canSelectAll = selectedItems.size > 0;
 
     return (
       <Tag
         fill={true}
         minimal={true}
-        interactive={true}
+        interactive={canSelectAll}
         style={{ marginBottom: "5px" }}
-        intent={Intent.PRIMARY}
-        icon={icon}
+        intent={canSelectAll ? Intent.PRIMARY : Intent.NONE}
+        icon={IconNames.DOUBLE_CHEVRON_UP}
+        onClick={() => {
+          if (!canSelectAll) {
+            return;
+          }
+
+          this.setState({ ...this.state, selectedItems: new Set<ItemId>() });
+        }}
       >
         Select All
       </Tag>
@@ -275,6 +281,7 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
               onMouseLeave={() => {
                 this.setState({ ...this.state, highlightedItemId: null });
               }}
+              onClick={() => this.onLegendItemClick(itemId)}
             >
               {this.renderLegendItem(itemId, originalIndex)}
             </Tag>
@@ -298,12 +305,26 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
         item={foundItem}
         itemTextFormatter={text => <span style={{ color: getColor(originalIndex) }}>{text}</span>}
         position={Position.BOTTOM}
-        onItemClick={() => {
-          // tslint:disable-next-line:no-console
-          console.log("ItemPopoverContainer.onItemClick()", foundItem);
-        }}
+        onItemClick={() => this.onLegendItemClick(foundItem.id)}
       />
     );
+  }
+
+  private onLegendItemClick(itemId: ItemId) {
+    const { selectedItems } = this.state;
+
+    const nextSelectedItems: Set<ItemId> = (() => {
+      if (selectedItems.has(itemId)) {
+        return selectedItems;
+      }
+
+      return new Set<ItemId>([...Array.from(selectedItems), itemId]);
+    })();
+
+    // tslint:disable-next-line:no-console
+    console.log(nextSelectedItems);
+
+    this.setState({ ...this.state, selectedItems: nextSelectedItems });
   }
 
   private getDataKey(itemId: ItemId) {
