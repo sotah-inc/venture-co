@@ -332,12 +332,26 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
         intent={intent}
         rightIcon={rightIcon}
         onMouseEnter={() => {
+          if (!hasData) {
+            return;
+          }
+
           this.setState({ ...this.state, highlightedItemId: itemId });
         }}
         onMouseLeave={() => {
+          if (!hasData) {
+            return;
+          }
+
           this.setState({ ...this.state, highlightedItemId: null });
         }}
-        onClick={() => this.onLegendItemClick(itemId)}
+        onClick={() => {
+          if (!hasData) {
+            return;
+          }
+
+          this.onLegendItemClick(itemId);
+        }}
       >
         {this.renderLegendItem(itemId, originalIndex, hasData)}
       </Tag>
