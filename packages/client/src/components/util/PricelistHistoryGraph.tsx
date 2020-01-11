@@ -355,15 +355,23 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
 
   private renderLine(index: number, itemId: ItemId) {
     const { items } = this.props;
-    const { highlightedItemId } = this.state;
+    const { highlightedItemId, selectedItems } = this.state;
 
     const { stroke, strokeWidth } = (() => {
       if (highlightedItemId === null || highlightedItemId === itemId) {
-        return { stroke: getColor(index), strokeWidth: highlightedItemId === itemId ? 5 : 1 };
+        return {
+          stroke: getColor(index),
+          strokeWidth: highlightedItemId === itemId ? 5 : 1,
+        };
       }
 
-      return { stroke: "#5C7080", strokeWidth: 1 };
+      return {
+        stroke: "#5C7080",
+        strokeWidth: 1,
+      };
     })();
+
+    const opacity = selectedItems.size === 0 || selectedItems.has(itemId) ? 1 : 0;
 
     return (
       <Line
@@ -375,6 +383,7 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
         dot={false}
         animationDuration={500}
         animationEasing={"ease-in-out"}
+        opacity={opacity}
       />
     );
   }
