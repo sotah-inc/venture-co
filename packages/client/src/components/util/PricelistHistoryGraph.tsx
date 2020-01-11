@@ -454,14 +454,22 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
   }
 
   private renderLine(index: number, itemId: ItemId) {
-    const { items } = this.props;
+    const { items, pricelistHistoryMap } = this.props;
     const { highlightedItemId, selectedItems } = this.state;
+
+    const hasData = Object.keys(pricelistHistoryMap[itemId]).reduce<boolean>((result, v) => {
+      if (result) {
+        return result;
+      }
+
+      return !pricelistHistoryMap[itemId][Number(v)].is_blank;
+    }, false);
 
     const { stroke, strokeWidth } = (() => {
       if (highlightedItemId === null || highlightedItemId === itemId) {
         return {
           stroke: getColor(index),
-          strokeWidth: highlightedItemId === itemId ? 5 : 1,
+          strokeWidth: highlightedItemId === itemId ? 4 : 2,
         };
       }
 
@@ -471,7 +479,31 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
       };
     })();
 
-    const opacity = selectedItems.size === 0 || selectedItems.has(itemId) ? 1 : 0;
+    const opacity = (() => {
+      if (selectedItems.size === 0) {
+        if (highlightedItemId !== null && itemId !== highlightedItemId) {
+          return 0.5;
+        }
+
+        return 1;
+      }
+
+      if (!selectedItems.has(itemId)) {
+        if (highlightedItemId !== null && itemId === highlightedItemId) {
+          return 0.5;
+        }
+
+        return 0;
+      }
+
+      if (highlightedItemId !== null && itemId !== highlightedItemId) {
+        return 0.5;
+      }
+
+      return 1;
+    })();
+
+    const dot = highlightedItemId === itemId || selectedItems.has(itemId);
 
     return (
       <Line
@@ -480,10 +512,32 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
         dataKey={this.getDataKey(itemId)}
         stroke={stroke}
         strokeWidth={strokeWidth}
-        dot={false}
+        dot={dot}
         animationDuration={500}
         animationEasing={"ease-in-out"}
         opacity={opacity}
+        onMouseEnter={() => {
+          if (!hasData || opacity === 0) {
+            return;
+          }
+
+          this.setState({ ...this.state, highlightedItemId: itemId });
+        }}
+        onMouseLeave={() => {
+          if (!hasData || opacity === 0) {
+            return;
+          }
+
+          this.setState({ ...this.state, highlightedItemId: null });
+        }}
+        onClick={() => {
+          if (!hasData || opacity === 0) {
+            return;
+          }
+
+          this.onLegendItemClick(itemId);
+        }}
+        type={"basis"}
       />
     );
   }
