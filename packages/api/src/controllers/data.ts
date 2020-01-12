@@ -4,6 +4,7 @@ import {
   IGetAuctionsRequest,
   IGetAuctionsResponse,
   IGetBootResponse,
+  IGetItemResponse,
   IGetPostResponse,
   IGetPostsResponse,
   IGetPricelistHistoriesRequest,
@@ -204,6 +205,35 @@ export class DataController {
       headers,
       status: HTTPStatus.OK,
     };
+  };
+
+  public getItem: RequestHandler<null, IGetItemResponse | IErrorResponse> = async req => {
+    const itemId = Number(req.params["itemId"]);
+
+    const msg = await this.messenger.getItems([itemId]);
+
+    if (msg.code !== code.ok) {
+      const errorResponse: IErrorResponse = { error: "Failed to fetch items" };
+
+      return {
+        data: errorResponse,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    const foundItem = msg.data!.items[itemId];
+    if (typeof foundItem === "undefined") {
+      const errorResponse: IErrorResponse = { error: "Item not found" };
+
+      return {
+        data: errorResponse,
+        status: HTTPStatus.NOT_FOUND,
+      };
+    }
+
+    const itemResponse: IGetItemResponse = { item: foundItem };
+
+    return { data: itemResponse, status: HTTPStatus.OK };
   };
 
   public getAuctions: QueryRequestHandler<
