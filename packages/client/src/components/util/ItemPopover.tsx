@@ -330,7 +330,20 @@ export class ItemPopover extends React.Component<Props> {
     },
   };
 
-  public onItemClick() {
+  public render() {
+    const { item, itemClasses, position } = this.props;
+
+    return (
+      <Popover
+        content={renderPopoverContent(item, itemClasses)}
+        target={this.renderPopoverTarget(item)}
+        interactionKind={PopoverInteractionKind.HOVER}
+        position={position ?? Position.RIGHT}
+      />
+    );
+  }
+
+  private onItemClick() {
     const { onItemClick } = this.props;
     if (!onItemClick) {
       return;
@@ -339,16 +352,16 @@ export class ItemPopover extends React.Component<Props> {
     onItemClick();
   }
 
-  public itemTextFormatter(itemText: string) {
+  private itemTextFormatter(itemText: string) {
     const { itemTextFormatter } = this.props;
-    if (!itemTextFormatter) {
+    if (typeof itemTextFormatter === "undefined") {
       return itemText;
     }
 
     return itemTextFormatter(itemText);
   }
 
-  public renderDisplay(item: IItem) {
+  private renderDisplay(item: IItem) {
     const itemIconUrl = getItemIconUrl(item);
     if (itemIconUrl === null) {
       return this.renderLink(item);
@@ -361,7 +374,7 @@ export class ItemPopover extends React.Component<Props> {
     );
   }
 
-  public renderLink(item: IItem) {
+  private renderLink(item: IItem) {
     const { interactive } = this.props;
 
     const itemText = this.itemTextFormatter(getItemTextValue(item));
@@ -373,20 +386,7 @@ export class ItemPopover extends React.Component<Props> {
     return itemText;
   }
 
-  public renderPopoverTarget(item: IItem) {
+  private renderPopoverTarget(item: IItem) {
     return <div className="item-icon-container">{this.renderDisplay(item)}</div>;
-  }
-
-  public render() {
-    const { item, itemClasses, position } = this.props;
-
-    return (
-      <Popover
-        content={renderPopoverContent(item, itemClasses)}
-        target={this.renderPopoverTarget(item)}
-        interactionKind={PopoverInteractionKind.HOVER}
-        position={position ?? Position.RIGHT}
-      />
-    );
   }
 }
