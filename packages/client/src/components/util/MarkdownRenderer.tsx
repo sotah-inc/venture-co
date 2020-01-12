@@ -1,9 +1,8 @@
 import React from "react";
 
 import ReactMarkdown from "react-markdown";
-
-// tslint:disable-next-line:no-var-requires
-const shortcodes = require("remark-shortcodes");
+// @ts-ignore
+import shortcodes from "remark-shortcodes";
 
 import { ShortcodeRenderer } from "./ShortcodeRenderer";
 
