@@ -1,6 +1,6 @@
 import React from "react";
 
-import { IconName, Intent, Position, Tab, Tabs, Tag } from "@blueprintjs/core";
+import { Icon, Intent, Position, Tab, Tabs, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import {
   IItemPriceLimits,
@@ -15,7 +15,7 @@ import moment from "moment";
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
 import { ItemPopoverContainer } from "../../containers/util/ItemPopover";
-import { currencyToText, getColor, unixTimestampToText } from "../../util";
+import { currencyToText, getColor, qualityToColorClass, unixTimestampToText } from "../../util";
 
 export interface IOwnProps {
   items: IItemsMap;
@@ -359,15 +359,21 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
         return {
           intent: Intent.NONE,
           interactive: false,
-          rightIcon: IconNames.EYE_OFF as IconName,
+          rightIcon: <Icon icon={IconNames.EYE_OFF} />,
         };
       }
 
+      const rightIconElement = <Icon icon={IconNames.CHART} color={getColor(originalIndex)} />;
+
       if (selectedItems.size === 0 || selectedItems.has(itemId)) {
-        return { intent: Intent.PRIMARY, rightIcon: null, interactive: true };
+        return {
+          intent: Intent.PRIMARY,
+          interactive: true,
+          rightIcon: rightIconElement,
+        };
       }
 
-      return { intent: Intent.NONE, rightIcon: null, interactive: true };
+      return { intent: Intent.NONE, rightIcon: rightIconElement, interactive: true };
     })();
 
     return (
@@ -402,12 +408,12 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
           this.onLegendItemClick(itemId);
         }}
       >
-        {this.renderLegendItem(itemId, originalIndex, hasData)}
+        {this.renderLegendItem(itemId, hasData)}
       </Tag>
     );
   }
 
-  private renderLegendItem(itemId: ItemId, originalIndex: number, hasData: boolean) {
+  private renderLegendItem(itemId: ItemId, hasData: boolean) {
     const { items } = this.props;
 
     const foundItem = items[itemId];
@@ -419,7 +425,9 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
     return (
       <ItemPopoverContainer
         item={foundItem}
-        itemTextFormatter={text => <span style={{ color: getColor(originalIndex) }}>{text}</span>}
+        itemTextFormatter={text => (
+          <span className={qualityToColorClass(foundItem.quality)}>{text}</span>
+        )}
         position={Position.BOTTOM}
         onItemClick={() => {
           if (!hasData) {
