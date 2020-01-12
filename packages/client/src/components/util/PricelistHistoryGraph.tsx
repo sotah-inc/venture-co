@@ -64,7 +64,11 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
     const { loadId } = this.props;
 
     if (prevProps.loadId !== loadId) {
-      this.setState({ ...this.state, selectedItems: new Set<ItemId>() });
+      this.setState({
+        currentTabKind: TabKind.prices,
+        highlightedItemId: null,
+        selectedItems: new Set<ItemId>(),
+      });
     }
   }
 
