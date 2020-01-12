@@ -17,10 +17,10 @@ import {
   TextArea,
 } from "@blueprintjs/core";
 import { FormikProps } from "formik";
-import ReactMarkdown from "react-markdown";
 import speakingurl from "speakingurl";
 
 import { FetchLevel } from "../../../types/main";
+import { MarkdownRenderer } from "../../util";
 
 export interface IOwnProps {
   onSubmit: (v: IFormValues) => void;
@@ -81,11 +81,11 @@ const renderPreviewContent = (values: IFormValues) => {
       <hr />
       <H5>Summary</H5>
       <Card elevation={2}>
-        <ReactMarkdown source={summary} />
+        <MarkdownRenderer body={summary} />
       </Card>
       <hr />
       <H5>Body</H5>
-      <ReactMarkdown source={body} />
+      <MarkdownRenderer body={body} />
     </>
   );
 };

@@ -11,13 +11,13 @@ interface IProps {
   body: string;
 }
 
-export const MarkdownRenderer: React.SFC<IProps> = ({ body }: IProps) => {
+export function MarkdownRenderer({ body }: IProps) {
   return (
     <ReactMarkdown
       escapeHtml={false}
-      plugins={[shortcodes]}
+      plugins={[[shortcodes, { inlineMode: true }]]}
       source={body}
       renderers={{ shortcode: ShortcodeRenderer }}
     />
   );
-};
+}
