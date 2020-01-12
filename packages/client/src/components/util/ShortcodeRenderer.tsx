@@ -1,6 +1,7 @@
 import React from "react";
 
 import { Currency } from "./Currency";
+import { ItemStandalone } from "./ItemStandalone";
 
 interface IRenderers {
   [key: string]: (v: IAttributes) => React.ReactElement;
@@ -9,6 +10,9 @@ interface IRenderers {
 const renderers: IRenderers = {
   Currency: (attributes: IAttributes) => {
     return <Currency amount={Number(attributes.amount)} />;
+  },
+  Item: attrs => {
+    return <ItemStandalone itemId={Number(attrs.itemId)} />;
   },
 };
 
