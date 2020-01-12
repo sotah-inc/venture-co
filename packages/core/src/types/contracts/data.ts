@@ -75,6 +75,10 @@ export interface IQueryItemsResponse {
   items: IQueryItemsItem[];
 }
 
+export interface IGetItemResponse {
+  item: IItem;
+}
+
 export interface IGetPricelistRequest {
   item_ids: ItemId[];
 }
