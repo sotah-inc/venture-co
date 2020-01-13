@@ -56,15 +56,19 @@ export class ItemStandalone extends React.Component<Props, IState> {
         }
 
         return (
-          <ItemPopoverContainer
-            interactive={false}
-            onItemClick={() => {
-              return;
-            }}
-            position={Position.BOTTOM}
-            item={item}
-            itemTextFormatter={v => <span className={qualityToColorClass(item.quality)}>{v}</span>}
-          />
+          <span className="item-standalone">
+            <ItemPopoverContainer
+              interactive={false}
+              onItemClick={() => {
+                return;
+              }}
+              position={Position.BOTTOM}
+              item={item}
+              itemTextFormatter={v => (
+                <span className={qualityToColorClass(item.quality)}>{v}</span>
+              )}
+            />
+          </span>
         );
       case FetchLevel.failure:
         return <em>Failed to fetch item: {errors.error}</em>;
