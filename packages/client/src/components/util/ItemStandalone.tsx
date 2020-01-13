@@ -1,22 +1,25 @@
 import React from "react";
 
 import { Position } from "@blueprintjs/core";
-import { IItem, ItemId } from "@sotah-inc/core";
+import { IItem } from "@sotah-inc/core";
 
+import { getItem } from "../../api/data";
 import { ItemPopoverContainer } from "../../containers/util/ItemPopover";
 import { IFetchData } from "../../types/global";
 import { FetchLevel } from "../../types/main";
 import { qualityToColorClass } from "../../util";
 
 export interface IOwnProps {
-  itemId: ItemId;
+  itemId?: string;
 }
 
 interface IState {
   item: IFetchData<IItem | null>;
 }
 
-export class ItemStandalone extends React.Component<IOwnProps, IState> {
+type Props = Readonly<IOwnProps>;
+
+export class ItemStandalone extends React.Component<Props, IState> {
   public state: IState = {
     item: {
       data: null,
@@ -24,6 +27,22 @@ export class ItemStandalone extends React.Component<IOwnProps, IState> {
       level: FetchLevel.initial,
     },
   };
+
+  public async componentDidMount() {
+    const { itemId } = this.props;
+
+    await this.handleItemId(itemId);
+  }
+
+  public async componentDidUpdate(prevProps: Props) {
+    const { itemId } = this.props;
+
+    if (prevProps.itemId === itemId) {
+      return;
+    }
+
+    await this.handleItemId(itemId);
+  }
 
   public render() {
     const {
@@ -49,11 +68,56 @@ export class ItemStandalone extends React.Component<IOwnProps, IState> {
         );
       case FetchLevel.failure:
         return <em>Failed to fetch item: {errors.error}</em>;
-      case FetchLevel.fetching:
-        return <em>Fetching item...</em>;
       case FetchLevel.initial:
       default:
         return <em>Loading item...</em>;
     }
+  }
+
+  private handleItemId(itemId?: string) {
+    (async () => {
+      if (typeof itemId === "undefined" || itemId.length === 0) {
+        this.setState({
+          ...this.state,
+          item: {
+            ...this.state.item,
+            errors: { error: "ItemId cannot be blank" },
+            level: FetchLevel.failure,
+          },
+        });
+
+        return;
+      }
+
+      const foundItemId = parseInt(itemId, 10);
+
+      if (isNaN(foundItemId) || foundItemId.toString() !== itemId) {
+        this.setState({
+          ...this.state,
+          item: {
+            ...this.state.item,
+            errors: { error: "ItemId must be a number" },
+            level: FetchLevel.failure,
+          },
+        });
+
+        return;
+      }
+
+      const { item, error } = await getItem(foundItemId);
+      if (error !== null) {
+        this.setState({
+          ...this.state,
+          item: { ...this.state.item, errors: { error }, level: FetchLevel.failure },
+        });
+
+        return;
+      }
+
+      this.setState({
+        ...this.state,
+        item: { ...this.state.item, level: FetchLevel.success, data: item },
+      });
+    })();
   }
 }

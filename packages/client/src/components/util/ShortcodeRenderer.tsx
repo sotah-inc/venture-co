@@ -12,7 +12,7 @@ const renderers: IRenderers = {
     return <Currency amount={Number(attributes.amount)} />;
   },
   Item: attrs => {
-    return <ItemStandalone itemId={Number(attrs.itemId)} />;
+    return <ItemStandalone itemId={attrs.itemId} />;
   },
 };
 

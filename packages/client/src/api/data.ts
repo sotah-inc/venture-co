@@ -1,13 +1,16 @@
 import {
+  IErrorResponse,
   IGetAuctionsRequest,
   IGetAuctionsResponse,
   IGetBootResponse,
+  IGetItemResponse,
   IGetPostsResponse,
   IGetPricelistHistoriesRequest,
   IGetPricelistHistoriesResponse,
   IGetPricelistRequest,
   IGetPricelistResponse,
   IGetRealmsResponse,
+  IItem,
   IPostJson,
   IQueryAuctionsRequest,
   IQueryAuctionsResponse,
@@ -85,6 +88,29 @@ export const getItems = async (query: string): Promise<IQueryItemsResponse | nul
   }
 
   return body;
+};
+
+export interface IGetItemResult {
+  item: IItem | null;
+  error: string | null;
+}
+
+export const getItem = async (itemId: ItemId): Promise<IGetItemResult> => {
+  const { body, status } = await gather<null, IGetItemResponse | IErrorResponse>({
+    method: "GET",
+    url: `${getApiEndpoint()}/item/${itemId}`,
+  });
+  if (status !== HTTPStatus.OK) {
+    return {
+      error: (body as IErrorResponse).error,
+      item: null,
+    };
+  }
+
+  return {
+    error: null,
+    item: (body as IGetItemResponse).item,
+  };
 };
 
 export interface IQueryAuctionsOptions {
