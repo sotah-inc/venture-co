@@ -1,6 +1,11 @@
-import { IPostJson } from "@sotah-inc/core";
+import { IPostJson, ITokenHistory } from "@sotah-inc/core";
 
+import { IFetchData } from "./global";
 import { FetchLevel } from "./main";
+
+export interface IRegionTokenHistories {
+  [regionName: string]: ITokenHistory | undefined;
+}
 
 export interface IPostsState {
   getPostsLevel: FetchLevel;
@@ -17,6 +22,7 @@ export interface IPostsState {
   getPostLevel: FetchLevel;
   isDeletePostDialogOpen: boolean;
   deletePostLevel: FetchLevel;
+  regionTokenHistories: IFetchData<IRegionTokenHistories>;
 }
 
 export const defaultPostsState: IPostsState = {
@@ -28,6 +34,11 @@ export const defaultPostsState: IPostsState = {
   getPostsLevel: FetchLevel.initial,
   isDeletePostDialogOpen: false,
   posts: [],
+  regionTokenHistories: {
+    data: {},
+    errors: {},
+    level: FetchLevel.initial,
+  },
   updatePostErrors: {},
   updatePostLevel: FetchLevel.initial,
 };
