@@ -1,4 +1,4 @@
-import { IValidationErrorResponse } from "@sotah-inc/core";
+import { IPostJson, IValidationErrorResponse } from "@sotah-inc/core";
 
 import {
   LoadPostsEntrypoint,
@@ -9,16 +9,58 @@ import {
   ReceiveGetPosts,
   ReceiveUpdatePost,
 } from "../../actions/posts";
+import { IFetchData } from "../../types/global";
 import { FetchLevel } from "../../types/main";
-import { IPostsState } from "../../types/posts";
-
+import { IPostsState, IRegionTokenHistories } from "../../types/posts";
 import { IKindHandlers, Runner } from "./index";
 
 export const handlers: IKindHandlers<IPostsState, PostsActions> = {
   entrypoint: {
     posts: {
-      load: (state: IPostsState, _action: ReturnType<typeof LoadPostsEntrypoint>) => {
-        return { ...state };
+      load: (state: IPostsState, action: ReturnType<typeof LoadPostsEntrypoint>) => {
+        const posts: IFetchData<IPostJson[]> = (() => {
+          if (typeof action.payload.posts.error !== "undefined") {
+            return { ...state.posts, level: FetchLevel.failure };
+          }
+
+          return { data: action.payload.posts.posts, errors: {}, level: FetchLevel.success };
+        })();
+
+        const regionTokenHistories: IFetchData<IRegionTokenHistories> = (() => {
+          const error = Object.keys(action.payload.tokenHistories).reduce<string | null>(
+            (foundError, v) => {
+              if (foundError !== null) {
+                return foundError;
+              }
+
+              const result = action.payload.tokenHistories[v];
+
+              if (result.history === null) {
+                return `History for ${v} was null`;
+              }
+
+              return result.error;
+            },
+            null,
+          );
+          if (error != null) {
+            return { ...state.regionTokenHistories, level: FetchLevel.failure };
+          }
+
+          const data = Object.keys(action.payload.tokenHistories).reduce<IRegionTokenHistories>(
+            (result, v) => {
+              return {
+                ...result,
+                [v]: action.payload.tokenHistories[v].history!,
+              };
+            },
+            {},
+          );
+
+          return { data, errors: {}, level: FetchLevel.success };
+        })();
+
+        return { ...state, posts, regionTokenHistories };
       },
     },
   },
