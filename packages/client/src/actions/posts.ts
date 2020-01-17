@@ -6,7 +6,7 @@ import {
 } from "@sotah-inc/core";
 import { Dispatch } from "redux";
 
-import { getPosts, IGetPostsResult } from "../api/data";
+import { getPosts, IGetPostsResult, IGetTokenHistoryResult } from "../api/data";
 import {
   createPost,
   deletePost,
@@ -94,9 +94,22 @@ export const CHANGE_IS_DELETE_POST_DIALOG_OPEN = "CHANGE_IS_DELETE_POST_DIALOG_O
 export const ChangeIsDeletePostDialogOpen = (payload: IDeletePostOptions) =>
   createAction(CHANGE_IS_DELETE_POST_DIALOG_OPEN, payload);
 
+export interface ILoadPostsEntrypoint {
+  loadId: string;
+  posts: IGetPostsResult;
+  tokenHistories: {
+    [regionName: string]: IGetTokenHistoryResult;
+  };
+}
+
+export const LOAD_POSTS_ENTRYPOINT = "LOAD_POSTS_ENTRYPOINT";
+export const LoadPostsEntrypoint = (payload: ILoadPostsEntrypoint) =>
+  createAction(LOAD_POSTS_ENTRYPOINT, payload);
+
 export const PostsActions = {
   ChangeIsDeletePostDialogOpen,
   ChangePost,
+  LoadPostsEntrypoint,
   ReceiveCreatePost,
   ReceiveDeletePost,
   ReceiveGetPost,
