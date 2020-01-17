@@ -1,6 +1,7 @@
 import { IValidationErrorResponse } from "@sotah-inc/core";
 
 import {
+  LoadPostsEntrypoint,
   PostsActions,
   ReceiveCreatePost,
   ReceiveDeletePost,
@@ -14,6 +15,13 @@ import { IPostsState } from "../../types/posts";
 import { IKindHandlers, Runner } from "./index";
 
 export const handlers: IKindHandlers<IPostsState, PostsActions> = {
+  entrypoint: {
+    posts: {
+      load: (state: IPostsState, _action: ReturnType<typeof LoadPostsEntrypoint>) => {
+        return { ...state };
+      },
+    },
+  },
   post: {
     create: {
       receive: (state: IPostsState, action: ReturnType<typeof ReceiveCreatePost>) => {
