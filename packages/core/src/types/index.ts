@@ -7,6 +7,7 @@ export * from "./item-class";
 export * from "./pricelist";
 export * from "./profession";
 export * from "./region";
+export * from "./token";
 
 export enum SortDirection {
   none,
