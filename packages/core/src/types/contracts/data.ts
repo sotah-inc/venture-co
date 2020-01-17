@@ -1,7 +1,7 @@
 import { IAuction } from "../auction";
 import { IPostJson, IProfessionPricelistJson } from "../entities";
 import { ExpansionName, IExpansion } from "../expansion";
-import { IPricesFlagged, SortDirection, SortKind } from "../index";
+import { IPricesFlagged, ITokenHistory, SortDirection, SortKind } from "../index";
 import { IItem, IItemsMap, ItemId } from "../item";
 import { IItemClass } from "../item-class";
 import {
@@ -20,6 +20,10 @@ export interface IGetBootResponse {
   };
   expansions: IExpansion[];
   professions: IProfession[];
+}
+
+export interface IGetTokenHistoryResponse {
+  history: ITokenHistory;
 }
 
 export interface IStatusRealm extends IRealm {
