@@ -13,6 +13,7 @@ import {
   IGetPricelistResponse,
   IGetProfessionPricelistsResponse,
   IGetRealmsResponse,
+  IGetTokenHistoryResponse,
   IGetUnmetDemandRequest,
   IGetUnmetDemandResponse,
   IItemPriceLimits,
@@ -797,6 +798,28 @@ export class DataController {
     // dumping out a response
     return {
       data: { profession_pricelists: professionPricelists.map(v => v.toJson()), items },
+      status: HTTPStatus.OK,
+    };
+  };
+
+  public getTokenHistory: RequestHandler<null, IGetTokenHistoryResponse | null> = async req => {
+    const msg = await this.messenger.getTokenHistory(req.params["regionName"]);
+    if (msg.code !== code.ok) {
+      if (msg.code === code.notFound) {
+        return {
+          data: null,
+          status: HTTPStatus.NOT_FOUND,
+        };
+      }
+
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    return {
+      data: { history: msg.data! },
       status: HTTPStatus.OK,
     };
   };

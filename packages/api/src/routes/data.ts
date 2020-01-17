@@ -34,6 +34,12 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
     }),
   );
   router.get(
+    "/region/:regionName/token-history",
+    wrap(async (req: Request, res: Response) => {
+      await handle(controller.getTokenHistory, req, res);
+    }),
+  );
+  router.get(
     "/region/:regionName/realm/:realmSlug/auctions",
     wrap(async (req: Request, res: Response) => {
       await handle(controller.getAuctions, req, res);
