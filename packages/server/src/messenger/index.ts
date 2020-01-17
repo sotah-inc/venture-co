@@ -1,4 +1,4 @@
-import { IStatus, ItemId, RegionName } from "@sotah-inc/core";
+import { IStatus, ItemId, ITokenHistory, RegionName } from "@sotah-inc/core";
 import * as nats from "nats";
 
 import { gunzip } from "../util";
@@ -35,6 +35,7 @@ export enum subjects {
   sessionSecret = "sessionSecret",
   queryRealmModificationDates = "queryRealmModificationDates",
   realmModificationDates = "realmModificationDates",
+  tokenHistory = "tokenHistory",
 }
 
 export enum code {
@@ -66,6 +67,12 @@ export class Messenger {
 
   constructor(client: nats.Client) {
     this.client = client;
+  }
+
+  public getTokenHistory(regionName: RegionName): Promise<Message<ITokenHistory>> {
+    return this.request(subjects.tokenHistory, {
+      body: JSON.stringify({ region_name: regionName }),
+    });
   }
 
   public getStatus(regionNameValue: RegionName): Promise<Message<IStatus>> {
