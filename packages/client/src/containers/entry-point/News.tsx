@@ -13,8 +13,9 @@ import { IStoreState } from "../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const { currentRegion, authLevel } = state.Main;
+  const { regionTokenHistories } = state.Posts;
 
-  return { currentRegion, authLevel };
+  return { currentRegion, authLevel, regionTokenHistories };
 };
 
 const mapDispatchToProps: IDispatchProps = {
