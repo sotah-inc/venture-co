@@ -34,7 +34,7 @@ export const handlers: IKindHandlers<IPostsState, PostsActions> = {
           createPostErrors: {},
           createPostLevel: FetchLevel.success,
           currentPost: action.payload.post!,
-          getPostsLevel: FetchLevel.prompted,
+          posts: { ...state.posts, level: FetchLevel.prompted },
         };
       },
       request: (state: IPostsState) => {
@@ -51,8 +51,8 @@ export const handlers: IKindHandlers<IPostsState, PostsActions> = {
           ...state,
           currentPost: null,
           deletePostLevel: FetchLevel.success,
-          getPostsLevel: FetchLevel.prompted,
           isDeletePostDialogOpen: false,
+          posts: { ...state.posts, level: FetchLevel.prompted },
         };
       },
       request: (state: IPostsState) => {
@@ -85,7 +85,7 @@ export const handlers: IKindHandlers<IPostsState, PostsActions> = {
           return { ...state, updatePostLevel: FetchLevel.failure, updatePostErrors };
         }
 
-        const posts = state.posts.map(v => {
+        const postsData = state.posts.data.map(v => {
           if (v.id === action.payload.post!.id) {
             return action.payload.post!;
           }
@@ -96,7 +96,7 @@ export const handlers: IKindHandlers<IPostsState, PostsActions> = {
         return {
           ...state,
           currentPost: action.payload.post!,
-          posts,
+          posts: { ...state.posts, data: postsData },
           updatePostErrors: {},
           updatePostLevel: FetchLevel.success,
         };
@@ -110,13 +110,16 @@ export const handlers: IKindHandlers<IPostsState, PostsActions> = {
     get: {
       receive: (state: IPostsState, action: ReturnType<typeof ReceiveGetPosts>) => {
         if (typeof action.payload.error !== "undefined") {
-          return { ...state, getPostsLevel: FetchLevel.failure };
+          return { ...state, posts: { ...state.posts, level: FetchLevel.failure } };
         }
 
-        return { ...state, getPostsLevel: FetchLevel.success, posts: action.payload.posts };
+        return {
+          ...state,
+          posts: { data: action.payload.posts, errors: {}, level: FetchLevel.success },
+        };
       },
       request: (state: IPostsState) => {
-        return { ...state, getPostsLevel: FetchLevel.fetching };
+        return { ...state, posts: { ...state.posts, level: FetchLevel.fetching } };
       },
     },
   },

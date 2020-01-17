@@ -8,8 +8,7 @@ export interface IRegionTokenHistories {
 }
 
 export interface IPostsState {
-  getPostsLevel: FetchLevel;
-  posts: IPostJson[];
+  posts: IFetchData<IPostJson[]>;
   createPostLevel: FetchLevel;
   createPostErrors: {
     [key: string]: string;
@@ -31,9 +30,12 @@ export const defaultPostsState: IPostsState = {
   currentPost: null,
   deletePostLevel: FetchLevel.initial,
   getPostLevel: FetchLevel.initial,
-  getPostsLevel: FetchLevel.initial,
   isDeletePostDialogOpen: false,
-  posts: [],
+  posts: {
+    data: [],
+    errors: {},
+    level: FetchLevel.initial,
+  },
   regionTokenHistories: {
     data: {},
     errors: {},

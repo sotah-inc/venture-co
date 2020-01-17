@@ -10,7 +10,9 @@ import { IStoreState } from "../../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const { profile } = state.Main;
-  const { posts, getPostsLevel } = state.Posts;
+  const {
+    posts: { data: posts, level: getPostsLevel },
+  } = state.Posts;
   const user = profile === null ? null : profile.user;
 
   return { getPostsLevel, posts, user };
