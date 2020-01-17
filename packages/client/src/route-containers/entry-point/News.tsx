@@ -8,11 +8,11 @@ import { NewsContainer } from "../../containers/entry-point/News";
 
 type Props = Readonly<WithRouterProps & IOwnProps>;
 
-function RouteContainer({ router, posts }: Props) {
+function RouteContainer({ router, entrypointData }: Props) {
   return (
     <NewsContainer
       historyPush={(destination, asDest) => router.replace(destination, asDest)}
-      posts={posts}
+      entrypointData={entrypointData}
     />
   );
 }

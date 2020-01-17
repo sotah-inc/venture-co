@@ -3,7 +3,7 @@ import React from "react";
 import { Classes, H1, H4, Icon, IconName, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
 import { IRegion } from "@sotah-inc/core";
 
-import { IGetPostsResult } from "../../api/data";
+import { ILoadPostsEntrypoint } from "../../actions/posts";
 // tslint:disable-next-line:max-line-length
 import { DeletePostDialogRouteContainer } from "../../route-containers/entry-point/News/DeletePostDialog";
 import { PostListRouteContainer } from "../../route-containers/entry-point/News/PostList";
@@ -18,11 +18,11 @@ export interface IStateProps {
 
 export interface IDispatchProps {
   changeIsRegisterDialogOpen: (isOpen: boolean) => void;
-  loadNewsPosts: (payload: IGetPostsResult) => void;
+  loadEntrypointData: (payload: ILoadPostsEntrypoint) => void;
 }
 
 export interface IOwnProps {
-  posts: IGetPostsResult;
+  entrypointData: ILoadPostsEntrypoint;
 }
 
 export interface IRouteProps {
@@ -33,12 +33,23 @@ type Props = Readonly<IStateProps & IDispatchProps & IOwnProps & IRouteProps>;
 
 export class News extends React.Component<Props> {
   public componentDidMount() {
-    // props
-    const { loadNewsPosts, posts } = this.props;
+    const { entrypointData, loadEntrypointData } = this.props;
 
     setTitle("News");
 
-    loadNewsPosts(posts);
+    loadEntrypointData(entrypointData);
+  }
+
+  public componentDidUpdate(prevProps: Props) {
+    const { entrypointData, loadEntrypointData } = this.props;
+
+    if (entrypointData.loadId !== prevProps.entrypointData.loadId) {
+      setTitle("News");
+
+      loadEntrypointData(entrypointData);
+
+      return;
+    }
   }
 
   public render() {

@@ -18,6 +18,8 @@ export const handlers: IKindHandlers<IPostsState, PostsActions> = {
   entrypoint: {
     posts: {
       load: (state: IPostsState, action: ReturnType<typeof LoadPostsEntrypoint>) => {
+        const loadId = action.payload.loadId;
+
         const posts: IFetchData<IPostJson[]> = (() => {
           if (typeof action.payload.posts.error !== "undefined") {
             return { ...state.posts, level: FetchLevel.failure };
@@ -60,7 +62,7 @@ export const handlers: IKindHandlers<IPostsState, PostsActions> = {
           return { data, errors: {}, level: FetchLevel.success };
         })();
 
-        return { ...state, posts, regionTokenHistories };
+        return { ...state, loadId, posts, regionTokenHistories };
       },
     },
   },

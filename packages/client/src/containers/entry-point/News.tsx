@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 
 import { ChangeIsRegisterDialogOpen } from "../../actions/main";
-import { ReceiveGetPosts } from "../../actions/posts";
+import { LoadPostsEntrypoint } from "../../actions/posts";
 import {
   IDispatchProps,
   IOwnProps,
@@ -13,12 +13,13 @@ import { IStoreState } from "../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const { currentRegion, authLevel } = state.Main;
+
   return { currentRegion, authLevel };
 };
 
 const mapDispatchToProps: IDispatchProps = {
   changeIsRegisterDialogOpen: ChangeIsRegisterDialogOpen,
-  loadNewsPosts: ReceiveGetPosts,
+  loadEntrypointData: LoadPostsEntrypoint,
 };
 
 export const NewsContainer = connect<IStateProps, IDispatchProps, IOwnProps & IRouteProps>(
