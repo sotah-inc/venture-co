@@ -218,7 +218,7 @@ export const getTokenHistory = async (regionName: RegionName): Promise<IGetToken
   const { body, status } = await gather<null, IGetTokenHistoryResponse>({
     headers: new Headers({ "content-type": "application/json" }),
     method: "GET",
-    url: `${getApiEndpoint()}/token-history/${regionName}`,
+    url: `${getApiEndpoint()}/region/${regionName}/token-history`,
   });
 
   switch (status) {
