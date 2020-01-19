@@ -4,19 +4,17 @@ import { Classes, H1, H4, Icon, IconName, Intent, NonIdealState, Spinner } from 
 import { IRegion } from "@sotah-inc/core";
 
 import { ILoadPostsEntrypoint } from "../../actions/posts";
+import { TokenHistoryGraphContainer } from "../../containers/entry-point/News/TokenHistoryGraph";
 // tslint:disable-next-line:max-line-length
 import { DeletePostDialogRouteContainer } from "../../route-containers/entry-point/News/DeletePostDialog";
 import { PostListRouteContainer } from "../../route-containers/entry-point/News/PostList";
-import { IFetchData } from "../../types/global";
 import { AuthLevel } from "../../types/main";
-import { IRegionTokenHistories } from "../../types/posts";
 import { setTitle } from "../../util";
 import { CardCallout } from "../util";
 
 export interface IStateProps {
   currentRegion: IRegion | null;
   authLevel: AuthLevel;
-  regionTokenHistories: IFetchData<IRegionTokenHistories>;
 }
 
 export interface IDispatchProps {
@@ -104,7 +102,9 @@ export class News extends React.Component<Props> {
             </div>
             <PostListRouteContainer />
           </div>
-          <div className="pure-u-1-4">&nbsp;</div>
+          <div className="pure-u-1-4">
+            <TokenHistoryGraphContainer />
+          </div>
         </div>
       </>
     );
