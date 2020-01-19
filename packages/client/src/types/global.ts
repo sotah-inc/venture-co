@@ -54,3 +54,8 @@ export interface IFetchInfo {
 export interface IFetchData<T> extends IFetchInfo {
   data: T;
 }
+
+export interface ILineItem {
+  name: number;
+  [dataKey: string]: number;
+}

@@ -2,20 +2,29 @@ import {
   IExpansion,
   IItem,
   IItemClass,
+  IItemPricelistHistoryMap,
   IItemsMap,
   InventoryType,
+  IPricelistHistoryMap,
   IPricelistJson,
+  IPricesFlagged,
   IQueryAuctionsItem,
   IRealm,
   IRegion,
   ItemQuality,
   ItemStat,
 } from "@sotah-inc/core";
+import { IStatusRealm } from "@sotah-inc/core/build/dist/types/contracts/data";
 import moment from "moment";
 
-import { IStatusRealm } from "@sotah-inc/core/build/dist/types/contracts/data";
 import { getApiEndpoint } from "../api";
-import { IItemClasses, IItemClassWithSub, IRegions, ISubItemClasses } from "../types/global";
+import {
+  IItemClasses,
+  IItemClassWithSub,
+  ILineItem,
+  IRegions,
+  ISubItemClasses,
+} from "../types/global";
 
 const hostname: string = (() => {
   if (typeof window === "undefined") {
@@ -281,3 +290,71 @@ export const getItemFromPricelist = (items: IItemsMap, pricelist: IPricelistJson
 
   return foundItem;
 };
+
+export function getXAxisTimeRestrictions() {
+  const twoWeeksAgoDate = moment().subtract(14, "days");
+  const roundedTwoWeeksAgoDate = moment()
+    .subtract(16, "days")
+    .subtract(twoWeeksAgoDate.hours(), "hours")
+    .subtract(twoWeeksAgoDate.minutes(), "minutes")
+    .subtract(twoWeeksAgoDate.seconds(), "seconds");
+  const nowDate = moment().add(1, "days");
+  const roundedNowDate = moment()
+    .add(1, "days")
+    .subtract(nowDate.hours(), "hours")
+    .subtract(nowDate.minutes(), "minutes")
+    .subtract(nowDate.seconds(), "seconds")
+    .add(12, "hours");
+
+  const xAxisTicks = Array.from(Array(9)).map((_, i) => {
+    return roundedTwoWeeksAgoDate.unix() + i * 60 * 60 * 24 * 2;
+  });
+
+  return { roundedTwoWeeksAgoDate, roundedNowDate, xAxisTicks };
+}
+
+export const zeroGraphValue = 0.1;
+
+export function convertPricelistHistoryMapToLineData(
+  pricelistHistoryMap: IItemPricelistHistoryMap<IPricesFlagged>,
+): ILineItem[] {
+  return Object.keys(pricelistHistoryMap).reduce<ILineItem[]>(
+    (dataPreviousValue: ILineItem[], itemIdKey: string) => {
+      const itemPricelistHistory: IPricelistHistoryMap<IPricesFlagged> =
+        pricelistHistoryMap[Number(itemIdKey)];
+      const itemId = Number(itemIdKey);
+
+      return Object.keys(itemPricelistHistory).reduce(
+        (previousValue: ILineItem[], unixTimestampKey) => {
+          const unixTimestamp = Number(unixTimestampKey);
+          const prices = itemPricelistHistory[unixTimestamp];
+
+          const buyoutValue: number = (() => {
+            if (prices.min_buyout_per === 0) {
+              return zeroGraphValue;
+            }
+
+            return prices.min_buyout_per / 10 / 10;
+          })();
+          const volumeValue: number = (() => {
+            if (prices.volume === 0) {
+              return zeroGraphValue;
+            }
+
+            return prices.volume;
+          })();
+
+          previousValue.push({
+            name: unixTimestamp,
+            [`${itemId}_buyout`]: buyoutValue,
+            [`${itemId}_volume`]: volumeValue,
+          });
+
+          return previousValue;
+        },
+        dataPreviousValue,
+      );
+    },
+    [],
+  );
+}
