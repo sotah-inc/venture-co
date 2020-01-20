@@ -1,6 +1,7 @@
 import React from "react";
 
 import { RegionName } from "@sotah-inc/core";
+import moment from "moment";
 import {
   CartesianGrid,
   Legend,
@@ -17,7 +18,6 @@ import { IRegionTokenHistories } from "../../../types/posts";
 import {
   convertRegionTokenHistoriesToLineData,
   currencyToText,
-  getXAxisTimeRestrictions,
   unixTimestampToText,
   zeroGraphValue,
 } from "../../../util";
@@ -30,13 +30,29 @@ type Props = Readonly<IStateProps>;
 
 export class TokenHistoryGraph extends React.Component<Props> {
   private static renderXAxis() {
-    const { xAxisTicks, roundedNowDate, roundedTwoWeeksAgoDate } = getXAxisTimeRestrictions();
+    const earlilestDateLimit = moment().subtract(2, "days");
+    const roundedEarliestDateLimit = moment()
+      .subtract(4, "days")
+      .subtract(earlilestDateLimit.hours(), "hours")
+      .subtract(earlilestDateLimit.minutes(), "minutes")
+      .subtract(earlilestDateLimit.seconds(), "seconds");
+    const nowDate = moment().add(1, "days");
+    const roundedNowDate = moment()
+      .add(1, "days")
+      .subtract(nowDate.hours(), "hours")
+      .subtract(nowDate.minutes(), "minutes")
+      .subtract(nowDate.seconds(), "seconds")
+      .add(12, "hours");
+
+    const xAxisTicks = Array.from(Array(3)).map((_, i) => {
+      return roundedEarliestDateLimit.unix() + i * 60 * 60 * 24 * 2;
+    });
 
     return (
       <XAxis
         dataKey="name"
         tickFormatter={unixTimestampToText}
-        domain={[roundedTwoWeeksAgoDate.unix(), roundedNowDate.unix()]}
+        domain={[roundedEarliestDateLimit.unix(), roundedNowDate.unix()]}
         type="number"
         ticks={xAxisTicks}
         tick={{ fill: "#fff" }}
@@ -109,6 +125,9 @@ export class TokenHistoryGraph extends React.Component<Props> {
     }
 
     const data = convertRegionTokenHistoriesToLineData(regionTokenHistories.data);
+
+    // tslint:disable-next-line:no-console
+    console.log(data);
 
     return (
       <ResponsiveContainer width="100%" height={250}>
