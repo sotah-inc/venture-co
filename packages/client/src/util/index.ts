@@ -79,10 +79,8 @@ export const currencyToText = (amount: number, hideCopper?: boolean): string => 
   return outputParams.filter(v => v !== null).join(" ");
 };
 
-export const unixTimestampToText = (unixTimestamp: number): string => {
-  const date = new Date(unixTimestamp * 1000);
-  return moment(date).format("MMM D");
-};
+export const unixTimestampToText = (unixTimestamp: number): string =>
+  moment(new Date(unixTimestamp * 1000)).format("MMM D");
 
 export const getColor = (index: number): string => {
   const choices = [
@@ -397,7 +395,7 @@ export function convertRegionTokenHistoriesToLineData(
 
     return {
       data,
-      name: Number(unixTimestamp),
+      name: Number(unixTimestamp) / 1000,
     };
   });
 }
