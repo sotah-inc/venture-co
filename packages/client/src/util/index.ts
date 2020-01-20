@@ -21,7 +21,7 @@ import { getApiEndpoint } from "../api";
 import {
   IItemClasses,
   IItemClassWithSub,
-  ILineItem,
+  ILineItemOpen,
   IRegions,
   ISubItemClasses,
 } from "../types/global";
@@ -317,15 +317,15 @@ export const zeroGraphValue = 0.1;
 
 export function convertPricelistHistoryMapToLineData(
   pricelistHistoryMap: IItemPricelistHistoryMap<IPricesFlagged>,
-): ILineItem[] {
-  return Object.keys(pricelistHistoryMap).reduce<ILineItem[]>(
-    (dataPreviousValue: ILineItem[], itemIdKey: string) => {
+): ILineItemOpen[] {
+  return Object.keys(pricelistHistoryMap).reduce<ILineItemOpen[]>(
+    (dataPreviousValue: ILineItemOpen[], itemIdKey: string) => {
       const itemPricelistHistory: IPricelistHistoryMap<IPricesFlagged> =
         pricelistHistoryMap[Number(itemIdKey)];
       const itemId = Number(itemIdKey);
 
       return Object.keys(itemPricelistHistory).reduce(
-        (previousValue: ILineItem[], unixTimestampKey) => {
+        (previousValue: ILineItemOpen[], unixTimestampKey) => {
           const unixTimestamp = Number(unixTimestampKey);
           const prices = itemPricelistHistory[unixTimestamp];
 
@@ -346,8 +346,10 @@ export function convertPricelistHistoryMapToLineData(
 
           previousValue.push({
             name: unixTimestamp,
-            [`${itemId}_buyout`]: buyoutValue,
-            [`${itemId}_volume`]: volumeValue,
+            data: {
+              [`${itemId}_buyout`]: buyoutValue,
+              [`${itemId}_volume`]: volumeValue,
+            },
           });
 
           return previousValue;

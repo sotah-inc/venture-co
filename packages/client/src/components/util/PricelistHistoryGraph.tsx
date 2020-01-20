@@ -13,6 +13,7 @@ import {
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
 import { ItemPopoverContainer } from "../../containers/util/ItemPopover";
+import { ILineItemOpen } from "../../types/global";
 import {
   convertPricelistHistoryMapToLineData,
   currencyToText,
@@ -471,7 +472,7 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
       <Line
         key={index}
         name={items[itemId]?.name ?? itemId.toString()}
-        dataKey={this.getDataKey(itemId)}
+        dataKey={(item: ILineItemOpen) => item.data[this.getDataKey(itemId)]}
         stroke={stroke}
         strokeWidth={strokeWidth}
         dot={dot}
