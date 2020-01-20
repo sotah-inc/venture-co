@@ -56,7 +56,21 @@ export const currencyToText = (amount: number, hideCopper?: boolean): string => 
 
   const copperOutput = copper > 0 ? `${copper.toFixed()}c` : null;
   const silverOutput = silver > 0 ? `${silver.toFixed()}s` : null;
-  const goldOutput = gold > 0 ? `${Number(gold.toFixed(0)).toLocaleString()}g` : null;
+  const goldOutput = (() => {
+    if (gold === 0) {
+      return null;
+    }
+
+    if (gold > 1000 * 1000) {
+      return `${Number((gold / 1000 / 1000).toFixed(0)).toLocaleString()}Mg`;
+    }
+
+    if (gold > 100 * 1000) {
+      return `${Number((gold / 1000).toFixed(0)).toLocaleString()}Kg`;
+    }
+
+    return `${Number(gold.toFixed(0)).toLocaleString()}g`;
+  })();
   const outputParams = [goldOutput, silverOutput];
   if (typeof hideCopper === "undefined" || !hideCopper) {
     outputParams.push(copperOutput);
