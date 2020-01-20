@@ -345,11 +345,11 @@ export function convertPricelistHistoryMapToLineData(
           })();
 
           previousValue.push({
-            name: unixTimestamp,
             data: {
               [`${itemId}_buyout`]: buyoutValue,
               [`${itemId}_volume`]: volumeValue,
             },
+            name: unixTimestamp,
           });
 
           return previousValue;
