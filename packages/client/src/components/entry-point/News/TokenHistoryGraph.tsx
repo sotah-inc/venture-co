@@ -1,11 +1,15 @@
 import React from "react";
 
-import { LineChart, ResponsiveContainer } from "recharts";
+import { CartesianGrid, LineChart, ResponsiveContainer, XAxis } from "recharts";
 
 import { IFetchData } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
 import { IRegionTokenHistories } from "../../../types/posts";
-import { convertRegionTokenHistoriesToLineData } from "../../../util";
+import {
+  convertRegionTokenHistoriesToLineData,
+  getXAxisTimeRestrictions,
+  unixTimestampToText,
+} from "../../../util";
 
 export interface IStateProps {
   regionTokenHistories: IFetchData<IRegionTokenHistories>;
@@ -28,10 +32,21 @@ export class TokenHistoryGraph extends React.Component<Props> {
     }
 
     const data = convertRegionTokenHistoriesToLineData(regionTokenHistories.data);
+    const { xAxisTicks, roundedNowDate, roundedTwoWeeksAgoDate } = getXAxisTimeRestrictions();
 
     return (
       <ResponsiveContainer width="100%" height={250}>
-        <LineChart data={data} />
+        <LineChart data={data}>
+          <CartesianGrid vertical={false} strokeWidth={0.25} strokeOpacity={0.25} />
+          <XAxis
+            dataKey="name"
+            tickFormatter={unixTimestampToText}
+            domain={[roundedTwoWeeksAgoDate.unix(), roundedNowDate.unix()]}
+            type="number"
+            ticks={xAxisTicks}
+            tick={{ fill: "#fff" }}
+          />
+        </LineChart>
       </ResponsiveContainer>
     );
   }
