@@ -44,7 +44,7 @@ export const setTitle = (prefix: string) => {
   document.title = `${prefix} - ${title}`;
 };
 
-export const currencyToText = (amount: number): string => {
+export const currencyToText = (amount: number, hideCopper?: boolean): string => {
   if (amount === 0) {
     return "0g";
   }
@@ -57,8 +57,12 @@ export const currencyToText = (amount: number): string => {
   const copperOutput = copper > 0 ? `${copper.toFixed()}c` : null;
   const silverOutput = silver > 0 ? `${silver.toFixed()}s` : null;
   const goldOutput = gold > 0 ? `${Number(gold.toFixed(0)).toLocaleString()}g` : null;
+  const outputParams = [goldOutput, silverOutput];
+  if (typeof hideCopper === "undefined" || !hideCopper) {
+    outputParams.push(copperOutput);
+  }
 
-  return [goldOutput, silverOutput, copperOutput].filter(v => v !== null).join(" ");
+  return outputParams.filter(v => v !== null).join(" ");
 };
 
 export const unixTimestampToText = (unixTimestamp: number): string => {
