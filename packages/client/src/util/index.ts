@@ -25,6 +25,7 @@ import {
   IRegions,
   ISubItemClasses,
 } from "../types/global";
+import { IRegionTokenHistories } from "../types/posts";
 
 const hostname: string = (() => {
   if (typeof window === "undefined") {
@@ -314,6 +315,57 @@ export function getXAxisTimeRestrictions() {
 }
 
 export const zeroGraphValue = 0.1;
+
+interface IRegionTokenHistoryIntermediate {
+  [unixtimestamp: number]: {
+    [regionName: string]: number;
+  };
+}
+
+export function convertRegionTokenHistoriesToLineData(
+  regionTokenHistories: IRegionTokenHistories,
+): ILineItemOpen[] {
+  // grouping data by unix timestamp, for easier consumption
+  const dataIntermediate = Object.keys(regionTokenHistories).reduce<
+    IRegionTokenHistoryIntermediate
+  >((dataIntermediate1, regionName) => {
+    const tokenHistory = regionTokenHistories[regionName];
+    if (typeof tokenHistory === "undefined") {
+      return dataIntermediate1;
+    }
+
+    return Object.keys(tokenHistory).reduce<IRegionTokenHistoryIntermediate>(
+      (dataIntermediate2, unixTimestamp) => {
+        const parsedUnixTimestamp = Number(unixTimestamp);
+        if (!(parsedUnixTimestamp in dataIntermediate2)) {
+          dataIntermediate2[parsedUnixTimestamp] = {};
+        }
+
+        dataIntermediate2[parsedUnixTimestamp][regionName] = tokenHistory[parsedUnixTimestamp];
+
+        return dataIntermediate2;
+      },
+      dataIntermediate1,
+    );
+  }, {});
+
+  // converting each grouping to line-item data
+  return Object.keys(dataIntermediate).map<ILineItemOpen>(unixTimestamp => {
+    const data = Object.keys(dataIntermediate[Number(unixTimestamp)]).reduce<{
+      [dataKey: string]: number;
+    }>((data1, regionName) => {
+      return {
+        ...data1,
+        [`${regionName}_token_price`]: dataIntermediate[Number(unixTimestamp)][regionName],
+      };
+    }, {});
+
+    return {
+      data,
+      name: Number(unixTimestamp),
+    };
+  });
+}
 
 export function convertPricelistHistoryMapToLineData(
   pricelistHistoryMap: IItemPricelistHistoryMap<IPricesFlagged>,
