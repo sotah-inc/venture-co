@@ -2,9 +2,10 @@ import React from "react";
 
 import { LineChart, ResponsiveContainer } from "recharts";
 
-import { IFetchData, ILineItemOpen } from "../../../types/global";
+import { IFetchData } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
 import { IRegionTokenHistories } from "../../../types/posts";
+import { convertRegionTokenHistoriesToLineData } from "../../../util";
 
 export interface IStateProps {
   regionTokenHistories: IFetchData<IRegionTokenHistories>;
@@ -26,27 +27,7 @@ export class TokenHistoryGraph extends React.Component<Props> {
         return <p>Fetching regional token-histories...</p>;
     }
 
-    const data = Object.keys(regionTokenHistories).reduce<ILineItemOpen[]>(
-      (prevData, regionName) => {
-        const tokenHistory = regionTokenHistories.data[regionName];
-        if (typeof tokenHistory === "undefined") {
-          return prevData;
-        }
-
-        return Object.keys(tokenHistory).reduce<ILineItemOpen[]>((finalResult, unixTimestamp) => {
-          return [
-            ...finalResult,
-            {
-              data: {
-                [`${regionName}_token_price`]: tokenHistory[Number(unixTimestamp)],
-              },
-              name: Number(unixTimestamp),
-            },
-          ];
-        }, prevData);
-      },
-      [],
-    );
+    const data = convertRegionTokenHistoriesToLineData(regionTokenHistories.data);
 
     return (
       <ResponsiveContainer width="100%" height={250}>
