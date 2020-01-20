@@ -1,7 +1,15 @@
 import React from "react";
 
 import { RegionName } from "@sotah-inc/core";
-import { CartesianGrid, Line, LineChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
+import {
+  CartesianGrid,
+  Legend,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 import { IFetchData, ILineItemOpen } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
@@ -82,6 +90,7 @@ export class TokenHistoryGraph extends React.Component<Props> {
         animationDuration={500}
         animationEasing={"ease-in-out"}
         type={"basis"}
+        connectNulls={true}
       />
     );
   }
@@ -105,6 +114,7 @@ export class TokenHistoryGraph extends React.Component<Props> {
       <ResponsiveContainer width="100%" height={250}>
         <LineChart data={data}>
           <CartesianGrid vertical={false} strokeWidth={0.25} strokeOpacity={0.25} />
+          <Legend />
           {TokenHistoryGraph.renderXAxis()}
           {TokenHistoryGraph.renderYAxis()}
           {this.renderLines()}
@@ -116,6 +126,6 @@ export class TokenHistoryGraph extends React.Component<Props> {
   private renderLines() {
     const { regionTokenHistories } = this.props;
 
-    return Object.keys(regionTokenHistories).map((v, i) => TokenHistoryGraph.renderLine(i, v));
+    return Object.keys(regionTokenHistories.data).map((v, i) => TokenHistoryGraph.renderLine(i, v));
   }
 }
