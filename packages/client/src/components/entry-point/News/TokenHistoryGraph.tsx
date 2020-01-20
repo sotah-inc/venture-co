@@ -30,9 +30,9 @@ type Props = Readonly<IStateProps>;
 
 export class TokenHistoryGraph extends React.Component<Props> {
   private static renderXAxis() {
-    const earlilestDateLimit = moment().subtract(2, "days");
+    const earlilestDateLimit = moment().subtract(1, "days");
     const roundedEarliestDateLimit = moment()
-      .subtract(4, "days")
+      .subtract(1, "days")
       .subtract(earlilestDateLimit.hours(), "hours")
       .subtract(earlilestDateLimit.minutes(), "minutes")
       .subtract(earlilestDateLimit.seconds(), "seconds");
@@ -44,9 +44,9 @@ export class TokenHistoryGraph extends React.Component<Props> {
       .subtract(nowDate.seconds(), "seconds")
       .add(12, "hours");
 
-    const xAxisTicks = Array.from(Array(3)).map((_, i) => {
-      return roundedEarliestDateLimit.unix() + i * 60 * 60 * 24 * 2;
-    });
+    const xAxisTicks = Array.from(Array(4)).map(
+      (_, i) => roundedEarliestDateLimit.unix() + i * 60 * 60 * 24,
+    );
 
     return (
       <XAxis
@@ -63,7 +63,7 @@ export class TokenHistoryGraph extends React.Component<Props> {
   private static renderYAxis() {
     return (
       <YAxis
-        tickFormatter={v => currencyToText(v * 10 * 10)}
+        tickFormatter={currencyToText}
         domain={[
           dataMin => {
             if (dataMin <= 1) {

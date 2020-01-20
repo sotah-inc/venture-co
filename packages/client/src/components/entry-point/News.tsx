@@ -100,10 +100,11 @@ export class News extends React.Component<Props> {
               </div>
               {this.renderUserCallout()}
             </div>
-            <TokenHistoryGraphContainer />
             <PostListRouteContainer />
           </div>
-          <div className="pure-u-1-4">&nbsp;</div>
+          <div className="pure-u-1-4">
+            <TokenHistoryGraphContainer />
+          </div>
         </div>
       </>
     );
