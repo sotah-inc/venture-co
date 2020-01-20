@@ -1,8 +1,9 @@
 import React from "react";
 
-import { CartesianGrid, LineChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
+import { RegionName } from "@sotah-inc/core";
+import { CartesianGrid, Line, LineChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
-import { IFetchData } from "../../../types/global";
+import { IFetchData, ILineItemOpen } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
 import { IRegionTokenHistories } from "../../../types/posts";
 import {
@@ -68,6 +69,23 @@ export class TokenHistoryGraph extends React.Component<Props> {
     );
   }
 
+  private static getDataKey(regionName: RegionName) {
+    return `${regionName}_token_price`;
+  }
+
+  private static renderLine(index: number, regionName: RegionName) {
+    return (
+      <Line
+        key={index}
+        name={regionName}
+        dataKey={(item: ILineItemOpen) => item.data[TokenHistoryGraph.getDataKey(regionName)]}
+        animationDuration={500}
+        animationEasing={"ease-in-out"}
+        type={"basis"}
+      />
+    );
+  }
+
   public render() {
     const { regionTokenHistories } = this.props;
 
@@ -89,8 +107,15 @@ export class TokenHistoryGraph extends React.Component<Props> {
           <CartesianGrid vertical={false} strokeWidth={0.25} strokeOpacity={0.25} />
           {TokenHistoryGraph.renderXAxis()}
           {TokenHistoryGraph.renderYAxis()}
+          {this.renderLines()}
         </LineChart>
       </ResponsiveContainer>
     );
+  }
+
+  private renderLines() {
+    const { regionTokenHistories } = this.props;
+
+    return Object.keys(regionTokenHistories).map((v, i) => TokenHistoryGraph.renderLine(i, v));
   }
 }
