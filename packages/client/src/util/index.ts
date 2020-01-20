@@ -322,7 +322,7 @@ export const zeroGraphValue = 0.1;
 
 interface IRegionTokenHistoryIntermediate {
   [unixtimestamp: number]: {
-    [regionName: string]: number;
+    [regionName: string]: number | null;
   };
 }
 
@@ -353,10 +353,27 @@ export function convertRegionTokenHistoriesToLineData(
     );
   }, {});
 
+  // filling in missing data
+  const filledDataIntermediate = Object.keys(dataIntermediate).reduce<
+    IRegionTokenHistoryIntermediate
+  >((dataIntermediate1, unixTimestamp) => {
+    const foundIntermediate = dataIntermediate1[Number(unixTimestamp)];
+    for (const regionName of Object.keys(regionTokenHistories)) {
+      if (!(regionName in foundIntermediate)) {
+        foundIntermediate[regionName] = null;
+      }
+    }
+
+    return {
+      ...dataIntermediate1,
+      [Number(unixTimestamp)]: foundIntermediate,
+    };
+  }, dataIntermediate);
+
   // converting each grouping to line-item data
-  return Object.keys(dataIntermediate).map<ILineItemOpen>(unixTimestamp => {
+  return Object.keys(filledDataIntermediate).map<ILineItemOpen>(unixTimestamp => {
     const data = Object.keys(dataIntermediate[Number(unixTimestamp)]).reduce<{
-      [dataKey: string]: number;
+      [dataKey: string]: number | null;
     }>((data1, regionName) => {
       return {
         ...data1,
