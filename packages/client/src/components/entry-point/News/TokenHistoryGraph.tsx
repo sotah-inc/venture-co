@@ -2,7 +2,7 @@ import React from "react";
 
 import { LineChart, ResponsiveContainer } from "recharts";
 
-import { IFetchData, ILineItem } from "../../../types/global";
+import { IFetchData, ILineItemOpen } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
 import { IRegionTokenHistories } from "../../../types/posts";
 
@@ -26,22 +26,27 @@ export class TokenHistoryGraph extends React.Component<Props> {
         return <p>Fetching regional token-histories...</p>;
     }
 
-    const data = Object.keys(regionTokenHistories).reduce<ILineItem[]>((prevData, regionName) => {
-      const tokenHistory = regionTokenHistories.data[regionName];
-      if (typeof tokenHistory === "undefined") {
-        return prevData;
-      }
+    const data = Object.keys(regionTokenHistories).reduce<ILineItemOpen[]>(
+      (prevData, regionName) => {
+        const tokenHistory = regionTokenHistories.data[regionName];
+        if (typeof tokenHistory === "undefined") {
+          return prevData;
+        }
 
-      return Object.keys(tokenHistory).reduce<ILineItem[]>((finalResult, unixTimestamp) => {
-        return [
-          ...finalResult,
-          {
-            name: Number(unixTimestamp),
-            [`${regionName}_token_price`]: tokenHistory[Number(unixTimestamp)],
-          },
-        ];
-      }, prevData);
-    }, []);
+        return Object.keys(tokenHistory).reduce<ILineItemOpen[]>((finalResult, unixTimestamp) => {
+          return [
+            ...finalResult,
+            {
+              data: {
+                [`${regionName}_token_price`]: tokenHistory[Number(unixTimestamp)],
+              },
+              name: Number(unixTimestamp),
+            },
+          ];
+        }, prevData);
+      },
+      [],
+    );
 
     return (
       <ResponsiveContainer width="100%" height={250}>
