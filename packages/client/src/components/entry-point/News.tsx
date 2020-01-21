@@ -103,6 +103,7 @@ export class News extends React.Component<Props> {
             <PostListRouteContainer />
           </div>
           <div className="pure-u-1-4">
+            <H4>Token Price History</H4>
             <TokenHistoryGraphContainer />
           </div>
         </div>
