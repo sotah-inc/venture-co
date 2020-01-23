@@ -34,14 +34,14 @@ export class TokenHistoryGraph extends React.Component<Props, State> {
       .subtract(nowDate.hours(), "hours")
       .subtract(nowDate.minutes(), "minutes")
       .subtract(nowDate.seconds(), "seconds")
-      .subtract(1, "days");
+      .subtract(2, "days");
     const roundedNowDate = moment()
       .subtract(nowDate.hours(), "hours")
       .subtract(nowDate.minutes(), "minutes")
       .subtract(nowDate.seconds(), "seconds")
       .add(1, "days");
 
-    const xAxisTicks = Array.from(Array(3)).map(
+    const xAxisTicks = Array.from(Array(4)).map(
       (_, i) => roundedEarliestDateLimit.unix() + i * 60 * 60 * 24,
     );
 
