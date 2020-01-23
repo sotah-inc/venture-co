@@ -29,21 +29,19 @@ type State = Readonly<{
 
 export class TokenHistoryGraph extends React.Component<Props, State> {
   private static renderXAxis() {
-    const earliestDateLimit = moment().subtract(1, "days");
+    const nowDate = moment();
     const roundedEarliestDateLimit = moment()
-      .subtract(1, "days")
-      .subtract(earliestDateLimit.hours(), "hours")
-      .subtract(earliestDateLimit.minutes(), "minutes")
-      .subtract(earliestDateLimit.seconds(), "seconds");
-    const nowDate = moment().add(1, "days");
-    const roundedNowDate = moment()
-      .add(1, "days")
       .subtract(nowDate.hours(), "hours")
       .subtract(nowDate.minutes(), "minutes")
       .subtract(nowDate.seconds(), "seconds")
-      .add(12, "hours");
+      .subtract(1, "days");
+    const roundedNowDate = moment()
+      .subtract(nowDate.hours(), "hours")
+      .subtract(nowDate.minutes(), "minutes")
+      .subtract(nowDate.seconds(), "seconds")
+      .add(1, "days");
 
-    const xAxisTicks = Array.from(Array(4)).map(
+    const xAxisTicks = Array.from(Array(3)).map(
       (_, i) => roundedEarliestDateLimit.unix() + i * 60 * 60 * 24,
     );
 
