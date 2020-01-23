@@ -150,7 +150,7 @@ export class TokenHistoryGraph extends React.Component<Props, State> {
     const { intent, rightIcon, interactive } = (() => {
       const rightIconElement = <Icon icon={IconNames.CHART} color={getColor(originalIndex)} />;
 
-      return { intent: Intent.NONE, rightIcon: rightIconElement, interactive: true };
+      return { intent: Intent.NONE, rightIcon: rightIconElement, interactive: false };
     })();
 
     return (
