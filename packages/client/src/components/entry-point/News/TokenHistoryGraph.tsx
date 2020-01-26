@@ -27,21 +27,22 @@ type State = Readonly<{
   highlightedRegionName: RegionName | null;
 }>;
 
+const numberOfDays = 4;
+const nowDate = moment();
+const roundedEarliestDateLimit = moment()
+  .subtract(nowDate.hours(), "hours")
+  .subtract(nowDate.minutes(), "minutes")
+  .subtract(nowDate.seconds(), "seconds")
+  .subtract(numberOfDays, "days");
+const roundedNowDate = moment()
+  .subtract(nowDate.hours(), "hours")
+  .subtract(nowDate.minutes(), "minutes")
+  .subtract(nowDate.seconds(), "seconds")
+  .add(1, "days");
+
 export class TokenHistoryGraph extends React.Component<Props, State> {
   private static renderXAxis() {
-    const nowDate = moment();
-    const roundedEarliestDateLimit = moment()
-      .subtract(nowDate.hours(), "hours")
-      .subtract(nowDate.minutes(), "minutes")
-      .subtract(nowDate.seconds(), "seconds")
-      .subtract(2, "days");
-    const roundedNowDate = moment()
-      .subtract(nowDate.hours(), "hours")
-      .subtract(nowDate.minutes(), "minutes")
-      .subtract(nowDate.seconds(), "seconds")
-      .add(1, "days");
-
-    const xAxisTicks = Array.from(Array(4)).map(
+    const xAxisTicks = Array.from(Array(numberOfDays + 2)).map(
       (_, i) => roundedEarliestDateLimit.unix() + i * 60 * 60 * 24,
     );
 
@@ -117,7 +118,9 @@ export class TokenHistoryGraph extends React.Component<Props, State> {
         return <p>Fetching regional token-histories...</p>;
     }
 
-    const data = convertRegionTokenHistoriesToLineData(regionTokenHistories.data);
+    const data = convertRegionTokenHistoriesToLineData(regionTokenHistories.data).filter(
+      v => v.name > roundedEarliestDateLimit.unix(),
+    );
 
     return (
       <>
