@@ -827,11 +827,14 @@ export class DataController {
 
   public queryAuctionStats: RequestHandler<null, IQueryAuctionStatsResponse | null> = async req => {
     const params = (() => {
-      if (req.params["regionName"].length === 0) {
+      if (
+        typeof req.params["regionName"] === "undefined" ||
+        req.params["regionName"].length === 0
+      ) {
         return {};
       }
 
-      if (req.params["realmSlug"].length === 0) {
+      if (typeof req.params["realmSlug"] === "undefined" || req.params["realmSlug"].length === 0) {
         return { region_name: req.params["regionName"] };
       }
 
