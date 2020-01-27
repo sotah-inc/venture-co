@@ -40,7 +40,7 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
     }),
   );
   router.get(
-    "/region/:regionName/:realmSlug/query-auction-stats",
+    "/region/:regionName/realm/:realmSlug/query-auction-stats",
     wrap(async (req: Request, res: Response) => {
       await handle(controller.queryAuctionStats, req, res);
     }),
