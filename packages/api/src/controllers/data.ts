@@ -826,10 +826,22 @@ export class DataController {
   };
 
   public queryAuctionStats: RequestHandler<null, IQueryAuctionStatsResponse | null> = async req => {
-    const msg = await this.messenger.queryAuctionStats({
-      realm_slug: req.params["realmSlug"],
-      region_name: req.params["regionName"],
-    });
+    const params = (() => {
+      if (req.params["regionName"].length === 0) {
+        return {};
+      }
+
+      if (req.params["realmSlug"].length === 0) {
+        return { region_name: req.params["regionName"] };
+      }
+
+      return {
+        realm_slug: req.params["realmSlug"],
+        region_name: req.params["regionName"],
+      };
+    })();
+
+    const msg = await this.messenger.queryAuctionStats(params);
     if (msg.code !== code.ok) {
       if (msg.code === code.notFound) {
         return {
