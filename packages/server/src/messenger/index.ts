@@ -12,6 +12,8 @@ import {
   IGetPricelistRequest,
   IGetPricelistResponse,
   IGetSessionSecretResponse,
+  IQueryAuctionStatsRequest,
+  IQueryAuctionStatsResponse,
   IQueryItemsResponse,
   IQueryRealmModificationDatesRequest,
   IQueryRealmModificationDatesResponse,
@@ -36,6 +38,7 @@ export enum subjects {
   queryRealmModificationDates = "queryRealmModificationDates",
   realmModificationDates = "realmModificationDates",
   tokenHistory = "tokenHistory",
+  queryAuctionStats = "queryAuctionStats",
 }
 
 export enum code {
@@ -169,6 +172,12 @@ export class Messenger {
     req: IQueryRealmModificationDatesRequest,
   ): Promise<Message<IQueryRealmModificationDatesResponse>> {
     return this.request(subjects.queryRealmModificationDates, { body: JSON.stringify(req) });
+  }
+
+  public queryAuctionStats(
+    req: IQueryAuctionStatsRequest,
+  ): Promise<Message<IQueryAuctionStatsResponse>> {
+    return this.request(subjects.queryAuctionStats, { body: JSON.stringify(req) });
   }
 
   public request<T>(subject: string, opts?: IRequestOptions): Promise<Message<T>> {

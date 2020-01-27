@@ -95,3 +95,14 @@ export interface IRealmModificationDatesResponse {
     [realmSlug: string]: IRealmModificationDates;
   };
 }
+
+export interface IQueryAuctionStatsRequest {
+  region_name?: RegionName;
+  realm_slug?: RealmSlug;
+}
+
+export interface IQueryAuctionStatsResponse {
+  total_auctions: number;
+  total_quantity: number;
+  total_buyout: number;
+}
