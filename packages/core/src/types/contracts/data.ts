@@ -140,7 +140,7 @@ export interface IQueryAuctionStatsRequest {
   realm_slug?: RealmSlug;
 }
 
-export interface IQueryAuctionsStatsResponse {
+export interface IQueryAuctionStatsResponse {
   total_auctions: number;
   total_quantity: number;
   total_buyout: number;
