@@ -1,7 +1,14 @@
 import { IAuction } from "../auction";
 import { IPostJson, IProfessionPricelistJson } from "../entities";
 import { ExpansionName, IExpansion } from "../expansion";
-import { IPricesFlagged, ITokenHistory, SortDirection, SortKind } from "../index";
+import {
+  IPricesFlagged,
+  ITokenHistory,
+  RealmSlug,
+  RegionName,
+  SortDirection,
+  SortKind,
+} from "../index";
 import { IItem, IItemsMap, ItemId } from "../item";
 import { IItemClass } from "../item-class";
 import {
@@ -126,4 +133,15 @@ export interface IGetPostsResponse {
 
 export interface IGetPostResponse {
   post: IPostJson;
+}
+
+export interface IQueryAuctionStatsRequest {
+  region_name?: RegionName;
+  realm_slug?: RealmSlug;
+}
+
+export interface IQueryAuctionsStatsResponse {
+  total_auctions: number;
+  total_quantity: number;
+  total_buyout: number;
 }
