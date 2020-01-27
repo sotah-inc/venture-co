@@ -26,6 +26,7 @@ import {
   IQueryAuctionsItem,
   IQueryAuctionsRequest,
   IQueryAuctionsResponse,
+  IQueryAuctionStatsResponse,
   IQueryItemsRequest,
   IQueryItemsResponse,
   IRealmModificationDates,
@@ -820,6 +821,31 @@ export class DataController {
 
     return {
       data: { history: msg.data! },
+      status: HTTPStatus.OK,
+    };
+  };
+
+  public queryAuctionStats: RequestHandler<null, IQueryAuctionStatsResponse | null> = async req => {
+    const msg = await this.messenger.queryAuctionStats({
+      realm_slug: req.params["realmSlug"],
+      region_name: req.params["regionName"],
+    });
+    if (msg.code !== code.ok) {
+      if (msg.code === code.notFound) {
+        return {
+          data: null,
+          status: HTTPStatus.NOT_FOUND,
+        };
+      }
+
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    return {
+      data: msg.data!,
       status: HTTPStatus.OK,
     };
   };
