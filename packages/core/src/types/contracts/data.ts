@@ -147,5 +147,5 @@ export interface IQueryAuctionStatsItem {
 }
 
 export interface IQueryAuctionStatsResponse {
-  [key: number]: IQueryAuctionsItem;
+  [key: number]: IQueryAuctionStatsItem;
 }
