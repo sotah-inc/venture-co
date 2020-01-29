@@ -140,8 +140,12 @@ export interface IQueryAuctionStatsRequest {
   realm_slug?: RealmSlug;
 }
 
-export interface IQueryAuctionStatsResponse {
+export interface IQueryAuctionStatsItem {
   total_auctions: number;
   total_quantity: number;
   total_buyout: number;
+}
+
+export interface IQueryAuctionStatsResponse {
+  [key: number]: IQueryAuctionsItem;
 }
