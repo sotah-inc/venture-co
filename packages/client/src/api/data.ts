@@ -15,11 +15,13 @@ import {
   IPostJson,
   IQueryAuctionsRequest,
   IQueryAuctionsResponse,
+  IQueryAuctionStatsResponse,
   IQueryItemsRequest,
   IQueryItemsResponse,
   IStatusRealm,
   ItemId,
   ITokenHistory,
+  RealmSlug,
   RegionName,
 } from "@sotah-inc/core";
 import * as HTTPStatus from "http-status";
@@ -229,4 +231,46 @@ export const getTokenHistory = async (regionName: RegionName): Promise<IGetToken
   }
 
   return { history: body!.history, error: null };
+};
+
+export interface IQueryAuctionStatsOptions {
+  regionName?: RegionName;
+  realmSlug?: RealmSlug;
+}
+
+export interface IQueryAuctionStatsResult {
+  response: IQueryAuctionStatsResponse | null;
+  error: string | null;
+}
+
+export const queryAuctionStats = async ({
+  regionName,
+  realmSlug,
+}: IQueryAuctionStatsOptions): Promise<IQueryAuctionStatsResult> => {
+  const url: string = (() => {
+    if (typeof regionName === "undefined") {
+      return `${getApiEndpoint()}/query-auction-stats`;
+    }
+
+    if (typeof realmSlug === "undefined") {
+      return `${getApiEndpoint()}/region/${regionName}/query-auction-stats`;
+    }
+
+    return `${getApiEndpoint()}/region/${regionName}/realm/${realmSlug}/query-auction-stats`;
+  })();
+
+  const { body, status } = await gather<null, IQueryAuctionStatsResponse>({
+    headers: new Headers({ "content-type": "application/json" }),
+    method: "GET",
+    url,
+  });
+
+  switch (status) {
+    case HTTPStatus.OK:
+      break;
+    default:
+      return { response: null, error: "Failure" };
+  }
+
+  return { response: body, error: null };
 };
