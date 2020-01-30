@@ -2,15 +2,14 @@ import React from "react";
 
 import { Icon, Intent, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
-import { RegionName } from "@sotah-inc/core";
+import { IQueryAuctionStatsResponse } from "@sotah-inc/core";
 import moment from "moment";
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
-import { IFetchData, ILineItemOpen } from "../../../types/global";
+import { IFetchData } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
-import { IRegionTokenHistories } from "../../../types/posts";
 import {
-  convertRegionTokenHistoriesToLineData,
+  convertAuctionStatsToLineData,
   currencyToText,
   getColor,
   unixTimestampToText,
@@ -18,14 +17,10 @@ import {
 } from "../../../util";
 
 export interface IStateProps {
-  regionTokenHistories: IFetchData<IRegionTokenHistories>;
+  auctionStats: IFetchData<IQueryAuctionStatsResponse>;
 }
 
 type Props = Readonly<IStateProps>;
-
-type State = Readonly<{
-  highlightedRegionName: RegionName | null;
-}>;
 
 const numberOfDays = 4;
 const nowDate = moment();
@@ -40,7 +35,7 @@ const roundedNowDate = moment()
   .subtract(nowDate.seconds(), "seconds")
   .add(1, "days");
 
-export class AuctionStatsGraph extends React.Component<Props, State> {
+export class AuctionStatsGraph extends React.Component<Props> {
   private static renderXAxis() {
     const xAxisTicks = Array.from(Array(numberOfDays + 2)).map(
       (_, i) => roundedEarliestDateLimit.unix() + i * 60 * 60 * 24,
@@ -91,38 +86,39 @@ export class AuctionStatsGraph extends React.Component<Props, State> {
     );
   }
 
-  private static getDataKey(regionName: RegionName) {
-    return `${regionName}_token_price`;
-  }
-
-  private static renderLegendItem(regionName: RegionName) {
-    return <span>{regionName}</span>;
-  }
-
-  public state: State = {
-    highlightedRegionName: null,
-  };
-
-  public componentDidMount() {
-    this.setState({
-      highlightedRegionName: null,
-    });
+  private static renderLegend() {
+    return (
+      <div className="pure-g">
+        <div className="pure-u-1-2">
+          <Tag
+            fill={true}
+            minimal={true}
+            style={{ marginBottom: "5px" }}
+            intent={Intent.NONE}
+            rightIcon={<Icon icon={IconNames.CHART} color={getColor(0)} />}
+            interactive={false}
+          >
+            Total Gold Load
+          </Tag>
+        </div>
+      </div>
+    );
   }
 
   public render() {
-    const { regionTokenHistories } = this.props;
+    const { auctionStats } = this.props;
 
-    switch (regionTokenHistories.level) {
+    switch (auctionStats.level) {
       case FetchLevel.success:
         break;
       case FetchLevel.failure:
-        return <p>Failed to fetch token-histories!</p>;
+        return <p>Failed to fetch auction-stats!</p>;
       case FetchLevel.fetching:
       default:
-        return <p>Fetching regional token-histories...</p>;
+        return <p>Fetching auction-stats...</p>;
     }
 
-    const data = convertRegionTokenHistoriesToLineData(regionTokenHistories.data).filter(
+    const data = convertAuctionStatsToLineData(auctionStats.data).filter(
       v => v.name > roundedEarliestDateLimit.unix(),
     );
 
@@ -133,112 +129,20 @@ export class AuctionStatsGraph extends React.Component<Props, State> {
             <CartesianGrid vertical={false} strokeWidth={0.25} strokeOpacity={0.25} />
             {AuctionStatsGraph.renderXAxis()}
             {AuctionStatsGraph.renderYAxis()}
-            {this.renderLines()}
+            <Line
+              name="Total Buyout"
+              dataKey="total_buyout"
+              animationDuration={500}
+              animationEasing={"ease-in-out"}
+              type={"basis"}
+              connectNulls={true}
+              stroke="#5C7080"
+              strokeWidth={1}
+            />
           </LineChart>
         </ResponsiveContainer>
-        {this.renderLegend()}
+        {AuctionStatsGraph.renderLegend()}
       </>
-    );
-  }
-
-  private renderLegendColumn(regionIndexTuples: Array<[RegionName, number]>, index: number) {
-    return (
-      <div className="pure-u-1-2" key={index}>
-        <div style={index < 1 ? { marginRight: "10px" } : {}}>
-          {regionIndexTuples.map(([regionName, originalIndex], i) =>
-            this.renderLegendColumnTag(regionName, originalIndex, i),
-          )}
-        </div>
-      </div>
-    );
-  }
-
-  private renderLegendColumnTag(regionName: RegionName, originalIndex: number, i: number) {
-    const { intent, rightIcon, interactive } = (() => {
-      const rightIconElement = <Icon icon={IconNames.CHART} color={getColor(originalIndex)} />;
-
-      return { intent: Intent.NONE, rightIcon: rightIconElement, interactive: false };
-    })();
-
-    return (
-      <Tag
-        fill={true}
-        key={i}
-        minimal={true}
-        style={{ marginBottom: "5px" }}
-        intent={intent}
-        rightIcon={rightIcon}
-        interactive={interactive}
-        onMouseEnter={() => {
-          this.setState({ ...this.state, highlightedRegionName: regionName });
-        }}
-        onMouseLeave={() => {
-          this.setState({ ...this.state, highlightedRegionName: null });
-        }}
-      >
-        {AuctionStatsGraph.renderLegendItem(regionName)}
-      </Tag>
-    );
-  }
-
-  private renderLine(index: number, regionName: RegionName) {
-    const { highlightedRegionName } = this.state;
-
-    const { stroke, strokeWidth } = (() => {
-      if (highlightedRegionName === null || highlightedRegionName === regionName) {
-        return {
-          stroke: getColor(index),
-          strokeWidth: highlightedRegionName === regionName ? 4 : 2,
-        };
-      }
-
-      return {
-        stroke: "#5C7080",
-        strokeWidth: 1,
-      };
-    })();
-
-    return (
-      <Line
-        key={index}
-        name={regionName}
-        dataKey={(item: ILineItemOpen) => item.data[AuctionStatsGraph.getDataKey(regionName)]}
-        animationDuration={500}
-        animationEasing={"ease-in-out"}
-        type={"basis"}
-        connectNulls={true}
-        stroke={stroke}
-        strokeWidth={strokeWidth}
-      />
-    );
-  }
-
-  private renderLines() {
-    const { regionTokenHistories } = this.props;
-
-    return Object.keys(regionTokenHistories.data).map((v, i) => this.renderLine(i, v));
-  }
-
-  private renderLegend() {
-    const { regionTokenHistories } = this.props;
-
-    const groupedRegionNames = Object.keys(regionTokenHistories.data).reduce<
-      Array<Array<[RegionName, number]>>
-    >((result, v, i) => {
-      const column = i % 2;
-      if (Object.keys(result).indexOf(column.toString()) === -1) {
-        result[column] = [];
-      }
-
-      result[column].push([v, i]);
-
-      return result;
-    }, []);
-
-    return (
-      <div className="pure-g">
-        {groupedRegionNames.map((v, i) => this.renderLegendColumn(v, i))}
-      </div>
     );
   }
 }
