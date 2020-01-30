@@ -9,6 +9,7 @@ import {
   IPricelistJson,
   IPricesFlagged,
   IQueryAuctionsItem,
+  IQueryAuctionStatsResponse,
   IRealm,
   IRegion,
   ItemQuality,
@@ -395,6 +396,20 @@ export function convertRegionTokenHistoriesToLineData(
 
     return {
       data,
+      name: Number(unixTimestamp) / 1000,
+    };
+  });
+}
+
+export function convertAuctionStatsToLineData(
+  auctionStats: IQueryAuctionStatsResponse,
+): ILineItemOpen[] {
+  // converting each grouping to line-item data
+  return Object.keys(auctionStats).map<ILineItemOpen>(unixTimestamp => {
+    const data = auctionStats[Number(unixTimestamp)];
+
+    return {
+      data: { ...data },
       name: Number(unixTimestamp) / 1000,
     };
   });
