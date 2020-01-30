@@ -95,6 +95,10 @@ export class AuctionStatsGraph extends React.Component<Props, State> {
     return `${regionName}_token_price`;
   }
 
+  private static renderLegendItem(regionName: RegionName) {
+    return <span>{regionName}</span>;
+  }
+
   public state: State = {
     highlightedRegionName: null,
   };
@@ -172,13 +176,9 @@ export class AuctionStatsGraph extends React.Component<Props, State> {
           this.setState({ ...this.state, highlightedRegionName: null });
         }}
       >
-        {this.renderLegendItem(regionName)}
+        {AuctionStatsGraph.renderLegendItem(regionName)}
       </Tag>
     );
-  }
-
-  private renderLegendItem(regionName: RegionName) {
-    return <span>{regionName}</span>;
   }
 
   private renderLine(index: number, regionName: RegionName) {
