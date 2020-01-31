@@ -4,6 +4,7 @@ import { Classes, H1, H4, Icon, IconName, Intent, NonIdealState, Spinner } from 
 import { IRegion } from "@sotah-inc/core";
 
 import { ILoadPostsEntrypoint } from "../../actions/posts";
+import { AuctionStatsGraphContainer } from "../../containers/entry-point/News/AuctionStatsGraph";
 import { TokenHistoryGraphContainer } from "../../containers/entry-point/News/TokenHistoryGraph";
 // tslint:disable-next-line:max-line-length
 import { DeletePostDialogRouteContainer } from "../../route-containers/entry-point/News/DeletePostDialog";
@@ -11,7 +12,6 @@ import { PostListRouteContainer } from "../../route-containers/entry-point/News/
 import { AuthLevel } from "../../types/main";
 import { setTitle } from "../../util";
 import { CardCallout } from "../util";
-import { AuctionStatsGraphContainer } from "../../containers/entry-point/News/AuctionStatsGraph";
 
 export interface IStateProps {
   currentRegion: IRegion | null;
