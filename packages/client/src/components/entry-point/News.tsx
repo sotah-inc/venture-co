@@ -11,6 +11,7 @@ import { PostListRouteContainer } from "../../route-containers/entry-point/News/
 import { AuthLevel } from "../../types/main";
 import { setTitle } from "../../util";
 import { CardCallout } from "../util";
+import { AuctionStatsGraphContainer } from "../../containers/entry-point/News/AuctionStatsGraph";
 
 export interface IStateProps {
   currentRegion: IRegion | null;
@@ -106,6 +107,8 @@ export class News extends React.Component<Props> {
             <div style={{ marginLeft: "5px" }}>
               <H4>Token Price History</H4>
               <TokenHistoryGraphContainer />
+              <H4>Auction Stats History</H4>
+              <AuctionStatsGraphContainer />
             </div>
           </div>
         </div>
