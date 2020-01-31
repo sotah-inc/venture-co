@@ -63,7 +63,7 @@ export const handlers: IKindHandlers<IPostsState, PostsActions> = {
         })();
 
         const auctionStats = ((): IFetchData<IQueryAuctionStatsResponse> => {
-          if (typeof action.payload.auctionStats.error !== "undefined") {
+          if (action.payload.auctionStats.error !== null) {
             return { data: {}, level: FetchLevel.failure, errors: {} };
           }
 
