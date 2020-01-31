@@ -6,7 +6,12 @@ import {
 } from "@sotah-inc/core";
 import { Dispatch } from "redux";
 
-import { getPosts, IGetPostsResult, IGetTokenHistoryResult } from "../api/data";
+import {
+  getPosts,
+  IGetPostsResult,
+  IGetTokenHistoryResult,
+  IQueryAuctionStatsResult,
+} from "../api/data";
 import {
   createPost,
   deletePost,
@@ -102,6 +107,7 @@ export interface ILoadPostsEntrypoint {
   loadId: string;
   posts: IGetPostsResult;
   tokenHistories: IRegionTokenHistoryResults;
+  auctionStats: IQueryAuctionStatsResult;
 }
 
 export const LOAD_POSTS_ENTRYPOINT = "LOAD_POSTS_ENTRYPOINT";
