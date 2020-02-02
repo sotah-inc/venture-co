@@ -119,7 +119,11 @@ export class TokenHistoryGraph extends React.Component<Props, State> {
     }
 
     const data = convertRegionTokenHistoriesToLineData(regionTokenHistories.data).filter(
-      v => v.name > roundedEarliestDateLimit.unix(),
+      v =>
+        v.name >
+        moment(roundedEarliestDateLimit)
+          .add(1, "day")
+          .unix(),
     );
 
     return (
