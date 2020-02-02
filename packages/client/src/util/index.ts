@@ -410,7 +410,7 @@ export function convertAuctionStatsToLineData(
 
     return {
       data: { ...data },
-      name: Number(unixTimestamp) / 1000,
+      name: Number(unixTimestamp),
     };
   });
 }

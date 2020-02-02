@@ -6,7 +6,7 @@ import { IQueryAuctionStatsResponse } from "@sotah-inc/core";
 import moment from "moment";
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
-import { IFetchData } from "../../../types/global";
+import { IFetchData, ILineItemOpen } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
 import {
   convertAuctionStatsToLineData,
@@ -89,7 +89,7 @@ export class AuctionStatsGraph extends React.Component<Props> {
   private static renderLegend() {
     return (
       <div className="pure-g">
-        <div className="pure-u-1-2">
+        <div className="pure-u-1-1">
           <Tag
             fill={true}
             minimal={true}
@@ -98,7 +98,7 @@ export class AuctionStatsGraph extends React.Component<Props> {
             rightIcon={<Icon icon={IconNames.CHART} color={getColor(0)} />}
             interactive={false}
           >
-            Total Gold Load
+            Total Gold Valuation
           </Tag>
         </div>
       </div>
@@ -119,7 +119,11 @@ export class AuctionStatsGraph extends React.Component<Props> {
     }
 
     const data = convertAuctionStatsToLineData(auctionStats.data).filter(
-      v => v.name > roundedEarliestDateLimit.unix(),
+      v =>
+        v.name >
+        moment(roundedEarliestDateLimit)
+          .add(1, "day")
+          .unix(),
     );
 
     return (
@@ -131,13 +135,13 @@ export class AuctionStatsGraph extends React.Component<Props> {
             {AuctionStatsGraph.renderYAxis()}
             <Line
               name="Total Buyout"
-              dataKey="total_buyout"
+              dataKey={(item: ILineItemOpen) => item.data["total_buyout"]}
               animationDuration={500}
               animationEasing={"ease-in-out"}
               type={"basis"}
               connectNulls={true}
-              stroke="#5C7080"
-              strokeWidth={1}
+              stroke={getColor(0)}
+              strokeWidth={2}
             />
           </LineChart>
         </ResponsiveContainer>
