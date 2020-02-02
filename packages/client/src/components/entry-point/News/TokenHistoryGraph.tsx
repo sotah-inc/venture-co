@@ -182,7 +182,7 @@ export class TokenHistoryGraph extends React.Component<Props, State> {
   }
 
   private renderLegendItem(regionName: RegionName) {
-    return <span>{regionName}</span>;
+    return <span>{regionName.toUpperCase()}</span>;
   }
 
   private renderLine(index: number, regionName: RegionName) {

@@ -107,6 +107,7 @@ export class News extends React.Component<Props> {
             <div style={{ marginLeft: "5px" }}>
               <H4>Token Price History</H4>
               <TokenHistoryGraphContainer />
+              <hr />
               <H4>Auction Stats History</H4>
               <AuctionStatsGraphContainer />
             </div>
