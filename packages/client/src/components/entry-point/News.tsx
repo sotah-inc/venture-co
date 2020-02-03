@@ -108,7 +108,7 @@ export class News extends React.Component<Props> {
               <H4>Token Price History</H4>
               <TokenHistoryGraphContainer />
               <hr />
-              <H4>Auction Stats History</H4>
+              <H4>AH Valuation History</H4>
               <AuctionStatsGraphContainer />
             </div>
           </div>
