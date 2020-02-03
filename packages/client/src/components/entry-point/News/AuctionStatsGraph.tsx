@@ -98,7 +98,7 @@ export class AuctionStatsGraph extends React.Component<Props> {
             rightIcon={<Icon icon={IconNames.CHART} color={getColor(0)} />}
             interactive={false}
           >
-            Total Gold Valuation
+            Total Value of All Auctions
           </Tag>
         </div>
       </div>
