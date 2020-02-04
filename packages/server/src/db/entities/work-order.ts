@@ -3,6 +3,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -25,12 +26,15 @@ export class WorkOrder {
   public user: User | undefined;
 
   @Column("varchar", { length: 255 })
+  @Index("idx_region_name")
   public regionName: RegionName;
 
   @Column("varchar", { length: 255 })
+  @Index("idx_realm_slug")
   public realmSlug: RealmSlug;
 
   @Column({ type: "int", name: "item_id" })
+  @Index("idx_item_id")
   public itemId: ItemId;
 
   @Column({ type: "int" })
@@ -40,9 +44,11 @@ export class WorkOrder {
   public price: number;
 
   @CreateDateColumn({ name: "created_at" })
+  @Index("idx_created_at")
   public createdAt: Date | undefined;
 
   @UpdateDateColumn({ name: "updated_at" })
+  @Index("idx_updated_at")
   public updatedAt: Date | undefined;
 
   constructor() {
