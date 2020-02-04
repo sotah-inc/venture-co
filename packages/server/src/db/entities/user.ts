@@ -7,6 +7,7 @@ import { getJwtOptions } from "../../session";
 import { Post } from "./post";
 import { Preference } from "./preference";
 import { Pricelist } from "./pricelist";
+import { WorkOrder } from "./work-order";
 
 @Entity({ name: "users" })
 export class User {
@@ -39,6 +40,12 @@ export class User {
 
   @Column("int", { default: UserLevel.Unverified, nullable: false })
   public level: UserLevel;
+
+  @OneToMany(
+    () => WorkOrder,
+    workOrder => workOrder.user,
+  )
+  public workOrders: WorkOrder[] | undefined;
 
   constructor() {
     this.email = "";
