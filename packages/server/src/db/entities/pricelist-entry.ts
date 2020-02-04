@@ -8,7 +8,10 @@ export class PricelistEntry {
   @PrimaryGeneratedColumn()
   public id: number | undefined;
 
-  @ManyToOne(() => Pricelist, pricelist => pricelist.entries)
+  @ManyToOne(
+    () => Pricelist,
+    pricelist => pricelist.entries,
+  )
   @JoinColumn({ name: "pricelist_id" })
   public pricelist: Pricelist | undefined;
 

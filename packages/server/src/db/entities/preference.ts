@@ -8,7 +8,11 @@ export class Preference {
   @PrimaryGeneratedColumn()
   public id: number | undefined;
 
-  @OneToOne(() => User, user => user.preference, { nullable: false, eager: true })
+  @OneToOne(
+    () => User,
+    user => user.preference,
+    { nullable: false, eager: true },
+  )
   @JoinColumn({ name: "user_id" })
   public user: User | undefined;
 

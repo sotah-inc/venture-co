@@ -13,13 +13,22 @@ export class User {
   @PrimaryGeneratedColumn()
   public id: number | undefined;
 
-  @OneToOne(() => Preference, preference => preference.user)
+  @OneToOne(
+    () => Preference,
+    preference => preference.user,
+  )
   public preference: Preference | undefined;
 
-  @OneToMany(() => Pricelist, pricelist => pricelist.user)
+  @OneToMany(
+    () => Pricelist,
+    pricelist => pricelist.user,
+  )
   public pricelists: Pricelist[] | undefined;
 
-  @OneToMany(() => Post, post => post.user)
+  @OneToMany(
+    () => Post,
+    post => post.user,
+  )
   public posts: Post[] | undefined;
 
   @Column({ nullable: false, unique: true })
