@@ -25,11 +25,11 @@ export class WorkOrder {
   @JoinColumn({ name: "user_id" })
   public user: User | undefined;
 
-  @Column("varchar", { length: 255 })
+  @Column("varchar", { length: 255, name: "region_name" })
   @Index("idx_region_name")
   public regionName: RegionName;
 
-  @Column("varchar", { length: 255 })
+  @Column("varchar", { length: 255, name: "realm_slug" })
   @Index("idx_realm_slug")
   public realmSlug: RealmSlug;
 
