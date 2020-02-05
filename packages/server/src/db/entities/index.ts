@@ -9,3 +9,4 @@ export * from "./profession-pricelist";
 export * from "./profession-pricelist-repository";
 export * from "./user";
 export * from "./user-repository";
+export * from "./work-order";
