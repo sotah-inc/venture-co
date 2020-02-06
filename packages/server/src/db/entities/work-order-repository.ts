@@ -8,11 +8,13 @@ export interface IFindByOptions {
   realmSlug: RealmSlug;
   perPage: number;
   page: number;
-  orderBy: OrderBy;
+  orderBy: keyof WorkOrder;
+  orderDirection: OrderDirection;
 }
 
-export enum OrderBy {
-  CreatedAt = "createdAt",
+enum OrderDirection {
+  Asc = "ASC",
+  Desc = "DESC",
 }
 
 @EntityRepository(WorkOrder)
@@ -23,13 +25,10 @@ export class WorkOrderRepository extends AbstractRepository<WorkOrder> {
     perPage,
     page,
     orderBy,
+    orderDirection,
   }: IFindByOptions): Promise<WorkOrder[]> {
-    if (!(orderBy in OrderBy)) {
-      throw new Error("Invalid order-by");
-    }
-
     return this.repository.find({
-      order: { [orderBy]: "DESC" },
+      order: { [orderBy]: orderDirection },
       skip: perPage * page,
       take: perPage,
       where: { regionName, realmSlug },
