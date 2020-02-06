@@ -8,11 +8,15 @@ export interface IFindByOptions {
   realmSlug: RealmSlug;
   perPage: number;
   page: number;
-  orderBy: keyof WorkOrder;
+  orderBy: OrderKind;
   orderDirection: OrderDirection;
 }
 
-enum OrderDirection {
+export enum OrderKind {
+  CreatedAt = "createdAt",
+}
+
+export enum OrderDirection {
   Asc = "ASC",
   Desc = "DESC",
 }
