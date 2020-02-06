@@ -4,7 +4,13 @@ import {
   IGetAuctionsRequest,
   IUpdateProfileRequest,
 } from "@sotah-inc/core";
-import { PostRepository, UserRepository } from "@sotah-inc/server";
+import {
+  IFindByOptions,
+  OrderDirection,
+  OrderKind,
+  PostRepository,
+  UserRepository,
+} from "@sotah-inc/server";
 import * as yup from "yup";
 
 export const PreferenceRules = yup
@@ -130,5 +136,30 @@ export const AuctionsQueryParamsRules = yup
       .number()
       .integer("Sort-kind must be an integer")
       .required("Sort-kind is required"),
+  })
+  .noUnknown();
+
+export const WorkOrderQueryRules = yup
+  .object<IFindByOptions>()
+  .shape({
+    orderBy: yup
+      .string()
+      .required()
+      .oneOf(Object.values(OrderKind)),
+    orderDirection: yup
+      .string()
+      .required()
+      .oneOf(Object.values(OrderDirection)),
+    page: yup
+      .number()
+      .required()
+      .positive(),
+    perPage: yup
+      .number()
+      .required()
+      .positive()
+      .oneOf([10, 50, 100]),
+    realmSlug: yup.string().required(),
+    regionName: yup.string().required(),
   })
   .noUnknown();
