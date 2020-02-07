@@ -139,7 +139,7 @@ export const AuctionsQueryParamsRules = yup
   })
   .noUnknown();
 
-export const WorkOrderQueryRules = yup
+export const QueryWorkOrdersParamsRules = yup
   .object<IFindByOptions>()
   .shape({
     orderBy: yup
@@ -159,7 +159,5 @@ export const WorkOrderQueryRules = yup
       .required()
       .positive()
       .oneOf([10, 50, 100]),
-    realmSlug: yup.string().required(),
-    regionName: yup.string().required(),
   })
   .noUnknown();
