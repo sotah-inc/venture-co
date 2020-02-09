@@ -3,7 +3,7 @@ import {
   IQueryWorkOrdersResponse,
   IValidationErrorResponse,
 } from "@sotah-inc/core";
-import { Messenger } from "@sotah-inc/server";
+import { code, Messenger, OrderDirection, OrderKind, WorkOrderRepository } from "@sotah-inc/server";
 import HTTPStatus from "http-status";
 import { Connection } from "typeorm";
 
@@ -35,7 +35,31 @@ export class WorkOrderController {
       };
     }
 
+    const validateMsg = await this.messenger.validateRegionRealm({
+      realm_slug: req.params["realmSlug"],
+      region_name: req.params["regionName"],
+    });
+    if (validateMsg.code !== code.ok) {
+      const validationErrors: IValidationErrorResponse = {
+        error: "Could not validate region-name and realm-slug",
+      };
+
+      return {
+        data: validationErrors,
+        status: HTTPStatus.BAD_REQUEST,
+      };
+    }
+
+    const orders = await this.dbConn.getCustomRepository(WorkOrderRepository).findBy({
+      ...result,
+      orderBy: result.orderBy as OrderKind,
+      orderDirection: result.orderDirection as OrderDirection,
+      realmSlug: req.params["realmSlug"],
+      regionName: req.params["regionName"],
+    });
+
     return {
+      data: { orders: orders.map(v => v.toJson()) },
       status: HTTPStatus.OK,
     };
   };

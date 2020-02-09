@@ -6,7 +6,7 @@ import * as nats from "nats";
 import { v4 as uuidv4 } from "uuid";
 import { Logger } from "winston";
 
-import { defaultRouter, getDataRouter, getUserRouter } from "../routes";
+import { defaultRouter, getDataRouter, getUserRouter, getWorkOrderRouter } from "../routes";
 
 export interface IOptions {
   logger: Logger;
@@ -99,6 +99,7 @@ export const getApp = async (opts: IOptions): Promise<express.Express | null> =>
   app.use("/", defaultRouter);
   app.use("/", getDataRouter(dbConn, messenger));
   app.use("/", getUserRouter(dbConn, messenger));
+  app.use("/", getWorkOrderRouter(dbConn, messenger));
 
   // error handlers
   // if (isGceEnv && errors !== null) {
