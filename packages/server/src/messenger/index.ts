@@ -18,6 +18,8 @@ import {
   IQueryRealmModificationDatesRequest,
   IQueryRealmModificationDatesResponse,
   IRealmModificationDatesResponse,
+  IValidateRegionRealmRequest,
+  IValidateRegionRealmResponse,
 } from "./contracts";
 import { Message } from "./message";
 import { MessageError } from "./message-error";
@@ -39,6 +41,7 @@ export enum subjects {
   realmModificationDates = "realmModificationDates",
   tokenHistory = "tokenHistory",
   queryAuctionStats = "queryAuctionStats",
+  validateRegionRealm = "validateRegionRealm",
 }
 
 export enum code {
@@ -81,6 +84,14 @@ export class Messenger {
   public getStatus(regionNameValue: RegionName): Promise<Message<IStatus>> {
     return this.request(subjects.status, {
       body: JSON.stringify({ region_name: regionNameValue }),
+    });
+  }
+
+  public validateRegionRealm(
+    req: IValidateRegionRealmRequest,
+  ): Promise<Message<IValidateRegionRealmResponse>> {
+    return this.request(subjects.status, {
+      body: JSON.stringify(req),
     });
   }
 

@@ -110,3 +110,12 @@ export interface IQueryAuctionStatsItem {
 export interface IQueryAuctionStatsResponse {
   [key: number]: IQueryAuctionStatsItem;
 }
+
+export interface IValidateRegionRealmRequest {
+  region_name: string;
+  realm_slug: string;
+}
+
+export interface IValidateRegionRealmResponse {
+  is_valid: boolean;
+}
