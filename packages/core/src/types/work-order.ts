@@ -1,3 +1,4 @@
+import { GameVersion } from "./index";
 import { ItemId } from "./item";
 import { RealmSlug, RegionName } from "./region";
 
@@ -11,4 +12,5 @@ export interface IWorkOrderJson {
   price: number;
   created_at: number;
   updated_at: number;
+  game_version: GameVersion;
 }

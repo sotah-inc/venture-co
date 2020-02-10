@@ -1,4 +1,5 @@
 import {
+  GameVersion,
   ICreatePostRequest,
   ICreatePreferencesRequest,
   IGetAuctionsRequest,
@@ -142,6 +143,10 @@ export const AuctionsQueryParamsRules = yup
 export const QueryWorkOrdersParamsRules = yup
   .object<IFindByOptions>()
   .shape({
+    gameVersion: yup
+      .string()
+      .required()
+      .oneOf(Object.values(GameVersion)),
     orderBy: yup
       .string()
       .required()

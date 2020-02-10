@@ -1,4 +1,5 @@
 import {
+  GameVersion,
   IQueryWorkOrdersParams,
   IQueryWorkOrdersResponse,
   IValidationErrorResponse,
@@ -52,6 +53,7 @@ export class WorkOrderController {
 
     const orders = await this.dbConn.getCustomRepository(WorkOrderRepository).findBy({
       ...result,
+      gameVersion: result.gameVersion as GameVersion,
       orderBy: result.orderBy as OrderKind,
       orderDirection: result.orderDirection as OrderDirection,
       realmSlug: req.params["realmSlug"],

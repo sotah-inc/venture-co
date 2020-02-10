@@ -26,3 +26,8 @@ export enum SortKind {
   auctions,
   owner,
 }
+
+export enum GameVersion {
+  Retail = "retail",
+  Classic = "classic",
+}

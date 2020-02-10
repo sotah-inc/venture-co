@@ -1,4 +1,4 @@
-import { RealmSlug, RegionName } from "@sotah-inc/core";
+import { GameVersion, RealmSlug, RegionName } from "@sotah-inc/core";
 import { AbstractRepository, EntityRepository } from "typeorm";
 
 import { WorkOrder } from "./work-order";
@@ -10,6 +10,7 @@ export interface IFindByOptions {
   page: number;
   orderBy: OrderKind;
   orderDirection: OrderDirection;
+  gameVersion: GameVersion;
 }
 
 export enum OrderKind {
@@ -30,12 +31,13 @@ export class WorkOrderRepository extends AbstractRepository<WorkOrder> {
     page,
     orderBy,
     orderDirection,
+    gameVersion,
   }: IFindByOptions): Promise<WorkOrder[]> {
     return this.repository.find({
       order: { [orderBy]: orderDirection },
       skip: perPage * page,
       take: perPage,
-      where: { regionName, realmSlug },
+      where: { regionName, realmSlug, gameVersion },
     });
   }
 }

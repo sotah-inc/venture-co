@@ -1,4 +1,4 @@
-import { ItemId, IWorkOrderJson, RealmSlug, RegionName } from "@sotah-inc/core";
+import { GameVersion, ItemId, IWorkOrderJson, RealmSlug, RegionName } from "@sotah-inc/core";
 import {
   Column,
   CreateDateColumn,
@@ -24,6 +24,10 @@ export class WorkOrder {
   )
   @JoinColumn({ name: "user_id" })
   public user: User | undefined;
+
+  @Column("varchar", { length: 255, name: "game_version" })
+  @Index("idx_game_version")
+  public gameVersion: GameVersion;
 
   @Column("varchar", { length: 255, name: "region_name" })
   @Index("idx_region_name")
@@ -52,6 +56,7 @@ export class WorkOrder {
   public updatedAt: Date | undefined;
 
   constructor() {
+    this.gameVersion = GameVersion.Retail;
     this.realmSlug = "";
     this.regionName = "";
     this.itemId = -1;
@@ -62,6 +67,7 @@ export class WorkOrder {
   public toJson(): IWorkOrderJson {
     return {
       created_at: this.createdAt!.getTime() / 1000,
+      game_version: this.gameVersion,
       id: this.id!,
       item_id: this.itemId,
       price: this.price,
