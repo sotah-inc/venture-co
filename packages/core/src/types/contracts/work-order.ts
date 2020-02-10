@@ -5,7 +5,6 @@ export interface IQueryWorkOrdersParams {
   orderDirection: string;
   page: number;
   perPage: number;
-  gameVersion: string;
 }
 
 export interface IQueryWorkOrdersResponse {

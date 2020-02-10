@@ -24,9 +24,12 @@ export class WorkOrderController {
     IQueryWorkOrdersResponse | IValidationErrorResponse
   > = async req => {
     // parsing request params
-    let result: IQueryWorkOrdersParams | null = null;
+    let result: (IQueryWorkOrdersParams & { gameVersion: string }) | null = null;
     try {
-      result = await QueryWorkOrdersParamsRules.validate(req.query);
+      result = await QueryWorkOrdersParamsRules.validate({
+        ...(req.query as { [key: string]: string }),
+        gameVersion: req.params["gameVersion"],
+      });
     } catch (err) {
       const validationErrors: IValidationErrorResponse = { [err.path]: err.message };
 
