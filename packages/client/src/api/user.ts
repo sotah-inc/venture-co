@@ -15,7 +15,7 @@ import {
 } from "@sotah-inc/core";
 import * as HTTPStatus from "http-status";
 
-import { getApiEndpoint, gather } from "./index";
+import { gather, getApiEndpoint } from "./index";
 
 interface IRegisterUserResult {
   data: ICreateUserResponse | null;
