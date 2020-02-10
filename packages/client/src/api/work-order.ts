@@ -7,6 +7,7 @@ import {
   RegionName,
 } from "@sotah-inc/core";
 import * as HTTPStatus from "http-status";
+import queryString from "query-string";
 
 import { gather, getApiEndpoint } from "./index";
 
@@ -24,15 +25,23 @@ export interface IQueryWorkOrdersOptions extends IQueryWorkOrdersParams {
 export async function queryWorkOrders(
   opts: IQueryWorkOrdersOptions,
 ): Promise<IQueryWorkOrdersResult> {
+  const baseUrl = [
+    getApiEndpoint(),
+    `game-version/${opts.gameVersion}`,
+    `region-name/${opts.regionName}`,
+    `realm-slug/${opts.realmSlug}`,
+    "work-orders",
+  ].join("/");
+  const queryParams: IQueryWorkOrdersParams = {
+    orderBy: opts.orderBy,
+    orderDirection: opts.orderDirection,
+    page: opts.page,
+    perPage: opts.perPage,
+  };
+
   const { body, status } = await gather<void, IQueryWorkOrdersResponse | IValidationErrorResponse>({
     method: "GET",
-    url: [
-      getApiEndpoint(),
-      `game-version/${opts.gameVersion}`,
-      `region-name/${opts.regionName}`,
-      `realm-slug/${opts.realmSlug}`,
-      "work-orders",
-    ].join("/"),
+    url: `${baseUrl}?${queryString.stringify(queryParams)}`,
   });
   switch (status) {
     case HTTPStatus.OK:
