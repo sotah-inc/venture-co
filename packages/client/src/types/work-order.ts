@@ -8,10 +8,12 @@ export interface IRegionTokenHistories {
 }
 
 export interface IWorkOrderState {
+  loadId: string;
   orders: IFetchData<IWorkOrderJson[]>;
 }
 
 export const defaultWorkOrderState: IWorkOrderState = {
+  loadId: "",
   orders: {
     data: [],
     errors: {},

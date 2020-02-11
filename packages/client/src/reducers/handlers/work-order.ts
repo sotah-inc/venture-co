@@ -1,12 +1,33 @@
 import { LoadWorkOrderEntrypoint, WorkOrderActions } from "../../actions/work-order";
+import { FetchLevel } from "../../types/main";
 import { IWorkOrderState } from "../../types/work-order";
 import { IKindHandlers, Runner } from "./index";
 
 export const handlers: IKindHandlers<IWorkOrderState, WorkOrderActions> = {
   entrypoint: {
     workOrder: {
-      load: (state: IWorkOrderState, _action: ReturnType<typeof LoadWorkOrderEntrypoint>) => {
-        return { ...state };
+      load: (state: IWorkOrderState, action: ReturnType<typeof LoadWorkOrderEntrypoint>) => {
+        if (action.payload.workOrders.errors !== null) {
+          return {
+            ...state,
+            loadId: action.payload.loadId,
+            orders: {
+              data: [],
+              errors: action.payload.workOrders.errors,
+              level: FetchLevel.failure,
+            },
+          };
+        }
+
+        return {
+          ...state,
+          loadId: action.payload.loadId,
+          orders: {
+            data: action.payload.workOrders.data!.orders,
+            errors: {},
+            level: FetchLevel.success,
+          },
+        };
       },
     },
   },
