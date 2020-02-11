@@ -15,6 +15,7 @@ import {
   defaultPostsState,
   defaultPriceListsState,
   defaultProfileState,
+  defaultWorkOrderState,
   IStoreState,
 } from "./types";
 
@@ -25,6 +26,7 @@ export const defaultState: IStoreState = {
   Posts: defaultPostsState,
   PriceLists: defaultPriceListsState,
   Profile: defaultProfileState,
+  WorkOrder: defaultWorkOrderState,
 };
 
 const token: string | null = (() => {

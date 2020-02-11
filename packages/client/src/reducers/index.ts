@@ -6,6 +6,7 @@ import { oven } from "./oven";
 import { posts } from "./posts";
 import { priceLists } from "./price-lists";
 import { profile } from "./profile";
+import { workOrder } from "./work-order";
 
 export const rootReducer = combineReducers({
   Auction: auction,
@@ -14,4 +15,5 @@ export const rootReducer = combineReducers({
   Posts: posts,
   PriceLists: priceLists,
   Profile: profile,
+  WorkOrder: workOrder,
 });
