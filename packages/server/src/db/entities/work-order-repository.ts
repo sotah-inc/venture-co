@@ -1,4 +1,4 @@
-import { GameVersion, RealmSlug, RegionName } from "@sotah-inc/core";
+import { GameVersion, OrderDirection, OrderKind, RealmSlug, RegionName } from "@sotah-inc/core";
 import { AbstractRepository, EntityRepository } from "typeorm";
 
 import { WorkOrder } from "./work-order";
@@ -11,15 +11,6 @@ export interface IFindByOptions {
   orderBy: OrderKind;
   orderDirection: OrderDirection;
   gameVersion: GameVersion;
-}
-
-export enum OrderKind {
-  CreatedAt = "createdAt",
-}
-
-export enum OrderDirection {
-  Asc = "ASC",
-  Desc = "DESC",
 }
 
 @EntityRepository(WorkOrder)

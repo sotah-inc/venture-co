@@ -14,3 +14,12 @@ export interface IWorkOrderJson {
   updated_at: number;
   game_version: GameVersion;
 }
+
+export enum OrderKind {
+  CreatedAt = "createdAt",
+}
+
+export enum OrderDirection {
+  Asc = "ASC",
+  Desc = "DESC",
+}
