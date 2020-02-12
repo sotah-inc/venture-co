@@ -8,7 +8,7 @@ import { FetchLevel } from "../../types/main";
 import { setTitle } from "../../util";
 
 export interface IStateProps {
-  workOrder: IFetchData<IWorkOrderJson>;
+  workOrder: IFetchData<IWorkOrderJson[]>;
 }
 
 export interface IDispatchProps {
