@@ -25,4 +25,4 @@ function RouteContainer({ router, workOrderEntrypointData }: Props) {
   );
 }
 
-export const RealmRouteContainer = withRouter(RouteContainer);
+export const WorkOrdersRouteContainer = withRouter(RouteContainer);
