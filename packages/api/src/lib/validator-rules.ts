@@ -4,14 +4,11 @@ import {
   ICreatePreferencesRequest,
   IGetAuctionsRequest,
   IUpdateProfileRequest,
-} from "@sotah-inc/core";
-import {
-  IFindByOptions,
   OrderDirection,
   OrderKind,
-  PostRepository,
-  UserRepository,
-} from "@sotah-inc/server";
+  OrderPerPage,
+} from "@sotah-inc/core";
+import { IFindByOptions, PostRepository, UserRepository } from "@sotah-inc/server";
 import * as yup from "yup";
 
 export const PreferenceRules = yup
@@ -163,6 +160,6 @@ export const QueryWorkOrdersParamsRules = yup
       .number()
       .required()
       .positive()
-      .oneOf([10, 50, 100]),
+      .oneOf(Object.values(OrderPerPage).map(Number)),
   })
   .noUnknown();

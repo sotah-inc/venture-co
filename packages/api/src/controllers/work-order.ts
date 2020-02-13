@@ -3,8 +3,10 @@ import {
   IQueryWorkOrdersParams,
   IQueryWorkOrdersResponse,
   IValidationErrorResponse,
+  OrderDirection,
+  OrderKind,
 } from "@sotah-inc/core";
-import { code, Messenger, OrderDirection, OrderKind, WorkOrderRepository } from "@sotah-inc/server";
+import { code, Messenger, WorkOrderRepository } from "@sotah-inc/server";
 import HTTPStatus from "http-status";
 import { Connection } from "typeorm";
 
