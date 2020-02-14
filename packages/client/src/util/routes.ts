@@ -4,7 +4,7 @@ import {
   IProfession,
   IRegion,
   IStatusRealm,
-  OrderPerPage,
+  SortPerPage,
 } from "@sotah-inc/core";
 import * as queryString from "query-string";
 
@@ -87,7 +87,7 @@ export const toWorkOrders = (
   region: IRegion,
   realm: IStatusRealm,
   page: number,
-  perPage: OrderPerPage,
+  perPage: SortPerPage,
 ) => {
   const asDest = ["work-orders", region.name, realm.slug].join("/");
   const url = [].join("/");
