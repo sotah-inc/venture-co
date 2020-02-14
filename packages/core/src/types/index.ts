@@ -27,6 +27,12 @@ export enum SortKind {
   owner,
 }
 
+export enum SortPerPage {
+  Ten = 10,
+  Fifty = 50,
+  OneHundred = 100,
+}
+
 export enum GameVersion {
   Retail = "retail",
   Classic = "classic",

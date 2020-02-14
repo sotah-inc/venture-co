@@ -23,9 +23,3 @@ export enum OrderDirection {
   Asc = "ASC",
   Desc = "DESC",
 }
-
-export enum OrderPerPage {
-  Ten = 10,
-  Fifty = 50,
-  OneHundred = 100,
-}

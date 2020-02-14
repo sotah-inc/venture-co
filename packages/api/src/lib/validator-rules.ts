@@ -6,7 +6,7 @@ import {
   IUpdateProfileRequest,
   OrderDirection,
   OrderKind,
-  OrderPerPage,
+  SortPerPage,
 } from "@sotah-inc/core";
 import { IFindByOptions, PostRepository, UserRepository } from "@sotah-inc/server";
 import * as yup from "yup";
@@ -160,6 +160,6 @@ export const QueryWorkOrdersParamsRules = yup
       .number()
       .required()
       .positive()
-      .oneOf(Object.values(OrderPerPage).map(Number)),
+      .oneOf(Object.values(SortPerPage).map(Number)),
   })
   .noUnknown();
