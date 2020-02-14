@@ -1,4 +1,12 @@
-import { IExpansion, IPricelistJson, IProfession, IRegion, IStatusRealm } from "@sotah-inc/core";
+import {
+  IExpansion,
+  IPricelistJson,
+  IProfession,
+  IRegion,
+  IStatusRealm,
+  OrderPerPage,
+} from "@sotah-inc/core";
+import * as queryString from "query-string";
 
 export const toUserPricelist = (
   region: IRegion,
@@ -73,4 +81,17 @@ export const toExpansion = (region: IRegion, realm: IStatusRealm, expansion: IEx
   );
 
   return { url, asDest };
+};
+
+export const toWorkOrders = (
+  region: IRegion,
+  realm: IStatusRealm,
+  page: number,
+  perPage: OrderPerPage,
+) => {
+  const asDest = ["work-orders", region.name, realm.slug].join("/");
+  const url = [].join("/");
+  const params = queryString.stringify({ page, perPage });
+
+  return { url: `${url}?${params}`, asDest: `${asDest}?${params}` };
 };

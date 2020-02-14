@@ -1,6 +1,6 @@
 import React from "react";
 
-import { IWorkOrderJson, RealmSlug, RegionName } from "@sotah-inc/core";
+import { IRegion, IStatusRealm, IWorkOrderJson, OrderPerPage } from "@sotah-inc/core";
 
 import { ILoadWorkOrderEntrypoint } from "../../actions/work-order";
 import { IFetchData } from "../../types/global";
@@ -26,7 +26,7 @@ export interface IRouteParams {
 
 export interface IRouteProps {
   routeParams: IRouteParams;
-  browseTo: (regionName: RegionName, realmSlug: RealmSlug) => void;
+  browseTo: (region: IRegion, realm: IStatusRealm, page: number, perPage: OrderPerPage) => void;
 }
 
 export type Props = Readonly<IDispatchProps & IStateProps & IOwnProps & IRouteProps>;
