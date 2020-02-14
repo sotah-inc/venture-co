@@ -3,11 +3,11 @@ import React from "react";
 import { IRegion, IStatusRealm, IWorkOrderJson, SortPerPage } from "@sotah-inc/core";
 
 import { ILoadWorkOrderEntrypoint } from "../../actions/work-order";
+import { WorkOrdersNavContainer } from "../../containers/entry-point/WorkOrder/WorkOrdersNav";
 import { IFetchData } from "../../types/global";
 import { FetchLevel } from "../../types/main";
 import { setTitle } from "../../util";
 import { WorkOrdersList } from "./WorkOrders/WorkOrdersList";
-import { WorkOrdersNav } from "./WorkOrders/WorkOrdersNav";
 
 export interface IStateProps {
   workOrder: IFetchData<IWorkOrderJson[]>;
@@ -55,7 +55,7 @@ export class WorkOrders extends React.Component<Props> {
   public render() {
     return (
       <>
-        <WorkOrdersNav />
+        <WorkOrdersNavContainer />
         <WorkOrdersList />
       </>
     );
