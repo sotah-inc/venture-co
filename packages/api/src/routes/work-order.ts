@@ -11,7 +11,7 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
   const controller = new WorkOrderController(messenger, dbConn);
 
   router.get(
-    "/game-version/:gameVersion/region/:regionName/realm/:realmSlug/work-orders",
+    "/work-orders/:gameVersion/:regionName/:realmSlug",
     wrap(async (req: Request, res: Response) => {
       await handle(controller.queryWorkOrders, req, res);
     }),
