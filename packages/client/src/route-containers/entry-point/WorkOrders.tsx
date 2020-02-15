@@ -17,8 +17,8 @@ function RouteContainer({ router, workOrderEntrypointData }: Props) {
         realm_slug: extractString("realm_slug", router.query),
         region_name: extractString("region_name", router.query),
       }}
-      browseTo={(region, realm, page, perPage) => {
-        const { url, asDest } = toWorkOrders(region, realm, page, perPage);
+      browseTo={(region, realm) => {
+        const { url, asDest } = toWorkOrders(region, realm);
 
         (async () => {
           await router.replace(`/${url}`, `/${asDest}`);

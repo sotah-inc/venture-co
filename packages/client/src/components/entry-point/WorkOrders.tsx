@@ -1,6 +1,6 @@
 import React from "react";
 
-import { IRegion, IStatusRealm, IWorkOrderJson, SortPerPage } from "@sotah-inc/core";
+import { IRegion, IStatusRealm, IWorkOrderJson } from "@sotah-inc/core";
 
 import { ILoadWorkOrderEntrypoint } from "../../actions/work-order";
 import { WorkOrdersNavContainer } from "../../containers/entry-point/WorkOrder/WorkOrdersNav";
@@ -28,7 +28,7 @@ export interface IRouteParams {
 
 export interface IRouteProps {
   routeParams: IRouteParams;
-  browseTo: (region: IRegion, realm: IStatusRealm, page: number, perPage: SortPerPage) => void;
+  browseTo: (region: IRegion, realm: IStatusRealm) => void;
 }
 
 export type Props = Readonly<IDispatchProps & IStateProps & IOwnProps & IRouteProps>;
