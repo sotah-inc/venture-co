@@ -3,11 +3,11 @@ import React from "react";
 import { IRegion, IStatusRealm, IWorkOrderJson } from "@sotah-inc/core";
 
 import { ILoadWorkOrderEntrypoint } from "../../actions/work-order";
+import { WorkOrdersListContainer } from "../../containers/entry-point/WorkOrder/WorkOrdersList";
 import { WorkOrdersNavContainer } from "../../containers/entry-point/WorkOrder/WorkOrdersNav";
 import { IFetchData } from "../../types/global";
 import { FetchLevel } from "../../types/main";
 import { setTitle } from "../../util";
-import { WorkOrdersList } from "./WorkOrders/WorkOrdersList";
 
 export interface IStateProps {
   workOrder: IFetchData<IWorkOrderJson[]>;
@@ -41,9 +41,15 @@ export class WorkOrders extends React.Component<Props> {
     loadWorkOrderEntrypoint(workOrderEntrypointData);
   }
 
-  public componentDidUpdate() {
+  public componentDidUpdate(prevProps: Props) {
     // props
-    const { workOrder } = this.props;
+    const { workOrder, workOrderEntrypointData, loadWorkOrderEntrypoint } = this.props;
+
+    if (prevProps.workOrderEntrypointData.loadId !== workOrderEntrypointData.loadId) {
+      loadWorkOrderEntrypoint(workOrderEntrypointData);
+
+      return;
+    }
 
     if (workOrder.level !== FetchLevel.success) {
       return;
@@ -56,7 +62,7 @@ export class WorkOrders extends React.Component<Props> {
     return (
       <>
         <WorkOrdersNavContainer />
-        <WorkOrdersList />
+        <WorkOrdersListContainer />
       </>
     );
   }

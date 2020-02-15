@@ -27,10 +27,10 @@ export async function queryWorkOrders(
 ): Promise<IQueryWorkOrdersResult> {
   const baseUrl = [
     getApiEndpoint(),
-    `game-version/${opts.gameVersion}`,
-    `region-name/${opts.regionName}`,
-    `realm-slug/${opts.realmSlug}`,
     "work-orders",
+    opts.gameVersion,
+    opts.regionName,
+    opts.realmSlug,
   ].join("/");
   const queryParams: IQueryWorkOrdersParams = {
     orderBy: opts.orderBy,
