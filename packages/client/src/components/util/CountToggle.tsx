@@ -27,7 +27,9 @@ export class CountToggle extends React.Component<Props> {
   }
 
   public renderMenu() {
-    const counts: number[] = Object.values(SortPerPage).map(Number);
+    const counts: number[] = Object.values(SortPerPage)
+      .filter(v => !isNaN(Number(v)))
+      .map(Number);
     return (
       <Menu>
         <li>
