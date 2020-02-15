@@ -1,6 +1,7 @@
+import { SortPerPage } from "@sotah-inc/core";
+
 import { IQueryWorkOrdersResult } from "../api/work-order";
 import { ActionsUnion, createAction } from "./helpers";
-import { SortPerPage } from "@sotah-inc/core";
 
 export interface ILoadWorkOrderEntrypoint {
   loadId: string;

@@ -1,11 +1,15 @@
-import { LoadWorkOrderEntrypoint, WorkOrderActions } from "../../actions/work-order";
+import {
+  LoadWorkOrderEntrypoint,
+  SetWorkOrderPerPage,
+  WorkOrderActions,
+} from "../../actions/work-order";
 import { FetchLevel } from "../../types/main";
 import { IWorkOrderState } from "../../types/work-order";
 import { IKindHandlers, Runner } from "./index";
 
 export const handlers: IKindHandlers<IWorkOrderState, WorkOrderActions> = {
   entrypoint: {
-    workOrder: {
+    workorder: {
       load: (state: IWorkOrderState, action: ReturnType<typeof LoadWorkOrderEntrypoint>) => {
         if (action.payload.workOrders.errors !== null) {
           return {
@@ -28,6 +32,16 @@ export const handlers: IKindHandlers<IWorkOrderState, WorkOrderActions> = {
             level: FetchLevel.success,
           },
         };
+      },
+    },
+  },
+  perpage: {
+    workorder: {
+      set: (
+        state: IWorkOrderState,
+        action: ReturnType<typeof SetWorkOrderPerPage>,
+      ): IWorkOrderState => {
+        return { ...state, perPage: action.payload };
       },
     },
   },
