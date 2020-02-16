@@ -95,6 +95,12 @@ export class Topbar extends React.Component<Props> {
               <NavbarDivider />
               {contentLink}
               <NavbarDivider />
+              <LinkButtonRouteContainer
+                destination="/work-orders"
+                buttonProps={{ icon: "exchange", text: "Work Orders" }}
+                prefix={true}
+              />
+              <NavbarDivider />
               {dataLink}
               <NavbarDivider />
               {this.renderUserInfo()}
