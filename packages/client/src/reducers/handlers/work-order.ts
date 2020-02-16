@@ -1,5 +1,6 @@
 import {
   LoadWorkOrderEntrypoint,
+  ReceiveWorkOrderQuery,
   SetWorkOrderPerPage,
   WorkOrderActions,
 } from "../../actions/work-order";
@@ -42,6 +43,26 @@ export const handlers: IKindHandlers<IWorkOrderState, WorkOrderActions> = {
         action: ReturnType<typeof SetWorkOrderPerPage>,
       ): IWorkOrderState => {
         return { ...state, perPage: action.payload };
+      },
+    },
+  },
+  query: {
+    workorder: {
+      receive: (state, action: ReturnType<typeof ReceiveWorkOrderQuery>) => {
+        if (action.payload.errors !== null) {
+          return {
+            ...state,
+            orders: { ...state.orders, level: FetchLevel.failure, errors: action.payload.errors },
+          };
+        }
+
+        return {
+          ...state,
+          orders: { ...state.orders, level: FetchLevel.success, data: action.payload.data!.orders },
+        };
+      },
+      request: state => {
+        return { ...state, orders: { ...state.orders, level: FetchLevel.fetching } };
       },
     },
   },
