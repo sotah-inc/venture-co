@@ -10,7 +10,7 @@ import { toWorkOrders } from "../../util/routes";
 
 type Props = Readonly<WithRouterProps & IOwnProps>;
 
-function RouteContainer({ router, workOrderEntrypointData }: Props) {
+function RouteContainer({ realmEntrypointData, router, workOrderEntrypointData }: Props) {
   return (
     <WorkOrdersContainer
       routeParams={{
@@ -25,6 +25,7 @@ function RouteContainer({ router, workOrderEntrypointData }: Props) {
         })();
       }}
       workOrderEntrypointData={workOrderEntrypointData}
+      realmEntrypointData={realmEntrypointData}
     />
   );
 }

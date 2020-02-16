@@ -1,5 +1,6 @@
 import { connect } from "react-redux";
 
+import { LoadRealmEntrypoint } from "../../actions/main";
 import { FetchWorkOrderQuery, LoadWorkOrderEntrypoint } from "../../actions/work-order";
 import {
   IDispatchProps,
@@ -18,6 +19,7 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
 };
 
 const mapDispatchToProps: IDispatchProps = {
+  loadRealmEntrypoint: LoadRealmEntrypoint,
   loadWorkOrderEntrypoint: LoadWorkOrderEntrypoint,
   queryWorkOrders: FetchWorkOrderQuery,
 };

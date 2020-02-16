@@ -10,6 +10,7 @@ import {
   SortPerPage,
 } from "@sotah-inc/core";
 
+import { ILoadRealmEntrypoint } from "../../actions/main";
 import { ILoadWorkOrderEntrypoint } from "../../actions/work-order";
 import { IQueryWorkOrdersOptions } from "../../api/work-order";
 import { WorkOrdersListContainer } from "../../containers/entry-point/WorkOrder/WorkOrdersList";
@@ -28,10 +29,12 @@ export interface IStateProps {
 export interface IDispatchProps {
   loadWorkOrderEntrypoint: (payload: ILoadWorkOrderEntrypoint) => void;
   queryWorkOrders: (opts: IQueryWorkOrdersOptions) => void;
+  loadRealmEntrypoint: (payload: ILoadRealmEntrypoint) => void;
 }
 
 export interface IOwnProps {
   workOrderEntrypointData: ILoadWorkOrderEntrypoint;
+  realmEntrypointData: ILoadRealmEntrypoint;
 }
 
 export interface IRouteParams {
@@ -48,9 +51,15 @@ export type Props = Readonly<IDispatchProps & IStateProps & IOwnProps & IRoutePr
 
 export class WorkOrders extends React.Component<Props> {
   public componentDidMount() {
-    const { workOrderEntrypointData, loadWorkOrderEntrypoint } = this.props;
+    const {
+      workOrderEntrypointData,
+      loadWorkOrderEntrypoint,
+      loadRealmEntrypoint,
+      realmEntrypointData,
+    } = this.props;
 
     loadWorkOrderEntrypoint(workOrderEntrypointData);
+    loadRealmEntrypoint(realmEntrypointData);
   }
 
   public componentDidUpdate(prevProps: Props) {
@@ -60,10 +69,13 @@ export class WorkOrders extends React.Component<Props> {
       currentRegion,
       currentRealm,
       routeParams: { region_name, realm_slug },
+      loadRealmEntrypoint,
+      realmEntrypointData,
     } = this.props;
 
     if (prevProps.workOrderEntrypointData.loadId !== workOrderEntrypointData.loadId) {
       loadWorkOrderEntrypoint(workOrderEntrypointData);
+      loadRealmEntrypoint(realmEntrypointData);
 
       return;
     }
