@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 
-import { LoadWorkOrderEntrypoint } from "../../actions/work-order";
+import { FetchWorkOrderQuery, LoadWorkOrderEntrypoint } from "../../actions/work-order";
 import {
   IDispatchProps,
   IOwnProps,
@@ -11,12 +11,15 @@ import {
 import { IStoreState } from "../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
-  const { orders } = state.WorkOrder;
-  return { workOrder: orders };
+  const { orders, perPage } = state.WorkOrder;
+  const { currentRegion, currentRealm } = state.Main;
+
+  return { orders, currentRegion, currentRealm, perPage };
 };
 
 const mapDispatchToProps: IDispatchProps = {
   loadWorkOrderEntrypoint: LoadWorkOrderEntrypoint,
+  queryWorkOrders: FetchWorkOrderQuery,
 };
 
 export const WorkOrdersContainer = connect<
