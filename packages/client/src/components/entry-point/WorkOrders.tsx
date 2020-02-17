@@ -24,6 +24,7 @@ export interface IStateProps {
   currentRegion: IRegion | null;
   currentRealm: IStatusRealm | null;
   perPage: SortPerPage;
+  currentPage: number;
 }
 
 export interface IDispatchProps {
@@ -112,7 +113,7 @@ export class WorkOrders extends React.Component<Props> {
   }
 
   private refreshWorkOrdersTrigger(prevProps: Props) {
-    const { currentRegion, currentRealm, orders, perPage } = this.props;
+    const { currentRegion, currentRealm, orders, perPage, currentPage } = this.props;
 
     if (currentRegion === null || currentRealm === null) {
       return;
@@ -123,6 +124,10 @@ export class WorkOrders extends React.Component<Props> {
     }
 
     const didOptionsChange = ((): boolean => {
+      if (currentPage !== prevProps.currentPage) {
+        return true;
+      }
+
       return perPage !== prevProps.perPage;
     })();
     if (!didOptionsChange) {
@@ -133,7 +138,7 @@ export class WorkOrders extends React.Component<Props> {
   }
 
   private refreshWorkOrders() {
-    const { queryWorkOrders, currentRegion, currentRealm, perPage } = this.props;
+    const { queryWorkOrders, currentRegion, currentRealm, perPage, currentPage } = this.props;
 
     if (currentRegion === null || currentRealm === null) {
       return;
@@ -143,7 +148,7 @@ export class WorkOrders extends React.Component<Props> {
       gameVersion: GameVersion.Retail,
       orderBy: OrderKind.CreatedAt,
       orderDirection: OrderDirection.Desc,
-      page: 1,
+      page: currentPage,
       perPage,
       realmSlug: currentRealm.slug,
       regionName: currentRegion.name,

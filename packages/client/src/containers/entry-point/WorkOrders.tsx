@@ -12,10 +12,10 @@ import {
 import { IStoreState } from "../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
-  const { orders, perPage } = state.WorkOrder;
+  const { orders, perPage, currentPage } = state.WorkOrder;
   const { currentRegion, currentRealm } = state.Main;
 
-  return { orders, currentRegion, currentRealm, perPage };
+  return { orders, currentRegion, currentRealm, perPage, currentPage };
 };
 
 const mapDispatchToProps: IDispatchProps = {
