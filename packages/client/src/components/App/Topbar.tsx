@@ -42,6 +42,7 @@ enum SubBarKind {
   Content,
   Data,
   Profile,
+  Marketplace,
 }
 
 export class Topbar extends React.Component<Props> {
@@ -82,6 +83,24 @@ export class Topbar extends React.Component<Props> {
         </Tooltip>
       );
     })();
+    const marketplaceLink = (() => {
+      const out = (
+        <LinkButtonRouteContainer
+          destination="/marketplace"
+          buttonProps={{ icon: "exchange", text: "Marketplace" }}
+          prefix={true}
+        />
+      );
+      if (this.getSubBarKind() === SubBarKind.Marketplace) {
+        return out;
+      }
+
+      return (
+        <Tooltip content="Work orders, cross-realm exchange" inheritDarkTheme={true}>
+          {out}
+        </Tooltip>
+      );
+    })();
 
     return (
       <>
@@ -95,11 +114,7 @@ export class Topbar extends React.Component<Props> {
               <NavbarDivider />
               {contentLink}
               <NavbarDivider />
-              <LinkButtonRouteContainer
-                destination="/work-orders"
-                buttonProps={{ icon: "exchange", text: "Work Orders" }}
-                prefix={true}
-              />
+              {marketplaceLink}
               <NavbarDivider />
               {dataLink}
               <NavbarDivider />
@@ -141,6 +156,10 @@ export class Topbar extends React.Component<Props> {
       return SubBarKind.Profile;
     }
 
+    if (locationPathname.startsWith("/marketplace")) {
+      return SubBarKind.Marketplace;
+    }
+
     return SubBarKind.Unknown;
   }
 
@@ -166,6 +185,14 @@ export class Topbar extends React.Component<Props> {
         return this.renderDataSubBar();
       case SubBarKind.Profile:
         return this.renderProfileSubBar();
+      case SubBarKind.Marketplace:
+        return (
+          <LinkButtonRouteContainer
+            destination="/marketplace/work-orders"
+            buttonProps={{ icon: "flow-review", text: "Work Orders", minimal: true }}
+            prefix={true}
+          />
+        );
       default:
         return null;
     }
