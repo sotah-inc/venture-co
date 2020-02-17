@@ -56,17 +56,19 @@ export class WorkOrderController {
       };
     }
 
-    const orders = await this.dbConn.getCustomRepository(WorkOrderRepository).findBy({
-      ...result,
-      gameVersion: result.gameVersion as GameVersion,
-      orderBy: result.orderBy as OrderKind,
-      orderDirection: result.orderDirection as OrderDirection,
-      realmSlug: req.params["realmSlug"],
-      regionName: req.params["regionName"],
-    });
+    const { count: totalResults, orders } = await this.dbConn
+      .getCustomRepository(WorkOrderRepository)
+      .findBy({
+        ...result,
+        gameVersion: result.gameVersion as GameVersion,
+        orderBy: result.orderBy as OrderKind,
+        orderDirection: result.orderDirection as OrderDirection,
+        realmSlug: req.params["realmSlug"],
+        regionName: req.params["regionName"],
+      });
 
     return {
-      data: { orders: orders.map(v => v.toJson()) },
+      data: { orders: orders.map(v => v.toJson()), totalResults },
       status: HTTPStatus.OK,
     };
   };
