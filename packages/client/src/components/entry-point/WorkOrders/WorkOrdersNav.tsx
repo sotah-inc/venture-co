@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Alignment, Navbar, NavbarDivider, NavbarGroup } from "@blueprintjs/core";
-import { SortPerPage } from "@sotah-inc/core";
+import { IRegion, IStatusRealm, SortPerPage } from "@sotah-inc/core";
 
 import { Pagination } from "../../util";
 import { CountToggle } from "../../util/CountToggle";
@@ -17,7 +17,11 @@ export interface IDispatchProps {
   setPage: (page: number) => void;
 }
 
-type Props = Readonly<IDispatchProps & IStateProps>;
+export interface IRouteProps {
+  browseTo: (region: IRegion, realm: IStatusRealm) => void;
+}
+
+type Props = Readonly<IDispatchProps & IStateProps & IRouteProps>;
 
 export class WorkOrdersNav extends React.Component<Props> {
   public render() {

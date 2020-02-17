@@ -13,8 +13,8 @@ import {
 import { ILoadRealmEntrypoint } from "../../actions/main";
 import { ILoadWorkOrderEntrypoint } from "../../actions/work-order";
 import { IQueryWorkOrdersOptions } from "../../api/work-order";
-import { WorkOrdersListContainer } from "../../containers/entry-point/WorkOrder/WorkOrdersList";
-import { WorkOrdersNavContainer } from "../../containers/entry-point/WorkOrder/WorkOrdersNav";
+import { WorkOrdersListContainer } from "../../containers/entry-point/WorkOrders/WorkOrdersList";
+import { WorkOrdersNavRouteContainer } from "../../route-containers/entry-point/WorkOrders/WorkOrdersNav";
 import { IFetchData } from "../../types/global";
 import { FetchLevel } from "../../types/main";
 import { setTitle } from "../../util";
@@ -96,7 +96,7 @@ export class WorkOrders extends React.Component<Props> {
   public render() {
     return (
       <>
-        <WorkOrdersNavContainer />
+        <WorkOrdersNavRouteContainer />
         <WorkOrdersListContainer />
       </>
     );
