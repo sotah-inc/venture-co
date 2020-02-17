@@ -77,7 +77,7 @@ export const toExpansion = (region: IRegion, realm: IStatusRealm, expansion: IEx
 
 export const toWorkOrders = (region: IRegion, realm: IStatusRealm) => {
   const asDest = ["marketplace", "work-orders", region.name, realm.slug].join("/");
-  const url = [].join("/");
+  const url = ["marketplace", "work-orders", "[region_name]", "[realm_slug]"].join("/");
 
   return { url, asDest };
 };

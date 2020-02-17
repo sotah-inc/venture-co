@@ -16,8 +16,9 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
     },
     currentPage,
   } = state.WorkOrder;
+  const { currentRegion } = state.Main;
 
-  return { perPage, totalResults, currentPage };
+  return { perPage, totalResults, currentPage, currentRegion };
 };
 
 const mapDispatchToProps: IDispatchProps = {

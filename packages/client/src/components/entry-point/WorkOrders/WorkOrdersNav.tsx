@@ -1,8 +1,10 @@
 import React from "react";
 
-import { Alignment, Navbar, NavbarDivider, NavbarGroup } from "@blueprintjs/core";
+import { Alignment, ButtonGroup, Navbar, NavbarDivider, NavbarGroup } from "@blueprintjs/core";
 import { IRegion, IStatusRealm, SortPerPage } from "@sotah-inc/core";
 
+import { RealmToggleContainer } from "../../../containers/util/RealmToggle";
+import { RegionToggleContainer } from "../../../containers/util/RegionToggle";
 import { Pagination } from "../../util";
 import { CountToggle } from "../../util/CountToggle";
 
@@ -10,6 +12,7 @@ export interface IStateProps {
   perPage: SortPerPage;
   totalResults: number;
   currentPage: number;
+  currentRegion: IRegion | null;
 }
 
 export interface IDispatchProps {
@@ -39,8 +42,24 @@ export class WorkOrdersNav extends React.Component<Props> {
             onPageChange={setPage}
           />
         </NavbarGroup>
+        <NavbarGroup align={Alignment.RIGHT}>
+          <ButtonGroup>
+            <RealmToggleContainer onRealmChange={(v: IStatusRealm) => this.onRealmChange(v)} />
+            <RegionToggleContainer />
+          </ButtonGroup>
+        </NavbarGroup>
       </Navbar>
     );
+  }
+
+  private onRealmChange(realm: IStatusRealm) {
+    const { browseTo, currentRegion } = this.props;
+
+    if (currentRegion === null) {
+      return;
+    }
+
+    browseTo(currentRegion, realm);
   }
 
   private getPageCount() {
