@@ -21,6 +21,9 @@ export const SET_WORKORDER_PERPAGE = "SET_WORKORDER_PERPAGE";
 export const SetWorkOrderPerPage = (payload: SortPerPage) =>
   createAction(SET_WORKORDER_PERPAGE, payload);
 
+export const SET_WORKORDER_PAGE = "SET_WORKORDER_PAGE";
+export const SetWorkOrderPage = (payload: number) => createAction(SET_WORKORDER_PAGE, payload);
+
 export const REQUEST_WORKORDER_QUERY = "REQUEST_WORKORDER_QUERY";
 export const RequestWorkOrderQuery = () => createAction(REQUEST_WORKORDER_QUERY);
 export const RECEIVE_WORKORDER_QUERY = "RECEIVE_WORKORDER_QUERY";
@@ -37,6 +40,7 @@ export const WorkOrderActions = {
   LoadWorkOrderEntrypoint,
   ReceiveWorkOrderQuery,
   RequestWorkOrderQuery,
+  SetWorkOrderPage,
   SetWorkOrderPerPage,
 };
 

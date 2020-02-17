@@ -13,7 +13,7 @@ export interface IWorkOrderState {
 }
 
 export const defaultWorkOrderState: IWorkOrderState = {
-  currentPage: 1,
+  currentPage: 0,
   loadId: "",
   orderBy: OrderKind.CreatedAt,
   orderDirection: OrderDirection.Desc,

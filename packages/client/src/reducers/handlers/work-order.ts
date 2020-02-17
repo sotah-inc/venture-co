@@ -1,6 +1,7 @@
 import {
   LoadWorkOrderEntrypoint,
   ReceiveWorkOrderQuery,
+  SetWorkOrderPage,
   SetWorkOrderPerPage,
   WorkOrderActions,
 } from "../../actions/work-order";
@@ -33,6 +34,16 @@ export const handlers: IKindHandlers<IWorkOrderState, WorkOrderActions> = {
             level: FetchLevel.success,
           },
         };
+      },
+    },
+  },
+  page: {
+    workorder: {
+      set: (
+        state: IWorkOrderState,
+        action: ReturnType<typeof SetWorkOrderPage>,
+      ): IWorkOrderState => {
+        return { ...state, currentPage: action.payload };
       },
     },
   },
