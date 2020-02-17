@@ -2,9 +2,9 @@ import React from "react";
 
 import {
   GameVersion,
+  IQueryWorkOrdersResponse,
   IRegion,
   IStatusRealm,
-  IWorkOrderJson,
   OrderDirection,
   OrderKind,
   SortPerPage,
@@ -20,7 +20,7 @@ import { FetchLevel } from "../../types/main";
 import { setTitle } from "../../util";
 
 export interface IStateProps {
-  orders: IFetchData<IWorkOrderJson[]>;
+  orders: IFetchData<IQueryWorkOrdersResponse>;
   currentRegion: IRegion | null;
   currentRealm: IStatusRealm | null;
   perPage: SortPerPage;

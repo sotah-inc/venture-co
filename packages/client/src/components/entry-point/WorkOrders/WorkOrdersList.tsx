@@ -1,13 +1,13 @@
 import React from "react";
 
 import { Classes, HTMLTable } from "@blueprintjs/core";
-import { IWorkOrderJson } from "@sotah-inc/core";
+import { IQueryWorkOrdersResponse, IWorkOrderJson } from "@sotah-inc/core";
 
 import { IFetchData } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
 
 export interface IStateProps {
-  orders: IFetchData<IWorkOrderJson[]>;
+  orders: IFetchData<IQueryWorkOrdersResponse>;
 }
 
 type Props = Readonly<IStateProps>;
@@ -47,7 +47,7 @@ export class WorkOrdersList extends React.Component<Props> {
             <th>Created At</th>
           </tr>
         </thead>
-        <tbody>{orders.data.map(v => this.renderOrder(v))}</tbody>
+        <tbody>{orders.data.orders.map(v => this.renderOrder(v))}</tbody>
       </HTMLTable>
     );
   }
