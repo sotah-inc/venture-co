@@ -1,6 +1,6 @@
 {
   "name": "@sotah-inc/core",
-  "version": "1.0.88",
+  "version": "1.0.89",
   "description": "SotAH Core SDK",
   "main": "build/dist/index.js",
   "typings": "build/dist/index.d.ts",
@@ -14,7 +14,7 @@
     "build:watch": "run-p build:ts:watch lint:watch",
     "build:ts": "tsc",
     "build:ts:watch": "npm run -s build:ts -- --watch",
-    "prepublish": "npm run -s build"
+    "prepublishOnly": "npm run -s build"
   },
   "author": "Adrian Parker <adrian@sotah.info>",
   "license": "ISC",

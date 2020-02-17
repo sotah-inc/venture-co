@@ -9,4 +9,5 @@ export interface IQueryWorkOrdersParams {
 
 export interface IQueryWorkOrdersResponse {
   orders: IWorkOrderJson[];
+  totalResults: number;
 }
