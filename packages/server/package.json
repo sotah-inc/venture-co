@@ -1,6 +1,6 @@
 {
   "name": "@sotah-inc/server",
-  "version": "1.0.108",
+  "version": "1.0.109",
   "description": "",
   "main": "./build/dist/index.js",
   "typings": "build/dist/index.d.ts",
@@ -13,7 +13,7 @@
     "build": "run-s clean build:ts",
     "build:ts": "tsc",
     "build:ts:watch": "npm run -s build:ts -- --watch",
-    "prepublish": "npm run -s build"
+    "prepublishOnly": "npm run -s build"
   },
   "author": "",
   "license": "ISC",
@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "@google-cloud/firestore": "^2.4.0",
-    "@sotah-inc/core": "^1.0.88",
+    "@sotah-inc/core": "^1.0.89",
     "@types/express": "^4.17.1",
     "@types/passport": "^1.0.1",
     "@types/passport-jwt": "^3.0.2",

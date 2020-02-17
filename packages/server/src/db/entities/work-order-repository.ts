@@ -1,5 +1,7 @@
 import { GameVersion, OrderDirection, OrderKind, RealmSlug, RegionName } from "@sotah-inc/core";
 import { AbstractRepository, EntityRepository } from "typeorm";
+// tslint:disable-next-line:no-submodule-imports
+import { FindManyOptions } from "typeorm/find-options/FindManyOptions";
 
 import { WorkOrder } from "./work-order";
 
@@ -23,12 +25,19 @@ export class WorkOrderRepository extends AbstractRepository<WorkOrder> {
     orderBy,
     orderDirection,
     gameVersion,
-  }: IFindByOptions): Promise<WorkOrder[]> {
-    return this.repository.find({
+  }: IFindByOptions) {
+    const mainOptions: FindManyOptions<WorkOrder> = {
+      where: { regionName, realmSlug, gameVersion },
+    };
+
+    const count = await this.repository.count(mainOptions);
+    const orders = await this.repository.find({
+      ...mainOptions,
       order: { [orderBy]: orderDirection },
       skip: perPage * page,
       take: perPage,
-      where: { regionName, realmSlug, gameVersion },
     });
+
+    return { orders, count };
   }
 }
