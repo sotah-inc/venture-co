@@ -22,5 +22,5 @@ export const defaultWorkOrderState: IWorkOrderState = {
     errors: {},
     level: FetchLevel.initial,
   },
-  perPage: SortPerPage.Fifty,
+  perPage: SortPerPage.Ten,
 };
