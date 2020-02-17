@@ -9,7 +9,11 @@ export interface IStateProps {
   user: IUserJson | null;
 }
 
-export type Props = Readonly<IStateProps>;
+export interface IRouteProps {
+  locationPathname: string;
+}
+
+export type Props = Readonly<IStateProps & IRouteProps>;
 
 export class NewsButton extends React.Component<Props> {
   private static renderHomeButton() {
@@ -23,7 +27,7 @@ export class NewsButton extends React.Component<Props> {
   }
 
   public render() {
-    const { user } = this.props;
+    const { user, locationPathname } = this.props;
 
     if (user === null || user.level < UserLevel.Admin) {
       return NewsButton.renderHomeButton();
@@ -34,8 +38,11 @@ export class NewsButton extends React.Component<Props> {
         {NewsButton.renderHomeButton()}
         <LinkButtonRouteContainer
           destination="/content/news/creator"
-          buttonProps={{ icon: "plus", minimal: true }}
-          prefix={true}
+          buttonProps={{
+            active: locationPathname.startsWith("/content/news"),
+            icon: "plus",
+            minimal: true,
+          }}
         />
       </ButtonGroup>
     );

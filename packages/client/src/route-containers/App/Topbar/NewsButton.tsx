@@ -7,8 +7,8 @@ import { NewsButtonContainer } from "../../../containers/App/Topbar/NewsButton";
 
 type Props = Readonly<WithRouterProps>;
 
-function RouteContainer(_props: Props) {
-  return <NewsButtonContainer />;
+function RouteContainer({ router }: Props) {
+  return <NewsButtonContainer locationPathname={router.pathname} />;
 }
 
 export const NewsButtonRouteContainer = withRouter(RouteContainer);
