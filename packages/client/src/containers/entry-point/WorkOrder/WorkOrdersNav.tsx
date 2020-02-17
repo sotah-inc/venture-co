@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 
-import { SetWorkOrderPerPage } from "../../../actions/work-order";
+import { SetWorkOrderPage, SetWorkOrderPerPage } from "../../../actions/work-order";
 import {
   IDispatchProps,
   IStateProps,
@@ -9,11 +9,19 @@ import {
 import { IStoreState } from "../../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
-  const { perPage } = state.WorkOrder;
-  return { perPage };
+  const {
+    perPage,
+    orders: {
+      data: { totalResults },
+    },
+    currentPage,
+  } = state.WorkOrder;
+
+  return { perPage, totalResults, currentPage };
 };
 
 const mapDispatchToProps: IDispatchProps = {
+  setPage: SetWorkOrderPage,
   setPerPage: SetWorkOrderPerPage,
 };
 
