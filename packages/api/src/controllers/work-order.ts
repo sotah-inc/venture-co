@@ -1,17 +1,21 @@
 import {
   GameVersion,
+  ICreateWorkOrderRequest,
+  ICreateWorkOrderResponse,
   IQueryWorkOrdersParams,
   IQueryWorkOrdersResponse,
   IValidationErrorResponse,
   OrderDirection,
   OrderKind,
+  UserLevel,
 } from "@sotah-inc/core";
-import { code, Messenger, WorkOrderRepository } from "@sotah-inc/server";
+import { code, Messenger, User, WorkOrder, WorkOrderRepository } from "@sotah-inc/server";
+import { Response } from "express";
 import HTTPStatus from "http-status";
 import { Connection } from "typeorm";
 
-import { QueryWorkOrdersParamsRules } from "../lib/validator-rules";
-import { QueryRequestHandler } from "./index";
+import { CreateWorkOrderRequestRules, QueryWorkOrdersParamsRules } from "../lib/validator-rules";
+import { Authenticator, IRequest, IRequestResult, QueryRequestHandler, Validator } from "./index";
 
 export class WorkOrderController {
   private messenger: Messenger;
@@ -72,4 +76,42 @@ export class WorkOrderController {
       status: HTTPStatus.OK,
     };
   };
+
+  @Authenticator<ICreateWorkOrderRequest, ICreateWorkOrderResponse>(UserLevel.Regular)
+  @Validator<ICreateWorkOrderRequest, ICreateWorkOrderResponse>(CreateWorkOrderRequestRules)
+  public async createWorkOrder(
+    req: IRequest<ICreateWorkOrderRequest>,
+    _res: Response,
+  ): Promise<IRequestResult<ICreateWorkOrderResponse | IValidationErrorResponse>> {
+    const { realmSlug, regionName } = req.params;
+
+    const validateMsg = await this.messenger.validateRegionRealm({
+      realm_slug: realmSlug,
+      region_name: regionName,
+    });
+    if (validateMsg.code !== code.ok) {
+      const validationErrors: IValidationErrorResponse = {
+        error: "Could not validate region-name and realm-slug",
+      };
+
+      return {
+        data: validationErrors,
+        status: HTTPStatus.BAD_REQUEST,
+      };
+    }
+
+    const { body } = req;
+
+    const workOrder = new WorkOrder();
+    workOrder.user = req.user as User;
+    workOrder.gameVersion = body.gameVersion as GameVersion;
+    workOrder.regionName = regionName;
+    workOrder.realmSlug = realmSlug;
+    workOrder.itemId = body.itemId;
+    workOrder.price = body.price;
+    workOrder.quantity = body.quantity;
+    await this.dbConn.manager.save(workOrder);
+
+    return { status: HTTPStatus.CREATED, data: { order: workOrder.toJson() } };
+  }
 }

@@ -2,6 +2,7 @@ import {
   GameVersion,
   ICreatePostRequest,
   ICreatePreferencesRequest,
+  ICreateWorkOrderRequest,
   IGetAuctionsRequest,
   IUpdateProfileRequest,
   OrderDirection,
@@ -160,6 +161,32 @@ export const QueryWorkOrdersParamsRules = yup
       .number()
       .required()
       .positive()
-      .oneOf(Object.values(SortPerPage).map(Number)),
+      .oneOf(
+        Object.values(SortPerPage)
+          .filter(v => !isNaN(Number(v)))
+          .map(Number),
+      ),
+  })
+  .noUnknown();
+
+export const CreateWorkOrderRequestRules = yup
+  .object<ICreateWorkOrderRequest>()
+  .shape<ICreateWorkOrderRequest>({
+    gameVersion: yup
+      .string()
+      .required()
+      .oneOf(Object.values(GameVersion)),
+    itemId: yup
+      .number()
+      .positive()
+      .required(),
+    price: yup
+      .number()
+      .required()
+      .positive(),
+    quantity: yup
+      .number()
+      .positive()
+      .required(),
   })
   .noUnknown();
