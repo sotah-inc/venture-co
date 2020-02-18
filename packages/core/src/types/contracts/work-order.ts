@@ -11,3 +11,14 @@ export interface IQueryWorkOrdersResponse {
   orders: IWorkOrderJson[];
   totalResults: number;
 }
+
+export interface ICreateWorkOrderRequest {
+  itemId: number;
+  quantity: number;
+  price: number;
+  gameVersion: string;
+}
+
+export interface ICreateWorkOrderResponse {
+  order: IWorkOrderJson;
+}
