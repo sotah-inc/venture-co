@@ -12,7 +12,7 @@ import {
 
 import { ILoadRealmEntrypoint } from "../../actions/main";
 import { ILoadWorkOrderEntrypoint } from "../../actions/work-order";
-import { IQueryWorkOrdersOptions } from "../../api/work-order";
+import { QueryWorkOrdersOptions } from "../../api/work-order";
 import { WorkOrdersListContainer } from "../../containers/entry-point/WorkOrders/WorkOrdersList";
 import { WorkOrdersNavRouteContainer } from "../../route-containers/entry-point/WorkOrders/WorkOrdersNav";
 import { IFetchData } from "../../types/global";
@@ -29,7 +29,7 @@ export interface IStateProps {
 
 export interface IDispatchProps {
   loadWorkOrderEntrypoint: (payload: ILoadWorkOrderEntrypoint) => void;
-  queryWorkOrders: (opts: IQueryWorkOrdersOptions) => void;
+  queryWorkOrders: (opts: QueryWorkOrdersOptions) => void;
   loadRealmEntrypoint: (payload: ILoadRealmEntrypoint) => void;
 }
 

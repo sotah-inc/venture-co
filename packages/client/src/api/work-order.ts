@@ -11,19 +11,21 @@ import queryString from "query-string";
 
 import { gather, getApiEndpoint } from "./index";
 
-export interface IQueryWorkOrdersResult {
-  data: IQueryWorkOrdersResponse | null;
-  errors: IValidationErrorResponse | null;
-}
-
-export interface IQueryWorkOrdersOptions extends IQueryWorkOrdersParams {
+interface IWorkOrderParams {
   gameVersion: GameVersion;
   regionName: RegionName;
   realmSlug: RealmSlug;
 }
 
+export interface IQueryWorkOrdersResult {
+  data: IQueryWorkOrdersResponse | null;
+  errors: IValidationErrorResponse | null;
+}
+
+export type QueryWorkOrdersOptions = IQueryWorkOrdersParams & IWorkOrderParams;
+
 export async function queryWorkOrders(
-  opts: IQueryWorkOrdersOptions,
+  opts: QueryWorkOrdersOptions,
 ): Promise<IQueryWorkOrdersResult> {
   const baseUrl = [
     getApiEndpoint(),
