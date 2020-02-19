@@ -10,6 +10,19 @@ import { IWorkOrderState } from "../../types/work-order";
 import { IKindHandlers, Runner } from "./index";
 
 export const handlers: IKindHandlers<IWorkOrderState, WorkOrderActions> = {
+  create: {
+    workorder: {
+      receive: (
+        state: IWorkOrderState,
+        _action: ReturnType<typeof ReceiveWorkOrderQuery>,
+      ): IWorkOrderState => {
+        return { ...state };
+      },
+      request: (state: IWorkOrderState): IWorkOrderState => {
+        return { ...state };
+      },
+    },
+  },
   entrypoint: {
     workorder: {
       load: (state: IWorkOrderState, action: ReturnType<typeof LoadWorkOrderEntrypoint>) => {
