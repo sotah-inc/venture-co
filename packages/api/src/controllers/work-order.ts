@@ -83,7 +83,18 @@ export class WorkOrderController {
     req: IRequest<ICreateWorkOrderRequest>,
     _res: Response,
   ): Promise<IRequestResult<ICreateWorkOrderResponse | IValidationErrorResponse>> {
-    const { realmSlug, regionName } = req.params;
+    const { realmSlug, regionName, gameVersion } = req.params;
+
+    if (!Object.values(GameVersion).includes(gameVersion as GameVersion)) {
+      const validationErrors: IValidationErrorResponse = {
+        error: "Could not validate game-version",
+      };
+
+      return {
+        data: validationErrors,
+        status: HTTPStatus.BAD_REQUEST,
+      };
+    }
 
     const validateMsg = await this.messenger.validateRegionRealm({
       realm_slug: realmSlug,
@@ -104,7 +115,7 @@ export class WorkOrderController {
 
     const workOrder = new WorkOrder();
     workOrder.user = req.user as User;
-    workOrder.gameVersion = body.gameVersion as GameVersion;
+    workOrder.gameVersion = gameVersion as GameVersion;
     workOrder.regionName = regionName;
     workOrder.realmSlug = realmSlug;
     workOrder.itemId = body.itemId;

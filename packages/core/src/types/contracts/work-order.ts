@@ -16,7 +16,6 @@ export interface ICreateWorkOrderRequest {
   itemId: number;
   quantity: number;
   price: number;
-  gameVersion: string;
 }
 
 export interface ICreateWorkOrderResponse {
