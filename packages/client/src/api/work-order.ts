@@ -1,5 +1,7 @@
 import {
   GameVersion,
+  ICreateWorkOrderRequest,
+  ICreateWorkOrderResponse,
   IQueryWorkOrdersParams,
   IQueryWorkOrdersResponse,
   IValidationErrorResponse,
@@ -51,8 +53,48 @@ export async function queryWorkOrders(
     case HTTPStatus.BAD_REQUEST:
       return { errors: body as IValidationErrorResponse, data: null };
     case HTTPStatus.INTERNAL_SERVER_ERROR:
-      return { errors: { email: "There was a server error." }, data: null };
+      return { errors: { error: "There was a server error." }, data: null };
     default:
-      return { errors: { email: "There was an unknown error." }, data: null };
+      return { errors: { error: "There was an unknown error." }, data: null };
+  }
+}
+
+export interface ICreateWorkOrderOptions extends IWorkOrderParams {
+  req: ICreateWorkOrderRequest;
+}
+
+export interface ICreateWorkOrderResult {
+  data: ICreateWorkOrderResponse | null;
+  errors: IValidationErrorResponse | null;
+}
+
+export async function createWorkOrder(
+  opts: ICreateWorkOrderOptions,
+): Promise<ICreateWorkOrderResult> {
+  const baseUrl = [
+    getApiEndpoint(),
+    "work-orders",
+    opts.gameVersion,
+    opts.regionName,
+    opts.realmSlug,
+  ].join("/");
+
+  const { body, status } = await gather<
+    ICreateWorkOrderRequest,
+    ICreateWorkOrderResponse | IValidationErrorResponse
+  >({
+    body: opts.req,
+    method: "POST",
+    url: baseUrl,
+  });
+  switch (status) {
+    case HTTPStatus.OK:
+      return { errors: null, data: body as ICreateWorkOrderResponse };
+    case HTTPStatus.BAD_REQUEST:
+      return { errors: body as IValidationErrorResponse, data: null };
+    case HTTPStatus.INTERNAL_SERVER_ERROR:
+      return { errors: { error: "There was a server error." }, data: null };
+    default:
+      return { errors: { error: "There was an unknown error." }, data: null };
   }
 }
