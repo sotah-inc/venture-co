@@ -22,6 +22,18 @@ export const PriceListRules = {
     .required("Slug is required"),
 };
 
+export const WorkOrderRules = {
+  item: Yup.object()
+    .nullable(true)
+    .required("Item is required"),
+  price: Yup.number()
+    .required("Price is required")
+    .moreThan(0, "Price must be greater than zero"),
+  quantity: Yup.number()
+    .required("Quantity is required")
+    .moreThan(0, "Quantity must be greater than zero"),
+};
+
 export const PostRules = {
   body: Yup.string().required("Post body is required"),
   slug: Yup.string()
