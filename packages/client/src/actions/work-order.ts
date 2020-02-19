@@ -1,7 +1,14 @@
 import { SortPerPage } from "@sotah-inc/core";
 import { Dispatch } from "redux";
 
-import { IQueryWorkOrdersResult, queryWorkOrders, QueryWorkOrdersOptions } from "../api/work-order";
+import {
+  createWorkOrder,
+  ICreateWorkOrderOptions,
+  ICreateWorkOrderResult,
+  IQueryWorkOrdersResult,
+  queryWorkOrders,
+  QueryWorkOrdersOptions,
+} from "../api/work-order";
 import { ActionsUnion, createAction } from "./helpers";
 
 export interface ILoadWorkOrderEntrypoint {
@@ -32,9 +39,23 @@ export const FetchWorkOrderQuery = (opts: QueryWorkOrdersOptions) => {
   };
 };
 
+export const REQUEST_WORKORDER_CREATE = "REQUEST_WORKORDER_CREATE";
+export const RequestWorkOrderCreate = () => createAction(REQUEST_WORKORDER_CREATE);
+export const RECEIVE_WORKORDER_CREATE = "RECEIVE_WORKORDER_CREATE";
+export const ReceiveWorkOrderCreate = (payload: ICreateWorkOrderResult) =>
+  createAction(RECEIVE_WORKORDER_CREATE, payload);
+export const FetchCreateWorkOrder = (opts: ICreateWorkOrderOptions) => {
+  return async (dispatch: Dispatch) => {
+    dispatch(RequestWorkOrderCreate());
+    dispatch(ReceiveWorkOrderCreate(await createWorkOrder(opts)));
+  };
+};
+
 export const WorkOrderActions = {
   LoadWorkOrderEntrypoint,
+  ReceiveWorkOrderCreate,
   ReceiveWorkOrderQuery,
+  RequestWorkOrderCreate,
   RequestWorkOrderQuery,
   SetWorkOrderPage,
   SetWorkOrderPerPage,
