@@ -1,4 +1,4 @@
-import { Messenger } from "@sotah-inc/server";
+import { auth, Messenger } from "@sotah-inc/server";
 import { wrap } from "async-middleware";
 import { Request, Response, Router } from "express";
 import { Connection } from "typeorm";
@@ -14,6 +14,13 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
     "/work-orders/:gameVersion/:regionName/:realmSlug",
     wrap(async (req: Request, res: Response) => {
       await handle(controller.queryWorkOrders, req, res);
+    }),
+  );
+  router.post(
+    "/work-orders/:gameVersion/:regionName/:realmSlug",
+    auth,
+    wrap(async (req: Request, res: Response) => {
+      await handle(controller.createWorkOrder.bind(controller), req, res);
     }),
   );
 

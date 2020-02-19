@@ -172,10 +172,6 @@ export const QueryWorkOrdersParamsRules = yup
 export const CreateWorkOrderRequestRules = yup
   .object<ICreateWorkOrderRequest>()
   .shape<ICreateWorkOrderRequest>({
-    gameVersion: yup
-      .string()
-      .required()
-      .oneOf(Object.values(GameVersion)),
     itemId: yup
       .number()
       .positive()
