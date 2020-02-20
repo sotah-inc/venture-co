@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Dialog } from "@blueprintjs/core";
+import { Dialog, IToastProps } from "@blueprintjs/core";
 import { GameVersion, IRegion, IStatusRealm } from "@sotah-inc/core";
 
 import { ICreateWorkOrderOptions } from "../../../api/work-order";
@@ -19,6 +19,7 @@ export interface IStateProps {
 export interface IDispatchProps {
   changeIsWorkOrderDialogOpen: (isDialogOpen: boolean) => void;
   createWorkOrder: (opts: ICreateWorkOrderOptions) => void;
+  insertToast: (toast: IToastProps) => void;
 }
 
 export type Props = Readonly<IStateProps & IDispatchProps>;
@@ -33,6 +34,7 @@ export class CreateWorkOrderDialog extends React.Component<Props> {
       currentRealm,
       mutateOrderLevel,
       mutateOrderErrors,
+      insertToast,
     } = this.props;
 
     return (
@@ -60,10 +62,19 @@ export class CreateWorkOrderDialog extends React.Component<Props> {
           mutateOrderErrors={mutateOrderErrors}
           mutateOrderLevel={mutateOrderLevel}
           onComplete={() => {
-            // tslint:disable-next-line:no-console
-            console.log("success!");
+            insertToast({
+              icon: "info-sign",
+              intent: "success",
+              message: "Your work-order has successfully been created!",
+            });
           }}
-          onFatalError={console.error}
+          onFatalError={err => {
+            insertToast({
+              icon: "warning-sign",
+              intent: "danger",
+              message: `Could not create work-order: ${err}`,
+            });
+          }}
         />
       </Dialog>
     );
