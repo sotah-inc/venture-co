@@ -5,12 +5,20 @@ import { ICreateWorkOrderRequest, IItem } from "@sotah-inc/core";
 import { FormikProps } from "formik";
 
 import { Generator as FormFieldGenerator } from "../../../components/util/FormField";
+import { FetchLevel } from "../../../types/main";
 import { getItemIconUrl, getItemTextValue, qualityToColorClass } from "../../../util";
 import { DialogActions, DialogBody, ItemInput } from "../../util";
 
 export interface IOwnProps {
   onSubmit: (req: ICreateWorkOrderRequest) => void;
+  onComplete: () => void;
+  onFatalError: (v: string) => void;
   defaultFormValues?: IFormValues;
+  mutateOrderLevel: FetchLevel;
+  mutateOrderErrors: {
+    [key: string]: string;
+  };
+  isSubmitDisabled: boolean;
 }
 
 export interface IFormValues {
@@ -21,7 +29,7 @@ export interface IFormValues {
 
 export type Props = Readonly<IOwnProps & FormikProps<IFormValues>>;
 
-export class CreateOrderForm extends React.Component<Props> {
+export class WorkOrderForm extends React.Component<Props> {
   private static renderSelectedItem(item: IItem | null) {
     if (item === null) {
       return (
@@ -45,6 +53,35 @@ export class CreateOrderForm extends React.Component<Props> {
     );
   }
 
+  public componentDidUpdate(_prevProps: Props): void {
+    const {
+      mutateOrderErrors,
+      mutateOrderLevel,
+      onComplete,
+      setSubmitting,
+      handleReset,
+      onFatalError,
+    } = this.props;
+
+    switch (mutateOrderLevel) {
+      case FetchLevel.success:
+        setSubmitting(false);
+        handleReset();
+        onComplete();
+
+        return;
+      case FetchLevel.failure:
+        setSubmitting(false);
+        if ("error" in mutateOrderErrors) {
+          onFatalError(mutateOrderErrors.error);
+        }
+
+        return;
+      default:
+        return;
+    }
+  }
+
   public render() {
     const {
       values,
@@ -56,8 +93,12 @@ export class CreateOrderForm extends React.Component<Props> {
       errors,
       touched,
       children,
+      mutateOrderErrors,
+      isSubmitDisabled,
     } = this.props;
     const createFormField = FormFieldGenerator({ setFieldValue });
+
+    const coalescedErrors = { ...errors, ...mutateOrderErrors };
 
     const itemIntent = Intent.NONE;
 
@@ -76,16 +117,24 @@ export class CreateOrderForm extends React.Component<Props> {
             <div className="pure-u-1-2">
               <div style={{ paddingLeft: "5px" }}>
                 <FormGroup label="Selected item" intent={itemIntent}>
-                  {CreateOrderForm.renderSelectedItem(values.item)}
+                  {WorkOrderForm.renderSelectedItem(values.item)}
                 </FormGroup>
               </div>
             </div>
           </div>
           {createFormField({
             fieldName: "quantity",
-            getError: () => (errors.quantity ? errors.quantity : ""),
+            getError: () => coalescedErrors.quantity ?? "",
             getTouched: () => !!touched.quantity,
             getValue: () => values.quantity.toString(),
+            placeholder: "1",
+            type: "number",
+          })}
+          {createFormField({
+            fieldName: "price",
+            getError: () => coalescedErrors.price ?? "",
+            getTouched: () => !!touched.price,
+            getValue: () => values.price.toString(),
             placeholder: "1",
             type: "number",
           })}
@@ -102,7 +151,7 @@ export class CreateOrderForm extends React.Component<Props> {
             text="Add Order"
             intent={Intent.PRIMARY}
             icon="edit"
-            disabled={isSubmitting}
+            disabled={isSubmitting || isSubmitDisabled}
           />
         </DialogActions>
       </form>

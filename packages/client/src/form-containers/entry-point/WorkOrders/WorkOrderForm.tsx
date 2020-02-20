@@ -2,10 +2,10 @@ import { withFormik, WithFormikConfig } from "formik";
 import * as Yup from "yup";
 
 import {
-  CreateOrderForm,
   IFormValues,
   IOwnProps,
-} from "../../../components/entry-point/WorkOrders/CreateOrderForm";
+  WorkOrderForm,
+} from "../../../components/entry-point/WorkOrders/WorkOrderForm";
 import { WorkOrderRules } from "../../../validator-rules";
 
 const config: WithFormikConfig<IOwnProps, IFormValues> = {
@@ -29,11 +29,11 @@ const config: WithFormikConfig<IOwnProps, IFormValues> = {
       quantity: 1,
     };
   },
-  validationSchema: Yup.object().shape({
+  validationSchema: Yup.object<IFormValues>().shape({
     item: WorkOrderRules.item,
     price: WorkOrderRules.price,
     quantity: WorkOrderRules.quantity,
   }),
 };
 
-export const CreateOrderFormFormContainer = withFormik(config)(CreateOrderForm);
+export const WorkOrderFormFormContainer = withFormik(config)(WorkOrderForm);
