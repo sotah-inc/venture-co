@@ -13,6 +13,7 @@ import {
 import { ILoadRealmEntrypoint } from "../../actions/main";
 import { ILoadWorkOrderEntrypoint } from "../../actions/work-order";
 import { QueryWorkOrdersOptions } from "../../api/work-order";
+import { CreateWorkOrderDialogContainer } from "../../containers/entry-point/WorkOrders/CreateWorkOrderDialog";
 import { WorkOrdersListContainer } from "../../containers/entry-point/WorkOrders/WorkOrdersList";
 import { WorkOrdersNavRouteContainer } from "../../route-containers/entry-point/WorkOrders/WorkOrdersNav";
 import { IFetchData } from "../../types/global";
@@ -96,6 +97,7 @@ export class WorkOrders extends React.Component<Props> {
   public render() {
     return (
       <>
+        <CreateWorkOrderDialogContainer />
         <WorkOrdersNavRouteContainer />
         <WorkOrdersListContainer />
       </>
