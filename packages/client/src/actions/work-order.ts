@@ -51,7 +51,12 @@ export const FetchCreateWorkOrder = (opts: ICreateWorkOrderOptions) => {
   };
 };
 
+export const CHANGE_IS_WORKORDER_DIALOG_OPEN = "CHANGE_IS_WORKORDER_DIALOG_OPEN";
+export const ChangeIsWorkOrderDialogOpen = (payload: boolean) =>
+  createAction(CHANGE_IS_WORKORDER_DIALOG_OPEN, payload);
+
 export const WorkOrderActions = {
+  ChangeIsWorkOrderDialogOpen,
   LoadWorkOrderEntrypoint,
   ReceiveWorkOrderCreate,
   ReceiveWorkOrderQuery,
