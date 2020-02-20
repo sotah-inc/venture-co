@@ -14,12 +14,20 @@ export const handlers: IKindHandlers<IWorkOrderState, WorkOrderActions> = {
     workorder: {
       receive: (
         state: IWorkOrderState,
-        _action: ReturnType<typeof ReceiveWorkOrderQuery>,
+        action: ReturnType<typeof ReceiveWorkOrderQuery>,
       ): IWorkOrderState => {
-        return { ...state };
+        if (action.payload.errors !== null) {
+          return {
+            ...state,
+            mutateOrderErrors: action.payload.errors,
+            mutateOrderLevel: FetchLevel.failure,
+          };
+        }
+
+        return { ...state, mutateOrderLevel: FetchLevel.success };
       },
       request: (state: IWorkOrderState): IWorkOrderState => {
-        return { ...state };
+        return { ...state, mutateOrderLevel: FetchLevel.fetching, mutateOrderErrors: {} };
       },
     },
   },
