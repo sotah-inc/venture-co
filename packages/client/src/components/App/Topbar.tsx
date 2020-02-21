@@ -16,6 +16,7 @@ import { IExpansion, IRegion, IStatusRealm, IUserJson } from "@sotah-inc/core";
 
 import { LoginContainer } from "../../containers/App/Login";
 import { RegisterContainer } from "../../containers/App/Register";
+import { WorkOrdersButtonContainer } from "../../containers/App/Topbar/WorkOrdersButton";
 import { NewsButtonRouteContainer } from "../../route-containers/App/Topbar/NewsButton";
 import { LinkButtonRouteContainer } from "../../route-containers/util/LinkButton";
 import { getPrimaryExpansion } from "../../util";
@@ -186,13 +187,7 @@ export class Topbar extends React.Component<Props> {
       case SubBarKind.Profile:
         return this.renderProfileSubBar();
       case SubBarKind.Marketplace:
-        return (
-          <LinkButtonRouteContainer
-            destination="/marketplace/work-orders"
-            buttonProps={{ icon: "flow-review", text: "Work Orders", minimal: true }}
-            prefix={true}
-          />
-        );
+        return <WorkOrdersButtonContainer />;
       default:
         return null;
     }
