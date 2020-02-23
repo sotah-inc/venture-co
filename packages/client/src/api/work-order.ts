@@ -93,7 +93,7 @@ export async function createWorkOrder(
     url: baseUrl,
   });
   switch (status) {
-    case HTTPStatus.OK:
+    case HTTPStatus.CREATED:
       return { errors: null, data: body as ICreateWorkOrderResponse };
     case HTTPStatus.BAD_REQUEST:
       return { errors: body as IValidationErrorResponse, data: null };
