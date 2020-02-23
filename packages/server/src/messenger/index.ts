@@ -90,7 +90,7 @@ export class Messenger {
   public validateRegionRealm(
     req: IValidateRegionRealmRequest,
   ): Promise<Message<IValidateRegionRealmResponse>> {
-    return this.request(subjects.status, {
+    return this.request(subjects.validateRegionRealm, {
       body: JSON.stringify(req),
     });
   }

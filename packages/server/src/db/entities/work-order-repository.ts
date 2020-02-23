@@ -34,7 +34,7 @@ export class WorkOrderRepository extends AbstractRepository<WorkOrder> {
     const orders = await this.repository.find({
       ...mainOptions,
       order: { [orderBy]: orderDirection },
-      skip: perPage * page,
+      skip: perPage * (page - 1),
       take: perPage,
     });
 

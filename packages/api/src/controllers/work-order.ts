@@ -59,6 +59,16 @@ export class WorkOrderController {
         status: HTTPStatus.BAD_REQUEST,
       };
     }
+    if (!validateMsg.data!.is_valid) {
+      const validationErrors: IValidationErrorResponse = {
+        error: "Region-name and realm-slug combination was not valid",
+      };
+
+      return {
+        data: validationErrors,
+        status: HTTPStatus.NOT_FOUND,
+      };
+    }
 
     const { count: totalResults, orders } = await this.dbConn
       .getCustomRepository(WorkOrderRepository)
