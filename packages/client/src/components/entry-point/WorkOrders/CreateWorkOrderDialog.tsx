@@ -5,7 +5,7 @@ import { GameVersion, IRegion, IStatusRealm } from "@sotah-inc/core";
 
 import { ICreateWorkOrderOptions } from "../../../api/work-order";
 import { WorkOrderFormFormContainer } from "../../../form-containers/entry-point/WorkOrders/WorkOrderForm";
-import { IErrors } from "../../../types/global";
+import { IErrors, IProfile } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
 
 export interface IStateProps {
@@ -14,11 +14,12 @@ export interface IStateProps {
   mutateOrderErrors: IErrors;
   currentRegion: IRegion | null;
   currentRealm: IStatusRealm | null;
+  profile: IProfile | null;
 }
 
 export interface IDispatchProps {
   changeIsWorkOrderDialogOpen: (isDialogOpen: boolean) => void;
-  createWorkOrder: (opts: ICreateWorkOrderOptions) => void;
+  createWorkOrder: (token: string, opts: ICreateWorkOrderOptions) => void;
   insertToast: (toast: IToastProps) => void;
 }
 
@@ -35,6 +36,7 @@ export class CreateWorkOrderDialog extends React.Component<Props> {
       mutateOrderLevel,
       mutateOrderErrors,
       insertToast,
+      profile,
     } = this.props;
 
     return (
@@ -47,11 +49,11 @@ export class CreateWorkOrderDialog extends React.Component<Props> {
       >
         <WorkOrderFormFormContainer
           onSubmit={v => {
-            if (currentRegion === null || currentRealm === null) {
+            if (profile === null || currentRegion === null || currentRealm === null) {
               return;
             }
 
-            createWorkOrder({
+            createWorkOrder(profile.token, {
               gameVersion: GameVersion.Retail,
               realmSlug: currentRealm.slug,
               regionName: currentRegion.name,

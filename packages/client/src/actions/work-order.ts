@@ -44,10 +44,10 @@ export const RequestWorkOrderCreate = () => createAction(REQUEST_WORKORDER_CREAT
 export const RECEIVE_WORKORDER_CREATE = "RECEIVE_WORKORDER_CREATE";
 export const ReceiveWorkOrderCreate = (payload: ICreateWorkOrderResult) =>
   createAction(RECEIVE_WORKORDER_CREATE, payload);
-export const FetchCreateWorkOrder = (opts: ICreateWorkOrderOptions) => {
+export const FetchCreateWorkOrder = (token: string, opts: ICreateWorkOrderOptions) => {
   return async (dispatch: Dispatch) => {
     dispatch(RequestWorkOrderCreate());
-    dispatch(ReceiveWorkOrderCreate(await createWorkOrder(opts)));
+    dispatch(ReceiveWorkOrderCreate(await createWorkOrder(token, opts)));
   };
 };
 

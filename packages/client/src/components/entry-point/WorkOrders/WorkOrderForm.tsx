@@ -53,7 +53,7 @@ export class WorkOrderForm extends React.Component<Props> {
     );
   }
 
-  public componentDidUpdate(_prevProps: Props): void {
+  public componentDidUpdate(prevProps: Props): void {
     const {
       mutateOrderErrors,
       mutateOrderLevel,
@@ -63,22 +63,24 @@ export class WorkOrderForm extends React.Component<Props> {
       onFatalError,
     } = this.props;
 
-    switch (mutateOrderLevel) {
-      case FetchLevel.success:
-        setSubmitting(false);
-        handleReset();
-        onComplete();
+    if (prevProps.mutateOrderLevel !== mutateOrderLevel) {
+      switch (mutateOrderLevel) {
+        case FetchLevel.success:
+          setSubmitting(false);
+          handleReset();
+          onComplete();
 
-        return;
-      case FetchLevel.failure:
-        setSubmitting(false);
-        if ("error" in mutateOrderErrors) {
-          onFatalError(mutateOrderErrors.error);
-        }
+          return;
+        case FetchLevel.failure:
+          setSubmitting(false);
+          if ("error" in mutateOrderErrors) {
+            onFatalError(mutateOrderErrors.error);
+          }
 
-        return;
-      default:
-        return;
+          return;
+        default:
+          return;
+      }
     }
   }
 

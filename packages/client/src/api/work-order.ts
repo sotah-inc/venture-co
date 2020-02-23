@@ -69,6 +69,7 @@ export interface ICreateWorkOrderResult {
 }
 
 export async function createWorkOrder(
+  token: string,
   opts: ICreateWorkOrderOptions,
 ): Promise<ICreateWorkOrderResult> {
   const baseUrl = [
@@ -84,6 +85,10 @@ export async function createWorkOrder(
     ICreateWorkOrderResponse | IValidationErrorResponse
   >({
     body: opts.req,
+    headers: new Headers({
+      Authorization: `Bearer ${token}`,
+      "content-type": "application/json",
+    }),
     method: "POST",
     url: baseUrl,
   });

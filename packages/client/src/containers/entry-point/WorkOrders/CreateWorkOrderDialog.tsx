@@ -1,5 +1,6 @@
 import { connect } from "react-redux";
 
+import { InsertToast } from "../../../actions/oven";
 import { ChangeIsWorkOrderDialogOpen, FetchCreateWorkOrder } from "../../../actions/work-order";
 import {
   CreateWorkOrderDialog,
@@ -7,11 +8,10 @@ import {
   IStateProps,
 } from "../../../components/entry-point/WorkOrders/CreateWorkOrderDialog";
 import { IStoreState } from "../../../types";
-import { InsertToast } from "../../../actions/oven";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const { mutateOrderErrors, mutateOrderLevel, isWorkOrderDialogOpen } = state.WorkOrder;
-  const { currentRegion, currentRealm } = state.Main;
+  const { currentRegion, currentRealm, profile } = state.Main;
 
   return {
     currentRealm,
@@ -19,6 +19,7 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
     isWorkOrderDialogOpen,
     mutateOrderErrors,
     mutateOrderLevel,
+    profile,
   };
 };
 
