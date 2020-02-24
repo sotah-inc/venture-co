@@ -8,11 +8,17 @@ export interface IDispatchProps {
   changeIsWorkOrderDialogOpen: (isDialogOpen: boolean) => void;
 }
 
-export type Props = Readonly<IDispatchProps>;
+export interface IRouteProps {
+  locationPathname: string;
+}
+
+export type IOwnProps = IRouteProps;
+
+export type Props = Readonly<IDispatchProps & IOwnProps>;
 
 export class WorkOrdersButton extends React.Component<Props> {
   public render() {
-    const { changeIsWorkOrderDialogOpen } = this.props;
+    const { changeIsWorkOrderDialogOpen, locationPathname } = this.props;
 
     return (
       <ButtonGroup>
@@ -21,7 +27,12 @@ export class WorkOrdersButton extends React.Component<Props> {
           buttonProps={{ icon: "flow-review", text: "Work Orders", minimal: true }}
           prefix={true}
         />
-        <Button minimal={true} onClick={() => changeIsWorkOrderDialogOpen(true)} icon="plus" />
+        <Button
+          active={locationPathname.startsWith("/marketplace/work-orders")}
+          minimal={true}
+          onClick={() => changeIsWorkOrderDialogOpen(true)}
+          icon="plus"
+        />
       </ButtonGroup>
     );
   }
