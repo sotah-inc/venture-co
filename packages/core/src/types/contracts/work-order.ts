@@ -1,3 +1,4 @@
+import { IItemsMap } from "../item";
 import { IWorkOrderJson } from "../work-order";
 
 export interface IQueryWorkOrdersParams {
@@ -10,6 +11,7 @@ export interface IQueryWorkOrdersParams {
 export interface IQueryWorkOrdersResponse {
   orders: IWorkOrderJson[];
   totalResults: number;
+  items: IItemsMap;
 }
 
 export interface ICreateWorkOrderRequest {

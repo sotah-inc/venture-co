@@ -56,7 +56,7 @@ export class WorkOrdersList extends React.Component<Props> {
     return (
       <tr>
         <th>{order.id}</th>
-        <td>{order.region_name}</td>
+        <td>{order.region_name.toUpperCase()}</td>
         <td>{order.realm_slug}</td>
         <td>{order.item_id}</td>
         <td>{order.quantity}</td>

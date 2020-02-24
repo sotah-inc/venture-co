@@ -81,8 +81,19 @@ export class WorkOrderController {
         regionName: req.params["regionName"],
       });
 
+    const itemIds = orders.map(v => v.itemId);
+    const itemsMsg = await this.messenger.getItems(itemIds);
+    if (itemsMsg.code !== code.ok) {
+      const validationErrors: IValidationErrorResponse = { error: "Failed to resolve items" };
+
+      return {
+        data: validationErrors,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
     return {
-      data: { orders: orders.map(v => v.toJson()), totalResults },
+      data: { orders: orders.map(v => v.toJson()), totalResults, items: itemsMsg.data!.items },
       status: HTTPStatus.OK,
     };
   };

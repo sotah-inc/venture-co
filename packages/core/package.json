@@ -1,6 +1,6 @@
 {
   "name": "@sotah-inc/core",
-  "version": "1.0.92",
+  "version": "1.0.93",
   "description": "SotAH Core SDK",
   "main": "build/dist/index.js",
   "typings": "build/dist/index.d.ts",
