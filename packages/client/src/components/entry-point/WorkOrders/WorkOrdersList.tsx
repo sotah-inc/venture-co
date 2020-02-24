@@ -1,8 +1,9 @@
 import React from "react";
 
 import { Classes, HTMLTable } from "@blueprintjs/core";
-import { IQueryWorkOrdersResponse, IWorkOrderJson } from "@sotah-inc/core";
+import { IQueryWorkOrdersResponse, ItemId, IWorkOrderJson } from "@sotah-inc/core";
 
+import { ItemPopoverContainer } from "../../../containers/util/ItemPopover";
 import { IFetchData } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
 
@@ -47,23 +48,33 @@ export class WorkOrdersList extends React.Component<Props> {
             <th>Created At</th>
           </tr>
         </thead>
-        <tbody>{orders.data.orders.map(v => this.renderOrder(v))}</tbody>
+        <tbody>{orders.data.orders.map((v, i) => this.renderOrder(v, i))}</tbody>
       </HTMLTable>
     );
   }
 
-  private renderOrder(order: IWorkOrderJson) {
+  private renderOrder(order: IWorkOrderJson, i: number) {
     return (
-      <tr>
+      <tr key={i}>
         <th>{order.id}</th>
         <td>{order.region_name.toUpperCase()}</td>
         <td>{order.realm_slug}</td>
-        <td>{order.item_id}</td>
+        <td>{this.renderItem(order.item_id)}</td>
         <td>{order.quantity}</td>
         <td>{order.price}</td>
         <td>{order.user_id}</td>
         <td>{order.created_at}</td>
       </tr>
     );
+  }
+
+  private renderItem(itemId: ItemId) {
+    const { orders } = this.props;
+
+    if (!(itemId in orders.data.items)) {
+      return itemId;
+    }
+
+    return <ItemPopoverContainer item={orders.data.items[itemId]} />;
   }
 }

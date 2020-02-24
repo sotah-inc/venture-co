@@ -39,7 +39,7 @@ export const handlers: IKindHandlers<IWorkOrderState, WorkOrderActions> = {
             ...state,
             loadId: action.payload.loadId,
             orders: {
-              data: { totalResults: 0, orders: [] },
+              data: { items: {}, totalResults: 0, orders: [] },
               errors: action.payload.workOrders.errors,
               level: FetchLevel.failure,
             },
@@ -86,7 +86,7 @@ export const handlers: IKindHandlers<IWorkOrderState, WorkOrderActions> = {
             ...state,
             orders: {
               ...state.orders,
-              data: { orders: [], totalResults: 0 },
+              data: { items: {}, orders: [], totalResults: 0 },
               errors: action.payload.errors,
               level: FetchLevel.failure,
             },
