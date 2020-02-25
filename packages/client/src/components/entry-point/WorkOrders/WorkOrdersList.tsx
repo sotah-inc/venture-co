@@ -10,10 +10,12 @@ import {
   RealmSlug,
   RegionName,
 } from "@sotah-inc/core";
+import moment from "moment-timezone";
 
 import { ItemPopoverContainer } from "../../../containers/util/ItemPopover";
 import { IFetchData } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
+import { Currency } from "../../util";
 
 export interface IStateProps {
   orders: IFetchData<IQueryWorkOrdersResponse>;
@@ -52,7 +54,6 @@ export class WorkOrdersList extends React.Component<Props> {
             <th>Region</th>
             <th>Realm</th>
             <th>Item</th>
-            <th>Quantity</th>
             <th>Price</th>
             <th>Recipient</th>
             <th>Created At</th>
@@ -69,13 +70,21 @@ export class WorkOrdersList extends React.Component<Props> {
         <th>{order.id}</th>
         <td>{this.renderRegion(order.region_name)}</td>
         <td>{this.renderRealm(order.realm_slug)}</td>
-        <td>{this.renderItem(order.item_id)}</td>
-        <td>{order.quantity}</td>
-        <td>{order.price}</td>
+        <td>{this.renderItem(order.item_id, order.quantity)}</td>
+        <td>
+          <Currency amount={order.price} />
+        </td>
         <td>{order.user_id}</td>
-        <td>{order.created_at}</td>
+        <td>{this.renderCreatedAt(order.created_at)}</td>
       </tr>
     );
+  }
+
+  private renderCreatedAt(createdAt: number) {
+    return moment(new Date(createdAt * 1000))
+      .utc()
+      .tz("America/Phoenix")
+      .format("MMMM Do YYYY, h:mm:ss a");
   }
 
   private renderRegion(regionName: RegionName) {
@@ -85,7 +94,7 @@ export class WorkOrdersList extends React.Component<Props> {
       return regionName.toUpperCase();
     }
 
-    return currentRegion.name.toUpperCase;
+    return currentRegion.name.toUpperCase();
   }
 
   private renderRealm(realmSlug: RealmSlug) {
@@ -95,16 +104,21 @@ export class WorkOrdersList extends React.Component<Props> {
       return realmSlug;
     }
 
-    return currentRealm.slug;
+    return currentRealm.name;
   }
 
-  private renderItem(itemId: ItemId) {
+  private renderItem(itemId: ItemId, quantity: number) {
     const { orders } = this.props;
 
     if (!(itemId in orders.data.items)) {
       return itemId;
     }
 
-    return <ItemPopoverContainer item={orders.data.items[itemId]} />;
+    return (
+      <ItemPopoverContainer
+        item={orders.data.items[itemId]}
+        itemTextFormatter={v => `${v} x${quantity}`}
+      />
+    );
   }
 }
