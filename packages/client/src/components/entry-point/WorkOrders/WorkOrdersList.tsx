@@ -1,7 +1,15 @@
 import React from "react";
 
 import { Classes, HTMLTable } from "@blueprintjs/core";
-import { IQueryWorkOrdersResponse, ItemId, IWorkOrderJson } from "@sotah-inc/core";
+import {
+  IQueryWorkOrdersResponse,
+  IRegion,
+  IStatusRealm,
+  ItemId,
+  IWorkOrderJson,
+  RealmSlug,
+  RegionName,
+} from "@sotah-inc/core";
 
 import { ItemPopoverContainer } from "../../../containers/util/ItemPopover";
 import { IFetchData } from "../../../types/global";
@@ -9,6 +17,8 @@ import { FetchLevel } from "../../../types/main";
 
 export interface IStateProps {
   orders: IFetchData<IQueryWorkOrdersResponse>;
+  currentRealm: IStatusRealm | null;
+  currentRegion: IRegion | null;
 }
 
 type Props = Readonly<IStateProps>;
@@ -57,8 +67,8 @@ export class WorkOrdersList extends React.Component<Props> {
     return (
       <tr key={i}>
         <th>{order.id}</th>
-        <td>{order.region_name.toUpperCase()}</td>
-        <td>{order.realm_slug}</td>
+        <td>{this.renderRegion(order.region_name)}</td>
+        <td>{this.renderRealm(order.realm_slug)}</td>
         <td>{this.renderItem(order.item_id)}</td>
         <td>{order.quantity}</td>
         <td>{order.price}</td>
@@ -66,6 +76,26 @@ export class WorkOrdersList extends React.Component<Props> {
         <td>{order.created_at}</td>
       </tr>
     );
+  }
+
+  private renderRegion(regionName: RegionName) {
+    const { currentRegion } = this.props;
+
+    if (currentRegion === null) {
+      return regionName.toUpperCase();
+    }
+
+    return currentRegion.name.toUpperCase;
+  }
+
+  private renderRealm(realmSlug: RealmSlug) {
+    const { currentRealm } = this.props;
+
+    if (currentRealm === null) {
+      return realmSlug;
+    }
+
+    return currentRealm.slug;
   }
 
   private renderItem(itemId: ItemId) {
