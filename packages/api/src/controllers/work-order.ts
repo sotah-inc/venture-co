@@ -41,7 +41,7 @@ export class WorkOrderController {
 
       return {
         data: validationErrors,
-        status: HTTPStatus.BAD_REQUEST,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
       };
     }
 
