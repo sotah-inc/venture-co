@@ -8,9 +8,8 @@ import { IStoreState } from "../../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const { orders } = state.WorkOrder;
-  const { currentRealm, currentRegion } = state.Main;
 
-  return { orders, currentRealm, currentRegion };
+  return { orders };
 };
 
 export const WorkOrdersListContainer = connect<IStateProps, {}, {}, IStoreState>(mapStateToProps)(

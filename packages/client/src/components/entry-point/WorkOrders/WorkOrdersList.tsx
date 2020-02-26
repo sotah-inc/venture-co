@@ -1,15 +1,7 @@
 import React from "react";
 
-import { Classes, HTMLTable } from "@blueprintjs/core";
-import {
-  IQueryWorkOrdersResponse,
-  IRegion,
-  IStatusRealm,
-  ItemId,
-  IWorkOrderJson,
-  RealmSlug,
-  RegionName,
-} from "@sotah-inc/core";
+import { Classes, HTMLTable, Position, Tooltip } from "@blueprintjs/core";
+import { IQueryWorkOrdersResponse, ItemId, IWorkOrderJson } from "@sotah-inc/core";
 import moment from "moment-timezone";
 
 import { ItemPopoverContainer } from "../../../containers/util/ItemPopover";
@@ -19,8 +11,6 @@ import { Currency } from "../../util";
 
 export interface IStateProps {
   orders: IFetchData<IQueryWorkOrdersResponse>;
-  currentRealm: IStatusRealm | null;
-  currentRegion: IRegion | null;
 }
 
 type Props = Readonly<IStateProps>;
@@ -50,12 +40,9 @@ export class WorkOrdersList extends React.Component<Props> {
       <HTMLTable className={classNames.join(" ")}>
         <thead>
           <tr>
-            <th>Id</th>
-            <th>Region</th>
-            <th>Realm</th>
             <th>Item</th>
             <th>Price</th>
-            <th>Recipient</th>
+            <th>Recipient Id</th>
             <th>Created At</th>
           </tr>
         </thead>
@@ -67,9 +54,6 @@ export class WorkOrdersList extends React.Component<Props> {
   private renderOrder(order: IWorkOrderJson, i: number) {
     return (
       <tr key={i}>
-        <th>{order.id}</th>
-        <td>{this.renderRegion(order.region_name)}</td>
-        <td>{this.renderRealm(order.realm_slug)}</td>
         <td>{this.renderItem(order.item_id, order.quantity)}</td>
         <td>
           <Currency amount={order.price} />
@@ -81,30 +65,19 @@ export class WorkOrdersList extends React.Component<Props> {
   }
 
   private renderCreatedAt(createdAt: number) {
-    return moment(new Date(createdAt * 1000))
-      .utc()
-      .tz("America/Phoenix")
-      .format("MMMM Do YYYY, h:mm:ss a");
-  }
+    const foundDate = moment(createdAt * 1000)
+      .utc(true)
+      .tz(moment.tz.guess());
 
-  private renderRegion(regionName: RegionName) {
-    const { currentRegion } = this.props;
-
-    if (currentRegion === null) {
-      return regionName.toUpperCase();
-    }
-
-    return currentRegion.name.toUpperCase();
-  }
-
-  private renderRealm(realmSlug: RealmSlug) {
-    const { currentRealm } = this.props;
-
-    if (currentRealm === null) {
-      return realmSlug;
-    }
-
-    return currentRealm.name;
+    return (
+      <Tooltip
+        position={Position.LEFT}
+        inheritDarkTheme={true}
+        content={foundDate.format("MMMM Do YYYY, h:mm:ss a Z")}
+      >
+        {foundDate.fromNow()}
+      </Tooltip>
+    );
   }
 
   private renderItem(itemId: ItemId, quantity: number) {

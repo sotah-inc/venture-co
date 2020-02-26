@@ -150,7 +150,7 @@ export class WorkOrders extends React.Component<Props> {
       gameVersion: GameVersion.Retail,
       orderBy: OrderKind.CreatedAt,
       orderDirection: OrderDirection.Desc,
-      page: currentPage,
+      page: currentPage + 1,
       perPage,
       realmSlug: currentRealm.slug,
       regionName: currentRegion.name,
