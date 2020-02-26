@@ -2,6 +2,7 @@ import {
   GameVersion,
   ICreateWorkOrderRequest,
   ICreateWorkOrderResponse,
+  IPrefillWorkOrderItemResponse,
   IQueryWorkOrdersParams,
   IQueryWorkOrdersResponse,
   IValidationErrorResponse,
@@ -94,6 +95,66 @@ export class WorkOrderController {
 
     return {
       data: { orders: orders.map(v => v.toJson()), totalResults, items: itemsMsg.data!.items },
+      status: HTTPStatus.OK,
+    };
+  };
+
+  public prefillWorkOrderItem: QueryRequestHandler<
+    IPrefillWorkOrderItemResponse | IValidationErrorResponse
+  > = async req => {
+    const itemId = (req.query as { [key: string]: string })["itemId"] ?? "";
+    const parsedItemId = Number(itemId);
+
+    const itemsMsg = await this.messenger.getItems([parsedItemId]);
+    if (itemsMsg.code !== code.ok) {
+      const validationErrors: IValidationErrorResponse = { error: "failed to fetch items" };
+
+      return {
+        data: validationErrors,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    const foundItem = itemsMsg.data!.items[parsedItemId] ?? null;
+    if (foundItem === null) {
+      const validationErrors: IValidationErrorResponse = { error: "failed to resolve item" };
+
+      return {
+        data: validationErrors,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    const regionName = req.params["regionName"];
+    const realmSlug = req.params["realmSlug"];
+
+    const pricesMessage = await this.messenger.getPriceList({
+      item_ids: [foundItem.id],
+      realm_slug: realmSlug,
+      region_name: regionName,
+    });
+    if (pricesMessage.code !== code.ok) {
+      const validationErrors: IValidationErrorResponse = { error: "failed to fetch prices" };
+
+      return {
+        data: validationErrors,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    const foundPrice = pricesMessage.data!.price_list[foundItem.id] ?? null;
+
+    if (foundPrice === null) {
+      const validationErrors: IValidationErrorResponse = { error: "failed to resolve item price" };
+
+      return {
+        data: validationErrors,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    return {
+      data: { currentPrice: foundPrice.average_buyout_per },
       status: HTTPStatus.OK,
     };
   };

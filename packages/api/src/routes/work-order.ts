@@ -16,6 +16,12 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
       await handle(controller.queryWorkOrders, req, res);
     }),
   );
+  router.get(
+    "/work-orders/:gameVersion/:regionName/:realmSlug/prefill-item",
+    wrap(async (req: Request, res: Response) => {
+      await handle(controller.prefillWorkOrderItem, req, res);
+    }),
+  );
   router.post(
     "/work-orders/:gameVersion/:regionName/:realmSlug",
     auth,
