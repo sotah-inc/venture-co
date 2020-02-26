@@ -23,3 +23,7 @@ export interface ICreateWorkOrderRequest {
 export interface ICreateWorkOrderResponse {
   order: IWorkOrderJson;
 }
+
+export interface IPrefillWorkOrderItemResponse {
+  currentPrice: number;
+}
