@@ -1,10 +1,19 @@
 import React from "react";
 
 import { Button, FormGroup, H5, Intent } from "@blueprintjs/core";
-import { ICreateWorkOrderRequest, IItem } from "@sotah-inc/core";
+import {
+  GameVersion,
+  ICreateWorkOrderRequest,
+  IItem,
+  IPrefillWorkOrderItemResponse,
+  IRegion,
+  IStatusRealm,
+} from "@sotah-inc/core";
 import { FormikProps } from "formik";
 
+import { IPrefillWorkOrderItemOptions } from "../../../api/work-order";
 import { Generator as FormFieldGenerator } from "../../../components/util/FormField";
+import { IFetchData } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
 import { getItemIconUrl, getItemTextValue, qualityToColorClass } from "../../../util";
 import { DialogActions, DialogBody, ItemInput } from "../../util";
@@ -19,6 +28,10 @@ export interface IOwnProps {
     [key: string]: string;
   };
   isSubmitDisabled: boolean;
+  prefillWorkOrderItem: IFetchData<IPrefillWorkOrderItemResponse>;
+  callPrefillWorkOrderItem: (opts: IPrefillWorkOrderItemOptions) => void;
+  currentRegion: IRegion | null;
+  currentRealm: IStatusRealm | null;
 }
 
 export interface IFormValues {
@@ -132,14 +145,7 @@ export class WorkOrderForm extends React.Component<Props> {
             placeholder: "1",
             type: "number",
           })}
-          {createFormField({
-            fieldName: "price",
-            getError: () => coalescedErrors.price ?? "",
-            getTouched: () => !!touched.price,
-            getValue: () => values.price.toString(),
-            placeholder: "1",
-            type: "number",
-          })}
+          {this.renderPrice()}
         </DialogBody>
         <DialogActions>
           <Button
@@ -160,10 +166,68 @@ export class WorkOrderForm extends React.Component<Props> {
     );
   }
 
+  private renderPrice() {
+    const {
+      values,
+      setFieldValue,
+      errors,
+      touched,
+      mutateOrderErrors,
+      prefillWorkOrderItem,
+    } = this.props;
+
+    switch (prefillWorkOrderItem.level) {
+      case FetchLevel.success:
+        break;
+      case FetchLevel.failure:
+        return (
+          <p>
+            <strong>Failed to prefill work-item data!</strong>
+          </p>
+        );
+      case FetchLevel.fetching:
+      case FetchLevel.initial:
+      default:
+        return (
+          <p>
+            <em>Loading...</em>
+          </p>
+        );
+    }
+
+    const createFormField = FormFieldGenerator({ setFieldValue });
+    const coalescedErrors = { ...errors, ...mutateOrderErrors };
+
+    return createFormField({
+      fieldName: "price",
+      getError: () => coalescedErrors.price ?? "",
+      getTouched: () => !!touched.price,
+      getValue: () => values.price.toString(),
+      placeholder: "1",
+      type: "number",
+    });
+  }
+
   private onItemSelect(item: IItem) {
-    const { setFieldValue, setFieldTouched } = this.props;
+    const {
+      setFieldValue,
+      setFieldTouched,
+      callPrefillWorkOrderItem,
+      currentRegion,
+      currentRealm,
+    } = this.props;
+
+    if (currentRegion === null || currentRealm === null) {
+      return;
+    }
 
     setFieldValue("item", item);
     setFieldTouched("item");
+    callPrefillWorkOrderItem({
+      gameVersion: GameVersion.Retail,
+      itemId: item.id,
+      realmSlug: currentRealm.slug,
+      regionName: currentRegion.name,
+    });
   }
 }

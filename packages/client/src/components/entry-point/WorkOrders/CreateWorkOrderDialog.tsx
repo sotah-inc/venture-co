@@ -1,11 +1,11 @@
 import React from "react";
 
 import { Dialog, IToastProps } from "@blueprintjs/core";
-import { GameVersion, IRegion, IStatusRealm } from "@sotah-inc/core";
+import { GameVersion, IPrefillWorkOrderItemResponse, IRegion, IStatusRealm } from "@sotah-inc/core";
 
-import { ICreateWorkOrderOptions } from "../../../api/work-order";
+import { ICreateWorkOrderOptions, IPrefillWorkOrderItemOptions } from "../../../api/work-order";
 import { WorkOrderFormFormContainer } from "../../../form-containers/entry-point/WorkOrders/WorkOrderForm";
-import { IErrors, IProfile } from "../../../types/global";
+import { IErrors, IFetchData, IProfile } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
 
 export interface IStateProps {
@@ -15,12 +15,14 @@ export interface IStateProps {
   currentRegion: IRegion | null;
   currentRealm: IStatusRealm | null;
   profile: IProfile | null;
+  prefillWorkOrderItem: IFetchData<IPrefillWorkOrderItemResponse>;
 }
 
 export interface IDispatchProps {
   changeIsWorkOrderDialogOpen: (isDialogOpen: boolean) => void;
   createWorkOrder: (token: string, opts: ICreateWorkOrderOptions) => void;
   insertToast: (toast: IToastProps) => void;
+  callPrefillWorkOrderItem: (opts: IPrefillWorkOrderItemOptions) => void;
 }
 
 export type Props = Readonly<IStateProps & IDispatchProps>;
@@ -37,6 +39,8 @@ export class CreateWorkOrderDialog extends React.Component<Props> {
       mutateOrderErrors,
       insertToast,
       profile,
+      prefillWorkOrderItem,
+      callPrefillWorkOrderItem,
     } = this.props;
 
     return (
@@ -48,6 +52,9 @@ export class CreateWorkOrderDialog extends React.Component<Props> {
         canOutsideClickClose={false}
       >
         <WorkOrderFormFormContainer
+          prefillWorkOrderItem={prefillWorkOrderItem}
+          currentRegion={currentRegion}
+          currentRealm={currentRealm}
           onSubmit={v => {
             if (profile === null || currentRegion === null || currentRealm === null) {
               return;
@@ -61,6 +68,7 @@ export class CreateWorkOrderDialog extends React.Component<Props> {
             });
           }}
           isSubmitDisabled={mutateOrderLevel === FetchLevel.fetching}
+          callPrefillWorkOrderItem={callPrefillWorkOrderItem}
           mutateOrderErrors={mutateOrderErrors}
           mutateOrderLevel={mutateOrderLevel}
           onComplete={() => {

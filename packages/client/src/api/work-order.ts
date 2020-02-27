@@ -135,7 +135,7 @@ export async function prefillWorkOrderItem(
       "content-type": "application/json",
     }),
     method: "GET",
-    url: `${baseUrl}${queryString.stringify({ itemId: opts.itemId })}`,
+    url: `${baseUrl}?${queryString.stringify({ itemId: opts.itemId })}`,
   });
   switch (status) {
     case HTTPStatus.OK:
