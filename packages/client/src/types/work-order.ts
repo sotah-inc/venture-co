@@ -1,4 +1,10 @@
-import { IQueryWorkOrdersResponse, OrderDirection, OrderKind, SortPerPage } from "@sotah-inc/core";
+import {
+  IPrefillWorkOrderItemResponse,
+  IQueryWorkOrdersResponse,
+  OrderDirection,
+  OrderKind,
+  SortPerPage,
+} from "@sotah-inc/core";
 
 import { IErrors, IFetchData } from "./global";
 import { FetchLevel } from "./main";
@@ -13,6 +19,7 @@ export interface IWorkOrderState {
   isWorkOrderDialogOpen: boolean;
   mutateOrderLevel: FetchLevel;
   mutateOrderErrors: IErrors;
+  prefillWorkOrderItem: IFetchData<IPrefillWorkOrderItemResponse>;
 }
 
 export const defaultWorkOrderState: IWorkOrderState = {
@@ -29,4 +36,9 @@ export const defaultWorkOrderState: IWorkOrderState = {
     level: FetchLevel.initial,
   },
   perPage: SortPerPage.Ten,
+  prefillWorkOrderItem: {
+    data: { currentPrice: 0 },
+    errors: {},
+    level: FetchLevel.initial,
+  },
 };

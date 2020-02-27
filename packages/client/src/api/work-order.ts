@@ -2,8 +2,10 @@ import {
   GameVersion,
   ICreateWorkOrderRequest,
   ICreateWorkOrderResponse,
+  IPrefillWorkOrderItemResponse,
   IQueryWorkOrdersParams,
   IQueryWorkOrdersResponse,
+  ItemId,
   IValidationErrorResponse,
   RealmSlug,
   RegionName,
@@ -95,6 +97,49 @@ export async function createWorkOrder(
   switch (status) {
     case HTTPStatus.CREATED:
       return { errors: null, data: body as ICreateWorkOrderResponse };
+    case HTTPStatus.BAD_REQUEST:
+      return { errors: body as IValidationErrorResponse, data: null };
+    case HTTPStatus.INTERNAL_SERVER_ERROR:
+      return { errors: { error: "There was a server error." }, data: null };
+    default:
+      return { errors: { error: "There was an unknown error." }, data: null };
+  }
+}
+
+export interface IPrefillWorkOrderItemOptions extends IWorkOrderParams {
+  itemId: ItemId;
+}
+
+export interface IPrefillWorkOrderItemResult {
+  data: IPrefillWorkOrderItemResponse | null;
+  errors: IValidationErrorResponse | null;
+}
+
+export async function prefillWorkOrderItem(
+  opts: IPrefillWorkOrderItemOptions,
+): Promise<IPrefillWorkOrderItemResult> {
+  const baseUrl = [
+    getApiEndpoint(),
+    "work-orders",
+    opts.gameVersion,
+    opts.regionName,
+    opts.realmSlug,
+    "prefill-item",
+  ].join("/");
+
+  const { body, status } = await gather<
+    null,
+    IPrefillWorkOrderItemResponse | IValidationErrorResponse
+  >({
+    headers: new Headers({
+      "content-type": "application/json",
+    }),
+    method: "GET",
+    url: `${baseUrl}${queryString.stringify({ itemId: opts.itemId })}`,
+  });
+  switch (status) {
+    case HTTPStatus.OK:
+      return { errors: null, data: body as IPrefillWorkOrderItemResponse };
     case HTTPStatus.BAD_REQUEST:
       return { errors: body as IValidationErrorResponse, data: null };
     case HTTPStatus.INTERNAL_SERVER_ERROR:

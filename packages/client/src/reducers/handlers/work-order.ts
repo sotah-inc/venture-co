@@ -1,5 +1,6 @@
 import {
   LoadWorkOrderEntrypoint,
+  ReceiveWorkOrderItemPrefill,
   ReceiveWorkOrderQuery,
   SetWorkOrderPage,
   SetWorkOrderPerPage,
@@ -75,6 +76,41 @@ export const handlers: IKindHandlers<IWorkOrderState, WorkOrderActions> = {
         action: ReturnType<typeof SetWorkOrderPerPage>,
       ): IWorkOrderState => {
         return { ...state, perPage: action.payload };
+      },
+    },
+  },
+  prefill: {
+    workorderitem: {
+      receive: (state: IWorkOrderState, action: ReturnType<typeof ReceiveWorkOrderItemPrefill>) => {
+        if (action.payload.errors !== null) {
+          return {
+            ...state,
+            prefillWorkOrderItem: {
+              ...state.prefillWorkOrderItem,
+              errors: action.payload.errors,
+              level: FetchLevel.failure,
+            },
+          };
+        }
+
+        return {
+          ...state,
+          prefillWorkOrderItem: {
+            data: action.payload.data!,
+            errors: {},
+            level: FetchLevel.success,
+          },
+        };
+      },
+      request: (state: IWorkOrderState) => {
+        return {
+          ...state,
+          prefillWorkOrderItem: {
+            ...state.prefillWorkOrderItem,
+            errors: {},
+            level: FetchLevel.initial,
+          },
+        };
       },
     },
   },

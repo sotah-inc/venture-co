@@ -5,7 +5,10 @@ import {
   createWorkOrder,
   ICreateWorkOrderOptions,
   ICreateWorkOrderResult,
+  IPrefillWorkOrderItemOptions,
+  IPrefillWorkOrderItemResult,
   IQueryWorkOrdersResult,
+  prefillWorkOrderItem,
   queryWorkOrders,
   QueryWorkOrdersOptions,
 } from "../api/work-order";
@@ -55,12 +58,26 @@ export const CHANGE_IS_WORKORDER_DIALOG_OPEN = "CHANGE_IS_WORKORDER_DIALOG_OPEN"
 export const ChangeIsWorkOrderDialogOpen = (payload: boolean) =>
   createAction(CHANGE_IS_WORKORDER_DIALOG_OPEN, payload);
 
+export const REQUEST_WORKORDERITEM_PREFILL = "REQUEST_WORKORDERITEM_PREFILL";
+export const RequestWorkOrderItemPrefill = () => createAction(REQUEST_WORKORDERITEM_PREFILL);
+export const RECEIVE_WORKORDERITEM_PREFILL = "RECEIVE_WORKORDERITEM_PREFILL";
+export const ReceiveWorkOrderItemPrefill = (payload: IPrefillWorkOrderItemResult) =>
+  createAction(RECEIVE_WORKORDERITEM_PREFILL, payload);
+export const FetchWorkOrderItemPrefill = (opts: IPrefillWorkOrderItemOptions) => {
+  return async (dispatch: Dispatch) => {
+    dispatch(RequestWorkOrderItemPrefill());
+    dispatch(ReceiveWorkOrderItemPrefill(await prefillWorkOrderItem(opts)));
+  };
+};
+
 export const WorkOrderActions = {
   ChangeIsWorkOrderDialogOpen,
   LoadWorkOrderEntrypoint,
   ReceiveWorkOrderCreate,
+  ReceiveWorkOrderItemPrefill,
   ReceiveWorkOrderQuery,
   RequestWorkOrderCreate,
+  RequestWorkOrderItemPrefill,
   RequestWorkOrderQuery,
   SetWorkOrderPage,
   SetWorkOrderPerPage,
