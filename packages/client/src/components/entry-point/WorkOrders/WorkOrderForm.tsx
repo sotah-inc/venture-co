@@ -15,7 +15,12 @@ import { IPrefillWorkOrderItemOptions } from "../../../api/work-order";
 import { Generator as FormFieldGenerator } from "../../../components/util/FormField";
 import { IFetchData } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
-import { getItemIconUrl, getItemTextValue, qualityToColorClass } from "../../../util";
+import {
+  currencyToText,
+  getItemIconUrl,
+  getItemTextValue,
+  qualityToColorClass,
+} from "../../../util";
 import { DialogActions, DialogBody, ItemInput } from "../../util";
 
 export interface IOwnProps {
@@ -74,6 +79,8 @@ export class WorkOrderForm extends React.Component<Props> {
       setSubmitting,
       handleReset,
       onFatalError,
+      prefillWorkOrderItem,
+      setFieldValue,
     } = this.props;
 
     if (prevProps.mutateOrderLevel !== mutateOrderLevel) {
@@ -83,16 +90,27 @@ export class WorkOrderForm extends React.Component<Props> {
           handleReset();
           onComplete();
 
-          return;
+          break;
         case FetchLevel.failure:
           setSubmitting(false);
           if ("error" in mutateOrderErrors) {
             onFatalError(mutateOrderErrors.error);
           }
 
-          return;
+          break;
         default:
-          return;
+          break;
+      }
+    }
+
+    if (prevProps.prefillWorkOrderItem.level !== prefillWorkOrderItem.level) {
+      switch (prefillWorkOrderItem.level) {
+        case FetchLevel.success:
+          setFieldValue("price", prefillWorkOrderItem.data.currentPrice);
+
+          break;
+        default:
+          break;
       }
     }
   }
@@ -203,6 +221,7 @@ export class WorkOrderForm extends React.Component<Props> {
       getError: () => coalescedErrors.price ?? "",
       getTouched: () => !!touched.price,
       getValue: () => values.price.toString(),
+      helperText: currencyToText(values.price),
       placeholder: "1",
       type: "number",
     });
