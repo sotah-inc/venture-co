@@ -45,9 +45,19 @@ export const setTitle = (prefix: string) => {
   document.title = `${prefix} - ${title}`;
 };
 
-export const currencyToText = (amount: number, hideCopper?: boolean): string => {
+export type CurrencyToTextFormatter = (v: Array<string | null>) => string;
+
+export const currencyToText = (
+  amount: number,
+  hideCopper?: boolean,
+  formatter?: CurrencyToTextFormatter,
+): string => {
   if (amount === 0) {
     return "0g";
+  }
+
+  if (typeof formatter === "undefined") {
+    formatter = formatParams => formatParams.filter(v => v !== null).join(" ");
   }
 
   const copper = Math.floor(amount % 100);
@@ -77,7 +87,7 @@ export const currencyToText = (amount: number, hideCopper?: boolean): string => 
     outputParams.push(copperOutput);
   }
 
-  return outputParams.filter(v => v !== null).join(" ");
+  return formatter(outputParams);
 };
 
 export const unixTimestampToText = (unixTimestamp: number): string =>

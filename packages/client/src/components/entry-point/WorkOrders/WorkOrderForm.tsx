@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button, FormGroup, H5, Intent } from "@blueprintjs/core";
+import { Button, FormGroup, H5, Intent, Label, Slider } from "@blueprintjs/core";
 import {
   GameVersion,
   ICreateWorkOrderRequest,
@@ -185,14 +185,7 @@ export class WorkOrderForm extends React.Component<Props> {
   }
 
   private renderPrice() {
-    const {
-      values,
-      setFieldValue,
-      errors,
-      touched,
-      mutateOrderErrors,
-      prefillWorkOrderItem,
-    } = this.props;
+    const { prefillWorkOrderItem, setFieldValue, values } = this.props;
 
     switch (prefillWorkOrderItem.level) {
       case FetchLevel.success:
@@ -203,8 +196,13 @@ export class WorkOrderForm extends React.Component<Props> {
             <strong>Failed to prefill work-item data!</strong>
           </p>
         );
-      case FetchLevel.fetching:
       case FetchLevel.initial:
+        return (
+          <p>
+            <em>Please select an item!</em>
+          </p>
+        );
+      case FetchLevel.fetching:
       default:
         return (
           <p>
@@ -213,18 +211,28 @@ export class WorkOrderForm extends React.Component<Props> {
         );
     }
 
-    const createFormField = FormFieldGenerator({ setFieldValue });
-    const coalescedErrors = { ...errors, ...mutateOrderErrors };
+    const step = Math.pow(10, Math.floor(Math.log10(prefillWorkOrderItem.data.currentPrice)));
+    const min = prefillWorkOrderItem.data.currentPrice / 2;
+    const max = prefillWorkOrderItem.data.currentPrice * 2;
+    const range = max - min;
 
-    return createFormField({
-      fieldName: "price",
-      getError: () => coalescedErrors.price ?? "",
-      getTouched: () => !!touched.price,
-      getValue: () => values.price.toString(),
-      helperText: currencyToText(values.price),
-      placeholder: "1",
-      type: "number",
-    });
+    return (
+      <Label>
+        Price
+        <Slider
+          max={max}
+          min={min}
+          onChange={v => setFieldValue("price", v)}
+          labelRenderer={v => {
+            return currencyToText(v, true);
+          }}
+          labelStepSize={range}
+          stepSize={step}
+          value={values.price > 0 ? values.price : prefillWorkOrderItem.data.currentPrice}
+          showTrackFill={false}
+        />
+      </Label>
+    );
   }
 
   private onItemSelect(item: IItem) {
