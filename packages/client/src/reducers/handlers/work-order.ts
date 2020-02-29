@@ -112,6 +112,16 @@ export const handlers: IKindHandlers<IWorkOrderState, WorkOrderActions> = {
           },
         };
       },
+      reset: (state: IWorkOrderState) => {
+        return {
+          ...state,
+          prefillWorkOrderItem: {
+            data: { currentPrice: 0 },
+            errors: {},
+            level: FetchLevel.initial,
+          },
+        };
+      },
     },
   },
   query: {

@@ -23,6 +23,7 @@ export interface IDispatchProps {
   createWorkOrder: (token: string, opts: ICreateWorkOrderOptions) => void;
   insertToast: (toast: IToastProps) => void;
   callPrefillWorkOrderItem: (opts: IPrefillWorkOrderItemOptions) => void;
+  resetWorkOrderItemPrefill: () => void;
 }
 
 export type Props = Readonly<IStateProps & IDispatchProps>;
@@ -41,6 +42,7 @@ export class CreateWorkOrderDialog extends React.Component<Props> {
       profile,
       prefillWorkOrderItem,
       callPrefillWorkOrderItem,
+      resetWorkOrderItemPrefill,
     } = this.props;
 
     return (
@@ -55,6 +57,7 @@ export class CreateWorkOrderDialog extends React.Component<Props> {
           prefillWorkOrderItem={prefillWorkOrderItem}
           currentRegion={currentRegion}
           currentRealm={currentRealm}
+          resetWorkOrderItemPrefill={resetWorkOrderItemPrefill}
           onSubmit={v => {
             if (profile === null || currentRegion === null || currentRealm === null) {
               return;

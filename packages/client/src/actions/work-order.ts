@@ -70,6 +70,9 @@ export const FetchWorkOrderItemPrefill = (opts: IPrefillWorkOrderItemOptions) =>
   };
 };
 
+export const RESET_WORKORDERITEM_PREFILL = "RESET_WORKORDERITEM_PREFILL";
+export const ResetWorkOrderItemPrefill = () => createAction(RESET_WORKORDERITEM_PREFILL);
+
 export const WorkOrderActions = {
   ChangeIsWorkOrderDialogOpen,
   LoadWorkOrderEntrypoint,
@@ -79,6 +82,7 @@ export const WorkOrderActions = {
   RequestWorkOrderCreate,
   RequestWorkOrderItemPrefill,
   RequestWorkOrderQuery,
+  ResetWorkOrderItemPrefill,
   SetWorkOrderPage,
   SetWorkOrderPerPage,
 };

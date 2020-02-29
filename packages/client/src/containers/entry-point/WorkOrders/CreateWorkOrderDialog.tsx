@@ -5,6 +5,7 @@ import {
   ChangeIsWorkOrderDialogOpen,
   FetchCreateWorkOrder,
   FetchWorkOrderItemPrefill,
+  ResetWorkOrderItemPrefill,
 } from "../../../actions/work-order";
 import {
   CreateWorkOrderDialog,
@@ -38,6 +39,7 @@ const mapDispatchToProps: IDispatchProps = {
   changeIsWorkOrderDialogOpen: ChangeIsWorkOrderDialogOpen,
   createWorkOrder: FetchCreateWorkOrder,
   insertToast: InsertToast,
+  resetWorkOrderItemPrefill: ResetWorkOrderItemPrefill,
 };
 
 export const CreateWorkOrderDialogContainer = connect<IStateProps, IDispatchProps, {}, IStoreState>(

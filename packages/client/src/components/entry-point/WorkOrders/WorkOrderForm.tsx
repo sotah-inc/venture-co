@@ -37,6 +37,7 @@ export interface IOwnProps {
   callPrefillWorkOrderItem: (opts: IPrefillWorkOrderItemOptions) => void;
   currentRegion: IRegion | null;
   currentRealm: IStatusRealm | null;
+  resetWorkOrderItemPrefill: () => void;
 }
 
 export interface IFormValues {
@@ -128,6 +129,7 @@ export class WorkOrderForm extends React.Component<Props> {
       children,
       mutateOrderErrors,
       isSubmitDisabled,
+      resetWorkOrderItemPrefill,
     } = this.props;
     const createFormField = FormFieldGenerator({ setFieldValue });
 
@@ -169,7 +171,10 @@ export class WorkOrderForm extends React.Component<Props> {
           <Button
             text="Reset"
             intent={Intent.NONE}
-            onClick={handleReset}
+            onClick={() => {
+              handleReset();
+              resetWorkOrderItemPrefill();
+            }}
             disabled={!dirty || isSubmitting}
           />
           <Button
