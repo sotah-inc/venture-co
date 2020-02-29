@@ -108,7 +108,7 @@ export const handlers: IKindHandlers<IWorkOrderState, WorkOrderActions> = {
           prefillWorkOrderItem: {
             ...state.prefillWorkOrderItem,
             errors: {},
-            level: FetchLevel.initial,
+            level: FetchLevel.fetching,
           },
         };
       },

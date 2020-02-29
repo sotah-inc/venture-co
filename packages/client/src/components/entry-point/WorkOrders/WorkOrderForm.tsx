@@ -211,10 +211,11 @@ export class WorkOrderForm extends React.Component<Props> {
         );
     }
 
-    const step = Math.pow(10, Math.floor(Math.log10(prefillWorkOrderItem.data.currentPrice)));
     const min = prefillWorkOrderItem.data.currentPrice / 2;
     const max = prefillWorkOrderItem.data.currentPrice * 2;
     const range = max - min;
+    const step = range / 6;
+    const value = values.price > 0 ? values.price : min + step * 2;
 
     return (
       <Label>
@@ -224,12 +225,15 @@ export class WorkOrderForm extends React.Component<Props> {
           min={min}
           onChange={v => setFieldValue("price", v)}
           labelRenderer={v => {
-            return currencyToText(v, true);
+            return currencyToText(v, true, formatParams =>
+              formatParams.filter(param => param !== null).join("\u00a0"),
+            );
           }}
           labelStepSize={range}
           stepSize={step}
-          value={values.price > 0 ? values.price : prefillWorkOrderItem.data.currentPrice}
+          value={value}
           showTrackFill={false}
+          vertical={true}
         />
       </Label>
     );
