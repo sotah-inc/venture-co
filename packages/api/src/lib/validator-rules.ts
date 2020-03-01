@@ -178,10 +178,12 @@ export const CreateWorkOrderRequestRules = yup
       .required(),
     price: yup
       .number()
+      .integer()
       .required()
       .positive(),
     quantity: yup
       .number()
+      .integer()
       .positive()
       .required(),
   })
