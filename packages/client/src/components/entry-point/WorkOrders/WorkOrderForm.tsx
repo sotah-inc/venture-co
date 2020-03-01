@@ -177,7 +177,7 @@ export class WorkOrderForm extends React.Component<Props> {
   }
 
   private renderQuantity() {
-    const { values, setFieldValue } = this.props;
+    const { values, setFieldValue, setFieldTouched } = this.props;
 
     if (values.item === null) {
       return (
@@ -210,7 +210,10 @@ export class WorkOrderForm extends React.Component<Props> {
         <Slider
           max={max}
           min={min}
-          onChange={v => setFieldValue("quantity", v)}
+          onChange={v => {
+            setFieldValue("quantity", v);
+            setFieldTouched("quantity");
+          }}
           labelStepSize={max - min}
           stepSize={stepSize}
           value={values.quantity < min ? min : values.quantity}
@@ -229,9 +232,10 @@ export class WorkOrderForm extends React.Component<Props> {
       errors,
       touched,
       mutateOrderErrors,
+      setFieldTouched,
     } = this.props;
 
-    const coalesedErrors = { ...mutateOrderErrors, ...errors };
+    const coalescedErrors = { ...mutateOrderErrors, ...errors };
 
     if (values.item === null) {
       return (
@@ -270,8 +274,8 @@ export class WorkOrderForm extends React.Component<Props> {
     const range = max - min;
     const step = range / 6;
     const value = values.price > 0 ? values.price : min + step * 2;
-    const intent = coalesedErrors.price && touched.price ? Intent.DANGER : Intent.NONE;
-    const helperText = coalesedErrors.price ? coalesedErrors.price : "";
+    const intent = coalescedErrors.price && touched.price ? Intent.DANGER : Intent.NONE;
+    const helperText = coalescedErrors.price ? coalescedErrors.price : "";
 
     return (
       <FormGroup label="Price" intent={intent} helperText={helperText}>
@@ -279,7 +283,10 @@ export class WorkOrderForm extends React.Component<Props> {
           intent={intent}
           max={max}
           min={min}
-          onChange={v => setFieldValue("price", v)}
+          onChange={v => {
+            setFieldValue("price", v);
+            setFieldTouched("price");
+          }}
           labelRenderer={v => {
             return currencyToText(v, v > 100 * 100, formatParams =>
               formatParams.filter(param => param !== null).join("\u00a0"),

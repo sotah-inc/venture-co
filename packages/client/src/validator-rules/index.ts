@@ -31,7 +31,7 @@ export const WorkOrderRules = {
     .moreThan(0, "Price must be greater than zero"),
   quantity: Yup.number()
     .required("Quantity is required")
-    .integer("Price must be an integer")
+    .integer("Quantity must be an integer")
     .moreThan(0, "Quantity must be greater than zero"),
 };
 

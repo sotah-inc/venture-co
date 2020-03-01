@@ -82,11 +82,13 @@ export async function createWorkOrder(
     opts.realmSlug,
   ].join("/");
 
+  const req: ICreateWorkOrderRequest = { ...opts.req, price: Number(opts.req.price.toFixed(0)) };
+
   const { body, status } = await gather<
     ICreateWorkOrderRequest,
     ICreateWorkOrderResponse | IValidationErrorResponse
   >({
-    body: opts.req,
+    body: req,
     headers: new Headers({
       Authorization: `Bearer ${token}`,
       "content-type": "application/json",
