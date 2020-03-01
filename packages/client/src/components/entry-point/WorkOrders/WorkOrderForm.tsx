@@ -222,7 +222,16 @@ export class WorkOrderForm extends React.Component<Props> {
   }
 
   private renderPrice() {
-    const { prefillWorkOrderItem, setFieldValue, values } = this.props;
+    const {
+      prefillWorkOrderItem,
+      setFieldValue,
+      values,
+      errors,
+      touched,
+      mutateOrderErrors,
+    } = this.props;
+
+    const coalesedErrors = { ...mutateOrderErrors, ...errors };
 
     if (values.item === null) {
       return (
@@ -261,11 +270,13 @@ export class WorkOrderForm extends React.Component<Props> {
     const range = max - min;
     const step = range / 6;
     const value = values.price > 0 ? values.price : min + step * 2;
+    const intent = coalesedErrors.price && touched.price ? Intent.DANGER : Intent.NONE;
+    const helperText = coalesedErrors.price ? coalesedErrors.price : "";
 
     return (
-      <Label>
-        Price
+      <FormGroup label="Price" intent={intent} helperText={helperText}>
         <Slider
+          intent={intent}
           max={max}
           min={min}
           onChange={v => setFieldValue("price", v)}
@@ -280,7 +291,7 @@ export class WorkOrderForm extends React.Component<Props> {
           showTrackFill={false}
           vertical={true}
         />
-      </Label>
+      </FormGroup>
     );
   }
 
