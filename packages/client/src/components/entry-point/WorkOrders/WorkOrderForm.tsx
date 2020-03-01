@@ -137,7 +137,7 @@ export class WorkOrderForm extends React.Component<Props> {
             <div className="pure-u-1-2">
               <div style={{ paddingRight: "5px" }}>
                 <FormGroup label="Item" labelInfo={true} intent={itemIntent}>
-                  <ItemInput onSelect={v => this.onItemSelect(v)} autoFocus={true} />
+                  <ItemInput onSelect={v => this.onItemSelect(v)} autoFocus={false} />
                 </FormGroup>
               </div>
             </div>

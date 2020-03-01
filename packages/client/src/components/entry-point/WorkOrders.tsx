@@ -121,6 +121,12 @@ export class WorkOrders extends React.Component<Props> {
       return;
     }
 
+    if (prevProps.orders.level !== orders.level && orders.level === FetchLevel.prompted) {
+      this.refreshWorkOrders();
+
+      return;
+    }
+
     if (orders.level !== FetchLevel.success) {
       return;
     }

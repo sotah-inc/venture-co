@@ -25,7 +25,11 @@ export const handlers: IKindHandlers<IWorkOrderState, WorkOrderActions> = {
           };
         }
 
-        return { ...state, mutateOrderLevel: FetchLevel.success };
+        return {
+          ...state,
+          mutateOrderLevel: FetchLevel.success,
+          orders: { ...state.orders, level: FetchLevel.prompted },
+        };
       },
       request: (state: IWorkOrderState): IWorkOrderState => {
         return { ...state, mutateOrderLevel: FetchLevel.fetching, mutateOrderErrors: {} };
@@ -126,7 +130,7 @@ export const handlers: IKindHandlers<IWorkOrderState, WorkOrderActions> = {
   },
   query: {
     workorder: {
-      receive: (state, action: ReturnType<typeof ReceiveWorkOrderQuery>) => {
+      receive: (state, action: ReturnType<typeof ReceiveWorkOrderQuery>): IWorkOrderState => {
         if (action.payload.errors !== null) {
           return {
             ...state,
@@ -144,7 +148,7 @@ export const handlers: IKindHandlers<IWorkOrderState, WorkOrderActions> = {
           orders: { ...state.orders, level: FetchLevel.success, data: action.payload.data! },
         };
       },
-      request: state => {
+      request: (state: IWorkOrderState): IWorkOrderState => {
         return { ...state, orders: { ...state.orders, level: FetchLevel.fetching } };
       },
     },
