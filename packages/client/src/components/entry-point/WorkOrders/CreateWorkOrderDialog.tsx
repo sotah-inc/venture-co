@@ -48,7 +48,10 @@ export class CreateWorkOrderDialog extends React.Component<Props> {
     return (
       <Dialog
         isOpen={isWorkOrderDialogOpen}
-        onClose={() => changeIsWorkOrderDialogOpen(!isWorkOrderDialogOpen)}
+        onClose={() => {
+          changeIsWorkOrderDialogOpen(!isWorkOrderDialogOpen);
+          resetWorkOrderItemPrefill();
+        }}
         title="New Order"
         icon="manually-entered-data"
         canOutsideClickClose={false}
@@ -75,6 +78,8 @@ export class CreateWorkOrderDialog extends React.Component<Props> {
           mutateOrderErrors={mutateOrderErrors}
           mutateOrderLevel={mutateOrderLevel}
           onComplete={() => {
+            changeIsWorkOrderDialogOpen(!isWorkOrderDialogOpen);
+            resetWorkOrderItemPrefill();
             insertToast({
               icon: "info-sign",
               intent: "success",

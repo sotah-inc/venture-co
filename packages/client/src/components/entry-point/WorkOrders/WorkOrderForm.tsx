@@ -12,7 +12,6 @@ import {
 import { FormikProps } from "formik";
 
 import { IPrefillWorkOrderItemOptions } from "../../../api/work-order";
-import { Generator as FormFieldGenerator } from "../../../components/util/FormField";
 import { IFetchData } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
 import {
@@ -119,21 +118,14 @@ export class WorkOrderForm extends React.Component<Props> {
   public render() {
     const {
       values,
-      setFieldValue,
       isSubmitting,
       handleReset,
       handleSubmit,
       dirty,
-      errors,
-      touched,
       children,
-      mutateOrderErrors,
       isSubmitDisabled,
       resetWorkOrderItemPrefill,
     } = this.props;
-    const createFormField = FormFieldGenerator({ setFieldValue });
-
-    const coalescedErrors = { ...errors, ...mutateOrderErrors };
 
     const itemIntent = Intent.NONE;
 
@@ -157,15 +149,10 @@ export class WorkOrderForm extends React.Component<Props> {
               </div>
             </div>
           </div>
-          {createFormField({
-            fieldName: "quantity",
-            getError: () => coalescedErrors.quantity ?? "",
-            getTouched: () => !!touched.quantity,
-            getValue: () => values.quantity.toString(),
-            placeholder: "1",
-            type: "number",
-          })}
-          {this.renderPrice()}
+          <div className="pure-g">
+            <div className="pure-u-1-2">{this.renderQuantity()}</div>
+            <div className="pure-u-1-2">{this.renderPrice()}</div>
+          </div>
         </DialogBody>
         <DialogActions>
           <Button
@@ -189,8 +176,61 @@ export class WorkOrderForm extends React.Component<Props> {
     );
   }
 
+  private renderQuantity() {
+    const { values, setFieldValue } = this.props;
+
+    if (values.item === null) {
+      return (
+        <p>
+          <em>Please select an item!</em>
+        </p>
+      );
+    }
+
+    interface IQuantitySliderProps {
+      min: number;
+      max: number;
+      stepSize: number;
+    }
+
+    const { min, max, stepSize } = ((): IQuantitySliderProps => {
+      switch (values.item.stackable) {
+        case 200:
+          return { min: 20, max: values.item.stackable, stepSize: 20 };
+        case 1:
+          return { min: 1, max: 10, stepSize: 1 };
+        default:
+          return { min: 1, max: values.item.stackable, stepSize: 1 };
+      }
+    })();
+
+    return (
+      <Label>
+        Quantity
+        <Slider
+          max={max}
+          min={min}
+          onChange={v => setFieldValue("quantity", v)}
+          labelStepSize={max - min}
+          stepSize={stepSize}
+          value={values.quantity < min ? min : values.quantity}
+          showTrackFill={false}
+          vertical={true}
+        />
+      </Label>
+    );
+  }
+
   private renderPrice() {
     const { prefillWorkOrderItem, setFieldValue, values } = this.props;
+
+    if (values.item === null) {
+      return (
+        <p>
+          <em>Please select an item!</em>
+        </p>
+      );
+    }
 
     switch (prefillWorkOrderItem.level) {
       case FetchLevel.success:
@@ -230,7 +270,7 @@ export class WorkOrderForm extends React.Component<Props> {
           min={min}
           onChange={v => setFieldValue("price", v)}
           labelRenderer={v => {
-            return currencyToText(v, true, formatParams =>
+            return currencyToText(v, v > 100 * 100, formatParams =>
               formatParams.filter(param => param !== null).join("\u00a0"),
             );
           }}
