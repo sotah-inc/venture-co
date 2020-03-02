@@ -12,22 +12,20 @@ const config: WithFormikConfig<IOwnProps, IFormValues> = {
   handleSubmit: async (values, { props }) => {
     const { onSubmit } = props;
 
-    if (values.item === null) {
+    if (
+      typeof values.item === "undefined" ||
+      values.item === null ||
+      typeof values.price === "undefined" ||
+      typeof values.quantity === "undefined"
+    ) {
       return;
     }
 
-    onSubmit({ itemId: values.item.id, quantity: values.quantity, price: values.price });
-  },
-  mapPropsToValues: ({ defaultFormValues }: IOwnProps) => {
-    if (typeof defaultFormValues !== "undefined") {
-      return defaultFormValues;
-    }
-
-    return {
-      item: null,
-      price: 0,
-      quantity: 1,
-    };
+    onSubmit({
+      itemId: values.item.id,
+      price: Number(values.price.toFixed(0)),
+      quantity: values.quantity,
+    });
   },
   validationSchema: Yup.object<IFormValues>().shape({
     item: WorkOrderRules.item,

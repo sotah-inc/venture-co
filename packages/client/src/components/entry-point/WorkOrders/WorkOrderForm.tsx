@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button, FormGroup, H5, Intent, Label, Slider } from "@blueprintjs/core";
+import { Button, FormGroup, H5, Intent, Slider } from "@blueprintjs/core";
 import {
   GameVersion,
   ICreateWorkOrderRequest,
@@ -19,6 +19,8 @@ import {
   getItemIconUrl,
   getItemTextValue,
   qualityToColorClass,
+  translatePriceToSliderData,
+  translateQuantityToSliderData,
 } from "../../../util";
 import { DialogActions, DialogBody, ItemInput } from "../../util";
 
@@ -40,16 +42,16 @@ export interface IOwnProps {
 }
 
 export interface IFormValues {
-  price: number;
-  quantity: number;
-  item: IItem | null;
+  price?: number;
+  quantity?: number;
+  item?: IItem | null;
 }
 
 export type Props = Readonly<IOwnProps & FormikProps<IFormValues>>;
 
 export class WorkOrderForm extends React.Component<Props> {
-  private static renderSelectedItem(item: IItem | null) {
-    if (item === null) {
+  private static renderSelectedItem(item?: IItem | null) {
+    if (typeof item === "undefined" || item === null) {
       return (
         <p>
           <em>No item selected.</em>
@@ -81,6 +83,7 @@ export class WorkOrderForm extends React.Component<Props> {
       onFatalError,
       prefillWorkOrderItem,
       setFieldValue,
+      values,
     } = this.props;
 
     if (prevProps.mutateOrderLevel !== mutateOrderLevel) {
@@ -106,7 +109,15 @@ export class WorkOrderForm extends React.Component<Props> {
     if (prevProps.prefillWorkOrderItem.level !== prefillWorkOrderItem.level) {
       switch (prefillWorkOrderItem.level) {
         case FetchLevel.success:
-          setFieldValue("price", prefillWorkOrderItem.data.currentPrice);
+          const priceSliderData = translatePriceToSliderData(prefillWorkOrderItem);
+          if (priceSliderData !== null) {
+            setFieldValue("price", priceSliderData.min + priceSliderData.step);
+          }
+
+          const quantitySliderData = translateQuantityToSliderData(values.item);
+          if (quantitySliderData !== null) {
+            setFieldValue("quantity", quantitySliderData.min);
+          }
 
           break;
         default:
@@ -177,7 +188,14 @@ export class WorkOrderForm extends React.Component<Props> {
   }
 
   private renderQuantity() {
-    const { values, setFieldValue, setFieldTouched } = this.props;
+    const {
+      values,
+      setFieldValue,
+      setFieldTouched,
+      errors,
+      mutateOrderErrors,
+      touched,
+    } = this.props;
 
     if (values.item === null) {
       return (
@@ -187,40 +205,37 @@ export class WorkOrderForm extends React.Component<Props> {
       );
     }
 
-    interface IQuantitySliderProps {
-      min: number;
-      max: number;
-      stepSize: number;
+    const sliderData = translateQuantityToSliderData(values.item);
+
+    if (sliderData === null) {
+      return (
+        <p>
+          <em>Please select an item!</em>
+        </p>
+      );
     }
 
-    const { min, max, stepSize } = ((): IQuantitySliderProps => {
-      switch (values.item.stackable) {
-        case 200:
-          return { min: 20, max: values.item.stackable, stepSize: 20 };
-        case 1:
-          return { min: 1, max: 10, stepSize: 1 };
-        default:
-          return { min: 1, max: values.item.stackable, stepSize: 1 };
-      }
-    })();
+    const coalescedErrors = { ...mutateOrderErrors, ...errors };
+    const intent = coalescedErrors.quantity && touched.quantity ? Intent.DANGER : Intent.NONE;
+    const helperText = coalescedErrors.quantity && touched.quantity ? coalescedErrors.quantity : "";
 
     return (
-      <Label>
-        Quantity
+      <FormGroup intent={intent} label="Quantity" helperText={helperText}>
         <Slider
-          max={max}
-          min={min}
+          intent={intent}
+          max={sliderData.max}
+          min={sliderData.min}
           onChange={v => {
             setFieldValue("quantity", v);
             setFieldTouched("quantity");
           }}
-          labelStepSize={max - min}
-          stepSize={stepSize}
-          value={values.quantity < min ? min : values.quantity}
+          labelStepSize={sliderData.range}
+          stepSize={sliderData.step}
+          value={values.quantity}
           showTrackFill={false}
           vertical={true}
         />
-      </Label>
+      </FormGroup>
     );
   }
 
@@ -269,13 +284,18 @@ export class WorkOrderForm extends React.Component<Props> {
         );
     }
 
-    const min = prefillWorkOrderItem.data.currentPrice / 2;
-    const max = prefillWorkOrderItem.data.currentPrice * 2;
-    const range = max - min;
-    const step = range / 6;
-    const value = values.price > 0 ? values.price : min + step * 2;
+    const sliderValues = translatePriceToSliderData(prefillWorkOrderItem);
+    if (sliderValues === null) {
+      return (
+        <p>
+          <strong>Failed to prefill work-item data!</strong>
+        </p>
+      );
+    }
+
+    const { max, min, range, step } = sliderValues;
     const intent = coalescedErrors.price && touched.price ? Intent.DANGER : Intent.NONE;
-    const helperText = coalescedErrors.price ? coalescedErrors.price : "";
+    const helperText = coalescedErrors.price && touched.price ? coalescedErrors.price : "";
 
     return (
       <FormGroup label="Price" intent={intent} helperText={helperText}>
@@ -288,13 +308,13 @@ export class WorkOrderForm extends React.Component<Props> {
             setFieldTouched("price");
           }}
           labelRenderer={v => {
-            return currencyToText(v, v > 100 * 100, formatParams =>
-              formatParams.filter(param => param !== null).join("\u00a0"),
-            );
+            return currencyToText(v, v > 100 * 100, formatParams => {
+              return formatParams.filter(param => param !== null).join("\u00a0");
+            });
           }}
           labelStepSize={range}
           stepSize={step}
-          value={value}
+          value={values.price}
           showTrackFill={false}
           vertical={true}
         />
