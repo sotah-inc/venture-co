@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button, FormGroup, H5, Intent, Slider } from "@blueprintjs/core";
+import { Button, Callout, FormGroup, H5, Intent, Position, Slider } from "@blueprintjs/core";
 import {
   GameVersion,
   ICreateWorkOrderRequest,
@@ -12,6 +12,7 @@ import {
 import { FormikProps } from "formik";
 
 import { IPrefillWorkOrderItemOptions } from "../../../api/work-order";
+import { ItemPopoverContainer } from "../../../containers/util/ItemPopover";
 import { IFetchData } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
 import {
@@ -22,7 +23,7 @@ import {
   translatePriceToSliderData,
   translateQuantityToSliderData,
 } from "../../../util";
-import { DialogActions, DialogBody, ItemInput } from "../../util";
+import { Currency, DialogActions, DialogBody, ItemInput } from "../../util";
 
 export interface IOwnProps {
   onSubmit: (req: ICreateWorkOrderRequest) => void;
@@ -164,6 +165,7 @@ export class WorkOrderForm extends React.Component<Props> {
             <div className="pure-u-1-2">{this.renderQuantity()}</div>
             <div className="pure-u-1-2">{this.renderPrice()}</div>
           </div>
+          {this.renderTotal()}
         </DialogBody>
         <DialogActions>
           <Button
@@ -187,6 +189,39 @@ export class WorkOrderForm extends React.Component<Props> {
     );
   }
 
+  private renderTotal() {
+    const { values } = this.props;
+
+    if (
+      typeof values.item === "undefined" ||
+      values.item === null ||
+      typeof values.quantity === "undefined" ||
+      typeof values.price === "undefined"
+    ) {
+      return null;
+    }
+
+    const renderedCurrency = () => {
+      return <Currency amount={values.price!} />;
+    };
+    const renderedItem = () => {
+      return (
+        <ItemPopoverContainer
+          interactive={false}
+          item={values.item!}
+          position={Position.BOTTOM}
+          itemTextFormatter={v => `${v} x${values.quantity}`}
+        />
+      );
+    };
+
+    return (
+      <Callout title="New Order" style={{ marginTop: "10px" }} intent={Intent.PRIMARY}>
+        {`Yes, create order for ${renderedItem()} for ${renderedCurrency()}.`}
+      </Callout>
+    );
+  }
+
   private renderQuantity() {
     const {
       values,
@@ -195,6 +230,7 @@ export class WorkOrderForm extends React.Component<Props> {
       errors,
       mutateOrderErrors,
       touched,
+      prefillWorkOrderItem,
     } = this.props;
 
     if (values.item === null) {
@@ -203,6 +239,30 @@ export class WorkOrderForm extends React.Component<Props> {
           <em>Please select an item!</em>
         </p>
       );
+    }
+
+    switch (prefillWorkOrderItem.level) {
+      case FetchLevel.success:
+        break;
+      case FetchLevel.failure:
+        return (
+          <p>
+            <strong>Failed to prefill work-item data!</strong>
+          </p>
+        );
+      case FetchLevel.initial:
+        return (
+          <p>
+            <em>Please select an item!</em>
+          </p>
+        );
+      case FetchLevel.fetching:
+      default:
+        return (
+          <p>
+            <em>Loading...</em>
+          </p>
+        );
     }
 
     const sliderData = translateQuantityToSliderData(values.item);

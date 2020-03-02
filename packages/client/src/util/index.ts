@@ -500,6 +500,19 @@ export function translateQuantityToSliderData(item?: IItem | null): ISliderData 
           step,
         };
       })();
+    case 20:
+      return ((): ISliderData => {
+        const step = 5;
+        const max = item.stackable;
+        const min = step;
+
+        return {
+          max,
+          min,
+          range: max - min,
+          step,
+        };
+      })();
     case 1:
       return ((): ISliderData => {
         const step = 1;

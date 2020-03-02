@@ -41,7 +41,8 @@ export class WorkOrdersList extends React.Component<Props> {
         <thead>
           <tr>
             <th>Item</th>
-            <th>Price</th>
+            <th>Price Per</th>
+            <th>Total Price</th>
             <th>Recipient Id</th>
             <th>Created At</th>
           </tr>
@@ -57,6 +58,9 @@ export class WorkOrdersList extends React.Component<Props> {
         <td>{this.renderItem(order.item_id, order.quantity)}</td>
         <td>
           <Currency amount={order.price} />
+        </td>
+        <td>
+          <Currency amount={order.price * order.quantity} />
         </td>
         <td>{order.user_id}</td>
         <td>{this.renderCreatedAt(order.created_at)}</td>
