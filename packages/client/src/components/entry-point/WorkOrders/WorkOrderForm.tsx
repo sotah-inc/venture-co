@@ -217,7 +217,7 @@ export class WorkOrderForm extends React.Component<Props> {
 
     return (
       <Callout title="New Order" style={{ marginTop: "10px" }} intent={Intent.PRIMARY}>
-        {`Yes, create order for ${renderedItem()} for ${renderedCurrency()}.`}
+        Yes, create order for {renderedItem()} for {renderedCurrency()}.
       </Callout>
     );
   }
