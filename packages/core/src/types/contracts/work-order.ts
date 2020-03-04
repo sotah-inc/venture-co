@@ -25,5 +25,5 @@ export interface ICreateWorkOrderResponse {
 }
 
 export interface IPrefillWorkOrderItemResponse {
-  currentPrice: number;
+  currentPrice: number | null;
 }

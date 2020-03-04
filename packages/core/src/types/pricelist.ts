@@ -11,7 +11,7 @@ export interface IPricesFlagged extends IPrices {
 }
 
 export interface IPriceListMap {
-  [itemId: number]: IPrices;
+  [itemId: number]: IPrices | undefined;
 }
 
 export interface IItemPricelistHistoryMap<T extends IPrices> {
