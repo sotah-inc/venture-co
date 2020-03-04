@@ -201,23 +201,24 @@ export class WorkOrderForm extends React.Component<Props> {
       return null;
     }
 
-    const renderedCurrency = () => {
-      return <Currency amount={values.price!} />;
+    const renderedCurrency = (amount: number) => {
+      return <Currency amount={amount} hideCopper={amount > 100 * 100} />;
     };
-    const renderedItem = () => {
+    const renderedItem = (item: IItem, quantity: number) => {
       return (
         <ItemPopoverContainer
           interactive={false}
-          item={values.item!}
+          item={item}
           position={Position.BOTTOM}
-          itemTextFormatter={v => `${v} x${values.quantity}`}
+          itemTextFormatter={v => `${v} x${quantity}`}
         />
       );
     };
 
     return (
       <Callout title="New Order" style={{ marginTop: "10px" }} intent={Intent.PRIMARY}>
-        Yes, create order for {renderedItem()} for {renderedCurrency()}.
+        Yes, create order for {renderedItem(values.item, values.quantity)} for{" "}
+        {renderedCurrency(values.price * values.quantity)}.
       </Callout>
     );
   }
