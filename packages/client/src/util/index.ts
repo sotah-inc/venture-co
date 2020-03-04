@@ -545,7 +545,10 @@ export function translateQuantityToSliderData(item?: IItem | null): ISliderData 
 export function translatePriceToSliderData(
   prefillWorkOrderItem: IFetchData<IPrefillWorkOrderItemResponse>,
 ): ISliderData | null {
-  if (prefillWorkOrderItem.level !== FetchLevel.success) {
+  if (
+    prefillWorkOrderItem.level !== FetchLevel.success ||
+    prefillWorkOrderItem.data.currentPrice === null
+  ) {
     return null;
   }
 

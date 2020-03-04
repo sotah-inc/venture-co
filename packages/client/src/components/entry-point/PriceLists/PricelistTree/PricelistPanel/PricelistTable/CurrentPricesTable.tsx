@@ -96,12 +96,12 @@ export class CurrentPricesTable extends React.Component<Props> {
 
       let aResult = 0;
       if (a.item_id in pricelistMap) {
-        aResult = pricelistMap[a.item_id].min_buyout_per * a.quantity_modifier;
+        aResult = pricelistMap[a.item_id]!.min_buyout_per * a.quantity_modifier;
       }
 
       let bResult = 0;
       if (b.item_id in pricelistMap) {
-        bResult = pricelistMap[b.item_id].min_buyout_per * b.quantity_modifier;
+        bResult = pricelistMap[b.item_id]!.min_buyout_per * b.quantity_modifier;
       }
 
       if (aResult === bResult && aItem && bItem) {
@@ -139,8 +139,8 @@ export class CurrentPricesTable extends React.Component<Props> {
     let buyout: number = 0;
     let volume: number = 0;
     if (item_id in pricelistMap) {
-      buyout = pricelistMap[item_id].min_buyout_per;
-      volume = pricelistMap[item_id].volume;
+      buyout = pricelistMap[item_id]!.min_buyout_per;
+      volume = pricelistMap[item_id]!.volume;
     }
 
     const item = this.getItem(item_id);

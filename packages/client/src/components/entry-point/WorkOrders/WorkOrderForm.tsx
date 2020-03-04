@@ -174,7 +174,6 @@ export class WorkOrderForm extends React.Component<Props> {
             <div className="pure-u-1-2">{this.renderQuantity()}</div>
             <div className="pure-u-1-2">{this.renderPrice()}</div>
           </div>
-          <hr />
           {this.renderTotal()}
         </DialogBody>
         <DialogActions>
@@ -237,20 +236,23 @@ export class WorkOrderForm extends React.Component<Props> {
     ];
 
     return (
-      <FormGroup label="Work Order Summary">
-        <HTMLTable className={classNames.join(" ")}>
-          <tbody>
-            <tr>
-              <th>Item</th>
-              <td>{renderItem(values.item, values.quantity)}</td>
-            </tr>
-            <tr>
-              <th>Price</th>
-              <td>{renderCurrency(values.quantity * values.price)}</td>
-            </tr>
-          </tbody>
-        </HTMLTable>
-      </FormGroup>
+      <>
+        <hr />
+        <FormGroup label="Work Order Summary">
+          <HTMLTable className={classNames.join(" ")}>
+            <tbody>
+              <tr>
+                <th>Item</th>
+                <td>{renderItem(values.item, values.quantity)}</td>
+              </tr>
+              <tr>
+                <th>Price</th>
+                <td>{renderCurrency(values.quantity * values.price)}</td>
+              </tr>
+            </tbody>
+          </HTMLTable>
+        </FormGroup>
+      </>
     );
   }
 
