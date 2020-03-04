@@ -142,19 +142,10 @@ export class WorkOrderController {
       };
     }
 
-    const foundPrice = pricesMessage.data!.price_list[foundItem.id] ?? null;
-
-    if (foundPrice === null) {
-      const validationErrors: IValidationErrorResponse = { error: "failed to resolve item price" };
-
-      return {
-        data: validationErrors,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
+    const foundPrice = pricesMessage.data!.price_list[foundItem.id];
 
     return {
-      data: { currentPrice: foundPrice.average_buyout_per },
+      data: { currentPrice: foundPrice?.average_buyout_per ?? null },
       status: HTTPStatus.OK,
     };
   };
