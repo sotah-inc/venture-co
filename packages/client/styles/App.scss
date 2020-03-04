@@ -98,7 +98,24 @@ body.bp3-dark,
     margin-bottom: -5px;
 }
 
+.work-order-summary-table  {
+    width: 100%;
+    margin: 0;
+
+    th {
+        text-align: right;
+    }
+
+    .item-icon {
+        width: 24px;
+        height: 24px;
+        border-radius: 3px;
+        margin-bottom: -5px;
+    }
+}
+
 .auction-table,
+.work-order-summary-table,
 .price-list-table,
 .list-dialog-table,
 .unmet-items-table,

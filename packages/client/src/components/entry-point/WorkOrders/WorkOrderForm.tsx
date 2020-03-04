@@ -1,6 +1,15 @@
 import React from "react";
 
-import { Button, Callout, FormGroup, H5, Intent, Position, Slider } from "@blueprintjs/core";
+import {
+  Button,
+  Classes,
+  FormGroup,
+  H5,
+  HTMLTable,
+  Intent,
+  Position,
+  Slider,
+} from "@blueprintjs/core";
 import {
   GameVersion,
   ICreateWorkOrderRequest,
@@ -165,6 +174,7 @@ export class WorkOrderForm extends React.Component<Props> {
             <div className="pure-u-1-2">{this.renderQuantity()}</div>
             <div className="pure-u-1-2">{this.renderPrice()}</div>
           </div>
+          <hr />
           {this.renderTotal()}
         </DialogBody>
         <DialogActions>
@@ -201,25 +211,46 @@ export class WorkOrderForm extends React.Component<Props> {
       return null;
     }
 
-    const renderedCurrency = (amount: number) => {
+    const renderCurrency = (amount: number) => {
       return <Currency amount={amount} hideCopper={amount > 100 * 100} />;
     };
-    const renderedItem = (item: IItem, quantity: number) => {
+    const renderItem = (item: IItem, quantity: number) => {
       return (
         <ItemPopoverContainer
           interactive={false}
           item={item}
           position={Position.BOTTOM}
-          itemTextFormatter={v => `${v} x${quantity}`}
+          itemTextFormatter={v => (
+            <span className={qualityToColorClass(item.quality)}>
+              {v} x{quantity}
+            </span>
+          )}
         />
       );
     };
 
+    const classNames = [
+      Classes.HTML_TABLE,
+      Classes.HTML_TABLE_BORDERED,
+      Classes.SMALL,
+      "work-order-summary-table",
+    ];
+
     return (
-      <Callout title="New Order" style={{ marginTop: "10px" }} intent={Intent.PRIMARY}>
-        Yes, create order for {renderedItem(values.item, values.quantity)} for{" "}
-        {renderedCurrency(values.price * values.quantity)}.
-      </Callout>
+      <FormGroup label="Work Order Summary">
+        <HTMLTable className={classNames.join(" ")}>
+          <tbody>
+            <tr>
+              <th>Item</th>
+              <td>{renderItem(values.item, values.quantity)}</td>
+            </tr>
+            <tr>
+              <th>Price</th>
+              <td>{renderCurrency(values.quantity * values.price)}</td>
+            </tr>
+          </tbody>
+        </HTMLTable>
+      </FormGroup>
     );
   }
 
