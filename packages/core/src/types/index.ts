@@ -37,3 +37,17 @@ export enum GameVersion {
   Retail = "retail",
   Classic = "classic",
 }
+
+export interface ILinksBase {
+  _links: {
+    self: IHrefReference;
+  };
+}
+
+export interface ILocaleMapping {
+  [key: string]: string;
+}
+
+export interface IHrefReference {
+  href: string;
+}

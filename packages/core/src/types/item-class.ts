@@ -1,10 +1,18 @@
-export interface ISubItemClass {
+import { IHrefReference, ILinksBase, ILocaleMapping } from "./index";
+
+export type ItemSubClassId = number;
+
+export interface IItemSubClass {
+  key: IHrefReference;
   subclass: number;
-  name: string;
+  name: ILocaleMapping;
+  id: ItemSubClassId;
 }
 
-export interface IItemClass {
-  class: number;
-  name: string;
-  subclasses: ISubItemClass[];
+export type ItemClassId = number;
+
+export interface IItemClass extends ILinksBase {
+  class_id: ItemClassId;
+  name: ILocaleMapping;
+  item_subclasses: IItemSubClass[];
 }
