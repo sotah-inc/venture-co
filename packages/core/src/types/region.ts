@@ -1,4 +1,61 @@
+import { IHrefReference, ILinksBase, ILocaleMapping, UnixTimestamp } from "./index";
+
 export type RegionName = string;
+
+export type ConnectedRealmId = number;
+
+export type RegionId = number;
+
+export type RealmId = number;
+
+export interface IRegionComposite {
+  config_region: {
+    name: RegionName;
+    hostname: string;
+    primary: boolean;
+  };
+  connected_realms: Array<{
+    connected_realm: ILinksBase & {
+      id: ConnectedRealmId;
+      has_queue: boolean;
+      status: {
+        type: string;
+        name: ILocaleMapping;
+      };
+      population: {
+        type: string;
+        name: ILocaleMapping;
+      };
+      realms: Array<
+        ILinksBase & {
+          id: RealmId;
+          region: ILinksBase & {
+            id: RegionId;
+            name: ILocaleMapping;
+          };
+          connected_realm: IHrefReference;
+          name: ILocaleMapping;
+          category: ILocaleMapping;
+          locale: string;
+          timezone: string;
+          type: {
+            type: string;
+            name: ILocaleMapping;
+          };
+          is_tournament: boolean;
+          slug: RealmSlug;
+        }
+      >;
+      mythic_leaderboards: IHrefReference;
+      auctions: IHrefReference;
+    };
+    modification_dates: {
+      downloaded: UnixTimestamp;
+      live_auctions_received: UnixTimestamp;
+      pricelist_history_received: UnixTimestamp;
+    };
+  }>;
+}
 
 export interface IRegion {
   name: RegionName;

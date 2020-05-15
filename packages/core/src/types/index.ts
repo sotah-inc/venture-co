@@ -51,3 +51,5 @@ export interface ILocaleMapping {
 export interface IHrefReference {
   href: string;
 }
+
+export type UnixTimestamp = number;
