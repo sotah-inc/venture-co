@@ -87,7 +87,7 @@ export class Messenger {
     });
   }
 
-  public validateRegionRealm(
+  public validateRegionConnectedRealm(
     req: IValidateRegionRealmRequest,
   ): Promise<Message<IValidateRegionRealmResponse>> {
     return this.request(subjects.validateRegionRealm, {

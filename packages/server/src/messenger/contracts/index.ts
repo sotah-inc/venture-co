@@ -7,8 +7,7 @@ import {
   IPriceListMap,
   IPrices,
   IProfession,
-  IRealmModificationDates,
-  IRegion,
+  IRealmModificationDates, IRegionComposite,
   ItemId,
   RealmSlug,
   RegionName,
@@ -59,7 +58,7 @@ export interface IGetItemsResponse {
 }
 
 export interface IGetBootResponse {
-  regions: IRegion[];
+  regions: IRegionComposite[];
   item_classes: {
     classes: IItemClass[];
   };
