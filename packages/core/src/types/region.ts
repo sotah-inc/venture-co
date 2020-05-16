@@ -57,12 +57,6 @@ export interface IRegionComposite {
   }>;
 }
 
-export interface IRegion {
-  name: RegionName;
-  hostname: string;
-  primary: boolean;
-}
-
 export interface IStatus {
   realms: IRealm[];
 }
