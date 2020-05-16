@@ -2,7 +2,15 @@ import { IHrefReference, ILinksBase, ILocaleMapping, UnixTimestamp } from "./ind
 
 export type RegionName = string;
 
+export interface IRegionTuple {
+  region_name: RegionName;
+}
+
 export type ConnectedRealmId = number;
+
+export interface IRegionConnectedRealmTuple extends IRegionTuple {
+  connected_realm_id: ConnectedRealmId;
+}
 
 export type RegionId = number;
 
