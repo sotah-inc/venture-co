@@ -2,7 +2,7 @@ import { IAuction } from "../auction";
 import { IPostJson, IProfessionPricelistJson } from "../entities";
 import { ExpansionName, IExpansion } from "../expansion";
 import {
-  IPricesFlagged,
+  IPricesFlagged, IRegionComposite,
   ITokenHistory,
   RealmSlug,
   RegionName,
@@ -18,13 +18,11 @@ import {
   IPriceListMap,
 } from "../pricelist";
 import { IProfession } from "../profession";
-import { IRealm, IRealmModificationDates, IRegion } from "../region";
+import { IRealm, IRealmModificationDates } from "../region";
 
 export interface IGetBootResponse {
-  regions: IRegion[];
-  item_classes: {
-    classes: IItemClass[];
-  };
+  regions: IRegionComposite[];
+  item_classes: IItemClass[];
   expansions: IExpansion[];
   professions: IProfession[];
 }
