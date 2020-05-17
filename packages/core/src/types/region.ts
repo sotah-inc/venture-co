@@ -65,10 +65,6 @@ export interface IRegionComposite {
   }>;
 }
 
-export interface IStatus {
-  realms: IRealm[];
-}
-
 export type RealmSlug = string;
 
 export enum RealmPopulation {
