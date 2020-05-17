@@ -155,14 +155,14 @@ export class Messenger {
   }
 
   public request<T>(subject: string, opts?: IRequestOptions): Promise<Message<T>> {
+    const { body, parseKind }: IDefaultRequestOptions = {
+      body: "",
+      parseKind: ParseKind.None,
+      ...opts,
+    };
+
     return new Promise<Message<T>>((resolve, reject) => {
       const tId = setTimeout(() => reject(new Error("Timed out!")), DEFAULT_TIMEOUT);
-
-      const { body, parseKind }: IDefaultRequestOptions = {
-        body: "",
-        parseKind: ParseKind.None,
-        ...opts,
-      };
 
       this.client.request(subject, body, (natsMsg: string) => {
         (async () => {
