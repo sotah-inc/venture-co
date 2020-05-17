@@ -2,7 +2,8 @@ import { IAuction } from "../auction";
 import { IPostJson, IProfessionPricelistJson } from "../entities";
 import { ExpansionName, IExpansion } from "../expansion";
 import {
-  IPricesFlagged, IRegionComposite,
+  IPricesFlagged,
+  IRegionComposite,
   ITokenHistory,
   RealmSlug,
   RegionName,
