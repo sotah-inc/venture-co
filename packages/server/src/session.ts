@@ -21,7 +21,7 @@ export const getJwtOptions = async (messenger: Messenger): Promise<IJwtOptions> 
   return {
     audience: "sotah-client",
     issuer: "sotah-api",
-    secret: msg.data!.session_secret,
+    secret: (await msg.decode())!.session_secret,
   };
 };
 

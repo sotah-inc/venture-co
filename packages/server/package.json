@@ -12,6 +12,7 @@
     "lint:watch": "chokidar --silent ./src/**/*.ts{,x} -c \"npm run -s lint\"",
     "build": "run-s clean build:ts",
     "build:ts": "tsc",
+    "build:watch": "run-p build:ts:watch lint:watch",
     "build:ts:watch": "npm run -s build:ts -- --watch",
     "prepublishOnly": "npm run -s build"
   },

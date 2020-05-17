@@ -1,7 +1,6 @@
 import { IStatus, ItemId, ITokenHistory, RegionName } from "@sotah-inc/core";
 import * as nats from "nats";
 
-import { gunzip } from "../util";
 import {
   IGetAuctionsRequest,
   IGetAuctionsResponse,
@@ -21,7 +20,7 @@ import {
   IValidateRegionRealmRequest,
   IValidateRegionRealmResponse,
 } from "./contracts";
-import { Message } from "./message";
+import { Message, ParseKind } from "./message";
 import { MessageError } from "./message-error";
 
 const DEFAULT_TIMEOUT = 5 * 1000;
@@ -60,12 +59,12 @@ export interface IMessage {
 
 interface IRequestOptions {
   body?: string;
-  parseData?: boolean;
+  parseKind?: ParseKind;
 }
 
 interface IDefaultRequestOptions {
   body: string;
-  parseData: boolean;
+  parseKind: ParseKind;
 }
 
 export class Messenger {
@@ -96,19 +95,10 @@ export class Messenger {
   }
 
   public async getAuctions(request: IGetAuctionsRequest): Promise<Message<IGetAuctionsResponse>> {
-    const message = await this.request<string>(subjects.auctions, {
+    return this.request(subjects.auctions, {
       body: JSON.stringify(request),
-      parseData: false,
+      parseKind: ParseKind.GzipJsonEncoded,
     });
-    if (message.code !== code.ok) {
-      return { code: message.code, error: message.error };
-    }
-
-    return {
-      code: code.ok,
-      data: JSON.parse((await gunzip(Buffer.from(message.rawData!, "base64"))).toString()),
-      error: null,
-    };
   }
 
   public queryItems(query: string): Promise<Message<IQueryItemsResponse>> {
@@ -118,35 +108,17 @@ export class Messenger {
   public async getPriceList(
     request: IGetPricelistRequest,
   ): Promise<Message<IGetPricelistResponse>> {
-    const message = await this.request<string>(subjects.priceList, {
+    return this.request(subjects.priceList, {
       body: JSON.stringify(request),
-      parseData: false,
+      parseKind: ParseKind.GzipJsonEncoded,
     });
-    if (message.code !== code.ok) {
-      return { code: message.code, error: message.error };
-    }
-
-    return {
-      code: code.ok,
-      data: JSON.parse((await gunzip(Buffer.from(message.rawData!, "base64"))).toString()),
-      error: null,
-    };
   }
 
   public async getItems(itemIds: ItemId[]): Promise<Message<IGetItemsResponse>> {
-    const message = await this.request<string>(subjects.items, {
+    return this.request(subjects.items, {
       body: JSON.stringify({ itemIds }),
-      parseData: false,
+      parseKind: ParseKind.GzipJsonEncoded,
     });
-    if (message.code !== code.ok) {
-      return { code: message.code, error: message.error };
-    }
-
-    return {
-      code: code.ok,
-      data: JSON.parse((await gunzip(Buffer.from(message.rawData!, "base64"))).toString()),
-      error: null,
-    };
   }
 
   public getBoot(): Promise<Message<IGetBootResponse>> {
@@ -160,19 +132,10 @@ export class Messenger {
   public async getPricelistHistories(
     req: IGetPricelistHistoriesRequest,
   ): Promise<Message<IGetPricelistHistoriesResponse>> {
-    const message = await this.request<string>(subjects.priceListHistory, {
+    return this.request(subjects.priceListHistory, {
       body: JSON.stringify(req),
-      parseData: false,
+      parseKind: ParseKind.GzipJsonEncoded,
     });
-    if (message.code !== code.ok) {
-      return { code: message.code, error: message.error };
-    }
-
-    return {
-      code: code.ok,
-      data: JSON.parse((await gunzip(Buffer.from(message.rawData!, "base64"))).toString()),
-      error: null,
-    };
   }
 
   public getSessionSecret(): Promise<Message<IGetSessionSecretResponse>> {
@@ -195,24 +158,17 @@ export class Messenger {
     return new Promise<Message<T>>((resolve, reject) => {
       const tId = setTimeout(() => reject(new Error("Timed out!")), DEFAULT_TIMEOUT);
 
-      const defaultOptions: IDefaultRequestOptions = {
+      const { body, parseKind }: IDefaultRequestOptions = {
         body: "",
-        parseData: true,
+        parseKind: ParseKind.None,
+        ...opts,
       };
-      let settings = defaultOptions;
-      if (opts) {
-        settings = {
-          ...settings,
-          ...opts,
-        };
-      }
-      const { body, parseData } = settings;
 
       this.client.request(subject, body, (natsMsg: string) => {
         (async () => {
           clearTimeout(tId);
           const parsedMsg: IMessage = JSON.parse(natsMsg.toString());
-          const msg = new Message<T>(parsedMsg, parseData);
+          const msg = new Message<T>(parsedMsg, parseKind);
           if (msg.error !== null && msg.code === code.genericError) {
             const reason: MessageError = {
               code: msg.code,

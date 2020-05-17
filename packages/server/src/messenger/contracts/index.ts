@@ -7,7 +7,8 @@ import {
   IPriceListMap,
   IPrices,
   IProfession,
-  IRealmModificationDates, IRegionComposite,
+  IRealmModificationDates,
+  IRegionComposite,
   ItemId,
   RealmSlug,
   RegionName,
@@ -46,11 +47,11 @@ export interface IGetSessionSecretResponse {
 }
 
 export interface IQueryItemsResponse {
-  items: Array<{
+  items: {
     item_id: ItemId;
     target: string;
     rank: number;
-  }>;
+  }[];
 }
 
 export interface IGetItemsResponse {
