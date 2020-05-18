@@ -47,11 +47,11 @@ export interface IGetSessionSecretResponse {
 }
 
 export interface IQueryItemsResponse {
-  items: {
+  items: Array<{
     item_id: ItemId;
     target: string;
     rank: number;
-  }[];
+  }>;
 }
 
 export interface IGetItemsResponse {

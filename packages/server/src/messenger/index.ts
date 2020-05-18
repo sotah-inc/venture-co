@@ -1,4 +1,4 @@
-import { IStatus, ItemId, ITokenHistory, RegionName } from "@sotah-inc/core";
+import { IRegionComposite, ItemId, ITokenHistory, RegionName } from "@sotah-inc/core";
 import * as nats from "nats";
 
 import {
@@ -80,7 +80,7 @@ export class Messenger {
     });
   }
 
-  public getStatus(regionNameValue: RegionName): Promise<Message<IStatus>> {
+  public getStatus(regionNameValue: RegionName): Promise<Message<IRegionComposite>> {
     return this.request(subjects.status, {
       body: JSON.stringify({ region_name: regionNameValue }),
     });
