@@ -9,6 +9,7 @@ import {
   IProfession,
   IRealmModificationDates,
   IRegionComposite,
+  IRegionConnectedRealmTuple,
   ItemId,
   RealmSlug,
   RegionName,
@@ -17,8 +18,7 @@ import {
 } from "@sotah-inc/core";
 
 export interface IGetAuctionsRequest {
-  region_name: RegionName;
-  realm_slug: RealmSlug;
+  tuple: IRegionConnectedRealmTuple;
   page: number;
   count: number;
   sort_kind: SortKind;
