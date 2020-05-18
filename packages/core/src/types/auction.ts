@@ -6,13 +6,13 @@ export interface IAuctionRealm {
   slug: RealmSlug;
 }
 
+export type AuctionId = number;
+
 export interface IAuction {
   itemId: ItemId;
-  ownerRealm: string;
-  bid: number;
   buyout: number;
   buyoutPer: number;
   quantity: number;
   timeLeft: string;
-  aucList: number[];
+  aucList: AuctionId[];
 }
