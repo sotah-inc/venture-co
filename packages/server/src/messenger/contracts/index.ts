@@ -11,6 +11,7 @@ import {
   IRegionComposite,
   IRegionConnectedRealmTuple,
   ItemId,
+  Locale,
   RealmSlug,
   RegionName,
   SortDirection,
@@ -44,6 +45,11 @@ export interface IGetPricelistResponse {
 
 export interface IGetSessionSecretResponse {
   session_secret: string;
+}
+
+export interface IQueryItemsRequest {
+  query: string;
+  locale: Locale;
 }
 
 export interface IQueryItemsResponse {

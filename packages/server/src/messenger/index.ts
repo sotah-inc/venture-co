@@ -1,4 +1,10 @@
-import { IRegionComposite, ItemId, ITokenHistory, RegionName } from "@sotah-inc/core";
+import {
+  IQueryItemsRequest,
+  IRegionComposite,
+  ItemId,
+  ITokenHistory,
+  RegionName,
+} from "@sotah-inc/core";
 import * as nats from "nats";
 
 import {
@@ -101,8 +107,8 @@ export class Messenger {
     });
   }
 
-  public queryItems(query: string): Promise<Message<IQueryItemsResponse>> {
-    return this.request(subjects.itemsQuery, { body: JSON.stringify({ query }) });
+  public queryItems(request: IQueryItemsRequest): Promise<Message<IQueryItemsResponse>> {
+    return this.request(subjects.itemsQuery, { body: JSON.stringify(request) });
   }
 
   public async getPriceList(
