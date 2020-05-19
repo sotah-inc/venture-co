@@ -53,3 +53,18 @@ export interface IHrefReference {
 }
 
 export type UnixTimestamp = number;
+
+export enum Locale {
+  EnUS = "en_US",
+  EsMX = "es_MX",
+  PtBR = "pt_BR",
+  DeDE = "de_DE",
+  EnGB = "en_GB",
+  EsES = "es_ES",
+  FrFR = "fr_FR",
+  ItIT = "it_IT",
+  RuRU = "ru_RU",
+  KoKR = "ko_KR",
+  ZhTW = "zh_TW",
+  ZhCN = "zh_CN",
+}
