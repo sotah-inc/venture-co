@@ -34,8 +34,7 @@ export interface IGetAuctionsResponse {
 }
 
 export interface IGetPricelistRequest {
-  region_name: RegionName;
-  realm_slug: RealmSlug;
+  tuple: IRegionConnectedRealmTuple;
   item_ids: ItemId[];
 }
 
