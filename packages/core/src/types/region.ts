@@ -1,4 +1,4 @@
-import { IHrefReference, ILinksBase, ILocaleMapping, UnixTimestamp } from "./index";
+import { IHrefReference, ILinksBase, LocaleMapping, UnixTimestamp } from "./index";
 
 export type RegionName = string;
 
@@ -28,27 +28,27 @@ export interface IRegionComposite {
       has_queue: boolean;
       status: {
         type: string;
-        name: ILocaleMapping;
+        name: LocaleMapping;
       };
       population: {
         type: string;
-        name: ILocaleMapping;
+        name: LocaleMapping;
       };
       realms: Array<
         ILinksBase & {
           id: RealmId;
           region: ILinksBase & {
             id: RegionId;
-            name: ILocaleMapping;
+            name: LocaleMapping;
           };
           connected_realm: IHrefReference;
-          name: ILocaleMapping;
-          category: ILocaleMapping;
+          name: LocaleMapping;
+          category: LocaleMapping;
           locale: string;
           timezone: string;
           type: {
             type: string;
-            name: ILocaleMapping;
+            name: LocaleMapping;
           };
           is_tournament: boolean;
           slug: RealmSlug;

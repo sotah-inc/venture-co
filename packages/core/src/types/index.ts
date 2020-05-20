@@ -44,9 +44,9 @@ export interface ILinksBase {
   };
 }
 
-export interface ILocaleMapping {
-  [key: string]: string;
-}
+export type LocaleMapping = {
+  [key in Locale]: string | undefined;
+};
 
 export interface IHrefReference {
   href: string;
@@ -67,4 +67,13 @@ export enum Locale {
   KoKR = "ko_KR",
   ZhTW = "zh_TW",
   ZhCN = "zh_CN",
+}
+
+export interface ITypeNameTuple {
+  type: string;
+  name: LocaleMapping;
+}
+
+export interface IKeyHrefReference {
+  key: IHrefReference;
 }

@@ -1,3 +1,13 @@
+import {
+  IKeyHrefReference,
+  ILinksBase,
+  ItemClassId,
+  ItemSubClassId,
+  ITypeNameTuple,
+  LocaleMapping,
+  UnixTimestamp,
+} from "./index";
+
 export type ItemId = number;
 
 export enum ItemQuality {
@@ -63,23 +73,11 @@ export enum ItemClassClasses {
   Key = 13,
   Misc = 15,
   Glyph = 16,
-  Battlepet = 17,
+  BattlePet = 17,
   WowToken = 18,
 }
 
-type ItemClassClass = number;
-
-type SubItemClassClass = number;
-
-type ItemSpellId = number;
-
-interface IItemSpellSpell {
-  id: ItemSpellId;
-  name: string;
-  icon: string;
-  description: string;
-  castTime: string;
-}
+export type ItemSpellId = number;
 
 export enum ItemSpellTrigger {
   OnProc = "ON_PROC",
@@ -91,25 +89,11 @@ export enum ItemSpellTrigger {
 }
 
 interface IItemSpell {
-  spellId: ItemSpellId;
-  nCharges: number;
-  consumable: boolean;
-  categoryId: number;
-  trigger: ItemSpellTrigger;
-  spell: IItemSpellSpell;
-}
-
-interface IItemWeaponDamage {
-  min: number;
-  max: number;
-  exactMin: number;
-  exactMax: number;
-}
-
-interface IItemWeaponInfo {
-  damage: IItemWeaponDamage;
-  weaponSpeed: number;
-  dps: number;
+  spell: IKeyHrefReference & {
+    name: LocaleMapping;
+    id: ItemSpellId;
+  };
+  description: LocaleMapping;
 }
 
 export enum ItemStat {
@@ -140,29 +124,82 @@ export interface IItemBonusStat {
   amount: number;
 }
 
+export interface IItemQuality {
+  type: string;
+  name: LocaleMapping;
+}
+
+export interface IPreviewItem {
+  item: IKeyHrefReference & {
+    id: ItemId;
+  };
+  quality: IItemQuality;
+  name: LocaleMapping;
+  item_class: IKeyHrefReference & {
+    name: LocaleMapping;
+    id: ItemClassId;
+  };
+  item_subclass: IKeyHrefReference & {
+    name: LocaleMapping;
+    id: ItemSubClassId;
+  };
+  inventory_type: ITypeNameTuple;
+  binding: ITypeNameTuple;
+  spells: IItemSpell[];
+  sell_price: {
+    value: number;
+    header: LocaleMapping;
+    gold: LocaleMapping;
+    silver: LocaleMapping;
+    copper: LocaleMapping;
+  };
+  is_subclass_hidden: boolean;
+  name_description: {
+    display_string: LocaleMapping;
+    color: {
+      r: string;
+      g: string;
+      b: string;
+      a: number;
+    };
+  };
+}
+
 export interface IItem {
-  id: ItemId;
-  name: string;
-  normalized_name: string;
-  quality: ItemQuality;
-  icon: string;
-  itemLevel: number;
-  itemClass: ItemClassClass;
-  itemSubClass: SubItemClassClass;
-  inventoryType: InventoryType;
-  itemBind: ItemBind;
-  requiredLevel: number;
-  armor: number;
-  maxDurability: number;
-  sellPrice: number;
-  itemSpells: IItemSpell[] | null;
-  equippable: boolean;
-  stackable: number;
-  weaponInfo: IItemWeaponInfo;
-  bonusStats: IItemBonusStat[];
-  description: string;
-  icon_url: string;
-  icon_object_name: string;
+  blizzard_meta: ILinksBase & {
+    id: ItemId;
+    name: LocaleMapping;
+    quality: IItemQuality;
+    level: number;
+    required_level: number;
+    media: IKeyHrefReference & {
+      id: ItemId;
+    };
+    item_class: IKeyHrefReference & {
+      name: LocaleMapping;
+      id: ItemClassId;
+    };
+    item_subclass: IKeyHrefReference & {
+      name: LocaleMapping;
+      id: ItemSubClassId;
+    };
+    inventory_type: ITypeNameTuple;
+    purchase_price: number;
+    sell_price: number;
+    max_count: number;
+    is_equippable: boolean;
+    is_stackable: boolean;
+    preview_item: IPreviewItem;
+  };
+  sotah_meta: {
+    last_modified: UnixTimestamp;
+    normalized_name: LocaleMapping;
+    item_icon_meta: {
+      icon_url: string;
+      icon_object_name: string;
+      icon: string;
+    };
+  };
 }
 
 export interface IItemsMap {

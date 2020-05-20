@@ -1,11 +1,11 @@
-import { IHrefReference, ILinksBase, ILocaleMapping } from "./index";
+import { IHrefReference, ILinksBase, LocaleMapping } from "./index";
 
 export type ItemSubClassId = number;
 
 export interface IItemSubClass {
   key: IHrefReference;
   subclass: number;
-  name: ILocaleMapping;
+  name: LocaleMapping;
   id: ItemSubClassId;
 }
 
@@ -13,6 +13,6 @@ export type ItemClassId = number;
 
 export interface IItemClass extends ILinksBase {
   class_id: ItemClassId;
-  name: ILocaleMapping;
+  name: LocaleMapping;
   item_subclasses: IItemSubClass[];
 }
