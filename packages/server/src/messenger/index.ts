@@ -41,12 +41,13 @@ export enum subjects {
   queryRealmModificationDates = "queryRealmModificationDates",
   connectedRealmModificationDates = "connectedRealmModificationDates",
 
+  boot = "boot",
+  sessionSecret = "sessionSecret",
+
   auctions = "auctions",
   auctionsQuery = "auctionsQuery",
   priceList = "priceList",
   priceListHistory = "priceListHistory",
-  boot = "boot",
-  sessionSecret = "sessionSecret",
   queryAuctionStats = "queryAuctionStats",
 }
 
@@ -125,6 +126,15 @@ export class Messenger {
     return this.request(subjects.connectedRealmModificationDates);
   }
 
+  // via boot
+  public getBoot(): Promise<Message<IGetBootResponse>> {
+    return this.request(subjects.boot);
+  }
+
+  public getSessionSecret(): Promise<Message<IGetSessionSecretResponse>> {
+    return this.request(subjects.sessionSecret);
+  }
+
   // old
   public async getAuctions(request: IGetAuctionsRequest): Promise<Message<IGetAuctionsResponse>> {
     return this.request(subjects.auctions, {
@@ -142,10 +152,6 @@ export class Messenger {
     });
   }
 
-  public getBoot(): Promise<Message<IGetBootResponse>> {
-    return this.request(subjects.boot);
-  }
-
   public async getPricelistHistories(
     req: IGetPricelistHistoriesRequest,
   ): Promise<Message<IGetPricelistHistoriesResponse>> {
@@ -153,10 +159,6 @@ export class Messenger {
       body: JSON.stringify(req),
       parseKind: ParseKind.GzipJsonEncoded,
     });
-  }
-
-  public getSessionSecret(): Promise<Message<IGetSessionSecretResponse>> {
-    return this.request(subjects.sessionSecret);
   }
 
   public queryAuctionStats(
