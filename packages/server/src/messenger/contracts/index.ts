@@ -81,7 +81,7 @@ export interface IGetPricelistHistoriesRequest {
 }
 
 export interface IItemPricelistHistoryMap {
-  [itemId: number]: IPricelistHistoryMap<IPrices>;
+  [itemId: number]: IPricelistHistoryMap<IPrices> | undefined;
 }
 
 export interface IGetPricelistHistoriesResponse {
@@ -108,7 +108,7 @@ export interface IQueryAuctionStatsItem {
 }
 
 export interface IQueryAuctionStatsResponse {
-  [key: number]: IQueryAuctionStatsItem;
+  [key: number]: IQueryAuctionStatsItem | undefined;
 }
 
 export interface IValidateRegionConnectedRealmResponse {
