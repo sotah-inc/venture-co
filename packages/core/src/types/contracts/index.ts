@@ -8,5 +8,5 @@ export interface IErrorResponse {
 }
 
 export interface IValidationErrorResponse {
-  [path: string]: string;
+  [path: string]: string | undefined;
 }
