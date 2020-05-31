@@ -1,6 +1,8 @@
 import {
   IQueryItemsRequest,
+  IRealmModificationDates,
   IRegionComposite,
+  IRegionConnectedRealmTuple,
   ItemId,
   ITokenHistory,
   RegionName,
@@ -20,11 +22,8 @@ import {
   IQueryAuctionStatsRequest,
   IQueryAuctionStatsResponse,
   IQueryItemsResponse,
-  IQueryRealmModificationDatesRequest,
-  IQueryRealmModificationDatesResponse,
   IRealmModificationDatesResponse,
-  IValidateRegionRealmRequest,
-  IValidateRegionRealmResponse,
+  IValidateRegionConnectedRealmResponse,
 } from "./contracts";
 import { Message, ParseKind } from "./message";
 import { MessageError } from "./message-error";
@@ -32,21 +31,23 @@ import { MessageError } from "./message-error";
 const DEFAULT_TIMEOUT = 5 * 1000;
 
 export enum subjects {
-  status = "status",
-  genericTestErrors = "genericTestErrors",
-  auctions = "auctions",
+  items = "items",
   itemsQuery = "itemsQuery",
+
+  tokenHistory = "tokenHistory",
+
+  status = "status",
+  validateRegionConnectedRealm = "validateRegionConnectedRealm",
+  queryRealmModificationDates = "queryRealmModificationDates",
+  connectedRealmModificationDates = "connectedRealmModificationDates",
+
+  auctions = "auctions",
   auctionsQuery = "auctionsQuery",
   priceList = "priceList",
   priceListHistory = "priceListHistory",
-  items = "items",
   boot = "boot",
   sessionSecret = "sessionSecret",
-  queryRealmModificationDates = "queryRealmModificationDates",
-  realmModificationDates = "realmModificationDates",
-  tokenHistory = "tokenHistory",
   queryAuctionStats = "queryAuctionStats",
-  validateRegionRealm = "validateRegionRealm",
 }
 
 export enum code {
@@ -80,12 +81,26 @@ export class Messenger {
     this.client = client;
   }
 
+  // via items
+  public async getItems(itemIds: ItemId[]): Promise<Message<IGetItemsResponse>> {
+    return this.request(subjects.items, {
+      body: JSON.stringify({ itemIds }),
+      parseKind: ParseKind.GzipJsonEncoded,
+    });
+  }
+
+  public queryItems(request: IQueryItemsRequest): Promise<Message<IQueryItemsResponse>> {
+    return this.request(subjects.itemsQuery, { body: JSON.stringify(request) });
+  }
+
+  // via token-histories
   public getTokenHistory(regionName: RegionName): Promise<Message<ITokenHistory>> {
     return this.request(subjects.tokenHistory, {
       body: JSON.stringify({ region_name: regionName }),
     });
   }
 
+  // via regions
   public getStatus(regionNameValue: RegionName): Promise<Message<IRegionComposite>> {
     return this.request(subjects.status, {
       body: JSON.stringify({ region_name: regionNameValue }),
@@ -93,22 +108,29 @@ export class Messenger {
   }
 
   public validateRegionConnectedRealm(
-    req: IValidateRegionRealmRequest,
-  ): Promise<Message<IValidateRegionRealmResponse>> {
-    return this.request(subjects.validateRegionRealm, {
-      body: JSON.stringify(req),
+    tuple: IRegionConnectedRealmTuple,
+  ): Promise<Message<IValidateRegionConnectedRealmResponse>> {
+    return this.request(subjects.validateRegionConnectedRealm, {
+      body: JSON.stringify(tuple),
     });
   }
 
+  public queryRealmModificationDates(
+    tuple: IRegionConnectedRealmTuple,
+  ): Promise<Message<IRealmModificationDates>> {
+    return this.request(subjects.queryRealmModificationDates, { body: JSON.stringify(tuple) });
+  }
+
+  public getConnectedRealmModificationDates(): Promise<Message<IRealmModificationDatesResponse>> {
+    return this.request(subjects.connectedRealmModificationDates);
+  }
+
+  // old
   public async getAuctions(request: IGetAuctionsRequest): Promise<Message<IGetAuctionsResponse>> {
     return this.request(subjects.auctions, {
       body: JSON.stringify(request),
       parseKind: ParseKind.GzipJsonEncoded,
     });
-  }
-
-  public queryItems(request: IQueryItemsRequest): Promise<Message<IQueryItemsResponse>> {
-    return this.request(subjects.itemsQuery, { body: JSON.stringify(request) });
   }
 
   public async getPriceList(
@@ -120,19 +142,8 @@ export class Messenger {
     });
   }
 
-  public async getItems(itemIds: ItemId[]): Promise<Message<IGetItemsResponse>> {
-    return this.request(subjects.items, {
-      body: JSON.stringify({ itemIds }),
-      parseKind: ParseKind.GzipJsonEncoded,
-    });
-  }
-
   public getBoot(): Promise<Message<IGetBootResponse>> {
     return this.request(subjects.boot);
-  }
-
-  public getRealmModificationDates(): Promise<Message<IRealmModificationDatesResponse | null>> {
-    return this.request(subjects.realmModificationDates);
   }
 
   public async getPricelistHistories(
@@ -148,19 +159,13 @@ export class Messenger {
     return this.request(subjects.sessionSecret);
   }
 
-  public queryRealmModificationDates(
-    req: IQueryRealmModificationDatesRequest,
-  ): Promise<Message<IQueryRealmModificationDatesResponse>> {
-    return this.request(subjects.queryRealmModificationDates, { body: JSON.stringify(req) });
-  }
-
   public queryAuctionStats(
     req: IQueryAuctionStatsRequest,
   ): Promise<Message<IQueryAuctionStatsResponse>> {
     return this.request(subjects.queryAuctionStats, { body: JSON.stringify(req) });
   }
 
-  public request<T>(subject: string, opts?: IRequestOptions): Promise<Message<T>> {
+  private request<T>(subject: string, opts?: IRequestOptions): Promise<Message<T>> {
     const { body, parseKind }: IDefaultRequestOptions = {
       body: "",
       parseKind: ParseKind.None,

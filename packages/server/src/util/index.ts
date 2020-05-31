@@ -25,14 +25,17 @@ export const getLatestRealmModifiedDate = (
   regionName: RegionName,
   res: IRealmModificationDatesResponse,
 ): Date | null => {
-  if (!(regionName in res)) {
+  const realmModDates = res[regionName];
+  if (typeof realmModDates === "undefined") {
     return null;
   }
 
-  const realmModDates = res[regionName];
-
   const latestDownloaded = Object.values(realmModDates).reduce<number | null>(
     (result, modDates) => {
+      if (typeof modDates === "undefined") {
+        return null;
+      }
+
       if (result === null || modDates.downloaded > result) {
         return modDates.downloaded;
       }

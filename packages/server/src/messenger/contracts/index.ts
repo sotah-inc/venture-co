@@ -88,17 +88,12 @@ export interface IGetPricelistHistoriesResponse {
   history: IItemPricelistHistoryMap;
 }
 
-export interface IQueryRealmModificationDatesRequest {
-  region_name: RegionName;
-  realm_slug: RealmSlug;
-}
-
-export type IQueryRealmModificationDatesResponse = IRealmModificationDates;
-
 export interface IRealmModificationDatesResponse {
-  [regionName: string]: {
-    [realmSlug: string]: IRealmModificationDates;
-  };
+  [regionName: string]:
+    | undefined
+    | {
+        [connectedRealmId: number]: IRealmModificationDates | undefined;
+      };
 }
 
 export interface IQueryAuctionStatsRequest {
@@ -116,11 +111,6 @@ export interface IQueryAuctionStatsResponse {
   [key: number]: IQueryAuctionStatsItem;
 }
 
-export interface IValidateRegionRealmRequest {
-  region_name: string;
-  realm_slug: string;
-}
-
-export interface IValidateRegionRealmResponse {
+export interface IValidateRegionConnectedRealmResponse {
   is_valid: boolean;
 }
