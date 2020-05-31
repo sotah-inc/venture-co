@@ -1,3 +1,3 @@
 export interface ITokenHistory {
-  [unixTimestamp: number]: number;
+  [unixTimestamp: number]: number | undefined;
 }

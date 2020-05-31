@@ -15,11 +15,11 @@ export interface IPriceListMap {
 }
 
 export interface IItemPricelistHistoryMap<T extends IPrices> {
-  [itemId: number]: IPricelistHistoryMap<T>;
+  [itemId: number]: IPricelistHistoryMap<T> | undefined;
 }
 
 export interface IPricelistHistoryMap<T extends IPrices> {
-  [unixTimestamp: number]: T;
+  [unixTimestamp: number]: T | undefined;
 }
 
 export interface IPriceLimits {
@@ -28,11 +28,11 @@ export interface IPriceLimits {
 }
 
 export interface IItemPriceLimits {
-  [itemId: number]: IPriceLimits;
+  [itemId: number]: IPriceLimits | undefined;
 }
 
 export interface IItemMarketPrices {
-  [itemId: number]: number;
+  [itemId: number]: number | undefined;
 }
 
 export interface IBollingerBands {
