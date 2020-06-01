@@ -12,10 +12,9 @@ import {
   IRegionConnectedRealmTuple,
   ItemId,
   Locale,
-  RealmSlug,
-  RegionName,
   SortDirection,
   SortKind,
+  UnixTimestamp,
 } from "@sotah-inc/core";
 
 export interface IGetAuctionsRequest {
@@ -73,11 +72,10 @@ export interface IGetBootResponse {
 }
 
 export interface IGetPricelistHistoriesRequest {
-  region_name: RegionName;
-  realm_slug: RealmSlug;
+  tuple: IRegionConnectedRealmTuple;
   item_ids: ItemId[];
-  lower_bounds: number;
-  upper_bounds: number;
+  lower_bounds: UnixTimestamp;
+  upper_bounds: UnixTimestamp;
 }
 
 export interface IItemPricelistHistoryMap {
