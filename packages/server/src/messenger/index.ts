@@ -137,12 +137,18 @@ export class Messenger {
     return this.request(subjects.sessionSecret);
   }
 
-  // old
+  // via live-auctions
   public async getAuctions(request: IGetAuctionsRequest): Promise<Message<IGetAuctionsResponse>> {
     return this.request(subjects.auctions, {
       body: JSON.stringify(request),
       parseKind: ParseKind.GzipJsonEncoded,
     });
+  }
+
+  public queryAuctionStats(
+    req: IQueryAuctionStatsRequest,
+  ): Promise<Message<IQueryAuctionStatsResponse>> {
+    return this.request(subjects.queryAuctionStats, { body: JSON.stringify(req) });
   }
 
   public async getPriceList(
@@ -154,6 +160,7 @@ export class Messenger {
     });
   }
 
+  // via pricelist-histories
   public async getPricelistHistories(
     req: IGetPricelistHistoriesRequest,
   ): Promise<Message<IGetPricelistHistoriesResponse>> {
@@ -163,12 +170,7 @@ export class Messenger {
     });
   }
 
-  public queryAuctionStats(
-    req: IQueryAuctionStatsRequest,
-  ): Promise<Message<IQueryAuctionStatsResponse>> {
-    return this.request(subjects.queryAuctionStats, { body: JSON.stringify(req) });
-  }
-
+  // etc
   private request<T>(subject: string, opts?: IRequestOptions): Promise<Message<T>> {
     const { body, parseKind }: IDefaultRequestOptions = {
       body: "",
