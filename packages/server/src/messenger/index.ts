@@ -19,7 +19,6 @@ import {
   IGetPricelistRequest,
   IGetPricelistResponse,
   IGetSessionSecretResponse,
-  IQueryAuctionStatsRequest,
   IQueryAuctionStatsResponse,
   IQueryItemsResponse,
   IRealmModificationDatesResponse,
@@ -49,8 +48,6 @@ export enum subjects {
   priceList = "priceList",
 
   priceListHistory = "priceListHistory",
-
-  auctionsQuery = "auctionsQuery",
 }
 
 export enum code {
@@ -146,9 +143,9 @@ export class Messenger {
   }
 
   public queryAuctionStats(
-    req: IQueryAuctionStatsRequest,
+    tuple: Partial<IRegionConnectedRealmTuple>,
   ): Promise<Message<IQueryAuctionStatsResponse>> {
-    return this.request(subjects.queryAuctionStats, { body: JSON.stringify(req) });
+    return this.request(subjects.queryAuctionStats, { body: JSON.stringify(tuple) });
   }
 
   public async getPriceList(

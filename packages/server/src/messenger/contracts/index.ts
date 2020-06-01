@@ -96,11 +96,6 @@ export interface IRealmModificationDatesResponse {
       };
 }
 
-export interface IQueryAuctionStatsRequest {
-  region_name?: RegionName;
-  realm_slug?: RealmSlug;
-}
-
 export interface IQueryAuctionStatsItem {
   total_auctions: number;
   total_quantity: number;
