@@ -45,10 +45,12 @@ export enum subjects {
   sessionSecret = "sessionSecret",
 
   auctions = "auctions",
-  auctionsQuery = "auctionsQuery",
-  priceList = "priceList",
-  priceListHistory = "priceListHistory",
   queryAuctionStats = "queryAuctionStats",
+  priceList = "priceList",
+
+  priceListHistory = "priceListHistory",
+
+  auctionsQuery = "auctionsQuery",
 }
 
 export enum code {
