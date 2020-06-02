@@ -12,6 +12,10 @@ export interface IRegionConnectedRealmTuple extends IRegionTuple {
   connected_realm_id: ConnectedRealmId;
 }
 
+export interface IRegionRealmTuple extends IRegionTuple {
+  realm_slug: RealmSlug;
+}
+
 export type RegionId = number;
 
 export type RealmId = number;
