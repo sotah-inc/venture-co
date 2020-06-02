@@ -27,13 +27,13 @@ test("Status Should return status information", async t => {
     throw new Error("Timed out!");
   }, 5 * 1000);
 
-  const { regions } = (await messenger.getBoot()).data!;
+  const { regions } = (await (await messenger.getBoot()).decode())!;
   t.true(regions.length > 0);
 
   // tslint:disable-next-line:no-console
-  console.log(`/region/${regions[0].name}/realms`);
+  console.log(`/region/${regions[0].config_region.name}/realms`);
 
-  const res = await request.get(`/region/${regions[0].name}/realms`);
+  const res = await request.get(`/region/${regions[0].config_region.name}/connected-realms`);
   clearTimeout(tId);
 
   t.is(res.status, HttpStatus.OK, "Http status is OK");
@@ -46,15 +46,21 @@ test("Status Should return auction information", async t => {
     throw new Error("Timed out!");
   }, 5 * 1000);
 
-  const { regions } = (await messenger.getBoot()).data!;
+  const { regions } = (await (await messenger.getBoot()).decode())!;
   const [region] = regions;
-  const [realm] = (await messenger.getStatus(region.name)).data!.realms;
-  const res = await request.get(`/region/${region.name}/realm/${realm.slug}/auctions`).send({
-    count: 10,
-    page: 0,
-    sortDirection: SortDirection.none,
-    sortKind: SortKind.none,
-  });
+  const [connectedRealm] = (await (
+    await messenger.getStatus({ region_name: region.config_region.name })
+  ).decode())!.connected_realms;
+  const res = await request
+    .get(
+      `/region/${region.config_region.name}/connected-realm/${connectedRealm.connected_realm.id}/auctions`,
+    )
+    .send({
+      count: 10,
+      page: 0,
+      sortDirection: SortDirection.none,
+      sortKind: SortKind.none,
+    });
   clearTimeout(tId);
 
   t.is(res.status, HttpStatus.OK, "Http status is OK");
@@ -67,7 +73,7 @@ test("Status Should return return 404 on invalid region name in auctions", async
     throw new Error("Timed out!");
   }, 5 * 1000);
 
-  const res = await request.post("/region/fdsfgs/realm/fdsfgs/auctions");
+  const res = await request.post("/region/fdsfgs/connected-realm/fdsfgs/auctions");
   clearTimeout(tId);
 
   t.is(res.status, HttpStatus.NOT_FOUND, "Http status is NOT_FOUND");
@@ -80,11 +86,15 @@ test("Status Should return 400 on invalid count", async t => {
     throw new Error("Timed out!");
   }, 5 * 1000);
 
-  const { regions } = (await messenger.getBoot()).data!;
+  const { regions } = (await (await messenger.getBoot()).decode())!;
   const [region] = regions;
-  const [realm] = (await messenger.getStatus(region.name)).data!.realms;
+  const [connectedRealm] = (await (
+    await messenger.getStatus({ region_name: region.config_region.name })
+  ).decode())!.connected_realms;
   const res = await request
-    .post(`/region/${region.name}/realm/${realm.slug}/auctions`)
+    .post(
+      `/region/${region.config_region.name}/connected-realm/${connectedRealm.connected_realm.id}/auctions`,
+    )
     .send({ count: 0 });
   clearTimeout(tId);
 
@@ -99,7 +109,7 @@ test("Status Should return 404 on invalid region name", async t => {
     throw new Error("Timed out!");
   }, 5 * 1000);
 
-  const res = await request.get("/region/fdsfgs/realms");
+  const res = await request.get("/region/fdsfgs/connected-realms");
   clearTimeout(tId);
 
   t.is(res.status, HttpStatus.NOT_FOUND, "Http status is NOT_FOUND");

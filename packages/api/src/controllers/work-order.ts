@@ -160,7 +160,7 @@ export class WorkOrderController {
 
     if (!Object.values(GameVersion).includes(gameVersion as GameVersion)) {
       const validationErrors: IValidationErrorResponse = {
-        error: "Could not validate game-version",
+        error: "could not validate game-version",
       };
 
       return {
@@ -175,7 +175,7 @@ export class WorkOrderController {
     });
     if (validateMsg.code !== code.ok) {
       const validationErrors: IValidationErrorResponse = {
-        error: "Could not validate region-name and realm-slug",
+        error: "could not validate region-name and realm-slug",
       };
 
       return {
