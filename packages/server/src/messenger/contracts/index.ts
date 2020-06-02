@@ -107,3 +107,5 @@ export interface IQueryAuctionStatsResponse {
 export interface IValidateRegionConnectedRealmResponse {
   is_valid: boolean;
 }
+
+export type ValidateRegionRealmResponse = IValidateRegionConnectedRealmResponse;
