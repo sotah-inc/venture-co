@@ -1,5 +1,4 @@
 import {
-  IQueryItemsRequest,
   IRealmModificationDates,
   IRegionComposite,
   IRegionConnectedRealmTuple,
@@ -20,6 +19,7 @@ import {
   IGetPricelistResponse,
   IGetSessionSecretResponse,
   IQueryAuctionStatsResponse,
+  IQueryItemsRequest,
   IQueryItemsResponse,
   IRealmModificationDatesResponse,
   IValidateRegionConnectedRealmResponse,
