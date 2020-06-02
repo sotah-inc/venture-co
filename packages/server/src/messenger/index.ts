@@ -2,9 +2,9 @@ import {
   IRealmModificationDates,
   IRegionComposite,
   IRegionConnectedRealmTuple,
+  IRegionTuple,
   ItemId,
   ITokenHistory,
-  RegionName,
 } from "@sotah-inc/core";
 import * as nats from "nats";
 
@@ -94,16 +94,16 @@ export class Messenger {
   }
 
   // via token-histories
-  public getTokenHistory(regionName: RegionName): Promise<Message<ITokenHistory>> {
+  public getTokenHistory(tuple: IRegionTuple): Promise<Message<ITokenHistory>> {
     return this.request(subjects.tokenHistory, {
-      body: JSON.stringify({ region_name: regionName }),
+      body: JSON.stringify(tuple),
     });
   }
 
   // via regions
-  public getStatus(regionNameValue: RegionName): Promise<Message<IRegionComposite>> {
+  public getStatus(tuple: IRegionTuple): Promise<Message<IRegionComposite>> {
     return this.request(subjects.status, {
-      body: JSON.stringify({ region_name: regionNameValue }),
+      body: JSON.stringify(tuple),
     });
   }
 
