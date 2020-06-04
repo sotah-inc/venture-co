@@ -62,10 +62,7 @@ export const ProfessionPricelistRequestBodyRules = yup
 export const UserRequestBodyRules = yup
   .object()
   .shape({
-    email: yup
-      .string()
-      .email("Email must be a valid email")
-      .required("Email is required"),
+    email: yup.string().email("Email must be a valid email").required("Email is required"),
     password: yup
       .string()
       .min(6, "Password must be at least 6 characters")
@@ -118,15 +115,9 @@ export const UpdateProfileRequestBodyRules = (repo: UserRepository, exceptEmail?
 export const AuctionsQueryParamsRules = yup
   .object<IGetAuctionsRequest>()
   .shape({
-    count: yup
-      .number()
-      .integer("Count must be an integer")
-      .required("Count is required"),
+    count: yup.number().integer("Count must be an integer").required("Count is required"),
     itemFilters: yup.array(yup.number().integer("Item-id must be an integer")),
-    page: yup
-      .number()
-      .integer("Page must be an integer")
-      .required("Page is required"),
+    page: yup.number().integer("Page must be an integer").required("Page is required"),
     sortDirection: yup
       .number()
       .integer("Sort-direction must be an integer")
@@ -141,22 +132,10 @@ export const AuctionsQueryParamsRules = yup
 export const QueryWorkOrdersParamsRules = yup
   .object<IFindByOptions>()
   .shape({
-    gameVersion: yup
-      .string()
-      .required()
-      .oneOf(Object.values(GameVersion)),
-    orderBy: yup
-      .string()
-      .required()
-      .oneOf(Object.values(OrderKind)),
-    orderDirection: yup
-      .string()
-      .required()
-      .oneOf(Object.values(OrderDirection)),
-    page: yup
-      .number()
-      .required()
-      .positive(),
+    gameVersion: yup.string().required().oneOf(Object.values(GameVersion)),
+    orderBy: yup.string().required().oneOf(Object.values(OrderKind)),
+    orderDirection: yup.string().required().oneOf(Object.values(OrderDirection)),
+    page: yup.number().required().positive(),
     perPage: yup
       .number()
       .required()
@@ -172,19 +151,30 @@ export const QueryWorkOrdersParamsRules = yup
 export const CreateWorkOrderRequestRules = yup
   .object<ICreateWorkOrderRequest>()
   .shape<ICreateWorkOrderRequest>({
-    itemId: yup
-      .number()
-      .positive()
-      .required(),
-    price: yup
-      .number()
-      .integer()
-      .required()
-      .positive(),
-    quantity: yup
-      .number()
-      .integer()
-      .positive()
-      .required(),
+    itemId: yup.number().positive().required(),
+    price: yup.number().integer().required().positive(),
+    quantity: yup.number().integer().positive().required(),
   })
   .noUnknown();
+
+export interface IValidateResult<T> {
+  data: T | null;
+  error: yup.ValidationError | null;
+}
+
+export async function validate<T>(
+  schema: yup.Schema<T>,
+  payload: unknown,
+): Promise<IValidateResult<T>> {
+  try {
+    return {
+      data: await schema.validate(payload),
+      error: null,
+    };
+  } catch (err) {
+    return {
+      data: null,
+      error: err,
+    };
+  }
+}

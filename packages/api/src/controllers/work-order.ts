@@ -3,7 +3,6 @@ import {
   ICreateWorkOrderRequest,
   ICreateWorkOrderResponse,
   IPrefillWorkOrderItemResponse,
-  IQueryWorkOrdersParams,
   IQueryWorkOrdersResponse,
   IValidationErrorResponse,
   OrderDirection,
@@ -15,7 +14,11 @@ import { Response } from "express";
 import HTTPStatus from "http-status";
 import { Connection } from "typeorm";
 
-import { CreateWorkOrderRequestRules, QueryWorkOrdersParamsRules } from "../lib/validator-rules";
+import {
+  CreateWorkOrderRequestRules,
+  QueryWorkOrdersParamsRules,
+  validate,
+} from "../lib/validator-rules";
 import { Authenticator, IRequest, IRequestResult, QueryRequestHandler, Validator } from "./index";
 
 export class WorkOrderController {
@@ -30,15 +33,14 @@ export class WorkOrderController {
   public queryWorkOrders: QueryRequestHandler<
     IQueryWorkOrdersResponse | IValidationErrorResponse
   > = async req => {
-    // parsing request params
-    let result: (IQueryWorkOrdersParams & { gameVersion: string }) | null = null;
-    try {
-      result = await QueryWorkOrdersParamsRules.validate({
-        ...(req.query as { [key: string]: string }),
-        gameVersion: req.params["gameVersion"],
-      });
-    } catch (err) {
-      const validationErrors: IValidationErrorResponse = { [err.path]: err.message };
+    const result = await validate(QueryWorkOrdersParamsRules, {
+      ...(req.query as { [key: string]: string }),
+      gameVersion: req.params["gameVersion"],
+    });
+    if (result.error || !result.data) {
+      const validationErrors: IValidationErrorResponse = result.error
+        ? { [result.error.path]: result.error.message }
+        : {};
 
       return {
         data: validationErrors,
@@ -60,7 +62,7 @@ export class WorkOrderController {
         status: HTTPStatus.BAD_REQUEST,
       };
     }
-    if (!validateMsg.data!.is_valid) {
+    if (!(await validateMsg.decode())!.is_valid) {
       const validationErrors: IValidationErrorResponse = {
         error: "Region-name and realm-slug combination was not valid",
       };
@@ -74,10 +76,11 @@ export class WorkOrderController {
     const { count: totalResults, orders } = await this.dbConn
       .getCustomRepository(WorkOrderRepository)
       .findBy({
-        ...result,
-        gameVersion: result.gameVersion as GameVersion,
-        orderBy: result.orderBy as OrderKind,
-        orderDirection: result.orderDirection as OrderDirection,
+        gameVersion: result.data.gameVersion as GameVersion,
+        orderBy: result.data.orderBy as OrderKind,
+        orderDirection: result.data.orderDirection as OrderDirection,
+        page: result.data.page,
+        perPage: result.data.perPage,
         realmSlug: req.params["realmSlug"],
         regionName: req.params["regionName"],
       });
@@ -94,7 +97,11 @@ export class WorkOrderController {
     }
 
     return {
-      data: { orders: orders.map(v => v.toJson()), totalResults, items: itemsMsg.data!.items },
+      data: {
+        items: (await itemsMsg.decode())!.items,
+        orders: orders.map(v => v.toJson()),
+        totalResults,
+      },
       status: HTTPStatus.OK,
     };
   };
@@ -115,7 +122,7 @@ export class WorkOrderController {
       };
     }
 
-    const foundItem = itemsMsg.data!.items[parsedItemId] ?? null;
+    const foundItem = (await itemsMsg.decode())!.items[parsedItemId] ?? null;
     if (foundItem === null) {
       const validationErrors: IValidationErrorResponse = { error: "failed to resolve item" };
 
@@ -125,13 +132,14 @@ export class WorkOrderController {
       };
     }
 
-    const regionName = req.params["regionName"];
-    const realmSlug = req.params["realmSlug"];
+    const { regionName, connectedRealmId } = req.params;
 
     const pricesMessage = await this.messenger.getPriceList({
-      item_ids: [foundItem.id],
-      realm_slug: realmSlug,
-      region_name: regionName,
+      item_ids: [foundItem.blizzard_meta.id],
+      tuple: {
+        connected_realm_id: Number(connectedRealmId),
+        region_name: regionName,
+      },
     });
     if (pricesMessage.code !== code.ok) {
       const validationErrors: IValidationErrorResponse = { error: "failed to fetch prices" };
@@ -142,7 +150,7 @@ export class WorkOrderController {
       };
     }
 
-    const foundPrice = pricesMessage.data!.price_list[foundItem.id];
+    const foundPrice = (await pricesMessage.decode())!.price_list[foundItem.blizzard_meta.id];
 
     return {
       data: { currentPrice: foundPrice?.average_buyout_per ?? null },

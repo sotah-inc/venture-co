@@ -3,7 +3,10 @@ import { User } from "@sotah-inc/server";
 import { Request, Response } from "express";
 import * as HTTPStatus from "http-status";
 import "passport";
-import { ObjectSchema } from "yup";
+import { ParsedQs } from "qs";
+import { ObjectSchema, Schema } from "yup";
+
+import { validate } from "../lib/validator-rules";
 
 export { DataController } from "./data";
 
@@ -21,7 +24,7 @@ export interface IQueryRequest extends Request {
   params: {
     [key: string]: string;
   };
-  query: unknown;
+  query: ParsedQs;
 }
 
 export interface IRequestResult<T> {
@@ -60,7 +63,7 @@ interface IManualValidatorResult<T> {
 
 export async function ManualValidator<T extends object>(
   req: IRequest<T>,
-  schema: ObjectSchema<T>,
+  schema: Schema<T>,
 ): Promise<IManualValidatorResult<T>> {
   let result: T | null = null;
   try {
@@ -83,7 +86,7 @@ type ControllerDescriptor<T, A> = (
   res: Response,
 ) => Promise<IRequestResult<A | IValidationErrorResponse>>;
 
-export function Validator<T extends object, A>(schema: ObjectSchema<T>) {
+export function Validator<T extends object, A>(schema: ObjectSchema<T | undefined>) {
   return function validatorCallable(
     _target: any,
     _propertyKey: string,
@@ -91,15 +94,15 @@ export function Validator<T extends object, A>(schema: ObjectSchema<T>) {
   ) {
     const originalMethod = descriptor.value!;
 
-    descriptor.value = async function(
+    descriptor.value = async function (
       req,
       res,
     ): Promise<IRequestResult<A | IValidationErrorResponse>> {
-      let result: T | null = null;
-      try {
-        result = (await schema.validate(req.body)) as T;
-      } catch (err) {
-        const validationErrors: IValidationErrorResponse = { [err.path]: err.message };
+      const result = await validate(schema, req.body);
+      if (result.error || !result.data) {
+        const validationErrors: IValidationErrorResponse = result.error
+          ? { [result.error.path]: result.error.message }
+          : {};
 
         return {
           data: validationErrors,
@@ -107,7 +110,7 @@ export function Validator<T extends object, A>(schema: ObjectSchema<T>) {
         };
       }
 
-      req.body = result!;
+      req.body = result.data;
 
       /* tslint:disable-next-line:no-invalid-this */
       return originalMethod.apply(this, [req, res]);
@@ -125,7 +128,7 @@ export function Authenticator<T, A>(requiredLevel: UserLevel) {
   ) {
     const originalMethod = descriptor.value!;
 
-    descriptor.value = async function(
+    descriptor.value = async function (
       req,
       res,
     ): Promise<IRequestResult<A | IValidationErrorResponse>> {
