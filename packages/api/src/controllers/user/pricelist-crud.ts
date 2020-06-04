@@ -12,7 +12,7 @@ import { Messenger, Pricelist, PricelistEntry, PricelistRepository, User } from 
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
 
-import { PricelistRequestBodyRules } from "../../lib/validator-rules";
+import { PricelistRequestBodyRules, validate } from "../../lib/validator-rules";
 import { RequestHandler } from "../index";
 
 export class PricelistCrudController {
@@ -29,28 +29,30 @@ export class PricelistCrudController {
     ICreatePricelistResponse | IValidationErrorResponse
   > = async req => {
     const user = req.user as User;
-    let result: ICreatePricelistRequest | null = null;
-    try {
-      result = (await PricelistRequestBodyRules.validate(req.body)) as ICreatePricelistRequest;
-    } catch (err) {
-      const validationErrorResponse: IValidationErrorResponse = err.errors;
+
+    const result = await validate(PricelistRequestBodyRules, req.body);
+    if (result.error || !result.data) {
+      const validationErrors: IValidationErrorResponse = result.error
+        ? { [result.error.path]: result.error.message }
+        : {};
+
       return {
-        data: validationErrorResponse,
-        status: HTTPStatus.BAD_REQUEST,
+        data: validationErrors,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
       };
     }
 
     const pricelist = new Pricelist();
     pricelist.user = user;
-    pricelist.name = result.pricelist.name;
-    pricelist.slug = result.pricelist.slug;
+    pricelist.name = result.data.pricelist.name;
+    pricelist.slug = result.data.pricelist.slug;
     await this.dbConn.manager.save(pricelist);
     const entries = await Promise.all(
-      result.entries.map(v => {
+      result.data.entries.map(v => {
         const entry = new PricelistEntry();
         entry.pricelist = pricelist;
-        entry.itemId = v.item_id;
-        entry.quantityModifier = v.quantity_modifier;
+        entry.itemId = v!.item_id;
+        entry.quantityModifier = v!.quantity_modifier;
 
         return this.dbConn.manager.save(entry);
       }),
@@ -84,7 +86,7 @@ export class PricelistCrudController {
         return entriesItemIds;
       }, pricelistsItemIds);
     }, []);
-    const items = (await this.messenger.getItems(itemIds)).data!.items;
+    const items = (await (await this.messenger.getItems(itemIds)).decode())!.items;
 
     // dumping out a response
     return {
@@ -105,7 +107,7 @@ export class PricelistCrudController {
       };
     }
     const itemIds = pricelist.entries!.map(v => v.itemId);
-    const items = (await this.messenger.getItems(itemIds)).data!.items;
+    const items = (await (await this.messenger.getItems(itemIds)).decode())!.items;
 
     return {
       data: { items, pricelist: pricelist.toJson() },
@@ -128,7 +130,7 @@ export class PricelistCrudController {
       };
     }
     const itemIds = pricelist.entries!.map(v => v.itemId);
-    const items = (await this.messenger.getItems(itemIds)).data!.items;
+    const items = (await (await this.messenger.getItems(itemIds)).decode())!.items;
 
     return {
       data: { items, pricelist: pricelist.toJson() },
