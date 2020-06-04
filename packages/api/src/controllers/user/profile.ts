@@ -9,8 +9,8 @@ import { Response } from "express";
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
 
-import { UpdateProfileRequestBodyRules } from "../../lib/validator-rules";
-import { Authenticator, IRequest, IRequestResult, ManualValidator } from "../index";
+import { UpdateProfileRequestBodyRules, validate } from "../../lib/validator-rules";
+import { Authenticator, IRequest, IRequestResult } from "../index";
 
 export class ProfileController {
   private dbConn: Connection;
@@ -26,16 +26,19 @@ export class ProfileController {
   ): Promise<IRequestResult<IUpdateProfileResponse | IValidationErrorResponse>> {
     const user = req.user as User;
 
-    const result = await ManualValidator<IUpdateProfileRequest>(
-      req,
+    const result = await validate(
       UpdateProfileRequestBodyRules(this.dbConn.getCustomRepository(UserRepository), user.email),
+      req,
     );
-    if (typeof result.errorResult !== "undefined") {
-      return result.errorResult;
-    }
-    const { body } = result.req!;
+    if (result.error || !result.data) {
+      const validationErrors: IValidationErrorResponse = result.error
+        ? { [result.error.path]: result.error.message }
+        : {};
 
-    user.email = body.email;
+      return { data: validationErrors, status: HTTPStatus.BAD_REQUEST };
+    }
+
+    user.email = result.data.email;
 
     await this.dbConn.manager.save(user);
 

@@ -4,7 +4,7 @@ import { Request, Response } from "express";
 import * as HTTPStatus from "http-status";
 import "passport";
 import { ParsedQs } from "qs";
-import { ObjectSchema, Schema } from "yup";
+import { ObjectSchema } from "yup";
 
 import { validate } from "../lib/validator-rules";
 
@@ -54,31 +54,6 @@ export async function handle<T, A>(
     res.set(headers);
   }
   res.send(data);
-}
-
-interface IManualValidatorResult<T> {
-  req?: IRequest<T>;
-  errorResult?: IRequestResult<IValidationErrorResponse>;
-}
-
-export async function ManualValidator<T extends object>(
-  req: IRequest<T>,
-  schema: Schema<T>,
-): Promise<IManualValidatorResult<T>> {
-  let result: T | null = null;
-  try {
-    result = (await schema.validate(req.body)) as T;
-  } catch (err) {
-    const validationErrors: IValidationErrorResponse = { [err.path]: err.message };
-
-    return {
-      errorResult: { data: validationErrors, status: HTTPStatus.BAD_REQUEST },
-    };
-  }
-
-  req.body = result!;
-
-  return { req };
 }
 
 type ControllerDescriptor<T, A> = (
