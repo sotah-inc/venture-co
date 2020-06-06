@@ -1,5 +1,4 @@
 import {
-  IRealmComposite,
   IRealmModificationDates,
   IRegionComposite,
   IRegionConnectedRealmTuple,
@@ -14,6 +13,7 @@ import {
   IGetAuctionsRequest,
   IGetAuctionsResponse,
   IGetBootResponse,
+  IGetConnectedRealmsResponse,
   IGetItemsResponse,
   IGetPricelistHistoriesRequest,
   IGetPricelistHistoriesResponse,
@@ -112,8 +112,9 @@ export class Messenger {
     });
   }
 
-  public getConnectedRealms(): Promise<Message<IRealmComposite[]>> {
+  public getConnectedRealms(tuple: IRegionTuple): Promise<Message<IGetConnectedRealmsResponse>> {
     return this.request(subjects.connectedRealms, {
+      body: JSON.stringify(tuple),
       parseKind: ParseKind.GzipJsonEncoded,
     });
   }

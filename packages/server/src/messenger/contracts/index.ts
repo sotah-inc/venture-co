@@ -7,6 +7,7 @@ import {
   IPriceListMap,
   IPrices,
   IProfession,
+  IRealmComposite,
   IRealmModificationDates,
   IRegionComposite,
   IRegionConnectedRealmTuple,
@@ -109,3 +110,7 @@ export interface IValidateRegionConnectedRealmResponse {
 }
 
 export type ValidateRegionRealmResponse = IValidateRegionConnectedRealmResponse;
+
+export interface IGetConnectedRealmsResponse {
+  connected_realms: IRealmComposite[];
+}
