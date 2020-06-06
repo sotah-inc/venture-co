@@ -13,7 +13,6 @@ import {
   IGetPricelistRequest,
   IGetPricelistResponse,
   IGetProfessionPricelistsResponse,
-  IGetRealmsResponse,
   IGetTokenHistoryResponse,
   IGetUnmetDemandRequest,
   IGetUnmetDemandResponse,
@@ -30,15 +29,11 @@ import {
   IQueryAuctionStatsResponse,
   IQueryItemsRequest,
   IQueryItemsResponse,
-  IRealmComposite,
-  IRealmModificationDates,
-  IStatusRealm,
   ItemId,
   IValidationErrorResponse,
 } from "@sotah-inc/core";
 import {
   code,
-  getLatestRealmModifiedDate,
   Messenger,
   Post,
   ProfessionPricelist,
