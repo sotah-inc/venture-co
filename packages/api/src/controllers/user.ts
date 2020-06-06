@@ -11,7 +11,11 @@ import * as bcrypt from "bcrypt";
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
 
-import { UserRequestBodyRules } from "../lib/validator-rules";
+import {
+  UserRequestBodyRules,
+  validate,
+  yupValidationErrorToResponse,
+} from "../lib/validator-rules";
 import { RequestHandler } from "./index";
 
 export class UserController {
@@ -27,20 +31,17 @@ export class UserController {
     ICreateUserRequest,
     ICreateUserResponse | IValidationErrorResponse
   > = async req => {
-    let result: ICreateUserRequest | null = null;
-    try {
-      result = (await UserRequestBodyRules.validate(req.body)) as ICreateUserRequest;
-    } catch (err) {
-      const validationErrorResponse: IValidationErrorResponse = { [err.path]: err.message };
+    const result = await validate(UserRequestBodyRules, req.body);
+    if (result.error || !result.data) {
       return {
-        data: validationErrorResponse,
+        data: yupValidationErrorToResponse(result.error),
         status: HTTPStatus.BAD_REQUEST,
       };
     }
 
     const existingUser = await this.dbConn
       .getRepository(User)
-      .findOne({ where: { email: result.email } });
+      .findOne({ where: { email: result.data.email } });
     if (typeof existingUser !== "undefined") {
       const userValidationError: IValidationErrorResponse = { email: "Email is already in use!" };
       return {
@@ -50,8 +51,8 @@ export class UserController {
     }
 
     const user = new User();
-    user.email = result.email;
-    user.hashedPassword = await bcrypt.hash(result.password, 10);
+    user.email = result.data.email;
+    user.hashedPassword = await bcrypt.hash(result.data.password, 10);
     user.level = UserLevel.Unverified;
     await this.dbConn.manager.save(user);
 
