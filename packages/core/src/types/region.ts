@@ -8,6 +8,48 @@ export interface IRegionTuple {
 
 export type ConnectedRealmId = number;
 
+export interface IRealmComposite {
+  connected_realm: ILinksBase & {
+    id: ConnectedRealmId;
+    has_queue: boolean;
+    status: {
+      type: string;
+      name: LocaleMapping;
+    };
+    population: {
+      type: string;
+      name: LocaleMapping;
+    };
+    realms: Array<
+      ILinksBase & {
+        id: RealmId;
+        region: ILinksBase & {
+          id: RegionId;
+          name: LocaleMapping;
+        };
+        connected_realm: IHrefReference;
+        name: LocaleMapping;
+        category: LocaleMapping;
+        locale: string;
+        timezone: string;
+        type: {
+          type: string;
+          name: LocaleMapping;
+        };
+        is_tournament: boolean;
+        slug: RealmSlug;
+      }
+    >;
+    mythic_leaderboards: IHrefReference;
+    auctions: IHrefReference;
+  };
+  modification_dates: {
+    downloaded: UnixTimestamp;
+    live_auctions_received: UnixTimestamp;
+    pricelist_history_received: UnixTimestamp;
+  };
+}
+
 export interface IRegionConnectedRealmTuple extends IRegionTuple {
   connected_realm_id: ConnectedRealmId;
 }
@@ -26,47 +68,7 @@ export interface IRegionComposite {
     hostname: string;
     primary: boolean;
   };
-  connected_realms: Array<{
-    connected_realm: ILinksBase & {
-      id: ConnectedRealmId;
-      has_queue: boolean;
-      status: {
-        type: string;
-        name: LocaleMapping;
-      };
-      population: {
-        type: string;
-        name: LocaleMapping;
-      };
-      realms: Array<
-        ILinksBase & {
-          id: RealmId;
-          region: ILinksBase & {
-            id: RegionId;
-            name: LocaleMapping;
-          };
-          connected_realm: IHrefReference;
-          name: LocaleMapping;
-          category: LocaleMapping;
-          locale: string;
-          timezone: string;
-          type: {
-            type: string;
-            name: LocaleMapping;
-          };
-          is_tournament: boolean;
-          slug: RealmSlug;
-        }
-      >;
-      mythic_leaderboards: IHrefReference;
-      auctions: IHrefReference;
-    };
-    modification_dates: {
-      downloaded: UnixTimestamp;
-      live_auctions_received: UnixTimestamp;
-      pricelist_history_received: UnixTimestamp;
-    };
-  }>;
+  connected_realms: IRealmComposite[];
 }
 
 export type RealmSlug = string;
