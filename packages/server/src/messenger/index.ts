@@ -1,4 +1,5 @@
 import {
+  IRealmComposite,
   IRealmModificationDates,
   IRegionComposite,
   IRegionConnectedRealmTuple,
@@ -38,6 +39,7 @@ export enum subjects {
   tokenHistory = "tokenHistory",
 
   status = "status",
+  connectedRealms = "connectedRealms",
   validateRegionConnectedRealm = "validateRegionConnectedRealm",
   validateRegionRealm = "validateRegionRealm",
   queryRealmModificationDates = "queryRealmModificationDates",
@@ -107,6 +109,12 @@ export class Messenger {
   public getStatus(tuple: IRegionTuple): Promise<Message<IRegionComposite>> {
     return this.request(subjects.status, {
       body: JSON.stringify(tuple),
+    });
+  }
+
+  public getConnectedRealms(): Promise<Message<IRealmComposite[]>> {
+    return this.request(subjects.connectedRealms, {
+      parseKind: ParseKind.GzipJsonEncoded,
     });
   }
 
