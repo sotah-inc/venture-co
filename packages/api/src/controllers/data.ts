@@ -4,6 +4,7 @@ import {
   IGetAuctionsRequest,
   IGetAuctionsResponse,
   IGetBootResponse,
+  IGetConnectedRealmsResponse,
   IGetItemResponse,
   IGetPostResponse,
   IGetPostsResponse,
@@ -29,6 +30,7 @@ import {
   IQueryAuctionStatsResponse,
   IQueryItemsRequest,
   IQueryItemsResponse,
+  IRealmComposite,
   IRealmModificationDates,
   IStatusRealm,
   ItemId,
@@ -92,39 +94,73 @@ export class DataController {
     };
   };
 
-  public getBoot: RequestHandler<null, IGetBootResponse> = async () => {
+  public getBoot: RequestHandler<null, IGetBootResponse | null> = async () => {
     const msg = await this.messenger.getBoot();
-    return { data: msg.data!, status: HTTPStatus.OK };
-  };
-
-  public getRealms: RequestHandler<null, IGetRealmsResponse | null> = async req => {
-    const [statusMessage, modDatesMessage] = await Promise.all([
-      this.messenger.getStatus(req.params["regionName"]),
-      this.messenger.getRealmModificationDates(),
-    ]);
-    if (statusMessage.code === code.notFound) {
-      return { status: HTTPStatus.NOT_FOUND, data: null };
+    if (msg.code !== code.ok) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
     }
 
-    if (modDatesMessage.code !== code.ok) {
+    const result = await msg.decode();
+    if (result === null) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    return {
+      data: {
+        ...result,
+        item_classes: result.item_classes.classes,
+      },
+      status: HTTPStatus.OK,
+    };
+  };
+
+  public getConnectedRealms: RequestHandler<
+    null,
+    IGetConnectedRealmsResponse | null
+  > = async req => {
+    const realmsMessage = await this.messenger.getConnectedRealms({
+      region_name: req.params["regionName"],
+    });
+    switch (realmsMessage.code) {
+      case code.notFound:
+        return { status: HTTPStatus.NOT_FOUND, data: null };
+      default:
+        if (realmsMessage.code !== code.ok) {
+          return { status: HTTPStatus.INTERNAL_SERVER_ERROR, data: null };
+        }
+
+        break;
+    }
+
+    const realmsResult = await realmsMessage.decode();
+    if (realmsResult === null) {
       return { status: HTTPStatus.INTERNAL_SERVER_ERROR, data: null };
     }
 
     // gathering earliest downloaded realm-modification-date
     const lastModifiedDate: moment.Moment | null = (() => {
-      if (modDatesMessage.data === null || typeof modDatesMessage.data === "undefined") {
-        return null;
-      }
+      const latestDownloaded = realmsResult.connected_realms.reduce<number | null>(
+        (result, connectedRealm) => {
+          if (result === null || connectedRealm.modification_dates.downloaded > result) {
+            return connectedRealm.modification_dates.downloaded;
+          }
 
-      const latestRealmModified = getLatestRealmModifiedDate(
-        req.params["regionName"],
-        modDatesMessage.data,
+          return result;
+        },
+        null,
       );
-      if (latestRealmModified === null) {
+
+      if (latestDownloaded === null) {
         return null;
       }
 
-      return moment(latestRealmModified).utc();
+      return moment(latestDownloaded * 1000).utc();
     })();
 
     // checking if-modified-since header
@@ -143,54 +179,6 @@ export class DataController {
       }
     }
 
-    const realms = statusMessage
-      .data!.realms.map<IStatusRealm>(realm => {
-        const realmModificationDates = ((): IRealmModificationDates => {
-          if (typeof modDatesMessage.data === "undefined" || modDatesMessage.data === null) {
-            return {
-              downloaded: 0,
-              live_auctions_received: 0,
-              pricelist_histories_received: 0,
-            };
-          }
-
-          if (!(req.params["regionName"] in modDatesMessage.data)) {
-            return {
-              downloaded: 0,
-              live_auctions_received: 0,
-              pricelist_histories_received: 0,
-            };
-          }
-
-          if (!(realm.slug in modDatesMessage.data[req.params["regionName"]])) {
-            return {
-              downloaded: 0,
-              live_auctions_received: 0,
-              pricelist_histories_received: 0,
-            };
-          }
-
-          return modDatesMessage.data[req.params["regionName"]][realm.slug];
-        })();
-
-        return {
-          ...realm,
-          realm_modification_dates: realmModificationDates,
-          regionName: req.params["regionName"],
-        };
-      })
-      .sort((a, b) => {
-        if (a.name < b.name) {
-          return -1;
-        }
-
-        if (a.name > b.name) {
-          return 1;
-        }
-
-        return 0;
-      });
-
     const headers = (() => {
       if (lastModifiedDate === null) {
         return;
@@ -203,7 +191,7 @@ export class DataController {
     })();
 
     return {
-      data: { realms },
+      data: { connectedRealms: realmsResult.connected_realms },
       headers,
       status: HTTPStatus.OK,
     };
