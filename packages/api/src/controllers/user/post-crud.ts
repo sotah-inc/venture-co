@@ -11,8 +11,12 @@ import { Response } from "express";
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
 
-import { FullPostRequestBodyRules, PostRequestBodyRules } from "../../lib/validator-rules";
-import { Authenticator, IRequest, IRequestResult, ManualValidator, Validator } from "../index";
+import {
+  FullPostRequestBodyRules,
+  PostRequestBodyRules,
+  validate,
+} from "../../lib/validator-rules";
+import { Authenticator, IRequest, IRequestResult, Validator } from "../index";
 
 export class PostCrudController {
   private dbConn: Connection;
@@ -27,12 +31,12 @@ export class PostCrudController {
     req: IRequest<ICreatePostRequest>,
     _res: Response,
   ): Promise<IRequestResult<ICreatePostResponse | IValidationErrorResponse>> {
-    const result = await ManualValidator<ICreatePostRequest>(
-      req,
+    const result = await validate<ICreatePostRequest>(
       FullPostRequestBodyRules(this.dbConn.getCustomRepository(PostRepository)),
+      req,
     );
-    if (typeof result.errorResult !== "undefined") {
-      return result.errorResult;
+    if (result.error || !result.data) {
+      return result.error;
     }
     const { body } = result.req!;
 

@@ -61,7 +61,7 @@ type ControllerDescriptor<T, A> = (
   res: Response,
 ) => Promise<IRequestResult<A | IValidationErrorResponse>>;
 
-export function Validator<T extends object, A>(schema: ObjectSchema<T | undefined>) {
+export function Validator<T extends object, A>(schema: ObjectSchema<T>) {
   return function validatorCallable(
     _target: any,
     _propertyKey: string,

@@ -18,6 +18,7 @@ import {
   CreateWorkOrderRequestRules,
   QueryWorkOrdersParamsRules,
   validate,
+  yupValidationErrorToResponse,
 } from "../lib/validator-rules";
 import { Authenticator, IRequest, IRequestResult, QueryRequestHandler, Validator } from "./index";
 
@@ -38,12 +39,8 @@ export class WorkOrderController {
       gameVersion: req.params["gameVersion"],
     });
     if (result.error || !result.data) {
-      const validationErrors: IValidationErrorResponse = result.error
-        ? { [result.error.path]: result.error.message }
-        : {};
-
       return {
-        data: validationErrors,
+        data: yupValidationErrorToResponse(result.error),
         status: HTTPStatus.INTERNAL_SERVER_ERROR,
       };
     }

@@ -15,8 +15,8 @@ import { UserRequestBodyRules } from "../lib/validator-rules";
 import { RequestHandler } from "./index";
 
 export class UserController {
-  private messenger: Messenger;
-  private dbConn: Connection;
+  private readonly messenger: Messenger;
+  private readonly dbConn: Connection;
 
   constructor(messenger: Messenger, dbConn: Connection) {
     this.messenger = messenger;
