@@ -2,6 +2,7 @@ import {
   GameVersion,
   ICreatePostRequest,
   ICreatePreferencesRequest,
+  ICreateUserRequest,
   ICreateWorkOrderRequest,
   IGetAuctionsRequest,
   IUpdateProfileRequest,
@@ -61,7 +62,7 @@ export const ProfessionPricelistRequestBodyRules = yup
   .noUnknown();
 
 export const UserRequestBodyRules = yup
-  .object({
+  .object<ICreateUserRequest>({
     email: yup.string().email("email must be a valid email").required("email is required"),
     password: yup
       .string()
