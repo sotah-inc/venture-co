@@ -196,9 +196,8 @@ export class DataController {
     const itemId = Number(req.params["itemId"]);
 
     const msg = await this.messenger.getItems([itemId]);
-
     if (msg.code !== code.ok) {
-      const errorResponse: IErrorResponse = { error: "Failed to fetch items" };
+      const errorResponse: IErrorResponse = { error: "failed to fetch items" };
 
       return {
         data: errorResponse,
@@ -206,9 +205,19 @@ export class DataController {
       };
     }
 
-    const foundItem = msg.data!.items[itemId];
+    const itemsResult = await msg.decode();
+    if (itemsResult === null) {
+      const errorResponse: IErrorResponse = { error: "failed to fetch items" };
+
+      return {
+        data: errorResponse,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    const foundItem = itemsResult.items[itemId];
     if (typeof foundItem === "undefined") {
-      const errorResponse: IErrorResponse = { error: "Item not found" };
+      const errorResponse: IErrorResponse = { error: "item not found" };
 
       return {
         data: errorResponse,
