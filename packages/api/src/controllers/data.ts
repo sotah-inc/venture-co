@@ -235,7 +235,7 @@ export class DataController {
   > = async req => {
     // gathering last-modified
     const realmModificationDatesMessage = await this.messenger.queryRealmModificationDates({
-      realm_slug: req.params["realmSlug"],
+      connected_realm_id: Number(req.params["connectedRealmId"]),
       region_name: req.params["regionName"],
     });
     if (realmModificationDatesMessage.code !== code.ok) {
