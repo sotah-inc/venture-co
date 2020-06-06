@@ -3,6 +3,7 @@ import { IPostJson, IProfessionPricelistJson } from "../entities";
 import { ExpansionName, IExpansion } from "../expansion";
 import {
   IPricesFlagged,
+  IRealmComposite,
   IRegionComposite,
   ITokenHistory,
   RealmSlug,
@@ -37,8 +38,8 @@ export interface IStatusRealm extends IRealm {
   realm_modification_dates: IRealmModificationDates;
 }
 
-export interface IGetRealmsResponse {
-  realms: IStatusRealm[];
+export interface IGetConnectedRealmsResponse {
+  connectedRealms: IRealmComposite[];
 }
 
 export interface IGetAuctionsRequest {
