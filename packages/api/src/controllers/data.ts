@@ -1,7 +1,6 @@
 import {
   IBollingerBands,
   IErrorResponse,
-  IGetAuctionsRequest,
   IGetAuctionsResponse,
   IGetBootResponse,
   IGetConnectedRealmsResponse,
@@ -45,7 +44,11 @@ import HTTPStatus from "http-status";
 import moment from "moment";
 import { Connection } from "typeorm";
 
-import { AuctionsQueryParamsRules } from "../lib/validator-rules";
+import {
+  AuctionsQueryParamsRules,
+  validate,
+  yupValidationErrorToResponse,
+} from "../lib/validator-rules";
 import { QueryRequestHandler, RequestHandler } from "./index";
 
 export class DataController {
@@ -238,29 +241,32 @@ export class DataController {
       connected_realm_id: Number(req.params["connectedRealmId"]),
       region_name: req.params["regionName"],
     });
-    if (realmModificationDatesMessage.code !== code.ok) {
-      switch (realmModificationDatesMessage.code) {
-        case code.notFound:
-          return {
-            data: {
-              error: `${realmModificationDatesMessage.error!.message} (realm-modification-dates)`,
-            },
-            status: HTTPStatus.NOT_FOUND,
-          };
-        case code.userError:
-          return {
-            data: { error: realmModificationDatesMessage.error!.message },
-            status: HTTPStatus.BAD_REQUEST,
-          };
-        default:
-          return {
-            data: { error: realmModificationDatesMessage.error!.message },
-            status: HTTPStatus.INTERNAL_SERVER_ERROR,
-          };
-      }
+    switch (realmModificationDatesMessage.code) {
+      case code.ok:
+        break;
+      case code.notFound:
+        return {
+          data: {
+            error: `${realmModificationDatesMessage.error!.message} (realm-modification-dates)`,
+          },
+          status: HTTPStatus.NOT_FOUND,
+        };
+      default:
+        return {
+          data: { error: realmModificationDatesMessage.error!.message },
+          status: HTTPStatus.INTERNAL_SERVER_ERROR,
+        };
     }
-    const realmModificationDates = realmModificationDatesMessage.data!;
-    const lastModifiedDate = moment(realmModificationDates.downloaded * 1000).utc();
+
+    const realmModificationDatesResult = await realmModificationDatesMessage.decode();
+    if (realmModificationDatesResult === null) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    const lastModifiedDate = moment(realmModificationDatesResult.downloaded * 1000).utc();
     const lastModified = `${lastModifiedDate.format("ddd, DD MMM YYYY HH:mm:ss")} GMT`;
 
     // checking if-modified-since header
@@ -283,54 +289,69 @@ export class DataController {
     }
 
     // parsing request params
-    let result: IGetAuctionsRequest | null = null;
-    try {
-      result = await AuctionsQueryParamsRules.validate(req.query);
-    } catch (err) {
-      const validationErrors: IValidationErrorResponse = { [err.path]: err.message };
-
+    const validateParamsResult = await validate(AuctionsQueryParamsRules, req.query);
+    if (validateParamsResult.error || !validateParamsResult.data) {
       return {
-        data: validationErrors,
+        data: yupValidationErrorToResponse(validateParamsResult.error),
         status: HTTPStatus.BAD_REQUEST,
       };
     }
-    const { count, page, sortDirection, sortKind, itemFilters } = result;
+
+    const { count, page, sortDirection, sortKind, itemFilters } = validateParamsResult.data;
 
     // gathering auctions
-    const msg = await this.messenger.getAuctions({
+    const auctionsMessage = await this.messenger.getAuctions({
       count,
       item_filters: itemFilters,
       page,
-      realm_slug: req.params["realmSlug"],
-      region_name: req.params["regionName"],
       sort_direction: sortDirection,
       sort_kind: sortKind,
+      tuple: {
+        connected_realm_id: Number(req.params["realmSlug"]),
+        region_name: req.params["regionName"],
+      },
     });
-    if (msg.code !== code.ok) {
-      switch (msg.code) {
-        case code.notFound:
-          return {
-            data: { error: `${msg.error!.message} (auctions)` },
-            status: HTTPStatus.NOT_FOUND,
-          };
-        case code.userError:
-          return {
-            data: { error: msg.error!.message },
-            status: HTTPStatus.BAD_REQUEST,
-          };
-        default:
-          return {
-            data: { error: msg.error!.message },
-            status: HTTPStatus.INTERNAL_SERVER_ERROR,
-          };
-      }
+    switch (auctionsMessage.code) {
+      case code.ok:
+        break;
+      case code.notFound:
+        return {
+          data: { error: `${auctionsMessage.error?.message ?? ""} (auctions)` },
+          status: HTTPStatus.NOT_FOUND,
+        };
+      case code.userError:
+        return {
+          data: { error: auctionsMessage.error?.message ?? "" },
+          status: HTTPStatus.BAD_REQUEST,
+        };
+      default:
+        return {
+          data: { error: auctionsMessage.error?.message ?? "" },
+          status: HTTPStatus.INTERNAL_SERVER_ERROR,
+        };
     }
 
-    const itemIds = [...Array.from(new Set(msg.data!.auctions.map(v => v.itemId)))];
+    const auctionsResult = await auctionsMessage.decode();
+    if (auctionsResult === null) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    const itemIds = [...Array.from(new Set(auctionsResult.auctions.map(v => v.itemId)))];
     const itemsMsg = await this.messenger.getItems(itemIds);
     if (itemsMsg.code !== code.ok) {
       return {
-        data: { error: msg.error!.message },
+        data: { error: itemsMsg.error?.message ?? "" },
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    const itemsResult = await itemsMsg.decode();
+    if (itemsResult === null) {
+      return {
+        data: null,
         status: HTTPStatus.INTERNAL_SERVER_ERROR,
       };
     }
@@ -349,13 +370,21 @@ export class DataController {
         .getMany();
     })();
 
-    const pricelistItemIds = [
+    const pricelistItemIds: ItemId[] = [
       ...professionPricelists.map(v => v.pricelist!.entries!.map(y => y.itemId)[0]),
     ];
     const pricelistItemsMsg = await this.messenger.getItems(pricelistItemIds);
     if (pricelistItemsMsg.code !== code.ok) {
       return {
-        data: { error: pricelistItemsMsg.error!.message },
+        data: { error: pricelistItemsMsg.error?.message ?? "" },
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    const pricelistItemsResult = await pricelistItemsMsg.decode();
+    if (pricelistItemsResult === null) {
+      return {
+        data: null,
         status: HTTPStatus.INTERNAL_SERVER_ERROR,
       };
     }
@@ -365,8 +394,8 @@ export class DataController {
 
     return {
       data: {
-        ...msg.data!,
-        items: { ...itemsMsg.data!.items, ...pricelistItemsMsg.data!.items },
+        ...auctionsResult,
+        items: { ...itemsResult.items, ...pricelistItemsResult.items },
         professionPricelists: professionPricelists.map(v => v.toJson()),
       },
       headers: {
