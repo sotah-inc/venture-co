@@ -15,6 +15,7 @@ import {
   FullPostRequestBodyRules,
   PostRequestBodyRules,
   validate,
+  yupValidationErrorToResponse,
 } from "../../lib/validator-rules";
 import { Authenticator, IRequest, IRequestResult, Validator } from "../index";
 
@@ -31,21 +32,23 @@ export class PostCrudController {
     req: IRequest<ICreatePostRequest>,
     _res: Response,
   ): Promise<IRequestResult<ICreatePostResponse | IValidationErrorResponse>> {
-    const result = await validate<ICreatePostRequest>(
+    const result = await validate(
       FullPostRequestBodyRules(this.dbConn.getCustomRepository(PostRepository)),
       req,
     );
     if (result.error || !result.data) {
-      return result.error;
+      return {
+        data: yupValidationErrorToResponse(result.error),
+        status: HTTPStatus.BAD_REQUEST,
+      };
     }
-    const { body } = result.req!;
 
     const post = new Post();
-    post.title = body.title;
-    post.slug = body.slug;
+    post.title = result.data.title;
+    post.slug = result.data.slug;
     post.user = req.user as User;
-    post.body = body.body;
-    post.summary = body.summary;
+    post.body = result.data.body;
+    post.summary = result.data.summary;
     await this.dbConn.manager.save(post);
 
     return {
@@ -86,19 +89,21 @@ export class PostCrudController {
       };
     }
 
-    const result = await ManualValidator<IUpdatePostRequest>(
-      req,
+    const result = await validate(
       FullPostRequestBodyRules(this.dbConn.getCustomRepository(PostRepository), post.slug),
+      req,
     );
-    if (typeof result.errorResult !== "undefined") {
-      return result.errorResult;
+    if (result.error || !result.data) {
+      return {
+        data: yupValidationErrorToResponse(result.error),
+        status: HTTPStatus.BAD_REQUEST,
+      };
     }
-    const { body } = result.req!;
 
-    post.title = body.title;
-    post.slug = body.slug;
-    post.body = body.body;
-    post.summary = body.summary;
+    post.title = result.data.title;
+    post.slug = result.data.slug;
+    post.body = result.data.body;
+    post.summary = result.data.summary;
     await this.dbConn.manager.save(post);
 
     return {

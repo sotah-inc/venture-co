@@ -522,30 +522,59 @@ export class DataController {
 
   public getPricelistHistories: RequestHandler<
     IGetPricelistHistoriesRequest,
-    IGetPricelistHistoriesResponse
+    IGetPricelistHistoriesResponse | null
   > = async req => {
     const { item_ids } = req.body;
     const currentUnixTimestamp = Math.floor(Date.now() / 1000);
     const lowerBounds = currentUnixTimestamp - 60 * 60 * 24 * 14;
-    const foundHistory = (
-      await this.messenger.getPricelistHistories({
-        item_ids,
-        lower_bounds: lowerBounds,
-        realm_slug: req.params["realmSlug"],
+    const historyMessage = await this.messenger.getPricelistHistories({
+      item_ids,
+      lower_bounds: lowerBounds,
+      tuple: {
+        connected_realm_id: Number(req.params["connectedRealmId"] ?? "0"),
         region_name: req.params["regionName"],
-        upper_bounds: currentUnixTimestamp,
-      })
-    ).data!.history;
-    const items = (await this.messenger.getItems(item_ids)).data!.items;
+      },
+      upper_bounds: currentUnixTimestamp,
+    });
+    if (historyMessage.code !== code.ok) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+    const historyMessageResult = await historyMessage.decode();
+    if (!historyMessageResult) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+    const foundHistory = historyMessageResult.history;
+    const itemsMessage = await this.messenger.getItems(item_ids);
+    if (itemsMessage.code !== code.ok) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+    const itemsResult = await itemsMessage.decode();
+    if (!itemsResult) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+    const items = itemsResult.items;
 
     // gathering unix timestamps for all items
     const historyUnixTimestamps: number[] = item_ids.reduce(
       (previousHistoryUnixTimestamps: number[], itemId) => {
-        if (!(itemId in foundHistory)) {
+        const itemHistory = foundHistory[itemId];
+        if (typeof itemHistory === "undefined") {
           return previousHistoryUnixTimestamps;
         }
 
-        const itemUnixTimestamps = Object.keys(foundHistory[itemId]).map(Number);
+        const itemUnixTimestamps = Object.keys(itemHistory).map(Number);
         for (const itemUnixTimestamp of itemUnixTimestamps) {
           if (previousHistoryUnixTimestamps.indexOf(itemUnixTimestamp) > -1) {
             continue;
@@ -563,7 +592,8 @@ export class DataController {
     const historyResult = item_ids.reduce<IItemPricelistHistoryMap<IPricesFlagged>>(
       (previousHistory, itemId) => {
         // generating a full zeroed pricelist-history for this item
-        if (!(itemId in foundHistory)) {
+        const currentItemHistory = foundHistory[itemId];
+        if (typeof currentItemHistory === "undefined") {
           const blankItemHistory = historyUnixTimestamps.reduce<
             IPricelistHistoryMap<IPricesFlagged>
           >((previousBlankItemHistory, unixTimestamp) => {
@@ -589,10 +619,10 @@ export class DataController {
         }
 
         // reforming the item-history with zeroed blank prices where none found
-        const currentItemHistory = foundHistory[itemId];
         const newItemHistory = historyUnixTimestamps.reduce<IPricelistHistoryMap<IPricesFlagged>>(
           (previousNewItemHistory, unixTimestamp) => {
-            if (!(unixTimestamp in currentItemHistory)) {
+            const itemHistoryAtTime = currentItemHistory[unixTimestamp];
+            if (typeof itemHistoryAtTime === "undefined") {
               const blankPrices: IPricesFlagged = {
                 average_buyout_per: 0,
                 is_blank: true,
@@ -611,7 +641,7 @@ export class DataController {
             return {
               ...previousNewItemHistory,
               [unixTimestamp]: {
-                ...currentItemHistory[unixTimestamp],
+                ...itemHistoryAtTime,
                 is_blank: false,
               },
             };
@@ -627,22 +657,30 @@ export class DataController {
       {},
     );
 
-    const itemPriceLimits: IItemPriceLimits = item_ids.reduce((previousItemPriceLimits, itemId) => {
+    const itemPriceLimits = item_ids.reduce<IItemPriceLimits>((previousItemPriceLimits, itemId) => {
       const out: IPriceLimits = {
         lower: 0,
         upper: 0,
       };
 
-      if (!(itemId in historyResult)) {
+      const itemPriceHistory = historyResult[itemId];
+      if (typeof itemPriceHistory === "undefined") {
         return {
           ...previousItemPriceLimits,
           [itemId]: out,
         };
       }
 
-      const itemPriceHistory = historyResult[itemId];
-      const itemPrices = Object.keys(itemPriceHistory).map<IPrices>(
-        (v: string) => itemPriceHistory[Number(v)],
+      const itemPrices = Object.keys(itemPriceHistory).reduce<IPrices[]>(
+        (itemPricesResult, itemIdString) => {
+          const foundItemPrices = itemPriceHistory[Number(itemIdString)];
+          if (typeof foundItemPrices === "undefined") {
+            return itemPricesResult;
+          }
+
+          return [...itemPricesResult, foundItemPrices];
+        },
+        [],
       );
       if (itemPrices.length > 0) {
         const bands: IBollingerBands = boll(
@@ -695,25 +733,35 @@ export class DataController {
 
     const overallPriceLimits: IPriceLimits = { lower: 0, upper: 0 };
     overallPriceLimits.lower = item_ids.reduce((overallLower, itemId) => {
-      if (itemPriceLimits[itemId].lower === 0) {
+      const priceLimits = itemPriceLimits[itemId];
+      if (typeof priceLimits === "undefined") {
+        return overallLower;
+      }
+
+      if (priceLimits.lower === 0) {
         return overallLower;
       }
       if (overallLower === 0) {
-        return itemPriceLimits[itemId].lower;
+        return priceLimits.lower;
       }
 
-      if (itemPriceLimits[itemId].lower < overallLower) {
-        return itemPriceLimits[itemId].lower;
+      if (priceLimits.lower < overallLower) {
+        return priceLimits.lower;
       }
 
       return overallLower;
     }, 0);
     overallPriceLimits.upper = item_ids.reduce((overallUpper, itemId) => {
-      if (overallUpper > itemPriceLimits[itemId].upper) {
+      const priceLimits = itemPriceLimits[itemId];
+      if (typeof priceLimits === "undefined") {
         return overallUpper;
       }
 
-      return itemPriceLimits[itemId].upper;
+      if (overallUpper > priceLimits.upper) {
+        return overallUpper;
+      }
+
+      return priceLimits.upper;
     }, 0);
 
     return {
@@ -724,7 +772,7 @@ export class DataController {
 
   public getUnmetDemand: RequestHandler<
     IGetUnmetDemandRequest,
-    IGetUnmetDemandResponse | IErrorResponse
+    IGetUnmetDemandResponse | IErrorResponse | null
   > = async req => {
     // gathering profession-pricelists
     const { expansion } = req.body;
@@ -755,24 +803,38 @@ export class DataController {
         status: HTTPStatus.INTERNAL_SERVER_ERROR,
       };
     }
-    const items = itemsMsg.data!.items;
-
-    // gathering pricing data
-    const msg = await this.messenger.getPriceList({
-      item_ids: itemIds,
-      realm_slug: req.params["realmSlug"],
-      region_name: req.params["regionName"],
-    });
-    if (msg.code !== code.ok) {
+    const itemsResult = await itemsMsg.decode();
+    if (!itemsResult) {
       return {
-        data: { error: msg.error!.message },
+        data: null,
         status: HTTPStatus.INTERNAL_SERVER_ERROR,
       };
     }
-    const msgData = msg.data!;
+
+    // gathering pricing data
+    const pricelistMessage = await this.messenger.getPriceList({
+      item_ids: itemIds,
+      tuple: {
+        connected_realm_id: Number(req.params["connectedRealmId"] ?? "0"),
+        region_name: req.params["regionName"],
+      },
+    });
+    if (pricelistMessage.code !== code.ok) {
+      return {
+        data: { error: pricelistMessage.error!.message },
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+    const pricelistResult = await pricelistMessage.decode();
+    if (!pricelistResult) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
 
     // gathering unmet items
-    const unmetItemIds = itemIds.filter(v => !(v.toString() in msgData.price_list));
+    const unmetItemIds = itemIds.filter(v => !(v.toString() in pricelistResult.price_list));
 
     // filtering in unmet profession-pricelists
     const unmetProfessionPricelists = professionPricelists.filter(v => {
@@ -785,7 +847,7 @@ export class DataController {
 
     return {
       data: {
-        items,
+        items: itemsResult.items,
         professionPricelists: unmetProfessionPricelists.map(v => v.toJson()),
         unmetItemIds,
       },
@@ -795,7 +857,7 @@ export class DataController {
 
   public getProfessionPricelists: RequestHandler<
     null,
-    IGetProfessionPricelistsResponse
+    IGetProfessionPricelistsResponse | IValidationErrorResponse | null
   > = async req => {
     // gathering profession-pricelists
     const professionPricelists = await this.dbConn.getRepository(ProfessionPricelist).find({
@@ -815,17 +877,34 @@ export class DataController {
       },
       [],
     );
-    const items = (await this.messenger.getItems(itemIds)).data!.items;
+
+    const itemsMessage = await this.messenger.getItems(itemIds);
+    if (itemsMessage.code !== code.ok) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+    const itemsResult = await itemsMessage.decode();
+    if (!itemsResult) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
 
     // dumping out a response
     return {
-      data: { profession_pricelists: professionPricelists.map(v => v.toJson()), items },
+      data: {
+        items: itemsResult.items,
+        profession_pricelists: professionPricelists.map(v => v.toJson()),
+      },
       status: HTTPStatus.OK,
     };
   };
 
   public getTokenHistory: RequestHandler<null, IGetTokenHistoryResponse | null> = async req => {
-    const msg = await this.messenger.getTokenHistory(req.params["regionName"]);
+    const msg = await this.messenger.getTokenHistory({ region_name: req.params["regionName"] });
     if (msg.code !== code.ok) {
       if (msg.code === code.notFound) {
         return {
@@ -840,8 +919,16 @@ export class DataController {
       };
     }
 
+    const tokenHistoryResult = await msg.decode();
+    if (!tokenHistoryResult) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
     return {
-      data: { history: msg.data! },
+      data: { history: tokenHistoryResult },
       status: HTTPStatus.OK,
     };
   };
@@ -880,8 +967,16 @@ export class DataController {
       };
     }
 
+    const auctionStatsResult = await msg.decode();
+    if (!auctionStatsResult) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
     return {
-      data: msg.data!,
+      data: auctionStatsResult,
       status: HTTPStatus.OK,
     };
   };

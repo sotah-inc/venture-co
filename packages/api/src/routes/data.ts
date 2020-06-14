@@ -28,9 +28,9 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
     }),
   );
   router.get(
-    "/region/:regionName/realms",
+    "/region/:regionName/connected-realms",
     wrap(async (req: Request, res: Response) => {
-      await handle(controller.getRealms, req, res);
+      await handle(controller.getConnectedRealms, req, res);
     }),
   );
   router.get(
