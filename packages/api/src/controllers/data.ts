@@ -30,6 +30,7 @@ import {
   IQueryItemsResponse,
   ItemId,
   IValidationErrorResponse,
+  Locale,
 } from "@sotah-inc/core";
 import {
   code,
@@ -408,20 +409,27 @@ export class DataController {
 
   public queryAuctions: RequestHandler<
     IQueryAuctionsRequest,
-    IQueryAuctionsResponse | IErrorResponse
+    IQueryAuctionsResponse | IErrorResponse | null
   > = async req => {
     const { query } = req.body;
 
-    const itemsQueryMessage = await this.messenger.queryItems(query);
+    const itemsQueryMessage = await this.messenger.queryItems({ locale: Locale.EnUS, query });
     if (itemsQueryMessage.code !== code.ok) {
       return {
         data: { error: itemsQueryMessage.error!.message },
         status: HTTPStatus.INTERNAL_SERVER_ERROR,
       };
     }
+    const itemsQueryResult = await itemsQueryMessage.decode();
+    if (itemsQueryResult === null) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
 
     const getItemsMessage = await this.messenger.getItems(
-      itemsQueryMessage.data!.items.map(v => v.item_id),
+      itemsQueryResult.items.map(v => v.item_id),
     );
     if (getItemsMessage.code !== code.ok) {
       return {
@@ -429,9 +437,16 @@ export class DataController {
         status: HTTPStatus.INTERNAL_SERVER_ERROR,
       };
     }
-    const foundItems = getItemsMessage.data!.items;
+    const getItemsResult = await getItemsMessage.decode();
+    if (getItemsResult === null) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+    const foundItems = getItemsResult.items;
 
-    let items: IQueryAuctionsItem[] = itemsQueryMessage.data!.items.map(v => {
+    let items: IQueryAuctionsItem[] = itemsQueryResult.items.map(v => {
       const result: IQueryAuctionsItem = {
         item: v.item_id in foundItems ? foundItems[v.item_id]! : null,
         rank: v.rank,
@@ -461,22 +476,29 @@ export class DataController {
 
   public queryItems: RequestHandler<
     IQueryItemsRequest,
-    IQueryItemsResponse | IErrorResponse
+    IQueryItemsResponse | IErrorResponse | null
   > = async req => {
     const { query } = req.body;
 
     // resolving items-query message
-    const itemsQueryMessage = await this.messenger.queryItems(query);
+    const itemsQueryMessage = await this.messenger.queryItems({ locale: Locale.EnUS, query });
     if (itemsQueryMessage.code !== code.ok) {
       return {
         data: { error: itemsQueryMessage.error!.message },
         status: HTTPStatus.INTERNAL_SERVER_ERROR,
       };
     }
+    const itemsQueryResult = await itemsQueryMessage.decode();
+    if (itemsQueryResult === null) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
 
     // resolving items from item-ids in items-query response data
     const getItemsMessage = await this.messenger.getItems(
-      itemsQueryMessage.data!.items.map(v => v.item_id),
+      itemsQueryResult.items.map(v => v.item_id),
     );
     if (getItemsMessage.code !== code.ok) {
       return {
@@ -484,11 +506,18 @@ export class DataController {
         status: HTTPStatus.INTERNAL_SERVER_ERROR,
       };
     }
-    const foundItems = getItemsMessage.data!.items;
+    const getItemsResult = await getItemsMessage.decode();
+    if (getItemsResult === null) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+    const foundItems = getItemsResult.items;
 
     // formatting a response
     const data: IQueryItemsResponse = {
-      items: itemsQueryMessage.data!.items.map(v => {
+      items: itemsQueryResult.items.map(v => {
         return {
           item: v.item_id in foundItems ? foundItems[v.item_id]! : null,
           rank: v.rank,
@@ -503,19 +532,51 @@ export class DataController {
     };
   };
 
-  public getPricelist: RequestHandler<IGetPricelistRequest, IGetPricelistResponse> = async req => {
+  public getPricelist: RequestHandler<
+    IGetPricelistRequest,
+    IGetPricelistResponse | null
+  > = async req => {
     const { item_ids } = req.body;
-    const price_list = (
-      await this.messenger.getPriceList({
-        item_ids,
-        realm_slug: req.params["realmSlug"],
+    const pricelistMessage = await this.messenger.getPriceList({
+      item_ids,
+      tuple: {
+        connected_realm_id: Number(req.params["connectedRealmId"] ?? "0"),
         region_name: req.params["regionName"],
-      })
-    ).data!.price_list;
-    const items = (await this.messenger.getItems(item_ids)).data!.items;
+      },
+    });
+    if (pricelistMessage.code !== code.ok) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+    const pricelistResult = await pricelistMessage.decode();
+    if (pricelistResult === null) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    const itemsMessage = await this.messenger.getItems(item_ids);
+    if (itemsMessage.code !== code.ok) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+    const itemsResult = await itemsMessage.decode();
+    if (itemsResult === null) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    const items = itemsResult.items;
 
     return {
-      data: { price_list, items },
+      data: { price_list: pricelistResult.price_list, items },
       status: HTTPStatus.OK,
     };
   };
