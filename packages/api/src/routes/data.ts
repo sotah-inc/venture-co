@@ -58,9 +58,9 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
     }),
   );
   router.get(
-    "/region/:regionName/connected-realm/:connectedRealmId/auctions",
+    "/region/:regionName/connected-realm/:connectedRealmId/query-auctions",
     wrap(async (req: Request, res: Response) => {
-      await handle(controller.getAuctions, req, res);
+      await handle(controller.queryAuctions, req, res);
     }),
   );
   router.post(
@@ -73,12 +73,6 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
     "/item/:itemId",
     wrap(async (req: Request, res: Response) => {
       await handle(controller.getItem, req, res);
-    }),
-  );
-  router.post(
-    "/region/:regionName/realm/:realmSlug/query-auctions",
-    wrap(async (req: Request, res: Response) => {
-      await handle(controller.queryAuctions, req, res);
     }),
   );
   router.post(

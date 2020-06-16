@@ -22,9 +22,6 @@ import {
   IPrices,
   IPricesFlagged,
   IProfessionPricelistJson,
-  IQueryAuctionsItem,
-  IQueryAuctionsRequest,
-  IQueryAuctionsResponse,
   IQueryAuctionStatsResponse,
   IQueryItemsRequest,
   IQueryItemsResponse,
@@ -235,13 +232,16 @@ export class DataController {
     return { data: itemResponse, status: HTTPStatus.OK };
   };
 
-  public getAuctions: QueryRequestHandler<
+  public queryAuctions: QueryRequestHandler<
     IGetAuctionsResponse | IErrorResponse | IValidationErrorResponse | null
   > = async req => {
+    const connectedRealmId = Number(req.params["connectedRealmId"]);
+    const regionName = req.params["regionName"];
+
     // gathering last-modified
     const realmModificationDatesMessage = await this.messenger.queryRealmModificationDates({
-      connected_realm_id: Number(req.params["connectedRealmId"]),
-      region_name: req.params["regionName"],
+      connected_realm_id: connectedRealmId,
+      region_name: regionName,
     });
     switch (realmModificationDatesMessage.code) {
       case code.ok:
@@ -309,8 +309,8 @@ export class DataController {
       sort_direction: sortDirection,
       sort_kind: sortKind,
       tuple: {
-        connected_realm_id: Number(req.params["realmSlug"]),
-        region_name: req.params["regionName"],
+        connected_realm_id: connectedRealmId,
+        region_name: regionName,
       },
     });
     switch (auctionsMessage.code) {
@@ -359,7 +359,7 @@ export class DataController {
     }
 
     const professionPricelists = await (async () => {
-      if (itemIds.length === 0) {
+      if (Object.keys(itemsResult).length === 0) {
         return [];
       }
 
@@ -404,59 +404,6 @@ export class DataController {
         "Cache-Control": ["public", `max-age=${60 * 30}`],
         "Last-Modified": lastModified,
       },
-      status: HTTPStatus.OK,
-    };
-  };
-
-  public queryAuctions: RequestHandler<
-    IQueryAuctionsRequest,
-    IQueryAuctionsResponse | IErrorResponse | null
-  > = async req => {
-    const { query } = req.body;
-
-    const itemsQueryMessage = await this.messenger.queryItems({ locale: Locale.EnUS, query });
-    if (itemsQueryMessage.code !== code.ok) {
-      return {
-        data: { error: itemsQueryMessage.error!.message },
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-    const itemsQueryResult = await itemsQueryMessage.decode();
-    if (itemsQueryResult === null) {
-      return {
-        data: null,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-
-    const getItemsMessage = await this.messenger.getItems(
-      itemsQueryResult.items.map(v => v.item_id),
-    );
-    if (getItemsMessage.code !== code.ok) {
-      return {
-        data: { error: itemsQueryMessage.error!.message },
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-    const getItemsResult = await getItemsMessage.decode();
-    if (getItemsResult === null) {
-      return {
-        data: null,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-    const foundItems = getItemsResult.items;
-
-    const items = itemsQueryResult.items.map<IQueryAuctionsItem>(v => {
-      return {
-        item: v.item_id in foundItems ? foundItems[v.item_id]! : null,
-        rank: v.rank,
-        target: v.target,
-      };
-    });
-
-    return {
-      data: { items },
       status: HTTPStatus.OK,
     };
   };
