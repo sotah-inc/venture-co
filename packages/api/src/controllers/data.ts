@@ -28,6 +28,7 @@ import {
   IQueryAuctionStatsResponse,
   IQueryItemsRequest,
   IQueryItemsResponse,
+  IRegionConnectedRealmTuple,
   ItemId,
   IValidationErrorResponse,
   Locale,
@@ -995,21 +996,20 @@ export class DataController {
   };
 
   public queryAuctionStats: RequestHandler<null, IQueryAuctionStatsResponse | null> = async req => {
-    const params = (() => {
-      if (
-        typeof req.params["regionName"] === "undefined" ||
-        req.params["regionName"].length === 0
-      ) {
+    const params = ((): Partial<IRegionConnectedRealmTuple> => {
+      const { regionName, connectedRealmId } = req.params;
+
+      if (typeof regionName || regionName.length === 0) {
         return {};
       }
 
-      if (typeof req.params["realmSlug"] === "undefined" || req.params["realmSlug"].length === 0) {
-        return { region_name: req.params["regionName"] };
+      if (connectedRealmId === "undefined" || connectedRealmId.length === 0) {
+        return { region_name: regionName };
       }
 
       return {
-        realm_slug: req.params["realmSlug"],
-        region_name: req.params["regionName"],
+        connected_realm_id: Number(connectedRealmId),
+        region_name: regionName,
       };
     })();
 
