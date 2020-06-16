@@ -43,7 +43,8 @@ export class UserController {
       .getRepository(User)
       .findOne({ where: { email: result.data.email } });
     if (typeof existingUser !== "undefined") {
-      const userValidationError: IValidationErrorResponse = { email: "Email is already in use!" };
+      const userValidationError: IValidationErrorResponse = { email: "email is already in use" };
+
       return {
         data: userValidationError,
         status: HTTPStatus.BAD_REQUEST,
@@ -73,7 +74,7 @@ export class UserController {
     const email: string = req.body.email;
     const user = await this.dbConn.getRepository(User).findOne({ where: { email } });
     if (typeof user === "undefined") {
-      const userValidationError = { email: "Invalid email!" };
+      const userValidationError = { email: "invalid email" };
 
       return {
         data: userValidationError,
@@ -84,8 +85,8 @@ export class UserController {
     // validating provided password
     const password: string = req.body.password;
     const isMatching = await bcrypt.compare(password, user.hashedPassword);
-    if (isMatching === false) {
-      const passwordValidationError = { password: "Invalid password!" };
+    if (!isMatching) {
+      const passwordValidationError = { password: "invalid password" };
 
       return {
         data: passwordValidationError,
