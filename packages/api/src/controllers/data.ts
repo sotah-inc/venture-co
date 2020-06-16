@@ -418,7 +418,7 @@ export class DataController {
     const itemsQueryMessage = await this.messenger.queryItems({ locale: Locale.EnUS, query });
     if (itemsQueryMessage.code !== code.ok) {
       return {
-        data: { error: itemsQueryMessage.error!.message },
+        data: { error: itemsQueryMessage.error?.message ?? "" },
         status: HTTPStatus.INTERNAL_SERVER_ERROR,
       };
     }
@@ -436,7 +436,7 @@ export class DataController {
     );
     if (getItemsMessage.code !== code.ok) {
       return {
-        data: { error: itemsQueryMessage.error!.message },
+        data: { error: itemsQueryMessage.error?.message ?? "" },
         status: HTTPStatus.INTERNAL_SERVER_ERROR,
       };
     }
@@ -995,7 +995,7 @@ export class DataController {
 
     if (typeof professionPricelist.pricelist === "undefined") {
       const validationErrors: IValidationErrorResponse = {
-        error: "Profession-pricelist pricelist was undefined.",
+        error: "profession-pricelist pricelist was undefined.",
       };
 
       return {
@@ -1006,7 +1006,7 @@ export class DataController {
 
     if (typeof professionPricelist.pricelist.user === "undefined") {
       const validationErrors: IValidationErrorResponse = {
-        error: "Profession-pricelist pricelist user was undefined.",
+        error: "profession-pricelist pricelist user was undefined.",
       };
 
       return {
@@ -1017,7 +1017,7 @@ export class DataController {
 
     if (typeof professionPricelist.pricelist.entries === "undefined") {
       const validationErrors: IValidationErrorResponse = {
-        error: "Profession-pricelist pricelist entries was undefined.",
+        error: "profession-pricelist pricelist entries was undefined.",
       };
 
       return {

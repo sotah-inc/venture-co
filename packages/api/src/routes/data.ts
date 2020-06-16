@@ -76,19 +76,19 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
     }),
   );
   router.post(
-    "/region/:regionName/realm/:realmSlug/price-list",
+    "/region/:regionName/connected-realm/:connectedRealmId/price-list",
     wrap(async (req: Request, res: Response) => {
       await handle(controller.getPricelist, req, res);
     }),
   );
   router.post(
-    "/region/:regionName/realm/:realmSlug/price-list-history",
+    "/region/:regionName/connected-realm/:connectedRealmId/price-list-history",
     wrap(async (req: Request, res: Response) => {
       await handle(controller.getPricelistHistories, req, res);
     }),
   );
   router.post(
-    "/region/:regionName/realm/:realmSlug/unmet-demand",
+    "/region/:regionName/connected-realm/:connectedRealmId/unmet-demand",
     wrap(async (req: Request, res: Response) => {
       await handle(controller.getUnmetDemand, req, res);
     }),
