@@ -32,8 +32,11 @@ export class WorkOrderController {
   }
 
   public queryWorkOrders: QueryRequestHandler<
-    IQueryWorkOrdersResponse | IValidationErrorResponse
+    IQueryWorkOrdersResponse | IValidationErrorResponse | null
   > = async req => {
+    const regionName = req.params["regionName"];
+    const realmSlug = req.params["realmSlug"];
+
     const result = await validate(QueryWorkOrdersParamsRules, {
       ...(req.query as { [key: string]: string }),
       gameVersion: req.params["gameVersion"],
@@ -46,12 +49,12 @@ export class WorkOrderController {
     }
 
     const validateMsg = await this.messenger.validateRegionRealm({
-      realm_slug: req.params["realmSlug"],
-      region_name: req.params["regionName"],
+      realm_slug: realmSlug,
+      region_name: regionName,
     });
     if (validateMsg.code !== code.ok) {
       const validationErrors: IValidationErrorResponse = {
-        error: "Could not validate region-name and realm-slug",
+        error: "could not validate region-name and realm-slug",
       };
 
       return {
@@ -59,9 +62,17 @@ export class WorkOrderController {
         status: HTTPStatus.BAD_REQUEST,
       };
     }
-    if (!(await validateMsg.decode())!.is_valid) {
+    const validateResult = await validateMsg.decode();
+    if (validateResult === null) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    if (!validateResult.is_valid) {
       const validationErrors: IValidationErrorResponse = {
-        error: "Region-name and realm-slug combination was not valid",
+        error: "region-name and realm-slug combination was not valid",
       };
 
       return {
@@ -78,24 +89,30 @@ export class WorkOrderController {
         orderDirection: result.data.orderDirection as OrderDirection,
         page: result.data.page,
         perPage: result.data.perPage,
-        realmSlug: req.params["realmSlug"],
-        regionName: req.params["regionName"],
+        realmSlug,
+        regionName,
       });
 
-    const itemIds = orders.map(v => v.itemId);
-    const itemsMsg = await this.messenger.getItems(itemIds);
+    const itemsMsg = await this.messenger.getItems(orders.map(v => v.itemId));
     if (itemsMsg.code !== code.ok) {
-      const validationErrors: IValidationErrorResponse = { error: "Failed to resolve items" };
+      const validationErrors: IValidationErrorResponse = { error: "failed to resolve items" };
 
       return {
         data: validationErrors,
         status: HTTPStatus.INTERNAL_SERVER_ERROR,
       };
     }
+    const itemsResult = await itemsMsg.decode();
+    if (itemsResult === null) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
 
     return {
       data: {
-        items: (await itemsMsg.decode())!.items,
+        items: itemsResult.items,
         orders: orders.map(v => v.toJson()),
         totalResults,
       },
