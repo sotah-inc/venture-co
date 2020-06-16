@@ -58,20 +58,6 @@ export interface IGetAuctionsResponse {
   professionPricelists: IProfessionPricelistJson[];
 }
 
-export interface IQueryAuctionsRequest {
-  query: string;
-}
-
-export interface IQueryAuctionsItem {
-  target: string;
-  item: IItem | null;
-  rank: number;
-}
-
-export interface IQueryAuctionsResponse {
-  items: IQueryAuctionsItem[];
-}
-
 export interface IQueryItemsRequest {
   query: string;
 }
