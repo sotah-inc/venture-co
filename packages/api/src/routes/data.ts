@@ -28,25 +28,25 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
     }),
   );
   router.get(
-    "/region/:regionName/connected-realms",
+    "/connected-realms/:regionName",
     wrap(async (req: Request, res: Response) => {
       await handle(controller.getConnectedRealms, req, res);
     }),
   );
   router.get(
-    "/region/:regionName/token-history",
+    "/token-history/:regionName",
     wrap(async (req: Request, res: Response) => {
       await handle(controller.getTokenHistory, req, res);
     }),
   );
   router.get(
-    "/region/:regionName/connected-realm/:connectedRealmId/query-auction-stats",
+    "/query-auction-stats/:regionName/:connectedRealmId",
     wrap(async (req: Request, res: Response) => {
       await handle(controller.queryAuctionStats, req, res);
     }),
   );
   router.get(
-    "/region/:regionName/query-auction-stats",
+    "/query-auction-stats/:regionName",
     wrap(async (req: Request, res: Response) => {
       await handle(controller.queryAuctionStats, req, res);
     }),
@@ -58,7 +58,7 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
     }),
   );
   router.get(
-    "/region/:regionName/connected-realm/:connectedRealmId/query-auctions",
+    "/query-auctions/:regionName/:connectedRealmId",
     wrap(async (req: Request, res: Response) => {
       await handle(controller.queryAuctions, req, res);
     }),
@@ -76,19 +76,19 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
     }),
   );
   router.post(
-    "/region/:regionName/connected-realm/:connectedRealmId/price-list",
+    "/price-list/:regionName/:connectedRealmId",
     wrap(async (req: Request, res: Response) => {
       await handle(controller.getPricelist, req, res);
     }),
   );
   router.post(
-    "/region/:regionName/connected-realm/:connectedRealmId/price-list-history",
+    "/price-list-history/:regionName/:connectedRealmId",
     wrap(async (req: Request, res: Response) => {
       await handle(controller.getPricelistHistories, req, res);
     }),
   );
   router.post(
-    "/region/:regionName/connected-realm/:connectedRealmId/unmet-demand",
+    "/unmet-demand/:regionName/:connectedRealmId",
     wrap(async (req: Request, res: Response) => {
       await handle(controller.getUnmetDemand, req, res);
     }),
