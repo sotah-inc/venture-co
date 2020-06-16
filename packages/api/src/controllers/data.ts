@@ -447,27 +447,13 @@ export class DataController {
     }
     const foundItems = getItemsResult.items;
 
-    let items: IQueryAuctionsItem[] = itemsQueryResult.items.map(v => {
-      const result: IQueryAuctionsItem = {
+    const items = itemsQueryResult.items.map<IQueryAuctionsItem>(v => {
+      return {
         item: v.item_id in foundItems ? foundItems[v.item_id]! : null,
         rank: v.rank,
         target: v.target,
       };
-
-      return result;
     });
-    items = items.sort((a, b) => {
-      if (a.rank !== b.rank) {
-        return a.rank > b.rank ? 1 : -1;
-      }
-
-      if (a.target !== b.target) {
-        return a.target > b.target ? 1 : -1;
-      }
-
-      return 0;
-    });
-    items = items.slice(0, 10);
 
     return {
       data: { items },
