@@ -48,7 +48,7 @@ import {
   validate,
   yupValidationErrorToResponse,
 } from "../lib/validator-rules";
-import { QueryRequestHandler, RequestHandler } from "./index";
+import { IRequestResult, QueryRequestHandler, RequestHandler } from "./index";
 
 export class DataController {
   private messenger: Messenger;
@@ -82,14 +82,14 @@ export class DataController {
     };
   };
 
-  public getPosts: RequestHandler<null, IGetPostsResponse> = async () => {
+  public async getPosts(): Promise<IRequestResult<IGetPostsResponse>> {
     const posts = await this.dbConn.getRepository(Post).find({ order: { id: "DESC" }, take: 3 });
 
     return {
       data: { posts: posts.map(v => v.toJson()) },
       status: HTTPStatus.OK,
     };
-  };
+  }
 
   public getBoot: RequestHandler<null, IGetBootResponse | null> = async () => {
     const msg = await this.messenger.getBoot();

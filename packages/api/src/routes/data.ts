@@ -3,7 +3,7 @@ import { wrap } from "async-middleware";
 import { Request, Response, Router } from "express";
 import { Connection } from "typeorm";
 
-import { DataController, handle } from "../controllers";
+import { DataController, handle, handleResult } from "../controllers";
 
 export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
   const router = Router();
@@ -11,8 +11,8 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
 
   router.get(
     "/posts",
-    wrap(async (req: Request, res: Response) => {
-      await handle(controller.getPosts, req, res);
+    wrap(async (_req: Request, res: Response) => {
+      await handleResult(res, await controller.getPosts());
     }),
   );
   router.get(
