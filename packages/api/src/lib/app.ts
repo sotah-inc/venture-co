@@ -20,7 +20,7 @@ export interface IOptions {
 export const getApp = async (opts: IOptions): Promise<express.Express | null> => {
   const { logger, natsHost, natsPort, dbHost, dbPassword } = opts;
 
-  logger.info("Starting app");
+  logger.info("starting app");
 
   // const errors = isGceEnv ? new ErrorReporting() : null;
 
@@ -35,7 +35,7 @@ export const getApp = async (opts: IOptions): Promise<express.Express | null> =>
   });
 
   // messenger init
-  logger.info("Connecting to nats", { natsHost, natsPort });
+  logger.info("connecting to nats", { natsHost, natsPort });
   const natsConnection = await (async () => {
     const conn = nats.connect({
       maxReconnectAttempts: 5,
@@ -45,7 +45,7 @@ export const getApp = async (opts: IOptions): Promise<express.Express | null> =>
     return new Promise<nats.Client | null>(resolve => {
       conn.on("connect", () => resolve(conn));
       conn.on("error", err => {
-        logger.error("Failed to connect to nats", { err });
+        logger.error("failed to connect to nats", { err });
 
         resolve(null);
       });
@@ -58,7 +58,7 @@ export const getApp = async (opts: IOptions): Promise<express.Express | null> =>
   await messenger.getBoot();
 
   // db init
-  logger.info("Connecting to db", { dbHost, dbPassword });
+  logger.info("connecting to db", { dbHost, dbPassword });
   const dbConn = await (async () => {
     try {
       return await connectDatabase({
@@ -70,7 +70,7 @@ export const getApp = async (opts: IOptions): Promise<express.Express | null> =>
         username: "postgres",
       });
     } catch (err) {
-      logger.error("Failed to connect to db", { err });
+      logger.error("failed to connect to db", { err });
 
       return null;
     }
@@ -80,13 +80,13 @@ export const getApp = async (opts: IOptions): Promise<express.Express | null> =>
   }
 
   // session init
-  logger.info("Appending session middleware");
+  logger.info("appending session middleware");
   app = await appendSessions(app, messenger, dbConn);
 
   // request logging
-  logger.info("Appending cors middleware");
+  logger.info("appending cors middleware");
   app.use((req, res, next) => {
-    logger.info("Received HTTP request", { url: req.originalUrl, method: req.method });
+    logger.info("received HTTP request", { url: req.originalUrl, method: req.method });
 
     res.set("access-control-allow-origin", "*");
     res.set("access-control-allow-headers", "content-type,authorization");
@@ -95,7 +95,7 @@ export const getApp = async (opts: IOptions): Promise<express.Express | null> =>
   });
 
   // route init
-  logger.info("Appending route middlewares");
+  logger.info("appending route middlewares");
   app.use("/", defaultRouter);
   app.use("/", getDataRouter(dbConn, messenger));
   app.use("/", getUserRouter(dbConn, messenger));
@@ -107,9 +107,9 @@ export const getApp = async (opts: IOptions): Promise<express.Express | null> =>
 
   //     app.use(errors.express);
   // }
-  logger.info("Appending error middleware");
+  logger.info("appending error middleware");
   app.use((err: Error, _: express.Request, res: express.Response, next: () => void) => {
-    logger.error("Dumping out error response", { error: err });
+    logger.error("dumping out error response", { error: err });
 
     res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(err.message);
     next();

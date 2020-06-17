@@ -9,5 +9,5 @@ router.get("/ping", (_, res: Response) => {
   res.set("Content-type", "text/plain").send("Pong");
 });
 router.get("/internal-error", () => {
-  throw new Error("Test error!");
+  throw new Error("test error!");
 });
