@@ -6,6 +6,7 @@ import {
   IRealmComposite,
   IRegionComposite,
   ITokenHistory,
+  IValidationErrorResponse,
   RealmSlug,
   RegionName,
   SortDirection,
@@ -28,6 +29,13 @@ export interface IGetBootResponse {
   expansions: IExpansion[];
   professions: IProfession[];
 }
+
+export type GetBootResponse = null | {
+  regions: IRegionComposite[];
+  item_classes: IItemClass[];
+  expansions: IExpansion[];
+  professions: IProfession[];
+};
 
 export interface IGetTokenHistoryResponse {
   history: ITokenHistory;
@@ -117,9 +125,11 @@ export interface IGetPostsResponse {
   posts: IPostJson[];
 }
 
-export interface IGetPostResponse {
-  post: IPostJson;
-}
+export type GetPostResponse =
+  | IValidationErrorResponse
+  | {
+      post: IPostJson;
+    };
 
 export interface IQueryAuctionStatsRequest {
   region_name?: RegionName;

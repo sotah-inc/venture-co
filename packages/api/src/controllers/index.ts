@@ -56,7 +56,7 @@ export async function handle<T, A>(
   res.send(data);
 }
 
-export async function handleResult<T>(res: Response, { data, headers, status }: IRequestResult<T>) {
+export function handleResult<T>(res: Response, { data, headers, status }: IRequestResult<T>) {
   res.status(status);
   if (headers) {
     res.set(headers);
