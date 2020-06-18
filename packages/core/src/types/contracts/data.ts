@@ -2,6 +2,7 @@ import { IAuction } from "../auction";
 import { IPostJson, IProfessionPricelistJson } from "../entities";
 import { ExpansionName, IExpansion } from "../expansion";
 import {
+  IErrorResponse,
   IPricesFlagged,
   IRealmComposite,
   IRegionComposite,
@@ -23,32 +24,33 @@ import {
 import { IProfession } from "../profession";
 import { IRealm, IRealmModificationDates } from "../region";
 
-export interface IGetBootResponse {
+// new
+export interface IGetBootResponseData {
   regions: IRegionComposite[];
   item_classes: IItemClass[];
   expansions: IExpansion[];
   professions: IProfession[];
 }
 
-export type GetBootResponse = null | {
-  regions: IRegionComposite[];
-  item_classes: IItemClass[];
-  expansions: IExpansion[];
-  professions: IProfession[];
-};
+export type GetBootResponse = IGetBootResponseData | null;
 
-export interface IGetTokenHistoryResponse {
-  history: ITokenHistory;
+export interface IGetPostsResponseData {
+  posts: IPostJson[];
 }
 
-export interface IStatusRealm extends IRealm {
-  regionName: string;
-  realm_modification_dates: IRealmModificationDates;
-}
+export type GetPostsResponse = IGetPostsResponseData | IValidationErrorResponse;
 
-export interface IGetConnectedRealmsResponse {
+export interface IGetConnectedRealmsResponseData {
   connectedRealms: IRealmComposite[];
 }
+
+export type GetConnectedRealmsResponse = IGetConnectedRealmsResponseData | null;
+
+export interface IGetItemResponseData {
+  item: IItem;
+}
+
+export type GetItemResponse = IGetItemResponseData | IErrorResponse;
 
 export interface IGetAuctionsRequest {
   count: number;
@@ -58,13 +60,19 @@ export interface IGetAuctionsRequest {
   itemFilters: ItemId[];
 }
 
-export interface IGetAuctionsResponse {
+export interface IGetAuctionsResponseData {
   auctions: IAuction[];
   total: number;
   total_count: number;
   items: IItemsMap;
   professionPricelists: IProfessionPricelistJson[];
 }
+
+export type GetAuctionsResponse =
+  | IGetAuctionsResponseData
+  | IErrorResponse
+  | IValidationErrorResponse
+  | null;
 
 export interface IQueryItemsRequest {
   query: string;
@@ -76,22 +84,22 @@ export interface IQueryItemsItem {
   rank: number;
 }
 
-export interface IQueryItemsResponse {
+export interface IQueryItemsResponseData {
   items: IQueryItemsItem[];
 }
 
-export interface IGetItemResponse {
-  item: IItem;
-}
+export type QueryItemsResponse = IQueryItemsResponseData | IErrorResponse | null;
 
 export interface IGetPricelistRequest {
   item_ids: ItemId[];
 }
 
-export interface IGetPricelistResponse {
+export interface IGetPricelistResponseData {
   price_list: IPriceListMap;
   items: IItemsMap;
 }
+
+export type GetPricelistResponse = IGetPricelistResponseData | null;
 
 export interface IGetPricelistHistoriesRequest {
   item_ids: ItemId[];
@@ -99,37 +107,42 @@ export interface IGetPricelistHistoriesRequest {
   upper_bounds?: number;
 }
 
-export interface IGetPricelistHistoriesResponse {
+export interface IGetPricelistHistoriesResponseData {
   history: IItemPricelistHistoryMap<IPricesFlagged>;
   items: IItemsMap;
   itemPriceLimits: IItemPriceLimits;
   overallPriceLimits: IPriceLimits;
 }
 
+export type GetPricelistHistoriesResponse = IGetPricelistHistoriesResponseData | null;
+
 export interface IGetUnmetDemandRequest {
   expansion: ExpansionName;
 }
 
-export interface IGetUnmetDemandResponse {
+export interface IGetUnmetDemandResponseData {
   items: IItemsMap;
   professionPricelists: IProfessionPricelistJson[];
   unmetItemIds: ItemId[];
 }
 
-export interface IGetProfessionPricelistsResponse {
+export type GetUnmetDemandResponse = IGetUnmetDemandResponseData | IErrorResponse | null;
+
+export interface IGetProfessionPricelistsResponseData {
   profession_pricelists: IProfessionPricelistJson[];
   items: IItemsMap;
 }
 
-export interface IGetPostsResponse {
-  posts: IPostJson[];
+export type GetProfessionPricelistsResponse =
+  | IGetProfessionPricelistsResponseData
+  | IValidationErrorResponse
+  | null;
+
+export interface IGetTokenHistoryResponseData {
+  history: ITokenHistory;
 }
 
-export type GetPostResponse =
-  | IValidationErrorResponse
-  | {
-      post: IPostJson;
-    };
+export type GetTokenHistoryResponse = IGetTokenHistoryResponseData | null;
 
 export interface IQueryAuctionStatsRequest {
   region_name?: RegionName;
@@ -142,6 +155,19 @@ export interface IQueryAuctionStatsItem {
   total_buyout: number;
 }
 
-export interface IQueryAuctionStatsResponse {
+export interface IQueryAuctionStatsResponseData {
   [key: number]: IQueryAuctionStatsItem | undefined;
+}
+
+export type QueryAuctionStatsResponse = IQueryAuctionStatsResponseData | null;
+
+export type GetProfessionPricelistResponse =
+  | IProfessionPricelistJson
+  | IValidationErrorResponse
+  | null;
+
+// old
+export interface IStatusRealm extends IRealm {
+  regionName: string;
+  realm_modification_dates: IRealmModificationDates;
 }
