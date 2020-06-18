@@ -34,6 +34,12 @@ export interface IGetBootResponseData {
 
 export type GetBootResponse = IGetBootResponseData | null;
 
+export interface IGetPostResponseData {
+  post: IPostJson;
+}
+
+export type GetPostResponse = IGetPostResponseData | IValidationErrorResponse;
+
 export interface IGetPostsResponseData {
   posts: IPostJson[];
 }
