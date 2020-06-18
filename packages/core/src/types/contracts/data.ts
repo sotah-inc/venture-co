@@ -44,7 +44,7 @@ export interface IGetPostsResponseData {
   posts: IPostJson[];
 }
 
-export type GetPostsResponse = IGetPostsResponseData | IValidationErrorResponse;
+export type GetPostsResponse = IGetPostsResponseData;
 
 export interface IGetConnectedRealmsResponseData {
   connectedRealms: IRealmComposite[];
