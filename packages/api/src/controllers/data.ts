@@ -1,20 +1,21 @@
 import {
+  GetAuctionsResponse,
+  GetBootResponse,
+  GetConnectedRealmsResponse,
+  GetItemResponse,
+  GetPostResponse,
+  GetPostsResponse,
+  GetPricelistHistoriesResponse,
+  GetPricelistResponse,
+  GetProfessionPricelistsResponse,
+  GetTokenHistoryResponse,
+  GetUnmetDemandResponse,
   IBollingerBands,
   IErrorResponse,
-  IGetAuctionsResponse,
-  IGetBootResponse,
-  IGetConnectedRealmsResponse,
-  IGetItemResponse,
-  IGetPostResponse,
-  IGetPostsResponse,
+  IGetItemResponseData,
   IGetPricelistHistoriesRequest,
-  IGetPricelistHistoriesResponse,
   IGetPricelistRequest,
-  IGetPricelistResponse,
-  IGetProfessionPricelistsResponse,
-  IGetTokenHistoryResponse,
   IGetUnmetDemandRequest,
-  IGetUnmetDemandResponse,
   IItemPriceLimits,
   IItemPricelistHistoryMap,
   IPriceLimits,
@@ -22,13 +23,14 @@ import {
   IPrices,
   IPricesFlagged,
   IProfessionPricelistJson,
-  IQueryAuctionStatsResponse,
   IQueryItemsRequest,
-  IQueryItemsResponse,
+  IQueryItemsResponseData,
   IRegionConnectedRealmTuple,
   ItemId,
   IValidationErrorResponse,
   Locale,
+  QueryAuctionStatsResponse,
+  QueryItemsResponse,
 } from "@sotah-inc/core";
 import {
   code,
@@ -59,7 +61,7 @@ export class DataController {
     this.dbConn = dbConn;
   }
 
-  public getPost: RequestHandler<null, IGetPostResponse | IValidationErrorResponse> = async req => {
+  public getPost: RequestHandler<null, GetPostResponse> = async req => {
     const post = await this.dbConn.getRepository(Post).findOne({
       where: {
         slug: req.params["post_slug"],
@@ -82,7 +84,7 @@ export class DataController {
     };
   };
 
-  public async getPosts(): Promise<IRequestResult<IGetPostsResponse>> {
+  public async getPosts(): Promise<IRequestResult<GetPostsResponse>> {
     const posts = await this.dbConn.getRepository(Post).find({ order: { id: "DESC" }, take: 3 });
 
     return {
@@ -91,7 +93,7 @@ export class DataController {
     };
   }
 
-  public getBoot: RequestHandler<null, IGetBootResponse | null> = async () => {
+  public getBoot: RequestHandler<null, GetBootResponse> = async () => {
     const msg = await this.messenger.getBoot();
     if (msg.code !== code.ok) {
       return {
@@ -117,10 +119,7 @@ export class DataController {
     };
   };
 
-  public getConnectedRealms: RequestHandler<
-    null,
-    IGetConnectedRealmsResponse | null
-  > = async req => {
+  public getConnectedRealms: RequestHandler<null, GetConnectedRealmsResponse> = async req => {
     const realmsMessage = await this.messenger.getConnectedRealms({
       region_name: req.params["regionName"],
     });
@@ -194,7 +193,7 @@ export class DataController {
     };
   };
 
-  public getItem: RequestHandler<null, IGetItemResponse | IErrorResponse> = async req => {
+  public getItem: RequestHandler<null, GetItemResponse> = async req => {
     const itemId = Number(req.params["itemId"]);
 
     const msg = await this.messenger.getItems([itemId]);
@@ -227,14 +226,12 @@ export class DataController {
       };
     }
 
-    const itemResponse: IGetItemResponse = { item: foundItem };
+    const itemResponse: IGetItemResponseData = { item: foundItem };
 
     return { data: itemResponse, status: HTTPStatus.OK };
   };
 
-  public queryAuctions: QueryRequestHandler<
-    IGetAuctionsResponse | IErrorResponse | IValidationErrorResponse | null
-  > = async req => {
+  public queryAuctions: QueryRequestHandler<GetAuctionsResponse> = async req => {
     const connectedRealmId = Number(req.params["connectedRealmId"]);
     const regionName = req.params["regionName"];
 
@@ -408,10 +405,7 @@ export class DataController {
     };
   };
 
-  public queryItems: RequestHandler<
-    IQueryItemsRequest,
-    IQueryItemsResponse | IErrorResponse | null
-  > = async req => {
+  public queryItems: RequestHandler<IQueryItemsRequest, QueryItemsResponse> = async req => {
     const { query } = req.body;
 
     // resolving items-query message
@@ -450,10 +444,10 @@ export class DataController {
     const foundItems = getItemsResult.items;
 
     // formatting a response
-    const data: IQueryItemsResponse = {
+    const data: IQueryItemsResponseData = {
       items: itemsQueryResult.items.map(v => {
         return {
-          item: v.item_id in foundItems ? foundItems[v.item_id]! : null,
+          item: foundItems[v.item_id] ?? null,
           rank: v.rank,
           target: v.target,
         };
@@ -466,10 +460,7 @@ export class DataController {
     };
   };
 
-  public getPricelist: RequestHandler<
-    IGetPricelistRequest,
-    IGetPricelistResponse | null
-  > = async req => {
+  public getPricelist: RequestHandler<IGetPricelistRequest, GetPricelistResponse> = async req => {
     const { item_ids } = req.body;
     const pricelistMessage = await this.messenger.getPriceList({
       item_ids,
@@ -517,7 +508,7 @@ export class DataController {
 
   public getPricelistHistories: RequestHandler<
     IGetPricelistHistoriesRequest,
-    IGetPricelistHistoriesResponse | null
+    GetPricelistHistoriesResponse
   > = async req => {
     const { item_ids } = req.body;
     const currentUnixTimestamp = Math.floor(Date.now() / 1000);
@@ -767,7 +758,7 @@ export class DataController {
 
   public getUnmetDemand: RequestHandler<
     IGetUnmetDemandRequest,
-    IGetUnmetDemandResponse | IErrorResponse | null
+    GetUnmetDemandResponse
   > = async req => {
     // gathering profession-pricelists
     const { expansion } = req.body;
@@ -852,7 +843,7 @@ export class DataController {
 
   public getProfessionPricelists: RequestHandler<
     null,
-    IGetProfessionPricelistsResponse | IValidationErrorResponse | null
+    GetProfessionPricelistsResponse
   > = async req => {
     // gathering profession-pricelists
     const professionPricelists = await this.dbConn.getRepository(ProfessionPricelist).find({
@@ -898,7 +889,7 @@ export class DataController {
     };
   };
 
-  public getTokenHistory: RequestHandler<null, IGetTokenHistoryResponse | null> = async req => {
+  public getTokenHistory: RequestHandler<null, GetTokenHistoryResponse> = async req => {
     const msg = await this.messenger.getTokenHistory({ region_name: req.params["regionName"] });
     if (msg.code !== code.ok) {
       if (msg.code === code.notFound) {
@@ -928,7 +919,7 @@ export class DataController {
     };
   };
 
-  public queryAuctionStats: RequestHandler<null, IQueryAuctionStatsResponse | null> = async req => {
+  public queryAuctionStats: RequestHandler<null, QueryAuctionStatsResponse> = async req => {
     const params = ((): Partial<IRegionConnectedRealmTuple> => {
       const { regionName, connectedRealmId } = req.params;
 
