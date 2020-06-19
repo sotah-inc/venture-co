@@ -9,10 +9,13 @@ import { Request, Response, Router } from "express";
 import { Connection } from "typeorm";
 
 import { DataController, handleResult } from "../controllers";
+import { getRouter as getQueryAuctionStatsRouter } from "./data/query-auction-stats";
 
 export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
   const router = Router();
   const controller = new DataController(messenger, dbConn);
+
+  router.use("/query-auction-stats", getQueryAuctionStatsRouter(messenger));
 
   router.get(
     "/posts",
@@ -45,29 +48,6 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
 
       handleResult(res, await controller.getTokenHistory(regionName));
     }),
-  );
-  router.get(
-    "/query-auction-stats/:regionName/:connectedRealmId",
-    wrap(async (req: Request, res: Response) => {
-      const regionName = req.params["regionName"];
-      const connectedRealmId = Number(req.params["connectedRealmId"]);
-
-      handleResult(res, await controller.queryAuctionStats(regionName, connectedRealmId));
-    }),
-  );
-  router.get(
-    "/query-auction-stats/:regionName",
-    wrap(async (req: Request, res: Response) => {
-      const regionName = req.params["regionName"];
-
-      handleResult(res, await controller.queryAuctionStats(regionName));
-    }),
-  );
-  router.get(
-    "/query-auction-stats",
-    wrap(async (_req: Request, res: Response) =>
-      handleResult(res, await controller.queryAuctionStats()),
-    ),
   );
   router.get(
     "/query-auctions/:regionName/:connectedRealmId",
