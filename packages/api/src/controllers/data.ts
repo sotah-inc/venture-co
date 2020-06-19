@@ -1,4 +1,6 @@
 import {
+  ConnectedRealmId,
+  ExpansionName,
   GetAuctionsResponse,
   GetBootResponse,
   GetConnectedRealmsResponse,
@@ -7,30 +9,28 @@ import {
   GetPostsResponse,
   GetPricelistHistoriesResponse,
   GetPricelistResponse,
+  GetProfessionPricelistResponse,
   GetProfessionPricelistsResponse,
   GetTokenHistoryResponse,
   GetUnmetDemandResponse,
   IBollingerBands,
   IErrorResponse,
   IGetItemResponseData,
-  IGetPricelistHistoriesRequest,
-  IGetPricelistRequest,
-  IGetUnmetDemandRequest,
   IItemPriceLimits,
   IItemPricelistHistoryMap,
   IPriceLimits,
   IPricelistHistoryMap,
   IPrices,
   IPricesFlagged,
-  IProfessionPricelistJson,
-  IQueryItemsRequest,
   IQueryItemsResponseData,
   IRegionConnectedRealmTuple,
   ItemId,
   IValidationErrorResponse,
   Locale,
+  ProfessionName,
   QueryAuctionStatsResponse,
   QueryItemsResponse,
+  RegionName,
 } from "@sotah-inc/core";
 import {
   code,
@@ -43,6 +43,7 @@ import {
 import boll from "bollinger-bands";
 import HTTPStatus from "http-status";
 import moment from "moment";
+import { ParsedQs } from "qs";
 import { Connection } from "typeorm";
 
 import {
@@ -50,7 +51,7 @@ import {
   validate,
   yupValidationErrorToResponse,
 } from "../lib/validator-rules";
-import { IRequestResult, QueryRequestHandler, RequestHandler } from "./index";
+import { IRequestResult } from "./index";
 
 export class DataController {
   private messenger: Messenger;
@@ -61,12 +62,8 @@ export class DataController {
     this.dbConn = dbConn;
   }
 
-  public getPost: RequestHandler<null, GetPostResponse> = async req => {
-    const post = await this.dbConn.getRepository(Post).findOne({
-      where: {
-        slug: req.params["post_slug"],
-      },
-    });
+  public async getPost(slug: string): Promise<IRequestResult<GetPostResponse>> {
+    const post = await this.dbConn.getRepository(Post).findOne({ where: { slug } });
     if (typeof post === "undefined" || post === null) {
       const validationResponse: IValidationErrorResponse = {
         notFound: "Not Found",
@@ -82,7 +79,7 @@ export class DataController {
       data: { post: post.toJson() },
       status: HTTPStatus.OK,
     };
-  };
+  }
 
   public async getPosts(): Promise<IRequestResult<GetPostsResponse>> {
     const posts = await this.dbConn.getRepository(Post).find({ order: { id: "DESC" }, take: 3 });
@@ -93,7 +90,7 @@ export class DataController {
     };
   }
 
-  public getBoot: RequestHandler<null, GetBootResponse> = async () => {
+  public async getBoot(): Promise<IRequestResult<GetBootResponse>> {
     const msg = await this.messenger.getBoot();
     if (msg.code !== code.ok) {
       return {
@@ -117,11 +114,14 @@ export class DataController {
       },
       status: HTTPStatus.OK,
     };
-  };
+  }
 
-  public getConnectedRealms: RequestHandler<null, GetConnectedRealmsResponse> = async req => {
+  public async getConnectedRealms(
+    regionName: RegionName,
+    ifModifiedSince?: string,
+  ): Promise<IRequestResult<GetConnectedRealmsResponse>> {
     const realmsMessage = await this.messenger.getConnectedRealms({
-      region_name: req.params["regionName"],
+      region_name: regionName,
     });
     switch (realmsMessage.code) {
       case code.notFound:
@@ -160,7 +160,6 @@ export class DataController {
     })();
 
     // checking if-modified-since header
-    const ifModifiedSince = req.header("if-modified-since");
     if (lastModifiedDate !== null && typeof ifModifiedSince !== "undefined") {
       const ifModifiedSinceDate = moment(new Date(ifModifiedSince)).utc();
       if (lastModifiedDate.isSameOrBefore(ifModifiedSinceDate)) {
@@ -191,11 +190,9 @@ export class DataController {
       headers,
       status: HTTPStatus.OK,
     };
-  };
+  }
 
-  public getItem: RequestHandler<null, GetItemResponse> = async req => {
-    const itemId = Number(req.params["itemId"]);
-
+  public async getItem(itemId: ItemId): Promise<IRequestResult<GetItemResponse>> {
     const msg = await this.messenger.getItems([itemId]);
     if (msg.code !== code.ok) {
       const errorResponse: IErrorResponse = { error: "failed to fetch items" };
@@ -229,12 +226,14 @@ export class DataController {
     const itemResponse: IGetItemResponseData = { item: foundItem };
 
     return { data: itemResponse, status: HTTPStatus.OK };
-  };
+  }
 
-  public queryAuctions: QueryRequestHandler<GetAuctionsResponse> = async req => {
-    const connectedRealmId = Number(req.params["connectedRealmId"]);
-    const regionName = req.params["regionName"];
-
+  public async queryAuctions(
+    regionName: RegionName,
+    connectedRealmId: ConnectedRealmId,
+    query: ParsedQs,
+    ifModifiedSince?: string,
+  ): Promise<IRequestResult<GetAuctionsResponse>> {
     // gathering last-modified
     const realmModificationDatesMessage = await this.messenger.queryRealmModificationDates({
       connected_realm_id: connectedRealmId,
@@ -269,7 +268,6 @@ export class DataController {
     const lastModified = `${lastModifiedDate.format("ddd, DD MMM YYYY HH:mm:ss")} GMT`;
 
     // checking if-modified-since header
-    const ifModifiedSince = req.header("if-modified-since");
     if (ifModifiedSince) {
       const ifModifiedSinceDate = moment(new Date(ifModifiedSince)).utc();
       if (lastModifiedDate.isSameOrBefore(ifModifiedSinceDate)) {
@@ -288,7 +286,7 @@ export class DataController {
     }
 
     // parsing request params
-    const validateParamsResult = await validate(AuctionsQueryParamsRules, req.query);
+    const validateParamsResult = await validate(AuctionsQueryParamsRules, query);
     if (validateParamsResult.error || !validateParamsResult.data) {
       return {
         data: yupValidationErrorToResponse(validateParamsResult.error),
@@ -403,11 +401,9 @@ export class DataController {
       },
       status: HTTPStatus.OK,
     };
-  };
+  }
 
-  public queryItems: RequestHandler<IQueryItemsRequest, QueryItemsResponse> = async req => {
-    const { query } = req.body;
-
+  public async queryItems(query: string): Promise<IRequestResult<QueryItemsResponse>> {
     // resolving items-query message
     const itemsQueryMessage = await this.messenger.queryItems({ locale: Locale.EnUS, query });
     if (itemsQueryMessage.code !== code.ok) {
@@ -458,15 +454,18 @@ export class DataController {
       data,
       status: HTTPStatus.OK,
     };
-  };
+  }
 
-  public getPricelist: RequestHandler<IGetPricelistRequest, GetPricelistResponse> = async req => {
-    const { item_ids } = req.body;
+  public async getPricelist(
+    regionName: RegionName,
+    connectedRealmId: ConnectedRealmId,
+    itemIds: ItemId[],
+  ): Promise<IRequestResult<GetPricelistResponse>> {
     const pricelistMessage = await this.messenger.getPriceList({
-      item_ids,
+      item_ids: itemIds,
       tuple: {
-        connected_realm_id: Number(req.params["connectedRealmId"] ?? "0"),
-        region_name: req.params["regionName"],
+        connected_realm_id: connectedRealmId,
+        region_name: regionName,
       },
     });
     if (pricelistMessage.code !== code.ok) {
@@ -483,7 +482,7 @@ export class DataController {
       };
     }
 
-    const itemsMessage = await this.messenger.getItems(item_ids);
+    const itemsMessage = await this.messenger.getItems(itemIds);
     if (itemsMessage.code !== code.ok) {
       return {
         data: null,
@@ -504,21 +503,21 @@ export class DataController {
       data: { price_list: pricelistResult.price_list, items },
       status: HTTPStatus.OK,
     };
-  };
+  }
 
-  public getPricelistHistories: RequestHandler<
-    IGetPricelistHistoriesRequest,
-    GetPricelistHistoriesResponse
-  > = async req => {
-    const { item_ids } = req.body;
+  public async getPricelistHistories(
+    regionName: RegionName,
+    connectedRealmId: ConnectedRealmId,
+    itemIds: ItemId[],
+  ): Promise<IRequestResult<GetPricelistHistoriesResponse>> {
     const currentUnixTimestamp = Math.floor(Date.now() / 1000);
     const lowerBounds = currentUnixTimestamp - 60 * 60 * 24 * 14;
     const historyMessage = await this.messenger.getPricelistHistories({
-      item_ids,
+      item_ids: itemIds,
       lower_bounds: lowerBounds,
       tuple: {
-        connected_realm_id: Number(req.params["connectedRealmId"] ?? "0"),
-        region_name: req.params["regionName"],
+        connected_realm_id: connectedRealmId,
+        region_name: regionName,
       },
       upper_bounds: currentUnixTimestamp,
     });
@@ -536,7 +535,7 @@ export class DataController {
       };
     }
     const foundHistory = historyMessageResult.history;
-    const itemsMessage = await this.messenger.getItems(item_ids);
+    const itemsMessage = await this.messenger.getItems(itemIds);
     if (itemsMessage.code !== code.ok) {
       return {
         data: null,
@@ -553,7 +552,7 @@ export class DataController {
     const items = itemsResult.items;
 
     // gathering unix timestamps for all items
-    const historyUnixTimestamps: number[] = item_ids.reduce(
+    const historyUnixTimestamps: number[] = itemIds.reduce(
       (previousHistoryUnixTimestamps: number[], itemId) => {
         const itemHistory = foundHistory[itemId];
         if (typeof itemHistory === "undefined") {
@@ -575,7 +574,7 @@ export class DataController {
     );
 
     // normalizing all histories to have zeroed data where missing
-    const historyResult = item_ids.reduce<IItemPricelistHistoryMap<IPricesFlagged>>(
+    const historyResult = itemIds.reduce<IItemPricelistHistoryMap<IPricesFlagged>>(
       (previousHistory, itemId) => {
         // generating a full zeroed pricelist-history for this item
         const currentItemHistory = foundHistory[itemId];
@@ -643,7 +642,7 @@ export class DataController {
       {},
     );
 
-    const itemPriceLimits = item_ids.reduce<IItemPriceLimits>((previousItemPriceLimits, itemId) => {
+    const itemPriceLimits = itemIds.reduce<IItemPriceLimits>((previousItemPriceLimits, itemId) => {
       const out: IPriceLimits = {
         lower: 0,
         upper: 0,
@@ -718,7 +717,7 @@ export class DataController {
     }, {});
 
     const overallPriceLimits: IPriceLimits = { lower: 0, upper: 0 };
-    overallPriceLimits.lower = item_ids.reduce((overallLower, itemId) => {
+    overallPriceLimits.lower = itemIds.reduce((overallLower, itemId) => {
       const priceLimits = itemPriceLimits[itemId];
       if (typeof priceLimits === "undefined") {
         return overallLower;
@@ -737,7 +736,7 @@ export class DataController {
 
       return overallLower;
     }, 0);
-    overallPriceLimits.upper = item_ids.reduce((overallUpper, itemId) => {
+    overallPriceLimits.upper = itemIds.reduce((overallUpper, itemId) => {
       const priceLimits = itemPriceLimits[itemId];
       if (typeof priceLimits === "undefined") {
         return overallUpper;
@@ -754,16 +753,16 @@ export class DataController {
       data: { history: historyResult, items, itemPriceLimits, overallPriceLimits },
       status: HTTPStatus.OK,
     };
-  };
+  }
 
-  public getUnmetDemand: RequestHandler<
-    IGetUnmetDemandRequest,
-    GetUnmetDemandResponse
-  > = async req => {
+  public async getUnmetDemand(
+    regionName: RegionName,
+    connectedRealmId: ConnectedRealmId,
+    expansionName: ExpansionName,
+  ): Promise<IRequestResult<GetUnmetDemandResponse>> {
     // gathering profession-pricelists
-    const { expansion } = req.body;
     const professionPricelists = await this.dbConn.getRepository(ProfessionPricelist).find({
-      where: { expansion },
+      where: { expansion: expansionName },
     });
 
     // gathering included item-ids
@@ -801,8 +800,8 @@ export class DataController {
     const pricelistMessage = await this.messenger.getPriceList({
       item_ids: itemIds,
       tuple: {
-        connected_realm_id: Number(req.params["connectedRealmId"] ?? "0"),
-        region_name: req.params["regionName"],
+        connected_realm_id: connectedRealmId,
+        region_name: regionName,
       },
     });
     if (pricelistMessage.code !== code.ok) {
@@ -839,15 +838,15 @@ export class DataController {
       },
       status: HTTPStatus.OK,
     };
-  };
+  }
 
-  public getProfessionPricelists: RequestHandler<
-    null,
-    GetProfessionPricelistsResponse
-  > = async req => {
+  public async getProfessionPricelists(
+    professionName: ProfessionName,
+    expansionName: ExpansionName,
+  ): Promise<IRequestResult<GetProfessionPricelistsResponse>> {
     // gathering profession-pricelists
     const professionPricelists = await this.dbConn.getRepository(ProfessionPricelist).find({
-      where: { name: req.params["profession"], expansion: req.params["expansion"] },
+      where: { name: professionName, expansion: expansionName },
     });
 
     // gathering related items
@@ -887,10 +886,12 @@ export class DataController {
       },
       status: HTTPStatus.OK,
     };
-  };
+  }
 
-  public getTokenHistory: RequestHandler<null, GetTokenHistoryResponse> = async req => {
-    const msg = await this.messenger.getTokenHistory({ region_name: req.params["regionName"] });
+  public async getTokenHistory(
+    regionName: RegionName,
+  ): Promise<IRequestResult<GetTokenHistoryResponse>> {
+    const msg = await this.messenger.getTokenHistory({ region_name: regionName });
     if (msg.code !== code.ok) {
       if (msg.code === code.notFound) {
         return {
@@ -917,17 +918,18 @@ export class DataController {
       data: { history: tokenHistoryResult },
       status: HTTPStatus.OK,
     };
-  };
+  }
 
-  public queryAuctionStats: RequestHandler<null, QueryAuctionStatsResponse> = async req => {
+  public async queryAuctionStats(
+    regionName?: RegionName,
+    connectedRealmId?: ConnectedRealmId,
+  ): Promise<IRequestResult<QueryAuctionStatsResponse>> {
     const params = ((): Partial<IRegionConnectedRealmTuple> => {
-      const { regionName, connectedRealmId } = req.params;
-
-      if (typeof regionName || regionName.length === 0) {
+      if (typeof regionName === "undefined" || regionName.length === 0) {
         return {};
       }
 
-      if (connectedRealmId === "undefined" || connectedRealmId.length === 0) {
+      if (typeof connectedRealmId === "undefined") {
         return { region_name: regionName };
       }
 
@@ -964,19 +966,16 @@ export class DataController {
       data: auctionStatsResult,
       status: HTTPStatus.OK,
     };
-  };
+  }
 
-  public getProfessionPricelist: RequestHandler<
-    null,
-    IProfessionPricelistJson | IValidationErrorResponse | null
-  > = async req => {
+  public async getProfessionPricelist(
+    professionName: ProfessionName,
+    expansionName: ExpansionName,
+    pricelistSlug: string,
+  ): Promise<IRequestResult<GetProfessionPricelistResponse>> {
     const professionPricelist = await this.dbConn
       .getCustomRepository(ProfessionPricelistRepository)
-      .getFromPricelistSlug(
-        req.params["profession"],
-        req.params["expansion"],
-        req.params["pricelist_slug"],
-      );
+      .getFromPricelistSlug(professionName, expansionName, pricelistSlug);
     if (professionPricelist === null) {
       return {
         data: null,
@@ -1021,5 +1020,5 @@ export class DataController {
       data: professionPricelist.toJson(),
       status: HTTPStatus.OK,
     };
-  };
+  }
 }
