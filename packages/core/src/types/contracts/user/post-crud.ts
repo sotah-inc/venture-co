@@ -1,4 +1,5 @@
 import { IPostJson } from "../../entities";
+import { IValidationErrorResponse } from "../index";
 
 export interface ICreatePostRequest {
   title: string;
@@ -7,10 +8,14 @@ export interface ICreatePostRequest {
   body: string;
 }
 
-export interface ICreatePostResponse {
+export interface ICreatePostResponseData {
   post: IPostJson;
 }
 
-export type IUpdatePostRequest = ICreatePostRequest;
+export type CreatePostResponse = ICreatePostResponseData | IValidationErrorResponse;
 
-export type IUpdatePostResponse = ICreatePostResponse;
+export type UpdatePostRequest = ICreatePostRequest;
+
+export type UpdatePostResponse = CreatePostResponse;
+
+export type DeletePostResponse = IValidationErrorResponse | null;
