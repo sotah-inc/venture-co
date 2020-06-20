@@ -1,9 +1,9 @@
 import {
+  CreateUserResponse,
   ICreateUserRequest,
-  ICreateUserResponse,
   ILoginRequest,
-  ILoginResponse,
   IValidationErrorResponse,
+  LoginResponse,
   UserLevel,
 } from "@sotah-inc/core";
 import { Messenger, User } from "@sotah-inc/server";
@@ -16,7 +16,7 @@ import {
   validate,
   yupValidationErrorToResponse,
 } from "../lib/validator-rules";
-import { RequestHandler } from "./index";
+import { IRequestResult } from "./index";
 
 export class UserController {
   private readonly messenger: Messenger;
@@ -27,11 +27,8 @@ export class UserController {
     this.dbConn = dbConn;
   }
 
-  public createUser: RequestHandler<
-    ICreateUserRequest,
-    ICreateUserResponse | IValidationErrorResponse
-  > = async req => {
-    const result = await validate(UserRequestBodyRules, req.body);
+  public async createUser(body: ICreateUserRequest): Promise<IRequestResult<CreateUserResponse>> {
+    const result = await validate(UserRequestBodyRules, body);
     if (result.error || !result.data) {
       return {
         data: yupValidationErrorToResponse(result.error),
@@ -64,14 +61,11 @@ export class UserController {
       },
       status: HTTPStatus.CREATED,
     };
-  };
+  }
 
-  public login: RequestHandler<
-    ILoginRequest,
-    ILoginResponse | IValidationErrorResponse
-  > = async req => {
+  public async login(body: ILoginRequest): Promise<IRequestResult<LoginResponse>> {
     // validating provided email
-    const email: string = req.body.email;
+    const email: string = body.email;
     const user = await this.dbConn.getRepository(User).findOne({ where: { email } });
     if (typeof user === "undefined") {
       const userValidationError = { email: "invalid email" };
@@ -83,7 +77,7 @@ export class UserController {
     }
 
     // validating provided password
-    const password: string = req.body.password;
+    const password: string = body.password;
     const isMatching = await bcrypt.compare(password, user.hashedPassword);
     if (!isMatching) {
       const passwordValidationError = { password: "invalid password" };
@@ -102,5 +96,5 @@ export class UserController {
       },
       status: HTTPStatus.OK,
     };
-  };
+  }
 }

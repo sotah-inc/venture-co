@@ -6,7 +6,7 @@ import {
   ICreateProfessionPricelistRequest,
   ICreateProfessionPricelistResponse,
   ICreateUserRequest,
-  ICreateUserResponse,
+  ICreateUserResponseData,
 } from "@sotah-inc/core";
 import {
   Messenger,
@@ -65,7 +65,7 @@ const getUserTestHelper = (request: supertest.SuperTest<supertest.Test>) => {
     t.is(res.status, HTTPStatus.CREATED);
     t.not(String(res.header["content-type"]).match(/^application\/json/), null);
 
-    const responseBody: ICreateUserResponse = res.body;
+    const responseBody: ICreateUserResponseData = res.body;
     t.true("user" in responseBody);
     t.true("id" in responseBody.user);
     t.is(typeof responseBody.user.id, "number");
@@ -79,10 +79,7 @@ const getUserTestHelper = (request: supertest.SuperTest<supertest.Test>) => {
 // pricelist test-helper
 const getPricelistTestHelper = (request: supertest.SuperTest<supertest.Test>) => {
   const requestPricelist = (token: string, body: ICreatePricelistRequest) => {
-    return request
-      .post("/user/pricelists")
-      .set("Authorization", `Bearer ${token}`)
-      .send(body);
+    return request.post("/user/pricelists").set("Authorization", `Bearer ${token}`).send(body);
   };
   const createPricelist = async (
     t: ExecutionContext,
@@ -147,10 +144,7 @@ const getProfessionPricelistTestHelper = (request: supertest.SuperTest<supertest
 
 const getPostTestHelper = (request: supertest.SuperTest<supertest.Test>) => {
   const requestPost = (token: string, body: ICreatePostRequest) => {
-    return request
-      .post("/user/posts")
-      .set("Authorization", `Bearer ${token}`)
-      .send(body);
+    return request.post("/user/posts").set("Authorization", `Bearer ${token}`).send(body);
   };
   const createPost = async (
     t: ExecutionContext,

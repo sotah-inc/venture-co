@@ -3,7 +3,7 @@ import { wrap } from "async-middleware";
 import { Request, Response, Router } from "express";
 import { Connection } from "typeorm";
 
-import { handle } from "../controllers";
+import { handleResult } from "../controllers";
 import { UserController } from "../controllers/user";
 import { getRouter as getBaseRouter } from "./user/base";
 import { getRouter as getPostsRouter } from "./user/posts-crud";
@@ -25,15 +25,15 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
 
   router.post(
     "/users",
-    wrap(async (req: Request, res: Response) => {
-      await handle(controller.createUser, req, res);
-    }),
+    wrap(async (req: Request, res: Response) =>
+      handleResult(res, await controller.createUser(req.body)),
+    ),
   );
 
   router.post(
     "/login",
     wrap(async (req: Request, res: Response) => {
-      await handle(controller.login, req, res);
+      handleResult(res, await controller.login(req.body));
     }),
   );
 
