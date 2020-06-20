@@ -3,7 +3,7 @@ import { wrap } from "async-middleware";
 import { Request, Response, Router } from "express";
 import { Connection } from "typeorm";
 
-import { handle } from "../../controllers";
+import { handleResult } from "../../controllers";
 import { ProfileController } from "../../controllers/user/profile";
 
 export const getRouter = (dbConn: Connection): Router => {
@@ -13,9 +13,9 @@ export const getRouter = (dbConn: Connection): Router => {
   router.put(
     "/",
     auth,
-    wrap(async (req: Request, res: Response) => {
-      await handle(controller.updateProfile.bind(controller), req, res);
-    }),
+    wrap(async (req: Request, res: Response) =>
+      handleResult(res, await controller.updateProfile(req, res)),
+    ),
   );
 
   return router;

@@ -1,7 +1,7 @@
 import {
   IUpdateProfileRequest,
-  IUpdateProfileResponse,
   IValidationErrorResponse,
+  UpdateProfileResponse,
   UserLevel,
 } from "@sotah-inc/core";
 import { User, UserRepository } from "@sotah-inc/server";
@@ -19,11 +19,11 @@ export class ProfileController {
     this.dbConn = dbConn;
   }
 
-  @Authenticator<IUpdateProfileRequest, IUpdateProfileResponse>(UserLevel.Regular)
+  @Authenticator<IUpdateProfileRequest, UpdateProfileResponse>(UserLevel.Regular)
   public async updateProfile(
     req: IRequest<IUpdateProfileRequest>,
     _res: Response,
-  ): Promise<IRequestResult<IUpdateProfileResponse | IValidationErrorResponse>> {
+  ): Promise<IRequestResult<UpdateProfileResponse>> {
     const user = req.user as User;
 
     const result = await validate(
