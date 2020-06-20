@@ -3,7 +3,7 @@ import { wrap } from "async-middleware";
 import { Request, Response, Router } from "express";
 import { Connection } from "typeorm";
 
-import { handle } from "../../controllers";
+import { handleResult } from "../../controllers";
 import { PostCrudController } from "../../controllers/user/post-crud";
 
 export const getRouter = (dbConn: Connection): Router => {
@@ -13,25 +13,25 @@ export const getRouter = (dbConn: Connection): Router => {
   router.post(
     "/",
     auth,
-    wrap(async (req: Request, res: Response) => {
-      await handle(controller.createPost.bind(controller), req, res);
-    }),
+    wrap(async (req: Request, res: Response) =>
+      handleResult(res, await controller.createPost(req, res)),
+    ),
   );
 
   router.put(
     "/:post_id",
     auth,
-    wrap(async (req: Request, res: Response) => {
-      await handle(controller.updatePost.bind(controller), req, res);
-    }),
+    wrap(async (req: Request, res: Response) =>
+      handleResult(res, await controller.updatePost(req, res)),
+    ),
   );
 
   router.delete(
     "/:post_id",
     auth,
-    wrap(async (req: Request, res: Response) => {
-      await handle(controller.deletePost.bind(controller), req, res);
-    }),
+    wrap(async (req: Request, res: Response) =>
+      handleResult(res, await controller.deletePost(req, res)),
+    ),
   );
 
   return router;

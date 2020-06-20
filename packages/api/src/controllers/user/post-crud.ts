@@ -1,9 +1,10 @@
 import {
+  CreatePostResponse,
+  DeletePostResponse,
   ICreatePostRequest,
-  ICreatePostResponse,
-  IUpdatePostRequest,
-  IUpdatePostResponse,
   IValidationErrorResponse,
+  UpdatePostRequest,
+  UpdatePostResponse,
   UserLevel,
 } from "@sotah-inc/core";
 import { Post, PostRepository, User } from "@sotah-inc/server";
@@ -26,12 +27,12 @@ export class PostCrudController {
     this.dbConn = dbConn;
   }
 
-  @Authenticator<ICreatePostRequest, ICreatePostResponse>(UserLevel.Admin)
-  @Validator<ICreatePostRequest, ICreatePostResponse>(PostRequestBodyRules)
+  @Authenticator<ICreatePostRequest, CreatePostResponse>(UserLevel.Admin)
+  @Validator<ICreatePostRequest, CreatePostResponse>(PostRequestBodyRules)
   public async createPost(
     req: IRequest<ICreatePostRequest>,
     _res: Response,
-  ): Promise<IRequestResult<ICreatePostResponse | IValidationErrorResponse>> {
+  ): Promise<IRequestResult<CreatePostResponse>> {
     const result = await validate(
       FullPostRequestBodyRules(this.dbConn.getCustomRepository(PostRepository)),
       req,
@@ -57,12 +58,12 @@ export class PostCrudController {
     };
   }
 
-  @Authenticator<IUpdatePostRequest, IUpdatePostResponse>(UserLevel.Admin)
-  @Validator<IUpdatePostRequest, IUpdatePostResponse>(PostRequestBodyRules)
+  @Authenticator<UpdatePostRequest, UpdatePostResponse>(UserLevel.Admin)
+  @Validator<UpdatePostRequest, UpdatePostResponse>(PostRequestBodyRules)
   public async updatePost(
-    req: IRequest<IUpdatePostRequest>,
+    req: IRequest<UpdatePostRequest>,
     _res: Response,
-  ): Promise<IRequestResult<IUpdatePostResponse | IValidationErrorResponse>> {
+  ): Promise<IRequestResult<UpdatePostResponse>> {
     const post = await this.dbConn
       .getCustomRepository(PostRepository)
       .getWithUser(Number(req.params["post_id"]));
@@ -112,11 +113,11 @@ export class PostCrudController {
     };
   }
 
-  @Authenticator<null, null>(UserLevel.Admin)
+  @Authenticator<null, DeletePostResponse>(UserLevel.Admin)
   public async deletePost(
     req: IRequest<null>,
     _res: Response,
-  ): Promise<IRequestResult<null | IValidationErrorResponse>> {
+  ): Promise<IRequestResult<DeletePostResponse>> {
     const user = req.user as User;
     const post = await this.dbConn
       .getCustomRepository(PostRepository)
