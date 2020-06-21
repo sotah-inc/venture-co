@@ -1,19 +1,25 @@
 import {
+  CreatePricelistResponse,
+  DeletePricelistResponse,
+  GetPricelistsResponse,
+  GetUserPricelistResponse,
   ICreatePricelistRequest,
-  ICreatePricelistResponse,
-  IGetPricelistsResponse,
-  IGetUserPricelistResponse,
   ItemId,
-  IUpdatePricelistRequest,
-  IUpdatePricelistResponse,
   IValidationErrorResponse,
+  ProfessionName,
+  UpdatePricelistRequest,
+  UpdatePricelistResponse,
 } from "@sotah-inc/core";
 import { Messenger, Pricelist, PricelistEntry, PricelistRepository, User } from "@sotah-inc/server";
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
 
-import { PricelistRequestBodyRules, validate } from "../../lib/validator-rules";
-import { RequestHandler } from "../index";
+import {
+  PricelistRequestBodyRules,
+  validate,
+  yupValidationErrorToResponse,
+} from "../../lib/validator-rules";
+import { IRequestResult } from "../index";
 
 export class PricelistCrudController {
   private dbConn: Connection;
@@ -24,13 +30,11 @@ export class PricelistCrudController {
     this.messenger = messenger;
   }
 
-  public createPricelist: RequestHandler<
-    ICreatePricelistRequest,
-    ICreatePricelistResponse | IValidationErrorResponse
-  > = async req => {
-    const user = req.user as User;
-
-    const result = await validate(PricelistRequestBodyRules, req.body);
+  public async createPricelist(
+    user: User,
+    body: ICreatePricelistRequest,
+  ): Promise<IRequestResult<CreatePricelistResponse>> {
+    const result = await validate(PricelistRequestBodyRules, body);
     if (result.error || !result.data) {
       const validationErrors: IValidationErrorResponse = result.error
         ? { [result.error.path]: result.error.message }
@@ -61,11 +65,9 @@ export class PricelistCrudController {
       data: { entries: entries.map(v => v.toJson()), pricelist: pricelist.toJson() },
       status: HTTPStatus.CREATED,
     };
-  };
+  }
 
-  public getPricelists: RequestHandler<null, IGetPricelistsResponse> = async req => {
-    const user = req.user as User;
-
+  public async getPricelists(user: User): Promise<IRequestResult<GetPricelistsResponse>> {
     // gathering pricelists associated with this user
     let pricelists = await this.dbConn
       .getCustomRepository(PricelistRepository)
@@ -93,60 +95,57 @@ export class PricelistCrudController {
       data: { pricelists: pricelists.map(v => v.toJson()), items },
       status: HTTPStatus.OK,
     };
-  };
+  }
 
-  public getPricelist: RequestHandler<null, IGetUserPricelistResponse | null> = async req => {
-    const user = req.user as User;
+  public async getPricelist(
+    id: number,
+    user: User,
+  ): Promise<IRequestResult<GetUserPricelistResponse>> {
     const pricelist = await this.dbConn
       .getCustomRepository(PricelistRepository)
-      .getBelongingToUserById(Number(req.params["id"]), user.id!);
+      .getBelongingToUserById(id, user.id!);
     if (pricelist === null) {
       return {
         data: null,
         status: HTTPStatus.NOT_FOUND,
       };
     }
-    const itemIds = pricelist.entries!.map(v => v.itemId);
-    const items = (await (await this.messenger.getItems(itemIds)).decode())!.items;
 
     return {
-      data: { items, pricelist: pricelist.toJson() },
+      data: { pricelist: pricelist.toJson() },
       status: HTTPStatus.OK,
     };
-  };
+  }
 
-  public getPricelistFromSlug: RequestHandler<
-    null,
-    IGetUserPricelistResponse | null
-  > = async req => {
-    const user = req.user as User;
+  public async getPricelistFromSlug(
+    user: User,
+    professionName: ProfessionName,
+  ): Promise<IRequestResult<GetUserPricelistResponse>> {
     const pricelist = await this.dbConn
       .getCustomRepository(PricelistRepository)
-      .getFromPricelistSlug(user.id!, req.params["profession"]);
+      .getFromPricelistSlug(user.id!, professionName);
     if (pricelist === null) {
       return {
         data: null,
         status: HTTPStatus.NOT_FOUND,
       };
     }
-    const itemIds = pricelist.entries!.map(v => v.itemId);
-    const items = (await (await this.messenger.getItems(itemIds)).decode())!.items;
 
     return {
-      data: { items, pricelist: pricelist.toJson() },
+      data: { pricelist: pricelist.toJson() },
       status: HTTPStatus.OK,
     };
-  };
+  }
 
-  public updatePricelist: RequestHandler<
-    IUpdatePricelistRequest,
-    IUpdatePricelistResponse | IValidationErrorResponse | null
-  > = async req => {
+  public async updatePricelist(
+    id: number,
+    user: User,
+    body: UpdatePricelistRequest,
+  ): Promise<IRequestResult<UpdatePricelistResponse>> {
     // resolving the pricelist
-    const user = req.user as User;
     const pricelist = await this.dbConn
       .getCustomRepository(PricelistRepository)
-      .getBelongingToUserById(Number(req.params["id"]), user.id!);
+      .getBelongingToUserById(id, user.id!);
     if (pricelist === null) {
       return {
         data: null,
@@ -155,28 +154,24 @@ export class PricelistCrudController {
     }
 
     // validating the request body
-    let result: IUpdatePricelistRequest | null = null;
-    try {
-      result = (await PricelistRequestBodyRules.validate(req.body)) as IUpdatePricelistRequest;
-    } catch (err) {
-      const validationErrorResponse: IValidationErrorResponse = err.errors;
-
+    const result = await validate(PricelistRequestBodyRules, body);
+    if (result.error || !result.data) {
       return {
-        data: validationErrorResponse,
+        data: yupValidationErrorToResponse(result.error),
         status: HTTPStatus.BAD_REQUEST,
       };
     }
 
     // saving the pricelist
-    pricelist.name = result.pricelist.name;
-    pricelist.slug = result.pricelist.slug;
+    pricelist.name = result.data.pricelist.name;
+    pricelist.slug = result.data.pricelist.slug;
     await this.dbConn.manager.save(pricelist);
 
     // misc
     const entries = pricelist.entries!;
 
     // creating new entries
-    const newRequestEntries = result.entries.filter(v => v.id === -1);
+    const newRequestEntries = result.data.entries.filter(v => v.id === -1);
     const newEntries = await Promise.all(
       newRequestEntries.map(v => {
         const entry = new PricelistEntry();
@@ -189,7 +184,7 @@ export class PricelistCrudController {
     );
 
     // updating existing entries
-    const receivedRequestEntries = result.entries.filter(v => v.id !== -1);
+    const receivedRequestEntries = result.data.entries.filter(v => v.id !== -1);
     let receivedEntries = await this.dbConn
       .getRepository(PricelistEntry)
       .createQueryBuilder("entries")
@@ -220,14 +215,16 @@ export class PricelistCrudController {
       },
       status: HTTPStatus.OK,
     };
-  };
+  }
 
-  public deletePricelist: RequestHandler<null, null> = async req => {
+  public async deletePricelist(
+    id: number,
+    user: User,
+  ): Promise<IRequestResult<DeletePricelistResponse>> {
     // resolving the pricelist
-    const user = req.user as User;
     const removed = await this.dbConn
       .getCustomRepository(PricelistRepository)
-      .removeByUserId(Number(req.params["id"]), user.id!);
+      .removeByUserId(id, user.id!);
     if (!removed) {
       return {
         data: null,
@@ -239,5 +236,5 @@ export class PricelistCrudController {
       data: null,
       status: HTTPStatus.OK,
     };
-  };
+  }
 }

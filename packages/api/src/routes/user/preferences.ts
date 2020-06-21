@@ -3,7 +3,7 @@ import { wrap } from "async-middleware";
 import { Request, Response, Router } from "express";
 import { Connection } from "typeorm";
 
-import { handle } from "../../controllers";
+import { handleResult } from "../../controllers";
 import { PreferencesController } from "../../controllers/user/preferences";
 
 export const getRouter = (dbConn: Connection): Router => {
@@ -13,25 +13,25 @@ export const getRouter = (dbConn: Connection): Router => {
   router.get(
     "/",
     auth,
-    wrap(async (req: Request, res: Response) => {
-      await handle(controller.getPreferences.bind(controller), req, res);
-    }),
+    wrap(async (req: Request, res: Response) =>
+      handleResult(res, await controller.getPreferences(req, res)),
+    ),
   );
 
   router.post(
     "/",
     auth,
-    wrap(async (req: Request, res: Response) => {
-      await handle(controller.createPreferences.bind(controller), req, res);
-    }),
+    wrap(async (req: Request, res: Response) =>
+      handleResult(res, await controller.createPreferences(req, res)),
+    ),
   );
 
   router.put(
     "/",
     auth,
-    wrap(async (req: Request, res: Response) => {
-      await handle(controller.updatePreferences.bind(controller), req, res);
-    }),
+    wrap(async (req: Request, res: Response) =>
+      handleResult(res, await controller.updatePreferences(req, res)),
+    ),
   );
 
   return router;

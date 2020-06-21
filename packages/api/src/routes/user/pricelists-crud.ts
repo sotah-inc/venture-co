@@ -1,9 +1,9 @@
-import { auth, Messenger } from "@sotah-inc/server";
+import { auth, Messenger, User } from "@sotah-inc/server";
 import { wrap } from "async-middleware";
 import { Request, Response, Router } from "express";
 import { Connection } from "typeorm";
 
-import { handle } from "../../controllers";
+import { handleResult } from "../../controllers";
 import { PricelistCrudController } from "../../controllers/user/pricelist-crud";
 
 export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
@@ -13,49 +13,58 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
   router.post(
     "/",
     auth,
-    wrap(async (req: Request, res: Response) => {
-      await handle(controller.createPricelist, req, res);
-    }),
+    wrap(async (req: Request, res: Response) =>
+      handleResult(res, await controller.createPricelist(req.user as User, req.body)),
+    ),
   );
 
   router.get(
     "/",
     auth,
-    wrap(async (req: Request, res: Response) => {
-      await handle(controller.getPricelists, req, res);
-    }),
+    wrap(async (req: Request, res: Response) =>
+      handleResult(res, await controller.getPricelists(req.user as User)),
+    ),
   );
 
   router.get(
     "/:id([0-9]+)",
     auth,
-    wrap(async (req: Request, res: Response) => {
-      await handle(controller.getPricelist, req, res);
-    }),
+    wrap(async (req: Request, res: Response) =>
+      handleResult(res, await controller.getPricelist(Number(req.params["id"]), req.user as User)),
+    ),
   );
 
   router.get(
     "/:pricelist_slug",
     auth,
-    wrap(async (req: Request, res: Response) => {
-      await handle(controller.getPricelistFromSlug, req, res);
-    }),
+    wrap(async (req: Request, res: Response) =>
+      handleResult(
+        res,
+        await controller.getPricelistFromSlug(req.user as User, req.params["pricelist_slug"]),
+      ),
+    ),
   );
 
   router.put(
     "/:id",
     auth,
-    wrap(async (req: Request, res: Response) => {
-      await handle(controller.updatePricelist, req, res);
-    }),
+    wrap(async (req: Request, res: Response) =>
+      handleResult(
+        res,
+        await controller.updatePricelist(Number(req.params["id"]), req.user as User, req.body),
+      ),
+    ),
   );
 
   router.delete(
     "/:id",
     auth,
-    wrap(async (req: Request, res: Response) => {
-      await handle(controller.deletePricelist, req, res);
-    }),
+    wrap(async (req: Request, res: Response) =>
+      handleResult(
+        res,
+        await controller.deletePricelist(Number(req.params["id"]), req.user as User),
+      ),
+    ),
   );
 
   return router;

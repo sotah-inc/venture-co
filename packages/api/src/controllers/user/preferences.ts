@@ -1,10 +1,9 @@
 import {
+  CreatePreferencesResponse,
+  GetPreferencesResponse,
   ICreatePreferencesRequest,
-  ICreatePreferencesResponse,
-  IGetPreferencesResponse,
-  IUpdatePreferencesRequest,
-  IUpdatePreferencesResponse,
-  IValidationErrorResponse,
+  UpdatePreferencesRequest,
+  UpdatePreferencesResponse,
   UserLevel,
 } from "@sotah-inc/core";
 import { Preference, PreferenceRepository, User } from "@sotah-inc/server";
@@ -22,11 +21,11 @@ export class PreferencesController {
     this.dbConn = dbConn;
   }
 
-  @Authenticator<null, IGetPreferencesResponse | IValidationErrorResponse>(UserLevel.Unverified)
+  @Authenticator<null, GetPreferencesResponse>(UserLevel.Unverified)
   public async getPreferences(
     req: IRequest<null>,
     _res: Response,
-  ): Promise<IRequestResult<IGetPreferencesResponse | IValidationErrorResponse>> {
+  ): Promise<IRequestResult<GetPreferencesResponse>> {
     const user = req.user as User;
     const preference = await this.dbConn
       .getCustomRepository(PreferenceRepository)
@@ -45,14 +44,12 @@ export class PreferencesController {
     };
   }
 
-  @Authenticator<ICreatePreferencesRequest, ICreatePreferencesResponse | IValidationErrorResponse>(
-    UserLevel.Unverified,
-  )
-  @Validator<ICreatePreferencesRequest, ICreatePreferencesResponse>(PreferenceRules)
+  @Authenticator<ICreatePreferencesRequest, CreatePreferencesResponse>(UserLevel.Unverified)
+  @Validator<ICreatePreferencesRequest, CreatePreferencesResponse>(PreferenceRules)
   public async createPreferences(
     req: IRequest<ICreatePreferencesRequest>,
     _res: Response,
-  ): Promise<IRequestResult<ICreatePreferencesResponse | IValidationErrorResponse>> {
+  ): Promise<IRequestResult<CreatePreferencesResponse>> {
     const user = req.user as User;
     const hasPreference: boolean = await (async () => {
       const foundPreference = await this.dbConn
@@ -79,14 +76,12 @@ export class PreferencesController {
     };
   }
 
-  @Authenticator<IUpdatePreferencesRequest, IUpdatePreferencesResponse | IValidationErrorResponse>(
-    UserLevel.Unverified,
-  )
-  @Validator<IUpdatePreferencesRequest, IUpdatePreferencesResponse>(PreferenceRules)
+  @Authenticator<UpdatePreferencesRequest, UpdatePreferencesResponse>(UserLevel.Unverified)
+  @Validator<UpdatePreferencesRequest, UpdatePreferencesResponse>(PreferenceRules)
   public async updatePreferences(
-    req: IRequest<IUpdatePreferencesRequest>,
+    req: IRequest<UpdatePreferencesRequest>,
     _res: Response,
-  ): Promise<IRequestResult<IUpdatePreferencesResponse | IValidationErrorResponse>> {
+  ): Promise<IRequestResult<UpdatePreferencesResponse>> {
     const user = req.user as User;
     const preference = await this.dbConn
       .getCustomRepository(PreferenceRepository)

@@ -1,8 +1,8 @@
 import {
+  CreatePostResponse,
+  CreatePricelistResponse,
   ICreatePostRequest,
-  ICreatePostResponse,
   ICreatePricelistRequest,
-  ICreatePricelistResponse,
   ICreateProfessionPricelistRequest,
   ICreateProfessionPricelistResponse,
   ICreateUserRequest,
@@ -85,7 +85,7 @@ const getPricelistTestHelper = (request: supertest.SuperTest<supertest.Test>) =>
     t: ExecutionContext,
     token: string,
     body: ICreatePricelistRequest,
-  ): Promise<ICreatePricelistResponse> => {
+  ): Promise<CreatePricelistResponse> => {
     const res = await requestPricelist(token, body);
     const { status, body: responseBody, header } = res;
     t.is(status, HTTPStatus.CREATED);
@@ -150,7 +150,7 @@ const getPostTestHelper = (request: supertest.SuperTest<supertest.Test>) => {
     t: ExecutionContext,
     token: string,
     body: ICreatePostRequest,
-  ): Promise<ICreatePostResponse> => {
+  ): Promise<CreatePostResponse> => {
     const res = await requestPost(token, body);
     const { status, body: responseBody, header } = res;
     t.is(status, HTTPStatus.CREATED);
