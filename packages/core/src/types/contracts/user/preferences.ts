@@ -1,9 +1,12 @@
 import { IPreferenceJson } from "../../entities";
 import { RealmSlug, RegionName } from "../../region";
+import { IValidationErrorResponse } from "../index";
 
-export interface IGetPreferencesResponse {
+export interface IGetPreferencesResponseData {
   preference: IPreferenceJson;
 }
+
+export type GetPreferencesResponse = IGetPreferencesResponseData | IValidationErrorResponse;
 
 export interface ICreatePreferencesRequest {
   id?: number;
@@ -11,8 +14,8 @@ export interface ICreatePreferencesRequest {
   current_realm: RealmSlug | null;
 }
 
-export type ICreatePreferencesResponse = IGetPreferencesResponse;
+export type CreatePreferencesResponse = GetPreferencesResponse;
 
-export type IUpdatePreferencesRequest = ICreatePreferencesRequest;
+export type UpdatePreferencesRequest = ICreatePreferencesRequest;
 
-export type IUpdatePreferencesResponse = IGetPreferencesResponse;
+export type UpdatePreferencesResponse = GetPreferencesResponse;
