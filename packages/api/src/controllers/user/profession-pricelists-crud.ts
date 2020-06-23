@@ -1,6 +1,7 @@
 import {
+  CreateProfessionPricelistResponse,
+  DeleteProfessionPricelistResponse,
   ICreateProfessionPricelistRequest,
-  ICreateProfessionPricelistResponse,
   IValidationErrorResponse,
   UserLevel,
 } from "@sotah-inc/core";
@@ -11,11 +12,12 @@ import {
   ProfessionPricelistRepository,
   User,
 } from "@sotah-inc/server";
+import { Response } from "express";
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
 
 import { ProfessionPricelistRequestBodyRules } from "../../lib/validator-rules";
-import { RequestHandler } from "../index";
+import { Authenticator, IRequest, IRequestResult, Validator } from "../index";
 
 export class ProfessionPricelistsCrudController {
   private dbConn: Connection;
@@ -24,44 +26,24 @@ export class ProfessionPricelistsCrudController {
     this.dbConn = dbConn;
   }
 
-  public createProfessionPricelist: RequestHandler<
-    ICreateProfessionPricelistRequest,
-    ICreateProfessionPricelistResponse | IValidationErrorResponse
-  > = async req => {
-    const user = req.user as User;
-    if (user.level !== UserLevel.Admin) {
-      const validationErrors: IValidationErrorResponse = {
-        unauthorized: "You are not authorized to do that.",
-      };
-
-      return {
-        data: validationErrors,
-        status: HTTPStatus.UNAUTHORIZED,
-      };
-    }
-
-    let result: ICreateProfessionPricelistRequest | null = null;
-    try {
-      result = (await ProfessionPricelistRequestBodyRules.validate(
-        req.body,
-      )) as ICreateProfessionPricelistRequest;
-    } catch (err) {
-      const validationErrors: IValidationErrorResponse = { [err.path]: err.message };
-
-      return {
-        data: validationErrors,
-        status: HTTPStatus.BAD_REQUEST,
-      };
-    }
-
+  @Authenticator<ICreateProfessionPricelistRequest, CreateProfessionPricelistResponse>(
+    UserLevel.Admin,
+  )
+  @Validator<ICreateProfessionPricelistRequest, CreateProfessionPricelistResponse>(
+    ProfessionPricelistRequestBodyRules,
+  )
+  public async createProfessionPricelist(
+    req: IRequest<ICreateProfessionPricelistRequest>,
+    _res: Response,
+  ): Promise<IRequestResult<CreateProfessionPricelistResponse>> {
     const pricelist = new Pricelist();
-    pricelist.user = user;
-    pricelist.name = result.pricelist.name;
-    pricelist.slug = result.pricelist.slug;
+    pricelist.user = req.user as User;
+    pricelist.name = req.body.pricelist.name;
+    pricelist.slug = req.body.pricelist.slug;
     await this.dbConn.manager.save(pricelist);
 
     const entries = await Promise.all(
-      result.entries.map(v => {
+      req.body.entries.map(v => {
         const entry = new PricelistEntry();
         entry.pricelist = pricelist;
         entry.itemId = v.item_id;
@@ -73,8 +55,8 @@ export class ProfessionPricelistsCrudController {
 
     const professionPricelist = new ProfessionPricelist();
     professionPricelist.pricelist = pricelist;
-    professionPricelist.name = result.profession_name;
-    professionPricelist.expansion = result.expansion_name;
+    professionPricelist.name = req.body.profession_name;
+    professionPricelist.expansion = req.body.expansion_name;
     await this.dbConn.manager.save(professionPricelist);
 
     return {
@@ -85,23 +67,13 @@ export class ProfessionPricelistsCrudController {
       },
       status: HTTPStatus.CREATED,
     };
-  };
+  }
 
-  public deleteProfessionPricelist: RequestHandler<
-    null,
-    null | IValidationErrorResponse
-  > = async req => {
-    const user = req.user as User;
-    if (user.level !== UserLevel.Admin) {
-      const validationErrors: IValidationErrorResponse = {
-        unauthorized: "You are not authorized to do that.",
-      };
-
-      return {
-        data: validationErrors,
-        status: HTTPStatus.UNAUTHORIZED,
-      };
-    }
+  @Authenticator<null, DeleteProfessionPricelistResponse>(UserLevel.Admin)
+  public async deleteProfessionPricelist(
+    req: IRequest<null>,
+    _res: Response,
+  ): Promise<IRequestResult<DeleteProfessionPricelistResponse>> {
     const professionPricelist = await this.dbConn
       .getCustomRepository(ProfessionPricelistRepository)
       .getFromPricelistId(Number(req.params["pricelist_id"]));
@@ -134,7 +106,7 @@ export class ProfessionPricelistsCrudController {
       };
     }
 
-    if (professionPricelist.pricelist.user.id !== user.id) {
+    if (professionPricelist.pricelist.user.id !== (req.user as User).id) {
       return {
         data: null,
         status: HTTPStatus.UNAUTHORIZED,
@@ -162,5 +134,5 @@ export class ProfessionPricelistsCrudController {
       data: null,
       status: HTTPStatus.OK,
     };
-  };
+  }
 }
