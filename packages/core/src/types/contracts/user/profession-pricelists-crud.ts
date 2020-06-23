@@ -27,4 +27,4 @@ export type CreateProfessionPricelistResponse =
   | ICreateProfessionPricelistResponseData
   | IValidationErrorResponse;
 
-export type DeleteProfessionPricelist = IValidationErrorResponse | null;
+export type DeleteProfessionPricelistResponse = IValidationErrorResponse | null;
