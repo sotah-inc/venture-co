@@ -1,5 +1,6 @@
 import { IItemsMap } from "../item";
 import { IWorkOrderJson } from "../work-order";
+import { IValidationErrorResponse } from "./index";
 
 export interface IQueryWorkOrdersParams {
   orderBy: string;
@@ -8,11 +9,16 @@ export interface IQueryWorkOrdersParams {
   perPage: number;
 }
 
-export interface IQueryWorkOrdersResponse {
+export interface IQueryWorkOrdersResponseData {
   orders: IWorkOrderJson[];
   totalResults: number;
   items: IItemsMap;
 }
+
+export type QueryWorkOrdersResponse =
+  | IQueryWorkOrdersResponseData
+  | IValidationErrorResponse
+  | null;
 
 export interface ICreateWorkOrderRequest {
   itemId: number;
@@ -20,10 +26,16 @@ export interface ICreateWorkOrderRequest {
   price: number;
 }
 
-export interface ICreateWorkOrderResponse {
+export interface ICreateWorkOrderResponseData {
   order: IWorkOrderJson;
 }
 
-export interface IPrefillWorkOrderItemResponse {
+export type CreateWorkOrderResponse = ICreateWorkOrderResponseData | IValidationErrorResponse;
+
+export interface IPrefillWorkOrderItemResponseData {
   currentPrice: number | null;
 }
+
+export type PrefillWorkOrderItemResponse =
+  | IPrefillWorkOrderItemResponseData
+  | IValidationErrorResponse;
