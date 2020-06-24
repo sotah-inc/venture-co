@@ -1,17 +1,22 @@
 import {
+  ConnectedRealmId,
+  CreateWorkOrderResponse,
   GameVersion,
   ICreateWorkOrderRequest,
-  ICreateWorkOrderResponse,
-  IPrefillWorkOrderItemResponse,
-  IQueryWorkOrdersResponse,
+  ItemId,
   IValidationErrorResponse,
   OrderDirection,
   OrderKind,
+  PrefillWorkOrderItemResponse,
+  QueryWorkOrdersResponse,
+  RealmSlug,
+  RegionName,
   UserLevel,
 } from "@sotah-inc/core";
 import { code, Messenger, User, WorkOrder, WorkOrderRepository } from "@sotah-inc/server";
 import { Response } from "express";
 import HTTPStatus from "http-status";
+import { ParsedQs } from "qs";
 import { Connection } from "typeorm";
 
 import {
@@ -20,7 +25,7 @@ import {
   validate,
   yupValidationErrorToResponse,
 } from "../lib/validator-rules";
-import { Authenticator, IRequest, IRequestResult, QueryRequestHandler, Validator } from "./index";
+import { Authenticator, IRequest, IRequestResult, Validator } from "./index";
 
 export class WorkOrderController {
   private messenger: Messenger;
@@ -31,15 +36,15 @@ export class WorkOrderController {
     this.dbConn = dbConn;
   }
 
-  public queryWorkOrders: QueryRequestHandler<
-    IQueryWorkOrdersResponse | IValidationErrorResponse | null
-  > = async req => {
-    const regionName = req.params["regionName"];
-    const realmSlug = req.params["realmSlug"];
-
+  public async queryWorkOrders(
+    gameVersion: string,
+    regionName: RegionName,
+    realmSlug: RealmSlug,
+    query: ParsedQs,
+  ): Promise<IRequestResult<QueryWorkOrdersResponse>> {
     const result = await validate(QueryWorkOrdersParamsRules, {
-      ...(req.query as { [key: string]: string }),
-      gameVersion: req.params["gameVersion"],
+      ...query,
+      gameVersion,
     });
     if (result.error || !result.data) {
       return {
@@ -118,15 +123,26 @@ export class WorkOrderController {
       },
       status: HTTPStatus.OK,
     };
-  };
+  }
 
-  public prefillWorkOrderItem: QueryRequestHandler<
-    IPrefillWorkOrderItemResponse | IValidationErrorResponse
-  > = async req => {
-    const itemId = (req.query as { [key: string]: string })["itemId"] ?? "";
-    const parsedItemId = Number(itemId);
+  public async prefillWorkOrderItem(
+    gameVersion: string,
+    regionName: RegionName,
+    connectedRealmId: ConnectedRealmId,
+    itemId: ItemId,
+  ): Promise<IRequestResult<PrefillWorkOrderItemResponse>> {
+    if (!Object.values(GameVersion).includes(gameVersion as GameVersion)) {
+      const validationErrors: IValidationErrorResponse = {
+        error: "could not validate game-version",
+      };
 
-    const itemsMsg = await this.messenger.getItems([parsedItemId]);
+      return {
+        data: validationErrors,
+        status: HTTPStatus.BAD_REQUEST,
+      };
+    }
+
+    const itemsMsg = await this.messenger.getItems([itemId]);
     if (itemsMsg.code !== code.ok) {
       const validationErrors: IValidationErrorResponse = { error: "failed to fetch items" };
 
@@ -136,7 +152,7 @@ export class WorkOrderController {
       };
     }
 
-    const foundItem = (await itemsMsg.decode())!.items[parsedItemId] ?? null;
+    const foundItem = (await itemsMsg.decode())!.items[itemId] ?? null;
     if (foundItem === null) {
       const validationErrors: IValidationErrorResponse = { error: "failed to resolve item" };
 
@@ -145,8 +161,6 @@ export class WorkOrderController {
         status: HTTPStatus.INTERNAL_SERVER_ERROR,
       };
     }
-
-    const { regionName, connectedRealmId } = req.params;
 
     const pricesMessage = await this.messenger.getPriceList({
       item_ids: [foundItem.blizzard_meta.id],
@@ -170,14 +184,14 @@ export class WorkOrderController {
       data: { currentPrice: foundPrice?.average_buyout_per ?? null },
       status: HTTPStatus.OK,
     };
-  };
+  }
 
-  @Authenticator<ICreateWorkOrderRequest, ICreateWorkOrderResponse>(UserLevel.Regular)
-  @Validator<ICreateWorkOrderRequest, ICreateWorkOrderResponse>(CreateWorkOrderRequestRules)
+  @Authenticator<ICreateWorkOrderRequest, CreateWorkOrderResponse>(UserLevel.Regular)
+  @Validator<ICreateWorkOrderRequest, CreateWorkOrderResponse>(CreateWorkOrderRequestRules)
   public async createWorkOrder(
     req: IRequest<ICreateWorkOrderRequest>,
     _res: Response,
-  ): Promise<IRequestResult<ICreateWorkOrderResponse | IValidationErrorResponse>> {
+  ): Promise<IRequestResult<CreateWorkOrderResponse>> {
     const { realmSlug, regionName, gameVersion } = req.params;
 
     if (!Object.values(GameVersion).includes(gameVersion as GameVersion)) {

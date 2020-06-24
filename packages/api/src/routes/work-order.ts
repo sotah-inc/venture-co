@@ -3,7 +3,7 @@ import { wrap } from "async-middleware";
 import { Request, Response, Router } from "express";
 import { Connection } from "typeorm";
 
-import { handle } from "../controllers";
+import { handleResult } from "../controllers";
 import { WorkOrderController } from "../controllers/work-order";
 
 export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
@@ -12,22 +12,38 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
 
   router.get(
     "/work-orders/:gameVersion/:regionName/:realmSlug",
-    wrap(async (req: Request, res: Response) => {
-      await handle(controller.queryWorkOrders, req, res);
-    }),
+    wrap(async (req: Request, res: Response) =>
+      handleResult(
+        res,
+        await controller.queryWorkOrders(
+          req.params["gameVersion"],
+          req.params["regionName"],
+          req.params["realmSlug"],
+          req.query,
+        ),
+      ),
+    ),
   );
   router.get(
-    "/work-orders/:gameVersion/:regionName/:realmSlug/prefill-item",
-    wrap(async (req: Request, res: Response) => {
-      await handle(controller.prefillWorkOrderItem, req, res);
-    }),
+    "/work-orders/:gameVersion/:regionName/:connectedRealmId/prefill-item",
+    wrap(async (req: Request, res: Response) =>
+      handleResult(
+        res,
+        await controller.prefillWorkOrderItem(
+          req.params["gameVersion"],
+          req.params["regionName"],
+          Number(req.params["connectedRealmId"]),
+          Number(req.query["itemId"]),
+        ),
+      ),
+    ),
   );
   router.post(
     "/work-orders/:gameVersion/:regionName/:realmSlug",
     auth,
-    wrap(async (req: Request, res: Response) => {
-      await handle(controller.createWorkOrder.bind(controller), req, res);
-    }),
+    wrap(async (req: Request, res: Response) =>
+      handleResult(res, await controller.createWorkOrder(req, res)),
+    ),
   );
 
   return router;

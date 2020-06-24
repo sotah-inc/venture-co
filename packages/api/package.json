@@ -44,7 +44,7 @@
     "supertest": "^4.0.2",
     "tslint": "^6.1.2",
     "typescript": "3.9.5",
-    "uuid": "^8.1.0"
+    "uuid": "^8.2.0"
   },
   "dependencies": {
     "@google-cloud/error-reporting": "^2.0.0",
@@ -53,7 +53,7 @@
     "@google-cloud/pubsub": "^2.1.0",
     "@google-cloud/storage": "^5.1.1",
     "@sendgrid/mail": "^7.2.0",
-    "@sotah-inc/core": "^1.0.117",
+    "@sotah-inc/core": "^1.0.118",
     "@sotah-inc/server": "^1.0.118",
     "@types/bcrypt": "^3.0.0",
     "@types/compression": "1.7.0",
@@ -92,10 +92,10 @@
     "qs": "^6.9.4",
     "reflect-metadata": "^0.1.13",
     "speakingurl": "^14.0.1",
-    "stripe": "^8.64.0",
+    "stripe": "^8.66.0",
     "typeorm": "^0.2.25",
-    "uuid": "^8.1.0",
-    "winston": "^3.3.2",
+    "uuid": "^8.2.0",
+    "winston": "^3.3.3",
     "yup": "^0.29.1"
   },
   "nyc": {

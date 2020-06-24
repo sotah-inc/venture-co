@@ -3,7 +3,6 @@ import { User } from "@sotah-inc/server";
 import { Request, Response } from "express";
 import * as HTTPStatus from "http-status";
 import "passport";
-import { ParsedQs } from "qs";
 import { ObjectSchema } from "yup";
 
 import { validate } from "../lib/validator-rules";
@@ -18,42 +17,12 @@ export interface IRequest<T> extends Request {
   };
 }
 
-export interface IQueryRequest extends Request {
-  body: null;
-  user?: Express.User;
-  params: {
-    [key: string]: string;
-  };
-  query: ParsedQs;
-}
-
 export interface IRequestResult<T> {
   status: number;
   data: T;
   headers?: {
     [key: string]: string | string[];
   };
-}
-
-export type RequestHandler<T, A> = (req: IRequest<T>, res: Response) => Promise<IRequestResult<A>>;
-
-export type QueryRequestHandler<A> = (
-  req: IQueryRequest,
-  res: Response,
-) => Promise<IRequestResult<A>>;
-
-export async function handle<T, A>(
-  handlerFunc: RequestHandler<T, A>,
-  req: IRequest<T>,
-  res: Response,
-) {
-  const { status, data, headers } = await handlerFunc(req, res);
-
-  res.status(status);
-  if (headers) {
-    res.set(headers);
-  }
-  res.send(data);
 }
 
 export function handleResult<T>(res: Response, { data, headers, status }: IRequestResult<T>) {
