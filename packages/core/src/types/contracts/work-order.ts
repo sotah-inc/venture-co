@@ -38,4 +38,5 @@ export interface IPrefillWorkOrderItemResponseData {
 
 export type PrefillWorkOrderItemResponse =
   | IPrefillWorkOrderItemResponseData
-  | IValidationErrorResponse;
+  | IValidationErrorResponse
+  | null;
