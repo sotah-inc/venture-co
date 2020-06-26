@@ -152,8 +152,16 @@ export class WorkOrderController {
       };
     }
 
-    const foundItem = (await itemsMsg.decode())!.items[itemId] ?? null;
-    if (foundItem === null) {
+    const itemsResult = await itemsMsg.decode();
+    if (itemsResult === null) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    const foundItem = itemsResult.items[itemId];
+    if (typeof foundItem === "undefined") {
       const validationErrors: IValidationErrorResponse = { error: "failed to resolve item" };
 
       return {
@@ -177,8 +185,15 @@ export class WorkOrderController {
         status: HTTPStatus.INTERNAL_SERVER_ERROR,
       };
     }
+    const pricesResult = await pricesMessage.decode();
+    if (pricesResult === null) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
 
-    const foundPrice = (await pricesMessage.decode())!.price_list[foundItem.blizzard_meta.id];
+    const foundPrice = pricesResult.price_list[foundItem.blizzard_meta.id];
 
     return {
       data: { currentPrice: foundPrice?.average_buyout_per ?? null },
