@@ -5,14 +5,13 @@ import {
   IItemPricelistHistoryMap,
   IItemsMap,
   InventoryType,
-  IPrefillWorkOrderItemResponse,
-  IPricelistHistoryMap,
+  IPrefillWorkOrderItemResponseData,
   IPricelistJson,
   IPricesFlagged,
-  IQueryAuctionsItem,
-  IQueryAuctionStatsResponse,
+  IQueryAuctionStatsResponseData,
+  IQueryItemsItem,
   IRealm,
-  IRegion,
+  IRegionComposite,
   ItemQuality,
   ItemStat,
 } from "@sotah-inc/core";
@@ -28,8 +27,8 @@ import {
   IRegions,
   ISubItemClasses,
 } from "../types/global";
-import { IRegionTokenHistories } from "../types/posts";
 import { FetchLevel } from "../types/main";
+import { IRegionTokenHistories } from "../types/posts";
 
 const hostname: string = (() => {
   if (typeof window === "undefined") {
@@ -133,27 +132,28 @@ export const qualityToColorClass = (quality: ItemQuality): string => {
 };
 
 export const getItemIconUrl = (item: IItem): string | null => {
-  if (item.icon_object_name !== "") {
-    return `https://item-icons.sotah.info/${item.icon_object_name}`;
+  if (item.sotah_meta.item_icon_meta.icon_object_name !== "") {
+    return `https://item-icons.sotah.info/${item.sotah_meta.item_icon_meta.icon_object_name}`;
   }
 
-  if (item.icon_url !== "") {
-    return item.icon_url;
+  if (item.sotah_meta.item_icon_meta.icon_url !== "") {
+    return item.sotah_meta.item_icon_meta.icon_url;
   }
 
-  if (item.icon === "") {
+  if (item.sotah_meta.item_icon_meta.icon === "") {
     return null;
   }
 
-  return `${getApiEndpoint()}/item-icons/${item.icon}.jpg`;
+  return `${getApiEndpoint()}/item-icons/${item.sotah_meta.item_icon_meta.icon}.jpg`;
 };
 
 export const getItemTextValue = (item: IItem): string => {
-  if (item.name !== "") {
-    return item.name;
+  const foundName = item.sotah_meta.normalized_name.en_US;
+  if (typeof foundName !== "undefined" && foundName.length > 0) {
+    return foundName;
   }
 
-  return item.id.toString();
+  return item.blizzard_meta.id.toString();
 };
 
 export const inventoryTypeToString = (iType: InventoryType): string => {
@@ -215,8 +215,8 @@ export const itemStatToString = (stat: ItemStat): string => {
 };
 
 export const getSelectedResultIndex = (
-  result: IQueryAuctionsItem,
-  selectedItems: IQueryAuctionsItem[],
+  result: IQueryItemsItem,
+  selectedItems: IQueryItemsItem[],
 ): number => {
   if (selectedItems.length === 0) {
     return -1;
@@ -226,7 +226,10 @@ export const getSelectedResultIndex = (
     const selectedItem = selectedItems[i];
 
     if (selectedItem.item !== null) {
-      if (result.item !== null && result.item.id === selectedItem.item.id) {
+      if (
+        result.item !== null &&
+        result.item.blizzard_meta.id === selectedItem.item.blizzard_meta.id
+      ) {
         return Number(i);
       }
     }
@@ -235,19 +238,21 @@ export const getSelectedResultIndex = (
   return -1;
 };
 
-export const didRegionChange = (prevRegion: IRegion | null, currentRegion: IRegion): boolean => {
+export const didRegionChange = (
+  prevRegion: IRegionComposite | null,
+  currentRegion: IRegionComposite,
+): boolean => {
   if (prevRegion === null) {
     return true;
   }
 
-  return prevRegion.name !== currentRegion.name;
+  return prevRegion.config_region.name !== currentRegion.config_region.name;
 };
 
 export const didRealmChange = (prevRealm: IRealm | null, currentRealm: IRealm): boolean => {
   if (prevRealm === null) {
     return true;
   }
-
   return !(
     prevRealm.regionName === currentRealm.regionName && prevRealm.slug === currentRealm.slug
   );
@@ -279,12 +284,12 @@ export const extractString = (key: string, params: IExtractStringMap): string =>
   return "";
 };
 
-export const FormatRegionList = (regionList: IRegion[]): IRegions =>
-  regionList.reduce((result, region) => ({ ...result, [region.name]: region }), {});
+export const FormatRegionList = (regionList: IRegionComposite[]): IRegions =>
+  regionList.reduce((result, region) => ({ ...result, [region.config_region.name]: region }), {});
 
 export const FormatItemClassList = (itemClassList: IItemClass[]): IItemClasses =>
   itemClassList.reduce((previousItemClasses: IItemClasses, itemClass) => {
-    const subClassesMap: ISubItemClasses = itemClass.subclasses.reduce(
+    const subClassesMap: ISubItemClasses = itemClass.item_subclasses.reduce(
       (previousSubClasses: ISubItemClasses, subItemClass) => {
         const nextSubClasses: ISubItemClasses = {
           ...previousSubClasses,
@@ -300,7 +305,7 @@ export const FormatItemClassList = (itemClassList: IItemClass[]): IItemClasses =
 
     const nextItemClasses: IItemClasses = {
       ...previousItemClasses,
-      [itemClass.class]: itemClassWithSub,
+      [itemClass.class_id]: itemClassWithSub,
     };
 
     return nextItemClasses;
@@ -367,11 +372,18 @@ export function convertRegionTokenHistoriesToLineData(
     return Object.keys(tokenHistory).reduce<IRegionTokenHistoryIntermediate>(
       (dataIntermediate2, unixTimestamp) => {
         const parsedUnixTimestamp = Number(unixTimestamp);
-        if (!(parsedUnixTimestamp in dataIntermediate2)) {
-          dataIntermediate2[parsedUnixTimestamp] = {};
+        const foundTokenHistory = tokenHistory[parsedUnixTimestamp];
+        if (typeof foundTokenHistory === "undefined") {
+          return dataIntermediate2;
         }
 
-        dataIntermediate2[parsedUnixTimestamp][regionName] = tokenHistory[parsedUnixTimestamp];
+        if (typeof dataIntermediate2[parsedUnixTimestamp] === "undefined") {
+          dataIntermediate2[parsedUnixTimestamp] = {
+            [regionName]: foundTokenHistory,
+          };
+        } else {
+          dataIntermediate2[parsedUnixTimestamp][regionName] = foundTokenHistory;
+        }
 
         return dataIntermediate2;
       },
@@ -415,7 +427,7 @@ export function convertRegionTokenHistoriesToLineData(
 }
 
 export function convertAuctionStatsToLineData(
-  auctionStats: IQueryAuctionStatsResponse,
+  auctionStats: IQueryAuctionStatsResponseData,
 ): ILineItemOpen[] {
   // converting each grouping to line-item data
   return Object.keys(auctionStats).map<ILineItemOpen>(unixTimestamp => {
@@ -433,14 +445,19 @@ export function convertPricelistHistoryMapToLineData(
 ): ILineItemOpen[] {
   return Object.keys(pricelistHistoryMap).reduce<ILineItemOpen[]>(
     (dataPreviousValue: ILineItemOpen[], itemIdKey: string) => {
-      const itemPricelistHistory: IPricelistHistoryMap<IPricesFlagged> =
-        pricelistHistoryMap[Number(itemIdKey)];
+      const itemPricelistHistory = pricelistHistoryMap[Number(itemIdKey)];
       const itemId = Number(itemIdKey);
+      if (typeof itemPricelistHistory === "undefined") {
+        return dataPreviousValue;
+      }
 
       return Object.keys(itemPricelistHistory).reduce(
         (previousValue: ILineItemOpen[], unixTimestampKey) => {
           const unixTimestamp = Number(unixTimestampKey);
           const prices = itemPricelistHistory[unixTimestamp];
+          if (typeof prices === "undefined") {
+            return previousValue;
+          }
 
           const buyoutValue: number = (() => {
             if (prices.min_buyout_per === 0) {
@@ -486,11 +503,11 @@ export function translateQuantityToSliderData(item?: IItem | null): ISliderData 
     return null;
   }
 
-  switch (item.stackable) {
+  switch (item.blizzard_meta.max_count) {
     case 200:
       return ((): ISliderData => {
         const step = 20;
-        const max = item.stackable;
+        const max = item.blizzard_meta.max_count;
         const min = step;
 
         return {
@@ -503,7 +520,7 @@ export function translateQuantityToSliderData(item?: IItem | null): ISliderData 
     case 20:
       return ((): ISliderData => {
         const step = 5;
-        const max = item.stackable;
+        const max = item.blizzard_meta.max_count;
         const min = step;
 
         return {
@@ -529,7 +546,7 @@ export function translateQuantityToSliderData(item?: IItem | null): ISliderData 
     default:
       return ((): ISliderData => {
         const step = 1;
-        const max = item.stackable;
+        const max = item.blizzard_meta.max_count;
         const min = step;
 
         return {
@@ -543,7 +560,7 @@ export function translateQuantityToSliderData(item?: IItem | null): ISliderData 
 }
 
 export function translatePriceToSliderData(
-  prefillWorkOrderItem: IFetchData<IPrefillWorkOrderItemResponse>,
+  prefillWorkOrderItem: IFetchData<IPrefillWorkOrderItemResponseData>,
 ): ISliderData | null {
   if (
     prefillWorkOrderItem.level !== FetchLevel.success ||

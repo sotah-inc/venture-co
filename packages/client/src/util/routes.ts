@@ -1,18 +1,24 @@
-import { IExpansion, IPricelistJson, IProfession, IRegion, IStatusRealm } from "@sotah-inc/core";
+import {
+  IExpansion,
+  IPricelistJson,
+  IProfession,
+  IRegionComposite,
+  IStatusRealm,
+} from "@sotah-inc/core";
 
 export const toUserPricelist = (
-  region: IRegion,
+  region: IRegionComposite,
   realm: IStatusRealm,
   pricelist: IPricelistJson,
 ) => {
-  const asDest = ["data", region.name, realm.slug, "user", pricelist.slug].join("/");
+  const asDest = ["data", region.config_region.name, realm.slug, "user", pricelist.slug].join("/");
   const url = ["data", "[region_name]", "[realm_slug]", "user", "[pricelist_slug]"].join("/");
 
   return { url, asDest };
 };
 
 export const toProfessionPricelist = (
-  region: IRegion,
+  region: IRegionComposite,
   realm: IStatusRealm,
   expansion: IExpansion,
   profession: IProfession,
@@ -20,7 +26,7 @@ export const toProfessionPricelist = (
 ) => {
   const asDest = [
     "data",
-    region.name,
+    region.config_region.name,
     realm.slug,
     expansion.name,
     "professions",
@@ -41,14 +47,14 @@ export const toProfessionPricelist = (
 };
 
 export const toProfession = (
-  region: IRegion,
+  region: IRegionComposite,
   realm: IStatusRealm,
   expansion: IExpansion,
   profession: IProfession,
 ) => {
   const asDest = [
     "data",
-    region.name,
+    region.config_region.name,
     realm.slug,
     expansion.name,
     "professions",
@@ -66,8 +72,18 @@ export const toProfession = (
   return { url, asDest };
 };
 
-export const toExpansion = (region: IRegion, realm: IStatusRealm, expansion: IExpansion) => {
-  const asDest = ["data", region.name, realm.slug, expansion.name, "professions"].join("/");
+export const toExpansion = (
+  region: IRegionComposite,
+  realm: IStatusRealm,
+  expansion: IExpansion,
+) => {
+  const asDest = [
+    "data",
+    region.config_region.name,
+    realm.slug,
+    expansion.name,
+    "professions",
+  ].join("/");
   const url = ["data", "[region_name]", "[realm_slug]", "[expansion_name]", "professions"].join(
     "/",
   );
@@ -75,8 +91,8 @@ export const toExpansion = (region: IRegion, realm: IStatusRealm, expansion: IEx
   return { url, asDest };
 };
 
-export const toWorkOrders = (region: IRegion, realm: IStatusRealm) => {
-  const asDest = ["marketplace", "work-orders", region.name, realm.slug].join("/");
+export const toWorkOrders = (region: IRegionComposite, realm: IStatusRealm) => {
+  const asDest = ["marketplace", "work-orders", region.config_region.name, realm.slug].join("/");
   const url = ["marketplace", "work-orders", "[region_name]", "[realm_slug]"].join("/");
 
   return { url, asDest };
