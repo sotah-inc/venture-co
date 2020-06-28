@@ -11,14 +11,14 @@ import {
 export type ItemId = number;
 
 export enum ItemQuality {
-  Poor,
-  Common,
-  Uncommon,
-  Rare,
-  Epic,
-  Legendary,
-  Artifact,
-  Heirloom,
+  Poor = "EPIC",
+  Common = "COMMON",
+  Uncommon = "UNCOMMON",
+  Rare = "RARE",
+  Epic = "EPIC",
+  Legendary = "LEGENDARY",
+  Artifact = "ARTIFACT",
+  Heirloom = "HEIRLOOM",
 }
 
 export enum InventoryType {
@@ -125,7 +125,7 @@ export interface IItemBonusStat {
 }
 
 export interface IItemQuality {
-  type: string;
+  type: ItemQuality;
   name: LocaleMapping;
 }
 
