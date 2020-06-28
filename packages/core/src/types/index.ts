@@ -1,3 +1,5 @@
+import { ItemBind } from "./item";
+
 export * from "./contracts";
 export * from "./auction";
 export * from "./entities";
@@ -70,7 +72,7 @@ export enum Locale {
 }
 
 export interface ITypeNameTuple {
-  type: string;
+  type: ItemBind;
   name: LocaleMapping;
 }
 
