@@ -94,32 +94,27 @@ interface IItemSpell {
   description: LocaleMapping;
 }
 
-export enum ItemStat {
-  Agi = 3,
-  Str = 4,
-  Int = 5,
-  Stam = 7,
-  Dodge = 13,
-  Parry = 14,
-  Crit = 32,
-  PvPResil = 35,
-  Haste = 36,
-  Vers = 40,
-  Mastery = 49,
-  FireResist = 51,
-  ShadowResist = 54,
-  NatResist = 55,
-  PvpPow = 57,
-  AgiOrStr = 72,
-  AgiOrInt = 73,
-  StrOrInt = 74,
+export interface IItemColor {
+  r: string;
+  g: string;
+  b: string;
+  a: number;
 }
 
-export const SecondaryItemStats: ItemStat[] = [ItemStat.Crit, ItemStat.PvPResil, ItemStat.Haste];
+export enum StatType {
+  Intellect = "INTELLECT",
+}
 
-export interface IItemBonusStat {
-  stat: number;
-  amount: number;
+export interface IItemStat {
+  type: {
+    type: StatType;
+    name: LocaleMapping;
+  };
+  value: number;
+  display: {
+    display_string: LocaleMapping;
+    color: IItemColor;
+  };
 }
 
 export interface IItemQuality {
@@ -144,6 +139,7 @@ export interface IPreviewItem {
   inventory_type: ITypeNameTuple;
   binding: ITypeNameTuple;
   spells: IItemSpell[];
+  stats: IItemStat[];
   sell_price: {
     value: number;
     header: LocaleMapping;
@@ -154,12 +150,7 @@ export interface IPreviewItem {
   is_subclass_hidden: boolean;
   name_description: {
     display_string: LocaleMapping;
-    color: {
-      r: string;
-      g: string;
-      b: string;
-      a: number;
-    };
+    color: IItemColor;
   };
 }
 
