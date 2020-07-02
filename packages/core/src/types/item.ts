@@ -137,7 +137,10 @@ export interface IPreviewItem {
     id: ItemSubClassId;
   };
   inventory_type: ITypeNameTuple;
-  binding: ITypeNameTuple;
+  binding: {
+    type: ItemBind;
+    name: LocaleMapping;
+  };
   spells: IItemSpell[];
   stats: IItemStat[];
   sell_price: {
