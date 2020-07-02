@@ -79,3 +79,5 @@ export interface ITypeNameTuple {
 export interface IKeyHrefReference {
   key: IHrefReference;
 }
+
+export type PriceValue = number;

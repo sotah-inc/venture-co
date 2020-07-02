@@ -5,6 +5,7 @@ import {
   ItemSubClassId,
   ITypeNameTuple,
   LocaleMapping,
+  PriceValue,
   UnixTimestamp,
 } from "./index";
 
@@ -105,16 +106,23 @@ export enum StatType {
   Intellect = "INTELLECT",
 }
 
+export interface IItemDisplay {
+  display_string: LocaleMapping;
+  color: IItemColor;
+}
+
+export interface IItemValueDisplayStringTuple {
+  value: number;
+  display_string: LocaleMapping;
+}
+
 export interface IItemStat {
   type: {
     type: StatType;
     name: LocaleMapping;
   };
   value: number;
-  display: {
-    display_string: LocaleMapping;
-    color: IItemColor;
-  };
+  display: IItemDisplay;
 }
 
 export interface IItemQuality {
@@ -141,20 +149,27 @@ export interface IPreviewItem {
     type: ItemBind;
     name: LocaleMapping;
   };
+  armor: IItemValueDisplayStringTuple;
+  shield_block: IItemValueDisplayStringTuple;
   spells: IItemSpell[];
   stats: IItemStat[];
   sell_price: {
-    value: number;
-    header: LocaleMapping;
-    gold: LocaleMapping;
-    silver: LocaleMapping;
-    copper: LocaleMapping;
+    value: PriceValue;
+    display_strings: {
+      header: LocaleMapping;
+      gold: LocaleMapping;
+      silver: LocaleMapping;
+      copper: LocaleMapping;
+    };
   };
-  is_subclass_hidden: boolean;
-  name_description: {
+  requirements: {
+    level: number;
     display_string: LocaleMapping;
-    color: IItemColor;
   };
+  level: IItemValueDisplayStringTuple;
+  durability: IItemValueDisplayStringTuple;
+  is_subclass_hidden: boolean;
+  name_description: IItemDisplay;
 }
 
 export interface IItem {
@@ -176,8 +191,8 @@ export interface IItem {
       id: ItemSubClassId;
     };
     inventory_type: ITypeNameTuple;
-    purchase_price: number;
-    sell_price: number;
+    purchase_price: PriceValue;
+    sell_price: PriceValue;
     max_count: number;
     is_equippable: boolean;
     is_stackable: boolean;
