@@ -1,5 +1,7 @@
 import {
   IAuction,
+  IConnectedRealmComposite,
+  IConnectedRealmModificationDates,
   IExpansion,
   IItemClass,
   IItemsMap,
@@ -7,8 +9,6 @@ import {
   IPriceListMap,
   IPrices,
   IProfession,
-  IRealmComposite,
-  IRealmModificationDates,
   IRegionComposite,
   IRegionConnectedRealmTuple,
   ItemId,
@@ -91,7 +91,7 @@ export interface IRealmModificationDatesResponse {
   [regionName: string]:
     | undefined
     | {
-        [connectedRealmId: number]: IRealmModificationDates | undefined;
+        [connectedRealmId: number]: IConnectedRealmModificationDates | undefined;
       };
 }
 
@@ -112,5 +112,5 @@ export interface IValidateRegionConnectedRealmResponse {
 export type ValidateRegionRealmResponse = IValidateRegionConnectedRealmResponse;
 
 export interface IGetConnectedRealmsResponse {
-  connected_realms: IRealmComposite[];
+  connected_realms: IConnectedRealmComposite[];
 }

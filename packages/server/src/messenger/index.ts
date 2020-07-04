@@ -1,5 +1,5 @@
 import {
-  IRealmModificationDates,
+  IConnectedRealmModificationDates,
   IRegionComposite,
   IRegionConnectedRealmTuple,
   IRegionRealmTuple,
@@ -137,7 +137,7 @@ export class Messenger {
 
   public queryRealmModificationDates(
     tuple: IRegionConnectedRealmTuple,
-  ): Promise<Message<IRealmModificationDates>> {
+  ): Promise<Message<IConnectedRealmModificationDates>> {
     return this.request(subjects.queryRealmModificationDates, { body: JSON.stringify(tuple) });
   }
 
