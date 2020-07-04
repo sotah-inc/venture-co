@@ -9,7 +9,7 @@ import {
   IProfession,
   IProfessionPricelistJson,
   ItemId,
-  IUpdatePricelistRequest,
+  UpdatePricelistRequest,
 } from "@sotah-inc/core";
 
 import { IUpdatePricelistResult } from "../api/price-lists";
@@ -59,7 +59,7 @@ interface IUpdatePricelistMeta {
 }
 
 export interface IUpdatePricelistRequestOptions {
-  request: IUpdatePricelistRequest;
+  request: UpdatePricelistRequest;
   meta: IUpdatePricelistMeta;
   token: string;
   id: number;

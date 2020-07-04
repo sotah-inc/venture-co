@@ -1,33 +1,30 @@
 import {
+  CreatePostResponse,
+  GetPostResponse,
   ICreatePostRequest,
-  ICreatePostResponse,
-  IErrorResponse,
-  IGetPostResponse,
+  ICreatePostResponseData,
+  IGetPostResponseData,
   IPostJson,
-  IUpdatePostRequest,
-  IUpdatePostResponse,
   IValidationErrorResponse,
+  UpdatePostRequest,
+  UpdatePostResponse,
 } from "@sotah-inc/core";
 import * as HTTPStatus from "http-status";
 
-import { getApiEndpoint, gather } from "./index";
+import { IErrors } from "../types/global";
+import { gather, getApiEndpoint } from "./index";
 
 export interface ICreatePostResult {
   post: IPostJson | null;
   error?: string;
-  errors?: {
-    [key: string]: string;
-  };
+  errors?: IErrors;
 }
 
 export const createPost = async (
   token: string,
   request: ICreatePostRequest,
 ): Promise<ICreatePostResult> => {
-  const { body, status } = await gather<
-    ICreatePostRequest,
-    ICreatePostResponse | IErrorResponse | IValidationErrorResponse
-  >({
+  const { body, status } = await gather<ICreatePostRequest, CreatePostResponse>({
     body: request,
     headers: new Headers({
       Authorization: `Bearer ${token}`,
@@ -50,26 +47,21 @@ export const createPost = async (
       return { error: "Failure", post: null };
   }
 
-  return { post: (body as ICreatePostResponse).post };
+  return { post: (body as ICreatePostResponseData).post };
 };
 
 export interface IUpdatePostResult {
   post: IPostJson | null;
   error?: string;
-  errors?: {
-    [key: string]: string;
-  };
+  errors?: IErrors;
 }
 
 export const updatePost = async (
   token: string,
   id: number,
-  request: IUpdatePostRequest,
+  request: UpdatePostRequest,
 ): Promise<IUpdatePostResult> => {
-  const { body, status } = await gather<
-    IUpdatePostRequest,
-    IUpdatePostResponse | IErrorResponse | IValidationErrorResponse
-  >({
+  const { body, status } = await gather<UpdatePostRequest, UpdatePostResponse>({
     body: request,
     headers: new Headers({
       Authorization: `Bearer ${token}`,
@@ -92,11 +84,11 @@ export const updatePost = async (
       return { error: "Failure", post: null };
   }
 
-  return { post: (body as IUpdatePostResponse).post };
+  return { post: (body as ICreatePostResponseData).post };
 };
 
-export const getPost = async (slug: string): Promise<IGetPostResponse | null> => {
-  const { body, status } = await gather<null, IGetPostResponse | IErrorResponse>({
+export const getPost = async (slug: string): Promise<IGetPostResponseData | null> => {
+  const { body, status } = await gather<null, GetPostResponse>({
     headers: new Headers({
       "content-type": "application/json",
     }),
@@ -109,7 +101,7 @@ export const getPost = async (slug: string): Promise<IGetPostResponse | null> =>
       return null;
   }
 
-  return { post: (body as IGetPostResponse).post };
+  return { post: (body as IGetPostResponseData).post };
 };
 
 export const deletePost = async (token: string, id: number): Promise<number | null> => {

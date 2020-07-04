@@ -1,11 +1,12 @@
 import {
+  IConnectedRealmComposite,
   ICreatePreferencesRequest,
-  IGetBootResponse,
-  IRegion,
-  IStatusRealm,
-  IUpdatePreferencesRequest,
+  IGetBootResponseData,
+  IRealm,
+  IRegionComposite,
   RealmSlug,
   RegionName,
+  UpdatePreferencesRequest,
 } from "@sotah-inc/core";
 import { Dispatch } from "redux";
 
@@ -96,7 +97,7 @@ const ReceiveUserPreferencesUpdate = (payload: IUpdatePreferencesResult) =>
 type FetchUserPreferencesUpdateType = ReturnType<
   typeof RequestUserPreferencesUpdate | typeof ReceiveUserPreferencesUpdate
 >;
-export const FetchUserPreferencesUpdate = (token: string, body: IUpdatePreferencesRequest) => {
+export const FetchUserPreferencesUpdate = (token: string, body: UpdatePreferencesRequest) => {
   return async (dispatch: Dispatch<FetchUserPreferencesUpdateType>) => {
     dispatch(RequestUserPreferencesUpdate());
     dispatch(ReceiveUserPreferencesUpdate(await updatePreferences(token, body)));
@@ -106,7 +107,7 @@ export const FetchUserPreferencesUpdate = (token: string, body: IUpdatePreferenc
 export const REQUEST_GET_BOOT = "REQUEST_GET_BOOT";
 export const RECEIVE_GET_BOOT = "RECEIVE_GET_BOOT";
 export const RequestGetBoot = () => createAction(REQUEST_GET_BOOT);
-export const ReceiveGetBoot = (payload: IGetBootResponse | null) =>
+export const ReceiveGetBoot = (payload: IGetBootResponseData | null) =>
   createAction(RECEIVE_GET_BOOT, payload);
 type FetchGetBootType = ReturnType<typeof RequestGetBoot | typeof ReceiveGetBoot>;
 export const FetchGetBoot = () => {
@@ -117,8 +118,8 @@ export const FetchGetBoot = () => {
 };
 
 export interface ILoadBootPayload {
-  boot: IGetBootResponse | null;
-  realms: IStatusRealm[] | null;
+  boot: IGetBootResponseData | null;
+  realms: IConnectedRealmComposite[] | null;
   regionName: RegionName;
   realmSlug?: RealmSlug;
 }
@@ -127,23 +128,23 @@ export const LOAD_GET_BOOT = "LOAD_GET_BOOT";
 export const LoadGetBoot = (payload: ILoadBootPayload) => createAction(LOAD_GET_BOOT, payload);
 
 export const REGION_CHANGE = "REGION_CHANGE";
-export const RegionChange = (payload: IRegion) => createAction(REGION_CHANGE, payload);
+export const RegionChange = (payload: IRegionComposite) => createAction(REGION_CHANGE, payload);
 
 export const REQUEST_GET_REALMS = "REQUEST_GET_REALMS";
 export const RECEIVE_GET_REALMS = "RECEIVE_GET_REALMS";
 export const RequestGetRealms = () => createAction(REQUEST_GET_REALMS);
-export const ReceiveGetRealms = (payload: IStatusRealm[] | null) =>
+export const ReceiveGetRealms = (payload: IConnectedRealmComposite[] | null) =>
   createAction(RECEIVE_GET_REALMS, payload);
 type FetchGetRealmType = ReturnType<typeof RequestGetRealms | typeof ReceiveGetRealms>;
-export const FetchGetRealms = (region: IRegion) => {
+export const FetchGetRealms = (region: IRegionComposite) => {
   return async (dispatch: Dispatch<FetchGetRealmType>) => {
     dispatch(RequestGetRealms());
-    dispatch(ReceiveGetRealms(await getStatus(region.name)));
+    dispatch(ReceiveGetRealms(await getStatus(region.config_region.name)));
   };
 };
 
 export const REALM_CHANGE = "REALM_CHANGE";
-export const RealmChange = (payload: IStatusRealm) => createAction(REALM_CHANGE, payload);
+export const RealmChange = (payload: IRealm) => createAction(REALM_CHANGE, payload);
 
 export const CHANGE_IS_LOGIN_DIALOG_OPEN = "CHANGE_IS_LOGIN_DIALOG_OPEN";
 export const ChangeIsLoginDialogOpen = (payload: boolean) =>
@@ -154,7 +155,7 @@ export const ChangeIsRegisterDialogOpen = (payload: boolean) =>
   createAction(CHANGE_IS_REGISTER_DIALOG_OPEN, payload);
 
 export interface ILoadRootEntrypoint {
-  boot: IGetBootResponse | null;
+  boot: IGetBootResponseData | null;
   ping: boolean;
 }
 
@@ -163,7 +164,7 @@ export const LoadRootEntrypoint = (payload: ILoadRootEntrypoint) =>
   createAction(LOAD_ROOT_ENTRYPOINT, payload);
 
 export interface ILoadRegionEntrypoint {
-  realms: IStatusRealm[] | null;
+  realms: IConnectedRealmComposite[] | null;
   nextRegionName: RegionName;
 }
 
@@ -172,7 +173,7 @@ export const LoadRegionEntrypoint = (payload: ILoadRegionEntrypoint) =>
   createAction(LOAD_REGION_ENTRYPOINT, payload);
 
 export interface ILoadRealmEntrypoint {
-  realms: IStatusRealm[] | null;
+  realms: IConnectedRealmComposite[] | null;
   nextRegionName: RegionName;
   nextRealmSlug: RealmSlug;
 }

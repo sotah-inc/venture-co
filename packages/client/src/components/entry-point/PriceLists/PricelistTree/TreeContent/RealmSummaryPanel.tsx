@@ -1,12 +1,12 @@
 import React from "react";
 
 import { Callout, Card, Classes, H5, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
-import { IRegion, IStatusRealm, RealmPopulation } from "@sotah-inc/core";
+import { IRegionComposite, IStatusRealm, RealmPopulation } from "@sotah-inc/core";
 
 import { UnmetDemandRouteContainer } from "../../../../../route-containers/entry-point/PriceLists/PricelistTree/TreeContent/RealmSummaryPanel/UnmetDemand";
 
 export interface IStateProps {
-  currentRegion: IRegion | null;
+  currentRegion: IRegionComposite | null;
   currentRealm: IStatusRealm | null;
 }
 
@@ -41,7 +41,7 @@ export class RealmSummaryPanel extends React.Component<Props> {
         <Callout style={{ marginBottom: "10px" }}>
           <H5>Summary</H5>
           <p style={{ marginBottom: 0 }}>
-            {currentRegion.name.toUpperCase()}-{currentRealm.name} is a{" "}
+            {currentRegion.config_region.name.toUpperCase()}-{currentRealm.name} is a{" "}
             <em>{population} population</em> realm
           </p>
         </Callout>

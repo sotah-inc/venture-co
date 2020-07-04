@@ -6,7 +6,7 @@ import {
   IPricelistJson,
   IProfession,
   IProfessionPricelistJson,
-  IRegion,
+  IRegionComposite,
   IStatusRealm,
 } from "@sotah-inc/core";
 
@@ -34,7 +34,7 @@ export interface IStateProps {
   authLevel: AuthLevel;
 
   currentRealm: IStatusRealm | null;
-  currentRegion: IRegion | null;
+  currentRegion: IRegionComposite | null;
   regions: IRegions;
   fetchRealmLevel: FetchLevel;
   realms: IRealms;
@@ -57,7 +57,7 @@ export interface IDispatchProps {
 export interface IRouteProps {
   routeParams: IRouteParams;
   redirectToPricelist: (
-    region: IRegion,
+    region: IRegionComposite,
     realm: IStatusRealm,
     profession: IProfession,
     expansion: IExpansion,
@@ -123,7 +123,7 @@ export class PriceLists extends React.Component<Props> {
       return;
     }
 
-    if (currentRegion === null || currentRegion.name !== region_name) {
+    if (currentRegion === null || currentRegion.config_region.name !== region_name) {
       return;
     }
 
@@ -350,7 +350,9 @@ export class PriceLists extends React.Component<Props> {
 
     if (selectedProfession === null) {
       if (selectedList === null) {
-        setTitle(`Professions - ${currentRegion.name.toUpperCase()} ${currentRealm.name}`);
+        setTitle(
+          `Professions - ${currentRegion.config_region.name.toUpperCase()} ${currentRealm.name}`,
+        );
 
         return;
       }
@@ -358,7 +360,7 @@ export class PriceLists extends React.Component<Props> {
       const userPricelistTitle = [
         selectedList.name,
         "Professions",
-        currentRegion.name.toUpperCase(),
+        currentRegion.config_region.name.toUpperCase(),
         currentRealm.name,
       ].join(" - ");
       setTitle(userPricelistTitle);
@@ -368,7 +370,9 @@ export class PriceLists extends React.Component<Props> {
 
     if (selectedExpansion === null) {
       setTitle(`
-                ${selectedProfession.label} - Professions - ${currentRegion.name.toUpperCase()} ${
+                ${
+                  selectedProfession.label
+                } - Professions - ${currentRegion.config_region.name.toUpperCase()} ${
         currentRealm.name
       }`);
 
@@ -379,7 +383,7 @@ export class PriceLists extends React.Component<Props> {
       setTitle(`
                 ${selectedExpansion.label} - ${
         selectedProfession.label
-      } - Professions - ${currentRegion.name.toUpperCase()} ${currentRealm.name}`);
+      } - Professions - ${currentRegion.config_region.name.toUpperCase()} ${currentRealm.name}`);
 
       return;
     }
@@ -389,7 +393,7 @@ export class PriceLists extends React.Component<Props> {
       selectedExpansion.label,
       selectedProfession.label,
       "Professions",
-      currentRegion.name.toUpperCase(),
+      currentRegion.config_region.name.toUpperCase(),
       currentRealm.name,
     ].join(" - ");
     setTitle(title);

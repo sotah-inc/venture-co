@@ -1,4 +1,8 @@
-import { IPostJson, IQueryAuctionStatsResponse, IValidationErrorResponse } from "@sotah-inc/core";
+import {
+  IPostJson,
+  IQueryAuctionStatsResponseData,
+  IValidationErrorResponse,
+} from "@sotah-inc/core";
 
 import {
   LoadPostsEntrypoint,
@@ -62,7 +66,7 @@ export const handlers: IKindHandlers<IPostsState, PostsActions> = {
           return { data, errors: {}, level: FetchLevel.success };
         })();
 
-        const auctionStats = ((): IFetchData<IQueryAuctionStatsResponse> => {
+        const auctionStats = ((): IFetchData<IQueryAuctionStatsResponseData> => {
           if (action.payload.auctionStats.error !== null) {
             return { data: {}, level: FetchLevel.failure, errors: {} };
           }

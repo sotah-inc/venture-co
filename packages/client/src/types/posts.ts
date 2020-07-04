@@ -1,6 +1,6 @@
-import { IPostJson, IQueryAuctionStatsResponse, ITokenHistory } from "@sotah-inc/core";
+import { IPostJson, IQueryAuctionStatsResponseData, ITokenHistory } from "@sotah-inc/core";
 
-import { IFetchData } from "./global";
+import { IErrors, IFetchData } from "./global";
 import { FetchLevel } from "./main";
 
 export interface IRegionTokenHistories {
@@ -10,19 +10,15 @@ export interface IRegionTokenHistories {
 export interface IPostsState {
   posts: IFetchData<IPostJson[]>;
   createPostLevel: FetchLevel;
-  createPostErrors: {
-    [key: string]: string;
-  };
+  createPostErrors: IErrors;
   updatePostLevel: FetchLevel;
-  updatePostErrors: {
-    [key: string]: string;
-  };
+  updatePostErrors: IErrors;
   currentPost: IPostJson | null;
   getPostLevel: FetchLevel;
   isDeletePostDialogOpen: boolean;
   deletePostLevel: FetchLevel;
   regionTokenHistories: IFetchData<IRegionTokenHistories>;
-  auctionStats: IFetchData<IQueryAuctionStatsResponse>;
+  auctionStats: IFetchData<IQueryAuctionStatsResponseData>;
 }
 
 export const defaultPostsState: IPostsState = {

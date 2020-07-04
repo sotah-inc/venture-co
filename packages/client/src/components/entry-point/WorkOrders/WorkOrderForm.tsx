@@ -14,15 +14,15 @@ import {
   GameVersion,
   ICreateWorkOrderRequest,
   IItem,
-  IPrefillWorkOrderItemResponse,
-  IRegion,
+  IPrefillWorkOrderItemResponseData,
+  IRegionComposite,
   IStatusRealm,
 } from "@sotah-inc/core";
 import { FormikProps } from "formik";
 
 import { IPrefillWorkOrderItemOptions } from "../../../api/work-order";
 import { ItemPopoverContainer } from "../../../containers/util/ItemPopover";
-import { IFetchData } from "../../../types/global";
+import { IErrors, IFetchData } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
 import {
   currencyToText,
@@ -40,13 +40,11 @@ export interface IOwnProps {
   onFatalError: (v: string) => void;
   defaultFormValues?: IFormValues;
   mutateOrderLevel: FetchLevel;
-  mutateOrderErrors: {
-    [key: string]: string;
-  };
+  mutateOrderErrors: IErrors;
   isSubmitDisabled: boolean;
-  prefillWorkOrderItem: IFetchData<IPrefillWorkOrderItemResponse>;
+  prefillWorkOrderItem: IFetchData<IPrefillWorkOrderItemResponseData>;
   callPrefillWorkOrderItem: (opts: IPrefillWorkOrderItemOptions) => void;
-  currentRegion: IRegion | null;
+  currentRegion: IRegionComposite | null;
   currentRealm: IStatusRealm | null;
   resetWorkOrderItemPrefill: () => void;
 }
@@ -69,7 +67,7 @@ export class WorkOrderForm extends React.Component<Props> {
       );
     }
 
-    const className = qualityToColorClass(item.quality);
+    const className = qualityToColorClass(item.blizzard_meta.quality.type);
     const textValue = getItemTextValue(item);
     const itemIcon = getItemIconUrl(item);
     if (itemIcon === null) {
@@ -106,7 +104,8 @@ export class WorkOrderForm extends React.Component<Props> {
           break;
         case FetchLevel.failure:
           setSubmitting(false);
-          if ("error" in mutateOrderErrors) {
+
+          if ("error" in mutateOrderErrors && typeof mutateOrderErrors.error === "string") {
             onFatalError(mutateOrderErrors.error);
           }
 
@@ -220,7 +219,7 @@ export class WorkOrderForm extends React.Component<Props> {
           item={item}
           position={Position.BOTTOM}
           itemTextFormatter={v => (
-            <span className={qualityToColorClass(item.quality)}>
+            <span className={qualityToColorClass(item.blizzard_meta.quality.type)}>
               {v} x{quantity}
             </span>
           )}
@@ -433,9 +432,9 @@ export class WorkOrderForm extends React.Component<Props> {
     setFieldTouched("item");
     callPrefillWorkOrderItem({
       gameVersion: GameVersion.Retail,
-      itemId: item.id,
+      itemId: item.blizzard_meta.id,
       realmSlug: currentRealm.slug,
-      regionName: currentRegion.name,
+      regionName: currentRegion.config_region.name,
     });
   }
 }

@@ -199,7 +199,7 @@ export class ListDialog extends React.Component<Props, State> {
 
   private onCreateEntryFormComplete(v: IPricelistEntryJson, item: IItem) {
     const entriesItems = this.state.entriesItems;
-    entriesItems[item.id] = item;
+    entriesItems[item.blizzard_meta.id] = item;
     this.setState({ entriesItems: { ...entriesItems } });
 
     this.setState({
@@ -218,7 +218,7 @@ export class ListDialog extends React.Component<Props, State> {
     const { entries } = this.state;
 
     for (const entry of entries) {
-      if (entry.item_id === item.id) {
+      if (entry.item_id === item.blizzard_meta.id) {
         this.setState({ entryFormError: "Item is already in the list." });
 
         return;
@@ -232,7 +232,7 @@ export class ListDialog extends React.Component<Props, State> {
     const { entries } = this.state;
 
     for (const entry of entries) {
-      if (entry.item_id === item.id) {
+      if (entry.item_id === item.blizzard_meta.id) {
         this.setState({ entryFormError: "Item is already in the list." });
 
         return;
@@ -240,10 +240,10 @@ export class ListDialog extends React.Component<Props, State> {
     }
 
     this.setState({
-      entries: [...entries, { id: -1, item_id: item.id, quantity_modifier: 1 }],
+      entries: [...entries, { id: -1, item_id: item.blizzard_meta.id, quantity_modifier: 1 }],
       entriesItems: {
         ...this.state.entriesItems,
-        [item.id]: item,
+        [item.blizzard_meta.id]: item,
       },
       entryFormError: "",
     });
@@ -345,7 +345,7 @@ export class ListDialog extends React.Component<Props, State> {
 
     return (
       <tr key={index}>
-        <td className={item === null ? "" : qualityToColorClass(item!.quality)}>
+        <td className={item === null ? "" : qualityToColorClass(item.blizzard_meta.quality.type)}>
           {this.renderItemPopover(item)}
         </td>
         <td>x{entry.quantity_modifier}</td>

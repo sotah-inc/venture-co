@@ -23,7 +23,7 @@ import {
   ItemRenderer,
   Suggest,
 } from "@blueprintjs/select";
-import { IItem, IQueryAuctionsItem, IRegion, IStatusRealm } from "@sotah-inc/core";
+import { IItem, IQueryItemsItem, IRegionComposite, IStatusRealm } from "@sotah-inc/core";
 import { debounce } from "lodash";
 
 import { IQueryAuctionsOptions } from "../../../api/data";
@@ -35,23 +35,23 @@ import {
   qualityToColorClass,
 } from "../../../util";
 
-const QueryAuctionResultSuggest = Suggest.ofType<IQueryAuctionsItem>();
+const QueryAuctionResultSuggest = Suggest.ofType<IQueryItemsItem>();
 
 export interface IStateProps {
   queryAuctionsLevel: FetchLevel;
-  currentRegion: IRegion | null;
+  currentRegion: IRegionComposite | null;
   currentRealm: IStatusRealm | null;
-  items: IQueryAuctionsItem[];
-  selectedItems: IQueryAuctionsItem[];
+  items: IQueryItemsItem[];
+  selectedItems: IQueryItemsItem[];
   activeSelect: boolean;
 }
 
 export interface IDispatchProps {
-  onAuctionsQuerySelect: (aqResult: IQueryAuctionsItem) => void;
+  onAuctionsQuerySelect: (aqResult: IQueryItemsItem) => void;
   onAuctionsQueryDeselect: (index: number) => void;
   fetchAuctionsQuery: (opts: IQueryAuctionsOptions) => void;
   activeSelectChange: (v: boolean) => void;
-  refreshAuctionsQuery: (v: IQueryAuctionsItem[]) => void;
+  refreshAuctionsQuery: (v: IQueryItemsItem[]) => void;
 }
 
 type Props = Readonly<IStateProps & IDispatchProps>;
@@ -125,9 +125,9 @@ export class QueryAuctionsFilter extends React.Component<Props> {
     activeSelectChange(!activeSelect);
   }
 
-  private itemPredicate: ItemPredicate<IQueryAuctionsItem> = (
+  private itemPredicate: ItemPredicate<IQueryItemsItem> = (
     _query: string,
-    result: IQueryAuctionsItem,
+    result: IQueryItemsItem,
   ) => {
     return result.rank > -1;
   };
@@ -147,7 +147,7 @@ export class QueryAuctionsFilter extends React.Component<Props> {
     );
   }
 
-  private renderItemRendererTextContent(result: IQueryAuctionsItem) {
+  private renderItemRendererTextContent(result: IQueryItemsItem) {
     const { item } = result;
 
     if (item !== null) {
@@ -157,12 +157,12 @@ export class QueryAuctionsFilter extends React.Component<Props> {
     return "n/a";
   }
 
-  private renderItemRendererText(result: IQueryAuctionsItem) {
+  private renderItemRendererText(result: IQueryItemsItem) {
     return <span className="qaf-menu-item">{this.renderItemRendererTextContent(result)}</span>;
   }
 
-  private itemRenderer: ItemRenderer<IQueryAuctionsItem> = (
-    result: IQueryAuctionsItem,
+  private itemRenderer: ItemRenderer<IQueryItemsItem> = (
+    result: IQueryItemsItem,
     { handleClick, modifiers, index }: IItemRendererProps,
   ) => {
     if (!modifiers.matchesPredicate) {
@@ -174,8 +174,8 @@ export class QueryAuctionsFilter extends React.Component<Props> {
 
     let label = "n/a";
     if (item !== null) {
-      label = `#${item.id}`;
-      className = `${className} ${qualityToColorClass(item.quality)}`;
+      label = `#${item.blizzard_meta.id}`;
+      className = `${className} ${qualityToColorClass(item.blizzard_meta.quality.type)}`;
     }
 
     return (
@@ -190,8 +190,8 @@ export class QueryAuctionsFilter extends React.Component<Props> {
     );
   };
 
-  private itemListRenderer: ItemListRenderer<IQueryAuctionsItem> = (
-    params: IItemListRendererProps<IQueryAuctionsItem>,
+  private itemListRenderer: ItemListRenderer<IQueryItemsItem> = (
+    params: IItemListRendererProps<IQueryItemsItem>,
   ) => {
     const { items, itemsParentRef, renderItem } = params;
     const renderedItems = items.map(renderItem).filter(renderedItem => renderedItem !== null);
@@ -218,7 +218,7 @@ export class QueryAuctionsFilter extends React.Component<Props> {
     );
   };
 
-  private onItemSelect(result: IQueryAuctionsItem) {
+  private onItemSelect(result: IQueryItemsItem) {
     const { onAuctionsQueryDeselect, onAuctionsQuerySelect } = this.props;
 
     if (this.isResultSelected(result)) {
@@ -233,23 +233,27 @@ export class QueryAuctionsFilter extends React.Component<Props> {
   private triggerQuery(filterValue: string) {
     const { fetchAuctionsQuery, currentRealm, currentRegion } = this.props;
 
+    if (currentRegion === null || currentRealm === null) {
+      return;
+    }
+
     fetchAuctionsQuery({
       query: filterValue,
-      realmSlug: currentRealm!.slug,
-      regionName: currentRegion!.name,
+      realmSlug: currentRealm.slug,
+      regionName: currentRegion.config_region.name,
     });
   }
 
-  private isResultSelected(result: IQueryAuctionsItem) {
+  private isResultSelected(result: IQueryItemsItem) {
     return this.getSelectedResultIndex(result) > -1;
   }
 
-  private getSelectedResultIndex(result: IQueryAuctionsItem): number {
+  private getSelectedResultIndex(result: IQueryItemsItem): number {
     const selectedItems = this.props.selectedItems;
     return getSelectedResultIndex(result, selectedItems);
   }
 
-  private inputValueRenderer(result: IQueryAuctionsItem): string {
+  private inputValueRenderer(result: IQueryItemsItem): string {
     const { item } = result;
 
     if (item !== null) {
@@ -259,7 +263,7 @@ export class QueryAuctionsFilter extends React.Component<Props> {
     return "n/a";
   }
 
-  private renderSelectedItem(index: number, result: IQueryAuctionsItem) {
+  private renderSelectedItem(index: number, result: IQueryItemsItem) {
     const { onAuctionsQueryDeselect } = this.props;
 
     return (
@@ -273,7 +277,7 @@ export class QueryAuctionsFilter extends React.Component<Props> {
     );
   }
 
-  private renderSelectedItems(selectedItems: IQueryAuctionsItem[]) {
+  private renderSelectedItems(selectedItems: IQueryItemsItem[]) {
     if (selectedItems.length === 0) {
       return;
     }

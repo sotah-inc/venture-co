@@ -19,7 +19,7 @@ function RouteContainer({ router, realmEntrypointData }: Props) {
       redirectToRealmAuctions={(region, realm) =>
         router.replace(
           "/data/[region_name]/[realm_slug]/auctions",
-          `/data/${region.name}/${realm.slug}/auctions`,
+          `/data/${region.config_region.name}/${realm.slug}/auctions`,
         )
       }
       realmEntrypointData={realmEntrypointData}

@@ -1,13 +1,14 @@
 import {
   IUpdateProfileRequest,
-  IUpdateProfileResponse,
+  IUpdateProfileResponseData,
   IValidationErrorResponse,
+  UpdateProfileResponse,
 } from "@sotah-inc/core";
 import * as HTTPStatus from "http-status";
 
 import { IErrors } from "../types/global";
 
-import { getApiEndpoint, gather } from "./index";
+import { gather, getApiEndpoint } from "./index";
 
 export interface IUpdateProfileResult {
   email: string | null;
@@ -19,10 +20,7 @@ export const updateProfile = async (
   token: string,
   request: IUpdateProfileRequest,
 ): Promise<IUpdateProfileResult> => {
-  const { body, status } = await gather<
-    IUpdateProfileRequest,
-    IUpdateProfileResponse | IValidationErrorResponse
-  >({
+  const { body, status } = await gather<IUpdateProfileRequest, UpdateProfileResponse>({
     body: request,
     headers: new Headers({
       Authorization: `Bearer ${token}`,
@@ -45,5 +43,5 @@ export const updateProfile = async (
       return { error: "Failure", email: null };
   }
 
-  return { email: body!.email };
+  return { email: (body as IUpdateProfileResponseData).email };
 };

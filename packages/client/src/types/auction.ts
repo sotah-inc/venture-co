@@ -1,7 +1,7 @@
 import {
   IAuction,
   IProfessionPricelistJson,
-  IQueryAuctionsItem,
+  IQueryItemsItem,
   SortDirection,
   SortKind,
 } from "@sotah-inc/core";
@@ -18,8 +18,8 @@ export interface IAuctionState {
   sortDirection: SortDirection;
   sortKind: SortKind;
   queryAuctionsLevel: FetchLevel;
-  queryAuctionResults: IQueryAuctionsItem[];
-  selectedQueryAuctionResults: IQueryAuctionsItem[];
+  queryAuctionResults: IQueryItemsItem[];
+  selectedQueryAuctionResults: IQueryItemsItem[];
   activeSelect: boolean;
   relatedProfessionPricelists: IProfessionPricelistJson[];
 }

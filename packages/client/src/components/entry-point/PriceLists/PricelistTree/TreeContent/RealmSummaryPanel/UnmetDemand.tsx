@@ -19,7 +19,7 @@ import {
   IPricelistJson,
   IProfession,
   IProfessionPricelistJson,
-  IRegion,
+  IRegionComposite,
   IStatusRealm,
   ItemId,
   ItemQuality,
@@ -39,13 +39,13 @@ export interface IStateProps {
   getUnmetDemandLevel: FetchLevel;
   items: IItemsMap;
   selectedExpansion: IExpansion | null;
-  currentRegion: IRegion | null;
+  currentRegion: IRegionComposite | null;
   currentRealm: IStatusRealm | null;
 }
 
 export interface IRouteProps {
   browseToProfessionPricelist: (
-    region: IRegion,
+    region: IRegionComposite,
     realm: IStatusRealm,
     expansion: IExpansion,
     profession: IProfession,
@@ -191,9 +191,13 @@ export class UnmetDemand extends React.Component<Props, IState> {
       }
 
       const aItemValue: string =
-        a.entry.item_id in items ? items[a.entry.item_id]!.name : a.entry.item_id.toString();
+        a.entry.item_id in items
+          ? items[a.entry.item_id]!.blizzard_meta.preview_item.name.en_US!
+          : a.entry.item_id.toString();
       const bItemValue: string =
-        b.entry.item_id in items ? items[b.entry.item_id]!.name : b.entry.item_id.toString();
+        b.entry.item_id in items
+          ? items[b.entry.item_id]!.blizzard_meta.preview_item.name.en_US!
+          : b.entry.item_id.toString();
       if (aItemValue !== bItemValue) {
         return aItemValue > bItemValue ? 1 : -1;
       }
@@ -204,7 +208,8 @@ export class UnmetDemand extends React.Component<Props, IState> {
     if (collapsedResult.length === 0) {
       return (
         <Callout intent={Intent.SUCCESS}>
-          All pricelists are fulfilled for {currentRegion.name.toUpperCase()}-{currentRealm.name}!
+          All pricelists are fulfilled for {currentRegion.config_region.name.toUpperCase()}-
+          {currentRealm.name}!
         </Callout>
       );
     }
@@ -230,8 +235,8 @@ export class UnmetDemand extends React.Component<Props, IState> {
     return (
       <>
         <Callout intent={Intent.PRIMARY} style={{ marginBottom: "10px" }}>
-          These items have <strong>0</strong> auctions posted on {currentRegion.name.toUpperCase()}-
-          {currentRealm.name}.
+          These items have <strong>0</strong> auctions posted on{" "}
+          {currentRegion.config_region.name.toUpperCase()}-{currentRealm.name}.
         </Callout>
         <Navbar>
           <NavbarGroup align={Alignment.LEFT}>
@@ -301,7 +306,7 @@ export class UnmetDemand extends React.Component<Props, IState> {
 
     return (
       <tr key={index}>
-        <td className={qualityToColorClass(item.quality)}>
+        <td className={qualityToColorClass(item.blizzard_meta.quality.type)}>
           <ItemPopoverContainer interactive={false} item={item} />
         </td>
         <td>{UnmetDemand.renderProfession(profession)}</td>

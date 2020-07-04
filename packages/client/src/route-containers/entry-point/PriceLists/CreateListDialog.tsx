@@ -14,7 +14,7 @@ function RouteContainer({ router }: Props) {
       browseOnCreate={(region, realm, pricelist, professionData) => {
         const urlParts: Array<[string, string]> = [
           ["data", "data"],
-          ["[region_name]", region.name],
+          ["[region_name]", region.config_region.name],
           ["[realm_slug]", realm.slug],
           ["professions", "professions"],
         ];

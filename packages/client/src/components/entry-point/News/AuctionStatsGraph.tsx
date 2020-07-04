@@ -2,7 +2,7 @@ import React from "react";
 
 import { Icon, Intent, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
-import { IQueryAuctionStatsResponse } from "@sotah-inc/core";
+import { IQueryAuctionStatsResponseData } from "@sotah-inc/core";
 import moment from "moment";
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
@@ -17,7 +17,7 @@ import {
 } from "../../../util";
 
 export interface IStateProps {
-  auctionStats: IFetchData<IQueryAuctionStatsResponse>;
+  auctionStats: IFetchData<IQueryAuctionStatsResponseData>;
 }
 
 type Props = Readonly<IStateProps>;
@@ -119,11 +119,7 @@ export class AuctionStatsGraph extends React.Component<Props> {
     }
 
     const data = convertAuctionStatsToLineData(auctionStats.data).filter(
-      v =>
-        v.name >
-        moment(roundedEarliestDateLimit)
-          .add(1, "day")
-          .unix(),
+      v => v.name > moment(roundedEarliestDateLimit).add(1, "day").unix(),
     );
 
     return (

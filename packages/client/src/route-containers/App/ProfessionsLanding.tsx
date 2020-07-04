@@ -14,7 +14,7 @@ function RouteContainer({ router }: Props) {
       browseToProfessions={(region, realm) =>
         router.replace(
           "/data/[region_name]/[realm_slug]/professions",
-          `/data/${region.name}/${realm.slug}/professions`,
+          `/data/${region.config_region.name}/${realm.slug}/professions`,
         )
       }
     />

@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Classes, HTMLTable, Position, Tooltip } from "@blueprintjs/core";
-import { IQueryWorkOrdersResponse, ItemId, IWorkOrderJson } from "@sotah-inc/core";
+import { IQueryWorkOrdersResponseData, ItemId, IWorkOrderJson } from "@sotah-inc/core";
 import moment from "moment-timezone";
 
 import { ItemPopoverContainer } from "../../../containers/util/ItemPopover";
@@ -10,7 +10,7 @@ import { FetchLevel } from "../../../types/main";
 import { Currency } from "../../util";
 
 export interface IStateProps {
-  orders: IFetchData<IQueryWorkOrdersResponse>;
+  orders: IFetchData<IQueryWorkOrdersResponseData>;
 }
 
 type Props = Readonly<IStateProps>;

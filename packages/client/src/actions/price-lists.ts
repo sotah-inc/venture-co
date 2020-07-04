@@ -3,9 +3,9 @@ import {
   ICreatePricelistRequest,
   ICreateProfessionPricelistRequest,
   IExpansion,
-  IGetPricelistHistoriesResponse,
-  IGetPricelistResponse,
-  IGetPricelistsResponse,
+  IGetPricelistHistoriesResponseData,
+  IGetPricelistResponseData,
+  IGetPricelistsResponseData,
   IPricelistJson,
   IProfession,
   ProfessionName,
@@ -92,7 +92,7 @@ export const FetchDeletePricelist = (token: string, id: number) => {
 export const REQUEST_GET_PRICELISTS = "REQUEST_GET_PRICELISTS";
 export const RequestGetPricelists = () => createAction(REQUEST_GET_PRICELISTS);
 export const RECEIVE_GET_PRICELISTS = "RECEIVE_GET_PRICELISTS";
-export const ReceiveGetPricelists = (payload: IGetPricelistsResponse) =>
+export const ReceiveGetPricelists = (payload: IGetPricelistsResponseData) =>
   createAction(RECEIVE_GET_PRICELISTS, payload);
 type FetchGetPricelistsType = ReturnType<typeof RequestGetPricelists | typeof ReceiveGetPricelists>;
 export const FetchGetPricelists = (token: string) => {
@@ -178,7 +178,7 @@ export const FetchGetProfessionPricelists = (
 export const REQUEST_GET_PRICELIST = "REQUEST_GET_PRICELIST";
 export const RequestGetPricelist = () => createAction(REQUEST_GET_PRICELIST);
 export const RECEIVE_GET_PRICELIST = "RECEIVE_GET_PRICELIST";
-export const ReceiveGetPricelist = (payload: IGetPricelistResponse | null) =>
+export const ReceiveGetPricelist = (payload: IGetPricelistResponseData | null) =>
   createAction(RECEIVE_GET_PRICELIST, payload);
 type FetchGetPricelist = ReturnType<typeof RequestGetPricelist | typeof ReceiveGetPricelist>;
 export const FetchGetPricelist = (opts: IGetPriceListOptions) => {
@@ -191,7 +191,7 @@ export const FetchGetPricelist = (opts: IGetPriceListOptions) => {
 export const REQUEST_GET_PRICELISTHISTORY = "REQUEST_GET_PRICELISTHISTORY";
 export const RequestGetPricelistHistory = () => createAction(REQUEST_GET_PRICELISTHISTORY);
 export const RECEIVE_GET_PRICELISTHISTORY = "RECEIVE_GET_PRICELISTHISTORY";
-export const ReceiveGetPricelistHistory = (payload: IGetPricelistHistoriesResponse | null) =>
+export const ReceiveGetPricelistHistory = (payload: IGetPricelistHistoriesResponseData | null) =>
   createAction(RECEIVE_GET_PRICELISTHISTORY, payload);
 type FetchGetPricelistHistory = ReturnType<
   typeof RequestGetPricelistHistory | typeof ReceiveGetPricelistHistory
@@ -207,8 +207,8 @@ export interface ILoadPricelistsEntrypointFront {
   professionName?: ProfessionName;
   expansionName?: ExpansionName;
   pricelistSlug?: string;
-  pricelistHistory?: IGetPricelistHistoriesResponse | null;
-  currentPrices?: IGetPricelistResponse | null;
+  pricelistHistory?: IGetPricelistHistoriesResponseData | null;
+  currentPrices?: IGetPricelistResponseData | null;
   selectedList?: IPricelistJson | null;
   professionPricelists?: IGetProfessionPricelistsResult;
   unmetDemand?: IGetUnmetDemandResult;

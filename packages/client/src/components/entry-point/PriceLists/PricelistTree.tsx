@@ -7,7 +7,7 @@ import {
   IPricelistJson,
   IProfession,
   IProfessionPricelistJson,
-  IRegion,
+  IRegionComposite,
   IStatusRealm,
 } from "@sotah-inc/core";
 
@@ -23,7 +23,7 @@ export interface IStateProps {
   pricelists: IPricelistJson[];
   items: IItemsMap;
   selectedList: IPricelistJson | null;
-  currentRegion: IRegion | null;
+  currentRegion: IRegionComposite | null;
   currentRealm: IStatusRealm | null;
   professions: IProfession[];
   selectedProfession: IProfession | null;
@@ -41,16 +41,20 @@ export interface IDispatchProps {
 }
 
 export interface IRouteProps {
-  browseToUserPricelist: (region: IRegion, realm: IStatusRealm, pricelist: IPricelistJson) => void;
-  browseToExpansion: (region: IRegion, realm: IStatusRealm, expansion: IExpansion) => void;
+  browseToUserPricelist: (
+    region: IRegionComposite,
+    realm: IStatusRealm,
+    pricelist: IPricelistJson,
+  ) => void;
+  browseToExpansion: (region: IRegionComposite, realm: IStatusRealm, expansion: IExpansion) => void;
   browseToProfession: (
-    region: IRegion,
+    region: IRegionComposite,
     realm: IStatusRealm,
     expansion: IExpansion,
     profession: IProfession,
   ) => void;
   browseToProfessionPricelist: (
-    region: IRegion,
+    region: IRegionComposite,
     realm: IStatusRealm,
     expansion: IExpansion,
     profession: IProfession,
@@ -131,7 +135,7 @@ export class PricelistTree extends React.Component<Props, IState> {
       nodes.push({
         id: `top-summary`,
         isSelected: this.isSummarySelected(),
-        label: `${currentRegion.name.toUpperCase()}-${currentRealm!.name} Summary`,
+        label: `${currentRegion.config_region.name.toUpperCase()}-${currentRealm!.name} Summary`,
       });
     }
 

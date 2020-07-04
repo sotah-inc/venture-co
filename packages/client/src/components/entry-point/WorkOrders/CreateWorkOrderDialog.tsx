@@ -1,7 +1,12 @@
 import React from "react";
 
 import { Dialog, IToastProps } from "@blueprintjs/core";
-import { GameVersion, IPrefillWorkOrderItemResponse, IRegion, IStatusRealm } from "@sotah-inc/core";
+import {
+  GameVersion,
+  IPrefillWorkOrderItemResponseData,
+  IRegionComposite,
+  IStatusRealm,
+} from "@sotah-inc/core";
 
 import { ICreateWorkOrderOptions, IPrefillWorkOrderItemOptions } from "../../../api/work-order";
 import { WorkOrderFormFormContainer } from "../../../form-containers/entry-point/WorkOrders/WorkOrderForm";
@@ -12,10 +17,10 @@ export interface IStateProps {
   isWorkOrderDialogOpen: boolean;
   mutateOrderLevel: FetchLevel;
   mutateOrderErrors: IErrors;
-  currentRegion: IRegion | null;
+  currentRegion: IRegionComposite | null;
   currentRealm: IStatusRealm | null;
   profile: IProfile | null;
-  prefillWorkOrderItem: IFetchData<IPrefillWorkOrderItemResponse>;
+  prefillWorkOrderItem: IFetchData<IPrefillWorkOrderItemResponseData>;
 }
 
 export interface IDispatchProps {
@@ -69,7 +74,7 @@ export class CreateWorkOrderDialog extends React.Component<Props> {
             createWorkOrder(profile.token, {
               gameVersion: GameVersion.Retail,
               realmSlug: currentRealm.slug,
-              regionName: currentRegion.name,
+              regionName: currentRegion.config_region.name,
               req: v,
             });
           }}

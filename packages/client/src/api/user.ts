@@ -1,24 +1,25 @@
 import {
+  CreatePreferencesResponse,
+  CreateUserResponse,
   ICreatePreferencesRequest,
-  ICreatePreferencesResponse,
   ICreateUserRequest,
-  ICreateUserResponse,
-  IErrorResponse,
-  IGetPreferencesResponse,
+  ICreateUserResponseData,
+  IGetPreferencesResponseData,
   ILoginRequest,
-  ILoginResponse,
+  ILoginResponseData,
   IPreferenceJson,
-  IUpdatePreferencesRequest,
-  IUpdatePreferencesResponse,
   IUserJson,
   IValidationErrorResponse,
+  LoginResponse,
+  UpdatePreferencesRequest,
+  UpdatePreferencesResponse,
 } from "@sotah-inc/core";
 import * as HTTPStatus from "http-status";
 
 import { gather, getApiEndpoint } from "./index";
 
 interface IRegisterUserResult {
-  data: ICreateUserResponse | null;
+  data: ICreateUserResponseData | null;
   errors: IValidationErrorResponse | null;
 }
 
@@ -26,17 +27,14 @@ export const registerUser = async (
   email: string,
   password: string,
 ): Promise<IRegisterUserResult> => {
-  const { body, status } = await gather<
-    ICreateUserRequest,
-    ICreateUserResponse | IValidationErrorResponse
-  >({
+  const { body, status } = await gather<ICreateUserRequest, CreateUserResponse>({
     body: { email, password },
     method: "POST",
     url: `${getApiEndpoint()}/users`,
   });
   switch (status) {
     case HTTPStatus.CREATED:
-      return { errors: null, data: body as ICreateUserResponse };
+      return { errors: null, data: body as ICreateUserResponseData };
     case HTTPStatus.BAD_REQUEST:
       return { errors: body as IValidationErrorResponse, data: null };
     case HTTPStatus.INTERNAL_SERVER_ERROR:
@@ -47,19 +45,19 @@ export const registerUser = async (
 };
 
 interface ILoginResult {
-  data: ILoginResponse | null;
+  data: ILoginResponseData | null;
   errors: IValidationErrorResponse | null;
 }
 
 export const loginUser = async (email: string, password: string): Promise<ILoginResult> => {
-  const { body, status } = await gather<ILoginRequest, ILoginResponse | IValidationErrorResponse>({
+  const { body, status } = await gather<ILoginRequest, LoginResponse>({
     body: { email, password },
     method: "POST",
     url: `${getApiEndpoint()}/login`,
   });
   switch (status) {
     case HTTPStatus.OK:
-      return { errors: null, data: body as ILoginResponse };
+      return { errors: null, data: body as ILoginResponseData };
     case HTTPStatus.BAD_REQUEST:
       return { errors: body as IValidationErrorResponse, data: null };
     case HTTPStatus.INTERNAL_SERVER_ERROR:
@@ -95,7 +93,7 @@ export interface IGetPreferencesResult {
 }
 
 export const getPreferences = async (token: string): Promise<IGetPreferencesResult> => {
-  const { body, status } = await gather<null, IGetPreferencesResponse>({
+  const { body, status } = await gather<null, IGetPreferencesResponseData>({
     headers: new Headers({
       Authorization: `Bearer ${token}`,
       "content-type": "application/json",
@@ -123,10 +121,7 @@ export const createPreferences = async (
   token: string,
   request: ICreatePreferencesRequest,
 ): Promise<ICreatePreferencesResult> => {
-  const { body, status } = await gather<
-    ICreatePreferencesRequest,
-    ICreatePreferencesResponse | IErrorResponse | IValidationErrorResponse
-  >({
+  const { body, status } = await gather<ICreatePreferencesRequest, CreatePreferencesResponse>({
     body: request,
     headers: new Headers({
       Authorization: `Bearer ${token}`,
@@ -139,7 +134,7 @@ export const createPreferences = async (
     return { error: "Unauthorized", preference: null };
   }
 
-  return { preference: (body as ICreatePreferencesResponse).preference, error: null };
+  return { preference: (body as IGetPreferencesResponseData).preference, error: null };
 };
 
 export interface IUpdatePreferencesResult {
@@ -149,9 +144,9 @@ export interface IUpdatePreferencesResult {
 
 export const updatePreferences = async (
   token: string,
-  request: IUpdatePreferencesRequest,
+  request: UpdatePreferencesRequest,
 ): Promise<IUpdatePreferencesResult> => {
-  const { body, status } = await gather<IUpdatePreferencesRequest, IUpdatePreferencesResponse>({
+  const { body, status } = await gather<UpdatePreferencesRequest, UpdatePreferencesResponse>({
     body: request,
     headers: new Headers({
       Authorization: `Bearer ${token}`,
@@ -164,5 +159,5 @@ export const updatePreferences = async (
     return { error: "Unauthorized", data: null };
   }
 
-  return { data: body!.preference, error: null };
+  return { data: (body as IGetPreferencesResponseData).preference, error: null };
 };

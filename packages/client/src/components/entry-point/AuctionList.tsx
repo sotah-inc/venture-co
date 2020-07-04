@@ -12,8 +12,8 @@ import {
 import {
   IAuction,
   IPreferenceJson,
-  IQueryAuctionsItem,
-  IRegion,
+  IQueryItemsItem,
+  IRegionComposite,
   IStatusRealm,
   ItemId,
   SortDirection,
@@ -47,13 +47,13 @@ export interface IStateProps {
   sortKind: SortKind;
   sortDirection: SortDirection;
   queryAuctionsLevel: FetchLevel;
-  selectedQueryAuctionResults: IQueryAuctionsItem[];
+  selectedQueryAuctionResults: IQueryItemsItem[];
   fetchUserPreferencesLevel: FetchLevel;
   userPreferences: IPreferenceJson | null;
   activeSelect: boolean;
   fetchRealmLevel: FetchLevel;
   realms: IRealms;
-  currentRegion: IRegion | null;
+  currentRegion: IRegionComposite | null;
   currentRealm: IStatusRealm | null;
   authLevel: AuthLevel;
   regions: IRegions;
@@ -68,7 +68,7 @@ export interface IDispatchProps {
 
 export interface IRouteProps {
   routeParams: IRouteParams;
-  browseToRealmAuctions: (region: IRegion, realm: IStatusRealm) => void;
+  browseToRealmAuctions: (region: IRegionComposite, realm: IStatusRealm) => void;
 }
 
 export interface IRouteParams {
@@ -116,7 +116,7 @@ export class AuctionList extends React.Component<Props> {
       return;
     }
 
-    if (currentRegion === null || currentRegion.name !== region_name) {
+    if (currentRegion === null || currentRegion.config_region.name !== region_name) {
       return;
     }
 
@@ -143,7 +143,7 @@ export class AuctionList extends React.Component<Props> {
       );
     }
 
-    if (currentRegion.name !== region_name) {
+    if (currentRegion.config_region.name !== region_name) {
       return this.renderUnmatchedRegion();
     }
 
@@ -157,7 +157,7 @@ export class AuctionList extends React.Component<Props> {
       return;
     }
 
-    setTitle(`Auctions - ${currentRegion.name.toUpperCase()} ${currentRealm.name}`);
+    setTitle(`Auctions - ${currentRegion.config_region.name.toUpperCase()} ${currentRealm.name}`);
   }
 
   private refreshAuctions() {
@@ -178,10 +178,10 @@ export class AuctionList extends React.Component<Props> {
 
     const itemFilters: ItemId[] = selectedQueryAuctionResults
       .filter(v => v.item !== null)
-      .map(v => v.item!.id);
+      .map(v => v.item!.blizzard_meta.id);
     refreshAuctions({
       realmSlug: currentRealm.slug,
-      regionName: currentRegion.name,
+      regionName: currentRegion.config_region.name,
       request: {
         count: auctionsPerPage,
         itemFilters,
@@ -268,7 +268,7 @@ export class AuctionList extends React.Component<Props> {
     if (!(realm_slug in realms)) {
       return (
         <NonIdealState
-          title={`Realm ${realm_slug} in region ${currentRegion.name} not found!`}
+          title={`Realm ${realm_slug} in region ${currentRegion.config_region.name} not found!`}
           icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={1} />}
         />
       );

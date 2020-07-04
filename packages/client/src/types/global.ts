@@ -1,25 +1,25 @@
 import {
   IItemClass,
   IItemsMap,
-  IRegion,
-  IStatusRealm,
-  ISubItemClass,
+  IItemSubClass,
+  IRealm,
+  IRegionComposite,
   IUserJson,
 } from "@sotah-inc/core";
 
 import { FetchLevel } from "./main";
 
 export interface IRegions {
-  [key: string]: IRegion;
+  [key: string]: IRegionComposite;
 }
 // error types
 export interface IErrors {
-  [key: string]: string;
+  [key: string]: string | undefined;
 }
 
 // realm types
 export interface IRealms {
-  [key: string]: IStatusRealm;
+  [key: string]: IRealm;
 }
 
 // user types
@@ -30,7 +30,7 @@ export interface IProfile {
 
 // item-classes
 export interface ISubItemClasses {
-  [key: number]: ISubItemClass;
+  [key: number]: IItemSubClass;
 }
 
 export interface IItemClasses {

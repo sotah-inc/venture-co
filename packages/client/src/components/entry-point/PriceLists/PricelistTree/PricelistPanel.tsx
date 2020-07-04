@@ -1,13 +1,13 @@
 import React from "react";
 
 import { Button, Classes, NonIdealState } from "@blueprintjs/core";
-import { IItem, IPricelistJson, IRegion, IStatusRealm } from "@sotah-inc/core";
+import { IItem, IPricelistJson, IRegionComposite, IStatusRealm } from "@sotah-inc/core";
 
 // tslint:disable-next-line:max-line-length
 import { PricelistTableContainer } from "../../../../containers/entry-point/PriceLists/PricelistTree/PricelistPanel/PricelistTable";
 
 export interface IStateProps {
-  currentRegion: IRegion | null;
+  currentRegion: IRegionComposite | null;
   currentRealm: IStatusRealm | null;
   isAddEntryDialogOpen: boolean;
 }

@@ -10,11 +10,15 @@ import { PriceListRules } from "../../../../validator-rules";
 
 const config: WithFormikConfig<IOwnProps, IFormValues> = {
   handleSubmit: async (values, { setSubmitting, resetForm, props }) => {
+    if (values.item === null) {
+      return;
+    }
+
     setSubmitting(false);
     resetForm();
     props.onComplete(
-      { id: -1, item_id: values.item!.id, quantity_modifier: values.quantity },
-      values.item!,
+      { id: -1, item_id: values.item.blizzard_meta.id, quantity_modifier: values.quantity },
+      values.item,
     );
   },
   mapPropsToValues: (_: IOwnProps) => {

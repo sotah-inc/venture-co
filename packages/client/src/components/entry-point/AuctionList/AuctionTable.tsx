@@ -6,8 +6,8 @@ import {
   IPricelistJson,
   IProfession,
   IProfessionPricelistJson,
-  IQueryAuctionsItem,
-  IRegion,
+  IQueryItemsItem,
+  IRegionComposite,
   IStatusRealm,
   ItemQuality,
   SortKind,
@@ -25,29 +25,29 @@ type ListAuction = IAuction | null;
 
 export interface IStateProps {
   auctions: IItemsData<ListAuction[]>;
-  selectedItems: IQueryAuctionsItem[];
+  selectedItems: IQueryItemsItem[];
   relatedProfessionPricelists: IProfessionPricelistJson[];
   expansions: IExpansion[];
   professions: IProfession[];
   currentRealm: IStatusRealm | null;
-  currentRegion: IRegion | null;
+  currentRegion: IRegionComposite | null;
 }
 
 export interface IDispatchProps {
-  onAuctionsQuerySelect: (aqResult: IQueryAuctionsItem) => void;
+  onAuctionsQuerySelect: (aqResult: IQueryItemsItem) => void;
   onAuctionsQueryDeselect: (index: number) => void;
 }
 
 export interface IRouteProps {
-  browseToExpansion: (region: IRegion, realm: IStatusRealm, expansion: IExpansion) => void;
+  browseToExpansion: (region: IRegionComposite, realm: IStatusRealm, expansion: IExpansion) => void;
   browseToProfession: (
-    region: IRegion,
+    region: IRegionComposite,
     realm: IStatusRealm,
     expansion: IExpansion,
     profession: IProfession,
   ) => void;
   browseToProfessionPricelist: (
-    region: IRegion,
+    region: IRegionComposite,
     realm: IStatusRealm,
     expansion: IExpansion,
     profession: IProfession,
@@ -60,17 +60,17 @@ export type IOwnProps = IRouteProps;
 type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
 
 export class AuctionTable extends React.Component<Props> {
-  public isResultSelected(result: IQueryAuctionsItem) {
+  public isResultSelected(result: IQueryItemsItem) {
     return this.getSelectedResultIndex(result) > -1;
   }
 
-  public getSelectedResultIndex(result: IQueryAuctionsItem): number {
+  public getSelectedResultIndex(result: IQueryItemsItem): number {
     const selectedItems = this.props.selectedItems;
     return getSelectedResultIndex(result, selectedItems);
   }
 
   public onItemClick(item: IItem) {
-    const result: IQueryAuctionsItem = {
+    const result: IQueryItemsItem = {
       item,
       rank: 0,
       target: "",
@@ -129,7 +129,11 @@ export class AuctionTable extends React.Component<Props> {
       return <td className={qualityToColorClass(ItemQuality.Common)}>{itemId}</td>;
     }
 
-    return <td className={qualityToColorClass(item.quality)}>{this.renderItemPopover(item)}</td>;
+    return (
+      <td className={qualityToColorClass(item.blizzard_meta.quality.type)}>
+        {this.renderItemPopover(item)}
+      </td>
+    );
   }
 
   public render() {
@@ -176,7 +180,8 @@ export class AuctionTable extends React.Component<Props> {
     }
 
     const forItem = relatedProfessionPricelists.filter(
-      v => v.pricelist.pricelist_entries.filter(y => y.item_id === item.id).length > 0,
+      v =>
+        v.pricelist.pricelist_entries.filter(y => y.item_id === item.blizzard_meta.id).length > 0,
     );
     if (forItem.length === 0) {
       return null;

@@ -13,7 +13,7 @@ import {
 import { ICreatePostRequest, IPostJson, UserLevel } from "@sotah-inc/core";
 
 import { PostFormFormContainer } from "../../../form-containers/entry-point/Content/PostForm";
-import { IProfile } from "../../../types/global";
+import { IErrors, IProfile } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
 import { setTitle } from "../../../util";
 import { IFormValues } from "./PostForm";
@@ -22,9 +22,7 @@ export interface IStateProps {
   profile: IProfile | null;
   currentPost: IPostJson | null;
   createPostLevel: FetchLevel;
-  createPostErrors: {
-    [key: string]: string;
-  };
+  createPostErrors: IErrors;
 }
 
 export interface IDispatchProps {

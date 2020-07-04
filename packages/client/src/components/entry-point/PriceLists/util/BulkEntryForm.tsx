@@ -127,7 +127,7 @@ export class BulkEntryForm extends React.Component<Props> {
       );
     }
 
-    const className = qualityToColorClass(item.quality);
+    const className = qualityToColorClass(item.blizzard_meta.quality.type);
     const textValue = getItemTextValue(item);
     const itemIcon = getItemIconUrl(item);
     if (itemIcon === null) {

@@ -8,7 +8,7 @@ import {
   IPriceLimits,
   IPricelistJson,
   IPricesFlagged,
-  IRegion,
+  IRegionComposite,
   IStatusRealm,
 } from "@sotah-inc/core";
 
@@ -28,7 +28,7 @@ export interface IStateProps {
 
 export interface IOwnProps {
   list: IPricelistJson;
-  region: IRegion;
+  region: IRegionComposite;
   realm: IStatusRealm;
 }
 

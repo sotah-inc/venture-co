@@ -15,7 +15,7 @@ import {
   NonIdealState,
   Spinner,
 } from "@blueprintjs/core";
-import { IGetPostResponse, IPostJson, IUserJson, UserLevel } from "@sotah-inc/core";
+import { IGetPostResponseData, IPostJson, IUserJson, UserLevel } from "@sotah-inc/core";
 import moment from "moment";
 
 import { IDeletePostOptions } from "../../actions/posts";
@@ -33,11 +33,11 @@ export interface IStateProps {
 
 export interface IDispatchProps {
   changeIsDeletePostDialogOpen: (v: IDeletePostOptions) => void;
-  loadPost: (payload: IGetPostResponse | null) => void;
+  loadPost: (payload: IGetPostResponseData | null) => void;
 }
 
 export interface IOwnProps {
-  postPayload: IGetPostResponse | null;
+  postPayload: IGetPostResponseData | null;
 }
 
 export interface IRouteParams {

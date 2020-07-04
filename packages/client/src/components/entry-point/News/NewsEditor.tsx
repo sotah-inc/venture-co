@@ -10,10 +10,10 @@ import {
   NonIdealState,
   Spinner,
 } from "@blueprintjs/core";
-import { IPostJson, IUpdatePostRequest, UserLevel } from "@sotah-inc/core";
+import { IPostJson, UpdatePostRequest, UserLevel } from "@sotah-inc/core";
 
 import { PostFormFormContainer } from "../../../form-containers/entry-point/Content/PostForm";
-import { IProfile } from "../../../types/global";
+import { IErrors, IProfile } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
 import { setTitle } from "../../../util";
 import { IFormValues } from "./PostForm";
@@ -22,15 +22,13 @@ export interface IStateProps {
   profile: IProfile | null;
   currentPost: IPostJson | null;
   updatePostLevel: FetchLevel;
-  updatePostErrors: {
-    [key: string]: string;
-  };
+  updatePostErrors: IErrors;
   getPostLevel: FetchLevel;
 }
 
 export interface IDispatchProps {
   getPost: (slug: string) => void;
-  updatePost: (token: string, postId: number, v: IUpdatePostRequest) => void;
+  updatePost: (token: string, postId: number, v: UpdatePostRequest) => void;
   insertToast: (toast: IToastProps) => void;
 }
 

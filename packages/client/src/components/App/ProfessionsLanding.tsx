@@ -1,22 +1,22 @@
 import React from "react";
 
 import { Classes, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
-import { IRegion, IStatusRealm } from "@sotah-inc/core";
+import { IRegionComposite, IStatusRealm } from "@sotah-inc/core";
 
 import { IRegions } from "../../types/global";
 import { FetchLevel } from "../../types/main";
 import { setTitle } from "../../util";
 
 export interface IStateProps {
-  currentRegion: IRegion | null;
+  currentRegion: IRegionComposite | null;
   currentRealm: IStatusRealm | null;
   fetchRealmLevel: FetchLevel;
   regions: IRegions;
 }
 
 export interface IDispatchProps {
-  fetchRealms: (region: IRegion) => void;
-  onRegionChange: (region: IRegion) => void;
+  fetchRealms: (region: IRegionComposite) => void;
+  onRegionChange: (region: IRegionComposite) => void;
 }
 
 export interface IRouteParams {
@@ -25,7 +25,7 @@ export interface IRouteParams {
 
 export interface IRouteProps {
   routeParams: IRouteParams;
-  browseToProfessions: (region: IRegion, realm: IStatusRealm) => void;
+  browseToProfessions: (region: IRegionComposite, realm: IStatusRealm) => void;
 }
 
 export type IOwnProps = IRouteProps;
@@ -47,7 +47,7 @@ export class ProfessionsLanding extends React.Component<Props> {
       return;
     }
 
-    if (typeof region_name !== "undefined" && currentRegion.name !== region_name) {
+    if (typeof region_name !== "undefined" && currentRegion.config_region.name !== region_name) {
       if (region_name in regions) {
         onRegionChange(regions[region_name]);
 
@@ -87,7 +87,7 @@ export class ProfessionsLanding extends React.Component<Props> {
       return;
     }
 
-    if (typeof region_name !== "undefined" && currentRegion.name !== region_name) {
+    if (typeof region_name !== "undefined" && currentRegion.config_region.name !== region_name) {
       switch (fetchRealmLevel) {
         case FetchLevel.success:
           if (!(region_name in regions)) {
@@ -139,7 +139,7 @@ export class ProfessionsLanding extends React.Component<Props> {
       );
     }
 
-    if (typeof region_name !== "undefined" && currentRegion.name !== region_name) {
+    if (typeof region_name !== "undefined" && currentRegion.config_region.name !== region_name) {
       return (
         <NonIdealState
           title="Changing region"
@@ -187,7 +187,7 @@ export class ProfessionsLanding extends React.Component<Props> {
     browseToProfessions(currentRegion, currentRealm);
 
     return (
-      <p>{`Redirecting to Professions - ${currentRegion.name.toUpperCase()} ${
+      <p>{`Redirecting to Professions - ${currentRegion.config_region.name.toUpperCase()} ${
         currentRealm.name
       }`}</p>
     );
@@ -201,7 +201,9 @@ export class ProfessionsLanding extends React.Component<Props> {
     }
 
     setTitle(
-      `Redirecting to Professions - ${currentRegion.name.toUpperCase()} ${currentRealm.name}`,
+      `Redirecting to Professions - ${currentRegion.config_region.name.toUpperCase()} ${
+        currentRealm.name
+      }`,
     );
   }
 }

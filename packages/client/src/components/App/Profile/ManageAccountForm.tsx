@@ -14,6 +14,7 @@ import {
 import { FormikProps } from "formik";
 
 import { FetchLevel } from "../../../types/main";
+import { IErrors } from "../../../types/global";
 
 export interface IOwnProps {
   onSubmit: (v: IFormValues) => void;
@@ -21,9 +22,7 @@ export interface IOwnProps {
   onFatalError: (err: string) => void;
 
   updateProfileLevel: FetchLevel;
-  updateProfileErrors: {
-    [key: string]: string;
-  };
+  updateProfileErrors: IErrors;
   defaultFormValues?: IFormValues;
 }
 
@@ -90,7 +89,7 @@ export function ManageAccountForm(props: Props) {
         return;
       case FetchLevel.failure:
         setSubmitting(false);
-        if ("error" in updateProfileErrors) {
+        if ("error" in updateProfileErrors && typeof updateProfileErrors.error !== "undefined") {
           onFatalError(updateProfileErrors.error);
         }
 

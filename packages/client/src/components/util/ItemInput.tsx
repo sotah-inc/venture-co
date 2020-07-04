@@ -26,7 +26,7 @@ export interface IOwnProps {
 type Props = Readonly<IOwnProps>;
 
 const inputValueRenderer = (result: IQueryItemsItem): string => {
-  if (result.item === null || result.item.id === 0) {
+  if (result.item === null || result.item.blizzard_meta.id === 0) {
     return "n/a";
   }
 
@@ -49,7 +49,7 @@ const renderItemAsItemRendererText = (item: IItem) => {
 };
 
 const renderItemRendererTextContent = (item: IItem | null) => {
-  if (item === null || item.id === 0) {
+  if (item === null || item.blizzard_meta.id === 0) {
     return "n/a";
   }
 
@@ -112,7 +112,7 @@ export function ItemInput(props: Props) {
             return true;
           }
 
-          return itemIdBlacklist.indexOf(result.item.id) > -1;
+          return itemIdBlacklist.indexOf(result.item.blizzard_meta.id) > -1;
         })();
 
         if (!modifiers.matchesPredicate) {
@@ -123,9 +123,9 @@ export function ItemInput(props: Props) {
         const { item } = result;
 
         let label = "n/a";
-        if (item !== null && item.name !== "") {
-          label = `#${item.id}`;
-          className = `${className} ${qualityToColorClass(item.quality)}`;
+        if (item !== null && item.sotah_meta.normalized_name.en_US !== "") {
+          label = `#${item.blizzard_meta.id}`;
+          className = `${className} ${qualityToColorClass(item.blizzard_meta.quality.type)}`;
         }
 
         return (

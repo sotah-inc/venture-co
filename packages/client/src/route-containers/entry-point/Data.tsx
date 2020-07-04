@@ -10,7 +10,9 @@ type Props = Readonly<WithRouterProps>;
 function RouteContainer({ router }: Props) {
   return (
     <DataContainer
-      redirectToRegion={region => router.replace("/data/[region_name]", `/data/${region.name}`)}
+      redirectToRegion={region =>
+        router.replace("/data/[region_name]", `/data/${region.config_region.name}`)
+      }
     />
   );
 }

@@ -19,6 +19,7 @@ import {
 import { FormikProps } from "formik";
 import speakingurl from "speakingurl";
 
+import { IErrors } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
 import { MarkdownRenderer } from "../../util";
 
@@ -28,9 +29,7 @@ export interface IOwnProps {
   onFatalError: (err: string) => void;
 
   mutatePostLevel: FetchLevel;
-  mutatePostErrors: {
-    [key: string]: string;
-  };
+  mutatePostErrors: IErrors;
   defaultFormValues?: IFormValues;
 }
 
@@ -213,7 +212,8 @@ export function PostForm(props: Props) {
         return;
       case FetchLevel.failure:
         setSubmitting(false);
-        if ("error" in mutatePostErrors) {
+
+        if ("error" in mutatePostErrors && typeof mutatePostErrors.error !== "undefined") {
           onFatalError(mutatePostErrors.error);
         }
 

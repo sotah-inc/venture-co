@@ -12,7 +12,7 @@ import {
   NavbarHeading,
   Tooltip,
 } from "@blueprintjs/core";
-import { IExpansion, IRegion, IStatusRealm, IUserJson } from "@sotah-inc/core";
+import { IExpansion, IRegionComposite, IStatusRealm, IUserJson } from "@sotah-inc/core";
 
 import { LoginContainer } from "../../containers/App/Login";
 import { RegisterContainer } from "../../containers/App/Register";
@@ -25,7 +25,7 @@ import { toExpansion } from "../../util/routes";
 export interface IStateProps {
   user: IUserJson | null;
   currentRealm: IStatusRealm | null;
-  currentRegion: IRegion | null;
+  currentRegion: IRegionComposite | null;
   expansions: IExpansion[];
   selectedExpansion: IExpansion | null;
 }
@@ -282,7 +282,7 @@ export class Topbar extends React.Component<Props> {
     return (
       <LinkButtonRouteContainer
         destination={`/data/[region_name]/[realm_slug]${destination}`}
-        asDestination={`/data/${currentRegion.name}/${currentRealm.slug}${destination}`}
+        asDestination={`/data/${currentRegion.config_region.name}/${currentRealm.slug}${destination}`}
         buttonProps={{ icon, text, minimal: true }}
       />
     );

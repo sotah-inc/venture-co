@@ -148,7 +148,15 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
 
           return activeItemIds
             .map<IPriceLimits>(v => {
-              let { lower, upper } = itemPriceLimits[Number(v)];
+              const foundPriceLimits = itemPriceLimits[Number(v)];
+              if (typeof foundPriceLimits === "undefined") {
+                return {
+                  lower: -1,
+                  upper: -1,
+                };
+              }
+
+              let { lower, upper } = foundPriceLimits;
 
               lower = Math.pow(10, Math.floor(Math.log10(lower)));
               if (lower === 0) {
@@ -295,12 +303,22 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
     const { pricelistHistoryMap } = this.props;
     const { selectedItems, highlightedItemId } = this.state;
 
-    const hasData = Object.keys(pricelistHistoryMap[itemId]).reduce<boolean>((result, v) => {
+    const foundItemPriceHistory = pricelistHistoryMap[itemId];
+    if (typeof foundItemPriceHistory === "undefined") {
+      return null;
+    }
+
+    const hasData = Object.keys(foundItemPriceHistory).reduce<boolean>((result, v) => {
       if (result) {
         return result;
       }
 
-      return !pricelistHistoryMap[itemId][Number(v)].is_blank;
+      const foundItemPriceHistoryAtTime = foundItemPriceHistory[Number(v)];
+      if (typeof foundItemPriceHistoryAtTime === "undefined") {
+        return false;
+      }
+
+      return !foundItemPriceHistoryAtTime.is_blank;
     }, false);
 
     const { intent, rightIcon, interactive } = (() => {
@@ -375,7 +393,7 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
       <ItemPopoverContainer
         item={foundItem}
         itemTextFormatter={text => (
-          <span className={qualityToColorClass(foundItem.quality)}>{text}</span>
+          <span className={qualityToColorClass(foundItem.blizzard_meta.quality.type)}>{text}</span>
         )}
         position={Position.BOTTOM}
         onItemClick={() => {
@@ -383,7 +401,7 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
             return;
           }
 
-          this.onLegendItemClick(foundItem.id);
+          this.onLegendItemClick(foundItem.blizzard_meta.id);
         }}
         interactive={hasData}
       />
@@ -420,12 +438,22 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
     const { items, pricelistHistoryMap } = this.props;
     const { highlightedItemId, selectedItems } = this.state;
 
-    const hasData = Object.keys(pricelistHistoryMap[itemId]).reduce<boolean>((result, v) => {
+    const foundItemPriceHistory = pricelistHistoryMap[itemId];
+    if (typeof foundItemPriceHistory === "undefined") {
+      return null;
+    }
+
+    const hasData = Object.keys(foundItemPriceHistory).reduce<boolean>((result, v) => {
       if (result) {
         return result;
       }
 
-      return !pricelistHistoryMap[itemId][Number(v)].is_blank;
+      const foundItemPriceHistoryAtTime = foundItemPriceHistory[Number(v)];
+      if (typeof foundItemPriceHistoryAtTime === "undefined") {
+        return false;
+      }
+
+      return foundItemPriceHistoryAtTime.is_blank;
     }, false);
 
     const { stroke, strokeWidth } = (() => {
@@ -471,7 +499,7 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
     return (
       <Line
         key={index}
-        name={items[itemId]?.name ?? itemId.toString()}
+        name={items[itemId]?.sotah_meta.normalized_name.en_US ?? itemId.toString()}
         dataKey={(item: ILineItemOpen) => item.data[this.getDataKey(itemId)]}
         stroke={stroke}
         strokeWidth={strokeWidth}

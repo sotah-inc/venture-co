@@ -1,13 +1,13 @@
 import React from "react";
 
-import { IRegion } from "@sotah-inc/core";
+import { IRegionComposite } from "@sotah-inc/core";
 
 export interface IRouteProps {
-  redirectToRegion: (region: IRegion) => void;
+  redirectToRegion: (region: IRegionComposite) => void;
 }
 
 export interface IStateProps {
-  currentRegion: IRegion | null;
+  currentRegion: IRegionComposite | null;
 }
 
 export type IOwnProps = IRouteProps;
@@ -21,5 +21,5 @@ export function Data({ currentRegion, redirectToRegion }: Props) {
 
   redirectToRegion(currentRegion);
 
-  return <p>Redirecting to data for {currentRegion.name}!</p>;
+  return <p>Redirecting to data for {currentRegion.config_region.name}!</p>;
 }

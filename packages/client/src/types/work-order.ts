@@ -1,6 +1,6 @@
 import {
-  IPrefillWorkOrderItemResponse,
-  IQueryWorkOrdersResponse,
+  IPrefillWorkOrderItemResponseData,
+  IQueryWorkOrdersResponseData,
   OrderDirection,
   OrderKind,
   SortPerPage,
@@ -11,7 +11,7 @@ import { FetchLevel } from "./main";
 
 export interface IWorkOrderState {
   loadId: string;
-  orders: IFetchData<IQueryWorkOrdersResponse>;
+  orders: IFetchData<IQueryWorkOrdersResponseData>;
   perPage: SortPerPage;
   currentPage: number;
   orderBy: OrderKind;
@@ -19,7 +19,7 @@ export interface IWorkOrderState {
   isWorkOrderDialogOpen: boolean;
   mutateOrderLevel: FetchLevel;
   mutateOrderErrors: IErrors;
-  prefillWorkOrderItem: IFetchData<IPrefillWorkOrderItemResponse>;
+  prefillWorkOrderItem: IFetchData<IPrefillWorkOrderItemResponseData>;
 }
 
 export const defaultWorkOrderState: IWorkOrderState = {

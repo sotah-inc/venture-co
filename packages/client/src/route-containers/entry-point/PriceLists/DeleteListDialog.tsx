@@ -14,7 +14,7 @@ function RouteContainer({ router }: Props) {
       browseOnDeletion={(region, realm, list, professionData) => {
         const urlParts: Array<[string, string]> = [
           ["data", "data"],
-          ["[region_name]", region.name],
+          ["[region_name]", region.config_region.name],
           ["[realm_slug]", realm.slug],
           ["professions", "professions"],
         ];

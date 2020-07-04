@@ -1,12 +1,15 @@
 import {
+  CreateWorkOrderResponse,
   GameVersion,
   ICreateWorkOrderRequest,
-  ICreateWorkOrderResponse,
-  IPrefillWorkOrderItemResponse,
+  ICreateWorkOrderResponseData,
+  IPrefillWorkOrderItemResponseData,
   IQueryWorkOrdersParams,
-  IQueryWorkOrdersResponse,
+  IQueryWorkOrdersResponseData,
   ItemId,
   IValidationErrorResponse,
+  PrefillWorkOrderItemResponse,
+  QueryWorkOrdersResponse,
   RealmSlug,
   RegionName,
 } from "@sotah-inc/core";
@@ -22,7 +25,7 @@ interface IWorkOrderParams {
 }
 
 export interface IQueryWorkOrdersResult {
-  data: IQueryWorkOrdersResponse | null;
+  data: IQueryWorkOrdersResponseData | null;
   errors: IValidationErrorResponse | null;
 }
 
@@ -45,13 +48,13 @@ export async function queryWorkOrders(
     perPage: opts.perPage,
   };
 
-  const { body, status } = await gather<void, IQueryWorkOrdersResponse | IValidationErrorResponse>({
+  const { body, status } = await gather<void, QueryWorkOrdersResponse>({
     method: "GET",
     url: `${baseUrl}?${queryString.stringify(queryParams)}`,
   });
   switch (status) {
     case HTTPStatus.OK:
-      return { errors: null, data: body as IQueryWorkOrdersResponse };
+      return { errors: null, data: body as IQueryWorkOrdersResponseData };
     case HTTPStatus.BAD_REQUEST:
       return { errors: body as IValidationErrorResponse, data: null };
     case HTTPStatus.INTERNAL_SERVER_ERROR:
@@ -66,7 +69,7 @@ export interface ICreateWorkOrderOptions extends IWorkOrderParams {
 }
 
 export interface ICreateWorkOrderResult {
-  data: ICreateWorkOrderResponse | null;
+  data: ICreateWorkOrderResponseData | null;
   errors: IValidationErrorResponse | null;
 }
 
@@ -82,10 +85,7 @@ export async function createWorkOrder(
     opts.realmSlug,
   ].join("/");
 
-  const { body, status } = await gather<
-    ICreateWorkOrderRequest,
-    ICreateWorkOrderResponse | IValidationErrorResponse
-  >({
+  const { body, status } = await gather<ICreateWorkOrderRequest, CreateWorkOrderResponse>({
     body: opts.req,
     headers: new Headers({
       Authorization: `Bearer ${token}`,
@@ -96,7 +96,7 @@ export async function createWorkOrder(
   });
   switch (status) {
     case HTTPStatus.CREATED:
-      return { errors: null, data: body as ICreateWorkOrderResponse };
+      return { errors: null, data: body as ICreateWorkOrderResponseData };
     case HTTPStatus.BAD_REQUEST:
       return { errors: body as IValidationErrorResponse, data: null };
     case HTTPStatus.INTERNAL_SERVER_ERROR:
@@ -111,7 +111,7 @@ export interface IPrefillWorkOrderItemOptions extends IWorkOrderParams {
 }
 
 export interface IPrefillWorkOrderItemResult {
-  data: IPrefillWorkOrderItemResponse | null;
+  data: IPrefillWorkOrderItemResponseData | null;
   errors: IValidationErrorResponse | null;
 }
 
@@ -127,10 +127,7 @@ export async function prefillWorkOrderItem(
     "prefill-item",
   ].join("/");
 
-  const { body, status } = await gather<
-    null,
-    IPrefillWorkOrderItemResponse | IValidationErrorResponse
-  >({
+  const { body, status } = await gather<null, PrefillWorkOrderItemResponse>({
     headers: new Headers({
       "content-type": "application/json",
     }),
@@ -139,7 +136,7 @@ export async function prefillWorkOrderItem(
   });
   switch (status) {
     case HTTPStatus.OK:
-      return { errors: null, data: body as IPrefillWorkOrderItemResponse };
+      return { errors: null, data: body as IPrefillWorkOrderItemResponseData };
     case HTTPStatus.BAD_REQUEST:
       return { errors: body as IValidationErrorResponse, data: null };
     case HTTPStatus.INTERNAL_SERVER_ERROR:

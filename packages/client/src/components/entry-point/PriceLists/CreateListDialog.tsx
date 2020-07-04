@@ -7,7 +7,7 @@ import {
   IExpansion,
   IPricelistJson,
   IProfession,
-  IRegion,
+  IRegionComposite,
   IStatusRealm,
 } from "@sotah-inc/core";
 
@@ -22,7 +22,7 @@ export interface IStateProps {
   profile: IProfile | null;
   selectedProfession: IProfession | null;
   selectedExpansion: IExpansion | null;
-  currentRegion: IRegion | null;
+  currentRegion: IRegionComposite | null;
   currentRealm: IStatusRealm | null;
   selectedList: IPricelistJson | null;
 }
@@ -39,7 +39,7 @@ export interface IDispatchProps {
 
 export interface IRouteProps {
   browseOnCreate: (
-    region: IRegion,
+    region: IRegionComposite,
     realm: IStatusRealm,
     pricelist: IPricelistJson,
     professionData?: {

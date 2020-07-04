@@ -22,7 +22,7 @@ const config: WithFormikConfig<IOwnProps, IFormValues> = {
     }
 
     onSubmit({
-      itemId: values.item.id,
+      itemId: values.item.blizzard_meta.id,
       price: Number(values.price.toFixed(0)),
       quantity: values.quantity,
     });

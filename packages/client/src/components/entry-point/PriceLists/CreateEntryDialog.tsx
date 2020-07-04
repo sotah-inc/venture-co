@@ -88,7 +88,7 @@ export class CreateEntryDialog extends React.Component<Props, IState> {
     const { selectedList } = this.props;
 
     for (const entry of selectedList!.pricelist_entries!) {
-      if (entry.item_id === item.id) {
+      if (entry.item_id === item.blizzard_meta.id) {
         this.setState({ entryFormError: "Item is already in the list." });
 
         return;

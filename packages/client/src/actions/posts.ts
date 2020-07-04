@@ -1,8 +1,8 @@
 import {
   ICreatePostRequest,
-  IGetPostResponse,
+  IGetPostResponseData,
   IPostJson,
-  IUpdatePostRequest,
+  UpdatePostRequest,
 } from "@sotah-inc/core";
 import { Dispatch } from "redux";
 
@@ -41,7 +41,7 @@ export const RequestUpdatePost = () => createAction(REQUEST_UPDATE_POST);
 export const ReceiveUpdatePost = (payload: IUpdatePostResult) =>
   createAction(RECEIVE_UPDATE_POST, payload);
 type FetchUpdatePostType = ReturnType<typeof RequestUpdatePost | typeof ReceiveUpdatePost>;
-export const FetchUpdatePost = (token: string, id: number, request: IUpdatePostRequest) => {
+export const FetchUpdatePost = (token: string, id: number, request: UpdatePostRequest) => {
   return async (dispatch: Dispatch<FetchUpdatePostType>) => {
     dispatch(RequestUpdatePost());
     dispatch(ReceiveUpdatePost(await updatePost(token, id, request)));
@@ -64,7 +64,7 @@ export const FetchGetPosts = () => {
 export const REQUEST_GET_POST = "REQUEST_GET_POST";
 export const RECEIVE_GET_POST = "RECEIVE_GET_POST";
 export const RequestGetPost = () => createAction(REQUEST_GET_POST);
-export const ReceiveGetPost = (payload: IGetPostResponse | null) =>
+export const ReceiveGetPost = (payload: IGetPostResponseData | null) =>
   createAction(RECEIVE_GET_POST, payload);
 type FetchGetPostType = ReturnType<typeof RequestGetPost | typeof ReceiveGetPost>;
 export const FetchGetPost = (slug: string) => {

@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Classes, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
-import { IRegion, IStatusRealm } from "@sotah-inc/core";
+import { IRegionComposite, IStatusRealm } from "@sotah-inc/core";
 import { ILoadRealmEntrypoint } from "../../actions/main";
 
 import { IRealms, IRegions } from "../../types/global";
@@ -11,7 +11,7 @@ import { setTitle } from "../../util";
 export interface IStateProps {
   fetchRealmLevel: FetchLevel;
   realms: IRealms;
-  currentRegion: IRegion | null;
+  currentRegion: IRegionComposite | null;
   currentRealm: IStatusRealm | null;
   authLevel: AuthLevel;
   regions: IRegions;
@@ -27,7 +27,7 @@ export interface IOwnProps {
 
 export interface IRouteProps {
   routeParams: IRouteParams;
-  redirectToRealmAuctions: (region: IRegion, realm: IStatusRealm) => void;
+  redirectToRealmAuctions: (region: IRegionComposite, realm: IStatusRealm) => void;
 }
 
 export interface IRouteParams {
@@ -59,7 +59,7 @@ export class Realm extends React.Component<Props> {
       );
     }
 
-    if (currentRegion.name !== region_name) {
+    if (currentRegion.config_region.name !== region_name) {
       return this.renderUnmatchedRegion();
     }
 
@@ -143,7 +143,7 @@ export class Realm extends React.Component<Props> {
     if (!(realm_slug in realms)) {
       return (
         <NonIdealState
-          title={`Realm ${realm_slug} in region ${currentRegion.name} not found!`}
+          title={`Realm ${realm_slug} in region ${currentRegion.config_region.name} not found!`}
           icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={1} />}
         />
       );
@@ -158,7 +158,11 @@ export class Realm extends React.Component<Props> {
       );
     }
 
-    setTitle(`Redirecting to Auctions - ${currentRegion.name.toUpperCase()} ${currentRealm.name}`);
+    setTitle(
+      `Redirecting to Auctions - ${currentRegion.config_region.name.toUpperCase()} ${
+        currentRealm.name
+      }`,
+    );
 
     redirectToRealmAuctions(currentRegion, currentRealm);
 

@@ -7,7 +7,7 @@ type Props = Readonly<{
   errors: IErrors;
 }>;
 
-const renderError = (value: string, index: number) => {
+const renderError = (value: string | undefined, index: number) => {
   return <FormGroup key={index} helperText={value} intent={Intent.DANGER} />;
 };
 

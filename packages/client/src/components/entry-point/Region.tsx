@@ -1,14 +1,14 @@
 import React from "react";
 
 import { Classes, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
-import { IRegion, IStatusRealm } from "@sotah-inc/core";
+import { IRegionComposite, IStatusRealm } from "@sotah-inc/core";
 
 import { ILoadRegionEntrypoint } from "../../actions/main";
 import { IRegions } from "../../types/global";
 import { AuthLevel, FetchLevel } from "../../types/main";
 
 export interface IStateProps {
-  currentRegion: IRegion | null;
+  currentRegion: IRegionComposite | null;
   currentRealm: IStatusRealm | null;
   authLevel: AuthLevel;
   regions: IRegions;
@@ -16,7 +16,7 @@ export interface IStateProps {
 }
 
 export interface IDispatchProps {
-  onRegionChange: (region: IRegion) => void;
+  onRegionChange: (region: IRegionComposite) => void;
   loadRegionEntrypoint: (payload: ILoadRegionEntrypoint) => void;
 }
 
@@ -26,7 +26,7 @@ export interface IOwnProps {
 
 export interface IRouteProps {
   routeParams: IRouteParams;
-  browseToRealmData: (region: IRegion, realm: IStatusRealm) => void;
+  browseToRealmData: (region: IRegionComposite, realm: IStatusRealm) => void;
 }
 
 export interface IRouteParams {
@@ -48,7 +48,7 @@ export class Region extends React.Component<Props> {
       routeParams: { region_name },
     } = this.props;
 
-    if (currentRegion === null || currentRegion.name !== region_name) {
+    if (currentRegion === null || currentRegion.config_region.name !== region_name) {
       return this.renderUnmatched();
     }
 

@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Alignment, ButtonGroup, Navbar, NavbarDivider, NavbarGroup } from "@blueprintjs/core";
-import { IRegion, IStatusRealm, SortPerPage } from "@sotah-inc/core";
+import { IRegionComposite, IStatusRealm, SortPerPage } from "@sotah-inc/core";
 
 import { RealmToggleContainer } from "../../../containers/util/RealmToggle";
 import { RegionToggleContainer } from "../../../containers/util/RegionToggle";
@@ -12,7 +12,7 @@ export interface IStateProps {
   perPage: SortPerPage;
   totalResults: number;
   currentPage: number;
-  currentRegion: IRegion | null;
+  currentRegion: IRegionComposite | null;
 }
 
 export interface IDispatchProps {
@@ -21,7 +21,7 @@ export interface IDispatchProps {
 }
 
 export interface IRouteProps {
-  browseTo: (region: IRegion, realm: IStatusRealm) => void;
+  browseTo: (region: IRegionComposite, realm: IStatusRealm) => void;
 }
 
 type Props = Readonly<IDispatchProps & IStateProps & IRouteProps>;

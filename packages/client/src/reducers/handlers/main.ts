@@ -1,4 +1,4 @@
-import { IRegion, IStatusRealm } from "@sotah-inc/core";
+import { IRegionComposite, IStatusRealm } from "@sotah-inc/core";
 
 import {
   LoadGetBoot,
@@ -37,14 +37,14 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
         }
 
         const regions = FormatRegionList(action.payload.boot.regions);
-        const currentRegion: IRegion = (() => {
-          const foundRegion: IRegion | null = action.payload.boot.regions.reduce(
-            (result: IRegion | null, v) => {
+        const currentRegion: IRegionComposite = (() => {
+          const foundRegion: IRegionComposite | null = action.payload.boot.regions.reduce(
+            (result: IRegionComposite | null, v) => {
               if (result !== null) {
                 return result;
               }
 
-              if (v.name === action.payload.regionName) {
+              if (v.config_region.name === action.payload.regionName) {
                 return v;
               }
 
@@ -85,7 +85,7 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
           }, null);
         })();
 
-        const itemClasses = FormatItemClassList(action.payload.boot.item_classes.classes);
+        const itemClasses = FormatItemClassList(action.payload.boot.item_classes);
 
         return {
           ...state,
@@ -106,19 +106,19 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
           return { ...state, fetchBootLevel: FetchLevel.failure };
         }
 
-        const currentRegion: IRegion = (() => {
+        const currentRegion: IRegionComposite = (() => {
           if (state.userPreferences === null) {
             return action.payload.regions[0];
           }
 
           const { current_region: preferredRegionName } = state.userPreferences;
-          const foundRegion: IRegion | null = action.payload.regions.reduce(
-            (result: IRegion | null, v) => {
+          const foundRegion: IRegionComposite | null = action.payload.regions.reduce(
+            (result: IRegionComposite | null, v) => {
               if (result !== null) {
                 return result;
               }
 
-              if (v.name === preferredRegionName) {
+              if (v.config_region.name === preferredRegionName) {
                 return v;
               }
 
@@ -135,7 +135,7 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
         })();
 
         const regions = FormatRegionList(action.payload.regions);
-        const itemClasses = FormatItemClassList(action.payload.item_classes.classes);
+        const itemClasses = FormatItemClassList(action.payload.item_classes);
 
         return {
           ...state,
@@ -155,17 +155,20 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
   entrypoint: {
     realm: {
       load: (state: IMainState, action: ReturnType<typeof LoadRealmEntrypoint>) => {
-        const currentRegion = Object.keys(state.regions).reduce<IRegion | null>((out, current) => {
-          if (out !== null) {
-            return out;
-          }
+        const currentRegion = Object.keys(state.regions).reduce<IRegionComposite | null>(
+          (out, current) => {
+            if (out !== null) {
+              return out;
+            }
 
-          if (current === action.payload.nextRegionName) {
-            return state.regions[current];
-          }
+            if (current === action.payload.nextRegionName) {
+              return state.regions[current];
+            }
 
-          return null;
-        }, null);
+            return null;
+          },
+          null,
+        );
         const currentRealm: IStatusRealm | null = (() => {
           if (action.payload.realms === null) {
             return null;
@@ -193,17 +196,20 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
     },
     region: {
       load: (state: IMainState, action: ReturnType<typeof LoadRegionEntrypoint>) => {
-        const currentRegion = Object.keys(state.regions).reduce<IRegion | null>((out, current) => {
-          if (out !== null) {
-            return out;
-          }
+        const currentRegion = Object.keys(state.regions).reduce<IRegionComposite | null>(
+          (out, current) => {
+            if (out !== null) {
+              return out;
+            }
 
-          if (current === action.payload.nextRegionName) {
-            return state.regions[current];
-          }
+            if (current === action.payload.nextRegionName) {
+              return state.regions[current];
+            }
 
-          return null;
-        }, null);
+            return null;
+          },
+          null,
+        );
 
         return {
           ...runners.main(state, ReceiveGetRealms(action.payload.realms)),
@@ -245,7 +251,10 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
           } = state.userPreferences;
 
           // defaulting to first realm in list if region is different from preferred region
-          if (state.currentRegion !== null && state.currentRegion.name !== preferredRegionName) {
+          if (
+            state.currentRegion !== null &&
+            state.currentRegion.config_region.name !== preferredRegionName
+          ) {
             return action.payload[0];
           }
 

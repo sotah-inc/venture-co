@@ -16,7 +16,7 @@ import {
   IExpansion,
   IPricelistJson,
   IProfession,
-  IRegion,
+  IRegionComposite,
   IStatusRealm,
   UserLevel,
 } from "@sotah-inc/core";
@@ -28,7 +28,7 @@ import { IProfile } from "../../../types/global";
 import { AuthLevel } from "../../../types/main";
 
 export interface IStateProps {
-  currentRegion: IRegion | null;
+  currentRegion: IRegionComposite | null;
   currentRealm: IStatusRealm | null;
   isAddListDialogOpen: boolean;
   isAddEntryDialogOpen: boolean;
@@ -47,15 +47,15 @@ export interface IDispatchProps {
 }
 
 export interface IRouteProps {
-  browseToExpansion: (region: IRegion, realm: IStatusRealm, expansion: IExpansion) => void;
+  browseToExpansion: (region: IRegionComposite, realm: IStatusRealm, expansion: IExpansion) => void;
   browseToProfession: (
-    region: IRegion,
+    region: IRegionComposite,
     realm: IStatusRealm,
     expansion: IExpansion,
     profession: IProfession,
   ) => void;
   browseToProfessionPricelist: (
-    region: IRegion,
+    region: IRegionComposite,
     realm: IStatusRealm,
     expansion: IExpansion,
     profession: IProfession,

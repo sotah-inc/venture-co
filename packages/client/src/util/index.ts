@@ -11,9 +11,9 @@ import {
   IQueryAuctionStatsResponseData,
   IQueryItemsItem,
   IRealm,
+  IRealmComposite,
   IRegionComposite,
   ItemQuality,
-  ItemStat,
 } from "@sotah-inc/core";
 import { IStatusRealm } from "@sotah-inc/core/build/dist/types/contracts/data";
 import moment from "moment";
@@ -166,51 +166,10 @@ export const inventoryTypeToString = (iType: InventoryType): string => {
       return "Wrist";
     case InventoryType.Robe:
       return "Chest";
-    case InventoryType.OneHand:
-      return "One-Hand";
-    case InventoryType.HeldInOffHand:
+    case InventoryType.OffHand:
       return "Held in Off-hand";
     default:
-      return InventoryType[iType];
-  }
-};
-
-export const itemStatToString = (stat: ItemStat): string => {
-  if (!(stat in ItemStat)) {
-    return `#${stat}`;
-  }
-
-  switch (stat) {
-    case ItemStat.Int:
-      return "Intellect";
-    case ItemStat.Stam:
-      return "Stamina";
-    case ItemStat.Crit:
-      return "Critical Strike";
-    case ItemStat.FireResist:
-      return "Fire Resistance";
-    case ItemStat.NatResist:
-      return "Nature Resistance";
-    case ItemStat.ShadowResist:
-      return "Shadow Resistance";
-    case ItemStat.Vers:
-      return "Versatility";
-    case ItemStat.PvPResil:
-      return "PvP Resilience";
-    case ItemStat.Agi:
-      return "Agility";
-    case ItemStat.PvpPow:
-      return "PvP Power";
-    case ItemStat.Str:
-      return "Strength";
-    case ItemStat.AgiOrInt:
-      return "[Agility or Intellect]";
-    case ItemStat.StrOrInt:
-      return "[Strength or Intellect]";
-    case ItemStat.AgiOrStr:
-      return "[Agility or Strength]";
-    default:
-      return ItemStat[stat];
+      return iType;
   }
 };
 
@@ -311,7 +270,7 @@ export const FormatItemClassList = (itemClassList: IItemClass[]): IItemClasses =
     return nextItemClasses;
   }, {});
 
-export const FormatRealmList = (realmList: IStatusRealm[]) =>
+export const FormatRealmList = (realmList: IRealmComposite[]) =>
   realmList.reduce((result, realm) => ({ ...result, [realm.slug]: realm }), {});
 
 export const getItemFromPricelist = (items: IItemsMap, pricelist: IPricelistJson): IItem | null => {

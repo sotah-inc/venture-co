@@ -18,7 +18,7 @@ import {
   ItemRenderer,
   Suggest,
 } from "@blueprintjs/select";
-import { IItem, IRegion, IStatusRealm } from "@sotah-inc/core";
+import { IItem, IRegionComposite, IStatusRealm } from "@sotah-inc/core";
 
 import { FetchLevel } from "../../../types/main";
 
@@ -28,7 +28,7 @@ export interface IStateProps {
   fetchItemsLevel: FetchLevel;
   items: IItem[];
   itemFilter: IItem | null;
-  currentRegion: IRegion | null;
+  currentRegion: IRegionComposite | null;
   currentRealm: IStatusRealm | null;
 }
 
@@ -52,7 +52,7 @@ export class ItemFilter extends React.Component<Props, State> {
 
   public itemPredicate: ItemPredicate<IItem> = (query: string, item: IItem) => {
     query = query.toLowerCase();
-    return item.name.toLowerCase().indexOf(query) >= 0;
+    return item.blizzard_meta.name.en_US!.toLowerCase().indexOf(query) >= 0;
   };
 
   public itemRenderer: ItemRenderer<IItem> = (
@@ -71,7 +71,7 @@ export class ItemFilter extends React.Component<Props, State> {
         intent={intent}
         className={modifiers.active ? Classes.ACTIVE : ""}
         onClick={handleClick}
-        text={item.name}
+        text={item.blizzard_meta.name.en_US ?? ""}
       />
     );
   };
@@ -103,7 +103,7 @@ export class ItemFilter extends React.Component<Props, State> {
   };
 
   public onFilterSet(item: IItem) {
-    this.setState({ itemFilterValue: item.name });
+    this.setState({ itemFilterValue: item.blizzard_meta.name.en_US ?? "" });
     this.props.onItemFilterChange(item);
   }
 
@@ -145,7 +145,7 @@ export class ItemFilter extends React.Component<Props, State> {
               itemListRenderer={this.itemListRenderer}
               itemPredicate={this.itemPredicate}
               onItemSelect={this.onFilterSet}
-              inputValueRenderer={v => v.name}
+              inputValueRenderer={v => v.blizzard_meta.name.en_US ?? ""}
               inputProps={{
                 onChange: (e: React.ChangeEvent<HTMLInputElement>) => this.onFilterChange(e),
                 value: itemFilterValue,

@@ -1,26 +1,31 @@
 import {
+  GetAuctionsResponse,
+  GetBootResponse,
+  GetConnectedRealmsResponse,
+  GetItemResponse,
+  GetPostsResponse,
+  GetPricelistHistoriesResponse,
+  GetPricelistResponse,
+  GetTokenHistoryResponse,
   IErrorResponse,
   IGetAuctionsRequest,
-  IGetAuctionsResponse,
-  IGetBootResponse,
-  IGetItemResponse,
-  IGetPostsResponse,
+  IGetAuctionsResponseData,
+  IGetBootResponseData,
+  IGetItemResponseData,
   IGetPricelistHistoriesRequest,
-  IGetPricelistHistoriesResponse,
+  IGetPricelistHistoriesResponseData,
   IGetPricelistRequest,
-  IGetPricelistResponse,
-  IGetRealmsResponse,
-  IGetTokenHistoryResponse,
+  IGetPricelistResponseData,
   IItem,
   IPostJson,
-  IQueryAuctionsRequest,
-  IQueryAuctionsResponse,
-  IQueryAuctionStatsResponse,
+  IQueryAuctionStatsResponseData,
   IQueryItemsRequest,
-  IQueryItemsResponse,
-  IStatusRealm,
+  IQueryItemsResponseData,
+  IRealmComposite,
   ItemId,
   ITokenHistory,
+  QueryAuctionStatsResponse,
+  QueryItemsResponse,
   RealmSlug,
   RegionName,
 } from "@sotah-inc/core";
@@ -37,8 +42,8 @@ export const getPing = async (): Promise<boolean> => {
   }
 };
 
-export const getBoot = async (): Promise<IGetBootResponse | null> => {
-  const { body, status } = await gather<null, IGetBootResponse>({
+export const getBoot = async (): Promise<IGetBootResponseData | null> => {
+  const { body, status } = await gather<null, GetBootResponse>({
     url: `${getApiEndpoint()}/boot`,
   });
   if (status !== HTTPStatus.OK) {
@@ -48,15 +53,15 @@ export const getBoot = async (): Promise<IGetBootResponse | null> => {
   return body;
 };
 
-export const getStatus = async (regionName: RegionName): Promise<IStatusRealm[] | null> => {
-  const { body, status } = await gather<null, IGetRealmsResponse>({
+export const getStatus = async (regionName: RegionName): Promise<IRealmComposite[] | null> => {
+  const { body, status } = await gather<null, GetConnectedRealmsResponse>({
     url: `${getApiEndpoint()}/region/${regionName}/realms`,
   });
   if (status !== HTTPStatus.OK) {
     return null;
   }
 
-  return body!.realms;
+  return body!.connectedRealms;
 };
 
 export interface IGetAuctionsOptions {
@@ -67,9 +72,9 @@ export interface IGetAuctionsOptions {
 
 export const getAuctions = async (
   opts: IGetAuctionsOptions,
-): Promise<IGetAuctionsResponse | null> => {
+): Promise<IGetAuctionsResponseData | null> => {
   const { regionName, realmSlug, request } = opts;
-  const { body, status } = await gatherWithQuery<IGetAuctionsRequest, IGetAuctionsResponse>({
+  const { body, status } = await gatherWithQuery<IGetAuctionsRequest, GetAuctionsResponse>({
     method: "GET",
     query: request,
     url: `${getApiEndpoint()}/region/${regionName}/realm/${realmSlug}/auctions`,
@@ -78,11 +83,11 @@ export const getAuctions = async (
     return null;
   }
 
-  return body;
+  return body as IGetAuctionsResponseData;
 };
 
-export const getItems = async (query: string): Promise<IQueryItemsResponse | null> => {
-  const { body, status } = await gather<IQueryItemsRequest, IQueryItemsResponse>({
+export const getItems = async (query: string): Promise<IQueryItemsResponseData | null> => {
+  const { body, status } = await gather<IQueryItemsRequest, QueryItemsResponse>({
     body: { query },
     method: "POST",
     url: `${getApiEndpoint()}/items`,
@@ -91,7 +96,7 @@ export const getItems = async (query: string): Promise<IQueryItemsResponse | nul
     return null;
   }
 
-  return body;
+  return body as IQueryItemsResponseData;
 };
 
 export interface IGetItemResult {
@@ -100,7 +105,7 @@ export interface IGetItemResult {
 }
 
 export const getItem = async (itemId: ItemId): Promise<IGetItemResult> => {
-  const { body, status } = await gather<null, IGetItemResponse | IErrorResponse>({
+  const { body, status } = await gather<null, GetItemResponse>({
     method: "GET",
     url: `${getApiEndpoint()}/item/${itemId}`,
   });
@@ -113,7 +118,7 @@ export const getItem = async (itemId: ItemId): Promise<IGetItemResult> => {
 
   return {
     error: null,
-    item: (body as IGetItemResponse).item,
+    item: (body as IGetItemResponseData).item,
   };
 };
 
@@ -123,22 +128,6 @@ export interface IQueryAuctionsOptions {
   query: string;
 }
 
-export const queryAuctions = async (
-  opts: IQueryAuctionsOptions,
-): Promise<IQueryAuctionsResponse | null> => {
-  const { regionName, realmSlug, query } = opts;
-  const { body, status } = await gather<IQueryAuctionsRequest, IQueryAuctionsResponse>({
-    body: { query },
-    method: "POST",
-    url: `${getApiEndpoint()}/region/${regionName}/realm/${realmSlug}/query-auctions`,
-  });
-  if (status !== HTTPStatus.OK) {
-    return null;
-  }
-
-  return body;
-};
-
 export interface IGetPriceListOptions {
   regionName: string;
   realmSlug: string;
@@ -147,9 +136,9 @@ export interface IGetPriceListOptions {
 
 export const getPriceList = async (
   opts: IGetPriceListOptions,
-): Promise<IGetPricelistResponse | null> => {
+): Promise<IGetPricelistResponseData | null> => {
   const { regionName, realmSlug, itemIds } = opts;
-  const { body, status } = await gather<IGetPricelistRequest, IGetPricelistResponse>({
+  const { body, status } = await gather<IGetPricelistRequest, GetPricelistResponse>({
     body: { item_ids: itemIds },
     method: "POST",
     url: `${getApiEndpoint()}/region/${regionName}/realm/${realmSlug}/price-list`,
@@ -169,11 +158,11 @@ export interface IGetPriceListHistoryOptions extends IGetPriceListOptions {
 
 export const getPriceListHistory = async (
   opts: IGetPriceListHistoryOptions,
-): Promise<IGetPricelistHistoriesResponse | null> => {
+): Promise<IGetPricelistHistoriesResponseData | null> => {
   const { regionName, realmSlug, itemIds } = opts;
   const { body, status } = await gather<
     IGetPricelistHistoriesRequest,
-    IGetPricelistHistoriesResponse
+    GetPricelistHistoriesResponse
   >({
     body: { item_ids: itemIds },
     headers: new Headers({
@@ -195,7 +184,7 @@ export interface IGetPostsResult {
 }
 
 export const getPosts = async (): Promise<IGetPostsResult> => {
-  const { body, status } = await gather<null, IGetPostsResponse>({
+  const { body, status } = await gather<null, GetPostsResponse>({
     headers: new Headers({ "content-type": "application/json" }),
     method: "GET",
     url: `${getApiEndpoint()}/posts`,
@@ -217,7 +206,7 @@ export interface IGetTokenHistoryResult {
 }
 
 export const getTokenHistory = async (regionName: RegionName): Promise<IGetTokenHistoryResult> => {
-  const { body, status } = await gather<null, IGetTokenHistoryResponse>({
+  const { body, status } = await gather<null, GetTokenHistoryResponse>({
     headers: new Headers({ "content-type": "application/json" }),
     method: "GET",
     url: `${getApiEndpoint()}/region/${regionName}/token-history`,
@@ -239,7 +228,7 @@ export interface IQueryAuctionStatsOptions {
 }
 
 export interface IQueryAuctionStatsResult {
-  response: IQueryAuctionStatsResponse | null;
+  response: IQueryAuctionStatsResponseData | null;
   error: string | null;
 }
 
@@ -259,7 +248,7 @@ export const queryAuctionStats = async ({
     return `${getApiEndpoint()}/region/${regionName}/realm/${realmSlug}/query-auction-stats`;
   })();
 
-  const { body, status } = await gather<null, IQueryAuctionStatsResponse>({
+  const { body, status } = await gather<null, QueryAuctionStatsResponse>({
     headers: new Headers({ "content-type": "application/json" }),
     method: "GET",
     url,

@@ -12,9 +12,9 @@ import {
 import {
   ICreatePreferencesRequest,
   IPreferenceJson,
-  IRegion,
+  IRegionComposite,
   IStatusRealm,
-  IUpdatePreferencesRequest,
+  UpdatePreferencesRequest,
 } from "@sotah-inc/core";
 
 import { IProfile, IRealms } from "../../types/global";
@@ -30,17 +30,17 @@ export interface IStateProps {
   userPreferences: IPreferenceJson | null;
   authLevel: AuthLevel;
   profile: IProfile | null;
-  currentRegion: IRegion | null;
+  currentRegion: IRegionComposite | null;
 }
 
 type persistUserPreferencesFunc = (
   token: string,
-  body: ICreatePreferencesRequest | IUpdatePreferencesRequest,
+  body: ICreatePreferencesRequest | UpdatePreferencesRequest,
 ) => void;
 
 export interface IDispatchProps {
   createUserPreferences: (token: string, body: ICreatePreferencesRequest) => void;
-  updateUserPreferences: (token: string, body: IUpdatePreferencesRequest) => void;
+  updateUserPreferences: (token: string, body: UpdatePreferencesRequest) => void;
 }
 
 export interface IOwnProps {
@@ -73,7 +73,7 @@ export class RealmToggle extends React.Component<Props> {
       if (didRealmChange(prevProps.currentRealm, currentRealm)) {
         persistUserPreferences(profile!.token, {
           current_realm: currentRealm.slug,
-          current_region: currentRegion.name,
+          current_region: currentRegion.config_region.name,
         });
       }
     }

@@ -65,7 +65,7 @@ export class ItemStandalone extends React.Component<Props, IState> {
               position={Position.BOTTOM}
               item={item}
               itemTextFormatter={v => (
-                <span className={qualityToColorClass(item.quality)}>{v}</span>
+                <span className={qualityToColorClass(item.blizzard_meta.quality.type)}>{v}</span>
               )}
             />
           </span>

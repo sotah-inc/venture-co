@@ -2,8 +2,8 @@ import React from "react";
 
 import {
   GameVersion,
-  IQueryWorkOrdersResponse,
-  IRegion,
+  IQueryWorkOrdersResponseData,
+  IRegionComposite,
   IStatusRealm,
   OrderDirection,
   OrderKind,
@@ -21,8 +21,8 @@ import { FetchLevel } from "../../types/main";
 import { setTitle } from "../../util";
 
 export interface IStateProps {
-  orders: IFetchData<IQueryWorkOrdersResponse>;
-  currentRegion: IRegion | null;
+  orders: IFetchData<IQueryWorkOrdersResponseData>;
+  currentRegion: IRegionComposite | null;
   currentRealm: IStatusRealm | null;
   perPage: SortPerPage;
   currentPage: number;
@@ -46,7 +46,7 @@ export interface IRouteParams {
 
 export interface IRouteProps {
   routeParams: IRouteParams;
-  browseTo: (region: IRegion, realm: IStatusRealm) => void;
+  browseTo: (region: IRegionComposite, realm: IStatusRealm) => void;
 }
 
 export type Props = Readonly<IDispatchProps & IStateProps & IOwnProps & IRouteProps>;
@@ -82,7 +82,7 @@ export class WorkOrders extends React.Component<Props> {
       return;
     }
 
-    if (currentRegion === null || currentRegion.name !== region_name) {
+    if (currentRegion === null || currentRegion.config_region.name !== region_name) {
       return;
     }
 
@@ -111,7 +111,9 @@ export class WorkOrders extends React.Component<Props> {
       return;
     }
 
-    setTitle(`Work Orders - ${currentRegion.name.toUpperCase()} ${currentRealm.name}`);
+    setTitle(
+      `Work Orders - ${currentRegion.config_region.name.toUpperCase()} ${currentRealm.name}`,
+    );
   }
 
   private refreshWorkOrdersTrigger(prevProps: Props) {
@@ -159,7 +161,7 @@ export class WorkOrders extends React.Component<Props> {
       page: currentPage + 1,
       perPage,
       realmSlug: currentRealm.slug,
-      regionName: currentRegion.name,
+      regionName: currentRegion.config_region.name,
     });
   }
 }

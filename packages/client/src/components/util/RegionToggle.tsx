@@ -1,27 +1,27 @@
 import React from "react";
 
 import { Button, Classes, H6, Menu, MenuItem, Popover, Position } from "@blueprintjs/core";
-import { IRegion } from "@sotah-inc/core";
+import { IRegionComposite } from "@sotah-inc/core";
 
 import { IRegions } from "../../types/global";
 
 export interface IStateProps {
-  currentRegion: IRegion | null;
+  currentRegion: IRegionComposite | null;
   regions: IRegions;
 }
 
 export interface IDispatchProps {
-  onRegionChange: (region: IRegion) => void;
+  onRegionChange: (region: IRegionComposite) => void;
 }
 
 type Props = Readonly<IStateProps & IDispatchProps>;
 
 export class RegionToggle extends React.Component<Props> {
-  public renderMenuItem(region: IRegion, index: number) {
+  public renderMenuItem(region: IRegionComposite, index: number) {
     const { currentRegion, onRegionChange } = this.props;
 
     let className = "";
-    if (currentRegion !== null && region.name === currentRegion.name) {
+    if (currentRegion !== null && region.config_region.name === currentRegion.config_region.name) {
       className = Classes.ACTIVE;
     }
 
@@ -30,7 +30,7 @@ export class RegionToggle extends React.Component<Props> {
         key={index}
         icon="geosearch"
         className={className}
-        text={region.name.toUpperCase()}
+        text={region.config_region.name.toUpperCase()}
         onClick={() => onRegionChange(region)}
       />
     );
@@ -59,7 +59,11 @@ export class RegionToggle extends React.Component<Props> {
     return (
       <Popover
         content={this.renderMenu(this.props.regions)}
-        target={<Button icon="double-caret-vertical">{currentRegion.name.toUpperCase()}</Button>}
+        target={
+          <Button icon="double-caret-vertical">
+            {currentRegion.config_region.name.toUpperCase()}
+          </Button>
+        }
         position={Position.BOTTOM_RIGHT}
       />
     );

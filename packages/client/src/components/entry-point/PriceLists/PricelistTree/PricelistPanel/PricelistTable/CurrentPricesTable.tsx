@@ -7,7 +7,7 @@ import {
   IPricelistEntryJson,
   IPricelistJson,
   IPriceListMap,
-  IRegion,
+  IRegionComposite,
   IStatusRealm,
   ItemId,
 } from "@sotah-inc/core";
@@ -26,7 +26,7 @@ export interface IStateProps {
 
 export interface IOwnProps {
   list: IPricelistJson;
-  region: IRegion;
+  region: IRegionComposite;
   realm: IStatusRealm;
 }
 
@@ -105,7 +105,9 @@ export class CurrentPricesTable extends React.Component<Props> {
       }
 
       if (aResult === bResult && aItem && bItem) {
-        return aItem.normalized_name > bItem.normalized_name ? 1 : -1;
+        return aItem.sotah_meta.normalized_name.en_US! > bItem.sotah_meta.normalized_name.en_US!
+          ? 1
+          : -1;
       }
 
       return aResult > bResult ? -1 : 1;
@@ -156,7 +158,7 @@ export class CurrentPricesTable extends React.Component<Props> {
 
     return (
       <tr key={index}>
-        <td className={qualityToColorClass(item.quality)}>
+        <td className={qualityToColorClass(item.blizzard_meta.quality.type)}>
           <ItemPopoverContainer
             item={item}
             itemTextFormatter={(itemText: string) => `${itemText} \u00D7${quantity_modifier}`}

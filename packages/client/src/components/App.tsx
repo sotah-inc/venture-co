@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 
 import { Classes, Intent, IToastProps, NonIdealState, Spinner } from "@blueprintjs/core";
-import { IPreferenceJson, IRegion, IStatusRealm } from "@sotah-inc/core";
+import { IPreferenceJson, IRegionComposite, IStatusRealm } from "@sotah-inc/core";
 
 import { ILoadRootEntrypoint } from "../actions/main";
 import { PromptsRouteContainer } from "../route-containers/App/Prompts";
@@ -11,7 +11,7 @@ import { AuthLevel, FetchLevel } from "../types/main";
 
 export interface IStateProps {
   fetchPingLevel: FetchLevel;
-  currentRegion: IRegion | null;
+  currentRegion: IRegionComposite | null;
   fetchRealmLevel: FetchLevel;
   currentRealm: IStatusRealm | null;
   preloadedToken: string;
