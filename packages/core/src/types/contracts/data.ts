@@ -2,9 +2,9 @@ import { IAuction } from "../auction";
 import { IPostJson, IProfessionPricelistJson } from "../entities";
 import { ExpansionName, IExpansion } from "../expansion";
 import {
+  IConnectedRealmComposite,
   IErrorResponse,
   IPricesFlagged,
-  IRealmComposite,
   IRegionComposite,
   ITokenHistory,
   IValidationErrorResponse,
@@ -46,7 +46,7 @@ export interface IGetPostsResponseData {
 export type GetPostsResponse = IGetPostsResponseData;
 
 export interface IGetConnectedRealmsResponseData {
-  connectedRealms: IRealmComposite[];
+  connectedRealms: IConnectedRealmComposite[];
 }
 
 export type GetConnectedRealmsResponse = IGetConnectedRealmsResponseData | null;

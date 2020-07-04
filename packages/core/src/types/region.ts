@@ -8,7 +8,32 @@ export interface IRegionTuple {
 
 export type ConnectedRealmId = number;
 
-export interface IRealmComposite {
+export type RealmSlug = string;
+
+export type RegionId = number;
+
+export type RealmId = number;
+
+export interface IRealm extends ILinksBase {
+  id: RealmId;
+  region: ILinksBase & {
+    id: RegionId;
+    name: LocaleMapping;
+  };
+  connected_realm: IHrefReference;
+  name: LocaleMapping;
+  category: LocaleMapping;
+  locale: string;
+  timezone: string;
+  type: {
+    type: string;
+    name: LocaleMapping;
+  };
+  is_tournament: boolean;
+  slug: RealmSlug;
+}
+
+export interface IConnectedRealmComposite {
   connected_realm: ILinksBase & {
     id: ConnectedRealmId;
     has_queue: boolean;
@@ -20,26 +45,7 @@ export interface IRealmComposite {
       type: string;
       name: LocaleMapping;
     };
-    realms: Array<
-      ILinksBase & {
-        id: RealmId;
-        region: ILinksBase & {
-          id: RegionId;
-          name: LocaleMapping;
-        };
-        connected_realm: IHrefReference;
-        name: LocaleMapping;
-        category: LocaleMapping;
-        locale: string;
-        timezone: string;
-        type: {
-          type: string;
-          name: LocaleMapping;
-        };
-        is_tournament: boolean;
-        slug: RealmSlug;
-      }
-    >;
+    realms: IRealm[];
     mythic_leaderboards: IHrefReference;
     auctions: IHrefReference;
   };
@@ -58,44 +64,11 @@ export interface IRegionRealmTuple extends IRegionTuple {
   realm_slug: RealmSlug;
 }
 
-export type RegionId = number;
-
-export type RealmId = number;
-
 export interface IRegionComposite {
   config_region: {
     name: RegionName;
     hostname: string;
     primary: boolean;
   };
-  connected_realms: IRealmComposite[];
-}
-
-export type RealmSlug = string;
-
-export enum RealmPopulation {
-  na = "n/a",
-  medium = "medium",
-  high = "high",
-  full = "full",
-}
-
-export interface IRealmModificationDates {
-  downloaded: number;
-  live_auctions_received: number;
-  pricelist_histories_received: number;
-}
-
-export interface IRealm {
-  regionName: RegionName;
-  type: string;
-  population: RealmPopulation;
-  queue: boolean;
-  status: boolean;
-  name: string;
-  slug: RealmSlug;
-  battlegroup: string;
-  locale: string;
-  timezone: string;
-  connected_realms: RealmSlug[];
+  connected_realms: IConnectedRealmComposite[];
 }
