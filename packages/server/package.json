@@ -1,6 +1,6 @@
 {
   "name": "@sotah-inc/server",
-  "version": "1.0.118",
+  "version": "1.0.119",
   "description": "",
   "main": "./build/dist/index.js",
   "typings": "build/dist/index.d.ts",
@@ -19,18 +19,18 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@blueprintjs/tslint-config": "^3.0.0",
-    "@types/node": "^14.0.11",
+    "@blueprintjs/tslint-config": "^3.0.1",
+    "@types/node": "^14.0.14",
     "chokidar-cli": "^2.1.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.0.5",
     "rimraf": "^3.0.2",
     "tslint": "^6.1.2",
-    "typescript": "3.9.5"
+    "typescript": "3.9.6"
   },
   "dependencies": {
-    "@google-cloud/firestore": "^3.8.4",
-    "@sotah-inc/core": "^1.0.107",
+    "@google-cloud/firestore": "^4.0.0",
+    "@sotah-inc/core": "^1.0.125",
     "@types/express": "^4.17.6",
     "@types/passport": "^1.0.3",
     "@types/passport-jwt": "^3.0.3",
@@ -38,14 +38,14 @@
     "build": "^0.1.4",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
-    "moment": "^2.26.0",
+    "moment": "^2.27.0",
     "nats": "^1.4.9",
     "npm": "^6.14.5",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "run": "^1.4.0",
     "typeorm": "^0.2.25",
-    "uuid": "^8.1.0"
+    "uuid": "^8.2.0"
   },
   "publishConfig": {
     "access": "private"
