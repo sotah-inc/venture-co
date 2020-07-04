@@ -22,7 +22,6 @@ import {
   IPriceListMap,
 } from "../pricelist";
 import { IProfession } from "../profession";
-import { IRealm, IRealmModificationDates } from "../region";
 
 // new
 export interface IGetBootResponseData {
@@ -171,9 +170,3 @@ export type GetProfessionPricelistResponse =
   | IProfessionPricelistJson
   | IValidationErrorResponse
   | null;
-
-// old
-export interface IStatusRealm extends IRealm {
-  regionName: string;
-  realm_modification_dates: IRealmModificationDates;
-}
