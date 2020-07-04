@@ -33,6 +33,12 @@ export interface IRealm extends ILinksBase {
   slug: RealmSlug;
 }
 
+export interface IConnectedRealmModificationDates {
+  downloaded: UnixTimestamp;
+  live_auctions_received: UnixTimestamp;
+  pricelist_history_received: UnixTimestamp;
+}
+
 export interface IConnectedRealmComposite {
   connected_realm: ILinksBase & {
     id: ConnectedRealmId;
@@ -49,11 +55,7 @@ export interface IConnectedRealmComposite {
     mythic_leaderboards: IHrefReference;
     auctions: IHrefReference;
   };
-  modification_dates: {
-    downloaded: UnixTimestamp;
-    live_auctions_received: UnixTimestamp;
-    pricelist_history_received: UnixTimestamp;
-  };
+  modification_dates: IConnectedRealmModificationDates;
 }
 
 export interface IRegionConnectedRealmTuple extends IRegionTuple {
