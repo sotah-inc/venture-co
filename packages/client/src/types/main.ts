@@ -2,8 +2,8 @@ import {
   IExpansion,
   IPreferenceJson,
   IProfession,
+  IRealm,
   IRegionComposite,
-  IStatusRealm,
 } from "@sotah-inc/core";
 
 import { IItemClasses, IProfile, IRealms, IRegions } from "./global";
@@ -20,7 +20,7 @@ export interface IMainState {
   currentRegion: IRegionComposite | null;
   fetchRealmLevel: FetchLevel;
   realms: IRealms;
-  currentRealm: IStatusRealm | null;
+  currentRealm: IRealm | null;
   authLevel: AuthLevel;
   isLoginDialogOpen: boolean;
   expansions: IExpansion[];

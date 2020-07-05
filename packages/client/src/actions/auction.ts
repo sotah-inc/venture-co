@@ -6,12 +6,7 @@ import {
 } from "@sotah-inc/core";
 import { Dispatch } from "redux";
 
-import {
-  getAuctions,
-  IGetAuctionsOptions,
-  IQueryAuctionsOptions,
-  queryAuctions,
-} from "../api/data";
+import { getAuctions, IGetAuctionsOptions, IGetAuctionsOptions, getAuctions } from "../api/data";
 import { ISortChangeOptions } from "../types/auction";
 import { ActionsUnion, createAction } from "./helpers";
 
@@ -46,10 +41,10 @@ const RequestAuctionsQuery = () => createAction(REQUEST_AUCTIONS_QUERY);
 export const ReceiveAuctionsQuery = (payload: IQueryAuctionsResponse | null) =>
   createAction(RECEIVE_AUCTIONS_QUERY, payload);
 type QueryAuctionsType = ReturnType<typeof RequestAuctionsQuery | typeof ReceiveAuctionsQuery>;
-export const FetchAuctionsQuery = (opts: IQueryAuctionsOptions) => {
+export const FetchAuctionsQuery = (opts: IGetAuctionsOptions) => {
   return async (dispatch: Dispatch<QueryAuctionsType>) => {
     dispatch(RequestAuctionsQuery());
-    dispatch(ReceiveAuctionsQuery(await queryAuctions(opts)));
+    dispatch(ReceiveAuctionsQuery(await getAuctions(opts)));
   };
 };
 

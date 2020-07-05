@@ -26,7 +26,7 @@ import {
 import { IItem, IQueryItemsItem, IRegionComposite, IStatusRealm } from "@sotah-inc/core";
 import { debounce } from "lodash";
 
-import { IQueryAuctionsOptions } from "../../../api/data";
+import { IGetAuctionsOptions } from "../../../api/data";
 import { FetchLevel } from "../../../types/main";
 import {
   getItemIconUrl,
@@ -49,7 +49,7 @@ export interface IStateProps {
 export interface IDispatchProps {
   onAuctionsQuerySelect: (aqResult: IQueryItemsItem) => void;
   onAuctionsQueryDeselect: (index: number) => void;
-  fetchAuctionsQuery: (opts: IQueryAuctionsOptions) => void;
+  fetchAuctionsQuery: (opts: IGetAuctionsOptions) => void;
   activeSelectChange: (v: boolean) => void;
   refreshAuctionsQuery: (v: IQueryItemsItem[]) => void;
 }

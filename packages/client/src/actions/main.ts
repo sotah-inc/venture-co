@@ -10,7 +10,7 @@ import {
 } from "@sotah-inc/core";
 import { Dispatch } from "redux";
 
-import { getBoot, getPing, getStatus } from "../api/data";
+import { getBoot, getConnectedRealms } from "../api/data";
 import {
   createPreferences,
   getPreferences,
@@ -24,18 +24,6 @@ import {
 import { IProfile } from "../types/global";
 import { AuthLevel } from "../types/main";
 import { ActionsUnion, createAction } from "./helpers";
-
-export const REQUEST_GET_PING = "REQUEST_GET_PING";
-export const RECEIVE_GET_PING = "RECEIVE_GET_PING";
-export const RequestGetPing = () => createAction(REQUEST_GET_PING);
-export const ReceiveGetPing = (payload: boolean) => createAction(RECEIVE_GET_PING, payload);
-type FetchGetPingType = ReturnType<typeof RequestGetPing | typeof ReceiveGetPing>;
-export const FetchGetPing = () => {
-  return async (dispatch: Dispatch<FetchGetPingType>) => {
-    dispatch(RequestGetPing());
-    dispatch(ReceiveGetPing(await getPing()));
-  };
-};
 
 export const USER_REGISTER = "USER_REGISTER";
 export const UserRegister = (payload: IProfile) => createAction(USER_REGISTER, payload);
@@ -139,7 +127,7 @@ type FetchGetRealmType = ReturnType<typeof RequestGetRealms | typeof ReceiveGetR
 export const FetchGetRealms = (region: IRegionComposite) => {
   return async (dispatch: Dispatch<FetchGetRealmType>) => {
     dispatch(RequestGetRealms());
-    dispatch(ReceiveGetRealms(await getStatus(region.config_region.name)));
+    dispatch(ReceiveGetRealms(await getConnectedRealms(region.config_region.name)));
   };
 };
 
@@ -192,13 +180,11 @@ export const MainActions = {
   LoadRootEntrypoint,
   RealmChange,
   ReceiveGetBoot,
-  ReceiveGetPing,
   ReceiveGetRealms,
   ReceiveGetUserPreferences,
   ReceiveUserReload,
   RegionChange,
   RequestGetBoot,
-  RequestGetPing,
   RequestGetRealms,
   RequestGetUserPreferences,
   RequestUserReload,

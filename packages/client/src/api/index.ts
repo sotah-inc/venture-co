@@ -48,14 +48,14 @@ export interface IGatherOptions<T> {
   headers?: Headers;
   body?: T;
   method?: string;
-  url: string;
+  url: string | Array<string | undefined>;
 }
 
 export interface IGatherQueryOptions<Q> {
   headers?: Headers;
   query?: Q;
   method?: string;
-  url: string;
+  url: string | Array<string | undefined>;
 }
 
 export interface IGatherResult<T> {
@@ -75,7 +75,9 @@ export const gather = async <T, A>(opts: IGatherOptions<T>): Promise<IGatherResu
     return opts.headers;
   })();
 
-  const response = await fetch(opts.url, {
+  const resolvedUrl = typeof opts.url === "string" ? opts.url : opts.url.filter(v => !!v).join("/");
+
+  const response = await fetch(resolvedUrl, {
     body,
     cache: "default",
     headers,
@@ -102,11 +104,14 @@ export const gatherWithQuery = async <Q, A>(
   })();
 
   const url = (() => {
+    const resolvedUrl =
+      typeof opts.url === "string" ? opts.url : opts.url.filter(v => !!v).join("/");
+
     if (query === null) {
-      return opts.url;
+      return resolvedUrl;
     }
 
-    return `${opts.url}?${query}`;
+    return `${resolvedUrl}?${query}`;
   })();
 
   const response = await fetch(url, {
