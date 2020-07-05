@@ -228,7 +228,7 @@ export class DataController {
     return { data: itemResponse, status: HTTPStatus.OK };
   }
 
-  public async queryAuctions(
+  public async getAuctions(
     regionName: RegionName,
     connectedRealmId: ConnectedRealmId,
     query: ParsedQs,
