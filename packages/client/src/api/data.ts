@@ -35,7 +35,7 @@ import { gather, gatherWithQuery, getApiEndpoint } from "./index";
 
 export const getBoot = async (): Promise<IGetBootResponseData | null> => {
   const { body, status } = await gather<null, GetBootResponse>({
-    url: [getApiEndpoint(), "boot"],
+    url: `${getApiEndpoint()}/boot`,
   });
   if (status !== HTTPStatus.OK) {
     return null;
@@ -48,7 +48,7 @@ export const getConnectedRealms = async (
   regionName: RegionName,
 ): Promise<IConnectedRealmComposite[] | null> => {
   const { body, status } = await gather<null, GetConnectedRealmsResponse>({
-    url: [getApiEndpoint(), "connected-realms", regionName],
+    url: `${getApiEndpoint()}/connected-realms/${regionName}`,
   });
   if (status !== HTTPStatus.OK) {
     return null;
@@ -70,7 +70,7 @@ export const getAuctions = async (
   const { body, status } = await gatherWithQuery<IGetAuctionsRequest, GetAuctionsResponse>({
     method: "GET",
     query: request,
-    url: [getApiEndpoint(), "auctions", regionName, connectedRealmId.toString()],
+    url: `${getApiEndpoint()}/auctions/${regionName}/${connectedRealmId}`,
   });
   if (status !== HTTPStatus.OK) {
     return null;
@@ -83,7 +83,7 @@ export const getItems = async (query: string): Promise<IQueryItemsResponseData |
   const { body, status } = await gather<IQueryItemsRequest, QueryItemsResponse>({
     body: { query },
     method: "POST",
-    url: [getApiEndpoint(), "items"],
+    url: `${getApiEndpoint()}/items`,
   });
   if (status !== HTTPStatus.OK) {
     return null;
@@ -100,7 +100,7 @@ export interface IGetItemResult {
 export const getItem = async (itemId: ItemId): Promise<IGetItemResult> => {
   const { body, status } = await gather<null, GetItemResponse>({
     method: "GET",
-    url: [getApiEndpoint(), "item", itemId.toString()],
+    url: `${getApiEndpoint()}/item/${itemId}`,
   });
   if (status !== HTTPStatus.OK) {
     return {

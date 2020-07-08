@@ -259,7 +259,7 @@ export const getUnmetDemand = async (
     body: opts.request,
     headers: new Headers({ "content-type": "application/json" }),
     method: "POST",
-    url: `${getApiEndpoint()}/region/${opts.region}/realm/${opts.realm}/unmet-demand`,
+    url: `${getApiEndpoint()}/unmet-demand/${opts.region}/${opts.realm}`,
   });
   switch (status) {
     case HTTPStatus.OK:
