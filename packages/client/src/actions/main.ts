@@ -129,16 +129,18 @@ export const LoadGetBoot = (payload: ILoadBootPayload) => createAction(LOAD_GET_
 export const REGION_CHANGE = "REGION_CHANGE";
 export const RegionChange = (payload: IRegionComposite) => createAction(REGION_CHANGE, payload);
 
-export const REQUEST_GET_REALMS = "REQUEST_GET_REALMS";
-export const RECEIVE_GET_REALMS = "RECEIVE_GET_REALMS";
-export const RequestGetRealms = () => createAction(REQUEST_GET_REALMS);
-export const ReceiveGetRealms = (payload: IConnectedRealmComposite[] | null) =>
-  createAction(RECEIVE_GET_REALMS, payload);
-type FetchGetRealmType = ReturnType<typeof RequestGetRealms | typeof ReceiveGetRealms>;
-export const FetchGetRealms = (region: IRegionComposite) => {
-  return async (dispatch: Dispatch<FetchGetRealmType>) => {
-    dispatch(RequestGetRealms());
-    dispatch(ReceiveGetRealms(await getConnectedRealms(region.config_region.name)));
+export const REQUEST_GET_CONNECTEDREALMS = "REQUEST_GET_CONNECTEDREALMS";
+export const RECEIVE_GET_CONNECTEDREALMS = "RECEIVE_GET_CONNECTEDREALMS";
+export const RequestGetConnectedRealms = () => createAction(REQUEST_GET_CONNECTEDREALMS);
+export const ReceiveGetConnectedRealms = (payload: IConnectedRealmComposite[] | null) =>
+  createAction(RECEIVE_GET_CONNECTEDREALMS, payload);
+type FetchGetConnectedRealmsType = ReturnType<
+  typeof RequestGetConnectedRealms | typeof ReceiveGetConnectedRealms
+>;
+export const FetchGetConnectedRealms = (region: IRegionComposite) => {
+  return async (dispatch: Dispatch<FetchGetConnectedRealmsType>) => {
+    dispatch(RequestGetConnectedRealms());
+    dispatch(ReceiveGetConnectedRealms(await getConnectedRealms(region.config_region.name)));
   };
 };
 
@@ -191,14 +193,14 @@ export const MainActions = {
   LoadRootEntrypoint,
   RealmChange,
   ReceiveGetBoot,
+  ReceiveGetConnectedRealms,
   ReceiveGetPing,
-  ReceiveGetRealms,
   ReceiveGetUserPreferences,
   ReceiveUserReload,
   RegionChange,
   RequestGetBoot,
+  RequestGetConnectedRealms,
   RequestGetPing,
-  RequestGetRealms,
   RequestGetUserPreferences,
   RequestUserReload,
   UserLogin,

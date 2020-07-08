@@ -6,14 +6,14 @@ import {
   LoadRegionEntrypoint,
   MainActions,
   ReceiveGetBoot,
+  ReceiveGetConnectedRealms,
   ReceiveGetPing,
-  ReceiveGetRealms,
   ReceiveGetUserPreferences,
 } from "../../actions/main";
+import { IClientRealm } from "../../types/global";
 import { FetchLevel, IMainState } from "../../types/main";
 import { FormatItemClassList, FormatRegionList } from "../../util";
 import { IKindHandlers, Runner, runners } from "./index";
-import { IClientRealm } from "../../types/global";
 
 export const handlers: IKindHandlers<IMainState, MainActions> = {
   boot: {
@@ -163,6 +163,50 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
       },
     },
   },
+  connectedrealms: {
+    get: {
+      receive: (state: IMainState, action: ReturnType<typeof ReceiveGetConnectedRealms>) => {
+        if (action.payload === null || action.payload.length === 0) {
+          return { ...state, fetchRealmLevel: FetchLevel.failure };
+        }
+
+        const realms = action.payload.reduce<IClientRealm[]>((out, connectedRealm) => {
+          return [
+            ...out,
+            ...connectedRealm.connected_realm.realms.map<IClientRealm>(v => {
+              return {
+                connectedRealmId: connectedRealm.connected_realm.id,
+                realm: v,
+                regionName: state.currentRegion!.config_region.name,
+              };
+            }),
+          ];
+        }, []);
+
+        const currentRealm: IClientRealm = (() => {
+          // optionally halting on blank user-preferences
+          if (state.userPreferences === null) {
+            return realms[0];
+          }
+
+          // defaulting to first realm in list if region is different from preferred region
+          if (state.currentRegion!.config_region.name !== state.userPreferences.current_region) {
+            return realms[0];
+          }
+
+          // defaulting to first realm in list if non-match
+          return (
+            realms.find(v => v.realm.slug === state.userPreferences!.current_realm) ?? realms[0]
+          );
+        })();
+
+        return { ...state, fetchRealmLevel: FetchLevel.success, realms, currentRealm };
+      },
+      request: (state: IMainState) => {
+        return { ...state, fetchRealmLevel: FetchLevel.fetching };
+      },
+    },
+  },
   entrypoint: {
     realm: {
       load: (state: IMainState, action: ReturnType<typeof LoadRealmEntrypoint>) => {
@@ -180,26 +224,43 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
           },
           null,
         );
-        const currentRealm: IStatusRealm | null = (() => {
+        const currentRealm: IClientRealm | null = (() => {
+          if (currentRegion === null) {
+            return null;
+          }
+
           if (action.payload.realms === null) {
             return null;
           }
 
-          return action.payload.realms.reduce<IStatusRealm | null>((out, current) => {
+          return action.payload.realms.reduce<IClientRealm | null>((out, current) => {
             if (out !== null) {
               return out;
             }
 
-            if (current.slug === action.payload.nextRealmSlug) {
-              return current;
-            }
+            return current.connected_realm.realms.reduce<IClientRealm | null>(
+              (connectedOut, connectedRealm) => {
+                if (connectedOut !== null) {
+                  return connectedOut;
+                }
 
-            return null;
+                if (connectedRealm.slug === action.payload.nextRealmSlug) {
+                  return {
+                    connectedRealmId: current.connected_realm.id,
+                    realm: connectedRealm,
+                    regionName: currentRegion.config_region.name,
+                  };
+                }
+
+                return null;
+              },
+              null,
+            );
           }, null);
         })();
 
         return {
-          ...runners.main(state, ReceiveGetRealms(action.payload.realms)),
+          ...runners.main(state, ReceiveGetConnectedRealms(action.payload.realms)),
           currentRealm,
           currentRegion,
         };
@@ -223,7 +284,7 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
         );
 
         return {
-          ...runners.main(state, ReceiveGetRealms(action.payload.realms)),
+          ...runners.main(state, ReceiveGetConnectedRealms(action.payload.realms)),
           currentRegion,
         };
       },
@@ -240,63 +301,6 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
       },
       request: (state: IMainState) => {
         return { ...state, fetchPingLevel: FetchLevel.fetching };
-      },
-    },
-  },
-  realms: {
-    get: {
-      receive: (state: IMainState, action: ReturnType<typeof ReceiveGetRealms>) => {
-        if (action.payload === null || action.payload.length === 0) {
-          return { ...state, fetchRealmLevel: FetchLevel.failure };
-        }
-
-        const currentRealm: IStatusRealm = (() => {
-          // optionally halting on blank user-preferences
-          if (state.userPreferences === null) {
-            return action.payload[0];
-          }
-
-          const {
-            current_region: preferredRegionName,
-            current_realm: preferredRealmSlug,
-          } = state.userPreferences;
-
-          // defaulting to first realm in list if region is different from preferred region
-          if (
-            state.currentRegion !== null &&
-            state.currentRegion.config_region.name !== preferredRegionName
-          ) {
-            return action.payload[0];
-          }
-
-          // gathering preferred realm
-          const foundRealm = action.payload.reduce<IStatusRealm | null>((result, v) => {
-            if (result !== null) {
-              return result;
-            }
-
-            if (v.slug === preferredRealmSlug) {
-              return v;
-            }
-
-            return null;
-          }, null);
-
-          // optionally halting on realm non-match against preferred realm name
-          if (foundRealm === null) {
-            return action.payload[0];
-          }
-
-          // dumping out preferred realm
-          return foundRealm;
-        })();
-
-        const realms = FormatRealmList(action.payload);
-
-        return { ...state, fetchRealmLevel: FetchLevel.success, realms, currentRealm };
-      },
-      request: (state: IMainState) => {
-        return { ...state, fetchRealmLevel: FetchLevel.fetching };
       },
     },
   },

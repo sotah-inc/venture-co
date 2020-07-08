@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 
-import { FetchGetRealms, RegionChange } from "../../actions/main";
+import { FetchGetConnectedRealms, RegionChange } from "../../actions/main";
 import {
   IDispatchProps,
   IOwnProps,
@@ -15,7 +15,7 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
 };
 
 const mapDispatchToProps: IDispatchProps = {
-  fetchRealms: FetchGetRealms,
+  fetchRealms: FetchGetConnectedRealms,
   onRegionChange: RegionChange,
 };
 
