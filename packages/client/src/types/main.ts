@@ -1,12 +1,6 @@
-import {
-  IExpansion,
-  IPreferenceJson,
-  IProfession,
-  IRealm,
-  IRegionComposite,
-} from "@sotah-inc/core";
+import { IExpansion, IPreferenceJson, IProfession, IRegionComposite } from "@sotah-inc/core";
 
-import { IItemClasses, IProfile, IRealms, IRegions } from "./global";
+import { IClientRealm, IItemClasses, IProfile, IRegions } from "./global";
 
 export interface IMainState {
   fetchPingLevel: FetchLevel;
@@ -19,8 +13,8 @@ export interface IMainState {
   regions: IRegions;
   currentRegion: IRegionComposite | null;
   fetchRealmLevel: FetchLevel;
-  realms: IRealms;
-  currentRealm: IRealm | null;
+  realms: IClientRealm[];
+  currentRealm: IClientRealm | null;
   authLevel: AuthLevel;
   isLoginDialogOpen: boolean;
   expansions: IExpansion[];
@@ -62,7 +56,7 @@ export const defaultMainState: IMainState = {
   preloadedToken: "",
   professions: [],
   profile: null,
-  realms: {},
+  realms: [],
   regions: {},
   userPreferences: null,
 };

@@ -10,16 +10,14 @@ import {
   IPricesFlagged,
   IQueryAuctionStatsResponseData,
   IQueryItemsItem,
-  IRealm,
-  IRealmComposite,
   IRegionComposite,
   ItemQuality,
 } from "@sotah-inc/core";
-import { IStatusRealm } from "@sotah-inc/core/build/dist/types/contracts/data";
 import moment from "moment";
 
 import { getApiEndpoint } from "../api";
 import {
+  IClientRealm,
   IFetchData,
   IItemClasses,
   IItemClassWithSub,
@@ -208,12 +206,18 @@ export const didRegionChange = (
   return prevRegion.config_region.name !== currentRegion.config_region.name;
 };
 
-export const didRealmChange = (prevRealm: IRealm | null, currentRealm: IRealm): boolean => {
+export const didRealmChange = (
+  prevRealm: IClientRealm | null,
+  currentRealm: IClientRealm,
+): boolean => {
   if (prevRealm === null) {
     return true;
   }
-  return !(
-    prevRealm.regionName === currentRealm.regionName && prevRealm.slug === currentRealm.slug
+
+  return (
+    prevRealm.regionName !== currentRealm.regionName ||
+    prevRealm.connectedRealmId !== currentRealm.connectedRealmId ||
+    prevRealm.realm.id !== prevRealm.realm.id
   );
 };
 
@@ -269,9 +273,6 @@ export const FormatItemClassList = (itemClassList: IItemClass[]): IItemClasses =
 
     return nextItemClasses;
   }, {});
-
-export const FormatRealmList = (realmList: IRealmComposite[]) =>
-  realmList.reduce((result, realm) => ({ ...result, [realm.slug]: realm }), {});
 
 export const getItemFromPricelist = (items: IItemsMap, pricelist: IPricelistJson): IItem | null => {
   if (pricelist.pricelist_entries.length === 0) {

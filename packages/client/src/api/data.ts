@@ -33,6 +33,15 @@ import * as HTTPStatus from "http-status";
 
 import { gather, gatherWithQuery, getApiEndpoint } from "./index";
 
+export const getPing = async (): Promise<boolean> => {
+  try {
+    await fetch(`${getApiEndpoint()}/ping`);
+    return true;
+  } catch (err) {
+    return false;
+  }
+};
+
 export const getBoot = async (): Promise<IGetBootResponseData | null> => {
   const { body, status } = await gather<null, GetBootResponse>({
     url: `${getApiEndpoint()}/boot`,

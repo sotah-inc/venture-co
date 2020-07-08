@@ -1,4 +1,4 @@
-import { IRegionComposite, IStatusRealm } from "@sotah-inc/core";
+import { IRegionComposite } from "@sotah-inc/core";
 
 import {
   LoadGetBoot,
@@ -10,10 +10,10 @@ import {
   ReceiveGetRealms,
   ReceiveGetUserPreferences,
 } from "../../actions/main";
-import { IRealms } from "../../types/global";
 import { FetchLevel, IMainState } from "../../types/main";
-import { FormatItemClassList, FormatRealmList, FormatRegionList } from "../../util";
+import { FormatItemClassList, FormatRegionList } from "../../util";
 import { IKindHandlers, Runner, runners } from "./index";
+import { IClientRealm } from "../../types/global";
 
 export const handlers: IKindHandlers<IMainState, MainActions> = {
   boot: {
@@ -60,24 +60,35 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
           return foundRegion;
         })();
 
-        const realms: IRealms = (() => {
+        const realms: IClientRealm[] = (() => {
           if (action.payload.realms === null) {
             return [];
           }
 
-          return FormatRealmList(action.payload.realms);
+          return action.payload.realms.reduce<IClientRealm[]>((realmsResult, v) => {
+            return [
+              ...realmsResult,
+              ...v.connected_realm.realms.map<IClientRealm>(connectedRealmRealm => {
+                return {
+                  connectedRealmId: v.connected_realm.id,
+                  realm: connectedRealmRealm,
+                  regionName: currentRegion.config_region.name,
+                };
+              }),
+            ];
+          }, []);
         })();
-        const currentRealm: IStatusRealm | null = (() => {
+        const currentRealm: IClientRealm | null = (() => {
           if (typeof action.payload.realmSlug === "undefined") {
-            return action.payload.realms[0];
+            return realms[0];
           }
 
-          return action.payload.realms.reduce((result: IStatusRealm | null, v) => {
+          return realms.reduce((result: IClientRealm | null, v) => {
             if (result !== null) {
               return result;
             }
 
-            if (v.slug === action.payload.realmSlug) {
+            if (v.realm.slug === action.payload.realmSlug) {
               return v;
             }
 
