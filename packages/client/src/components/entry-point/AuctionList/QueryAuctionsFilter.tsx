@@ -40,7 +40,7 @@ const QueryAuctionResultSuggest = Suggest.ofType<IQueryItemsItem>();
 export interface IStateProps {
   queryAuctionsLevel: FetchLevel;
   currentRegion: IRegionComposite | null;
-  currentRealm: IStatusRealm | null;
+  currentRealm: IClientRealm | null;
   items: IQueryItemsItem[];
   selectedItems: IQueryItemsItem[];
   activeSelect: boolean;

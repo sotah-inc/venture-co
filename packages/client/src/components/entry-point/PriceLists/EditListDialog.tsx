@@ -24,7 +24,7 @@ export interface IStateProps {
   selectedList: IPricelistJson | null;
   items: IItemsMap;
   currentRegion: IRegionComposite | null;
-  currentRealm: IStatusRealm | null;
+  currentRealm: IClientRealm | null;
   selectedProfession: IProfession | null;
   selectedExpansion: IExpansion | null;
 }

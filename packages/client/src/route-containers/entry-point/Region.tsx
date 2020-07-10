@@ -15,7 +15,7 @@ function RouteContainer({ router, regionEntrypointData }: Props) {
       browseToRealmData={(region, realm) =>
         router.replace(
           "/data/[region_name]/[realm_slug]",
-          `/data/${region.config_region.name}/${realm.slug}`,
+          `/data/${region.config_region.name}/${realm.realm.slug}`,
         )
       }
       regionEntrypointData={regionEntrypointData}

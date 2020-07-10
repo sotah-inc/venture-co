@@ -4,7 +4,6 @@ import {
   GameVersion,
   IQueryWorkOrdersResponseData,
   IRegionComposite,
-  IStatusRealm,
   OrderDirection,
   OrderKind,
   SortPerPage,
@@ -16,14 +15,14 @@ import { QueryWorkOrdersOptions } from "../../api/work-order";
 import { CreateWorkOrderDialogContainer } from "../../containers/entry-point/WorkOrders/CreateWorkOrderDialog";
 import { WorkOrdersListContainer } from "../../containers/entry-point/WorkOrders/WorkOrdersList";
 import { WorkOrdersNavRouteContainer } from "../../route-containers/entry-point/WorkOrders/WorkOrdersNav";
-import { IFetchData } from "../../types/global";
+import { IClientRealm, IFetchData } from "../../types/global";
 import { FetchLevel } from "../../types/main";
 import { setTitle } from "../../util";
 
 export interface IStateProps {
   orders: IFetchData<IQueryWorkOrdersResponseData>;
   currentRegion: IRegionComposite | null;
-  currentRealm: IStatusRealm | null;
+  currentRealm: IClientRealm | null;
   perPage: SortPerPage;
   currentPage: number;
 }
@@ -46,7 +45,7 @@ export interface IRouteParams {
 
 export interface IRouteProps {
   routeParams: IRouteParams;
-  browseTo: (region: IRegionComposite, realm: IStatusRealm) => void;
+  browseTo: (region: IRegionComposite, realm: IClientRealm) => void;
 }
 
 export type Props = Readonly<IDispatchProps & IStateProps & IOwnProps & IRouteProps>;
@@ -86,7 +85,7 @@ export class WorkOrders extends React.Component<Props> {
       return;
     }
 
-    if (currentRealm === null || currentRealm.slug !== realm_slug) {
+    if (currentRealm === null || currentRealm.realm.slug !== realm_slug) {
       return;
     }
 
@@ -112,7 +111,7 @@ export class WorkOrders extends React.Component<Props> {
     }
 
     setTitle(
-      `Work Orders - ${currentRegion.config_region.name.toUpperCase()} ${currentRealm.name}`,
+      `Work Orders - ${currentRegion.config_region.name.toUpperCase()} ${currentRealm.realm.name}`,
     );
   }
 
@@ -160,7 +159,7 @@ export class WorkOrders extends React.Component<Props> {
       orderDirection: OrderDirection.Desc,
       page: currentPage + 1,
       perPage,
-      realmSlug: currentRealm.slug,
+      realmSlug: currentRealm.realm.slug,
       regionName: currentRegion.config_region.name,
     });
   }

@@ -16,13 +16,12 @@ import {
   IItem,
   IPrefillWorkOrderItemResponseData,
   IRegionComposite,
-  IStatusRealm,
 } from "@sotah-inc/core";
 import { FormikProps } from "formik";
 
 import { IPrefillWorkOrderItemOptions } from "../../../api/work-order";
 import { ItemPopoverContainer } from "../../../containers/util/ItemPopover";
-import { IErrors, IFetchData } from "../../../types/global";
+import { IClientRealm, IErrors, IFetchData } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
 import {
   currencyToText,
@@ -45,7 +44,7 @@ export interface IOwnProps {
   prefillWorkOrderItem: IFetchData<IPrefillWorkOrderItemResponseData>;
   callPrefillWorkOrderItem: (opts: IPrefillWorkOrderItemOptions) => void;
   currentRegion: IRegionComposite | null;
-  currentRealm: IStatusRealm | null;
+  currentRealm: IClientRealm | null;
   resetWorkOrderItemPrefill: () => void;
 }
 
@@ -433,7 +432,7 @@ export class WorkOrderForm extends React.Component<Props> {
     callPrefillWorkOrderItem({
       gameVersion: GameVersion.Retail,
       itemId: item.blizzard_meta.id,
-      realmSlug: currentRealm.slug,
+      realmSlug: currentRealm.realm.slug,
       regionName: currentRegion.config_region.name,
     });
   }

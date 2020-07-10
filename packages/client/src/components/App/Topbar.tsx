@@ -24,7 +24,7 @@ import { toExpansion } from "../../util/routes";
 
 export interface IStateProps {
   user: IUserJson | null;
-  currentRealm: IStatusRealm | null;
+  currentRealm: IClientRealm | null;
   currentRegion: IRegionComposite | null;
   expansions: IExpansion[];
   selectedExpansion: IExpansion | null;

@@ -29,7 +29,7 @@ export interface IStateProps {
   items: IItem[];
   itemFilter: IItem | null;
   currentRegion: IRegionComposite | null;
-  currentRealm: IStatusRealm | null;
+  currentRealm: IClientRealm | null;
 }
 
 export interface IDispatchProps {

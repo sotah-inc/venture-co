@@ -10,7 +10,7 @@ import { LastModified } from "../../../util";
 
 export interface IStateProps {
   currentRegion: IRegionComposite | null;
-  currentRealm: IStatusRealm | null;
+  currentRealm: IClientRealm | null;
   selectedList: IPricelistJson | null;
 }
 

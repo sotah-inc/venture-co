@@ -1,4 +1,5 @@
 import { IExpansion, IPricelistJson, IProfession, IRealm, IRegionComposite } from "@sotah-inc/core";
+import { IClientRealm } from "../types/global";
 
 export const toUserPricelist = (
   region: IRegionComposite,
@@ -81,8 +82,10 @@ export const toExpansion = (region: IRegionComposite, realm: IRealm, expansion: 
   return { url, asDest };
 };
 
-export const toWorkOrders = (region: IRegionComposite, realm: IRealm) => {
-  const asDest = ["marketplace", "work-orders", region.config_region.name, realm.slug].join("/");
+export const toWorkOrders = (region: IRegionComposite, realm: IClientRealm) => {
+  const asDest = ["marketplace", "work-orders", region.config_region.name, realm.realm.slug].join(
+    "/",
+  );
   const url = ["marketplace", "work-orders", "[region_name]", "[realm_slug]"].join("/");
 
   return { url, asDest };

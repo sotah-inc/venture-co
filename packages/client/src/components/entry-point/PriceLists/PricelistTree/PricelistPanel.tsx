@@ -8,7 +8,7 @@ import { PricelistTableContainer } from "../../../../containers/entry-point/Pric
 
 export interface IStateProps {
   currentRegion: IRegionComposite | null;
-  currentRealm: IStatusRealm | null;
+  currentRealm: IClientRealm | null;
   isAddEntryDialogOpen: boolean;
 }
 

@@ -23,7 +23,7 @@ export interface IStateProps {
   selectedProfession: IProfession | null;
   selectedExpansion: IExpansion | null;
   currentRegion: IRegionComposite | null;
-  currentRealm: IStatusRealm | null;
+  currentRealm: IClientRealm | null;
   selectedList: IPricelistJson | null;
 }
 

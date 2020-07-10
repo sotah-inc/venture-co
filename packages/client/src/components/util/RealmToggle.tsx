@@ -13,19 +13,18 @@ import {
   ICreatePreferencesRequest,
   IPreferenceJson,
   IRegionComposite,
-  IStatusRealm,
   UpdatePreferencesRequest,
 } from "@sotah-inc/core";
 
-import { IProfile, IRealms } from "../../types/global";
+import { IClientRealm, IProfile } from "../../types/global";
 import { AuthLevel, FetchLevel } from "../../types/main";
 import { didRealmChange } from "../../util";
 
-const RealmToggleSelect = Select.ofType<IStatusRealm>();
+const RealmToggleSelect = Select.ofType<IClientRealm>();
 
 export interface IStateProps {
-  realms: IRealms;
-  currentRealm: IStatusRealm | null;
+  realms: IClientRealm[];
+  currentRealm: IClientRealm | null;
   fetchRealmLevel: FetchLevel;
   userPreferences: IPreferenceJson | null;
   authLevel: AuthLevel;
@@ -44,7 +43,7 @@ export interface IDispatchProps {
 }
 
 export interface IOwnProps {
-  onRealmChange: (realm: IStatusRealm) => void;
+  onRealmChange: (realm: IClientRealm) => void;
 }
 
 type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
@@ -72,23 +71,20 @@ export class RealmToggle extends React.Component<Props> {
 
       if (didRealmChange(prevProps.currentRealm, currentRealm)) {
         persistUserPreferences(profile!.token, {
-          current_realm: currentRealm.slug,
+          current_realm: currentRealm.realm.slug,
           current_region: currentRegion.config_region.name,
         });
       }
     }
   }
 
-  public itemPredicate: ItemPredicate<IStatusRealm> = (query: string, item: IStatusRealm) => {
+  public itemPredicate: ItemPredicate<IClientRealm> = (query: string, item: IClientRealm) => {
     query = query.toLowerCase();
-    return (
-      item.name.toLowerCase().indexOf(query) >= 0 ||
-      item.battlegroup.toLowerCase().indexOf(query) >= 0
-    );
+    return (item.realm.name.en_US ?? "n/a").toLowerCase().indexOf(query) >= 0;
   };
 
-  public itemRenderer: ItemRenderer<IStatusRealm> = (
-    realm: IStatusRealm,
+  public itemRenderer: ItemRenderer<IClientRealm> = (
+    realm: IClientRealm,
     { handleClick, modifiers, index }: IItemRendererProps,
   ) => {
     if (!modifiers.matchesPredicate) {
@@ -97,22 +93,23 @@ export class RealmToggle extends React.Component<Props> {
 
     const { currentRealm } = this.props;
     const intent =
-      currentRealm !== null && realm.slug === currentRealm.slug ? Intent.PRIMARY : Intent.NONE;
+      currentRealm !== null && realm.realm.slug === currentRealm.realm.slug
+        ? Intent.PRIMARY
+        : Intent.NONE;
 
     return (
       <MenuItem
         key={index}
         intent={intent}
         className={modifiers.active ? Classes.ACTIVE : ""}
-        label={realm.battlegroup}
         onClick={handleClick}
-        text={realm.name}
+        text={realm.realm.name.en_US}
       />
     );
   };
 
-  public itemListRenderer: ItemListRenderer<IStatusRealm> = (
-    params: IItemListRendererProps<IStatusRealm>,
+  public itemListRenderer: ItemListRenderer<IClientRealm> = (
+    params: IItemListRendererProps<IClientRealm>,
   ) => {
     const { items, itemsParentRef, renderItem } = params;
     const renderedItems = items.map(renderItem).filter(renderedItem => renderedItem !== null);
@@ -131,15 +128,14 @@ export class RealmToggle extends React.Component<Props> {
 
     switch (fetchRealmLevel) {
       case FetchLevel.success:
-        const items = Object.keys(realms).map(realmName => realms[realmName]);
-        let highlightedRealm = items[0];
+        let highlightedRealm = realms[0];
         if (currentRealm !== null) {
           highlightedRealm = currentRealm;
         }
 
         return (
           <RealmToggleSelect
-            items={items}
+            items={realms}
             itemRenderer={this.itemRenderer}
             itemListRenderer={this.itemListRenderer}
             itemPredicate={this.itemPredicate}
@@ -147,7 +143,7 @@ export class RealmToggle extends React.Component<Props> {
             resetOnSelect={true}
             resetOnClose={true}
           >
-            <Button text={highlightedRealm.name} rightIcon="double-caret-vertical" />
+            <Button text={highlightedRealm.realm.name.en_US} rightIcon="double-caret-vertical" />
           </RealmToggleSelect>
         );
       case FetchLevel.failure:

@@ -21,7 +21,7 @@ export interface IStateProps {
   deletePricelistLevel: FetchLevel;
   selectedProfession: IProfession | null;
   selectedExpansion: IExpansion | null;
-  currentRealm: IStatusRealm | null;
+  currentRealm: IClientRealm | null;
   currentRegion: IRegionComposite | null;
 }
 

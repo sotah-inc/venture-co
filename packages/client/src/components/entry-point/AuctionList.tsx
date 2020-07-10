@@ -54,7 +54,7 @@ export interface IStateProps {
   fetchRealmLevel: FetchLevel;
   realms: IRealms;
   currentRegion: IRegionComposite | null;
-  currentRealm: IStatusRealm | null;
+  currentRealm: IClientRealm | null;
   authLevel: AuthLevel;
   regions: IRegions;
 }

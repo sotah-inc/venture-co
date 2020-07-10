@@ -7,7 +7,7 @@ import { UnmetDemandRouteContainer } from "../../../../../route-containers/entry
 
 export interface IStateProps {
   currentRegion: IRegionComposite | null;
-  currentRealm: IStatusRealm | null;
+  currentRealm: IClientRealm | null;
 }
 
 export type Props = Readonly<IStateProps>;

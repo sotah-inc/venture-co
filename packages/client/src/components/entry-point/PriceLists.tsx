@@ -33,7 +33,7 @@ import { setTitle } from "../../util";
 export interface IStateProps {
   authLevel: AuthLevel;
 
-  currentRealm: IStatusRealm | null;
+  currentRealm: IClientRealm | null;
   currentRegion: IRegionComposite | null;
   regions: IRegions;
   fetchRealmLevel: FetchLevel;

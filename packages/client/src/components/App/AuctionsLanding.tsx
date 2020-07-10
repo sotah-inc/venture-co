@@ -9,7 +9,7 @@ import { setTitle } from "../../util";
 
 export interface IStateProps {
   currentRegion: IRegionComposite | null;
-  currentRealm: IStatusRealm | null;
+  currentRealm: IClientRealm | null;
   fetchRealmLevel: FetchLevel;
   regions: IRegions;
 }

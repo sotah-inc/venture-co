@@ -29,7 +29,7 @@ export interface IStateProps {
   relatedProfessionPricelists: IProfessionPricelistJson[];
   expansions: IExpansion[];
   professions: IProfession[];
-  currentRealm: IStatusRealm | null;
+  currentRealm: IClientRealm | null;
   currentRegion: IRegionComposite | null;
 }
 

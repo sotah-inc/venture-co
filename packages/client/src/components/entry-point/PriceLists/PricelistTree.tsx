@@ -24,7 +24,7 @@ export interface IStateProps {
   items: IItemsMap;
   selectedList: IPricelistJson | null;
   currentRegion: IRegionComposite | null;
-  currentRealm: IStatusRealm | null;
+  currentRealm: IClientRealm | null;
   professions: IProfession[];
   selectedProfession: IProfession | null;
   getProfessionPricelistsLevel: FetchLevel;

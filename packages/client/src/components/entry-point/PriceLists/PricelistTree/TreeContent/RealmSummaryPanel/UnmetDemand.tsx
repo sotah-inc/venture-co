@@ -40,7 +40,7 @@ export interface IStateProps {
   items: IItemsMap;
   selectedExpansion: IExpansion | null;
   currentRegion: IRegionComposite | null;
-  currentRealm: IStatusRealm | null;
+  currentRealm: IClientRealm | null;
 }
 
 export interface IRouteProps {

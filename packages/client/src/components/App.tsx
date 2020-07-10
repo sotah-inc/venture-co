@@ -13,7 +13,7 @@ export interface IStateProps {
   fetchPingLevel: FetchLevel;
   currentRegion: IRegionComposite | null;
   fetchRealmLevel: FetchLevel;
-  currentRealm: IStatusRealm | null;
+  currentRealm: IClientRealm | null;
   preloadedToken: string;
   authLevel: AuthLevel;
   isLoginDialogOpen: boolean;

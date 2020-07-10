@@ -1,10 +1,11 @@
 import React from "react";
 
 import { Alignment, ButtonGroup, Navbar, NavbarDivider, NavbarGroup } from "@blueprintjs/core";
-import { IRegionComposite, IStatusRealm, SortPerPage } from "@sotah-inc/core";
+import { IRegionComposite, SortPerPage } from "@sotah-inc/core";
 
 import { RealmToggleContainer } from "../../../containers/util/RealmToggle";
 import { RegionToggleContainer } from "../../../containers/util/RegionToggle";
+import { IClientRealm } from "../../../types/global";
 import { Pagination } from "../../util";
 import { CountToggle } from "../../util/CountToggle";
 
@@ -21,7 +22,7 @@ export interface IDispatchProps {
 }
 
 export interface IRouteProps {
-  browseTo: (region: IRegionComposite, realm: IStatusRealm) => void;
+  browseTo: (region: IRegionComposite, realm: IClientRealm) => void;
 }
 
 type Props = Readonly<IDispatchProps & IStateProps & IRouteProps>;
@@ -44,7 +45,7 @@ export class WorkOrdersNav extends React.Component<Props> {
         </NavbarGroup>
         <NavbarGroup align={Alignment.RIGHT}>
           <ButtonGroup>
-            <RealmToggleContainer onRealmChange={(v: IStatusRealm) => this.onRealmChange(v)} />
+            <RealmToggleContainer onRealmChange={(v: IClientRealm) => this.onRealmChange(v)} />
             <RegionToggleContainer />
           </ButtonGroup>
         </NavbarGroup>
@@ -52,7 +53,7 @@ export class WorkOrdersNav extends React.Component<Props> {
     );
   }
 
-  private onRealmChange(realm: IStatusRealm) {
+  private onRealmChange(realm: IClientRealm) {
     const { browseTo, currentRegion } = this.props;
 
     if (currentRegion === null) {
