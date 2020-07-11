@@ -4,6 +4,7 @@ import { Callout, Card, Classes, H5, Intent, NonIdealState, Spinner } from "@blu
 import { IRegionComposite, IStatusRealm, RealmPopulation } from "@sotah-inc/core";
 
 import { UnmetDemandRouteContainer } from "../../../../../route-containers/entry-point/PriceLists/PricelistTree/TreeContent/RealmSummaryPanel/UnmetDemand";
+import { IClientRealm } from "../../../../../types/global";
 
 export interface IStateProps {
   currentRegion: IRegionComposite | null;
@@ -31,18 +32,13 @@ export class RealmSummaryPanel extends React.Component<Props> {
       );
     }
 
-    const population =
-      currentRealm.population === RealmPopulation.na
-        ? RealmPopulation.high
-        : currentRealm.population;
-
     return (
       <>
         <Callout style={{ marginBottom: "10px" }}>
           <H5>Summary</H5>
           <p style={{ marginBottom: 0 }}>
-            {currentRegion.config_region.name.toUpperCase()}-{currentRealm.name} is a{" "}
-            <em>{population} population</em> realm
+            {currentRegion.config_region.name.toUpperCase()}-{currentRealm.realm.name.en_US} is a{" "}
+            <em>{currentRealm.realm.type.name} population</em> realm
           </p>
         </Callout>
         <Card>{<UnmetDemandRouteContainer />}</Card>

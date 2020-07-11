@@ -160,7 +160,7 @@ export class Realm extends React.Component<Props> {
 
     setTitle(
       `Redirecting to Auctions - ${currentRegion.config_region.name.toUpperCase()} ${
-        currentRealm.realm.name
+        currentRealm.realm.name.en_US
       }`,
     );
 

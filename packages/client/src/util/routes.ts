@@ -14,7 +14,7 @@ export const toUserPricelist = (
 
 export const toProfessionPricelist = (
   region: IRegionComposite,
-  realm: IRealm,
+  realm: IClientRealm,
   expansion: IExpansion,
   profession: IProfession,
   pricelist: IPricelistJson,
@@ -22,7 +22,7 @@ export const toProfessionPricelist = (
   const asDest = [
     "data",
     region.config_region.name,
-    realm.slug,
+    realm.realm.slug,
     expansion.name,
     "professions",
     profession.name,

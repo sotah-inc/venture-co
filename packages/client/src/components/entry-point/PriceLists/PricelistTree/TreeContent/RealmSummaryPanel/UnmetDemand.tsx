@@ -46,7 +46,7 @@ export interface IStateProps {
 export interface IRouteProps {
   browseToProfessionPricelist: (
     region: IRegionComposite,
-    realm: IStatusRealm,
+    realm: IClientRealm,
     expansion: IExpansion,
     profession: IProfession,
     pricelist: IPricelistJson,
@@ -209,7 +209,7 @@ export class UnmetDemand extends React.Component<Props, IState> {
       return (
         <Callout intent={Intent.SUCCESS}>
           All pricelists are fulfilled for {currentRegion.config_region.name.toUpperCase()}-
-          {currentRealm.realm.name}!
+          {currentRealm.realm.name.en_US}!
         </Callout>
       );
     }
@@ -236,7 +236,11 @@ export class UnmetDemand extends React.Component<Props, IState> {
       <>
         <Callout intent={Intent.PRIMARY} style={{ marginBottom: "10px" }}>
           These items have <strong>0</strong> auctions posted on{" "}
+<<<<<<< Updated upstream
           {currentRegion.config_region.name.toUpperCase()}-{currentRealm.realm.name}.
+=======
+          {currentRegion.config_region.name.toUpperCase()}-{currentRealm.realm.name.en_US}.
+>>>>>>> Stashed changes
         </Callout>
         <Navbar>
           <NavbarGroup align={Alignment.LEFT}>
