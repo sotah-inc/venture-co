@@ -149,7 +149,7 @@ export class Realm extends React.Component<Props> {
       );
     }
 
-    if (realm_slug !== currentRealm.slug) {
+    if (realm_slug !== currentRealm.realm.slug) {
       return (
         <NonIdealState
           title="Changing realm"
@@ -160,7 +160,7 @@ export class Realm extends React.Component<Props> {
 
     setTitle(
       `Redirecting to Auctions - ${currentRegion.config_region.name.toUpperCase()} ${
-        currentRealm.name
+        currentRealm.realm.name
       }`,
     );
 
