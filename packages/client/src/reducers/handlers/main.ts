@@ -71,7 +71,9 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
               ...v.connected_realm.realms.map<IClientRealm>(connectedRealmRealm => {
                 return {
                   connectedRealmId: v.connected_realm.id,
+                  population: v.connected_realm.population,
                   realm: connectedRealmRealm,
+                  realmModificationDates: v.modification_dates,
                   regionName: currentRegion.config_region.name,
                 };
               }),
@@ -176,7 +178,9 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
             ...connectedRealm.connected_realm.realms.map<IClientRealm>(v => {
               return {
                 connectedRealmId: connectedRealm.connected_realm.id,
+                population: connectedRealm.connected_realm.population,
                 realm: v,
+                realmModificationDates: connectedRealm.modification_dates,
                 regionName: state.currentRegion!.config_region.name,
               };
             }),
@@ -247,7 +251,9 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
                 if (connectedRealm.slug === action.payload.nextRealmSlug) {
                   return {
                     connectedRealmId: current.connected_realm.id,
+                    population: current.connected_realm.population,
                     realm: connectedRealm,
+                    realmModificationDates: current.modification_dates,
                     regionName: currentRegion.config_region.name,
                   };
                 }

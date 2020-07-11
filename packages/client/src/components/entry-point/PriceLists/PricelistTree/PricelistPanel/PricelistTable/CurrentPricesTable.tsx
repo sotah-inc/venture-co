@@ -8,7 +8,6 @@ import {
   IPricelistJson,
   IPriceListMap,
   IRegionComposite,
-  IStatusRealm,
   ItemId,
 } from "@sotah-inc/core";
 
@@ -16,6 +15,7 @@ import { ItemPopoverContainer } from "../../../../../../containers/util/ItemPopo
 import { FetchLevel } from "../../../../../../types/main";
 import { qualityToColorClass } from "../../../../../../util";
 import { Currency } from "../../../../../util";
+import { IClientRealm } from "../../../../../../types/global";
 
 export interface IStateProps {
   items: IItemsMap;
@@ -27,7 +27,7 @@ export interface IStateProps {
 export interface IOwnProps {
   list: IPricelistJson;
   region: IRegionComposite;
-  realm: IStatusRealm;
+  realm: IClientRealm;
 }
 
 type Props = Readonly<IStateProps & IOwnProps>;

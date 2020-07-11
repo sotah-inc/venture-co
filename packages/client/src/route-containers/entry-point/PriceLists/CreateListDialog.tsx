@@ -15,7 +15,7 @@ function RouteContainer({ router }: Props) {
         const urlParts: Array<[string, string]> = [
           ["data", "data"],
           ["[region_name]", region.config_region.name],
-          ["[realm_slug]", realm.slug],
+          ["[realm_slug]", realm.realm.slug],
           ["professions", "professions"],
         ];
 

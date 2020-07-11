@@ -9,7 +9,6 @@ import {
   IPricelistJson,
   IPricesFlagged,
   IRegionComposite,
-  IStatusRealm,
 } from "@sotah-inc/core";
 
 // tslint:disable-next-line:max-line-length
@@ -17,6 +16,7 @@ import { CurrentPricesTableContainer } from "../../../../../containers/entry-poi
 import { getItemFromPricelist } from "../../../../../util";
 import { ItemIcon } from "../../../../util/ItemIcon";
 import { PricelistHistoryGraph } from "../../../../util/PricelistHistoryGraph";
+import { IClientRealm } from "../../../../../types/global";
 
 export interface IStateProps {
   items: IItemsMap;
@@ -29,7 +29,7 @@ export interface IStateProps {
 export interface IOwnProps {
   list: IPricelistJson;
   region: IRegionComposite;
-  realm: IStatusRealm;
+  realm: IClientRealm;
 }
 
 type Props = Readonly<IStateProps & IOwnProps>;

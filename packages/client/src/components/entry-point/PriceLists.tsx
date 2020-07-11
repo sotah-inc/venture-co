@@ -7,7 +7,6 @@ import {
   IProfession,
   IProfessionPricelistJson,
   IRegionComposite,
-  IStatusRealm,
 } from "@sotah-inc/core";
 
 import { ILoadRealmEntrypoint } from "../../actions/main";
@@ -26,7 +25,7 @@ import { DeleteListDialogRouteContainer } from "../../route-containers/entry-poi
 import { EditListDialogRouteContainer } from "../../route-containers/entry-point/PriceLists/EditListDialog";
 // tslint:disable-next-line:max-line-length
 import { PricelistTreeRouteContainer } from "../../route-containers/entry-point/PriceLists/PricelistTree";
-import { IRealms, IRegions } from "../../types/global";
+import { IClientRealm, IRegions } from "../../types/global";
 import { AuthLevel, FetchLevel } from "../../types/main";
 import { setTitle } from "../../util";
 
@@ -37,7 +36,7 @@ export interface IStateProps {
   currentRegion: IRegionComposite | null;
   regions: IRegions;
   fetchRealmLevel: FetchLevel;
-  realms: IRealms;
+  realms: IClientRealm[];
   selectedProfession: IProfession | null;
   selectedExpansion: IExpansion | null;
   professions: IProfession[];
@@ -58,7 +57,7 @@ export interface IRouteProps {
   routeParams: IRouteParams;
   redirectToPricelist: (
     region: IRegionComposite,
-    realm: IStatusRealm,
+    realm: IClientRealm,
     profession: IProfession,
     expansion: IExpansion,
     pricelist: IPricelistJson,
@@ -127,7 +126,7 @@ export class PriceLists extends React.Component<Props> {
       return;
     }
 
-    if (currentRealm === null || currentRealm.slug !== realm_slug) {
+    if (currentRealm === null || currentRealm.realm.slug !== realm_slug) {
       return;
     }
 
@@ -351,7 +350,9 @@ export class PriceLists extends React.Component<Props> {
     if (selectedProfession === null) {
       if (selectedList === null) {
         setTitle(
-          `Professions - ${currentRegion.config_region.name.toUpperCase()} ${currentRealm.name}`,
+          `Professions - ${currentRegion.config_region.name.toUpperCase()} ${
+            currentRealm.realm.name.en_US
+          }`,
         );
 
         return;
@@ -361,7 +362,7 @@ export class PriceLists extends React.Component<Props> {
         selectedList.name,
         "Professions",
         currentRegion.config_region.name.toUpperCase(),
-        currentRealm.name,
+        currentRealm.realm.name.en_US,
       ].join(" - ");
       setTitle(userPricelistTitle);
 
@@ -373,7 +374,7 @@ export class PriceLists extends React.Component<Props> {
                 ${
                   selectedProfession.label
                 } - Professions - ${currentRegion.config_region.name.toUpperCase()} ${
-        currentRealm.name
+        currentRealm.realm.name.en_US
       }`);
 
       return;
@@ -383,7 +384,9 @@ export class PriceLists extends React.Component<Props> {
       setTitle(`
                 ${selectedExpansion.label} - ${
         selectedProfession.label
-      } - Professions - ${currentRegion.config_region.name.toUpperCase()} ${currentRealm.name}`);
+      } - Professions - ${currentRegion.config_region.name.toUpperCase()} ${
+        currentRealm.realm.name.en_US
+      }`);
 
       return;
     }
@@ -394,7 +397,7 @@ export class PriceLists extends React.Component<Props> {
       selectedProfession.label,
       "Professions",
       currentRegion.config_region.name.toUpperCase(),
-      currentRealm.name,
+      currentRealm.realm.name.en_US,
     ].join(" - ");
     setTitle(title);
   }

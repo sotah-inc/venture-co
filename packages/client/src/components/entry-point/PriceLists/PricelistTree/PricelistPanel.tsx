@@ -1,10 +1,11 @@
 import React from "react";
 
 import { Button, Classes, NonIdealState } from "@blueprintjs/core";
-import { IItem, IPricelistJson, IRegionComposite, IStatusRealm } from "@sotah-inc/core";
+import { IItem, IPricelistJson, IRegionComposite } from "@sotah-inc/core";
 
 // tslint:disable-next-line:max-line-length
 import { PricelistTableContainer } from "../../../../containers/entry-point/PriceLists/PricelistTree/PricelistPanel/PricelistTable";
+import { IClientRealm } from "../../../../types/global";
 
 export interface IStateProps {
   currentRegion: IRegionComposite | null;

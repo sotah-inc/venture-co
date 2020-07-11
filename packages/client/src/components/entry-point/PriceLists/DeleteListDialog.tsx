@@ -1,15 +1,9 @@
 import React from "react";
 
 import { Button, Callout, Dialog, Intent, IToastProps } from "@blueprintjs/core";
-import {
-  IExpansion,
-  IPricelistJson,
-  IProfession,
-  IRegionComposite,
-  IStatusRealm,
-} from "@sotah-inc/core";
+import { IExpansion, IPricelistJson, IProfession, IRegionComposite } from "@sotah-inc/core";
 
-import { IErrors, IProfile } from "../../../types/global";
+import { IClientRealm, IErrors, IProfile } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
 import { DialogActions, DialogBody } from "../../util";
 
@@ -35,7 +29,7 @@ export interface IDispatchProps {
 export interface IRouteProps {
   browseOnDeletion: (
     region: IRegionComposite,
-    realm: IStatusRealm,
+    realm: IClientRealm,
     pricelist: IPricelistJson | null,
     professionData?: {
       profession: IProfession;

@@ -8,11 +8,10 @@ import {
   IPricelistJson,
   IProfession,
   IRegionComposite,
-  IStatusRealm,
 } from "@sotah-inc/core";
 
 import { ListDialogContainer } from "../../../containers/entry-point/PriceLists/util/ListDialog";
-import { IFetchInfo, IProfile } from "../../../types/global";
+import { IClientRealm, IFetchInfo, IProfile } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
 import { IOnCompleteOptions } from "./util/ListDialog";
 
@@ -40,7 +39,7 @@ export interface IDispatchProps {
 export interface IRouteProps {
   browseOnCreate: (
     region: IRegionComposite,
-    realm: IStatusRealm,
+    realm: IClientRealm,
     pricelist: IPricelistJson,
     professionData?: {
       profession: IProfession;

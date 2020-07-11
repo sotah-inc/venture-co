@@ -1,5 +1,6 @@
 import {
   ConnectedRealmId,
+  IConnectedRealmComposite,
   IItemClass,
   IItemsMap,
   IItemSubClass,
@@ -10,6 +11,7 @@ import {
 } from "@sotah-inc/core";
 
 import { FetchLevel } from "./main";
+import { IConnectedRealmModificationDates } from "../../../core/src/types";
 
 export interface IRegions {
   [key: string]: IRegionComposite;
@@ -63,4 +65,6 @@ export interface IClientRealm {
   regionName: RegionName;
   connectedRealmId: ConnectedRealmId;
   realm: IRealm;
+  population: IConnectedRealmComposite["connected_realm"]["population"];
+  realmModificationDates: IConnectedRealmModificationDates;
 }

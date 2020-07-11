@@ -8,12 +8,11 @@ import {
   IProfession,
   IProfessionPricelistJson,
   IRegionComposite,
-  IStatusRealm,
 } from "@sotah-inc/core";
 
 // tslint:disable-next-line:max-line-length
 import { TreeContentContainer } from "../../../containers/entry-point/PriceLists/PricelistTree/TreeContent";
-import { IProfile } from "../../../types/global";
+import { IClientRealm, IProfile } from "../../../types/global";
 import { AuthLevel, FetchLevel } from "../../../types/main";
 import { getItemFromPricelist } from "../../../util";
 import { ProfessionIcon } from "../../util";
@@ -43,19 +42,19 @@ export interface IDispatchProps {
 export interface IRouteProps {
   browseToUserPricelist: (
     region: IRegionComposite,
-    realm: IStatusRealm,
+    realm: IClientRealm,
     pricelist: IPricelistJson,
   ) => void;
-  browseToExpansion: (region: IRegionComposite, realm: IStatusRealm, expansion: IExpansion) => void;
+  browseToExpansion: (region: IRegionComposite, realm: IClientRealm, expansion: IExpansion) => void;
   browseToProfession: (
     region: IRegionComposite,
-    realm: IStatusRealm,
+    realm: IClientRealm,
     expansion: IExpansion,
     profession: IProfession,
   ) => void;
   browseToProfessionPricelist: (
     region: IRegionComposite,
-    realm: IStatusRealm,
+    realm: IClientRealm,
     expansion: IExpansion,
     profession: IProfession,
     pricelist: IPricelistJson,
@@ -135,7 +134,9 @@ export class PricelistTree extends React.Component<Props, IState> {
       nodes.push({
         id: `top-summary`,
         isSelected: this.isSummarySelected(),
-        label: `${currentRegion.config_region.name.toUpperCase()}-${currentRealm!.name} Summary`,
+        label: `${currentRegion.config_region.name.toUpperCase()}-${
+          currentRealm.realm.name.en_US
+        } Summary`,
       });
     }
 

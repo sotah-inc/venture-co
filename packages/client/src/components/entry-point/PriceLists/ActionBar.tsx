@@ -17,14 +17,13 @@ import {
   IPricelistJson,
   IProfession,
   IRegionComposite,
-  IStatusRealm,
   UserLevel,
 } from "@sotah-inc/core";
 
 import { ExpansionToggleContainer } from "../../../containers/util/ExpansionToggle";
 import { RealmToggleContainer } from "../../../containers/util/RealmToggle";
 import { RegionToggleContainer } from "../../../containers/util/RegionToggle";
-import { IProfile } from "../../../types/global";
+import { IClientRealm, IProfile } from "../../../types/global";
 import { AuthLevel } from "../../../types/main";
 
 export interface IStateProps {
@@ -47,16 +46,16 @@ export interface IDispatchProps {
 }
 
 export interface IRouteProps {
-  browseToExpansion: (region: IRegionComposite, realm: IStatusRealm, expansion: IExpansion) => void;
+  browseToExpansion: (region: IRegionComposite, realm: IClientRealm, expansion: IExpansion) => void;
   browseToProfession: (
     region: IRegionComposite,
-    realm: IStatusRealm,
+    realm: IClientRealm,
     expansion: IExpansion,
     profession: IProfession,
   ) => void;
   browseToProfessionPricelist: (
     region: IRegionComposite,
-    realm: IStatusRealm,
+    realm: IClientRealm,
     expansion: IExpansion,
     profession: IProfession,
     list: IPricelistJson,
@@ -77,7 +76,7 @@ export class ActionBar extends React.Component<Props> {
             <ExpansionToggleContainer
               onExpansionChange={expansion => this.onExpansionChange(expansion)}
             />
-            <RealmToggleContainer onRealmChange={(v: IStatusRealm) => this.onRealmChange(v)} />
+            <RealmToggleContainer onRealmChange={(v: IClientRealm) => this.onRealmChange(v)} />
             <RegionToggleContainer />
           </ButtonGroup>
         </NavbarGroup>
@@ -107,7 +106,7 @@ export class ActionBar extends React.Component<Props> {
     browseToProfession(currentRegion, currentRealm, expansion, selectedProfession);
   }
 
-  private onRealmChange(realm: IStatusRealm) {
+  private onRealmChange(realm: IClientRealm) {
     const {
       browseToProfessionPricelist,
       browseToProfession,
