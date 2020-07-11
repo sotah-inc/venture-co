@@ -20,13 +20,13 @@ import {
   IProfession,
   IProfessionPricelistJson,
   IRegionComposite,
-  IStatusRealm,
   ItemId,
   ItemQuality,
   ProfessionName,
 } from "@sotah-inc/core";
 
 import { ItemPopoverContainer } from "../../../../../../containers/util/ItemPopover";
+import { IClientRealm } from "../../../../../../types/global";
 import { FetchLevel } from "../../../../../../types/main";
 import { getItemFromPricelist, qualityToColorClass } from "../../../../../../util";
 import { Pagination, ProfessionIcon } from "../../../../../util";
@@ -209,7 +209,7 @@ export class UnmetDemand extends React.Component<Props, IState> {
       return (
         <Callout intent={Intent.SUCCESS}>
           All pricelists are fulfilled for {currentRegion.config_region.name.toUpperCase()}-
-          {currentRealm.name}!
+          {currentRealm.realm.name}!
         </Callout>
       );
     }
@@ -236,7 +236,7 @@ export class UnmetDemand extends React.Component<Props, IState> {
       <>
         <Callout intent={Intent.PRIMARY} style={{ marginBottom: "10px" }}>
           These items have <strong>0</strong> auctions posted on{" "}
-          {currentRegion.config_region.name.toUpperCase()}-{currentRealm.name}.
+          {currentRegion.config_region.name.toUpperCase()}-{currentRealm.realm.name}.
         </Callout>
         <Navbar>
           <NavbarGroup align={Alignment.LEFT}>
