@@ -14,6 +14,10 @@ export type RegionId = number;
 
 export type RealmId = number;
 
+export enum RealmType {
+  Normal = "NORMAL",
+}
+
 export interface IRealm extends ILinksBase {
   id: RealmId;
   region: ILinksBase & {
@@ -26,7 +30,7 @@ export interface IRealm extends ILinksBase {
   locale: string;
   timezone: string;
   type: {
-    type: string;
+    type: RealmType;
     name: LocaleMapping;
   };
   is_tournament: boolean;
@@ -39,16 +43,27 @@ export interface IConnectedRealmModificationDates {
   pricelist_history_received: UnixTimestamp;
 }
 
+export enum RealmStatus {
+  Up = "UP",
+  Down = "DOWN",
+}
+
+export enum RealmPopulation {
+  Low = "LOW",
+  Medium = "MEDIUM",
+  High = "HIGH",
+}
+
 export interface IConnectedRealmComposite {
   connected_realm: ILinksBase & {
     id: ConnectedRealmId;
     has_queue: boolean;
     status: {
-      type: string;
+      type: RealmStatus;
       name: LocaleMapping;
     };
     population: {
-      type: string;
+      type: RealmPopulation;
       name: LocaleMapping;
     };
     realms: IRealm[];
