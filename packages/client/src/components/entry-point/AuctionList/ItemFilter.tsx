@@ -18,9 +18,10 @@ import {
   ItemRenderer,
   Suggest,
 } from "@blueprintjs/select";
-import { IItem, IRegionComposite, IStatusRealm } from "@sotah-inc/core";
+import { IItem, IRegionComposite } from "@sotah-inc/core";
 
 import { FetchLevel } from "../../../types/main";
+import { IClientRealm } from "../../../types/global";
 
 const ItemFilterSuggest = Suggest.ofType<IItem>();
 

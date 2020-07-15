@@ -2,17 +2,12 @@ import { IAuction } from "@sotah-inc/core";
 
 import {
   ACTIVESELECT_CHANGE,
-  ADD_AUCTIONS_QUERY,
   AuctionActions,
-  COUNT_CHANGE,
-  PAGE_CHANGE,
   RECEIVE_AUCTIONS,
-  RECEIVE_AUCTIONS_QUERY,
-  REFRESH_AUCTIONS_QUERY,
-  REMOVE_AUCTIONS_QUERY,
   REQUEST_AUCTIONS,
-  REQUEST_AUCTIONS_QUERY,
-  SORT_CHANGE,
+  SET_CURRENTPAGE_QUERYAUCTIONS,
+  SET_PERPAGE_QUERYAUCTIONS,
+  SET_SORT_QUERYAUCTIONS,
 } from "../actions/auction";
 import { defaultAuctionState, IAuctionState } from "../types/auction";
 import { FetchLevel } from "../types/main";
@@ -27,14 +22,18 @@ export const auction = (state: State | undefined, action: AuctionActions): State
 
   switch (action.type) {
     case REQUEST_AUCTIONS:
-      const requestFetchAuctionsLevel =
-        state.fetchAuctionsLevel === FetchLevel.initial
+      const requestAuctionsLevel =
+        state.auctionsResult.level === FetchLevel.initial
           ? FetchLevel.fetching
           : FetchLevel.refetching;
-      return { ...state, fetchAuctionsLevel: requestFetchAuctionsLevel };
+
+      return {
+        ...state,
+        auctionsResult: { ...state.auctionsResult, level: requestAuctionsLevel },
+      };
     case RECEIVE_AUCTIONS:
       if (action.payload === null) {
-        return { ...state, fetchAuctionsLevel: FetchLevel.failure };
+        return { ...state, auctionsResult: { ...state.auctionsResult, level: FetchLevel.failure } };
       }
 
       const auctions: IAuction[] = (() => {
@@ -47,31 +46,53 @@ export const auction = (state: State | undefined, action: AuctionActions): State
 
       return {
         ...state,
-        auctions: {
-          data: auctions,
-          items: action.payload.items,
+        auctionsResult: {
+          ...state.auctionsResult,
+          data: {
+            data: auctions,
+            items: action.payload.items,
+          },
+          level: FetchLevel.success,
         },
-        fetchAuctionsLevel: FetchLevel.success,
         relatedProfessionPricelists: action.payload.professionPricelists,
         totalResults: action.payload.total,
       };
-    case PAGE_CHANGE:
-      return { ...state, currentPage: action.payload };
-    case COUNT_CHANGE:
+    case SET_CURRENTPAGE_QUERYAUCTIONS:
+      return { ...state, options: { ...state.options, currentPage: action.payload } };
+    case SET_PERPAGE_QUERYAUCTIONS:
       return {
         ...state,
-        auctionsPerPage: action.payload,
-        currentPage: defaultAuctionState.currentPage,
+        options: {
+          ...state.options,
+          auctionsPerPage: action.payload,
+          currentPage: defaultAuctionState.options.currentPage,
+        },
       };
-    case SORT_CHANGE:
-      const { sortDirection, sortKind } = action.payload;
-      return { ...state, currentPage: defaultAuctionState.currentPage, sortDirection, sortKind };
+    case SET_SORT_QUERYAUCTIONS:
+      return {
+        ...state,
+        options: {
+          ...state.options,
+          currentPage: defaultAuctionState.options.currentPage,
+          ...action.payload,
+        },
+      };
     case REQUEST_AUCTIONS_QUERY:
-      const queryAuctionsLevel =
-        state.queryAuctionsLevel === FetchLevel.initial
+      const requestAuctionsQueryLevel =
+        state.options.queryAuctions.results.level === FetchLevel.initial
           ? FetchLevel.fetching
           : FetchLevel.refetching;
-      return { ...state, queryAuctionsLevel };
+
+      return {
+        ...state,
+        options: {
+          ...state.options,
+          queryAuctions: {
+            ...state.options.queryAuctions,
+            results: { ...state.options.queryAuctions.results, level: requestAuctionsQueryLevel },
+          },
+        },
+      };
     case RECEIVE_AUCTIONS_QUERY:
       if (action.payload === null) {
         return { ...state, queryAuctionsLevel: FetchLevel.failure };

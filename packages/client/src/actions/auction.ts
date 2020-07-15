@@ -1,19 +1,14 @@
-import {
-  IGetAuctionsResponse,
-  IItem,
-  IQueryAuctionsItem,
-  IQueryAuctionsResponse,
-} from "@sotah-inc/core";
+import { IGetAuctionsResponseData, ItemId, SortPerPage } from "@sotah-inc/core";
 import { Dispatch } from "redux";
 
-import { getAuctions, IGetAuctionsOptions, IGetAuctionsOptions, getAuctions } from "../api/data";
+import { getAuctions, IGetAuctionsOptions } from "../api/data";
 import { ISortChangeOptions } from "../types/auction";
 import { ActionsUnion, createAction } from "./helpers";
 
 export const REQUEST_AUCTIONS = "REQUEST_AUCTIONS";
 export const RECEIVE_AUCTIONS = "RECEIVE_AUCTIONS";
 const RequestAuctions = () => createAction(REQUEST_AUCTIONS);
-export const ReceiveAuctions = (payload: IGetAuctionsResponse | null) =>
+export const ReceiveAuctions = (payload: IGetAuctionsResponseData | null) =>
   createAction(RECEIVE_AUCTIONS, payload);
 type FetchAuctionsType = ReturnType<typeof RequestAuctions | typeof ReceiveAuctions>;
 export const FetchAuctions = (opts: IGetAuctionsOptions) => {
@@ -23,48 +18,27 @@ export const FetchAuctions = (opts: IGetAuctionsOptions) => {
   };
 };
 
-export const PAGE_CHANGE = "PAGE_CHANGE";
-export const PageChange = (payload: number) => createAction(PAGE_CHANGE, payload);
+export const ADD_ITEM_QUERYAUCTIONS = "ADD_ITEM_QUERYAUCTIONS";
+export const AddItemQueryAuctions = (payload: ItemId) =>
+  createAction(ADD_ITEM_QUERYAUCTIONS, payload);
 
-export const COUNT_CHANGE = "COUNT_CHANGE";
-export const CountChange = (payload: number) => createAction(COUNT_CHANGE, payload);
+export const SET_CURRENTPAGE_QUERYAUCTIONS = "SET_CURRENTPAGE_QUERYAUCTIONS";
+export const SetCurrentPageQueryAuctions = (payload: number) =>
+  createAction(SET_CURRENTPAGE_QUERYAUCTIONS, payload);
 
-export const SORT_CHANGE = "SORT_CHANGE";
-export const SortChange = (payload: ISortChangeOptions) => createAction(SORT_CHANGE, payload);
+export const SET_PERPAGE_QUERYAUCTIONS = "SET_PERPAGE_QUERYAUCTIONS";
+export const SetPerPageQueryAuctions = (payload: SortPerPage) =>
+  createAction(SET_PERPAGE_QUERYAUCTIONS, payload);
 
-export const ITEM_FILTER_CHANGE = "ITEM_FILTER_CHANGE";
-export const ItemFilterChange = (item: IItem | null) => createAction(ITEM_FILTER_CHANGE, item);
-
-export const REQUEST_AUCTIONS_QUERY = "REQUEST_AUCTIONS_QUERY";
-export const RECEIVE_AUCTIONS_QUERY = "RECEIVE_AUCTIONS_QUERY";
-const RequestAuctionsQuery = () => createAction(REQUEST_AUCTIONS_QUERY);
-export const ReceiveAuctionsQuery = (payload: IQueryAuctionsResponse | null) =>
-  createAction(RECEIVE_AUCTIONS_QUERY, payload);
-type QueryAuctionsType = ReturnType<typeof RequestAuctionsQuery | typeof ReceiveAuctionsQuery>;
-export const FetchAuctionsQuery = (opts: IGetAuctionsOptions) => {
-  return async (dispatch: Dispatch<QueryAuctionsType>) => {
-    dispatch(RequestAuctionsQuery());
-    dispatch(ReceiveAuctionsQuery(await getAuctions(opts)));
-  };
-};
-
-export const REFRESH_AUCTIONS_QUERY = "REFRESH_AUCTIONS_QUERY";
-export const RefreshAuctionsQuery = (payload: IQueryAuctionsItem[]) =>
-  createAction(REFRESH_AUCTIONS_QUERY, payload);
-
-export const ADD_AUCTIONS_QUERY = "ADD_AUCTIONS_QUERY";
-export const AddAuctionsQuery = (payload: IQueryAuctionsItem) =>
-  createAction(ADD_AUCTIONS_QUERY, payload);
-export const REMOVE_AUCTIONS_QUERY = "REMOVE_AUCTIONS_QUERY";
-export const RemoveAuctionsQuery = (payload: number) =>
-  createAction(REMOVE_AUCTIONS_QUERY, payload);
+export const SET_SORT_QUERYAUCTIONS = "SET_SORT_QUERYAUCTIONS";
+export const SetSortQueryAuctions = (payload: ISortChangeOptions) =>
+  createAction(SET_SORT_QUERYAUCTIONS, payload);
 
 export const ACTIVESELECT_CHANGE = "ACTIVESELECT_CHANGE";
 export const ActiveSelectChange = (payload: boolean) => createAction(ACTIVESELECT_CHANGE, payload);
 
 export interface ILoadAuctionListEntrypoint {
-  auctions: IGetAuctionsResponse | null;
-  auctionsQuery: IQueryAuctionsResponse | null;
+  auctions: IGetAuctionsResponseData | null;
 }
 
 export const LOAD_AUCTIONLIST_ENTRYPOINT = "LOAD_AUCTIONLIST_ENTRYPOINT";
@@ -73,18 +47,13 @@ export const LoadAuctionListEntrypoint = (payload: ILoadAuctionListEntrypoint) =
 
 export const AuctionActions = {
   ActiveSelectChange,
-  AddAuctionsQuery,
-  CountChange,
-  ItemFilterChange,
+  AddItemQueryAuctions,
   LoadAuctionListEntrypoint,
-  PageChange,
   ReceiveAuctions,
-  ReceiveAuctionsQuery,
-  RefreshAuctionsQuery,
-  RemoveAuctionsQuery,
   RequestAuctions,
-  RequestAuctionsQuery,
-  SortChange,
+  SetCurrentPageQueryAuctions,
+  SetPerPageQueryAuctions,
+  SetSortQueryAuctions,
 };
 
 export type AuctionActions = ActionsUnion<typeof AuctionActions>;
