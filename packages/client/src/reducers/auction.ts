@@ -1,4 +1,4 @@
-import { IAuction, IItem } from "@sotah-inc/core";
+import { IAuction } from "@sotah-inc/core";
 
 import {
   ACTIVESELECT_CHANGE,
@@ -7,10 +7,6 @@ import {
   RECEIVE_QUERYAUCTIONS,
   REQUEST_AUCTIONS,
   REQUEST_QUERYAUCTIONS,
-  SELECT_ITEM_QUERYAUCTIONS,
-  SET_CURRENTPAGE_QUERYAUCTIONS,
-  SET_PERPAGE_QUERYAUCTIONS,
-  SET_SORT_QUERYAUCTIONS,
 } from "../actions/auction";
 import { defaultAuctionState, IAuctionState } from "../types/auction";
 import { FetchLevel } from "../types/main";
@@ -60,26 +56,6 @@ export const auction = (state: State | undefined, action: AuctionActions): State
         relatedProfessionPricelists: action.payload.professionPricelists,
         totalResults: action.payload.total,
       };
-    case SET_CURRENTPAGE_QUERYAUCTIONS:
-      return { ...state, options: { ...state.options, currentPage: action.payload } };
-    case SET_PERPAGE_QUERYAUCTIONS:
-      return {
-        ...state,
-        options: {
-          ...state.options,
-          auctionsPerPage: action.payload,
-          currentPage: defaultAuctionState.options.currentPage,
-        },
-      };
-    case SET_SORT_QUERYAUCTIONS:
-      return {
-        ...state,
-        options: {
-          ...state.options,
-          currentPage: defaultAuctionState.options.currentPage,
-          ...action.payload,
-        },
-      };
     case REQUEST_QUERYAUCTIONS:
       const requestAuctionsQueryLevel =
         state.options.queryAuctions.results.level === FetchLevel.initial
@@ -124,36 +100,6 @@ export const auction = (state: State | undefined, action: AuctionActions): State
               data: action.payload.items,
               level: FetchLevel.success,
             },
-          },
-        },
-      };
-    case SELECT_ITEM_QUERYAUCTIONS:
-      const nextSelected = ((): IItem[] => {
-        const foundIndex = state.options.queryAuctions.selected.findIndex(
-          v => v.blizzard_meta.id === action.payload.blizzard_meta.id,
-        );
-
-        if (foundIndex === -1) {
-          return [action.payload];
-        }
-
-        if (foundIndex === 0) {
-          return [...state.options.queryAuctions.selected.slice(1)];
-        }
-
-        return [
-          ...state.options.queryAuctions.selected.slice(0, foundIndex),
-          ...state.options.queryAuctions.selected.slice(foundIndex + 1),
-        ];
-      })();
-
-      return {
-        ...state,
-        options: {
-          ...state.options,
-          queryAuctions: {
-            ...state.options.queryAuctions,
-            selected: nextSelected,
           },
         },
       };

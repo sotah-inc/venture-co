@@ -1,8 +1,14 @@
-import { IAuction } from "@sotah-inc/core";
+import { IAuction, IItem } from "@sotah-inc/core";
 
 import { AuctionActions } from "../../actions";
-import { LoadAuctionListEntrypoint } from "../../actions/auction";
-import { IAuctionState } from "../../types/auction";
+import {
+  LoadAuctionListEntrypoint,
+  SelectItemQueryAuctions,
+  SetCurrentPageQueryAuctions,
+  SetPerPageQueryAuctions,
+  SetSortQueryAuctions,
+} from "../../actions/auction";
+import { defaultAuctionState, IAuctionState } from "../../types/auction";
 import { FetchLevel } from "../../types/main";
 import { IKindHandlers, Runner } from "./index";
 
@@ -66,9 +72,80 @@ export const handlers: IKindHandlers<IAuctionState, AuctionActions> = {
     },
   },
   queryauctions: {
-    currentpage: {},
-    perpage: {},
-    sort: {},
+    currentpage: {
+      set: (
+        state: IAuctionState,
+        action: ReturnType<typeof SetCurrentPageQueryAuctions>,
+      ): IAuctionState => {
+        return { ...state, options: { ...state.options, currentPage: action.payload } };
+      },
+    },
+    item: {
+      select: (
+        state: IAuctionState,
+        action: ReturnType<typeof SelectItemQueryAuctions>,
+      ): IAuctionState => {
+        const nextSelected = ((): IItem[] => {
+          const foundIndex = state.options.queryAuctions.selected.findIndex(
+            v => v.blizzard_meta.id === action.payload.blizzard_meta.id,
+          );
+
+          if (foundIndex === -1) {
+            return [action.payload];
+          }
+
+          if (foundIndex === 0) {
+            return [...state.options.queryAuctions.selected.slice(1)];
+          }
+
+          return [
+            ...state.options.queryAuctions.selected.slice(0, foundIndex),
+            ...state.options.queryAuctions.selected.slice(foundIndex + 1),
+          ];
+        })();
+
+        return {
+          ...state,
+          options: {
+            ...state.options,
+            queryAuctions: {
+              ...state.options.queryAuctions,
+              selected: nextSelected,
+            },
+          },
+        };
+      },
+    },
+    perpage: {
+      set: (
+        state: IAuctionState,
+        action: ReturnType<typeof SetPerPageQueryAuctions>,
+      ): IAuctionState => {
+        return {
+          ...state,
+          options: {
+            ...state.options,
+            auctionsPerPage: action.payload,
+            currentPage: defaultAuctionState.options.currentPage,
+          },
+        };
+      },
+    },
+    sort: {
+      set: (
+        state: IAuctionState,
+        action: ReturnType<typeof SetSortQueryAuctions>,
+      ): IAuctionState => {
+        return {
+          ...state,
+          options: {
+            ...state.options,
+            currentPage: defaultAuctionState.options.currentPage,
+            ...action.payload,
+          },
+        };
+      },
+    },
   },
 };
 
