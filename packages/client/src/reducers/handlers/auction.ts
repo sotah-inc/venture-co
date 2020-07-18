@@ -65,6 +65,11 @@ export const handlers: IKindHandlers<IAuctionState, AuctionActions> = {
       },
     },
   },
+  queryauctions: {
+    currentpage: {},
+    perpage: {},
+    sort: {},
+  },
 };
 
 export const run: Runner<IAuctionState, AuctionActions> = (
@@ -75,20 +80,10 @@ export const run: Runner<IAuctionState, AuctionActions> = (
     .split("_")
     .reverse()
     .map(v => v.toLowerCase());
-  if (!(kind in handlers)) {
+  const taskHandler = handlers[kind]?.[verb]?.[task] ?? null;
+  if (taskHandler === null) {
     return state;
   }
-  const kindHandlers = handlers[kind];
-
-  if (!(verb in kindHandlers)) {
-    return state;
-  }
-  const verbHandlers = kindHandlers[verb];
-
-  if (!(task in verbHandlers)) {
-    return state;
-  }
-  const taskHandler = verbHandlers[task];
 
   return taskHandler(state, action);
 };

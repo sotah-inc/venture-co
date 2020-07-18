@@ -6,15 +6,15 @@ import { handlers as profileHandlers, run as profileRunner } from "./profile";
 import { handlers as workOrderHandlers, run as workOrderRunner } from "./work-order";
 
 export interface IKindHandlers<T, A> {
-  [key: string]: IVerbHandlers<T, A>;
+  [key: string]: IVerbHandlers<T, A> | undefined;
 }
 
 export interface IVerbHandlers<T, A> {
-  [key: string]: ITaskHandlers<T, A>;
+  [key: string]: ITaskHandlers<T, A> | undefined;
 }
 
 export interface ITaskHandlers<T, A> {
-  [key: string]: (state: T, action: A) => T;
+  [key: string]: Runner<T, A> | undefined;
 }
 
 export type Runner<T, A> = (x: T, y: A) => T;

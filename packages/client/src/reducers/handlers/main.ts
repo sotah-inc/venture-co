@@ -338,20 +338,10 @@ export const run: Runner<IMainState, MainActions> = (
     .split("_")
     .reverse()
     .map(v => v.toLowerCase());
-  if (!(kind in handlers)) {
+  const taskHandler = handlers[kind]?.[verb]?.[task] ?? null;
+  if (taskHandler === null) {
     return state;
   }
-  const kindHandlers = handlers[kind];
-
-  if (!(verb in kindHandlers)) {
-    return state;
-  }
-  const verbHandlers = kindHandlers[verb];
-
-  if (!(task in verbHandlers)) {
-    return state;
-  }
-  const taskHandler = verbHandlers[task];
 
   return taskHandler(state, action);
 };
