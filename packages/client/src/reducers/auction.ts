@@ -1,4 +1,4 @@
-import { IAuction } from "@sotah-inc/core";
+import { IAuction, ItemId } from "@sotah-inc/core";
 
 import {
   ACTIVESELECT_CHANGE,
@@ -7,6 +7,7 @@ import {
   RECEIVE_QUERYAUCTIONS,
   REQUEST_AUCTIONS,
   REQUEST_QUERYAUCTIONS,
+  SELECT_ITEM_QUERYAUCTIONS,
   SET_CURRENTPAGE_QUERYAUCTIONS,
   SET_PERPAGE_QUERYAUCTIONS,
   SET_SORT_QUERYAUCTIONS,
@@ -126,16 +127,28 @@ export const auction = (state: State | undefined, action: AuctionActions): State
           },
         },
       };
-    case ADD_AUCTIONS_QUERY:
+    case SELECT_ITEM_QUERYAUCTIONS:
+      const nextSelected: ItemId[] = (() => {
+        if (!state.options.queryAuctions.selected.includes(action.payload)) {
+          return [...state.options.queryAuctions.selected, action.payload];
+        }
+
+        const result = new Set(state.options.queryAuctions.selected);
+        result.delete(action.payload);
+
+        return Array.from(result.values());
+      })();
+
       return {
         ...state,
-        selectedQueryAuctionResults: [...state.selectedQueryAuctionResults, action.payload],
+        options: {
+          ...state.options,
+          queryAuctions: {
+            ...state.options.queryAuctions,
+            selected: nextSelected,
+          },
+        },
       };
-    case REMOVE_AUCTIONS_QUERY:
-      const removedSelectedQueryAuctionResults = state.selectedQueryAuctionResults.filter(
-        (_result, i) => i !== action.payload,
-      );
-      return { ...state, selectedQueryAuctionResults: removedSelectedQueryAuctionResults };
     case ACTIVESELECT_CHANGE:
       return { ...state, activeSelect: action.payload };
     default:

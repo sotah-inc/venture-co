@@ -36,9 +36,9 @@ export const FetchQueryAuctions = (query: string) => {
   };
 };
 
-export const ADD_ITEM_QUERYAUCTIONS = "ADD_ITEM_QUERYAUCTIONS";
-export const AddItemQueryAuctions = (payload: ItemId) =>
-  createAction(ADD_ITEM_QUERYAUCTIONS, payload);
+export const SELECT_ITEM_QUERYAUCTIONS = "SELECT_ITEM_QUERYAUCTIONS";
+export const SelectItemQueryAuctions = (payload: ItemId) =>
+  createAction(SELECT_ITEM_QUERYAUCTIONS, payload);
 
 export const SET_CURRENTPAGE_QUERYAUCTIONS = "SET_CURRENTPAGE_QUERYAUCTIONS";
 export const SetCurrentPageQueryAuctions = (payload: number) =>
@@ -65,12 +65,12 @@ export const LoadAuctionListEntrypoint = (payload: ILoadAuctionListEntrypoint) =
 
 export const AuctionActions = {
   ActiveSelectChange,
-  AddItemQueryAuctions,
   LoadAuctionListEntrypoint,
   ReceiveAuctions,
   ReceiveQueryAuctions,
   RequestAuctions,
   RequestQueryAuctions,
+  SelectItemQueryAuctions,
   SetCurrentPageQueryAuctions,
   SetPerPageQueryAuctions,
   SetSortQueryAuctions,
