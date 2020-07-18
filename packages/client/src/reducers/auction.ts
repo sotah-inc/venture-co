@@ -4,7 +4,9 @@ import {
   ACTIVESELECT_CHANGE,
   AuctionActions,
   RECEIVE_AUCTIONS,
+  RECEIVE_QUERYAUCTIONS,
   REQUEST_AUCTIONS,
+  REQUEST_QUERYAUCTIONS,
   SET_CURRENTPAGE_QUERYAUCTIONS,
   SET_PERPAGE_QUERYAUCTIONS,
   SET_SORT_QUERYAUCTIONS,
@@ -77,7 +79,7 @@ export const auction = (state: State | undefined, action: AuctionActions): State
           ...action.payload,
         },
       };
-    case REQUEST_AUCTIONS_QUERY:
+    case REQUEST_QUERYAUCTIONS:
       const requestAuctionsQueryLevel =
         state.options.queryAuctions.results.level === FetchLevel.initial
           ? FetchLevel.fetching
@@ -93,20 +95,36 @@ export const auction = (state: State | undefined, action: AuctionActions): State
           },
         },
       };
-    case RECEIVE_AUCTIONS_QUERY:
+    case RECEIVE_QUERYAUCTIONS:
       if (action.payload === null) {
-        return { ...state, queryAuctionsLevel: FetchLevel.failure };
+        return {
+          ...state,
+          options: {
+            ...state.options,
+            queryAuctions: {
+              ...state.options.queryAuctions,
+              results: {
+                ...state.options.queryAuctions.results,
+                level: FetchLevel.failure,
+              },
+            },
+          },
+        };
       }
 
       return {
         ...state,
-        queryAuctionResults: action.payload.items,
-        queryAuctionsLevel: FetchLevel.success,
-      };
-    case REFRESH_AUCTIONS_QUERY:
-      return {
-        ...state,
-        queryAuctionResults: action.payload,
+        options: {
+          ...state.options,
+          queryAuctions: {
+            ...state.options.queryAuctions,
+            results: {
+              ...state.options.queryAuctions.results,
+              data: action.payload.items,
+              level: FetchLevel.success,
+            },
+          },
+        },
       };
     case ADD_AUCTIONS_QUERY:
       return {
