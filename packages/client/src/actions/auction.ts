@@ -57,6 +57,7 @@ export const ActiveSelectChange = (payload: boolean) => createAction(ACTIVESELEC
 
 export interface ILoadAuctionListEntrypoint {
   auctions: IGetAuctionsResponseData | null;
+  querySelected: IItem[];
 }
 
 export const LOAD_AUCTIONLIST_ENTRYPOINT = "LOAD_AUCTIONLIST_ENTRYPOINT";

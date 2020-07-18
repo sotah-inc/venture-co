@@ -22,19 +22,43 @@ export const handlers: IKindHandlers<IAuctionState, AuctionActions> = {
           return action.payload.auctions.auctions;
         })();
 
-        if (action.payload.auctionsQuery === null) {
-          return { ...state, queryAuctionsLevel: FetchLevel.failure };
+        if (action.payload.querySelected === null) {
+          return {
+            ...state,
+            options: {
+              ...state.options,
+              queryAuctions: {
+                ...state.options.queryAuctions,
+                results: {
+                  ...state.options.queryAuctions.results,
+                  level: FetchLevel.failure,
+                },
+              },
+            },
+          };
         }
 
         return {
           ...state,
-          auctions: {
-            data: auctions,
-            items: action.payload.auctions.items,
+          auctionsResult: {
+            ...state.auctionsResult,
+            data: {
+              data: auctions,
+              items: action.payload.auctions.items,
+            },
+            level: FetchLevel.success,
           },
-          fetchAuctionsLevel: FetchLevel.success,
-          queryAuctionResults: action.payload.auctionsQuery.items,
-          queryAuctionsLevel: FetchLevel.success,
+          options: {
+            ...state.options,
+            queryAuctions: {
+              ...state.options.queryAuctions,
+              results: {
+                ...state.options.queryAuctions.results,
+                level: FetchLevel.success,
+              },
+              selected: action.payload.querySelected,
+            },
+          },
           relatedProfessionPricelists: action.payload.auctions.professionPricelists,
           totalResults: action.payload.auctions.total,
         };
