@@ -1,7 +1,7 @@
 import {
   IGetAuctionsResponseData,
+  IItem,
   IQueryItemsResponseData,
-  ItemId,
   SortPerPage,
 } from "@sotah-inc/core";
 import { Dispatch } from "redux";
@@ -37,7 +37,7 @@ export const FetchQueryAuctions = (query: string) => {
 };
 
 export const SELECT_ITEM_QUERYAUCTIONS = "SELECT_ITEM_QUERYAUCTIONS";
-export const SelectItemQueryAuctions = (payload: ItemId) =>
+export const SelectItemQueryAuctions = (payload: IItem) =>
   createAction(SELECT_ITEM_QUERYAUCTIONS, payload);
 
 export const SET_CURRENTPAGE_QUERYAUCTIONS = "SET_CURRENTPAGE_QUERYAUCTIONS";

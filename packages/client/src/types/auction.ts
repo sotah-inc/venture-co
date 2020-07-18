@@ -1,8 +1,8 @@
 import {
   IAuction,
+  IItem,
   IProfessionPricelistJson,
   IQueryItemsItem,
-  ItemId,
   SortDirection,
   SortKind,
   SortPerPage,
@@ -20,7 +20,7 @@ export interface IAuctionState {
     sortKind: SortKind;
     queryAuctions: {
       results: IFetchData<IQueryItemsItem[]>;
-      selected: ItemId[];
+      selected: IItem[];
     };
   };
   totalResults: number;

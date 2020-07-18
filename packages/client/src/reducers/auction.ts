@@ -1,4 +1,4 @@
-import { IAuction, ItemId } from "@sotah-inc/core";
+import { IAuction, IItem } from "@sotah-inc/core";
 
 import {
   ACTIVESELECT_CHANGE,
@@ -128,15 +128,23 @@ export const auction = (state: State | undefined, action: AuctionActions): State
         },
       };
     case SELECT_ITEM_QUERYAUCTIONS:
-      const nextSelected: ItemId[] = (() => {
-        if (!state.options.queryAuctions.selected.includes(action.payload)) {
-          return [...state.options.queryAuctions.selected, action.payload];
+      const nextSelected = ((): IItem[] => {
+        const foundIndex = state.options.queryAuctions.selected.findIndex(
+          v => v.blizzard_meta.id === action.payload.blizzard_meta.id,
+        );
+
+        if (foundIndex === -1) {
+          return [action.payload];
         }
 
-        const result = new Set(state.options.queryAuctions.selected);
-        result.delete(action.payload);
+        if (foundIndex === 0) {
+          return [...state.options.queryAuctions.selected.slice(1)];
+        }
 
-        return Array.from(result.values());
+        return [
+          ...state.options.queryAuctions.selected.slice(0, foundIndex),
+          ...state.options.queryAuctions.selected.slice(foundIndex + 1),
+        ];
       })();
 
       return {
