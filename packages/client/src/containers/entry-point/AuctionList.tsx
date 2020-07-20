@@ -1,6 +1,10 @@
 import { connect } from "react-redux";
 
-import { FetchAuctions, LoadAuctionListEntrypoint, PageChange } from "../../actions/auction";
+import {
+  FetchAuctions,
+  LoadAuctionListEntrypoint,
+  SetCurrentPageQueryAuctions,
+} from "../../actions/auction";
 import { LoadRealmEntrypoint } from "../../actions/main";
 import {
   AuctionList,
@@ -13,44 +17,28 @@ import { IStoreState } from "../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const {
-    currentRegion,
-    currentRealm,
-    authLevel,
     fetchUserPreferencesLevel,
     userPreferences,
     fetchRealmLevel,
     realms,
+    currentRegion,
+    currentRealm,
+    authLevel,
     regions,
   } = state.Main;
-  const {
-    fetchAuctionsLevel,
-    auctions,
-    currentPage,
-    auctionsPerPage,
-    totalResults,
-    sortDirection,
-    sortKind,
-    queryAuctionsLevel,
-    selectedQueryAuctionResults,
-    activeSelect,
-  } = state.Auction;
+  const { options, auctionsResult, totalResults, activeSelect } = state.Auction;
+
   return {
     activeSelect,
-    auctions: auctions.data,
-    auctionsPerPage,
+    auctionsResult,
     authLevel,
-    currentPage,
     currentRealm,
     currentRegion,
-    fetchAuctionsLevel,
     fetchRealmLevel,
     fetchUserPreferencesLevel,
-    queryAuctionsLevel,
+    options,
     realms,
     regions,
-    selectedQueryAuctionResults,
-    sortDirection,
-    sortKind,
     totalResults,
     userPreferences,
   };
@@ -60,7 +48,7 @@ const mapDispatchToProps: IDispatchProps = {
   loadAuctionListEntrypoint: LoadAuctionListEntrypoint,
   loadRealmEntrypoint: LoadRealmEntrypoint,
   refreshAuctions: FetchAuctions,
-  setCurrentPage: PageChange,
+  setCurrentPage: SetCurrentPageQueryAuctions,
 };
 
 export const AuctionsListContainer = connect<
