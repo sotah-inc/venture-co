@@ -9,16 +9,7 @@ import {
   NonIdealState,
   Spinner,
 } from "@blueprintjs/core";
-import {
-  IAuction,
-  IPreferenceJson,
-  IQueryItemsItem,
-  IRegionComposite,
-  IStatusRealm,
-  ItemId,
-  SortDirection,
-  SortKind,
-} from "@sotah-inc/core";
+import { IAuction, IPreferenceJson, IRegionComposite, SortPerPage } from "@sotah-inc/core";
 import React from "react";
 import { ILoadAuctionListEntrypoint } from "../../actions/auction";
 import { ILoadRealmEntrypoint } from "../../actions/main";
@@ -31,7 +22,8 @@ import { RealmToggleContainer } from "../../containers/util/RealmToggle";
 import { RegionToggleContainer } from "../../containers/util/RegionToggle";
 // tslint:disable-next-line:max-line-length
 import { AuctionTableRouteContainer } from "../../route-containers/entry-point/AuctionList/AuctionTable";
-import { IRealms, IRegions } from "../../types/global";
+import { AuctionsOptions } from "../../types/auction";
+import { IClientRealm, IFetchData, IItemsData, IRegions } from "../../types/global";
 import { AuthLevel, FetchLevel } from "../../types/main";
 import { setTitle } from "../../util";
 import { LastModified, Pagination } from "../util";
@@ -39,20 +31,15 @@ import { LastModified, Pagination } from "../util";
 type ListAuction = IAuction | null;
 
 export interface IStateProps {
-  fetchAuctionsLevel: FetchLevel;
-  auctions: ListAuction[];
-  currentPage: number;
-  auctionsPerPage: number;
+  options: AuctionsOptions;
+  auctionsResult: IFetchData<IItemsData<ListAuction[]>>;
   totalResults: number;
-  sortKind: SortKind;
-  sortDirection: SortDirection;
-  queryAuctionsLevel: FetchLevel;
-  selectedQueryAuctionResults: IQueryItemsItem[];
   fetchUserPreferencesLevel: FetchLevel;
   userPreferences: IPreferenceJson | null;
   activeSelect: boolean;
+
   fetchRealmLevel: FetchLevel;
-  realms: IRealms;
+  realms: IClientRealm[];
   currentRegion: IRegionComposite | null;
   currentRealm: IClientRealm | null;
   authLevel: AuthLevel;
@@ -68,7 +55,7 @@ export interface IDispatchProps {
 
 export interface IRouteProps {
   routeParams: IRouteParams;
-  browseToRealmAuctions: (region: IRegionComposite, realm: IStatusRealm) => void;
+  browseToRealmAuctions: (region: IRegionComposite, realm: IClientRealm) => void;
 }
 
 export interface IRouteParams {
@@ -120,7 +107,7 @@ export class AuctionList extends React.Component<Props> {
       return;
     }
 
-    if (currentRealm === null || currentRealm.slug !== realm_slug) {
+    if (currentRealm === null || currentRealm.realm.slug !== realm_slug) {
       return;
     }
 
@@ -157,37 +144,29 @@ export class AuctionList extends React.Component<Props> {
       return;
     }
 
-    setTitle(`Auctions - ${currentRegion.config_region.name.toUpperCase()} ${currentRealm.name}`);
+    setTitle(
+      `Auctions - ${currentRegion.config_region.name.toUpperCase()} ${
+        currentRealm.realm.name.en_US
+      }`,
+    );
   }
 
   private refreshAuctions() {
-    const {
-      selectedQueryAuctionResults,
-      refreshAuctions,
-      currentRealm,
-      currentRegion,
-      auctionsPerPage,
-      currentPage,
-      sortDirection,
-      sortKind,
-    } = this.props;
+    const { options, refreshAuctions, currentRealm, currentRegion } = this.props;
 
     if (currentRegion === null || currentRealm === null) {
       return;
     }
 
-    const itemFilters: ItemId[] = selectedQueryAuctionResults
-      .filter(v => v.item !== null)
-      .map(v => v.item!.blizzard_meta.id);
     refreshAuctions({
-      realmSlug: currentRealm.slug,
+      connectedRealmId: currentRealm.connectedRealmId,
       regionName: currentRegion.config_region.name,
       request: {
-        count: auctionsPerPage,
-        itemFilters,
-        page: currentPage,
-        sortDirection,
-        sortKind,
+        count: options.auctionsPerPage,
+        itemFilters: options.queryAuctions.selected.map(v => v.blizzard_meta.id),
+        page: options.currentPage,
+        sortDirection: options.sortDirection,
+        sortKind: options.sortKind,
       },
     });
   }
@@ -274,7 +253,7 @@ export class AuctionList extends React.Component<Props> {
       );
     }
 
-    if (realm_slug !== currentRealm.slug) {
+    if (realm_slug !== currentRealm.realm.slug) {
       return (
         <NonIdealState
           title="Changing realm"
@@ -287,7 +266,7 @@ export class AuctionList extends React.Component<Props> {
   }
 
   private renderContent() {
-    const { currentRegion, currentRealm } = this.props;
+    const { currentRegion, currentRealm, auctionsResult } = this.props;
 
     if (currentRegion === null) {
       return (
@@ -307,7 +286,7 @@ export class AuctionList extends React.Component<Props> {
       );
     }
 
-    switch (this.props.fetchAuctionsLevel) {
+    switch (auctionsResult.level) {
       case FetchLevel.initial:
         return (
           <NonIdealState
@@ -339,50 +318,41 @@ export class AuctionList extends React.Component<Props> {
   }
 
   private refreshAuctionsTrigger(prevProps: Props) {
-    const {
-      fetchAuctionsLevel,
-      currentRegion,
-      currentRealm,
-      currentPage,
-      auctionsPerPage,
-      sortDirection,
-      selectedQueryAuctionResults,
-      activeSelect,
-    } = this.props;
+    const { currentRegion, currentRealm, activeSelect, auctionsResult, options } = this.props;
 
     if (currentRegion === null || currentRealm === null) {
       return;
     }
 
-    if (fetchAuctionsLevel !== FetchLevel.success) {
+    if (auctionsResult.level !== FetchLevel.success) {
       return;
     }
 
     const didOptionsChange: boolean = (() => {
-      if (currentPage !== prevProps.currentPage) {
+      if (options.currentPage !== prevProps.options.currentPage) {
         return true;
       }
 
-      if (auctionsPerPage !== prevProps.auctionsPerPage) {
+      if (options.auctionsPerPage !== prevProps.options.auctionsPerPage) {
         return true;
       }
 
-      if (prevProps.sortDirection !== sortDirection) {
+      if (options.sortDirection !== prevProps.options.sortDirection) {
         return true;
       }
 
-      if (prevProps.sortKind !== this.props.sortKind) {
+      if (options.sortKind !== prevProps.options.sortKind) {
         return true;
       }
 
       const didSelectedAuctionsQueryChange =
         activeSelect &&
-        prevProps.selectedQueryAuctionResults.length !== selectedQueryAuctionResults.length;
+        options.queryAuctions.selected.length !== prevProps.options.queryAuctions.selected.length;
       if (didSelectedAuctionsQueryChange) {
         return true;
       }
 
-      if (prevProps.activeSelect !== activeSelect) {
+      if (activeSelect !== prevProps.activeSelect) {
         return true;
       }
 
@@ -397,8 +367,9 @@ export class AuctionList extends React.Component<Props> {
   }
 
   private renderRefetchingSpinner() {
-    const { fetchAuctionsLevel } = this.props;
-    if (fetchAuctionsLevel !== FetchLevel.refetching) {
+    const { auctionsResult } = this.props;
+
+    if (auctionsResult.level !== FetchLevel.refetching) {
       return null;
     }
 
@@ -408,17 +379,24 @@ export class AuctionList extends React.Component<Props> {
   private renderAuctionsFooter() {
     const { currentRealm } = this.props;
 
+    if (currentRealm === null) {
+      return null;
+    }
+
     return (
       <>
         <LastModified
-          targetDate={new Date(currentRealm!.realm_modification_dates.downloaded * 1000)}
+          targetDate={new Date(currentRealm.realmModificationDates.downloaded * 1000)}
         />
       </>
     );
   }
 
   private getPageCount() {
-    const { totalResults, auctionsPerPage } = this.props;
+    const {
+      totalResults,
+      options: { auctionsPerPage },
+    } = this.props;
 
     let pageCount = 0;
     if (totalResults > 0) {
@@ -432,7 +410,7 @@ export class AuctionList extends React.Component<Props> {
     return pageCount;
   }
 
-  private onRealmChange(realm: IStatusRealm) {
+  private onRealmChange(realm: IClientRealm) {
     const { browseToRealmAuctions, currentRegion } = this.props;
 
     if (currentRegion === null) {
@@ -443,12 +421,22 @@ export class AuctionList extends React.Component<Props> {
   }
 
   private renderAuctions() {
-    const { auctions, totalResults, auctionsPerPage, currentPage, setCurrentPage } = this.props;
+    const {
+      totalResults,
+      setCurrentPage,
+      options,
+      auctionsResult: {
+        data: { data: auctions },
+      },
+    } = this.props;
 
     // optionally appending blank auction lines
     if (totalResults > 0) {
-      if (auctionsPerPage === 10 && auctions.length < auctionsPerPage) {
-        for (let i = auctions.length; i < auctionsPerPage; i++) {
+      if (
+        options.auctionsPerPage === SortPerPage.Ten &&
+        auctions.length < options.auctionsPerPage
+      ) {
+        for (let i = auctions.length; i < options.auctionsPerPage; i++) {
           auctions[i] = null;
         }
       }
@@ -465,7 +453,7 @@ export class AuctionList extends React.Component<Props> {
             <NavbarDivider />
             <Pagination
               pageCount={pageCount}
-              currentPage={currentPage}
+              currentPage={options.currentPage}
               pagesShown={5}
               onPageChange={setCurrentPage}
             />
@@ -473,14 +461,14 @@ export class AuctionList extends React.Component<Props> {
           </NavbarGroup>
           <NavbarGroup align={Alignment.RIGHT}>
             <ButtonGroup>
-              <RealmToggleContainer onRealmChange={(v: IStatusRealm) => this.onRealmChange(v)} />
+              <RealmToggleContainer onRealmChange={(v: IClientRealm) => this.onRealmChange(v)} />
               <RegionToggleContainer />
             </ButtonGroup>
           </NavbarGroup>
         </Navbar>
         <AuctionTableRouteContainer />
         <p style={{ textAlign: "center", margin: "10px auto" }}>
-          Page {currentPage + 1} of {pageCount + 1}
+          Page {options.currentPage + 1} of {pageCount + 1}
         </p>
         {this.renderAuctionsFooter()}
       </>

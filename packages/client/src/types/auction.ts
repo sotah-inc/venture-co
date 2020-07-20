@@ -13,19 +13,21 @@ import { FetchLevel } from "./main";
 
 export interface IAuctionState {
   auctionsResult: IFetchData<IItemsData<IAuction[]>>;
-  options: {
-    currentPage: number;
-    auctionsPerPage: SortPerPage;
-    sortDirection: SortDirection;
-    sortKind: SortKind;
-    queryAuctions: {
-      results: IFetchData<IQueryItemsItem[]>;
-      selected: IItem[];
-    };
-  };
+  options: AuctionsOptions;
   totalResults: number;
   activeSelect: boolean;
   relatedProfessionPricelists: IProfessionPricelistJson[];
+}
+
+export interface AuctionsOptions {
+  currentPage: number;
+  auctionsPerPage: SortPerPage;
+  sortDirection: SortDirection;
+  sortKind: SortKind;
+  queryAuctions: {
+    results: IFetchData<IQueryItemsItem[]>;
+    selected: IItem[];
+  };
 }
 
 export interface ISortChangeOptions {
