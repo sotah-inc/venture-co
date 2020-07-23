@@ -20,8 +20,8 @@ import {
 } from "@blueprintjs/select";
 import { IItem, IRegionComposite } from "@sotah-inc/core";
 
-import { FetchLevel } from "../../../types/main";
 import { IClientRealm } from "../../../types/global";
+import { FetchLevel } from "../../../types/main";
 
 const ItemFilterSuggest = Suggest.ofType<IItem>();
 
