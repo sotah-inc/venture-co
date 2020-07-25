@@ -23,10 +23,12 @@ import {
   ItemRenderer,
   Suggest,
 } from "@blueprintjs/select";
-import { IItem, IQueryItemsItem, IRegionComposite, IStatusRealm } from "@sotah-inc/core";
+import { IItem, IQueryItemsItem, IRegionComposite } from "@sotah-inc/core";
 import { debounce } from "lodash";
 
 import { IGetAuctionsOptions } from "../../../api/data";
+import { AuctionsOptions } from "../../../types/auction";
+import { IClientRealm } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
 import {
   getItemIconUrl,
@@ -34,20 +36,19 @@ import {
   getSelectedResultIndex,
   qualityToColorClass,
 } from "../../../util";
+import { ItemInput } from "../../util";
 
 const QueryAuctionResultSuggest = Suggest.ofType<IQueryItemsItem>();
 
 export interface IStateProps {
-  queryAuctionsLevel: FetchLevel;
+  queryAuctionsOptions: AuctionsOptions["queryAuctions"];
   currentRegion: IRegionComposite | null;
   currentRealm: IClientRealm | null;
-  items: IQueryItemsItem[];
-  selectedItems: IQueryItemsItem[];
   activeSelect: boolean;
 }
 
 export interface IDispatchProps {
-  onAuctionsQuerySelect: (aqResult: IQueryItemsItem) => void;
+  onAuctionsQuerySelect: (item: IItem) => void;
   onAuctionsQueryDeselect: (index: number) => void;
   fetchAuctionsQuery: (opts: IGetAuctionsOptions) => void;
   activeSelectChange: (v: boolean) => void;
@@ -72,6 +73,7 @@ export class QueryAuctionsFilter extends React.Component<Props> {
           <>
             <Navbar>
               <NavbarGroup align={Alignment.LEFT}>
+                <ItemInput onSelect={v => this.onItemSelect(v)} />
                 <QueryAuctionResultSuggest
                   inputValueRenderer={this.inputValueRenderer}
                   itemRenderer={this.itemRenderer}
@@ -218,16 +220,16 @@ export class QueryAuctionsFilter extends React.Component<Props> {
     );
   };
 
-  private onItemSelect(result: IQueryItemsItem) {
+  private onItemSelect(item: IItem) {
     const { onAuctionsQueryDeselect, onAuctionsQuerySelect } = this.props;
 
-    if (this.isResultSelected(result)) {
-      onAuctionsQueryDeselect(this.getSelectedResultIndex(result));
+    if (this.isResultSelected(item)) {
+      onAuctionsQueryDeselect(this.getSelectedResultIndex(item));
 
       return;
     }
 
-    onAuctionsQuerySelect(result);
+    onAuctionsQuerySelect(item);
   }
 
   private triggerQuery(filterValue: string) {
@@ -244,13 +246,16 @@ export class QueryAuctionsFilter extends React.Component<Props> {
     });
   }
 
-  private isResultSelected(result: IQueryItemsItem) {
-    return this.getSelectedResultIndex(result) > -1;
+  private isResultSelected(item: IItem) {
+    return this.getSelectedResultIndex(item) > -1;
   }
 
-  private getSelectedResultIndex(result: IQueryItemsItem): number {
-    const selectedItems = this.props.selectedItems;
-    return getSelectedResultIndex(result, selectedItems);
+  private getSelectedResultIndex(item: IItem): number {
+    const {
+      queryAuctionsOptions: { selected },
+    } = this.props;
+
+    return selected.map(v => v.blizzard_meta.id).indexOf(item.blizzard_meta.id);
   }
 
   private inputValueRenderer(result: IQueryItemsItem): string {
