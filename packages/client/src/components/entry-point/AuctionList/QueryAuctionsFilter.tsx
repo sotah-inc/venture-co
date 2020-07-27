@@ -30,18 +30,13 @@ import { IGetAuctionsOptions } from "../../../api/data";
 import { AuctionsOptions } from "../../../types/auction";
 import { IClientRealm } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
-import {
-  getItemIconUrl,
-  getItemTextValue,
-  getSelectedResultIndex,
-  qualityToColorClass,
-} from "../../../util";
+import { getItemIconUrl, getItemTextValue, qualityToColorClass } from "../../../util";
 import { ItemInput } from "../../util";
 
 const QueryAuctionResultSuggest = Suggest.ofType<IQueryItemsItem>();
 
 export interface IStateProps {
-  queryAuctionsOptions: AuctionsOptions["queryAuctions"];
+  queryAuctionsOptions: AuctionsOptions;
   currentRegion: IRegionComposite | null;
   currentRealm: IClientRealm | null;
   activeSelect: boolean;
@@ -64,7 +59,15 @@ export class QueryAuctionsFilter extends React.Component<Props> {
   );
 
   public render() {
-    const { queryAuctionsLevel, items, activeSelect, selectedItems } = this.props;
+    const {
+      activeSelect,
+      queryAuctionsOptions: {
+        queryAuctions: {
+          results: { level: queryAuctionsLevel, data: queryResults },
+          selected: selectedItems,
+        },
+      },
+    } = this.props;
 
     switch (queryAuctionsLevel) {
       case FetchLevel.success:
@@ -77,7 +80,7 @@ export class QueryAuctionsFilter extends React.Component<Props> {
                 <QueryAuctionResultSuggest
                   inputValueRenderer={this.inputValueRenderer}
                   itemRenderer={this.itemRenderer}
-                  items={items}
+                  items={queryResults}
                   onItemSelect={v => this.onItemSelect(v)}
                   closeOnSelect={false}
                   onQueryChange={this.debouncedTriggerQuery}
@@ -220,8 +223,12 @@ export class QueryAuctionsFilter extends React.Component<Props> {
     );
   };
 
-  private onItemSelect(item: IItem) {
+  private onItemSelect({ item }: IQueryItemsItem) {
     const { onAuctionsQueryDeselect, onAuctionsQuerySelect } = this.props;
+
+    if (item === null) {
+      return;
+    }
 
     if (this.isResultSelected(item)) {
       onAuctionsQueryDeselect(this.getSelectedResultIndex(item));
@@ -233,16 +240,22 @@ export class QueryAuctionsFilter extends React.Component<Props> {
   }
 
   private triggerQuery(filterValue: string) {
-    const { fetchAuctionsQuery, currentRealm, currentRegion } = this.props;
+    const { fetchAuctionsQuery, currentRealm, currentRegion, queryAuctionsOptions } = this.props;
 
     if (currentRegion === null || currentRealm === null) {
       return;
     }
 
     fetchAuctionsQuery({
-      query: filterValue,
-      realmSlug: currentRealm.slug,
+      connectedRealmId: currentRealm.connectedRealmId,
       regionName: currentRegion.config_region.name,
+      request: {
+        count: queryAuctionsOptions.auctionsPerPage,
+        itemFilters: queryAuctionsOptions.queryAuctions.selected.map(v => v.blizzard_meta.id),
+        page: queryAuctionsOptions.currentPage,
+        sortDirection: queryAuctionsOptions.sortDirection,
+        sortKind: queryAuctionsOptions.sortKind,
+      },
     });
   }
 
@@ -268,7 +281,7 @@ export class QueryAuctionsFilter extends React.Component<Props> {
     return "n/a";
   }
 
-  private renderSelectedItem(index: number, result: IQueryItemsItem) {
+  private renderSelectedItem(index: number, item: IItem) {
     const { onAuctionsQueryDeselect } = this.props;
 
     return (
@@ -277,12 +290,12 @@ export class QueryAuctionsFilter extends React.Component<Props> {
         onRemove={() => onAuctionsQueryDeselect(index)}
         style={{ marginRight: "5px" }}
       >
-        {this.inputValueRenderer(result)}
+        {getItemTextValue(item)}
       </Tag>
     );
   }
 
-  private renderSelectedItems(selectedItems: IQueryItemsItem[]) {
+  private renderSelectedItems(selectedItems: IItem[]) {
     if (selectedItems.length === 0) {
       return;
     }
