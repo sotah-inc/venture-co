@@ -5,35 +5,22 @@ import {
   Callout,
   Classes,
   H4,
-  H6,
   Intent,
-  Menu,
-  MenuItem,
   Navbar,
   NavbarGroup,
   Spinner,
   Switch,
   Tag,
 } from "@blueprintjs/core";
-import {
-  IItemListRendererProps,
-  IItemRendererProps,
-  ItemListRenderer,
-  ItemPredicate,
-  ItemRenderer,
-  Suggest,
-} from "@blueprintjs/select";
-import { IItem, IQueryItemsItem, IRegionComposite } from "@sotah-inc/core";
-import { debounce } from "lodash";
+import { IItem, IRegionComposite } from "@sotah-inc/core";
 
 import { IGetAuctionsOptions } from "../../../api/data";
 import { AuctionsOptions } from "../../../types/auction";
 import { IClientRealm } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
-import { getItemIconUrl, getItemTextValue, qualityToColorClass } from "../../../util";
+import { getItemTextValue } from "../../../util";
 import { ItemInput } from "../../util";
-
-const QueryAuctionResultSuggest = Suggest.ofType<IQueryItemsItem>();
+import { ItemFilter } from "./ItemFilter";
 
 export interface IStateProps {
   queryAuctionsOptions: AuctionsOptions;
@@ -45,7 +32,8 @@ export interface IStateProps {
 export interface IDispatchProps {
   onAuctionsQuerySelect: (item: IItem) => void;
   onAuctionsQueryDeselect: (index: number) => void;
-  fetchAuctionsQuery: (opts: IGetAuctionsOptions) => void;
+  fetchAuctions: (opts: IGetAuctionsOptions) => void;
+  fetchQueryAuctions: (query: string) => void;
   activeSelectChange: (v: boolean) => void;
 }
 
@@ -54,13 +42,16 @@ type Props = Readonly<IStateProps & IDispatchProps>;
 export class QueryAuctionsFilter extends React.Component<Props> {
   public render() {
     const {
+      currentRealm,
+      currentRegion,
       activeSelect,
       queryAuctionsOptions: {
         queryAuctions: {
-          results: { level: queryAuctionsLevel, data: queryResults },
+          results: { level: queryAuctionsLevel },
           selected: selectedItems,
         },
       },
+      fetchQueryAuctions,
     } = this.props;
 
     switch (queryAuctionsLevel) {
@@ -93,6 +84,10 @@ export class QueryAuctionsFilter extends React.Component<Props> {
       default:
         return <Spinner className={Classes.SMALL} intent={Intent.PRIMARY} />;
     }
+  }
+
+  private refreshFilter(query: string) {
+    const {} = this.props;
   }
 
   private renderRefetchingSpinner() {
