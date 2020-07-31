@@ -47,17 +47,11 @@ export interface IDispatchProps {
   onAuctionsQueryDeselect: (index: number) => void;
   fetchAuctionsQuery: (opts: IGetAuctionsOptions) => void;
   activeSelectChange: (v: boolean) => void;
-  refreshAuctionsQuery: (v: IQueryItemsItem[]) => void;
 }
 
 type Props = Readonly<IStateProps & IDispatchProps>;
 
 export class QueryAuctionsFilter extends React.Component<Props> {
-  private debouncedTriggerQuery = debounce(
-    (filterValue: string) => this.triggerQuery(filterValue),
-    0.25 * 1000,
-  );
-
   public render() {
     const {
       activeSelect,
@@ -77,20 +71,6 @@ export class QueryAuctionsFilter extends React.Component<Props> {
             <Navbar>
               <NavbarGroup align={Alignment.LEFT}>
                 <ItemInput onSelect={v => this.onItemSelect(v)} />
-                <QueryAuctionResultSuggest
-                  inputValueRenderer={this.inputValueRenderer}
-                  itemRenderer={this.itemRenderer}
-                  items={queryResults}
-                  onItemSelect={v => this.onItemSelect(v)}
-                  closeOnSelect={false}
-                  onQueryChange={this.debouncedTriggerQuery}
-                  inputProps={{
-                    leftIcon: "search",
-                    type: "search",
-                  }}
-                  itemPredicate={this.itemPredicate}
-                  itemListRenderer={this.itemListRenderer}
-                />
                 <div style={{ marginLeft: "10px" }}>{this.renderRefetchingSpinner()}</div>
               </NavbarGroup>
               <NavbarGroup align={Alignment.RIGHT}>
@@ -116,7 +96,7 @@ export class QueryAuctionsFilter extends React.Component<Props> {
   }
 
   private renderRefetchingSpinner() {
-    const { queryAuctionsLevel } = this.props;
+    const {} = this.props;
     if (queryAuctionsLevel !== FetchLevel.refetching) {
       return null;
     }
@@ -130,100 +110,7 @@ export class QueryAuctionsFilter extends React.Component<Props> {
     activeSelectChange(!activeSelect);
   }
 
-  private itemPredicate: ItemPredicate<IQueryItemsItem> = (
-    _query: string,
-    result: IQueryItemsItem,
-  ) => {
-    return result.rank > -1;
-  };
-
-  private renderItemAsItemRendererText(item: IItem) {
-    const itemText = getItemTextValue(item);
-    const itemIconUrl = getItemIconUrl(item);
-
-    if (itemIconUrl === null) {
-      return itemText;
-    }
-
-    return (
-      <>
-        <img src={itemIconUrl} className="item-icon" /> {itemText}
-      </>
-    );
-  }
-
-  private renderItemRendererTextContent(result: IQueryItemsItem) {
-    const { item } = result;
-
-    if (item !== null) {
-      return this.renderItemAsItemRendererText(item);
-    }
-
-    return "n/a";
-  }
-
-  private renderItemRendererText(result: IQueryItemsItem) {
-    return <span className="qaf-menu-item">{this.renderItemRendererTextContent(result)}</span>;
-  }
-
-  private itemRenderer: ItemRenderer<IQueryItemsItem> = (
-    result: IQueryItemsItem,
-    { handleClick, modifiers, index }: IItemRendererProps,
-  ) => {
-    if (!modifiers.matchesPredicate) {
-      return null;
-    }
-
-    const { item } = result;
-    let className = modifiers.active ? Classes.ACTIVE : "";
-
-    let label = "n/a";
-    if (item !== null) {
-      label = `#${item.blizzard_meta.id}`;
-      className = `${className} ${qualityToColorClass(item.blizzard_meta.quality.type)}`;
-    }
-
-    return (
-      <MenuItem
-        key={index}
-        icon={this.isResultSelected(result) ? "tick" : "blank"}
-        className={className}
-        onClick={handleClick}
-        text={this.renderItemRendererText(result)}
-        label={label}
-      />
-    );
-  };
-
-  private itemListRenderer: ItemListRenderer<IQueryItemsItem> = (
-    params: IItemListRendererProps<IQueryItemsItem>,
-  ) => {
-    const { items, itemsParentRef, renderItem } = params;
-    const renderedItems = items.map(renderItem).filter(renderedItem => renderedItem !== null);
-    if (renderedItems.length === 0) {
-      return (
-        <Menu ulRef={itemsParentRef}>
-          <li>
-            <H6>Queried Results</H6>
-          </li>
-          <li>
-            <em>No results found.</em>
-          </li>
-        </Menu>
-      );
-    }
-
-    return (
-      <Menu ulRef={itemsParentRef} className="qaf-menu">
-        <li>
-          <H6>Queried Results</H6>
-        </li>
-        {renderedItems}
-      </Menu>
-    );
-  };
-
-  private onItemSelect({ item }: IQueryItemsItem) {
+  private onItemSelect(item: IItem) {
     const { onAuctionsQueryDeselect, onAuctionsQuerySelect } = this.props;
 
     if (item === null) {
@@ -239,26 +126,6 @@ export class QueryAuctionsFilter extends React.Component<Props> {
     onAuctionsQuerySelect(item);
   }
 
-  private triggerQuery(filterValue: string) {
-    const { fetchAuctionsQuery, currentRealm, currentRegion, queryAuctionsOptions } = this.props;
-
-    if (currentRegion === null || currentRealm === null) {
-      return;
-    }
-
-    fetchAuctionsQuery({
-      connectedRealmId: currentRealm.connectedRealmId,
-      regionName: currentRegion.config_region.name,
-      request: {
-        count: queryAuctionsOptions.auctionsPerPage,
-        itemFilters: queryAuctionsOptions.queryAuctions.selected.map(v => v.blizzard_meta.id),
-        page: queryAuctionsOptions.currentPage,
-        sortDirection: queryAuctionsOptions.sortDirection,
-        sortKind: queryAuctionsOptions.sortKind,
-      },
-    });
-  }
-
   private isResultSelected(item: IItem) {
     return this.getSelectedResultIndex(item) > -1;
   }
@@ -269,16 +136,6 @@ export class QueryAuctionsFilter extends React.Component<Props> {
     } = this.props;
 
     return selected.map(v => v.blizzard_meta.id).indexOf(item.blizzard_meta.id);
-  }
-
-  private inputValueRenderer(result: IQueryItemsItem): string {
-    const { item } = result;
-
-    if (item !== null) {
-      return getItemTextValue(item);
-    }
-
-    return "n/a";
   }
 
   private renderSelectedItem(index: number, item: IItem) {

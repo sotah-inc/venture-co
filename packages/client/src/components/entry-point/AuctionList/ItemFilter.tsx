@@ -20,15 +20,13 @@ import {
 } from "@blueprintjs/select";
 import { IItem, IRegionComposite } from "@sotah-inc/core";
 
-import { IClientRealm } from "../../../types/global";
+import { IClientRealm, IFetchData } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
 
 const ItemFilterSuggest = Suggest.ofType<IItem>();
 
 export interface IStateProps {
-  fetchItemsLevel: FetchLevel;
-  items: IItem[];
-  itemFilter: IItem | null;
+  items: IFetchData<IItem[]>;
   currentRegion: IRegionComposite | null;
   currentRealm: IClientRealm | null;
 }
@@ -104,8 +102,10 @@ export class ItemFilter extends React.Component<Props, State> {
   };
 
   public onFilterSet(item: IItem) {
+    const { onItemFilterChange } = this.props;
+
     this.setState({ itemFilterValue: item.blizzard_meta.name.en_US ?? "" });
-    this.props.onItemFilterChange(item);
+    onItemFilterChange(item);
   }
 
   public onFilterChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -130,7 +130,9 @@ export class ItemFilter extends React.Component<Props, State> {
   }
 
   public render() {
-    const { fetchItemsLevel, items } = this.props;
+    const {
+      items: { level: fetchItemsLevel, data: items },
+    } = this.props;
     const { itemFilterValue } = this.state;
 
     const canClearFilter = itemFilterValue !== null && itemFilterValue !== "";
