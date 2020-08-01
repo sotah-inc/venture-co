@@ -37,6 +37,7 @@ export class QueryAuctionsFilter extends React.Component<Props> {
     const {
       activeSelect,
       queryAuctionsOptions: { selected: selectedItems },
+      activeSelectChange,
     } = this.props;
 
     return (
@@ -50,7 +51,7 @@ export class QueryAuctionsFilter extends React.Component<Props> {
               checked={activeSelect}
               label="Active"
               style={{ marginBottom: "0" }}
-              onChange={() => this.onActiveChange()}
+              onChange={() => activeSelectChange(activeSelect)}
             />
           </NavbarGroup>
         </Navbar>
@@ -59,38 +60,25 @@ export class QueryAuctionsFilter extends React.Component<Props> {
     );
   }
 
-  private onActiveChange() {
-    const { activeSelectChange, activeSelect } = this.props;
-
-    activeSelectChange(!activeSelect);
-  }
-
   private onItemSelect(item: IItem) {
-    const { onAuctionsQueryDeselect, onAuctionsQuerySelect } = this.props;
+    const {
+      onAuctionsQueryDeselect,
+      onAuctionsQuerySelect,
+      queryAuctionsOptions: { selected },
+    } = this.props;
 
     if (item === null) {
       return;
     }
 
-    if (this.isResultSelected(item)) {
-      onAuctionsQueryDeselect(this.getSelectedResultIndex(item));
+    const itemIdIndex = selected.map(v => v.blizzard_meta.id).indexOf(item.blizzard_meta.id);
+    if (itemIdIndex === -1) {
+      onAuctionsQuerySelect(item);
 
       return;
     }
 
-    onAuctionsQuerySelect(item);
-  }
-
-  private isResultSelected(item: IItem) {
-    return this.getSelectedResultIndex(item) > -1;
-  }
-
-  private getSelectedResultIndex(item: IItem): number {
-    const {
-      queryAuctionsOptions: { selected },
-    } = this.props;
-
-    return selected.map(v => v.blizzard_meta.id).indexOf(item.blizzard_meta.id);
+    onAuctionsQueryDeselect(itemIdIndex);
   }
 
   private renderSelectedItem(index: number, item: IItem) {
