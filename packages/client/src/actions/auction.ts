@@ -1,12 +1,7 @@
-import {
-  IGetAuctionsResponseData,
-  IItem,
-  IQueryItemsResponseData,
-  SortPerPage,
-} from "@sotah-inc/core";
+import { IGetAuctionsResponseData, IItem, SortPerPage } from "@sotah-inc/core";
 import { Dispatch } from "redux";
 
-import { getAuctions, getItems, IGetAuctionsOptions } from "../api/data";
+import { getAuctions, IGetAuctionsOptions } from "../api/data";
 import { ISortChangeOptions } from "../types/auction";
 import { ActionsUnion, createAction } from "./helpers";
 
@@ -20,19 +15,6 @@ export const FetchAuctions = (opts: IGetAuctionsOptions) => {
   return async (dispatch: Dispatch<FetchAuctionsType>) => {
     dispatch(RequestAuctions());
     dispatch(ReceiveAuctions(await getAuctions(opts)));
-  };
-};
-
-export const REQUEST_QUERYAUCTIONS = "REQUEST_QUERYAUCTIONS";
-export const RECEIVE_QUERYAUCTIONS = "RECEIVE_QUERYAUCTIONS";
-const RequestQueryAuctions = () => createAction(REQUEST_QUERYAUCTIONS);
-const ReceiveQueryAuctions = (payload: IQueryItemsResponseData | null) =>
-  createAction(RECEIVE_QUERYAUCTIONS, payload);
-type FetchQueryAuctionsType = ReturnType<typeof RequestQueryAuctions | typeof ReceiveQueryAuctions>;
-export const FetchQueryAuctions = (query: string) => {
-  return async (dispatch: Dispatch<FetchQueryAuctionsType>) => {
-    dispatch(RequestQueryAuctions());
-    dispatch(ReceiveQueryAuctions(await getItems(query)));
   };
 };
 
@@ -68,9 +50,7 @@ export const AuctionActions = {
   ActiveSelectChange,
   LoadAuctionListEntrypoint,
   ReceiveAuctions,
-  ReceiveQueryAuctions,
   RequestAuctions,
-  RequestQueryAuctions,
   SelectItemQueryAuctions,
   SetCurrentPageQueryAuctions,
   SetPerPageQueryAuctions,

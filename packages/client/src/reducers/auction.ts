@@ -4,9 +4,7 @@ import {
   ACTIVESELECT_CHANGE,
   AuctionActions,
   RECEIVE_AUCTIONS,
-  RECEIVE_QUERYAUCTIONS,
   REQUEST_AUCTIONS,
-  REQUEST_QUERYAUCTIONS,
 } from "../actions/auction";
 import { defaultAuctionState, IAuctionState } from "../types/auction";
 import { FetchLevel } from "../types/main";
@@ -55,53 +53,6 @@ export const auction = (state: State | undefined, action: AuctionActions): State
         },
         relatedProfessionPricelists: action.payload.professionPricelists,
         totalResults: action.payload.total,
-      };
-    case REQUEST_QUERYAUCTIONS:
-      const requestAuctionsQueryLevel =
-        state.options.queryAuctions.results.level === FetchLevel.initial
-          ? FetchLevel.fetching
-          : FetchLevel.refetching;
-
-      return {
-        ...state,
-        options: {
-          ...state.options,
-          queryAuctions: {
-            ...state.options.queryAuctions,
-            results: { ...state.options.queryAuctions.results, level: requestAuctionsQueryLevel },
-          },
-        },
-      };
-    case RECEIVE_QUERYAUCTIONS:
-      if (action.payload === null) {
-        return {
-          ...state,
-          options: {
-            ...state.options,
-            queryAuctions: {
-              ...state.options.queryAuctions,
-              results: {
-                ...state.options.queryAuctions.results,
-                level: FetchLevel.failure,
-              },
-            },
-          },
-        };
-      }
-
-      return {
-        ...state,
-        options: {
-          ...state.options,
-          queryAuctions: {
-            ...state.options.queryAuctions,
-            results: {
-              ...state.options.queryAuctions.results,
-              data: action.payload.items,
-              level: FetchLevel.success,
-            },
-          },
-        },
       };
     case ACTIVESELECT_CHANGE:
       return { ...state, activeSelect: action.payload };

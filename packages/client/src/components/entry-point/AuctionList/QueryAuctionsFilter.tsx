@@ -1,39 +1,32 @@
-import React from "react";
-
 import {
   Alignment,
   Callout,
   Classes,
   H4,
-  Intent,
   Navbar,
   NavbarGroup,
-  Spinner,
   Switch,
   Tag,
 } from "@blueprintjs/core";
-import { IItem, IRegionComposite } from "@sotah-inc/core";
+import { IAuction, IItem } from "@sotah-inc/core";
+import React from "react";
 
 import { IGetAuctionsOptions } from "../../../api/data";
 import { AuctionsOptions } from "../../../types/auction";
-import { IClientRealm } from "../../../types/global";
-import { FetchLevel } from "../../../types/main";
+import { IFetchData, IItemsData } from "../../../types/global";
 import { getItemTextValue } from "../../../util";
 import { ItemInput } from "../../util";
-import { ItemFilter } from "./ItemFilter";
 
 export interface IStateProps {
   queryAuctionsOptions: AuctionsOptions;
-  currentRegion: IRegionComposite | null;
-  currentRealm: IClientRealm | null;
   activeSelect: boolean;
+  auctionsResult: IFetchData<IItemsData<IAuction[]>>;
 }
 
 export interface IDispatchProps {
   onAuctionsQuerySelect: (item: IItem) => void;
   onAuctionsQueryDeselect: (index: number) => void;
   fetchAuctions: (opts: IGetAuctionsOptions) => void;
-  fetchQueryAuctions: (query: string) => void;
   activeSelectChange: (v: boolean) => void;
 }
 
@@ -42,61 +35,28 @@ type Props = Readonly<IStateProps & IDispatchProps>;
 export class QueryAuctionsFilter extends React.Component<Props> {
   public render() {
     const {
-      currentRealm,
-      currentRegion,
       activeSelect,
-      queryAuctionsOptions: {
-        queryAuctions: {
-          results: { level: queryAuctionsLevel },
-          selected: selectedItems,
-        },
-      },
-      fetchQueryAuctions,
+      queryAuctionsOptions: { selected: selectedItems },
     } = this.props;
 
-    switch (queryAuctionsLevel) {
-      case FetchLevel.success:
-      case FetchLevel.refetching:
-        return (
-          <>
-            <Navbar>
-              <NavbarGroup align={Alignment.LEFT}>
-                <ItemInput onSelect={v => this.onItemSelect(v)} />
-                <div style={{ marginLeft: "10px" }}>{this.renderRefetchingSpinner()}</div>
-              </NavbarGroup>
-              <NavbarGroup align={Alignment.RIGHT}>
-                <Switch
-                  checked={activeSelect}
-                  label="Active"
-                  style={{ marginBottom: "0" }}
-                  onChange={() => this.onActiveChange()}
-                />
-              </NavbarGroup>
-            </Navbar>
-            {this.renderSelectedItems(selectedItems)}
-          </>
-        );
-      case FetchLevel.failure:
-        return <Spinner className={Classes.SMALL} intent={Intent.DANGER} value={1} />;
-      case FetchLevel.initial:
-        return <Spinner className={Classes.SMALL} intent={Intent.NONE} value={1} />;
-      case FetchLevel.fetching:
-      default:
-        return <Spinner className={Classes.SMALL} intent={Intent.PRIMARY} />;
-    }
-  }
-
-  private refreshFilter(query: string) {
-    const {} = this.props;
-  }
-
-  private renderRefetchingSpinner() {
-    const {} = this.props;
-    if (queryAuctionsLevel !== FetchLevel.refetching) {
-      return null;
-    }
-
-    return <Spinner className={Classes.SMALL} intent={Intent.PRIMARY} />;
+    return (
+      <>
+        <Navbar>
+          <NavbarGroup align={Alignment.LEFT}>
+            <ItemInput onSelect={v => this.onItemSelect(v)} />
+          </NavbarGroup>
+          <NavbarGroup align={Alignment.RIGHT}>
+            <Switch
+              checked={activeSelect}
+              label="Active"
+              style={{ marginBottom: "0" }}
+              onChange={() => this.onActiveChange()}
+            />
+          </NavbarGroup>
+        </Navbar>
+        {this.renderSelectedItems(selectedItems)}
+      </>
+    );
   }
 
   private onActiveChange() {
