@@ -163,7 +163,7 @@ export class AuctionList extends React.Component<Props> {
       regionName: currentRegion.config_region.name,
       request: {
         count: options.auctionsPerPage,
-        itemFilters: options.queryAuctions.selected.map(v => v.blizzard_meta.id),
+        itemFilters: options.selected.map(v => v.blizzard_meta.id),
         page: options.currentPage,
         sortDirection: options.sortDirection,
         sortKind: options.sortKind,
@@ -346,7 +346,7 @@ export class AuctionList extends React.Component<Props> {
       }
 
       const didSelectedAuctionsQueryChange =
-        activeSelect && options.selected.length !== prevProps.options.queryAuctions.selected.length;
+        activeSelect && options.selected.length !== prevProps.options.selected.length;
       if (didSelectedAuctionsQueryChange) {
         return true;
       }

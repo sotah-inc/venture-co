@@ -28,22 +28,6 @@ export const handlers: IKindHandlers<IAuctionState, AuctionActions> = {
           return action.payload.auctions.auctions;
         })();
 
-        if (action.payload.querySelected === null) {
-          return {
-            ...state,
-            options: {
-              ...state.options,
-              queryAuctions: {
-                ...state.options.queryAuctions,
-                results: {
-                  ...state.options.queryAuctions.results,
-                  level: FetchLevel.failure,
-                },
-              },
-            },
-          };
-        }
-
         return {
           ...state,
           auctionsResult: {
@@ -56,14 +40,7 @@ export const handlers: IKindHandlers<IAuctionState, AuctionActions> = {
           },
           options: {
             ...state.options,
-            queryAuctions: {
-              ...state.options.queryAuctions,
-              results: {
-                ...state.options.queryAuctions.results,
-                level: FetchLevel.success,
-              },
-              selected: action.payload.querySelected,
-            },
+            selected: action.payload.querySelected,
           },
           relatedProfessionPricelists: action.payload.auctions.professionPricelists,
           totalResults: action.payload.auctions.total,
@@ -86,7 +63,7 @@ export const handlers: IKindHandlers<IAuctionState, AuctionActions> = {
         action: ReturnType<typeof SelectItemQueryAuctions>,
       ): IAuctionState => {
         const nextSelected = ((): IItem[] => {
-          const foundIndex = state.options.queryAuctions.selected.findIndex(
+          const foundIndex = state.options.selected.findIndex(
             v => v.blizzard_meta.id === action.payload.blizzard_meta.id,
           );
 
@@ -95,12 +72,12 @@ export const handlers: IKindHandlers<IAuctionState, AuctionActions> = {
           }
 
           if (foundIndex === 0) {
-            return [...state.options.queryAuctions.selected.slice(1)];
+            return [...state.options.selected.slice(1)];
           }
 
           return [
-            ...state.options.queryAuctions.selected.slice(0, foundIndex),
-            ...state.options.queryAuctions.selected.slice(foundIndex + 1),
+            ...state.options.selected.slice(0, foundIndex),
+            ...state.options.selected.slice(foundIndex + 1),
           ];
         })();
 
@@ -108,10 +85,7 @@ export const handlers: IKindHandlers<IAuctionState, AuctionActions> = {
           ...state,
           options: {
             ...state.options,
-            queryAuctions: {
-              ...state.options.queryAuctions,
-              selected: nextSelected,
-            },
+            selected: nextSelected,
           },
         };
       },
