@@ -346,8 +346,7 @@ export class AuctionList extends React.Component<Props> {
       }
 
       const didSelectedAuctionsQueryChange =
-        activeSelect &&
-        options.queryAuctions.selected.length !== prevProps.options.queryAuctions.selected.length;
+        activeSelect && options.selected.length !== prevProps.options.queryAuctions.selected.length;
       if (didSelectedAuctionsQueryChange) {
         return true;
       }

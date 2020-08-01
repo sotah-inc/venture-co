@@ -8,25 +8,20 @@ import {
   Switch,
   Tag,
 } from "@blueprintjs/core";
-import { IAuction, IItem } from "@sotah-inc/core";
+import { IItem } from "@sotah-inc/core";
 import React from "react";
 
-import { IGetAuctionsOptions } from "../../../api/data";
 import { AuctionsOptions } from "../../../types/auction";
-import { IFetchData, IItemsData } from "../../../types/global";
 import { getItemTextValue } from "../../../util";
 import { ItemInput } from "../../util";
 
 export interface IStateProps {
   queryAuctionsOptions: AuctionsOptions;
   activeSelect: boolean;
-  auctionsResult: IFetchData<IItemsData<IAuction[]>>;
 }
 
 export interface IDispatchProps {
-  onAuctionsQuerySelect: (item: IItem) => void;
-  onAuctionsQueryDeselect: (index: number) => void;
-  fetchAuctions: (opts: IGetAuctionsOptions) => void;
+  selectItemQueryAuctions: (item: IItem) => void;
   activeSelectChange: (v: boolean) => void;
 }
 
@@ -38,13 +33,14 @@ export class QueryAuctionsFilter extends React.Component<Props> {
       activeSelect,
       queryAuctionsOptions: { selected: selectedItems },
       activeSelectChange,
+      selectItemQueryAuctions,
     } = this.props;
 
     return (
       <>
         <Navbar>
           <NavbarGroup align={Alignment.LEFT}>
-            <ItemInput onSelect={v => this.onItemSelect(v)} />
+            <ItemInput onSelect={selectItemQueryAuctions} />
           </NavbarGroup>
           <NavbarGroup align={Alignment.RIGHT}>
             <Switch
@@ -60,34 +56,13 @@ export class QueryAuctionsFilter extends React.Component<Props> {
     );
   }
 
-  private onItemSelect(item: IItem) {
-    const {
-      onAuctionsQueryDeselect,
-      onAuctionsQuerySelect,
-      queryAuctionsOptions: { selected },
-    } = this.props;
-
-    if (item === null) {
-      return;
-    }
-
-    const itemIdIndex = selected.map(v => v.blizzard_meta.id).indexOf(item.blizzard_meta.id);
-    if (itemIdIndex === -1) {
-      onAuctionsQuerySelect(item);
-
-      return;
-    }
-
-    onAuctionsQueryDeselect(itemIdIndex);
-  }
-
   private renderSelectedItem(index: number, item: IItem) {
-    const { onAuctionsQueryDeselect } = this.props;
+    const { selectItemQueryAuctions } = this.props;
 
     return (
       <Tag
         key={index}
-        onRemove={() => onAuctionsQueryDeselect(index)}
+        onRemove={() => selectItemQueryAuctions(item)}
         style={{ marginRight: "5px" }}
       >
         {getItemTextValue(item)}
