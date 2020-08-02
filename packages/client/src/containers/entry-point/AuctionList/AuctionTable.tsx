@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 
-import { AddAuctionsQuery, RemoveAuctionsQuery } from "../../../actions/auction";
+import { SelectItemQueryAuctions } from "../../../actions/auction";
 import {
   AuctionTable,
   IDispatchProps,
@@ -10,7 +10,11 @@ import { IStoreState } from "../../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const { professions, expansions, currentRealm, currentRegion } = state.Main;
-  const { auctions, selectedQueryAuctionResults, relatedProfessionPricelists } = state.Auction;
+  const {
+    relatedProfessionPricelists,
+    auctionsResult: { data: auctions },
+    options: { selected: selectedItems },
+  } = state.Auction;
 
   return {
     auctions,
@@ -19,13 +23,12 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
     expansions,
     professions,
     relatedProfessionPricelists,
-    selectedItems: selectedQueryAuctionResults,
+    selectedItems,
   };
 };
 
 const mapDispatchToProps: IDispatchProps = {
-  onAuctionsQueryDeselect: RemoveAuctionsQuery,
-  onAuctionsQuerySelect: AddAuctionsQuery,
+  selectItemQueryAuctions: SelectItemQueryAuctions,
 };
 
 export const AuctionTableContainer = connect<IStateProps, IDispatchProps, {}, IStoreState>(

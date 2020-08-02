@@ -1,12 +1,12 @@
 import React, { ReactNode } from "react";
 
 import { Classes, Intent, IToastProps, NonIdealState, Spinner } from "@blueprintjs/core";
-import { IPreferenceJson, IRegionComposite, IStatusRealm } from "@sotah-inc/core";
+import { IPreferenceJson, IRegionComposite } from "@sotah-inc/core";
 
 import { ILoadRootEntrypoint } from "../actions/main";
 import { PromptsRouteContainer } from "../route-containers/App/Prompts";
 import { TopbarRouteContainer } from "../route-containers/App/Topbar";
-import { IProfile } from "../types/global";
+import { IClientRealm, IProfile } from "../types/global";
 import { AuthLevel, FetchLevel } from "../types/main";
 
 export interface IStateProps {

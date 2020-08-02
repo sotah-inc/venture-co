@@ -1,9 +1,9 @@
 import React from "react";
 
 import { Classes, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
-import { IRegionComposite, IStatusRealm } from "@sotah-inc/core";
+import { IRegionComposite } from "@sotah-inc/core";
 
-import { IRegions } from "../../types/global";
+import { IClientRealm, IRegions } from "../../types/global";
 import { FetchLevel } from "../../types/main";
 import { setTitle } from "../../util";
 
@@ -21,7 +21,7 @@ export interface IDispatchProps {
 
 export interface IRouteProps {
   routeParams: IRouteParams;
-  redirectToAuctions: (region: IRegionComposite, realm: IStatusRealm) => void;
+  redirectToAuctions: (region: IRegionComposite, realm: IClientRealm) => void;
 }
 
 export interface IRouteParams {
@@ -216,7 +216,7 @@ export class AuctionsLanding extends React.Component<Props> {
 
     setTitle(
       `Redirecting to Auctions - ${currentRegion.config_region.name.toUpperCase()} ${
-        currentRealm.name
+        currentRealm.realm.name.en_US
       }`,
     );
   }

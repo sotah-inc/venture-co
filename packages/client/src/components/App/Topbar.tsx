@@ -12,13 +12,14 @@ import {
   NavbarHeading,
   Tooltip,
 } from "@blueprintjs/core";
-import { IExpansion, IRegionComposite, IStatusRealm, IUserJson } from "@sotah-inc/core";
+import { IExpansion, IRegionComposite, IUserJson } from "@sotah-inc/core";
 
 import { LoginContainer } from "../../containers/App/Login";
 import { RegisterContainer } from "../../containers/App/Register";
 import { NewsButtonRouteContainer } from "../../route-containers/App/Topbar/NewsButton";
 import { WorkOrdersButtonRouteContainer } from "../../route-containers/App/Topbar/WorkOrderButtons";
 import { LinkButtonRouteContainer } from "../../route-containers/util/LinkButton";
+import { IClientRealm } from "../../types/global";
 import { getPrimaryExpansion } from "../../util";
 import { toExpansion } from "../../util/routes";
 
@@ -282,7 +283,7 @@ export class Topbar extends React.Component<Props> {
     return (
       <LinkButtonRouteContainer
         destination={`/data/[region_name]/[realm_slug]${destination}`}
-        asDestination={`/data/${currentRegion.config_region.name}/${currentRealm.slug}${destination}`}
+        asDestination={`/data/${currentRegion.config_region.name}/${currentRealm.realm.slug}${destination}`}
         buttonProps={{ icon, text, minimal: true }}
       />
     );

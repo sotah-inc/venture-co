@@ -1,9 +1,9 @@
 import React from "react";
 
 import { Classes, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
-import { IRegionComposite, IStatusRealm } from "@sotah-inc/core";
+import { IRegionComposite } from "@sotah-inc/core";
 
-import { IRegions } from "../../types/global";
+import { IClientRealm, IRegions } from "../../types/global";
 import { FetchLevel } from "../../types/main";
 import { setTitle } from "../../util";
 
@@ -25,7 +25,7 @@ export interface IRouteParams {
 
 export interface IRouteProps {
   routeParams: IRouteParams;
-  browseToProfessions: (region: IRegionComposite, realm: IStatusRealm) => void;
+  browseToProfessions: (region: IRegionComposite, realm: IClientRealm) => void;
 }
 
 export type IOwnProps = IRouteProps;
@@ -188,7 +188,7 @@ export class ProfessionsLanding extends React.Component<Props> {
 
     return (
       <p>{`Redirecting to Professions - ${currentRegion.config_region.name.toUpperCase()} ${
-        currentRealm.name
+        currentRealm.realm.name.en_US
       }`}</p>
     );
   }
@@ -202,7 +202,7 @@ export class ProfessionsLanding extends React.Component<Props> {
 
     setTitle(
       `Redirecting to Professions - ${currentRegion.config_region.name.toUpperCase()} ${
-        currentRealm.name
+        currentRealm.realm.name.en_US
       }`,
     );
   }

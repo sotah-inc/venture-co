@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 
-import { SortChange } from "../../../actions/auction";
+import { SetSortQueryAuctions } from "../../../actions/auction";
 import {
   IDispatchProps,
   IOwnProps,
@@ -10,12 +10,15 @@ import {
 import { IStoreState } from "../../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
-  const { sortDirection, sortKind } = state.Auction;
+  const {
+    options: { sortDirection, sortKind },
+  } = state.Auction;
+
   return { currentSortDirection: sortDirection, currentSortKind: sortKind };
 };
 
 const mapDispatchToProps: IDispatchProps = {
-  onChange: SortChange,
+  onChange: SetSortQueryAuctions,
 };
 
 export const SortToggleContainer = connect<IStateProps, IDispatchProps, IOwnProps, IStoreState>(

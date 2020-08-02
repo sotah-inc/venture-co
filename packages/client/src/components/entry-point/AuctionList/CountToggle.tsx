@@ -1,13 +1,14 @@
 import React from "react";
 
 import { Button, Classes, H6, Menu, MenuItem, Popover, Position } from "@blueprintjs/core";
+import { SortPerPage } from "@sotah-inc/core";
 
 export interface IStateProps {
   auctionsPerPage: number;
 }
 
 export interface IDispatchProps {
-  onCountChange: (count: number) => void;
+  onCountChange: (count: SortPerPage) => void;
 }
 
 type Props = Readonly<IStateProps & IDispatchProps>;
@@ -32,7 +33,10 @@ export class CountToggle extends React.Component<Props> {
   }
 
   public renderMenu() {
-    const counts: number[] = [10, 50, 100];
+    const counts: number[] = Object.values(SortPerPage)
+      .filter(v => !isNaN(Number(v)))
+      .map(Number);
+
     return (
       <Menu>
         <li>

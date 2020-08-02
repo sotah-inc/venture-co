@@ -6,9 +6,7 @@ import {
   IPricelistJson,
   IProfession,
   IProfessionPricelistJson,
-  IQueryItemsItem,
   IRegionComposite,
-  IStatusRealm,
   ItemQuality,
   SortKind,
 } from "@sotah-inc/core";
@@ -16,8 +14,8 @@ import React from "react";
 
 import { SortToggleContainer } from "../../../containers/entry-point/AuctionList/SortToggle";
 import { ItemPopoverContainer } from "../../../containers/util/ItemPopover";
-import { IItemsData } from "../../../types/global";
-import { getItemFromPricelist, getSelectedResultIndex, qualityToColorClass } from "../../../util";
+import { IClientRealm, IItemsData } from "../../../types/global";
+import { getItemFromPricelist, qualityToColorClass } from "../../../util";
 import { Currency, ProfessionIcon } from "../../util";
 import { ItemIcon } from "../../util/ItemIcon";
 
@@ -25,7 +23,7 @@ type ListAuction = IAuction | null;
 
 export interface IStateProps {
   auctions: IItemsData<ListAuction[]>;
-  selectedItems: IQueryItemsItem[];
+  selectedItems: IItem[];
   relatedProfessionPricelists: IProfessionPricelistJson[];
   expansions: IExpansion[];
   professions: IProfession[];
@@ -34,21 +32,20 @@ export interface IStateProps {
 }
 
 export interface IDispatchProps {
-  onAuctionsQuerySelect: (aqResult: IQueryItemsItem) => void;
-  onAuctionsQueryDeselect: (index: number) => void;
+  selectItemQueryAuctions: (item: IItem) => void;
 }
 
 export interface IRouteProps {
-  browseToExpansion: (region: IRegionComposite, realm: IStatusRealm, expansion: IExpansion) => void;
+  browseToExpansion: (region: IRegionComposite, realm: IClientRealm, expansion: IExpansion) => void;
   browseToProfession: (
     region: IRegionComposite,
-    realm: IStatusRealm,
+    realm: IClientRealm,
     expansion: IExpansion,
     profession: IProfession,
   ) => void;
   browseToProfessionPricelist: (
     region: IRegionComposite,
-    realm: IStatusRealm,
+    realm: IClientRealm,
     expansion: IExpansion,
     profession: IProfession,
     pricelist: IPricelistJson,
@@ -60,33 +57,10 @@ export type IOwnProps = IRouteProps;
 type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
 
 export class AuctionTable extends React.Component<Props> {
-  public isResultSelected(result: IQueryItemsItem) {
-    return this.getSelectedResultIndex(result) > -1;
-  }
-
-  public getSelectedResultIndex(result: IQueryItemsItem): number {
-    const selectedItems = this.props.selectedItems;
-    return getSelectedResultIndex(result, selectedItems);
-  }
-
-  public onItemClick(item: IItem) {
-    const result: IQueryItemsItem = {
-      item,
-      rank: 0,
-      target: "",
-    };
-
-    if (this.isResultSelected(result)) {
-      this.props.onAuctionsQueryDeselect(this.getSelectedResultIndex(result));
-
-      return;
-    }
-
-    this.props.onAuctionsQuerySelect(result);
-  }
-
   public renderItemPopover(item: IItem) {
-    return <ItemPopoverContainer item={item} onItemClick={() => this.onItemClick(item)} />;
+    const { selectItemQueryAuctions } = this.props;
+
+    return <ItemPopoverContainer item={item} onItemClick={() => selectItemQueryAuctions(item)} />;
   }
 
   public renderAuction(auction: IAuction | null, index: number) {
