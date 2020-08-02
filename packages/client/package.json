@@ -32,27 +32,26 @@
     "access": "private"
   },
   "dependencies": {
-    "@blueprintjs/core": "^3.29.0",
-    "@blueprintjs/icons": "^3.19.0",
-    "@blueprintjs/select": "^3.13.4",
+    "@blueprintjs/core": "^3.30.1",
+    "@blueprintjs/icons": "^3.20.0",
+    "@blueprintjs/select": "^3.13.6",
     "@sotah-inc/core": "^1.0.128",
     "@types/http-status": "^1.1.2",
     "@types/isomorphic-fetch": "0.0.35",
-    "@types/lodash": "^4.14.157",
-    "@types/moment-timezone": "^0.5.13",
-    "@types/react": "^16.9.42",
+    "@types/lodash": "^4.14.158",
+    "@types/react": "^16.9.44",
     "@types/react-dom": "^16.9.8",
     "@types/react-redux": "^7.1.9",
     "@types/recharts": "^1.8.14",
     "@types/speakingurl": "^13.0.2",
     "@types/yup": "^0.29.3",
-    "formik": "^2.1.4",
+    "formik": "^2.1.5",
     "http-status": "^1.4.2",
     "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.17.19",
     "moment": "^2.27.0",
     "moment-timezone": "^0.5.31",
-    "next": "^9.4.4",
+    "next": "^9.5.1",
     "normalize.css": "^8.0.1",
     "purecss": "^2.0.3",
     "query-string": "^6.13.1",
@@ -60,13 +59,13 @@
     "react-cookie": "^4.0.3",
     "react-dom": "^16.13.1",
     "react-markdown": "^4.3.1",
-    "react-redux": "^7.2.0",
+    "react-redux": "^7.2.1",
     "recharts": "^1.8.5",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "remark-shortcodes": "^0.3.1",
     "speakingurl": "^14.0.1",
-    "yup": "^0.29.1"
+    "yup": "^0.29.2"
   },
   "devDependencies": {
     "@types/gulp": "^4.0.6",
@@ -85,8 +84,8 @@
     "postcss-safe-parser": "^4.0.2",
     "prettier": "^2.0.5",
     "rimraf": "^3.0.2",
-    "tslint": "^6.1.2",
-    "typescript": "^3.9.6"
+    "tslint": "^6.1.3",
+    "typescript": "^3.9.7"
   },
   "peerDependencies": {
     "react": "^16.13.1"
