@@ -2,7 +2,8 @@
   "compilerOptions": {
     "baseUrl": "src",
     "outDir": "build/dist",
-    "strictFunctionTypes": false
+    "strictFunctionTypes": false,
+    "declaration": false
   },
   "exclude": [
     "node_modules",

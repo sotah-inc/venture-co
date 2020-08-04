@@ -44,6 +44,7 @@
     "@types/react-redux": "^7.1.9",
     "@types/recharts": "^1.8.14",
     "@types/speakingurl": "^13.0.2",
+    "@types/webpack": "^4.41.21",
     "@types/yup": "^0.29.3",
     "formik": "^2.1.5",
     "http-status": "^1.4.2",
