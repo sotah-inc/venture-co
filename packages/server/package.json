@@ -48,7 +48,7 @@
     "uuid": "^8.3.0"
   },
   "publishConfig": {
-    "access": "private"
+    "access": "public"
   },
   "gitHead": "04815ff39e8767b2b57e767b2420736cd30af7af"
 }
