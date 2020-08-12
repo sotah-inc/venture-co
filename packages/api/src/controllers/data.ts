@@ -141,16 +141,13 @@ export class DataController {
 
     // gathering earliest downloaded realm-modification-date
     const lastModifiedDate: moment.Moment | null = (() => {
-      const latestDownloaded = realmsResult.connected_realms.reduce<number | null>(
-        (result, connectedRealm) => {
-          if (result === null || connectedRealm.modification_dates.downloaded > result) {
-            return connectedRealm.modification_dates.downloaded;
-          }
+      const latestDownloaded = realmsResult.reduce<number | null>((result, connectedRealm) => {
+        if (result === null || connectedRealm.modification_dates.downloaded > result) {
+          return connectedRealm.modification_dates.downloaded;
+        }
 
-          return result;
-        },
-        null,
-      );
+        return result;
+      }, null);
 
       if (latestDownloaded === null) {
         return null;
@@ -186,7 +183,7 @@ export class DataController {
     })();
 
     return {
-      data: { connectedRealms: realmsResult.connected_realms },
+      data: { connectedRealms: realmsResult },
       headers,
       status: HTTPStatus.OK,
     };
