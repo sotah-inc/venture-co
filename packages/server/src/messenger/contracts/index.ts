@@ -1,6 +1,5 @@
 import {
   IAuction,
-  IConnectedRealmComposite,
   IConnectedRealmModificationDates,
   IExpansion,
   IItemClass,
@@ -110,7 +109,3 @@ export interface IValidateRegionConnectedRealmResponse {
 }
 
 export type ValidateRegionRealmResponse = IValidateRegionConnectedRealmResponse;
-
-export interface IGetConnectedRealmsResponse {
-  connected_realms: IConnectedRealmComposite[];
-}
