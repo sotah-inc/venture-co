@@ -191,7 +191,7 @@ export class Messenger {
   private request<T>(subject: string, opts?: IRequestOptions): Promise<Message<T>> {
     const { body, parseKind }: IDefaultRequestOptions = {
       body: "",
-      parseKind: ParseKind.None,
+      parseKind: ParseKind.JsonEncoded,
       ...opts,
     };
 
