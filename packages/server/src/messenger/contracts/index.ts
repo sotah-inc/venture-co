@@ -1,5 +1,6 @@
 import {
   IAuction,
+  IConfigRegion,
   IConnectedRealmModificationDates,
   IExpansion,
   IItemClass,
@@ -8,7 +9,6 @@ import {
   IPriceListMap,
   IPrices,
   IProfession,
-  IRegionComposite,
   IRegionConnectedRealmTuple,
   ItemId,
   Locale,
@@ -63,7 +63,7 @@ export interface IGetItemsResponse {
 }
 
 export interface IGetBootResponse {
-  regions: IRegionComposite[];
+  regions: IConfigRegion[];
   item_classes: {
     classes: IItemClass[];
   };
