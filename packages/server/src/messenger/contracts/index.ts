@@ -64,9 +64,7 @@ export interface IGetItemsResponse {
 
 export interface IGetBootResponse {
   regions: IConfigRegion[];
-  item_classes: {
-    classes: IItemClass[];
-  };
+  item_classes: IItemClass[];
   expansions: IExpansion[];
   professions: IProfession[];
 }
