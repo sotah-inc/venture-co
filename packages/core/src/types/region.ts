@@ -81,11 +81,13 @@ export interface IRegionRealmTuple extends IRegionTuple {
   realm_slug: RealmSlug;
 }
 
+export interface IConfigRegion {
+  name: RegionName;
+  hostname: string;
+  primary: boolean;
+}
+
 export interface IRegionComposite {
-  config_region: {
-    name: RegionName;
-    hostname: string;
-    primary: boolean;
-  };
+  config_region: IConfigRegion;
   connected_realms: IConnectedRealmComposite[];
 }
