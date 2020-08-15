@@ -23,6 +23,7 @@ import {
   IPrices,
   IPricesFlagged,
   IQueryItemsResponseData,
+  IRegionComposite,
   IRegionConnectedRealmTuple,
   ItemId,
   IValidationErrorResponse,
@@ -91,16 +92,59 @@ export class DataController {
   }
 
   public async getBoot(): Promise<IRequestResult<GetBootResponse>> {
-    const msg = await this.messenger.getBoot();
-    if (msg.code !== code.ok) {
+    const bootMessage = await this.messenger.getBoot();
+    if (bootMessage.code !== code.ok) {
       return {
         data: null,
         status: HTTPStatus.INTERNAL_SERVER_ERROR,
       };
     }
 
-    const result = await msg.decode();
-    if (result === null) {
+    const bootResult = await bootMessage.decode();
+    if (bootResult === null) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    const regionCompositeResults = await Promise.all(
+      bootResult.regions.map(configRegion => {
+        return new Promise<IRegionComposite | null>((resolve, reject) => {
+          this.messenger
+            .getConnectedRealms({ region_name: configRegion.name })
+            .then(v => v.decode())
+            .then(v => {
+              if (v === null) {
+                resolve(null);
+
+                return;
+              }
+
+              resolve({
+                config_region: configRegion,
+                connected_realms: v,
+              });
+            })
+            .catch(reject);
+        });
+      }),
+    );
+    const regionComposites = regionCompositeResults.reduce<IRegionComposite[] | null>(
+      (result, v) => {
+        if (result === null) {
+          return null;
+        }
+
+        if (v === null) {
+          return null;
+        }
+
+        return [...result, v];
+      },
+      [],
+    );
+    if (regionComposites === null) {
       return {
         data: null,
         status: HTTPStatus.INTERNAL_SERVER_ERROR,
@@ -109,8 +153,9 @@ export class DataController {
 
     return {
       data: {
-        ...result,
-        item_classes: result.item_classes.classes,
+        ...bootResult,
+        item_classes: bootResult.item_classes.classes,
+        regions: regionComposites,
       },
       status: HTTPStatus.OK,
     };

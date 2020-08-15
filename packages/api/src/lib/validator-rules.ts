@@ -95,7 +95,13 @@ export const FullPostRequestBodyRules = (repo: PostRepository, exceptSlug?: stri
         .min(4, "post slug must be 4 characters")
         .matches(/^[a-z|0-9|_|\-]+$/, "post slug must be a-z, 0-9, or underscore")
         .required("post slug is required")
-        .test("is-unique", "post must be unique", v => repo.hasNoSlug(v, exceptSlug)),
+        .test("is-unique", "post must be unique", v => {
+          if (!v) {
+            return false;
+          }
+
+          return repo.hasNoSlug(v, exceptSlug);
+        }),
       summary: yup.string().required("summary is required"),
       title: yup.string().required("post title is required"),
     })
@@ -110,7 +116,13 @@ export const UpdateProfileRequestBodyRules = (repo: UserRepository, exceptEmail?
         .string()
         .email("email must be a valid email")
         .required("email is required")
-        .test("is-unique", "email must not already be taken", v => repo.hasNoEmail(v, exceptEmail)),
+        .test("is-unique", "email must not already be taken", v => {
+          if (!v) {
+            return false;
+          }
+
+          return repo.hasNoEmail(v, exceptEmail);
+        }),
     })
     .noUnknown();
 
