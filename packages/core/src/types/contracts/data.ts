@@ -2,10 +2,10 @@ import { IAuction } from "../auction";
 import { IPostJson, IProfessionPricelistJson } from "../entities";
 import { ExpansionName, IExpansion } from "../expansion";
 import {
-  IConfigRegion,
   IConnectedRealmComposite,
   IErrorResponse,
   IPricesFlagged,
+  IRegionComposite,
   ITokenHistory,
   IValidationErrorResponse,
   RealmSlug,
@@ -25,7 +25,7 @@ import { IProfession } from "../profession";
 
 // new
 export interface IGetBootResponseData {
-  regions: IConfigRegion[];
+  regions: IRegionComposite[];
   item_classes: IItemClass[];
   expansions: IExpansion[];
   professions: IProfession[];
