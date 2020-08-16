@@ -8,8 +8,6 @@ import {
   IRegionComposite,
   ITokenHistory,
   IValidationErrorResponse,
-  RealmSlug,
-  RegionName,
   SortDirection,
   SortKind,
 } from "../index";
@@ -148,11 +146,6 @@ export interface IGetTokenHistoryResponseData {
 }
 
 export type GetTokenHistoryResponse = IGetTokenHistoryResponseData | null;
-
-export interface IQueryAuctionStatsRequest {
-  region_name?: RegionName;
-  realm_slug?: RealmSlug;
-}
 
 export interface IQueryAuctionStatsItem {
   total_auctions: number;
