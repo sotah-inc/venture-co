@@ -154,7 +154,6 @@ export class DataController {
     return {
       data: {
         ...bootResult,
-        item_classes: bootResult.item_classes.classes,
         regions: regionComposites,
       },
       status: HTTPStatus.OK,
