@@ -9,7 +9,6 @@ import {
   OrderKind,
   PrefillWorkOrderItemResponse,
   QueryWorkOrdersResponse,
-  RealmSlug,
   RegionName,
   UserLevel,
 } from "@sotah-inc/core";
@@ -39,7 +38,7 @@ export class WorkOrderController {
   public async queryWorkOrders(
     gameVersion: string,
     regionName: RegionName,
-    realmSlug: RealmSlug,
+    connectedRealmId: ConnectedRealmId,
     query: ParsedQs,
   ): Promise<IRequestResult<QueryWorkOrdersResponse>> {
     const result = await validate(QueryWorkOrdersParamsRules, {
@@ -53,8 +52,8 @@ export class WorkOrderController {
       };
     }
 
-    const validateMsg = await this.messenger.validateRegionRealm({
-      realm_slug: realmSlug,
+    const validateMsg = await this.messenger.validateRegionConnectedRealm({
+      connected_realm_id: connectedRealmId,
       region_name: regionName,
     });
     if (validateMsg.code !== code.ok) {
@@ -77,7 +76,7 @@ export class WorkOrderController {
 
     if (!validateResult.is_valid) {
       const validationErrors: IValidationErrorResponse = {
-        error: "region-name and realm-slug combination was not valid",
+        error: "region-name and connected-realm-id combination was not valid",
       };
 
       return {
@@ -89,12 +88,12 @@ export class WorkOrderController {
     const { count: totalResults, orders } = await this.dbConn
       .getCustomRepository(WorkOrderRepository)
       .findBy({
+        connectedRealmId,
         gameVersion: result.data.gameVersion as GameVersion,
         orderBy: result.data.orderBy as OrderKind,
         orderDirection: result.data.orderDirection as OrderDirection,
         page: result.data.page,
         perPage: result.data.perPage,
-        realmSlug,
         regionName,
       });
 
@@ -207,7 +206,7 @@ export class WorkOrderController {
     req: IRequest<ICreateWorkOrderRequest>,
     _res: Response,
   ): Promise<IRequestResult<CreateWorkOrderResponse>> {
-    const { realmSlug, regionName, gameVersion } = req.params;
+    const { connectedRealmId, regionName, gameVersion } = req.params;
 
     if (!Object.values(GameVersion).includes(gameVersion as GameVersion)) {
       const validationErrors: IValidationErrorResponse = {
@@ -220,8 +219,8 @@ export class WorkOrderController {
       };
     }
 
-    const validateMsg = await this.messenger.validateRegionRealm({
-      realm_slug: realmSlug,
+    const validateMsg = await this.messenger.validateRegionConnectedRealm({
+      connected_realm_id: Number(connectedRealmId),
       region_name: regionName,
     });
     if (validateMsg.code !== code.ok) {
@@ -241,7 +240,7 @@ export class WorkOrderController {
     workOrder.user = req.user as User;
     workOrder.gameVersion = gameVersion as GameVersion;
     workOrder.regionName = regionName;
-    workOrder.realmSlug = realmSlug;
+    workOrder.connectedRealmId = Number(connectedRealmId);
     workOrder.itemId = body.itemId;
     workOrder.price = body.price;
     workOrder.quantity = body.quantity;

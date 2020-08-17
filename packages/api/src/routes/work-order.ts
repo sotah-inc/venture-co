@@ -11,14 +11,14 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
   const controller = new WorkOrderController(messenger, dbConn);
 
   router.get(
-    "/work-orders/:gameVersion/:regionName/:realmSlug",
+    "/work-orders/:gameVersion/:regionName/:connectedRealmId",
     wrap(async (req: Request, res: Response) =>
       handleResult(
         res,
         await controller.queryWorkOrders(
           req.params["gameVersion"],
           req.params["regionName"],
-          req.params["realmSlug"],
+          Number(req.params["connectedRealmId"]),
           req.query,
         ),
       ),
@@ -39,7 +39,7 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
     ),
   );
   router.post(
-    "/work-orders/:gameVersion/:regionName/:realmSlug",
+    "/work-orders/:gameVersion/:regionName/:connectedRealmId",
     auth,
     wrap(async (req: Request, res: Response) =>
       handleResult(res, await controller.createWorkOrder(req, res)),
