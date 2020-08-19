@@ -24,6 +24,7 @@ import {
   IQueryItemsRequest,
   IQueryItemsResponse,
   IRealmModificationDatesResponse,
+  IResolveConnectedRealmResponse,
   IValidateRegionConnectedRealmResponse,
   ValidateRegionRealmResponse,
 } from "./contracts";
@@ -41,6 +42,7 @@ export enum subjects {
   status = "status",
   connectedRealms = "connectedRealms",
   validateRegionConnectedRealm = "validateRegionConnectedRealm",
+  resolveConnectedRealm = "resolveConnectedRealm",
   validateRegionRealm = "validateRegionRealm",
   queryRealmModificationDates = "queryRealmModificationDates",
   connectedRealmModificationDates = "connectedRealmModificationDates",
@@ -123,6 +125,14 @@ export class Messenger {
     tuple: IRegionConnectedRealmTuple,
   ): Promise<Message<IValidateRegionConnectedRealmResponse>> {
     return this.request(subjects.validateRegionConnectedRealm, {
+      body: JSON.stringify(tuple),
+    });
+  }
+
+  public resolveConnectedRealm(
+    tuple: IRegionRealmTuple,
+  ): Promise<Message<IResolveConnectedRealmResponse>> {
+    return this.request(subjects.resolveConnectedRealm, {
       body: JSON.stringify(tuple),
     });
   }
