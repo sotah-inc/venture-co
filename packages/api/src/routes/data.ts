@@ -103,16 +103,13 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
     }),
   );
   router.post(
-    "/unmet-demand/:regionName/:connectedRealmId",
+    "/unmet-demand/:regionName/:realmSlug",
     wrap(async (req: Request, res: Response) => {
       const regionName = req.params["regionName"];
-      const connectedRealmId = Number(req.params["connectedRealmId"]);
+      const realmSlug = req.params["realmSlug"];
       const expansionName = (req.body as IGetUnmetDemandRequest).expansion;
 
-      handleResult(
-        res,
-        await controller.getUnmetDemand(regionName, connectedRealmId, expansionName),
-      );
+      handleResult(res, await controller.getUnmetDemand(regionName, realmSlug, expansionName));
     }),
   );
   router.get(
