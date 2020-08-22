@@ -172,7 +172,7 @@ export const getPriceListHistory = async (
     return null;
   }
 
-  return body;
+  return body as IGetPricelistHistoriesResponseData;
 };
 
 export interface IGetPostsResult {
