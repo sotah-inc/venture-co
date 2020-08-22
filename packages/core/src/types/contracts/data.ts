@@ -102,7 +102,7 @@ export interface IGetPricelistResponseData {
   items: IItemsMap;
 }
 
-export type GetPricelistResponse = IGetPricelistResponseData | null;
+export type GetPricelistResponse = IGetPricelistResponseData | IValidationErrorResponse | null;
 
 export interface IGetPricelistHistoriesRequest {
   item_ids: ItemId[];
