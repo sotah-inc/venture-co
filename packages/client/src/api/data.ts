@@ -149,14 +149,14 @@ export const getPriceList = async (
 
 export interface IGetPriceListHistoryOptions {
   regionName: RegionName;
-  connectedRealmId: ConnectedRealmId;
+  realmSlug: RealmSlug;
   itemIds: ItemId[];
 }
 
 export const getPriceListHistory = async (
   opts: IGetPriceListHistoryOptions,
 ): Promise<IGetPricelistHistoriesResponseData | null> => {
-  const { regionName, connectedRealmId, itemIds } = opts;
+  const { regionName, realmSlug, itemIds } = opts;
   const { body, status } = await gather<
     IGetPricelistHistoriesRequest,
     GetPricelistHistoriesResponse
@@ -166,7 +166,7 @@ export const getPriceListHistory = async (
       "content-type": "application/json",
     }),
     method: "POST",
-    url: `${getApiEndpoint()}/price-list-history/${regionName}/${connectedRealmId}`,
+    url: `${getApiEndpoint()}/price-list-history/${regionName}/${realmSlug}`,
   });
   if (status !== HTTPStatus.OK) {
     return null;
