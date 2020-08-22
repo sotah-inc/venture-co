@@ -50,16 +50,16 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
     }),
   );
   router.get(
-    "/auctions/:regionName/:connectedRealmId",
+    "/auctions/:regionName/:realmSlug",
     wrap(async (req: Request, res: Response) => {
       const regionName = req.params["regionName"];
-      const connectedRealmId = Number(req.params["connectedRealmId"]);
+      const realmSlug = req.params["realmSlug"];
 
       handleResult(
         res,
         await controller.getAuctions(
           regionName,
-          connectedRealmId,
+          realmSlug,
           req.query,
           req.headers["if-modified-since"],
         ),
