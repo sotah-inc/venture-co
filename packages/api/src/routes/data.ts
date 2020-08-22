@@ -93,16 +93,13 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
     }),
   );
   router.post(
-    "/price-list-history/:regionName/:connectedRealmId",
+    "/price-list-history/:regionName/:realmSlug",
     wrap(async (req: Request, res: Response) => {
       const regionName = req.params["regionName"];
-      const connectedRealmId = Number(req.params["connectedRealmId"]);
+      const realmSlug = req.params["realmSlug"];
       const itemIds = (req.body as IGetPricelistHistoriesRequest).item_ids;
 
-      handleResult(
-        res,
-        await controller.getPricelistHistories(regionName, connectedRealmId, itemIds),
-      );
+      handleResult(res, await controller.getPricelistHistories(regionName, realmSlug, itemIds));
     }),
   );
   router.post(
