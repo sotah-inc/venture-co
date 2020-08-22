@@ -117,7 +117,10 @@ export interface IGetPricelistHistoriesResponseData {
   overallPriceLimits: IPriceLimits;
 }
 
-export type GetPricelistHistoriesResponse = IGetPricelistHistoriesResponseData | null;
+export type GetPricelistHistoriesResponse =
+  | IGetPricelistHistoriesResponseData
+  | IValidationErrorResponse
+  | null;
 
 export interface IGetUnmetDemandRequest {
   expansion: ExpansionName;
