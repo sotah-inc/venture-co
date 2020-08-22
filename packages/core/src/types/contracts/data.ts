@@ -132,7 +132,11 @@ export interface IGetUnmetDemandResponseData {
   unmetItemIds: ItemId[];
 }
 
-export type GetUnmetDemandResponse = IGetUnmetDemandResponseData | IErrorResponse | null;
+export type GetUnmetDemandResponse =
+  | IGetUnmetDemandResponseData
+  | IValidationErrorResponse
+  | IErrorResponse
+  | null;
 
 export interface IGetProfessionPricelistsResponseData {
   profession_pricelists: IProfessionPricelistJson[];
