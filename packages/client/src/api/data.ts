@@ -27,6 +27,7 @@ import {
   ITokenHistory,
   QueryAuctionStatsResponse,
   QueryItemsResponse,
+  RealmSlug,
   RegionName,
 } from "@sotah-inc/core";
 import * as HTTPStatus from "http-status";
@@ -68,18 +69,18 @@ export const getConnectedRealms = async (
 
 export interface IGetAuctionsOptions {
   regionName: RegionName;
-  connectedRealmId: ConnectedRealmId;
+  realmSlug: RealmSlug;
   request: IGetAuctionsRequest;
 }
 
 export const getAuctions = async (
   opts: IGetAuctionsOptions,
 ): Promise<IGetAuctionsResponseData | null> => {
-  const { regionName, connectedRealmId, request } = opts;
+  const { regionName, realmSlug, request } = opts;
   const { body, status } = await gatherWithQuery<IGetAuctionsRequest, GetAuctionsResponse>({
     method: "GET",
     query: request,
-    url: `${getApiEndpoint()}/auctions/${regionName}/${connectedRealmId}`,
+    url: `${getApiEndpoint()}/auctions/${regionName}/${realmSlug}`,
   });
   if (status !== HTTPStatus.OK) {
     return null;

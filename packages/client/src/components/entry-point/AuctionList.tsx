@@ -159,7 +159,7 @@ export class AuctionList extends React.Component<Props> {
     }
 
     refreshAuctions({
-      connectedRealmId: currentRealm.connectedRealmId,
+      realmSlug: currentRealm.realm.slug,
       regionName: currentRegion.config_region.name,
       request: {
         count: options.auctionsPerPage,
