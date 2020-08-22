@@ -536,13 +536,49 @@ export class DataController {
 
   public async getPricelist(
     regionName: RegionName,
-    connectedRealmId: ConnectedRealmId,
+    realmSlug: RealmSlug,
     itemIds: ItemId[],
   ): Promise<IRequestResult<GetPricelistResponse>> {
+    // resolving connected-realm
+    const resolveMessage = await this.messenger.resolveConnectedRealm({
+      realm_slug: realmSlug,
+      region_name: regionName,
+    });
+    switch (resolveMessage.code) {
+      case code.ok:
+        break;
+      case code.notFound:
+        const notFoundValidationErrors: IValidationErrorResponse = {
+          error: "could not resolve connected-realm",
+        };
+
+        return {
+          data: notFoundValidationErrors,
+          status: HTTPStatus.NOT_FOUND,
+        };
+      default:
+        const defaultValidationErrors: IValidationErrorResponse = {
+          error: "could not resolve connected-realm",
+        };
+
+        return {
+          data: defaultValidationErrors,
+          status: HTTPStatus.INTERNAL_SERVER_ERROR,
+        };
+    }
+
+    const resolveResult = await resolveMessage.decode();
+    if (resolveResult === null) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
     const pricelistMessage = await this.messenger.getPriceList({
       item_ids: itemIds,
       tuple: {
-        connected_realm_id: connectedRealmId,
+        connected_realm_id: resolveResult.connected_realm.connected_realm.id,
         region_name: regionName,
       },
     });

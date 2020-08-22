@@ -83,13 +83,13 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
     }),
   );
   router.post(
-    "/price-list/:regionName/:connectedRealmId",
+    "/price-list/:regionName/:realmSlug",
     wrap(async (req: Request, res: Response) => {
       const regionName = req.params["regionName"];
-      const connectedRealmId = Number(req.params["connectedRealmId"]);
+      const realmSlug = req.params["realmSlug"];
       const itemIds = (req.body as IGetPricelistRequest).item_ids;
 
-      handleResult(res, await controller.getPricelist(regionName, connectedRealmId, itemIds));
+      handleResult(res, await controller.getPricelist(regionName, realmSlug, itemIds));
     }),
   );
   router.post(
