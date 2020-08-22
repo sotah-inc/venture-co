@@ -127,24 +127,24 @@ export const getItem = async (itemId: ItemId): Promise<IGetItemResult> => {
 
 export interface IGetPriceListOptions {
   regionName: RegionName;
-  connectedRealmId: ConnectedRealmId;
+  realmSlug: RealmSlug;
   itemIds: ItemId[];
 }
 
 export const getPriceList = async (
   opts: IGetPriceListOptions,
 ): Promise<IGetPricelistResponseData | null> => {
-  const { regionName, connectedRealmId, itemIds } = opts;
+  const { regionName, realmSlug, itemIds } = opts;
   const { body, status } = await gather<IGetPricelistRequest, GetPricelistResponse>({
     body: { item_ids: itemIds },
     method: "POST",
-    url: `${getApiEndpoint()}/price-list/${regionName}/${connectedRealmId}`,
+    url: `${getApiEndpoint()}/price-list/${regionName}/${realmSlug}`,
   });
   if (status !== HTTPStatus.OK) {
     return null;
   }
 
-  return body;
+  return body as IGetPricelistResponseData;
 };
 
 export interface IGetPriceListHistoryOptions {
