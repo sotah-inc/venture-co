@@ -3,7 +3,7 @@
     "baseUrl": "src",
     "outDir": "build/dist",
     "strictFunctionTypes": false,
-    "declaration": false
+    "declaration": true
   },
   "exclude": [
     "node_modules",
