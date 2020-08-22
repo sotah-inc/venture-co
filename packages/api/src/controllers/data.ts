@@ -585,16 +585,52 @@ export class DataController {
 
   public async getPricelistHistories(
     regionName: RegionName,
-    connectedRealmId: ConnectedRealmId,
+    realmSlug: RealmSlug,
     itemIds: ItemId[],
   ): Promise<IRequestResult<GetPricelistHistoriesResponse>> {
+    // resolving connected-realm
+    const resolveMessage = await this.messenger.resolveConnectedRealm({
+      realm_slug: realmSlug,
+      region_name: regionName,
+    });
+    switch (resolveMessage.code) {
+      case code.ok:
+        break;
+      case code.notFound:
+        const notFoundValidationErrors: IValidationErrorResponse = {
+          error: "could not resolve connected-realm",
+        };
+
+        return {
+          data: notFoundValidationErrors,
+          status: HTTPStatus.NOT_FOUND,
+        };
+      default:
+        const defaultValidationErrors: IValidationErrorResponse = {
+          error: "could not resolve connected-realm",
+        };
+
+        return {
+          data: defaultValidationErrors,
+          status: HTTPStatus.INTERNAL_SERVER_ERROR,
+        };
+    }
+
+    const resolveResult = await resolveMessage.decode();
+    if (resolveResult === null) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
     const currentUnixTimestamp = Math.floor(Date.now() / 1000);
     const lowerBounds = currentUnixTimestamp - 60 * 60 * 24 * 14;
     const historyMessage = await this.messenger.getPricelistHistories({
       item_ids: itemIds,
       lower_bounds: lowerBounds,
       tuple: {
-        connected_realm_id: connectedRealmId,
+        connected_realm_id: resolveResult.connected_realm.connected_realm.id,
         region_name: regionName,
       },
       upper_bounds: currentUnixTimestamp,
