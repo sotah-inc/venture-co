@@ -249,7 +249,7 @@ export interface IGetUnmetDemandOptions {
 
 export interface IGetUnmetDemandResult {
   data: IGetUnmetDemandResponseData | null;
-  errors: IErrorResponse | null;
+  errors: IErrorResponse | IValidationErrorResponse | null;
 }
 
 export const getUnmetDemand = async (
@@ -264,6 +264,8 @@ export const getUnmetDemand = async (
   switch (status) {
     case HTTPStatus.OK:
       return { errors: null, data: body as IGetUnmetDemandResponseData };
+    case HTTPStatus.NOT_FOUND:
+      return { data: null, errors: body as IValidationErrorResponse };
     default:
       return { data: null, errors: body as IErrorResponse };
   }
