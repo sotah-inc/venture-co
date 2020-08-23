@@ -140,7 +140,11 @@ export class Realm extends React.Component<Props> {
       );
     }
 
-    if (!(realm_slug in realms)) {
+    const hasRealm = realms.reduce<boolean>(
+      (result, v) => result || v.realm.slug === realm_slug,
+      false,
+    );
+    if (!hasRealm) {
       return (
         <NonIdealState
           title={`Realm ${realm_slug} in region ${currentRegion.config_region.name} not found!`}
