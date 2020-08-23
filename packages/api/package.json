@@ -1,6 +1,6 @@
 {
   "name": "@sotah-inc/api",
-  "version": "2.0.11",
+  "version": "2.0.12",
   "description": "SotAH API SDK",
   "main": "build/dist/index.js",
   "typings": "build/dist/index.d.ts",
@@ -53,7 +53,7 @@
     "@google-cloud/pubsub": "^2.5.0",
     "@google-cloud/storage": "^5.2.0",
     "@sendgrid/mail": "^7.2.4",
-    "@sotah-inc/core": "^2.0.8",
+    "@sotah-inc/core": "^2.0.9",
     "@sotah-inc/server": "^2.0.6",
     "@types/bcrypt": "^3.0.0",
     "@types/compression": "1.7.0",

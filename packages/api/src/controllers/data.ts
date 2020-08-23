@@ -377,7 +377,7 @@ export class DataController {
     // gathering auctions
     const auctionsMessage = await this.messenger.getAuctions({
       count,
-      item_filters: itemFilters,
+      item_filters: itemFilters ?? [],
       page,
       sort_direction: sortDirection,
       sort_kind: sortKind,
