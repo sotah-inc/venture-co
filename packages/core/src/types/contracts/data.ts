@@ -60,7 +60,7 @@ export interface IGetAuctionsRequest {
   page: number;
   sortKind: SortKind;
   sortDirection: SortDirection;
-  itemFilters: ItemId[];
+  itemFilters?: ItemId[];
 }
 
 export interface IGetAuctionsResponseData {
