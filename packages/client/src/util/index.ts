@@ -146,7 +146,7 @@ export const getItemIconUrl = (item: IItem): string | null => {
 };
 
 export const getItemTextValue = (item: IItem): string => {
-  const foundName = item.sotah_meta.normalized_name.en_US;
+  const foundName = item.blizzard_meta.name.en_US;
   if (typeof foundName !== "undefined" && foundName.length > 0) {
     return foundName;
   }
