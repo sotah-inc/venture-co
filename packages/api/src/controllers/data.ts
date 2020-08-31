@@ -22,6 +22,7 @@ import {
   IPricelistHistoryMap,
   IPrices,
   IPricesFlagged,
+  IQueryItemsRequest,
   IQueryItemsResponseData,
   IRegionComposite,
   IRegionConnectedRealmTuple,
@@ -481,9 +482,20 @@ export class DataController {
     };
   }
 
-  public async queryItems(query: string): Promise<IRequestResult<QueryItemsResponse>> {
+  public async queryItems(req: IQueryItemsRequest): Promise<IRequestResult<QueryItemsResponse>> {
+    const foundLocale: Locale | null = req.locale in Locale ? (req.locale as Locale) : null;
+    if (foundLocale === null) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
     // resolving items-query message
-    const itemsQueryMessage = await this.messenger.queryItems({ locale: Locale.EnUS, query });
+    const itemsQueryMessage = await this.messenger.queryItems({
+      locale: foundLocale,
+      query: req.query,
+    });
     if (itemsQueryMessage.code !== code.ok) {
       return {
         data: { error: itemsQueryMessage.error?.message ?? "" },

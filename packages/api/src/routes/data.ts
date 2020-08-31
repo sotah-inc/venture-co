@@ -70,8 +70,9 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
     "/items",
     wrap(async (req: Request, res: Response) => {
       const query = req.params["query"];
+      const locale = req.params["locale"];
 
-      handleResult(res, await controller.queryItems(query));
+      handleResult(res, await controller.queryItems({ query, locale }));
     }),
   );
   router.get(
