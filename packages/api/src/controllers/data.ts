@@ -22,7 +22,6 @@ import {
   IPricelistHistoryMap,
   IPrices,
   IPricesFlagged,
-  IQueryItemsRequest,
   IQueryItemsResponseData,
   IRegionComposite,
   IRegionConnectedRealmTuple,
@@ -51,6 +50,7 @@ import { Connection } from "typeorm";
 
 import {
   AuctionsQueryParamsRules,
+  ItemsQueryParamRules,
   validate,
   yupValidationErrorToResponse,
 } from "../lib/validator-rules";
@@ -482,21 +482,20 @@ export class DataController {
     };
   }
 
-  public async queryItems(req: IQueryItemsRequest): Promise<IRequestResult<QueryItemsResponse>> {
-    const foundLocale: Locale | null = Object.values(Locale).find(v => v === req.locale)
-      ? (req.locale as Locale)
-      : null;
-    if (foundLocale === null) {
+  public async queryItems(query: ParsedQs): Promise<IRequestResult<QueryItemsResponse>> {
+    // parsing request params
+    const validateParamsResult = await validate(ItemsQueryParamRules, query);
+    if (validateParamsResult.error || !validateParamsResult.data) {
       return {
-        data: null,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+        data: yupValidationErrorToResponse(validateParamsResult.error),
+        status: HTTPStatus.BAD_REQUEST,
       };
     }
 
     // resolving items-query message
     const itemsQueryMessage = await this.messenger.queryItems({
-      locale: foundLocale,
-      query: req.query,
+      locale: validateParamsResult.data.locale as Locale,
+      query: validateParamsResult.data.query,
     });
     if (itemsQueryMessage.code !== code.ok) {
       return {

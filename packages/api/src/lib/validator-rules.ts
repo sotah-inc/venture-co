@@ -5,8 +5,10 @@ import {
   ICreateUserRequest,
   ICreateWorkOrderRequest,
   IGetAuctionsRequest,
+  IQueryItemsRequest,
   IUpdateProfileRequest,
   IValidationErrorResponse,
+  Locale,
   OrderDirection,
   OrderKind,
   SortPerPage,
@@ -139,6 +141,14 @@ export const AuctionsQueryParamsRules = yup
       .number()
       .integer("sort-kind must be an integer")
       .required("sort-kind is required"),
+  })
+  .required()
+  .noUnknown();
+
+export const ItemsQueryParamRules = yup
+  .object<IQueryItemsRequest>({
+    locale: yup.string().oneOf(Object.values(Locale)).required("locale is required"),
+    query: yup.string().required("query is required"),
   })
   .required()
   .noUnknown();
