@@ -483,7 +483,9 @@ export class DataController {
   }
 
   public async queryItems(req: IQueryItemsRequest): Promise<IRequestResult<QueryItemsResponse>> {
-    const foundLocale: Locale | null = req.locale in Locale ? (req.locale as Locale) : null;
+    const foundLocale: Locale | null = Object.values(Locale).find(v => v === req.locale)
+      ? (req.locale as Locale)
+      : null;
     if (foundLocale === null) {
       return {
         data: null,
