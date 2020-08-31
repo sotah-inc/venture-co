@@ -1,12 +1,12 @@
 [submodule "extern/venture-co-next"]
 	path = extern/venture-co-next
-	url = ssh://adrian@sotah.info@source.developers.google.com:2022/p/sotah-prod/r/venture-co-next
+	url = ssh://ihsw.aparker.kilabuk@gmail.com@source.developers.google.com:2022/p/sotah-prod/r/venture-co-next
 [submodule "extern/venture-co-api"]
 	path = extern/venture-co-api
-	url = ssh://adrian@sotah.info@source.developers.google.com:2022/p/sotah-prod/r/venture-co-api
+	url = ssh://ihsw.aparker.kilabuk@gmail.com@source.developers.google.com:2022/p/sotah-prod/r/venture-co-api
 [submodule "extern/infra"]
 	path = extern/infra
-	url = ssh://adrian@sotah.info@source.developers.google.com:2022/p/sotah-prod/r/infra
+	url = ssh://ihsw.aparker.kilabuk@gmail.com@source.developers.google.com:2022/p/sotah-prod/r/infra
 [submodule "extern/bilgewater-cartel"]
 	path = extern/bilgewater-cartel
-	url = ssh://adrian@sotah.info@source.developers.google.com:2022/p/sotah-prod/r/bilgewater-cartel
+	url = ssh://ihsw.aparker.kilabuk@gmail.com@source.developers.google.com:2022/p/sotah-prod/r/bilgewater-cartel
