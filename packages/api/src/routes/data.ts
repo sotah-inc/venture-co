@@ -66,7 +66,7 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
       );
     }),
   );
-  router.post(
+  router.get(
     "/items",
     wrap(async (req: Request, res: Response) => {
       const query = req.params["query"];
