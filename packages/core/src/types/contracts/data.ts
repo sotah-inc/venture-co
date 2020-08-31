@@ -92,7 +92,11 @@ export interface IQueryItemsResponseData {
   items: IQueryItemsItem[];
 }
 
-export type QueryItemsResponse = IQueryItemsResponseData | IErrorResponse | null;
+export type QueryItemsResponse =
+  | IQueryItemsResponseData
+  | IErrorResponse
+  | IValidationErrorResponse
+  | null;
 
 export interface IGetPricelistRequest {
   item_ids: ItemId[];
