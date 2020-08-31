@@ -79,6 +79,7 @@ export type GetAuctionsResponse =
 
 export interface IQueryItemsRequest {
   query: string;
+  locale: string;
 }
 
 export interface IQueryItemsItem {
