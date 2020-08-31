@@ -8,7 +8,7 @@ import {
   ItemPredicate,
   Suggest,
 } from "@blueprintjs/select";
-import { IItem, IQueryItemsItem, ItemId } from "@sotah-inc/core";
+import { IItem, IQueryItemsItem, ItemId, Locale } from "@sotah-inc/core";
 import { debounce } from "lodash";
 
 import { getItems } from "../../api/data";
@@ -149,7 +149,7 @@ export function ItemInput(props: Props) {
       }}
       closeOnSelect={typeof closeOnSelect === "undefined" ? true : closeOnSelect}
       onQueryChange={debounce(async (filterValue: string) => {
-        const res = await getItems(filterValue);
+        const res = await getItems({ query: filterValue, locale: Locale.EnUS });
         if (res === null) {
           return;
         }

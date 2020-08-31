@@ -89,10 +89,12 @@ export const getAuctions = async (
   return body as IGetAuctionsResponseData;
 };
 
-export const getItems = async (query: string): Promise<IQueryItemsResponseData | null> => {
-  const { body, status } = await gather<IQueryItemsRequest, QueryItemsResponse>({
-    body: { query },
-    method: "POST",
+export const getItems = async (
+  req: IQueryItemsRequest,
+): Promise<IQueryItemsResponseData | null> => {
+  const { body, status } = await gatherWithQuery<IQueryItemsRequest, QueryItemsResponse>({
+    method: "GET",
+    query: req,
     url: `${getApiEndpoint()}/items`,
   });
   if (status !== HTTPStatus.OK) {
