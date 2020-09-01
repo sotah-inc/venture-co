@@ -495,7 +495,7 @@ export class DataController {
     // resolving items-query message
     const itemsQueryMessage = await this.messenger.queryItems({
       locale: validateParamsResult.data.locale as Locale,
-      query: validateParamsResult.data.query,
+      query: validateParamsResult.data.query ?? "",
     });
     if (itemsQueryMessage.code !== code.ok) {
       return {
