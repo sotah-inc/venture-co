@@ -1018,7 +1018,12 @@ export class DataController {
     }
 
     // gathering unmet items
-    const unmetItemIds = itemIds.filter(v => !(v.toString() in pricelistResult.price_list));
+    const unmetItemIds = itemIds.filter(
+      v =>
+        !Object.keys(pricelistResult.price_list).some(
+          pricelistItemId => pricelistItemId === v.toString(),
+        ),
+    );
 
     // filtering in unmet profession-pricelists
     const unmetProfessionPricelists = professionPricelists.filter(v => {
