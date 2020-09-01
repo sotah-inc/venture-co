@@ -155,7 +155,7 @@ export const getItemTextValue = (item: IItem): string => {
 };
 
 export const inventoryTypeToString = (iType: InventoryType): string => {
-  if (!(iType in InventoryType)) {
+  if (!Object.values(InventoryType).some(v => v === iType)) {
     return "n/a";
   }
 
@@ -236,7 +236,7 @@ interface IExtractStringMap {
 }
 
 export const extractString = (key: string, params: IExtractStringMap): string => {
-  if (!(key in params)) {
+  if (!Object.keys(params).some(v => v === key)) {
     return "";
   }
 
@@ -357,7 +357,7 @@ export function convertRegionTokenHistoriesToLineData(
   >((dataIntermediate1, unixTimestamp) => {
     const foundIntermediate = dataIntermediate1[Number(unixTimestamp)];
     for (const regionName of Object.keys(regionTokenHistories)) {
-      if (!(regionName in foundIntermediate)) {
+      if (!Object.keys(foundIntermediate).some(v => v === regionName)) {
         foundIntermediate[regionName] = null;
       }
     }

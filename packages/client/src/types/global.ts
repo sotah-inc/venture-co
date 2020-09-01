@@ -14,7 +14,7 @@ import {
 import { FetchLevel } from "./main";
 
 export interface IRegions {
-  [key: string]: IRegionComposite;
+  [key: string]: IRegionComposite | undefined;
 }
 // error types
 export interface IErrors {

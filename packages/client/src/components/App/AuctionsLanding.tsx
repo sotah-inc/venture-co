@@ -66,8 +66,11 @@ export class AuctionsLanding extends React.Component<Props> {
     }
 
     if (currentRegion.config_region.name !== region_name) {
-      if (region_name in regions) {
-        onRegionChange(regions[region_name]);
+      const foundRegion: IRegionComposite | undefined = Object.values(regions).find(
+        v => v?.config_region.name === foundRegion,
+      );
+      if (foundRegion) {
+        onRegionChange(foundRegion);
 
         return;
       }
@@ -108,11 +111,14 @@ export class AuctionsLanding extends React.Component<Props> {
     if (typeof region_name !== "undefined" && currentRegion.config_region.name !== region_name) {
       switch (fetchRealmLevel) {
         case FetchLevel.success:
-          if (!(region_name in regions)) {
+          const foundRegion: IRegionComposite | undefined = Object.values(regions).find(
+            v => v?.config_region.name === foundRegion,
+          );
+          if (!foundRegion) {
             return;
           }
 
-          onRegionChange(regions[region_name]);
+          onRegionChange(foundRegion);
 
           return;
         default:

@@ -43,7 +43,7 @@ export class RegionToggle extends React.Component<Props> {
           <H6>Select Region</H6>
         </li>
         {Object.keys(regions).map((regionName, index) =>
-          this.renderMenuItem(regions[regionName], index),
+          this.renderMenuItem(regions[regionName]!, index),
         )}
       </Menu>
     );

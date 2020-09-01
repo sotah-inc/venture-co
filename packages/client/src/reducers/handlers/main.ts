@@ -214,20 +214,10 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
   entrypoint: {
     realm: {
       load: (state: IMainState, action: ReturnType<typeof LoadRealmEntrypoint>) => {
-        const currentRegion = Object.keys(state.regions).reduce<IRegionComposite | null>(
-          (out, current) => {
-            if (out !== null) {
-              return out;
-            }
-
-            if (current === action.payload.nextRegionName) {
-              return state.regions[current];
-            }
-
-            return null;
-          },
-          null,
-        );
+        const currentRegion =
+          Object.values(state.regions).find(
+            v => v?.config_region.name === action.payload.nextRegionName,
+          ) ?? null;
         const currentRealm: IClientRealm | null = (() => {
           if (currentRegion === null) {
             return null;
@@ -274,20 +264,10 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
     },
     region: {
       load: (state: IMainState, action: ReturnType<typeof LoadRegionEntrypoint>) => {
-        const currentRegion = Object.keys(state.regions).reduce<IRegionComposite | null>(
-          (out, current) => {
-            if (out !== null) {
-              return out;
-            }
-
-            if (current === action.payload.nextRegionName) {
-              return state.regions[current];
-            }
-
-            return null;
-          },
-          null,
-        );
+        const currentRegion =
+          Object.values(state.regions).find(
+            v => v?.config_region.name === action.payload.nextRegionName,
+          ) ?? null;
 
         return {
           ...runners.main(state, ReceiveGetConnectedRealms(action.payload.realms)),
