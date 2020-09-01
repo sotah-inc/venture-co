@@ -148,7 +148,7 @@ export const AuctionsQueryParamsRules = yup
 export const ItemsQueryParamRules = yup
   .object<IQueryItemsRequest>({
     locale: yup.string().oneOf(Object.values(Locale)).required("locale is required"),
-    query: yup.string().required("query is required"),
+    query: yup.string().min(0).required("query is required"),
   })
   .required()
   .noUnknown();
