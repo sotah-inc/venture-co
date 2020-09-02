@@ -4,8 +4,8 @@ import {
   IConnectedRealmComposite,
   IConnectedRealmModificationDates,
   IExpansion,
+  IItem,
   IItemClass,
-  IItemsMap,
   IPricelistHistoryMap,
   IPriceListMap,
   IPrices,
@@ -60,7 +60,7 @@ export interface IQueryItemsResponse {
 }
 
 export interface IGetItemsResponse {
-  items: IItemsMap;
+  items: IItem[];
 }
 
 export interface IGetBootResponse {
