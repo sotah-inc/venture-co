@@ -433,7 +433,7 @@ export class DataController {
     }
 
     const professionPricelists = await (async () => {
-      if (Object.keys(itemsResult).length === 0) {
+      if (itemsResult.items.length === 0) {
         return [];
       }
 
