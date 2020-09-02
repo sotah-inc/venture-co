@@ -208,7 +208,3 @@ export interface IItem {
     };
   };
 }
-
-export interface IItemsMap {
-  [key: number]: IItem | undefined;
-}

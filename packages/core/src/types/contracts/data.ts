@@ -11,7 +11,7 @@ import {
   SortDirection,
   SortKind,
 } from "../index";
-import { IItem, IItemsMap, ItemId } from "../item";
+import { IItem, ItemId } from "../item";
 import { IItemClass } from "../item-class";
 import {
   IItemPriceLimits,
@@ -67,7 +67,7 @@ export interface IGetAuctionsResponseData {
   auctions: IAuction[];
   total: number;
   total_count: number;
-  items: IItemsMap;
+  items: IItem[];
   professionPricelists: IProfessionPricelistJson[];
 }
 
@@ -104,7 +104,7 @@ export interface IGetPricelistRequest {
 
 export interface IGetPricelistResponseData {
   price_list: IPriceListMap;
-  items: IItemsMap;
+  items: IItem[];
 }
 
 export type GetPricelistResponse = IGetPricelistResponseData | IValidationErrorResponse | null;
@@ -117,7 +117,7 @@ export interface IGetPricelistHistoriesRequest {
 
 export interface IGetPricelistHistoriesResponseData {
   history: IItemPricelistHistoryMap<IPricesFlagged>;
-  items: IItemsMap;
+  items: IItem[];
   itemPriceLimits: IItemPriceLimits;
   overallPriceLimits: IPriceLimits;
 }
@@ -132,7 +132,7 @@ export interface IGetUnmetDemandRequest {
 }
 
 export interface IGetUnmetDemandResponseData {
-  items: IItemsMap;
+  items: IItem[];
   professionPricelists: IProfessionPricelistJson[];
   unmetItemIds: ItemId[];
 }
@@ -145,7 +145,7 @@ export type GetUnmetDemandResponse =
 
 export interface IGetProfessionPricelistsResponseData {
   profession_pricelists: IProfessionPricelistJson[];
-  items: IItemsMap;
+  items: IItem[];
 }
 
 export type GetProfessionPricelistsResponse =

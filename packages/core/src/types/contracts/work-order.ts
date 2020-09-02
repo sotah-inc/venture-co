@@ -1,4 +1,4 @@
-import { IItemsMap } from "../item";
+import { IItem } from "../item";
 import { IWorkOrderJson } from "../work-order";
 import { IValidationErrorResponse } from "./index";
 
@@ -12,7 +12,7 @@ export interface IQueryWorkOrdersParams {
 export interface IQueryWorkOrdersResponseData {
   orders: IWorkOrderJson[];
   totalResults: number;
-  items: IItemsMap;
+  items: IItem[];
 }
 
 export type QueryWorkOrdersResponse =
