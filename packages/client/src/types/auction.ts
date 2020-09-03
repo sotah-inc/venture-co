@@ -36,7 +36,7 @@ export const defaultAuctionState: IAuctionState = {
   auctionsResult: {
     data: {
       data: [],
-      items: {},
+      items: [],
     },
     errors: {},
     level: FetchLevel.initial,

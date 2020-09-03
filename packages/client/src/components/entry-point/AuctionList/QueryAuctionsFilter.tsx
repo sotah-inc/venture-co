@@ -1,3 +1,5 @@
+import React from "react";
+
 import {
   Alignment,
   Callout,
@@ -9,7 +11,6 @@ import {
   Tag,
 } from "@blueprintjs/core";
 import { IItem } from "@sotah-inc/core";
-import React from "react";
 
 import { AuctionsOptions } from "../../../types/auction";
 import { getItemTextValue } from "../../../util";

@@ -14,7 +14,7 @@ import {
 } from "@blueprintjs/core";
 import {
   IExpansion,
-  IItemsMap,
+  IItem,
   IPricelistEntryJson,
   IPricelistJson,
   IProfession,
@@ -37,7 +37,7 @@ export interface IStateProps {
   unmetDemandProfessionPricelists: IProfessionPricelistJson[];
   professions: IProfession[];
   getUnmetDemandLevel: FetchLevel;
-  items: IItemsMap;
+  items: IItem[];
   selectedExpansion: IExpansion | null;
   currentRegion: IRegionComposite | null;
   currentRealm: IClientRealm | null;
@@ -191,13 +191,11 @@ export class UnmetDemand extends React.Component<Props, IState> {
       }
 
       const aItemValue: string =
-        a.entry.item_id in items
-          ? items[a.entry.item_id]!.blizzard_meta.preview_item.name.en_US!
-          : a.entry.item_id.toString();
+        items.find(v => v.blizzard_meta.id === a.entry.item_id)?.blizzard_meta.preview_item.name
+          .en_US ?? a.entry.item_id.toString();
       const bItemValue: string =
-        b.entry.item_id in items
-          ? items[b.entry.item_id]!.blizzard_meta.preview_item.name.en_US!
-          : b.entry.item_id.toString();
+        items.find(v => v.blizzard_meta.id === b.entry.item_id)?.blizzard_meta.preview_item.name
+          .en_US ?? b.entry.item_id.toString();
       if (aItemValue !== bItemValue) {
         return aItemValue > bItemValue ? 1 : -1;
       }
@@ -290,7 +288,7 @@ export class UnmetDemand extends React.Component<Props, IState> {
       null,
     );
     const { item_id } = entry;
-    const item = items[item_id];
+    const item = items.find(v => v.blizzard_meta.id === item_id);
 
     if (typeof item === "undefined") {
       return (

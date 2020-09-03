@@ -31,7 +31,7 @@ export const defaultWorkOrderState: IWorkOrderState = {
   orderBy: OrderKind.CreatedAt,
   orderDirection: OrderDirection.Desc,
   orders: {
-    data: { items: {}, orders: [], totalResults: 0 },
+    data: { items: [], orders: [], totalResults: 0 },
     errors: {},
     level: FetchLevel.initial,
   },

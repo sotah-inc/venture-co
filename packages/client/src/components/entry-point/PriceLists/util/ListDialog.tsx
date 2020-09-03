@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Button, Classes, Dialog, HTMLTable, Intent, Tooltip } from "@blueprintjs/core";
-import { IItem, IItemsMap, IPricelistEntryJson, ItemId } from "@sotah-inc/core";
+import { IItem, IPricelistEntryJson, ItemId } from "@sotah-inc/core";
 
 import { ItemPopoverContainer } from "../../../../containers/util/ItemPopover";
 // tslint:disable-next-line:max-line-length
@@ -24,11 +24,11 @@ export interface IOnCompleteOptions {
     item_id: number;
     quantity_modifier: number;
   }>;
-  items: IItemsMap;
+  items: IItem[];
 }
 
 export interface IStateProps {
-  items: IItemsMap;
+  items: IItem[];
 }
 
 export interface IOwnProps {
@@ -57,7 +57,7 @@ type State = Readonly<{
   listName: string;
   listSlug: string;
   entries: IPricelistEntryJson[];
-  entriesItems: IItemsMap;
+  entriesItems: IItem[];
   entryFormError: string;
   entryMode: EntryMode;
 }>;
@@ -65,7 +65,7 @@ type State = Readonly<{
 export class ListDialog extends React.Component<Props, State> {
   public state: State = {
     entries: [],
-    entriesItems: {},
+    entriesItems: [],
     entryFormError: "",
     entryMode: EntryMode.Pick,
     listDialogStep: ListDialogStep.list,
@@ -93,7 +93,7 @@ export class ListDialog extends React.Component<Props, State> {
     if (prevProps.resetTrigger !== resetTrigger) {
       this.setState({
         entries: defaultEntries || [],
-        entriesItems: {},
+        entriesItems: [],
         listDialogStep: ListDialogStep.list,
         listName: defaultName || "",
         listSlug: defaultName || "",
@@ -198,12 +198,11 @@ export class ListDialog extends React.Component<Props, State> {
   }
 
   private onCreateEntryFormComplete(v: IPricelistEntryJson, item: IItem) {
-    const entriesItems = this.state.entriesItems;
-    entriesItems[item.blizzard_meta.id] = item;
-    this.setState({ entriesItems: { ...entriesItems } });
+    const { entries, entriesItems } = this.state;
 
     this.setState({
-      entries: [...this.state.entries, v],
+      entries: [...entries, v],
+      entriesItems: [...entriesItems, item],
       listDialogStep: ListDialogStep.finish,
     });
   }
@@ -229,7 +228,7 @@ export class ListDialog extends React.Component<Props, State> {
   }
 
   private onBulkEntryFormItemSelect(item: IItem) {
-    const { entries } = this.state;
+    const { entries, entriesItems } = this.state;
 
     for (const entry of entries) {
       if (entry.item_id === item.blizzard_meta.id) {
@@ -241,10 +240,7 @@ export class ListDialog extends React.Component<Props, State> {
 
     this.setState({
       entries: [...entries, { id: -1, item_id: item.blizzard_meta.id, quantity_modifier: 1 }],
-      entriesItems: {
-        ...this.state.entriesItems,
-        [item.blizzard_meta.id]: item,
-      },
+      entriesItems: [...entriesItems, item],
       entryFormError: "",
     });
   }
@@ -319,12 +315,12 @@ export class ListDialog extends React.Component<Props, State> {
     const { items } = this.props;
     const { entriesItems } = this.state;
 
-    let foundItem = items[id];
+    let foundItem = items.find(v => v.blizzard_meta.id === id);
     if (typeof foundItem !== "undefined") {
       return foundItem;
     }
 
-    foundItem = entriesItems[id];
+    foundItem = entriesItems.find(v => v.blizzard_meta.id === id);
     if (typeof foundItem !== "undefined") {
       return foundItem;
     }

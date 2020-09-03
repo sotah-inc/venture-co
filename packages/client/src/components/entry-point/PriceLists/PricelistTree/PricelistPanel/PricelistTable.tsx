@@ -2,9 +2,9 @@ import React from "react";
 
 import { H2, H4 } from "@blueprintjs/core";
 import {
+  IItem,
   IItemPriceLimits,
   IItemPricelistHistoryMap,
-  IItemsMap,
   IPriceLimits,
   IPricelistJson,
   IPricesFlagged,
@@ -13,13 +13,13 @@ import {
 
 // tslint:disable-next-line:max-line-length
 import { CurrentPricesTableContainer } from "../../../../../containers/entry-point/PriceLists/PricelistTree/PricelistPanel/PricelistTable/CurrentPricesTable";
+import { IClientRealm } from "../../../../../types/global";
 import { getItemFromPricelist } from "../../../../../util";
 import { ItemIcon } from "../../../../util/ItemIcon";
 import { PricelistHistoryGraph } from "../../../../util/PricelistHistoryGraph";
-import { IClientRealm } from "../../../../../types/global";
 
 export interface IStateProps {
-  items: IItemsMap;
+  items: IItem[];
   pricelistHistoryMap: IItemPricelistHistoryMap<IPricesFlagged>;
   overallPriceLimits: IPriceLimits;
   itemPriceLimits: IItemPriceLimits;

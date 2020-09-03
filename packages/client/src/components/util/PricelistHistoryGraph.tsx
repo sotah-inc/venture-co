@@ -3,9 +3,9 @@ import React from "react";
 import { Icon, Intent, Position, Tab, Tabs, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import {
+  IItem,
   IItemPriceLimits,
   IItemPricelistHistoryMap,
-  IItemsMap,
   IPriceLimits,
   IPricesFlagged,
   ItemId,
@@ -25,7 +25,7 @@ import {
 } from "../../util";
 
 export interface IOwnProps {
-  items: IItemsMap;
+  items: IItem[];
   pricelistHistoryMap: IItemPricelistHistoryMap<IPricesFlagged>;
   overallPriceLimits: IPriceLimits;
   itemPriceLimits: IItemPriceLimits;
@@ -383,8 +383,7 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
   private renderLegendItem(itemId: ItemId, hasData: boolean) {
     const { items } = this.props;
 
-    const foundItem = items[itemId];
-
+    const foundItem = items.find(v => v.blizzard_meta.id === itemId);
     if (typeof foundItem === "undefined") {
       return itemId;
     }
@@ -499,7 +498,10 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
     return (
       <Line
         key={index}
-        name={items[itemId]?.sotah_meta.normalized_name.en_US ?? itemId.toString()}
+        name={
+          items.find(v => v.blizzard_meta.id === itemId)?.sotah_meta.normalized_name.en_US ??
+          itemId.toString()
+        }
         dataKey={(item: ILineItemOpen) => item.data[this.getDataKey(itemId)]}
         stroke={stroke}
         strokeWidth={strokeWidth}

@@ -23,7 +23,6 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
     currentRealm,
     currentRegion,
     isEditListDialogOpen,
-    items: {},
     profile,
     selectedExpansion,
     selectedList,

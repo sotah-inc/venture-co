@@ -3,7 +3,7 @@ import React from "react";
 import { Classes, Intent, ITreeNode, Spinner, Tree } from "@blueprintjs/core";
 import {
   IExpansion,
-  IItemsMap,
+  IItem,
   IPricelistJson,
   IProfession,
   IProfessionPricelistJson,
@@ -20,7 +20,7 @@ import { ItemIcon } from "../../util/ItemIcon";
 
 export interface IStateProps {
   pricelists: IPricelistJson[];
-  items: IItemsMap;
+  items: IItem[];
   selectedList: IPricelistJson | null;
   currentRegion: IRegionComposite | null;
   currentRealm: IClientRealm | null;

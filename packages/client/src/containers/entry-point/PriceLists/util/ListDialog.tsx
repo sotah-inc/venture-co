@@ -7,7 +7,7 @@ import {
 import { IStoreState } from "../../../../types";
 
 const mapStateToProps = (_state: IStoreState): IStateProps => {
-  return { items: {} };
+  return { items: [] };
 };
 
 export const ListDialogContainer = connect<IStateProps, {}, {}, IStoreState>(mapStateToProps)(

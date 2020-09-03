@@ -3,7 +3,6 @@ import React from "react";
 import { Classes, H4, HTMLTable, Intent, Spinner } from "@blueprintjs/core";
 import {
   IItem,
-  IItemsMap,
   IPricelistEntryJson,
   IPricelistJson,
   IPriceListMap,
@@ -12,13 +11,13 @@ import {
 } from "@sotah-inc/core";
 
 import { ItemPopoverContainer } from "../../../../../../containers/util/ItemPopover";
+import { IClientRealm } from "../../../../../../types/global";
 import { FetchLevel } from "../../../../../../types/main";
 import { qualityToColorClass } from "../../../../../../util";
 import { Currency } from "../../../../../util";
-import { IClientRealm } from "../../../../../../types/global";
 
 export interface IStateProps {
-  items: IItemsMap;
+  items: IItem[];
   getPricelistLevel: FetchLevel;
   pricelistMap: IPriceListMap;
   fetchRealmLevel: FetchLevel;
@@ -45,7 +44,7 @@ export class CurrentPricesTable extends React.Component<Props> {
   private getItem(itemId: ItemId): IItem | null {
     const { items } = this.props;
 
-    const foundItem = items[itemId];
+    const foundItem = items.find(v => v.blizzard_meta.id === itemId);
     if (typeof foundItem !== "undefined") {
       return foundItem;
     }
@@ -91,8 +90,8 @@ export class CurrentPricesTable extends React.Component<Props> {
     const { list, items, pricelistMap } = this.props;
 
     const entries = [...list.pricelist_entries!].sort((a, b) => {
-      const aItem = items[a.item_id];
-      const bItem = items[b.item_id];
+      const aItem = items.find(v => v.blizzard_meta.id === a.item_id);
+      const bItem = items.find(v => v.blizzard_meta.id === b.item_id);
 
       let aResult = 0;
       if (a.item_id in pricelistMap) {

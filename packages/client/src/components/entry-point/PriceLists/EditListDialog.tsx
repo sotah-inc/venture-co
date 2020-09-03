@@ -1,13 +1,7 @@
 import React from "react";
 
 import { Intent, IToastProps } from "@blueprintjs/core";
-import {
-  IExpansion,
-  IItemsMap,
-  IPricelistJson,
-  IProfession,
-  IRegionComposite,
-} from "@sotah-inc/core";
+import { IExpansion, IPricelistJson, IProfession, IRegionComposite } from "@sotah-inc/core";
 
 import { ListDialogContainer } from "../../../containers/entry-point/PriceLists/util/ListDialog";
 import { IClientRealm, IErrors, IProfile } from "../../../types/global";
@@ -21,7 +15,6 @@ export interface IStateProps {
   updatePricelistErrors: IErrors;
   profile: IProfile | null;
   selectedList: IPricelistJson | null;
-  items: IItemsMap;
   currentRegion: IRegionComposite | null;
   currentRealm: IClientRealm | null;
   selectedProfession: IProfession | null;

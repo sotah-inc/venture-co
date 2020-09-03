@@ -3,7 +3,6 @@ import {
   IItem,
   IItemClass,
   IItemPricelistHistoryMap,
-  IItemsMap,
   InventoryType,
   IPrefillWorkOrderItemResponseData,
   IPricelistJson,
@@ -274,12 +273,12 @@ export const FormatItemClassList = (itemClassList: IItemClass[]): IItemClasses =
     return nextItemClasses;
   }, {});
 
-export const getItemFromPricelist = (items: IItemsMap, pricelist: IPricelistJson): IItem | null => {
+export const getItemFromPricelist = (items: IItem[], pricelist: IPricelistJson): IItem | null => {
   if (pricelist.pricelist_entries.length === 0) {
     return null;
   }
 
-  const foundItem = items[pricelist.pricelist_entries[0].item_id];
+  const foundItem = items.find(v => v.blizzard_meta.id === pricelist.pricelist_entries[0].item_id);
   if (typeof foundItem === "undefined") {
     return null;
   }

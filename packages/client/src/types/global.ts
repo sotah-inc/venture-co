@@ -2,8 +2,8 @@ import {
   ConnectedRealmId,
   IConnectedRealmComposite,
   IConnectedRealmModificationDates,
+  IItem,
   IItemClass,
-  IItemsMap,
   IItemSubClass,
   IRealm,
   IRegionComposite,
@@ -41,7 +41,7 @@ export interface IItemClassWithSub extends IItemClass {
 }
 
 export interface IItemsData<T> {
-  items: IItemsMap;
+  items: IItem[];
   data: T;
 }
 

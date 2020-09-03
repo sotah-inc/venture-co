@@ -82,7 +82,7 @@ export const defaultPriceListsState: IPriceListsState = {
   priceTable: {
     data: {
       data: {},
-      items: {},
+      items: [],
     },
     errors: {},
     level: FetchLevel.initial,
@@ -94,7 +94,7 @@ export const defaultPriceListsState: IPriceListsState = {
         itemPriceLimits: {},
         overallPriceLimits: { lower: 0, upper: 0 },
       },
-      items: {},
+      items: [],
     },
     errors: {},
     level: FetchLevel.initial,
@@ -102,7 +102,7 @@ export const defaultPriceListsState: IPriceListsState = {
   pricelists: {
     data: {
       data: [],
-      items: {},
+      items: [],
     },
     errors: {},
     level: FetchLevel.initial,
@@ -110,7 +110,7 @@ export const defaultPriceListsState: IPriceListsState = {
   professionPricelists: {
     data: {
       data: [],
-      items: {},
+      items: [],
     },
     errors: {},
     level: FetchLevel.initial,
@@ -124,7 +124,7 @@ export const defaultPriceListsState: IPriceListsState = {
         professionPricelists: [],
         unmetItemIds: [],
       },
-      items: {},
+      items: [],
     },
     errors: {},
     level: FetchLevel.initial,
