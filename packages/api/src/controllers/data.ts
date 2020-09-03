@@ -471,7 +471,7 @@ export class DataController {
     return {
       data: {
         ...auctionsResult,
-        items: { ...itemsResult.items, ...pricelistItemsResult.items },
+        items: [...itemsResult.items, ...pricelistItemsResult.items],
         professionPricelists: professionPricelists.map(v => v.toJson()),
       },
       headers: {
