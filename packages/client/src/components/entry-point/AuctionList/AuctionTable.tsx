@@ -66,7 +66,8 @@ export class AuctionTable extends React.Component<Props> {
   public renderAuction(auction: IAuction | null, index: number) {
     const { auctions } = this.props;
 
-    if (auction === null || !(auction.itemId in auctions.items)) {
+    const foundItem = auctions.items.find(v => v.blizzard_meta.id === auction?.itemId);
+    if (auction === null || !foundItem) {
       return (
         <tr key={index}>
           <td>---</td>
@@ -78,12 +79,10 @@ export class AuctionTable extends React.Component<Props> {
       );
     }
 
-    const item = auctions.items[auction.itemId];
-
     return (
       <React.Fragment key={index}>
         <tr>
-          {this.renderItemCell(auction.itemId, item)}
+          {this.renderItemCell(auction.itemId, foundItem)}
           <td className="quantity-container">{auction.quantity}</td>
           <td className="currency-container">
             <Currency amount={auction.buyout} hideCopper={true} />
@@ -93,7 +92,7 @@ export class AuctionTable extends React.Component<Props> {
           </td>
           <td className="auclist-container">{auction.aucList.length}</td>
         </tr>
-        {this.renderRelatedProfessionPricelists(item)}
+        {this.renderRelatedProfessionPricelists(foundItem)}
       </React.Fragment>
     );
   }

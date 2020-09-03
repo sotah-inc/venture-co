@@ -231,7 +231,7 @@ export const getPrimaryExpansion = (expansions: IExpansion[]): IExpansion => {
 };
 
 interface IExtractStringMap {
-  [key: string]: string | string[];
+  [key: string]: string | string[] | undefined;
 }
 
 export const extractString = (key: string, params: IExtractStringMap): string => {
