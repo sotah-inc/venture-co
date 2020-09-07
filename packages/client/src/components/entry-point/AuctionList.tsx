@@ -349,7 +349,11 @@ export class AuctionList extends React.Component<Props> {
         return true;
       }
 
-      if (activeSelect && hasNewItems(options.selected, prevProps.options.selected)) {
+      if (
+        activeSelect &&
+        (hasNewItems(options.selected, prevProps.options.selected) ||
+          options.selected.length !== prevProps.options.selected.length)
+      ) {
         return true;
       }
 
