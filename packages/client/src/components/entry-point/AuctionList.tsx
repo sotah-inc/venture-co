@@ -25,7 +25,7 @@ import { AuctionTableRouteContainer } from "../../route-containers/entry-point/A
 import { AuctionsOptions } from "../../types/auction";
 import { IClientRealm, IFetchData, IItemsData, IRegions } from "../../types/global";
 import { AuthLevel, FetchLevel } from "../../types/main";
-import { setTitle } from "../../util";
+import { hasNewItems, setTitle } from "../../util";
 import { LastModified, Pagination } from "../util";
 
 type ListAuction = IAuction | null;
@@ -349,9 +349,7 @@ export class AuctionList extends React.Component<Props> {
         return true;
       }
 
-      const didSelectedAuctionsQueryChange =
-        activeSelect && options.selected.length !== prevProps.options.selected.length;
-      if (didSelectedAuctionsQueryChange) {
+      if (activeSelect && hasNewItems(options.selected, prevProps.options.selected)) {
         return true;
       }
 

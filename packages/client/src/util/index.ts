@@ -535,3 +535,22 @@ export function translatePriceToSliderData(
 
   return { min, max, range, step };
 }
+
+export function hasNewItems(firstList: IItem[], secondList: IItem[]): boolean {
+  return (
+    diff(
+      new Set(firstList.map(v => v.blizzard_meta.id)),
+      new Set(secondList.map(v => v.blizzard_meta.id)),
+    ).size > 0
+  );
+}
+
+export function diff<T>(firstSet: Set<T>, secondSet: Set<T>): Set<T> {
+  const out = new Set<T>(firstSet);
+  secondSet.forEach(v => out.delete(v));
+
+  // tslint:disable-next-line:no-console
+  console.log({ firstSet, secondSet, out });
+
+  return out;
+}
