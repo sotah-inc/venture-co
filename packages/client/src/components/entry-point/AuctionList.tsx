@@ -355,7 +355,7 @@ export class AuctionList extends React.Component<Props> {
         return true;
       }
 
-      if (activeSelect !== prevProps.activeSelect) {
+      if (activeSelect && !prevProps.activeSelect) {
         return true;
       }
 
