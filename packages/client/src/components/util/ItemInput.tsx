@@ -20,6 +20,8 @@ export interface IOwnProps {
   autoFocus?: boolean;
   itemIdBlacklist?: ItemId[];
   closeOnSelect?: boolean;
+  itemIdActiveList?: ItemId[];
+
   onSelect(item: IItem): void;
 }
 
@@ -93,7 +95,7 @@ const itemListRenderer: ItemListRenderer<IQueryItemsItem> = (
 };
 
 export function ItemInput(props: Props) {
-  const { autoFocus, onSelect, closeOnSelect, itemIdBlacklist } = props;
+  const { autoFocus, onSelect, closeOnSelect, itemIdBlacklist, itemIdActiveList } = props;
 
   const [results, setResults] = useState<IQueryItemsItem[]>([]);
 
@@ -102,36 +104,36 @@ export function ItemInput(props: Props) {
       inputValueRenderer={inputValueRenderer}
       itemRenderer={(result, itemRendererProps: IItemRendererProps) => {
         const { handleClick, modifiers, index } = itemRendererProps;
+        const { item } = result;
 
         const disabled: boolean = (() => {
           if (typeof itemIdBlacklist === "undefined") {
             return false;
           }
 
-          if (result.item === null) {
+          if (item === null) {
             return true;
           }
 
-          return itemIdBlacklist.indexOf(result.item.blizzard_meta.id) > -1;
+          return itemIdBlacklist.includes(item.blizzard_meta.id);
         })();
 
         if (!modifiers.matchesPredicate) {
           return null;
         }
 
-        let className = modifiers.active ? Classes.ACTIVE : "";
-        const { item } = result;
-
-        let label = "n/a";
-        if (item !== null && item.sotah_meta.normalized_name.en_US !== "") {
-          label = `#${item.blizzard_meta.id}`;
-          className = `${className} ${qualityToColorClass(item.blizzard_meta.quality.type)}`;
-        }
+        const hasFullItem = (item?.sotah_meta.normalized_name.en_US ?? "") !== "";
+        const label = item && hasFullItem ? `#${item.blizzard_meta.id}` : "";
+        const classNames = [
+          modifiers.active ? Classes.INTENT_PRIMARY : "",
+          item && itemIdActiveList?.includes(item.blizzard_meta.id) ? Classes.ACTIVE : "",
+          item && hasFullItem ? qualityToColorClass(item.blizzard_meta.quality.type) : "",
+        ].filter(v => v.length > 0);
 
         return (
           <MenuItem
             key={index}
-            className={className}
+            className={classNames.join(" ")}
             onClick={handleClick}
             text={renderItemRendererText(item)}
             label={label}

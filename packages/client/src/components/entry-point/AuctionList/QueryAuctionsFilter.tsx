@@ -41,7 +41,11 @@ export class QueryAuctionsFilter extends React.Component<Props> {
       <>
         <Navbar>
           <NavbarGroup align={Alignment.LEFT}>
-            <ItemInput onSelect={selectItemQueryAuctions} />
+            <ItemInput
+              onSelect={selectItemQueryAuctions}
+              closeOnSelect={activeSelect}
+              itemIdActiveList={selectedItems.map(v => v.blizzard_meta.id)}
+            />
           </NavbarGroup>
           <NavbarGroup align={Alignment.RIGHT}>
             <Switch
