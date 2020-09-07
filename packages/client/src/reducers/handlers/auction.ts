@@ -68,7 +68,7 @@ export const handlers: IKindHandlers<IAuctionState, AuctionActions> = {
           );
 
           if (foundIndex === -1) {
-            return [action.payload];
+            return [...state.options.selected, action.payload];
           }
 
           if (foundIndex === 0) {
