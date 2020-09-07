@@ -126,7 +126,9 @@ export function ItemInput(props: Props) {
         const label = item && hasFullItem ? `#${item.blizzard_meta.id}` : "";
         const classNames = [
           modifiers.active ? Classes.INTENT_PRIMARY : "",
-          item && itemIdActiveList?.includes(item.blizzard_meta.id) ? Classes.ACTIVE : "",
+          modifiers.active || (item && itemIdActiveList?.includes(item.blizzard_meta.id))
+            ? Classes.ACTIVE
+            : "",
           item && hasFullItem ? qualityToColorClass(item.blizzard_meta.quality.type) : "",
         ].filter(v => v.length > 0);
 
