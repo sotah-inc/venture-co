@@ -48,7 +48,7 @@ export class QueryAuctionsFilter extends React.Component<Props> {
               checked={activeSelect}
               label="Active"
               style={{ marginBottom: "0" }}
-              onChange={() => activeSelectChange(activeSelect)}
+              onChange={() => activeSelectChange(!activeSelect)}
             />
           </NavbarGroup>
         </Navbar>
