@@ -32,7 +32,7 @@ export class QueryAuctionsFilter extends React.Component<Props> {
   public render() {
     const {
       activeSelect,
-      queryAuctionsOptions: { selected: selectedItems },
+      queryAuctionsOptions: { selected: selectedItems, initialQueryResults },
       activeSelectChange,
       selectItemQueryAuctions,
     } = this.props;
@@ -45,6 +45,7 @@ export class QueryAuctionsFilter extends React.Component<Props> {
               onSelect={selectItemQueryAuctions}
               closeOnSelect={activeSelect}
               itemIdActiveList={selectedItems.map(v => v.blizzard_meta.id)}
+              initialResults={initialQueryResults}
             />
           </NavbarGroup>
           <NavbarGroup align={Alignment.RIGHT}>

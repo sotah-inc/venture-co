@@ -40,6 +40,7 @@ export const handlers: IKindHandlers<IAuctionState, AuctionActions> = {
           },
           options: {
             ...state.options,
+            initialQueryResults: action.payload.initialQueryResults,
             selected: action.payload.querySelected,
           },
           relatedProfessionPricelists: action.payload.auctions.professionPricelists,

@@ -2,6 +2,7 @@ import {
   IAuction,
   IItem,
   IProfessionPricelistJson,
+  IQueryItemsItem,
   SortDirection,
   SortKind,
   SortPerPage,
@@ -24,6 +25,7 @@ export interface AuctionsOptions {
   sortDirection: SortDirection;
   sortKind: SortKind;
   selected: IItem[];
+  initialQueryResults: IQueryItemsItem[];
 }
 
 export interface ISortChangeOptions {
@@ -44,6 +46,7 @@ export const defaultAuctionState: IAuctionState = {
   options: {
     auctionsPerPage: SortPerPage.Ten,
     currentPage: 0,
+    initialQueryResults: [],
     selected: [],
     sortDirection: SortDirection.none,
     sortKind: SortKind.none,

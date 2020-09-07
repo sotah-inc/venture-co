@@ -21,6 +21,7 @@ export interface IOwnProps {
   itemIdBlacklist?: ItemId[];
   closeOnSelect?: boolean;
   itemIdActiveList?: ItemId[];
+  initialResults?: IQueryItemsItem[];
 
   onSelect(item: IItem): void;
 }
@@ -95,9 +96,16 @@ const itemListRenderer: ItemListRenderer<IQueryItemsItem> = (
 };
 
 export function ItemInput(props: Props) {
-  const { autoFocus, onSelect, closeOnSelect, itemIdBlacklist, itemIdActiveList } = props;
+  const {
+    autoFocus,
+    onSelect,
+    closeOnSelect,
+    itemIdBlacklist,
+    itemIdActiveList,
+    initialResults,
+  } = props;
 
-  const [results, setResults] = useState<IQueryItemsItem[]>([]);
+  const [results, setResults] = useState<IQueryItemsItem[]>(initialResults ?? []);
 
   return (
     <ItemSuggest
