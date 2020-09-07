@@ -549,8 +549,5 @@ export function diff<T>(firstSet: Set<T>, secondSet: Set<T>): Set<T> {
   const out = new Set<T>(firstSet);
   secondSet.forEach(v => out.delete(v));
 
-  // tslint:disable-next-line:no-console
-  console.log({ firstSet, secondSet, out });
-
   return out;
 }
