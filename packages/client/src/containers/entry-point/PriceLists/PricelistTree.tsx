@@ -1,3 +1,4 @@
+import { IItem, ItemId } from "@sotah-inc/core";
 import { connect } from "react-redux";
 
 import { FetchGetPricelists } from "../../../actions/price-lists";
@@ -25,7 +26,24 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
     selectedExpansion,
   } = state.PriceLists;
 
-  const items = { ...pricelistItems, ...professionPricelistItems };
+  const { foundItems: items } = [...pricelistItems, ...professionPricelistItems].reduce<{
+    itemIds: Set<ItemId>;
+    foundItems: IItem[];
+  }>(
+    (result, v) => {
+      if (result.itemIds.has(v.blizzard_meta.id)) {
+        return result;
+      }
+
+      result.itemIds.add(v.blizzard_meta.id);
+
+      return {
+        foundItems: [...result.foundItems, v],
+        itemIds: result.itemIds,
+      };
+    },
+    { itemIds: new Set<ItemId>(), foundItems: [] },
+  );
 
   return {
     authLevel,
