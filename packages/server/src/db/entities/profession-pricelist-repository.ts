@@ -33,15 +33,16 @@ export class ProfessionPricelistRepository extends AbstractRepository<Profession
   ): Promise<ProfessionPricelist | null> {
     const queryBuilder = this.repository
       .createQueryBuilder("profession_pricelist")
-      .where({ name: profession, expansion })
-      .innerJoinAndSelect(
-        "profession_pricelist.pricelist",
-        "pricelist",
-        "pricelist.slug = :pricelist_slug",
-        { pricelist_slug: slug },
-      )
-      .innerJoinAndSelect("pricelist.user", "pricelist.user")
-      .innerJoinAndSelect("pricelist.entries", "pricelist.entries");
+      .innerJoinAndSelect("profession_pricelist.pricelist", "pricelist")
+      .innerJoinAndSelect("pricelist.user", "user")
+      .innerJoinAndSelect("pricelist.entries", "entry")
+      .where("profession_pricelist.name = :profession")
+      .andWhere("profession_pricelist.expansion = :expansion")
+      .andWhere("pricelist.slug = :slug")
+      .setParameters({ profession, expansion, slug });
+
+    // tslint:disable-next-line:no-console
+    console.log(queryBuilder.getSql());
 
     const professionPricelist = await queryBuilder.getOne();
 
