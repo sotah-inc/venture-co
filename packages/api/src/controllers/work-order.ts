@@ -207,7 +207,7 @@ export class WorkOrderController {
     }
 
     const pricesMessage = await this.messenger.getPriceList({
-      item_ids: [foundItem.blizzard_meta.id],
+      item_ids: [foundItem.id],
       tuple: {
         connected_realm_id: resolveResult.connected_realm.connected_realm.id,
         region_name: regionName,
@@ -229,7 +229,7 @@ export class WorkOrderController {
       };
     }
 
-    const foundPrice = pricesResult.price_list[foundItem.blizzard_meta.id];
+    const foundPrice = pricesResult.price_list[foundItem.id];
 
     return {
       data: { currentPrice: foundPrice?.average_buyout_per ?? null },

@@ -534,7 +534,7 @@ export class DataController {
     const data: IQueryItemsResponseData = {
       items: itemsQueryResult.items.map(v => {
         return {
-          item: foundItems.find(foundItem => foundItem.blizzard_meta.id === v.item_id) ?? null,
+          item: foundItems.find(foundItem => foundItem.id === v.item_id) ?? null,
           rank: v.rank,
           target: v.target,
         };
