@@ -11,6 +11,7 @@ export * from "./profession";
 export * from "./region";
 export * from "./token";
 export * from "./work-order";
+export * from "./short-item";
 
 export enum SortDirection {
   none,

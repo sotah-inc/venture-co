@@ -11,7 +11,7 @@ import {
   SortDirection,
   SortKind,
 } from "../index";
-import { IItem, ItemId } from "../item";
+import { ItemId } from "../item";
 import { IItemClass } from "../item-class";
 import {
   IItemPriceLimits,
@@ -20,6 +20,7 @@ import {
   IPriceListMap,
 } from "../pricelist";
 import { IProfession } from "../profession";
+import { IShortItem } from "../short-item";
 
 // new
 export interface IGetBootResponseData {
@@ -50,7 +51,7 @@ export interface IGetConnectedRealmsResponseData {
 export type GetConnectedRealmsResponse = IGetConnectedRealmsResponseData | null;
 
 export interface IGetItemResponseData {
-  item: IItem;
+  item: IShortItem;
 }
 
 export type GetItemResponse = IGetItemResponseData | IErrorResponse;
@@ -67,7 +68,7 @@ export interface IGetAuctionsResponseData {
   auctions: IAuction[];
   total: number;
   total_count: number;
-  items: IItem[];
+  items: IShortItem[];
   professionPricelists: IProfessionPricelistJson[];
 }
 
@@ -83,7 +84,7 @@ export interface IQueryItemsRequest {
 }
 
 export interface IQueryItemsItem {
-  item: IItem | null;
+  item: IShortItem | null;
   target: string;
   rank: number;
 }
@@ -104,7 +105,7 @@ export interface IGetPricelistRequest {
 
 export interface IGetPricelistResponseData {
   price_list: IPriceListMap;
-  items: IItem[];
+  items: IShortItem[];
 }
 
 export type GetPricelistResponse = IGetPricelistResponseData | IValidationErrorResponse | null;
@@ -117,7 +118,7 @@ export interface IGetPricelistHistoriesRequest {
 
 export interface IGetPricelistHistoriesResponseData {
   history: IItemPricelistHistoryMap<IPricesFlagged>;
-  items: IItem[];
+  items: IShortItem[];
   itemPriceLimits: IItemPriceLimits;
   overallPriceLimits: IPriceLimits;
 }
@@ -132,7 +133,7 @@ export interface IGetUnmetDemandRequest {
 }
 
 export interface IGetUnmetDemandResponseData {
-  items: IItem[];
+  items: IShortItem[];
   professionPricelists: IProfessionPricelistJson[];
   unmetItemIds: ItemId[];
 }
@@ -145,7 +146,7 @@ export type GetUnmetDemandResponse =
 
 export interface IGetProfessionPricelistsResponseData {
   profession_pricelists: IProfessionPricelistJson[];
-  items: IItem[];
+  items: IShortItem[];
 }
 
 export type GetProfessionPricelistsResponse =

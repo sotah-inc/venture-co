@@ -1,5 +1,5 @@
 import { IPricelistEntryJson, IPricelistJson } from "../../entities";
-import { IItem } from "../../item";
+import { IShortItem } from "../../short-item";
 import { IValidationErrorResponse } from "../index";
 
 export interface ICreatePricelistRequest {
@@ -23,7 +23,7 @@ export type CreatePricelistResponse = ICreatePricelistResponseData | IValidation
 
 export interface IGetPricelistsResponseData {
   pricelists: IPricelistJson[];
-  items: IItem[];
+  items: IShortItem[];
 }
 
 export type GetPricelistsResponse = IGetPricelistsResponseData;

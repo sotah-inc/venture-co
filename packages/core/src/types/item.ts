@@ -6,8 +6,8 @@ import {
   ITypeNameTuple,
   LocaleMapping,
   PriceValue,
-  UnixTimestamp,
 } from "./index";
+import { ISotahItemMeta } from "./sotah-item-meta";
 
 export type ItemId = number;
 
@@ -198,13 +198,5 @@ export interface IItem {
     is_stackable: boolean;
     preview_item: IPreviewItem;
   };
-  sotah_meta: {
-    last_modified: UnixTimestamp;
-    normalized_name: LocaleMapping;
-    item_icon_meta: {
-      icon_url: string;
-      icon_object_name: string;
-      icon: string;
-    };
-  };
+  sotah_meta: ISotahItemMeta;
 }
