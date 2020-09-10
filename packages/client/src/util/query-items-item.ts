@@ -12,10 +12,7 @@ export const getSelectedResultIndex = (
     const selectedItem = selectedItems[i];
 
     if (selectedItem.item !== null) {
-      if (
-        result.item !== null &&
-        result.item.blizzard_meta.id === selectedItem.item.blizzard_meta.id
-      ) {
+      if (result.item !== null && result.item.id === selectedItem.item.id) {
         return Number(i);
       }
     }

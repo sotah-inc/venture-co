@@ -8,7 +8,7 @@ import {
   ItemPredicate,
   Suggest,
 } from "@blueprintjs/select";
-import { IItem, IQueryItemsItem, ItemId, Locale } from "@sotah-inc/core";
+import { IItem, IQueryItemsItem, IShortItem, ItemId, Locale } from "@sotah-inc/core";
 import { debounce } from "lodash";
 
 import { getItems } from "../../api/data";
@@ -23,20 +23,20 @@ export interface IOwnProps {
   itemIdActiveList?: ItemId[];
   initialResults?: IQueryItemsItem[];
 
-  onSelect(item: IItem): void;
+  onSelect(item: IShortItem): void;
 }
 
 type Props = Readonly<IOwnProps>;
 
 const inputValueRenderer = (result: IQueryItemsItem): string => {
-  if (result.item === null || result.item.blizzard_meta.id === 0) {
+  if (result.item === null || result.item.id === 0) {
     return "n/a";
   }
 
   return getItemTextValue(result.item);
 };
 
-const renderItemAsItemRendererText = (item: IItem) => {
+const renderItemAsItemRendererText = (item: IShortItem) => {
   const itemText = getItemTextValue(item);
   const itemIconUrl = getItemIconUrl(item);
 
@@ -51,15 +51,15 @@ const renderItemAsItemRendererText = (item: IItem) => {
   );
 };
 
-const renderItemRendererTextContent = (item: IItem | null) => {
-  if (item === null || item.blizzard_meta.id === 0) {
+const renderItemRendererTextContent = (item: IShortItem | null) => {
+  if (item === null || item.id === 0) {
     return "n/a";
   }
 
   return renderItemAsItemRendererText(item);
 };
 
-const renderItemRendererText = (item: IItem | null) => {
+const renderItemRendererText = (item: IShortItem | null) => {
   return <span className="item-input-menu-item">{renderItemRendererTextContent(item)}</span>;
 };
 
@@ -123,7 +123,7 @@ export function ItemInput(props: Props) {
             return true;
           }
 
-          return itemIdBlacklist.includes(item.blizzard_meta.id);
+          return itemIdBlacklist.includes(item.id);
         })();
 
         if (!modifiers.matchesPredicate) {
@@ -131,13 +131,11 @@ export function ItemInput(props: Props) {
         }
 
         const hasFullItem = (item?.sotah_meta.normalized_name.en_US ?? "") !== "";
-        const label = item && hasFullItem ? `#${item.blizzard_meta.id}` : "";
+        const label = item && hasFullItem ? `#${item.id}` : "";
         const classNames = [
           modifiers.active ? Classes.INTENT_PRIMARY : "",
-          modifiers.active || (item && itemIdActiveList?.includes(item.blizzard_meta.id))
-            ? Classes.ACTIVE
-            : "",
-          item && hasFullItem ? qualityToColorClass(item.blizzard_meta.quality.type) : "",
+          modifiers.active || (item && itemIdActiveList?.includes(item.id)) ? Classes.ACTIVE : "",
+          item && hasFullItem ? qualityToColorClass(item.quality.type) : "",
         ].filter(v => v.length > 0);
 
         return (

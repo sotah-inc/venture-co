@@ -1,4 +1,11 @@
-import { IItem, IItemClass, InventoryType, IPricelistJson, ItemQuality } from "@sotah-inc/core";
+import {
+  IItem,
+  IItemClass,
+  InventoryType,
+  IPricelistJson,
+  IShortItem,
+  ItemQuality,
+} from "@sotah-inc/core";
 
 import { getApiEndpoint } from "../api";
 import { IItemClasses, IItemClassWithSub, ISubItemClasses } from "../types/global";
@@ -21,7 +28,7 @@ export const qualityToColorClass = (quality: ItemQuality): string => {
   }
 };
 
-export const getItemIconUrl = (item: IItem): string | null => {
+export const getItemIconUrl = (item: IShortItem): string | null => {
   if (item.sotah_meta.item_icon_meta.icon_object_name !== "") {
     return `https://item-icons.sotah.info/${item.sotah_meta.item_icon_meta.icon_object_name}`;
   }
@@ -37,13 +44,13 @@ export const getItemIconUrl = (item: IItem): string | null => {
   return `${getApiEndpoint()}/item-icons/${item.sotah_meta.item_icon_meta.icon}.jpg`;
 };
 
-export const getItemTextValue = (item: IItem): string => {
-  const foundName = item.blizzard_meta.name.en_US;
+export const getItemTextValue = (item: IShortItem): string => {
+  const foundName = item.name;
   if (typeof foundName !== "undefined" && foundName.length > 0) {
     return foundName;
   }
 
-  return item.blizzard_meta.id.toString();
+  return item.id.toString();
 };
 
 export const inventoryTypeToString = (iType: InventoryType): string => {

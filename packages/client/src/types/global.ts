@@ -2,11 +2,11 @@ import {
   ConnectedRealmId,
   IConnectedRealmComposite,
   IConnectedRealmModificationDates,
-  IItem,
   IItemClass,
   IItemSubClass,
   IRealm,
   IRegionComposite,
+  IShortItem,
   IUserJson,
   RegionName,
 } from "@sotah-inc/core";
@@ -41,7 +41,7 @@ export interface IItemClassWithSub extends IItemClass {
 }
 
 export interface IItemsData<T> {
-  items: IItem[];
+  items: IShortItem[];
   data: T;
 }
 

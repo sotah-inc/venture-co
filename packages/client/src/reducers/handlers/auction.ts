@@ -1,4 +1,4 @@
-import { IAuction, IItem } from "@sotah-inc/core";
+import { IAuction, IShortItem } from "@sotah-inc/core";
 
 import { AuctionActions } from "../../actions";
 import {
@@ -63,10 +63,8 @@ export const handlers: IKindHandlers<IAuctionState, AuctionActions> = {
         state: IAuctionState,
         action: ReturnType<typeof SelectItemQueryAuctions>,
       ): IAuctionState => {
-        const nextSelected = ((): IItem[] => {
-          const foundIndex = state.options.selected.findIndex(
-            v => v.blizzard_meta.id === action.payload.blizzard_meta.id,
-          );
+        const nextSelected = ((): IShortItem[] => {
+          const foundIndex = state.options.selected.findIndex(v => v.id === action.payload.id);
 
           if (foundIndex === -1) {
             return [...state.options.selected, action.payload];

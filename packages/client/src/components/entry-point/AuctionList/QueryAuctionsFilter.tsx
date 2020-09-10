@@ -10,7 +10,7 @@ import {
   Switch,
   Tag,
 } from "@blueprintjs/core";
-import { IItem } from "@sotah-inc/core";
+import { IItem, IShortItem } from "@sotah-inc/core";
 
 import { AuctionsOptions } from "../../../types/auction";
 import { getItemTextValue } from "../../../util";
@@ -22,7 +22,7 @@ export interface IStateProps {
 }
 
 export interface IDispatchProps {
-  selectItemQueryAuctions: (item: IItem) => void;
+  selectItemQueryAuctions: (item: IShortItem) => void;
   activeSelectChange: (v: boolean) => void;
 }
 
