@@ -1,11 +1,11 @@
 import React from "react";
 
-import { IItem } from "@sotah-inc/core";
+import { IShortItem } from "@sotah-inc/core";
 
 import { getItemIconUrl } from "../../util";
 
 export interface IOwnProps {
-  item: IItem;
+  item: IShortItem;
 }
 
 type Props = Readonly<IOwnProps>;
