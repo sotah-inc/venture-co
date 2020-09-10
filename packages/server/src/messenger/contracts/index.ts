@@ -4,13 +4,13 @@ import {
   IConnectedRealmComposite,
   IConnectedRealmModificationDates,
   IExpansion,
-  IItem,
   IItemClass,
   IPricelistHistoryMap,
   IPriceListMap,
   IPrices,
   IProfession,
   IRegionConnectedRealmTuple,
+  IShortItem,
   ItemId,
   Locale,
   SortDirection,
@@ -60,7 +60,7 @@ export interface IQueryItemsResponse {
 }
 
 export interface IGetItemsResponse {
-  items: IItem[];
+  items: IShortItem[];
 }
 
 export interface IGetBootResponse {

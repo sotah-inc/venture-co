@@ -1,6 +1,6 @@
 {
   "name": "@sotah-inc/server",
-  "version": "2.0.9",
+  "version": "2.0.10",
   "description": "",
   "main": "./build/dist/index.js",
   "typings": "build/dist/index.d.ts",
@@ -20,7 +20,7 @@
   "license": "ISC",
   "devDependencies": {
     "@blueprintjs/tslint-config": "^3.0.2",
-    "@types/node": "^14.6.2",
+    "@types/node": "^14.6.4",
     "chokidar-cli": "^2.1.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.1.1",
@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@google-cloud/firestore": "^4.2.0",
-    "@sotah-inc/core": "^2.0.13",
+    "@sotah-inc/core": "^2.0.14",
     "@types/express": "^4.17.8",
     "@types/passport": "^1.0.4",
     "@types/passport-jwt": "^3.0.3",
@@ -44,7 +44,7 @@
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "run": "^1.4.0",
-    "typeorm": "^0.2.25",
+    "typeorm": "^0.2.26",
     "uuid": "^8.3.0"
   },
   "publishConfig": {
