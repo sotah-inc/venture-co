@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Button, FormGroup, H5, Intent } from "@blueprintjs/core";
-import { IItem, ItemId } from "@sotah-inc/core";
+import { IShortItem, ItemId } from "@sotah-inc/core";
 import { FormikProps } from "formik";
 
 import { getItemIconUrl, getItemTextValue, qualityToColorClass } from "../../../../util";
@@ -9,7 +9,7 @@ import { DialogActions, DialogBody, ItemInput } from "../../../util";
 
 export interface IOwnProps {
   onComplete: () => void;
-  onItemSelect?: (item: IItem) => void;
+  onItemSelect?: (item: IShortItem) => void;
 
   isSubmitDisabled?: boolean;
   externalItemError?: string;
@@ -19,7 +19,7 @@ export interface IOwnProps {
 }
 
 export interface IFormValues {
-  item: IItem | null;
+  item: IShortItem | null;
 }
 
 export type Props = Readonly<IOwnProps & FormikProps<IFormValues>>;
@@ -58,7 +58,7 @@ export class BulkEntryForm extends React.Component<Props> {
                 >
                   <ItemInput
                     itemIdBlacklist={itemIdBlacklist}
-                    onSelect={(v: IItem) => this.onItemSelect(v)}
+                    onSelect={(v: IShortItem) => this.onItemSelect(v)}
                     autoFocus={true}
                     closeOnSelect={false}
                   />
@@ -108,7 +108,7 @@ export class BulkEntryForm extends React.Component<Props> {
     return null;
   }
 
-  private onItemSelect(item: IItem) {
+  private onItemSelect(item: IShortItem) {
     const { setFieldValue, onItemSelect, setFieldTouched } = this.props;
 
     setFieldValue("item", item);
@@ -118,7 +118,7 @@ export class BulkEntryForm extends React.Component<Props> {
     }
   }
 
-  private renderSelectedItem(item: IItem | null) {
+  private renderSelectedItem(item: IShortItem | null) {
     if (item === null) {
       return (
         <p>
@@ -127,7 +127,7 @@ export class BulkEntryForm extends React.Component<Props> {
       );
     }
 
-    const className = qualityToColorClass(item.blizzard_meta.quality.type);
+    const className = qualityToColorClass(item.quality.type);
     const textValue = getItemTextValue(item);
     const itemIcon = getItemIconUrl(item);
     if (itemIcon === null) {

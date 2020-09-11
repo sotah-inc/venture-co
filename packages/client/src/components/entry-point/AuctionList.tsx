@@ -163,7 +163,7 @@ export class AuctionList extends React.Component<Props> {
       regionName: currentRegion.config_region.name,
       request: {
         count: options.auctionsPerPage,
-        itemFilters: options.selected.map(v => v.blizzard_meta.id),
+        itemFilters: options.selected.map(v => v.id),
         page: options.currentPage,
         sortDirection: options.sortDirection,
         sortKind: options.sortKind,

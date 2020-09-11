@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Button, FormGroup, H5, Intent } from "@blueprintjs/core";
-import { IItem, IPricelistEntryJson, ItemId } from "@sotah-inc/core";
+import { IPricelistEntryJson, IShortItem, ItemId } from "@sotah-inc/core";
 import { FormikProps } from "formik";
 
 import { Generator as FormFieldGenerator } from "../../../../components/util/FormField";
@@ -9,8 +9,8 @@ import { getItemIconUrl, getItemTextValue, qualityToColorClass } from "../../../
 import { DialogActions, DialogBody, ItemInput } from "../../../util";
 
 export interface IOwnProps {
-  onComplete: (entry: IPricelistEntryJson, item: IItem) => void;
-  onItemSelect?: (item: IItem) => void;
+  onComplete: (entry: IPricelistEntryJson, item: IShortItem) => void;
+  onItemSelect?: (item: IShortItem) => void;
 
   isSubmitDisabled?: boolean;
   externalItemError?: string;
@@ -20,13 +20,13 @@ export interface IOwnProps {
 
 export interface IFormValues {
   quantity: number;
-  item: IItem | null;
+  item: IShortItem | null;
 }
 
 export type Props = Readonly<IOwnProps & FormikProps<IFormValues>>;
 
 export class CreateEntryForm extends React.Component<Props> {
-  private static renderSelectedItem(item: IItem | null) {
+  private static renderSelectedItem(item: IShortItem | null) {
     if (item === null) {
       return (
         <p>
@@ -35,7 +35,7 @@ export class CreateEntryForm extends React.Component<Props> {
       );
     }
 
-    const className = qualityToColorClass(item.blizzard_meta.quality.type);
+    const className = qualityToColorClass(item.quality.type);
     const textValue = getItemTextValue(item);
     const itemIcon = getItemIconUrl(item);
     if (itemIcon === null) {
@@ -139,7 +139,7 @@ export class CreateEntryForm extends React.Component<Props> {
     return null;
   }
 
-  private onItemSelect(item: IItem) {
+  private onItemSelect(item: IShortItem) {
     const { setFieldValue, onItemSelect, setFieldTouched } = this.props;
 
     setFieldValue("item", item);

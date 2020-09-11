@@ -13,9 +13,9 @@ import {
 import {
   GameVersion,
   ICreateWorkOrderRequest,
-  IItem,
   IPrefillWorkOrderItemResponseData,
   IRegionComposite,
+  IShortItem,
 } from "@sotah-inc/core";
 import { FormikProps } from "formik";
 
@@ -51,13 +51,13 @@ export interface IOwnProps {
 export interface IFormValues {
   price?: number;
   quantity?: number;
-  item?: IItem | null;
+  item?: IShortItem | null;
 }
 
 export type Props = Readonly<IOwnProps & FormikProps<IFormValues>>;
 
 export class WorkOrderForm extends React.Component<Props> {
-  private static renderSelectedItem(item?: IItem | null) {
+  private static renderSelectedItem(item?: IShortItem | null) {
     if (typeof item === "undefined" || item === null) {
       return (
         <p>
@@ -66,7 +66,7 @@ export class WorkOrderForm extends React.Component<Props> {
       );
     }
 
-    const className = qualityToColorClass(item.blizzard_meta.quality.type);
+    const className = qualityToColorClass(item.quality.type);
     const textValue = getItemTextValue(item);
     const itemIcon = getItemIconUrl(item);
     if (itemIcon === null) {
@@ -211,14 +211,14 @@ export class WorkOrderForm extends React.Component<Props> {
     const renderCurrency = (amount: number) => {
       return <Currency amount={amount} hideCopper={amount > 100 * 100} />;
     };
-    const renderItem = (item: IItem, quantity: number) => {
+    const renderItem = (item: IShortItem, quantity: number) => {
       return (
         <ItemPopoverContainer
           interactive={false}
           item={item}
           position={Position.BOTTOM}
           itemTextFormatter={v => (
-            <span className={qualityToColorClass(item.blizzard_meta.quality.type)}>
+            <span className={qualityToColorClass(item.quality.type)}>
               {v} x{quantity}
             </span>
           )}
@@ -414,7 +414,7 @@ export class WorkOrderForm extends React.Component<Props> {
     );
   }
 
-  private onItemSelect(item: IItem) {
+  private onItemSelect(item: IShortItem) {
     const {
       setFieldValue,
       setFieldTouched,
@@ -431,7 +431,7 @@ export class WorkOrderForm extends React.Component<Props> {
     setFieldTouched("item");
     callPrefillWorkOrderItem({
       gameVersion: GameVersion.Retail,
-      itemId: item.blizzard_meta.id,
+      itemId: item.id,
       realmSlug: currentRealm.realm.slug,
       regionName: currentRegion.config_region.name,
     });

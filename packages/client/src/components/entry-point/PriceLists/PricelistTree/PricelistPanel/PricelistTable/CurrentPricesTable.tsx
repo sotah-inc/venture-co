@@ -2,11 +2,11 @@ import React from "react";
 
 import { Classes, H4, HTMLTable, Intent, Spinner } from "@blueprintjs/core";
 import {
-  IItem,
   IPricelistEntryJson,
   IPricelistJson,
   IPriceListMap,
   IRegionComposite,
+  IShortItem,
   ItemId,
 } from "@sotah-inc/core";
 
@@ -17,7 +17,7 @@ import { qualityToColorClass } from "../../../../../../util";
 import { Currency } from "../../../../../util";
 
 export interface IStateProps {
-  items: IItem[];
+  items: IShortItem[];
   getPricelistLevel: FetchLevel;
   pricelistMap: IPriceListMap;
   fetchRealmLevel: FetchLevel;
@@ -41,10 +41,10 @@ export class CurrentPricesTable extends React.Component<Props> {
     );
   }
 
-  private getItem(itemId: ItemId): IItem | null {
+  private getItem(itemId: ItemId): IShortItem | null {
     const { items } = this.props;
 
-    const foundItem = items.find(v => v.blizzard_meta.id === itemId);
+    const foundItem = items.find(v => v.id === itemId);
     if (typeof foundItem !== "undefined") {
       return foundItem;
     }
@@ -90,8 +90,8 @@ export class CurrentPricesTable extends React.Component<Props> {
     const { list, items, pricelistMap } = this.props;
 
     const entries = [...list.pricelist_entries!].sort((a, b) => {
-      const aItem = items.find(v => v.blizzard_meta.id === a.item_id);
-      const bItem = items.find(v => v.blizzard_meta.id === b.item_id);
+      const aItem = items.find(v => v.id === a.item_id);
+      const bItem = items.find(v => v.id === b.item_id);
 
       let aResult = 0;
       if (a.item_id in pricelistMap) {
@@ -157,7 +157,7 @@ export class CurrentPricesTable extends React.Component<Props> {
 
     return (
       <tr key={index}>
-        <td className={qualityToColorClass(item.blizzard_meta.quality.type)}>
+        <td className={qualityToColorClass(item.quality.type)}>
           <ItemPopoverContainer
             item={item}
             itemTextFormatter={(itemText: string) => `${itemText} \u00D7${quantity_modifier}`}

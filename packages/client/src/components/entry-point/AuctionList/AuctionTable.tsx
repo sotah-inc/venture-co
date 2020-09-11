@@ -2,11 +2,11 @@ import { Button, ButtonGroup, Classes, HTMLTable } from "@blueprintjs/core";
 import {
   IAuction,
   IExpansion,
-  IItem,
   IPricelistJson,
   IProfession,
   IProfessionPricelistJson,
   IRegionComposite,
+  IShortItem,
   ItemQuality,
   SortKind,
 } from "@sotah-inc/core";
@@ -23,7 +23,7 @@ type ListAuction = IAuction | null;
 
 export interface IStateProps {
   auctions: IItemsData<ListAuction[]>;
-  selectedItems: IItem[];
+  selectedItems: IShortItem[];
   relatedProfessionPricelists: IProfessionPricelistJson[];
   expansions: IExpansion[];
   professions: IProfession[];
@@ -32,7 +32,7 @@ export interface IStateProps {
 }
 
 export interface IDispatchProps {
-  selectItemQueryAuctions: (item: IItem) => void;
+  selectItemQueryAuctions: (item: IShortItem) => void;
 }
 
 export interface IRouteProps {
@@ -57,7 +57,7 @@ export type IOwnProps = IRouteProps;
 type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
 
 export class AuctionTable extends React.Component<Props> {
-  public renderItemPopover(item: IItem) {
+  public renderItemPopover(item: IShortItem) {
     const { selectItemQueryAuctions } = this.props;
 
     return <ItemPopoverContainer item={item} onItemClick={() => selectItemQueryAuctions(item)} />;
@@ -66,7 +66,7 @@ export class AuctionTable extends React.Component<Props> {
   public renderAuction(auction: IAuction | null, index: number) {
     const { auctions } = this.props;
 
-    const foundItem = auctions.items.find(v => v.blizzard_meta.id === auction?.itemId);
+    const foundItem = auctions.items.find(v => v.id === auction?.itemId);
     if (auction === null || !foundItem) {
       return (
         <tr key={index}>
@@ -97,15 +97,13 @@ export class AuctionTable extends React.Component<Props> {
     );
   }
 
-  public renderItemCell(itemId: number, item: IItem | undefined) {
+  public renderItemCell(itemId: number, item: IShortItem | undefined) {
     if (typeof item === "undefined") {
       return <td className={qualityToColorClass(ItemQuality.Common)}>{itemId}</td>;
     }
 
     return (
-      <td className={qualityToColorClass(item.blizzard_meta.quality.type)}>
-        {this.renderItemPopover(item)}
-      </td>
+      <td className={qualityToColorClass(item.quality.type)}>{this.renderItemPopover(item)}</td>
     );
   }
 
@@ -145,7 +143,7 @@ export class AuctionTable extends React.Component<Props> {
     );
   }
 
-  private renderRelatedProfessionPricelists(item: IItem | undefined) {
+  private renderRelatedProfessionPricelists(item: IShortItem | undefined) {
     const { relatedProfessionPricelists } = this.props;
 
     if (typeof item === "undefined") {
@@ -153,8 +151,7 @@ export class AuctionTable extends React.Component<Props> {
     }
 
     const forItem = relatedProfessionPricelists.filter(
-      v =>
-        v.pricelist.pricelist_entries.filter(y => y.item_id === item.blizzard_meta.id).length > 0,
+      v => v.pricelist.pricelist_entries.filter(y => y.item_id === item.id).length > 0,
     );
     if (forItem.length === 0) {
       return null;

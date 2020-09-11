@@ -17,7 +17,7 @@ const config: WithFormikConfig<IOwnProps, IFormValues> = {
     setSubmitting(false);
     resetForm();
     props.onComplete(
-      { id: -1, item_id: values.item.blizzard_meta.id, quantity_modifier: values.quantity },
+      { id: -1, item_id: values.item.id, quantity_modifier: values.quantity },
       values.item,
     );
   },

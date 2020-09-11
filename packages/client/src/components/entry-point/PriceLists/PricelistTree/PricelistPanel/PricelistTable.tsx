@@ -2,13 +2,13 @@ import React from "react";
 
 import { H2, H4 } from "@blueprintjs/core";
 import {
-  IItem,
   IItemPriceLimits,
   IItemPricelistHistoryMap,
   IPriceLimits,
   IPricelistJson,
   IPricesFlagged,
   IRegionComposite,
+  IShortItem,
 } from "@sotah-inc/core";
 
 // tslint:disable-next-line:max-line-length
@@ -19,7 +19,7 @@ import { ItemIcon } from "../../../../util/ItemIcon";
 import { PricelistHistoryGraph } from "../../../../util/PricelistHistoryGraph";
 
 export interface IStateProps {
-  items: IItem[];
+  items: IShortItem[];
   pricelistHistoryMap: IItemPricelistHistoryMap<IPricesFlagged>;
   overallPriceLimits: IPriceLimits;
   itemPriceLimits: IItemPriceLimits;

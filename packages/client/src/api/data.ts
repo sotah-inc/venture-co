@@ -18,11 +18,11 @@ import {
   IGetPricelistHistoriesResponseData,
   IGetPricelistRequest,
   IGetPricelistResponseData,
-  IItem,
   IPostJson,
   IQueryAuctionStatsResponseData,
   IQueryItemsRequest,
   IQueryItemsResponseData,
+  IShortItem,
   ItemId,
   ITokenHistory,
   QueryAuctionStatsResponse,
@@ -105,7 +105,7 @@ export const getItems = async (
 };
 
 export interface IGetItemResult {
-  item: IItem | null;
+  item: IShortItem | null;
   error: string | null;
 }
 

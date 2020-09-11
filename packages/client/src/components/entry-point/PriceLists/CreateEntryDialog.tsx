@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Dialog } from "@blueprintjs/core";
-import { IItem, IPricelistEntryJson, IPricelistJson, ItemId } from "@sotah-inc/core";
+import { IPricelistEntryJson, IPricelistJson, IShortItem, ItemId } from "@sotah-inc/core";
 
 // tslint:disable-next-line:max-line-length
 import { CreateEntryFormFormContainer } from "../../../form-containers/entry-point/PriceLists/util/CreateEntryForm";
@@ -84,11 +84,11 @@ export class CreateEntryDialog extends React.Component<Props, IState> {
     });
   }
 
-  private onCreateEntryFormItemSelect(item: IItem) {
+  private onCreateEntryFormItemSelect(item: IShortItem) {
     const { selectedList } = this.props;
 
     for (const entry of selectedList!.pricelist_entries!) {
-      if (entry.item_id === item.blizzard_meta.id) {
+      if (entry.item_id === item.id) {
         this.setState({ entryFormError: "Item is already in the list." });
 
         return;

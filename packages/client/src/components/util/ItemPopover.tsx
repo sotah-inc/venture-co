@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Popover, PopoverInteractionKind, Position } from "@blueprintjs/core";
-import { IItem } from "@sotah-inc/core";
+import { IShortItem } from "@sotah-inc/core";
 
 import { IItemClasses } from "../../types/global";
 import { getItemIconUrl, getItemTextValue, qualityToColorClass } from "../../util";
@@ -13,7 +13,7 @@ export interface IStateProps {
 type ItemTextFormatterResult = string | React.ReactNode;
 
 export interface IOwnProps {
-  item: IItem;
+  item: IShortItem;
 
   onItemClick?: () => void;
   itemTextFormatter?: (itemText: string) => ItemTextFormatterResult;
@@ -23,12 +23,12 @@ export interface IOwnProps {
 
 type Props = Readonly<IStateProps & IOwnProps>;
 
-const renderData = (item: IItem, _itemClasses: IItemClasses) => {
-  return item.blizzard_meta.id;
+const renderData = (item: IShortItem, _itemClasses: IItemClasses) => {
+  return item.id;
 };
 
-const renderPopoverContent = (item: IItem, itemClasses: IItemClasses) => {
-  const itemTextClass = qualityToColorClass(item.blizzard_meta.quality.type);
+const renderPopoverContent = (item: IShortItem, itemClasses: IItemClasses) => {
+  const itemTextClass = qualityToColorClass(item.quality.type);
   const itemIconUrl = getItemIconUrl(item);
   const itemText = getItemTextValue(item);
 
@@ -41,7 +41,7 @@ const renderPopoverContent = (item: IItem, itemClasses: IItemClasses) => {
         </ul>
         <hr />
         <ul>
-          <li>Item id: {item.blizzard_meta.id}</li>
+          <li>Item id: {item.id}</li>
         </ul>
       </div>
     );
@@ -62,7 +62,7 @@ const renderPopoverContent = (item: IItem, itemClasses: IItemClasses) => {
           </ul>
           <hr />
           <ul>
-            <li>Item id: {item.blizzard_meta.id}</li>
+            <li>Item id: {item.id}</li>
           </ul>
         </div>
       </div>
@@ -109,7 +109,7 @@ export class ItemPopover extends React.Component<Props> {
     return itemTextFormatter(itemText);
   }
 
-  private renderDisplay(item: IItem) {
+  private renderDisplay(item: IShortItem) {
     const itemIconUrl = getItemIconUrl(item);
     if (itemIconUrl === null) {
       return this.renderLink(item);
@@ -122,7 +122,7 @@ export class ItemPopover extends React.Component<Props> {
     );
   }
 
-  private renderLink(item: IItem) {
+  private renderLink(item: IShortItem) {
     const { interactive } = this.props;
 
     const itemText = this.itemTextFormatter(getItemTextValue(item));
@@ -134,7 +134,7 @@ export class ItemPopover extends React.Component<Props> {
     return itemText;
   }
 
-  private renderPopoverTarget(item: IItem) {
+  private renderPopoverTarget(item: IShortItem) {
     return <div className="item-icon-container">{this.renderDisplay(item)}</div>;
   }
 }

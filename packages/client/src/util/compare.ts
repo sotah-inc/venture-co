@@ -1,4 +1,4 @@
-import { IItem, IRegionComposite } from "@sotah-inc/core";
+import { IRegionComposite, IShortItem } from "@sotah-inc/core";
 
 import { IClientRealm } from "../types/global";
 
@@ -28,13 +28,8 @@ export const didRealmChange = (
   );
 };
 
-export function hasNewItems(firstList: IItem[], secondList: IItem[]): boolean {
-  return (
-    diff(
-      new Set(firstList.map(v => v.blizzard_meta.id)),
-      new Set(secondList.map(v => v.blizzard_meta.id)),
-    ).size > 0
-  );
+export function hasNewItems(firstList: IShortItem[], secondList: IShortItem[]): boolean {
+  return diff(new Set(firstList.map(v => v.id)), new Set(secondList.map(v => v.id))).size > 0;
 }
 
 export function diff<T>(firstSet: Set<T>, secondSet: Set<T>): Set<T> {

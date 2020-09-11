@@ -3,11 +3,11 @@ import React from "react";
 import { Icon, Intent, Position, Tab, Tabs, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import {
-  IItem,
   IItemPriceLimits,
   IItemPricelistHistoryMap,
   IPriceLimits,
   IPricesFlagged,
+  IShortItem,
   ItemId,
 } from "@sotah-inc/core";
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
@@ -25,7 +25,7 @@ import {
 } from "../../util";
 
 export interface IOwnProps {
-  items: IItem[];
+  items: IShortItem[];
   pricelistHistoryMap: IItemPricelistHistoryMap<IPricesFlagged>;
   overallPriceLimits: IPriceLimits;
   itemPriceLimits: IItemPriceLimits;
@@ -383,7 +383,7 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
   private renderLegendItem(itemId: ItemId, hasData: boolean) {
     const { items } = this.props;
 
-    const foundItem = items.find(v => v.blizzard_meta.id === itemId);
+    const foundItem = items.find(v => v.id === itemId);
     if (typeof foundItem === "undefined") {
       return itemId;
     }
@@ -392,7 +392,7 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
       <ItemPopoverContainer
         item={foundItem}
         itemTextFormatter={text => (
-          <span className={qualityToColorClass(foundItem.blizzard_meta.quality.type)}>{text}</span>
+          <span className={qualityToColorClass(foundItem.quality.type)}>{text}</span>
         )}
         position={Position.BOTTOM}
         onItemClick={() => {
@@ -400,7 +400,7 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
             return;
           }
 
-          this.onLegendItemClick(foundItem.blizzard_meta.id);
+          this.onLegendItemClick(foundItem.id);
         }}
         interactive={hasData}
       />
@@ -499,8 +499,7 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
       <Line
         key={index}
         name={
-          items.find(v => v.blizzard_meta.id === itemId)?.sotah_meta.normalized_name.en_US ??
-          itemId.toString()
+          items.find(v => v.id === itemId)?.sotah_meta.normalized_name.en_US ?? itemId.toString()
         }
         dataKey={(item: ILineItemOpen) => item.data[this.getDataKey(itemId)]}
         stroke={stroke}

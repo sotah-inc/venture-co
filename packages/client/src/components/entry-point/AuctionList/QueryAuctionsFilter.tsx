@@ -10,7 +10,7 @@ import {
   Switch,
   Tag,
 } from "@blueprintjs/core";
-import { IItem, IShortItem } from "@sotah-inc/core";
+import { IShortItem } from "@sotah-inc/core";
 
 import { AuctionsOptions } from "../../../types/auction";
 import { getItemTextValue } from "../../../util";
@@ -44,7 +44,7 @@ export class QueryAuctionsFilter extends React.Component<Props> {
             <ItemInput
               onSelect={selectItemQueryAuctions}
               closeOnSelect={activeSelect}
-              itemIdActiveList={selectedItems.map(v => v.blizzard_meta.id)}
+              itemIdActiveList={selectedItems.map(v => v.id)}
               initialResults={initialQueryResults}
             />
           </NavbarGroup>
@@ -62,7 +62,7 @@ export class QueryAuctionsFilter extends React.Component<Props> {
     );
   }
 
-  private renderSelectedItem(index: number, item: IItem) {
+  private renderSelectedItem(index: number, item: IShortItem) {
     const { selectItemQueryAuctions } = this.props;
 
     return (
@@ -76,7 +76,7 @@ export class QueryAuctionsFilter extends React.Component<Props> {
     );
   }
 
-  private renderSelectedItems(selectedItems: IItem[]) {
+  private renderSelectedItems(selectedItems: IShortItem[]) {
     if (selectedItems.length === 0) {
       return;
     }

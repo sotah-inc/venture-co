@@ -3,11 +3,11 @@ import React from "react";
 import { Classes, Intent, ITreeNode, Spinner, Tree } from "@blueprintjs/core";
 import {
   IExpansion,
-  IItem,
   IPricelistJson,
   IProfession,
   IProfessionPricelistJson,
   IRegionComposite,
+  IShortItem,
 } from "@sotah-inc/core";
 
 // tslint:disable-next-line:max-line-length
@@ -20,7 +20,7 @@ import { ItemIcon } from "../../util/ItemIcon";
 
 export interface IStateProps {
   pricelists: IPricelistJson[];
-  items: IItem[];
+  items: IShortItem[];
   selectedList: IPricelistJson | null;
   currentRegion: IRegionComposite | null;
   currentRealm: IClientRealm | null;

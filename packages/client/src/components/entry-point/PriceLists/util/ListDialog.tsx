@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Button, Classes, Dialog, HTMLTable, Intent, Tooltip } from "@blueprintjs/core";
-import { IItem, IPricelistEntryJson, ItemId } from "@sotah-inc/core";
+import { IPricelistEntryJson, IShortItem, ItemId } from "@sotah-inc/core";
 
 import { ItemPopoverContainer } from "../../../../containers/util/ItemPopover";
 // tslint:disable-next-line:max-line-length
@@ -24,11 +24,11 @@ export interface IOnCompleteOptions {
     item_id: number;
     quantity_modifier: number;
   }>;
-  items: IItem[];
+  items: IShortItem[];
 }
 
 export interface IStateProps {
-  items: IItem[];
+  items: IShortItem[];
 }
 
 export interface IOwnProps {
@@ -57,7 +57,7 @@ type State = Readonly<{
   listName: string;
   listSlug: string;
   entries: IPricelistEntryJson[];
-  entriesItems: IItem[];
+  entriesItems: IShortItem[];
   entryFormError: string;
   entryMode: EntryMode;
 }>;
@@ -197,7 +197,7 @@ export class ListDialog extends React.Component<Props, State> {
     );
   }
 
-  private onCreateEntryFormComplete(v: IPricelistEntryJson, item: IItem) {
+  private onCreateEntryFormComplete(v: IPricelistEntryJson, item: IShortItem) {
     const { entries, entriesItems } = this.state;
 
     this.setState({
@@ -213,11 +213,11 @@ export class ListDialog extends React.Component<Props, State> {
     });
   }
 
-  private onCreateEntryFormItemSelect(item: IItem) {
+  private onCreateEntryFormItemSelect(item: IShortItem) {
     const { entries } = this.state;
 
     for (const entry of entries) {
-      if (entry.item_id === item.blizzard_meta.id) {
+      if (entry.item_id === item.id) {
         this.setState({ entryFormError: "Item is already in the list." });
 
         return;
@@ -227,11 +227,11 @@ export class ListDialog extends React.Component<Props, State> {
     this.setState({ entryFormError: "" });
   }
 
-  private onBulkEntryFormItemSelect(item: IItem) {
+  private onBulkEntryFormItemSelect(item: IShortItem) {
     const { entries, entriesItems } = this.state;
 
     for (const entry of entries) {
-      if (entry.item_id === item.blizzard_meta.id) {
+      if (entry.item_id === item.id) {
         this.setState({ entryFormError: "Item is already in the list." });
 
         return;
@@ -239,7 +239,7 @@ export class ListDialog extends React.Component<Props, State> {
     }
 
     this.setState({
-      entries: [...entries, { id: -1, item_id: item.blizzard_meta.id, quantity_modifier: 1 }],
+      entries: [...entries, { id: -1, item_id: item.id, quantity_modifier: 1 }],
       entriesItems: [...entriesItems, item],
       entryFormError: "",
     });
@@ -311,16 +311,16 @@ export class ListDialog extends React.Component<Props, State> {
     this.setState({ entries: [...entries.slice(0, index), ...entries.slice(index + 1)] });
   }
 
-  private getItem(id: ItemId): IItem | null {
+  private getItem(id: ItemId): IShortItem | null {
     const { items } = this.props;
     const { entriesItems } = this.state;
 
-    let foundItem = items.find(v => v.blizzard_meta.id === id);
+    let foundItem = items.find(v => v.id === id);
     if (typeof foundItem !== "undefined") {
       return foundItem;
     }
 
-    foundItem = entriesItems.find(v => v.blizzard_meta.id === id);
+    foundItem = entriesItems.find(v => v.id === id);
     if (typeof foundItem !== "undefined") {
       return foundItem;
     }
@@ -328,7 +328,7 @@ export class ListDialog extends React.Component<Props, State> {
     return null;
   }
 
-  private renderItemPopover(item: IItem | null) {
+  private renderItemPopover(item: IShortItem | null) {
     if (item === null) {
       return;
     }
@@ -341,7 +341,7 @@ export class ListDialog extends React.Component<Props, State> {
 
     return (
       <tr key={index}>
-        <td className={item === null ? "" : qualityToColorClass(item.blizzard_meta.quality.type)}>
+        <td className={item === null ? "" : qualityToColorClass(item.quality.type)}>
           {this.renderItemPopover(item)}
         </td>
         <td>x{entry.quantity_modifier}</td>

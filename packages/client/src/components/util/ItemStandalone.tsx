@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Position } from "@blueprintjs/core";
-import { IItem } from "@sotah-inc/core";
+import { IShortItem } from "@sotah-inc/core";
 
 import { getItem } from "../../api/data";
 import { ItemPopoverContainer } from "../../containers/util/ItemPopover";
@@ -14,7 +14,7 @@ export interface IOwnProps {
 }
 
 interface IState {
-  item: IFetchData<IItem | null>;
+  item: IFetchData<IShortItem | null>;
 }
 
 type Props = Readonly<IOwnProps>;
@@ -65,7 +65,7 @@ export class ItemStandalone extends React.Component<Props, IState> {
               position={Position.BOTTOM}
               item={item}
               itemTextFormatter={v => (
-                <span className={qualityToColorClass(item.blizzard_meta.quality.type)}>{v}</span>
+                <span className={qualityToColorClass(item.quality.type)}>{v}</span>
               )}
             />
           </span>

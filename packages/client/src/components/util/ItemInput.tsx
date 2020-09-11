@@ -8,7 +8,7 @@ import {
   ItemPredicate,
   Suggest,
 } from "@blueprintjs/select";
-import { IItem, IQueryItemsItem, IShortItem, ItemId, Locale } from "@sotah-inc/core";
+import { IQueryItemsItem, IShortItem, ItemId, Locale } from "@sotah-inc/core";
 import { debounce } from "lodash";
 
 import { getItems } from "../../api/data";

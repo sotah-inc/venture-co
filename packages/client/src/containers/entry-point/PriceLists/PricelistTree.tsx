@@ -1,4 +1,4 @@
-import { IItem, IShortItem, ItemId } from "@sotah-inc/core";
+import { IShortItem, ItemId } from "@sotah-inc/core";
 import { connect } from "react-redux";
 
 import { FetchGetPricelists } from "../../../actions/price-lists";

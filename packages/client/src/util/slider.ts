@@ -1,4 +1,4 @@
-import { IItem, IPrefillWorkOrderItemResponseData } from "@sotah-inc/core";
+import { IPrefillWorkOrderItemResponseData, IShortItem } from "@sotah-inc/core";
 
 import { IFetchData } from "../types/global";
 import { FetchLevel } from "../types/main";
@@ -10,16 +10,16 @@ export interface ISliderData {
   step: number;
 }
 
-export function translateQuantityToSliderData(item?: IItem | null): ISliderData | null {
+export function translateQuantityToSliderData(item?: IShortItem | null): ISliderData | null {
   if (typeof item === "undefined" || item === null) {
     return null;
   }
 
-  switch (item.blizzard_meta.max_count) {
+  switch (item.max_count) {
     case 200:
       return ((): ISliderData => {
         const step = 20;
-        const max = item.blizzard_meta.max_count;
+        const max = item.max_count;
         const min = step;
 
         return {
@@ -32,7 +32,7 @@ export function translateQuantityToSliderData(item?: IItem | null): ISliderData 
     case 20:
       return ((): ISliderData => {
         const step = 5;
-        const max = item.blizzard_meta.max_count;
+        const max = item.max_count;
         const min = step;
 
         return {
@@ -58,7 +58,7 @@ export function translateQuantityToSliderData(item?: IItem | null): ISliderData 
     default:
       return ((): ISliderData => {
         const step = 1;
-        const max = item.blizzard_meta.max_count;
+        const max = item.max_count;
         const min = step;
 
         return {
