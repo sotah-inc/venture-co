@@ -59,6 +59,11 @@ export interface IQueryItemsResponse {
   }>;
 }
 
+export interface IGetItemsRequest {
+  itemIds: ItemId[];
+  locale: Locale;
+}
+
 export interface IGetItemsResponse {
   items: IShortItem[];
 }

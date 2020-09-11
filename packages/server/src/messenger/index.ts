@@ -5,7 +5,6 @@ import {
   IRegionConnectedRealmTuple,
   IRegionRealmTuple,
   IRegionTuple,
-  ItemId,
   ITokenHistory,
 } from "@sotah-inc/core";
 import * as nats from "nats";
@@ -14,6 +13,7 @@ import {
   IGetAuctionsRequest,
   IGetAuctionsResponse,
   IGetBootResponse,
+  IGetItemsRequest,
   IGetItemsResponse,
   IGetPricelistHistoriesRequest,
   IGetPricelistHistoriesResponse,
@@ -89,9 +89,9 @@ export class Messenger {
   }
 
   // via items
-  public async getItems(itemIds: ItemId[]): Promise<Message<IGetItemsResponse>> {
+  public async getItems(request: IGetItemsRequest): Promise<Message<IGetItemsResponse>> {
     return this.request(subjects.items, {
-      body: JSON.stringify({ itemIds }),
+      body: JSON.stringify(request),
       parseKind: ParseKind.GzipJsonEncoded,
     });
   }
