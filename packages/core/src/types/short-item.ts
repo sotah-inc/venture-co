@@ -10,4 +10,5 @@ export interface IShortItem {
     type: ItemQuality;
     name: string;
   };
+  max_count: number;
 }
