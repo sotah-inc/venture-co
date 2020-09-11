@@ -1,4 +1,4 @@
-import { ItemId } from "./item";
+import { ItemId, ItemQuality } from "./item";
 import { ISotahItemMeta } from "./sotah-item-meta";
 
 export interface IShortItem {
@@ -6,4 +6,8 @@ export interface IShortItem {
 
   id: ItemId;
   name: string;
+  quality: {
+    type: ItemQuality;
+    name: string;
+  };
 }
