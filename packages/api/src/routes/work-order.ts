@@ -34,6 +34,7 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
           req.params["regionName"],
           req.params["realmSlug"],
           Number(req.query["itemId"]),
+          String(req.query["locale"]),
         ),
       ),
     ),

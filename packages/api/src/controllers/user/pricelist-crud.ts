@@ -88,7 +88,7 @@ export class PricelistCrudController {
         return entriesItemIds;
       }, pricelistsItemIds);
     }, []);
-    const items = (await (await this.messenger.getItems(itemIds)).decode())!.items;
+    const items = (await (await this.messenger.getItems({ itemIds, locale })).decode())!.items;
 
     // dumping out a response
     return {

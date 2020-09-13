@@ -4,6 +4,7 @@ import {
   ICreateWorkOrderRequest,
   ItemId,
   IValidationErrorResponse,
+  Locale,
   OrderDirection,
   OrderKind,
   PrefillWorkOrderItemResponse,
@@ -99,7 +100,10 @@ export class WorkOrderController {
         regionName,
       });
 
-    const itemsMsg = await this.messenger.getItems(orders.map(v => v.itemId));
+    const itemsMsg = await this.messenger.getItems({
+      itemIds: orders.map(v => v.itemId),
+      locale: result.data.locale,
+    });
     if (itemsMsg.code !== code.ok) {
       const validationErrors: IValidationErrorResponse = { error: "failed to resolve items" };
 
@@ -131,6 +135,7 @@ export class WorkOrderController {
     regionName: RegionName,
     realmSlug: RealmSlug,
     itemId: ItemId,
+    locale: string,
   ): Promise<IRequestResult<PrefillWorkOrderItemResponse>> {
     if (!Object.values(GameVersion).includes(gameVersion as GameVersion)) {
       const validationErrors: IValidationErrorResponse = {
@@ -143,7 +148,18 @@ export class WorkOrderController {
       };
     }
 
-    const itemsMsg = await this.messenger.getItems([itemId]);
+    if (!Object.values(Locale).includes(locale as Locale)) {
+      const validationErrors: IValidationErrorResponse = {
+        error: "could not validate locale",
+      };
+
+      return {
+        data: validationErrors,
+        status: HTTPStatus.BAD_REQUEST,
+      };
+    }
+
+    const itemsMsg = await this.messenger.getItems({ locale: locale as Locale, itemIds: [itemId] });
     if (itemsMsg.code !== code.ok) {
       const validationErrors: IValidationErrorResponse = { error: "failed to fetch items" };
 

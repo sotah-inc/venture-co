@@ -157,6 +157,7 @@ export const QueryWorkOrdersParamsRules = yup
   .object<IFindByOptions>()
   .shape({
     gameVersion: yup.string().required().oneOf(Object.values(GameVersion)),
+    locale: yup.string().required().oneOf(Object.values(Locale)),
     orderBy: yup.string().required().oneOf(Object.values(OrderKind)),
     orderDirection: yup.string().required().oneOf(Object.values(OrderDirection)),
     page: yup.number().required().positive(),
