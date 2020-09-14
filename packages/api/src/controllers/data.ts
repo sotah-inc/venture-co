@@ -235,8 +235,19 @@ export class DataController {
     };
   }
 
-  public async getItem(itemId: ItemId): Promise<IRequestResult<GetItemResponse>> {
-    const msg = await this.messenger.getItems([itemId]);
+  public async getItem(itemId: ItemId, locale: string): Promise<IRequestResult<GetItemResponse>> {
+    if (!Object.values(Locale).includes(locale as Locale)) {
+      const validationErrors: IValidationErrorResponse = {
+        error: "could not validate locale",
+      };
+
+      return {
+        data: validationErrors,
+        status: HTTPStatus.BAD_REQUEST,
+      };
+    }
+
+    const msg = await this.messenger.getItems({ itemIds: [itemId], locale: locale as Locale });
     if (msg.code !== code.ok) {
       const errorResponse: IErrorResponse = { error: "failed to fetch items" };
 
@@ -373,7 +384,7 @@ export class DataController {
       };
     }
 
-    const { count, page, sortDirection, sortKind, itemFilters } = validateParamsResult.data;
+    const { count, page, sortDirection, sortKind, itemFilters, locale } = validateParamsResult.data;
 
     // gathering auctions
     const auctionsMessage = await this.messenger.getAuctions({
@@ -416,7 +427,10 @@ export class DataController {
     }
 
     const itemIds = [...Array.from(new Set(auctionsResult.auctions.map(v => v.itemId)))];
-    const itemsMsg = await this.messenger.getItems(itemIds);
+    const itemsMsg = await this.messenger.getItems({
+      itemIds,
+      locale,
+    });
     if (itemsMsg.code !== code.ok) {
       return {
         data: { error: itemsMsg.error?.message ?? "" },
@@ -449,7 +463,7 @@ export class DataController {
     const pricelistItemIds: ItemId[] = [
       ...professionPricelists.map(v => v.pricelist!.entries!.map(y => y.itemId)[0]),
     ];
-    const pricelistItemsMsg = await this.messenger.getItems(pricelistItemIds);
+    const pricelistItemsMsg = await this.messenger.getItems({ itemIds: pricelistItemIds, locale });
     if (pricelistItemsMsg.code !== code.ok) {
       return {
         data: { error: pricelistItemsMsg.error?.message ?? "" },
@@ -512,9 +526,10 @@ export class DataController {
     }
 
     // resolving items from item-ids in items-query response data
-    const getItemsMessage = await this.messenger.getItems(
-      itemsQueryResult.items.map(v => v.item_id),
-    );
+    const getItemsMessage = await this.messenger.getItems({
+      itemIds: itemsQueryResult.items.map(v => v.item_id),
+      locale: validateParamsResult.data.locale as Locale,
+    });
     if (getItemsMessage.code !== code.ok) {
       return {
         data: { error: itemsQueryMessage.error?.message ?? "" },
@@ -551,7 +566,19 @@ export class DataController {
     regionName: RegionName,
     realmSlug: RealmSlug,
     itemIds: ItemId[],
+    locale: string,
   ): Promise<IRequestResult<GetPricelistResponse>> {
+    if (!Object.values(Locale).includes(locale as Locale)) {
+      const validationErrors: IValidationErrorResponse = {
+        error: "could not validate locale",
+      };
+
+      return {
+        data: validationErrors,
+        status: HTTPStatus.BAD_REQUEST,
+      };
+    }
+
     // resolving connected-realm
     const resolveMessage = await this.messenger.resolveConnectedRealm({
       realm_slug: realmSlug,
@@ -609,7 +636,7 @@ export class DataController {
       };
     }
 
-    const itemsMessage = await this.messenger.getItems(itemIds);
+    const itemsMessage = await this.messenger.getItems({ itemIds, locale: locale as Locale });
     if (itemsMessage.code !== code.ok) {
       return {
         data: null,
@@ -636,7 +663,19 @@ export class DataController {
     regionName: RegionName,
     realmSlug: RealmSlug,
     itemIds: ItemId[],
+    locale: string,
   ): Promise<IRequestResult<GetPricelistHistoriesResponse>> {
+    if (!Object.values(Locale).includes(locale as Locale)) {
+      const validationErrors: IValidationErrorResponse = {
+        error: "could not validate locale",
+      };
+
+      return {
+        data: validationErrors,
+        status: HTTPStatus.BAD_REQUEST,
+      };
+    }
+
     // resolving connected-realm
     const resolveMessage = await this.messenger.resolveConnectedRealm({
       realm_slug: realmSlug,
@@ -698,7 +737,7 @@ export class DataController {
       };
     }
     const foundHistory = historyMessageResult.history;
-    const itemsMessage = await this.messenger.getItems(itemIds);
+    const itemsMessage = await this.messenger.getItems({ itemIds, locale: locale as Locale });
     if (itemsMessage.code !== code.ok) {
       return {
         data: null,
@@ -922,7 +961,19 @@ export class DataController {
     regionName: RegionName,
     realmSlug: RealmSlug,
     expansionName: ExpansionName,
+    locale: string,
   ): Promise<IRequestResult<GetUnmetDemandResponse>> {
+    if (!Object.values(Locale).includes(locale as Locale)) {
+      const validationErrors: IValidationErrorResponse = {
+        error: "could not validate locale",
+      };
+
+      return {
+        data: validationErrors,
+        status: HTTPStatus.BAD_REQUEST,
+      };
+    }
+
     // resolving connected-realm
     const resolveMessage = await this.messenger.resolveConnectedRealm({
       realm_slug: realmSlug,
@@ -980,7 +1031,7 @@ export class DataController {
     );
 
     // gathering items
-    const itemsMsg = await this.messenger.getItems(itemIds);
+    const itemsMsg = await this.messenger.getItems({ itemIds, locale: locale as Locale });
     if (itemsMsg.code !== code.ok) {
       return {
         data: { error: itemsMsg.error!.message },
@@ -1047,7 +1098,19 @@ export class DataController {
   public async getProfessionPricelists(
     professionName: ProfessionName,
     expansionName: ExpansionName,
+    locale: string,
   ): Promise<IRequestResult<GetProfessionPricelistsResponse>> {
+    if (!Object.values(Locale).includes(locale as Locale)) {
+      const validationErrors: IValidationErrorResponse = {
+        error: "could not validate locale",
+      };
+
+      return {
+        data: validationErrors,
+        status: HTTPStatus.BAD_REQUEST,
+      };
+    }
+
     // gathering profession-pricelists
     const professionPricelists = await this.dbConn.getRepository(ProfessionPricelist).find({
       where: { name: professionName, expansion: expansionName },
@@ -1067,7 +1130,7 @@ export class DataController {
       [],
     );
 
-    const itemsMessage = await this.messenger.getItems(itemIds);
+    const itemsMessage = await this.messenger.getItems({ itemIds, locale: locale as Locale });
     if (itemsMessage.code !== code.ok) {
       return {
         data: null,

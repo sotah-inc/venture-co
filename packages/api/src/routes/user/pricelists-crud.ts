@@ -22,7 +22,10 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
     "/",
     auth,
     wrap(async (req: Request, res: Response) =>
-      handleResult(res, await controller.getPricelists(req.user as User)),
+      handleResult(
+        res,
+        await controller.getPricelists(req.user as User, String(req.query["locale"])),
+      ),
     ),
   );
 

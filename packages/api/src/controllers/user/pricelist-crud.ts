@@ -6,6 +6,7 @@ import {
   ICreatePricelistRequest,
   ItemId,
   IValidationErrorResponse,
+  Locale,
   ProfessionName,
   UpdatePricelistRequest,
   UpdatePricelistResponse,
@@ -67,7 +68,21 @@ export class PricelistCrudController {
     };
   }
 
-  public async getPricelists(user: User): Promise<IRequestResult<GetPricelistsResponse>> {
+  public async getPricelists(
+    user: User,
+    locale: string,
+  ): Promise<IRequestResult<GetPricelistsResponse>> {
+    if (!Object.values(Locale).includes(locale as Locale)) {
+      const validationErrors: IValidationErrorResponse = {
+        error: "could not validate locale",
+      };
+
+      return {
+        data: validationErrors,
+        status: HTTPStatus.BAD_REQUEST,
+      };
+    }
+
     // gathering pricelists associated with this user
     let pricelists = await this.dbConn
       .getCustomRepository(PricelistRepository)
@@ -88,7 +103,9 @@ export class PricelistCrudController {
         return entriesItemIds;
       }, pricelistsItemIds);
     }, []);
-    const items = (await (await this.messenger.getItems({ itemIds, locale })).decode())!.items;
+    const items = (await (
+      await this.messenger.getItems({ itemIds, locale: locale as Locale })
+    ).decode())!.items;
 
     // dumping out a response
     return {

@@ -132,6 +132,7 @@ export const AuctionsQueryParamsRules = yup
   .object<IGetAuctionsRequest>({
     count: yup.number().integer("count must be an integer").required("count is required"),
     itemFilters: yup.array(yup.number().required().integer("item-id must be an integer")),
+    locale: yup.string().oneOf(Object.values(Locale)).required("locale is required"),
     page: yup.number().integer("page must be an integer").required("page is required"),
     sortDirection: yup
       .number()
