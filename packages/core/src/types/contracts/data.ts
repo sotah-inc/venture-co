@@ -55,7 +55,7 @@ export interface IGetItemResponseData {
   item: IShortItem;
 }
 
-export type GetItemResponse = IGetItemResponseData | IErrorResponse;
+export type GetItemResponse = IGetItemResponseData | IErrorResponse | IValidationErrorResponse;
 
 export interface IGetAuctionsRequest {
   count: number;
