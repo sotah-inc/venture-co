@@ -8,6 +8,7 @@ import {
   IRegionComposite,
   ITokenHistory,
   IValidationErrorResponse,
+  Locale,
   SortDirection,
   SortKind,
 } from "../index";
@@ -61,6 +62,8 @@ export interface IGetAuctionsRequest {
   page: number;
   sortKind: SortKind;
   sortDirection: SortDirection;
+  locale: Locale;
+
   itemFilters?: ItemId[];
 }
 
