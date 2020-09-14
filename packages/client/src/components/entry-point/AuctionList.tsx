@@ -9,7 +9,7 @@ import {
   NonIdealState,
   Spinner,
 } from "@blueprintjs/core";
-import { IAuction, IPreferenceJson, IRegionComposite, SortPerPage } from "@sotah-inc/core";
+import { IAuction, IPreferenceJson, IRegionComposite, Locale, SortPerPage } from "@sotah-inc/core";
 import React from "react";
 import { ILoadAuctionListEntrypoint } from "../../actions/auction";
 import { ILoadRealmEntrypoint } from "../../actions/main";
@@ -164,6 +164,7 @@ export class AuctionList extends React.Component<Props> {
       request: {
         count: options.auctionsPerPage,
         itemFilters: options.selected.map(v => v.id),
+        locale: Locale.EnUS,
         page: options.currentPage,
         sortDirection: options.sortDirection,
         sortKind: options.sortKind,

@@ -8,6 +8,7 @@ import {
   IGetPricelistsResponseData,
   IPricelistJson,
   IProfession,
+  Locale,
   ProfessionName,
 } from "@sotah-inc/core";
 import { Dispatch } from "redux";
@@ -92,13 +93,13 @@ export const FetchDeletePricelist = (token: string, id: number) => {
 export const REQUEST_GET_PRICELISTS = "REQUEST_GET_PRICELISTS";
 export const RequestGetPricelists = () => createAction(REQUEST_GET_PRICELISTS);
 export const RECEIVE_GET_PRICELISTS = "RECEIVE_GET_PRICELISTS";
-export const ReceiveGetPricelists = (payload: IGetPricelistsResponseData) =>
+export const ReceiveGetPricelists = (payload: IGetPricelistsResponseData | null) =>
   createAction(RECEIVE_GET_PRICELISTS, payload);
 type FetchGetPricelistsType = ReturnType<typeof RequestGetPricelists | typeof ReceiveGetPricelists>;
-export const FetchGetPricelists = (token: string) => {
+export const FetchGetPricelists = (opts: { token: string; locale: Locale }) => {
   return async (dispatch: Dispatch<FetchGetPricelistsType>) => {
     dispatch(RequestGetPricelists());
-    dispatch(ReceiveGetPricelists(await getPricelists(token)));
+    dispatch(ReceiveGetPricelists(await getPricelists(opts.token, { locale: opts.locale })));
   };
 };
 

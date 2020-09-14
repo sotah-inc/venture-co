@@ -1,5 +1,3 @@
-import React from "react";
-
 import { Classes, Intent, ITreeNode, Spinner, Tree } from "@blueprintjs/core";
 import {
   IExpansion,
@@ -8,7 +6,9 @@ import {
   IProfessionPricelistJson,
   IRegionComposite,
   IShortItem,
+  Locale,
 } from "@sotah-inc/core";
+import React from "react";
 
 // tslint:disable-next-line:max-line-length
 import { TreeContentContainer } from "../../../containers/entry-point/PriceLists/PricelistTree/TreeContent";
@@ -36,7 +36,7 @@ export interface IStateProps {
 }
 
 export interface IDispatchProps {
-  refreshPricelists: (token: string) => void;
+  refreshPricelists: (opts: { token: string; locale: Locale }) => void;
 }
 
 export interface IRouteProps {
@@ -100,7 +100,7 @@ export class PricelistTree extends React.Component<Props, IState> {
 
     switch (getPricelistsLevel) {
       case FetchLevel.initial:
-        refreshPricelists(profile.token);
+        refreshPricelists({ token: profile.token, locale: Locale.EnUS });
 
         return;
       default:
@@ -117,7 +117,7 @@ export class PricelistTree extends React.Component<Props, IState> {
 
     switch (getPricelistsLevel) {
       case FetchLevel.initial:
-        refreshPricelists(profile.token);
+        refreshPricelists({ token: profile.token, locale: Locale.EnUS });
 
         return;
       default:

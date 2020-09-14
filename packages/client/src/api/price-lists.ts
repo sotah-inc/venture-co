@@ -17,6 +17,7 @@ import {
   IPricelistJson,
   IProfessionPricelistJson,
   IValidationErrorResponse,
+  Locale,
   ProfessionName,
   RealmSlug,
   RegionName,
@@ -25,7 +26,7 @@ import {
 } from "@sotah-inc/core";
 import * as HTTPStatus from "http-status";
 
-import { gather, getApiEndpoint } from "./index";
+import { gather, gatherWithQuery, getApiEndpoint } from "./index";
 
 export interface ICreatePricelistResult {
   errors: IValidationErrorResponse | null;
@@ -86,16 +87,24 @@ export const updatePricelist = async (
   }
 };
 
-export const getPricelists = async (token: string): Promise<IGetPricelistsResponseData> => {
-  const { body } = await gather<null, GetPricelistsResponse>({
+export const getPricelists = async (
+  token: string,
+  req: { locale: Locale },
+): Promise<IGetPricelistsResponseData | null> => {
+  const { body, status } = await gatherWithQuery<{ locale: Locale }, GetPricelistsResponse>({
     headers: new Headers({
       Authorization: `Bearer ${token}`,
       "content-type": "application/json",
     }),
+    query: req,
     url: `${getApiEndpoint()}/user/pricelists`,
   });
 
-  return body!;
+  if (status !== HTTPStatus.OK) {
+    return null;
+  }
+
+  return body as IGetPricelistsResponseData;
 };
 
 export const deletePricelist = async (token: string, id: number): Promise<number | null> => {

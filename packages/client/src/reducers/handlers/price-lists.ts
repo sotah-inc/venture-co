@@ -418,6 +418,17 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
   pricelists: {
     get: {
       receive: (state: IPriceListsState, action: ReturnType<typeof ReceiveGetPricelists>) => {
+        if (action.payload === null) {
+          return {
+            ...state,
+            pricelists: {
+              data: defaultPriceListsState.pricelists.data,
+              errors: {},
+              level: FetchLevel.failure,
+            },
+          };
+        }
+
         return {
           ...state,
           pricelists: {
