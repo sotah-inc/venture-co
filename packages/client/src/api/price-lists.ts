@@ -254,6 +254,7 @@ export interface IGetUnmetDemandOptions {
   region: RegionName;
   realm: RealmSlug;
   request: IGetUnmetDemandRequest;
+  locale: Locale;
 }
 
 export interface IGetUnmetDemandResult {
@@ -264,10 +265,15 @@ export interface IGetUnmetDemandResult {
 export const getUnmetDemand = async (
   opts: IGetUnmetDemandOptions,
 ): Promise<IGetUnmetDemandResult> => {
-  const { body, status } = await gather<IGetUnmetDemandRequest, GetUnmetDemandResponse>({
+  const { body, status } = await gatherWithQuery<
+    { locale: Locale },
+    GetUnmetDemandResponse,
+    IGetUnmetDemandRequest
+  >({
     body: opts.request,
     headers: new Headers({ "content-type": "application/json" }),
     method: "POST",
+    query: { locale: opts.locale },
     url: `${getApiEndpoint()}/unmet-demand/${opts.region}/${opts.realm}`,
   });
   switch (status) {

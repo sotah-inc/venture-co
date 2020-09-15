@@ -51,8 +51,9 @@ export interface IGatherOptions<T> {
   url: string | Array<string | undefined>;
 }
 
-export interface IGatherQueryOptions<Q> {
+export interface IGatherQueryOptions<Q, B> {
   headers?: Headers;
+  body?: B;
   query?: Q;
   method?: string;
   url: string | Array<string | undefined>;
@@ -87,9 +88,10 @@ export const gather = async <T, A>(opts: IGatherOptions<T>): Promise<IGatherResu
   return handleResponse(response);
 };
 
-export const gatherWithQuery = async <Q, A>(
-  opts: IGatherQueryOptions<Q>,
+export const gatherWithQuery = async <Q, A, B = {}>(
+  opts: IGatherQueryOptions<Q, B>,
 ): Promise<IGatherResult<A>> => {
+  const body = typeof opts.body === "undefined" ? null : JSON.stringify(opts.body);
   const query =
     typeof opts.query === "undefined"
       ? null
@@ -115,6 +117,7 @@ export const gatherWithQuery = async <Q, A>(
   })();
 
   const response = await fetch(url, {
+    body,
     cache: "default",
     headers,
     method,
