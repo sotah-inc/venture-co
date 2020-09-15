@@ -187,9 +187,14 @@ export interface IGetProfessionPricelistsResult {
 export const getProfessionPricelists = async (
   profession: ProfessionName,
   expansion: ExpansionName,
+  locale: Locale,
 ): Promise<IGetProfessionPricelistsResult> => {
-  const { body, status } = await gather<null, GetProfessionPricelistsResponse>({
+  const { body, status } = await gatherWithQuery<
+    { locale: Locale },
+    GetProfessionPricelistsResponse
+  >({
     method: "GET",
+    query: { locale },
     url: `${getApiEndpoint()}/profession-pricelists/${profession}/${expansion}`,
   });
   switch (status) {

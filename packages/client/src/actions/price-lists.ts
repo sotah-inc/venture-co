@@ -169,10 +169,13 @@ type FetchProfessionPricelistsType = ReturnType<
 export const FetchGetProfessionPricelists = (
   profession: ProfessionName,
   expansion: ExpansionName,
+  locale: Locale,
 ) => {
   return async (dispatch: Dispatch<FetchProfessionPricelistsType>) => {
     dispatch(RequestGetProfessionPricelists());
-    dispatch(ReceiveGetProfessionPricelists(await getProfessionPricelists(profession, expansion)));
+    dispatch(
+      ReceiveGetProfessionPricelists(await getProfessionPricelists(profession, expansion, locale)),
+    );
   };
 };
 
