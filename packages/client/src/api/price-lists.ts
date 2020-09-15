@@ -209,12 +209,14 @@ export const getProfessionPricelist = async (
   profession: ProfessionName,
   expansion: ExpansionName,
   slug: string,
+  locale: Locale,
 ): Promise<IGetProfessionPricelistResult> => {
-  const { body, status } = await gather<
-    null,
+  const { body, status } = await gatherWithQuery<
+    { locale: Locale },
     IProfessionPricelistJson | IValidationErrorResponse | null
   >({
     method: "GET",
+    query: { locale },
     url: `${getApiEndpoint()}/profession-pricelists/${profession}/${expansion}/${slug}`,
   });
   switch (status) {
