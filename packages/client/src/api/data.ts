@@ -25,6 +25,7 @@ import {
   IShortItem,
   ItemId,
   ITokenHistory,
+  Locale,
   QueryAuctionStatsResponse,
   QueryItemsResponse,
   RealmSlug,
@@ -131,15 +132,21 @@ export interface IGetPriceListOptions {
   regionName: RegionName;
   realmSlug: RealmSlug;
   itemIds: ItemId[];
+  locale: Locale;
 }
 
 export const getPriceList = async (
   opts: IGetPriceListOptions,
 ): Promise<IGetPricelistResponseData | null> => {
   const { regionName, realmSlug, itemIds } = opts;
-  const { body, status } = await gather<IGetPricelistRequest, GetPricelistResponse>({
+  const { body, status } = await gatherWithQuery<
+    { locale: Locale },
+    GetPricelistResponse,
+    IGetPricelistRequest
+  >({
     body: { item_ids: itemIds },
     method: "POST",
+    query: { locale: opts.locale },
     url: `${getApiEndpoint()}/price-list/${regionName}/${realmSlug}`,
   });
   if (status !== HTTPStatus.OK) {
@@ -153,21 +160,24 @@ export interface IGetPriceListHistoryOptions {
   regionName: RegionName;
   realmSlug: RealmSlug;
   itemIds: ItemId[];
+  locale: Locale;
 }
 
 export const getPriceListHistory = async (
   opts: IGetPriceListHistoryOptions,
 ): Promise<IGetPricelistHistoriesResponseData | null> => {
   const { regionName, realmSlug, itemIds } = opts;
-  const { body, status } = await gather<
-    IGetPricelistHistoriesRequest,
-    GetPricelistHistoriesResponse
+  const { body, status } = await gatherWithQuery<
+    { locale: Locale },
+    GetPricelistHistoriesResponse,
+    IGetPricelistHistoriesRequest
   >({
     body: { item_ids: itemIds },
     headers: new Headers({
       "content-type": "application/json",
     }),
     method: "POST",
+    query: { locale: opts.locale },
     url: `${getApiEndpoint()}/price-list-history/${regionName}/${realmSlug}`,
   });
   if (status !== HTTPStatus.OK) {
