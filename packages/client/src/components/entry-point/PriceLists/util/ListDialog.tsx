@@ -75,16 +75,8 @@ export class ListDialog extends React.Component<Props, State> {
 
   public componentDidMount() {
     const { defaultName, defaultEntries } = this.props;
-    let listName = "";
-    if (defaultName) {
-      listName = defaultName;
-    }
-    let entries: IPricelistEntryJson[] = [];
-    if (defaultEntries) {
-      entries = defaultEntries;
-    }
 
-    this.setState({ listName, entries });
+    this.setState({ listName: defaultName ?? "", entries: defaultEntries ?? [] });
   }
 
   public componentDidUpdate(prevProps: Props) {
@@ -92,11 +84,11 @@ export class ListDialog extends React.Component<Props, State> {
 
     if (prevProps.resetTrigger !== resetTrigger) {
       this.setState({
-        entries: defaultEntries || [],
+        entries: defaultEntries ?? [],
         entriesItems: [],
         listDialogStep: ListDialogStep.list,
-        listName: defaultName || "",
-        listSlug: defaultName || "",
+        listName: defaultName ?? "",
+        listSlug: defaultName ?? "",
       });
 
       return;
