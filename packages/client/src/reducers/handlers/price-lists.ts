@@ -365,6 +365,10 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
         return {
           ...state,
           ...action.payload.meta,
+          priceTable: {
+            ...state.priceTable,
+            level: FetchLevel.prompted,
+          },
           professionPricelists: {
             ...state.professionPricelists,
             data: { ...state.professionPricelists.data, professionPricelists },

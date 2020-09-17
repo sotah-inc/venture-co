@@ -1,5 +1,3 @@
-import React from "react";
-
 import { Classes, H4, HTMLTable, Intent, Spinner } from "@blueprintjs/core";
 import {
   IPricelistEntryJson,
@@ -8,19 +6,26 @@ import {
   IRegionComposite,
   IShortItem,
   ItemId,
+  Locale,
 } from "@sotah-inc/core";
+import React from "react";
+import { IGetPriceListOptions } from "../../../../../../api/data";
 
 import { ItemPopoverContainer } from "../../../../../../containers/util/ItemPopover";
-import { IClientRealm } from "../../../../../../types/global";
+import { IClientRealm, IFetchData, IItemsData } from "../../../../../../types/global";
 import { FetchLevel } from "../../../../../../types/main";
 import { qualityToColorClass } from "../../../../../../util";
 import { Currency } from "../../../../../util";
 
 export interface IStateProps {
-  items: IShortItem[];
-  getPricelistLevel: FetchLevel;
-  pricelistMap: IPriceListMap;
+  priceTable: IFetchData<IItemsData<IPriceListMap>>;
   fetchRealmLevel: FetchLevel;
+  currentRegion: IRegionComposite | null;
+  currentRealm: IClientRealm | null;
+}
+
+export interface IDispatchProps {
+  getPricelist: (opts: IGetPriceListOptions) => void;
 }
 
 export interface IOwnProps {
@@ -29,9 +34,41 @@ export interface IOwnProps {
   realm: IClientRealm;
 }
 
-type Props = Readonly<IStateProps & IOwnProps>;
+type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
 
 export class CurrentPricesTable extends React.Component<Props> {
+  public componentDidUpdate(prevProps: Props) {
+    const {
+      priceTable: {
+        level,
+        data: { items },
+      },
+      getPricelist,
+      currentRegion,
+      currentRealm,
+    } = this.props;
+
+    if (currentRegion === null || currentRealm === null) {
+      return;
+    }
+
+    if (level !== prevProps.priceTable.level) {
+      switch (level) {
+        case FetchLevel.prompted:
+          getPricelist({
+            itemIds: items.map(v => v.id),
+            locale: Locale.EnUS,
+            realmSlug: currentRealm.realm.slug,
+            regionName: currentRegion.config_region.name,
+          });
+
+          return;
+        default:
+          return;
+      }
+    }
+  }
+
   public render() {
     return (
       <>
@@ -42,7 +79,11 @@ export class CurrentPricesTable extends React.Component<Props> {
   }
 
   private getItem(itemId: ItemId): IShortItem | null {
-    const { items } = this.props;
+    const {
+      priceTable: {
+        data: { items },
+      },
+    } = this.props;
 
     const foundItem = items.find(v => v.id === itemId);
     if (typeof foundItem !== "undefined") {
@@ -71,7 +112,9 @@ export class CurrentPricesTable extends React.Component<Props> {
   }
 
   private renderContentWithRealms() {
-    const { getPricelistLevel } = this.props;
+    const {
+      priceTable: { level: getPricelistLevel },
+    } = this.props;
 
     switch (getPricelistLevel) {
       case FetchLevel.fetching:
@@ -87,7 +130,12 @@ export class CurrentPricesTable extends React.Component<Props> {
   }
 
   private renderTable() {
-    const { list, items, pricelistMap } = this.props;
+    const {
+      list,
+      priceTable: {
+        data: { items, data: pricelistMap },
+      },
+    } = this.props;
 
     const entries = [...list.pricelist_entries!].sort((a, b) => {
       const aItem = items.find(v => v.id === a.item_id);
@@ -134,7 +182,11 @@ export class CurrentPricesTable extends React.Component<Props> {
   }
 
   private renderEntry(index: number, entry: IPricelistEntryJson) {
-    const { pricelistMap } = this.props;
+    const {
+      priceTable: {
+        data: { data: pricelistMap },
+      },
+    } = this.props;
     const { item_id, quantity_modifier } = entry;
 
     let buyout: number = 0;
