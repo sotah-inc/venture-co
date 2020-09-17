@@ -34,7 +34,7 @@ export const priceLists = (state: State | undefined, action: PriceListsActions):
     case CHANGE_IS_ADD_ENTRY_DIALOG_OPEN:
       return {
         ...state,
-        isAddListDialogOpen: action.payload,
+        isAddEntryDialogOpen: action.payload,
       };
     default:
       return runners.pricelist(state, action);
