@@ -30,7 +30,7 @@ export function getXAxisTimeRestrictions() {
   return { roundedTwoWeeksAgoDate, roundedNowDate, xAxisTicks };
 }
 
-export const zeroGraphValue = 0.000001;
+export const zeroGraphValue = 0.0001;
 
 interface IRegionTokenHistoryIntermediate {
   [unixtimestamp: number]: {
