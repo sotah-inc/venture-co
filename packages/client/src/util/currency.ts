@@ -1,3 +1,5 @@
+import { zeroGraphValue } from "./graph";
+
 export type CurrencyToTextFormatter = (v: Array<string | null>) => string;
 
 export const currencyToText = (
@@ -5,7 +7,7 @@ export const currencyToText = (
   hideCopper?: boolean,
   formatter?: CurrencyToTextFormatter,
 ): string => {
-  if (amount === 0) {
+  if (amount === 0 || amount === zeroGraphValue) {
     return "0g";
   }
 
