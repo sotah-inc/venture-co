@@ -22,7 +22,6 @@ import {
   getXAxisTimeRestrictions,
   qualityToColorClass,
   unixTimestampToText,
-  zeroGraphValue,
 } from "../../util";
 
 export interface IOwnProps {
@@ -102,24 +101,11 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
         return (
           <YAxis
             tickFormatter={v => {
-              if (v === zeroGraphValue) {
-                return 0;
-              }
-
               return Number(v).toLocaleString();
             }}
             domain={[
               dataMin => {
-                if (dataMin <= 1) {
-                  return zeroGraphValue;
-                }
-
-                const result = Math.pow(10, Math.floor(Math.log10(dataMin)));
-                if (result === 0) {
-                  return zeroGraphValue;
-                }
-
-                return result;
+                return Math.pow(10, Math.floor(Math.log10(dataMin)));
               },
               dataMax => {
                 if (dataMax <= 1) {
@@ -168,15 +154,11 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
         })();
 
         const normalizedLimits = normalizeLimits(preferredLimits);
-        const resolvedLimits: IPriceLimits = {
-          ...normalizedLimits,
-          lower: normalizedLimits.lower === 0 ? zeroGraphValue : normalizedLimits.lower,
-        };
 
         return (
           <YAxis
             tickFormatter={v => currencyToText(v * 10 * 10)}
-            domain={[resolvedLimits.lower / 10 / 10, resolvedLimits.upper / 10 / 10]}
+            domain={[normalizedLimits.lower / 10 / 10, normalizedLimits.upper / 10 / 10]}
             tick={{ fill: "#fff" }}
             scale="log"
             allowDataOverflow={true}
