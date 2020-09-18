@@ -925,13 +925,6 @@ export class DataController {
         return overallLower;
       }
 
-      if (priceLimits.lower === 0) {
-        return overallLower;
-      }
-      if (overallLower === 0) {
-        return priceLimits.lower;
-      }
-
       if (priceLimits.lower < overallLower) {
         return priceLimits.lower;
       }
@@ -944,11 +937,11 @@ export class DataController {
         return overallUpper;
       }
 
-      if (overallUpper > priceLimits.upper) {
-        return overallUpper;
+      if (priceLimits.upper > overallUpper) {
+        return priceLimits.upper;
       }
 
-      return priceLimits.upper;
+      return overallUpper;
     }, 0);
 
     return {
