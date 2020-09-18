@@ -113,15 +113,7 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
                   return zeroGraphValue;
                 }
 
-                // tslint:disable-next-line:no-console
-                console.log({
-                  dataMin,
-                  log10: Math.log10(dataMin),
-                  floor: Math.floor(Math.log10(dataMin)),
-                  result: Math.pow(10, Math.floor(Math.log10(dataMin))),
-                });
-
-                const result = Math.pow(10, Math.floor(Math.log10(dataMin)) - 1);
+                const result = Math.pow(10, Math.floor(Math.log10(dataMin)));
                 if (result === 0) {
                   return zeroGraphValue;
                 }
