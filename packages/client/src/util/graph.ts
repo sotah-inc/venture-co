@@ -142,14 +142,14 @@ export function convertPricelistHistoryMapToLineData(
 
           const buyoutValue: number = (() => {
             if (prices.min_buyout_per === 0) {
-              return 0;
+              return zeroGraphValue;
             }
 
             return prices.min_buyout_per / 10 / 10;
           })();
           const volumeValue: number = (() => {
             if (prices.volume === 0) {
-              return 0;
+              return zeroGraphValue;
             }
 
             return prices.volume;
