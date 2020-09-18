@@ -9,6 +9,7 @@ import {
   IPricesFlagged,
   IShortItem,
   ItemId,
+  normalizeLimits,
 } from "@sotah-inc/core";
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
@@ -148,31 +149,11 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
 
           return activeItemIds
             .map<IPriceLimits>(v => {
-              const foundPriceLimits = itemPriceLimits[Number(v)];
-              if (typeof foundPriceLimits === "undefined") {
-                return {
-                  lower: -1,
-                  upper: -1,
-                };
-              }
-
-              let { lower, upper } = foundPriceLimits;
-
-              lower = Math.pow(10, Math.floor(Math.log10(lower)));
-              if (lower === 0) {
-                lower = zeroGraphValue;
-              }
-
-              if (upper <= 1) {
-                upper = 10;
-              }
-              upper = Math.pow(10, Math.ceil(Math.log10(upper)));
-
-              return { lower, upper };
+              return itemPriceLimits[Number(v)] ?? { lower: -1, upper: -1 };
             })
             .reduce<IPriceLimits>(
               (result, v) => {
-                if (result.lower === zeroGraphValue || v.lower < result.lower) {
+                if (v.lower > 0 && v.lower < result.lower) {
                   result.lower = v.lower;
                 }
 
@@ -182,18 +163,20 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
 
                 return result;
               },
-              { lower: zeroGraphValue, upper: 0 },
+              { lower: 0, upper: 0 },
             );
         })();
 
-        if (preferredLimits.upper > overallPriceLimits.upper) {
-          preferredLimits.upper = overallPriceLimits.upper;
-        }
+        const normalizedLimits = normalizeLimits(preferredLimits);
+        const resolvedLimits: IPriceLimits = {
+          ...normalizedLimits,
+          lower: normalizedLimits.lower === 0 ? zeroGraphValue : normalizedLimits.lower,
+        };
 
         return (
           <YAxis
             tickFormatter={v => currencyToText(v * 10 * 10)}
-            domain={[preferredLimits.lower / 10 / 10, preferredLimits.upper / 10 / 10]}
+            domain={[resolvedLimits.lower / 10 / 10, resolvedLimits.upper / 10 / 10]}
             tick={{ fill: "#fff" }}
             scale="log"
             allowDataOverflow={true}
