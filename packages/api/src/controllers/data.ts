@@ -925,7 +925,7 @@ export class DataController {
         return overallLower;
       }
 
-      if (priceLimits.lower < overallLower) {
+      if (overallLower === 0 || (priceLimits.lower > 0 && priceLimits.lower < overallLower)) {
         return priceLimits.lower;
       }
 
