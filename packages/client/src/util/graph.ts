@@ -136,7 +136,7 @@ export function convertPricelistHistoryMapToLineData(
         (previousValue: ILineItemOpen[], unixTimestampKey) => {
           const unixTimestamp = Number(unixTimestampKey);
           const prices = itemPricelistHistory[unixTimestamp];
-          if (typeof prices === "undefined") {
+          if (typeof prices === "undefined" || prices.min_buyout_per === 0) {
             return previousValue;
           }
 
