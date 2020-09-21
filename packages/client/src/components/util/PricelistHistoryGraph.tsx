@@ -388,7 +388,7 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
 
     const nextSelectedItems: Set<ItemId> = (() => {
       if (selectedItems.has(itemId)) {
-        return selectedItems;
+        return new Set<ItemId>(Array.from(selectedItems).filter(v => v !== itemId));
       }
 
       return new Set<ItemId>([...Array.from(selectedItems), itemId]);
