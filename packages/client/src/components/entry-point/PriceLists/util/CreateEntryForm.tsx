@@ -84,7 +84,7 @@ export class CreateEntryForm extends React.Component<Props> {
                   <ItemInput
                     itemIdBlacklist={itemIdBlacklist}
                     onSelect={v => this.onItemSelect(v)}
-                    autoFocus={true}
+                    autoFocus={false}
                   />
                 </FormGroup>
               </div>
