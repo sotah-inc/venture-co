@@ -31,12 +31,6 @@ export interface IStateProps {
 
 export interface IRouteProps {
   browseToExpansion: (region: IRegionComposite, realm: IClientRealm, expansion: IExpansion) => void;
-  browseToProfession: (
-    region: IRegionComposite,
-    realm: IClientRealm,
-    expansion: IExpansion,
-    profession: IProfession,
-  ) => void;
   browseToProfessionPricelist: (
     region: IRegionComposite,
     realm: IClientRealm,
@@ -208,36 +202,42 @@ export class PricelistTree extends React.Component<Props, IState> {
     return <ItemIcon item={item} />;
   }
 
-  private onProfessionNodeClick(id: string) {
+  private onPricelistNodeClick(id: string) {
     const {
-      professions,
+      professionPricelists,
+      selectedExpansion,
       currentRegion,
       currentRealm,
-      browseToProfession,
-      selectedExpansion,
+      selectedProfession,
+      browseToProfessionPricelist,
     } = this.props;
 
-    if (currentRegion === null || currentRealm === null || selectedExpansion === null) {
+    if (
+      currentRegion === null ||
+      currentRealm === null ||
+      selectedProfession === null ||
+      selectedExpansion === null
+    ) {
       return;
     }
 
-    const profession = professions.reduce<IProfession | null>((result, v) => {
-      if (result !== null) {
-        return result;
-      }
-
-      if (v.name === id) {
-        return v;
-      }
-
-      return null;
-    }, null);
-
-    if (profession === null) {
+    const foundProfessionPricelist = professionPricelists.data.data.find(
+      v => v.pricelist.id.toString() === id,
+    );
+    if (
+      typeof foundProfessionPricelist === "undefined" ||
+      foundProfessionPricelist.pricelist.slug === null
+    ) {
       return;
     }
 
-    browseToProfession(currentRegion, currentRealm, selectedExpansion, profession);
+    browseToProfessionPricelist(
+      currentRegion,
+      currentRealm,
+      selectedExpansion,
+      selectedProfession,
+      foundProfessionPricelist.pricelist,
+    );
   }
 
   private onTopNodeClick(id: TopOpenKey) {
@@ -268,7 +268,7 @@ export class PricelistTree extends React.Component<Props, IState> {
       node.id.toString().substr(separatorIndex + 1),
     ];
     const nodeClickMap: INodeClickMap = {
-      profession: (v: string) => this.onProfessionNodeClick(v),
+      pricelist: (v: string) => this.onPricelistNodeClick(v),
       top: (v: string) => this.onTopNodeClick(v as TopOpenKey),
     };
 

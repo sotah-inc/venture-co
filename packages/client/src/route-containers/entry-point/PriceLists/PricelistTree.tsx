@@ -4,7 +4,7 @@ import { WithRouterProps } from "next/dist/client/with-router";
 import { withRouter } from "next/router";
 
 import { PricelistTreeContainer } from "../../../containers/entry-point/PriceLists/PricelistTree";
-import { toExpansion, toProfession, toProfessionPricelist } from "../../../util";
+import { toExpansion, toProfessionPricelist } from "../../../util";
 
 type Props = Readonly<WithRouterProps>;
 
@@ -13,13 +13,6 @@ function RouteContainer({ router }: Props) {
     <PricelistTreeContainer
       browseToExpansion={(region, realm, expansion) => {
         const { url, asDest } = toExpansion(region, realm, expansion);
-
-        (async () => {
-          await router.replace(`/${url}`, `/${asDest}`);
-        })();
-      }}
-      browseToProfession={(region, realm, expansion, profession) => {
-        const { url, asDest } = toProfession(region, realm, expansion, profession);
 
         (async () => {
           await router.replace(`/${url}`, `/${asDest}`);
