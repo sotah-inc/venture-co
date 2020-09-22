@@ -161,7 +161,7 @@ export class PricelistTree extends React.Component<Props, IState> {
       label:
         selectedProfession === null
           ? "Profession Pricelists"
-          : `${selectedProfession.name} Pricelists`,
+          : `${selectedProfession.label} Pricelists`,
     });
 
     return (
