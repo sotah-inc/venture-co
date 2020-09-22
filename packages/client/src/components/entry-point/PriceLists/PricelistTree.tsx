@@ -163,6 +163,8 @@ export class PricelistTree extends React.Component<Props, IState> {
               contents={nodes}
               className={Classes.ELEVATION_0}
               onNodeClick={v => this.onNodeClick(v)}
+              onNodeExpand={v => this.onNodeClick(v)}
+              onNodeCollapse={v => this.onNodeClick(v)}
             />
           </div>
           <div className="pure-u-3-4">
