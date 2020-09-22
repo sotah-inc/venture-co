@@ -70,7 +70,7 @@ export type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
 export class ActionBar extends React.Component<Props> {
   public render() {
     return (
-      <Navbar>
+      <Navbar className="pricelist-actionbar">
         <NavbarGroup align={Alignment.LEFT}>{this.renderButtons()}</NavbarGroup>
         <NavbarGroup align={Alignment.RIGHT}>
           <ButtonGroup>
