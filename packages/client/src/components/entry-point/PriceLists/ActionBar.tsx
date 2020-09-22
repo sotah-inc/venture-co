@@ -21,6 +21,7 @@ import {
 } from "@sotah-inc/core";
 
 import { ExpansionToggleContainer } from "../../../containers/util/ExpansionToggle";
+import { ProfessionToggleContainer } from "../../../containers/util/ProfessionToggle";
 import { RealmToggleContainer } from "../../../containers/util/RealmToggle";
 import { RegionToggleContainer } from "../../../containers/util/RegionToggle";
 import { IClientRealm, IProfile } from "../../../types/global";
@@ -73,6 +74,9 @@ export class ActionBar extends React.Component<Props> {
         <NavbarGroup align={Alignment.LEFT}>{this.renderButtons()}</NavbarGroup>
         <NavbarGroup align={Alignment.RIGHT}>
           <ButtonGroup>
+            <ProfessionToggleContainer
+              onProfessionChange={profession => this.onProfessionChange(profession)}
+            />
             <ExpansionToggleContainer
               onExpansionChange={expansion => this.onExpansionChange(expansion)}
             />
@@ -82,6 +86,16 @@ export class ActionBar extends React.Component<Props> {
         </NavbarGroup>
       </Navbar>
     );
+  }
+
+  private onProfessionChange(profession: IProfession) {
+    const { browseToProfession, currentRegion, currentRealm, selectedExpansion } = this.props;
+
+    if (currentRegion === null || currentRealm === null || selectedExpansion === null) {
+      return;
+    }
+
+    browseToProfession(currentRegion, currentRealm, selectedExpansion, profession);
   }
 
   private onExpansionChange(expansion: IExpansion) {
