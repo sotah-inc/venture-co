@@ -53,7 +53,6 @@ export class ProfessionToggle extends React.Component<Props> {
         className={modifiers.active ? Classes.ACTIVE : ""}
         onClick={handleClick}
         text={item.label}
-        label={item.name}
       />
     );
   };
