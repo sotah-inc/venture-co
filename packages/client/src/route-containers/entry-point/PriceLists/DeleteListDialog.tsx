@@ -5,6 +5,7 @@ import { withRouter } from "next/router";
 
 // tslint:disable-next-line:max-line-length
 import { DeleteListDialogContainer } from "../../../containers/entry-point/PriceLists/DeleteListDialog";
+import { toProfession, toProfessionPricelist, toProfessions, toUserPricelist } from "../../../util";
 
 type Props = Readonly<WithRouterProps>;
 
@@ -12,34 +13,35 @@ function RouteContainer({ router }: Props) {
   return (
     <DeleteListDialogContainer
       browseOnDeletion={(region, realm, list, professionData) => {
-        const urlParts: Array<[string, string]> = [
-          ["data", "data"],
-          ["[region_name]", region.config_region.name],
-          ["[realm_slug]", realm.realm.slug],
-          ["professions", "professions"],
-        ];
+        const { asDest, url } = (() => {
+          if (professionData) {
+            if (!list) {
+              return toProfession(
+                region,
+                realm,
+                professionData.expansion,
+                professionData.profession,
+              );
+            }
 
-        if (typeof professionData === "undefined") {
-          if (list !== null && list.slug !== null) {
-            urlParts.push(["user", "user"]);
-            urlParts.push(["[pricelist_slug]", list.slug]);
+            return toProfessionPricelist(
+              region,
+              realm,
+              professionData.expansion,
+              professionData.profession,
+              list,
+            );
           }
-        } else {
-          urlParts.push(
-            ["[profession_name]", professionData.profession.name],
-            ["[expansion_name]", professionData.expansion.name],
-          );
 
-          if (list !== null && list.slug !== null) {
-            urlParts.push(["[pricelist_slug]", list.slug]);
+          if (!list) {
+            return toProfessions(region, realm);
           }
-        }
 
-        const dest = urlParts.map(v => v[0]).join("/");
-        const asDest = urlParts.map(v => v[1]).join("/");
+          return toUserPricelist(region, realm, list);
+        })();
 
         (async () => {
-          await router.replace(`/${dest}`, `/${asDest}`);
+          await router.replace(`/${url}`, `/${asDest}`);
         })();
       }}
     />
