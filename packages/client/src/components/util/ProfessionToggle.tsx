@@ -97,6 +97,7 @@ export class ProfessionToggle extends React.Component<Props> {
         resetOnClose={true}
       >
         <Button
+          className="profession-toggle-button"
           text={highlightedItem.label}
           rightIcon="double-caret-vertical"
           icon={<ProfessionIcon profession={highlightedItem} />}
