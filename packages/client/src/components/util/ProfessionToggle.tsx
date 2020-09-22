@@ -11,6 +11,8 @@ import {
 } from "@blueprintjs/select";
 import { IProfession } from "@sotah-inc/core";
 
+import { ProfessionIcon } from "./ProfessionIcon";
+
 const ProfessionToggleSelect = Select.ofType<IProfession>();
 
 export interface IStateProps {
@@ -53,6 +55,7 @@ export class ProfessionToggle extends React.Component<Props> {
         className={modifiers.active ? Classes.ACTIVE : ""}
         onClick={handleClick}
         text={item.label}
+        icon={<ProfessionIcon profession={item} />}
       />
     );
   };
