@@ -150,6 +150,7 @@ export class UnmetDemand extends React.Component<Props, IState> {
     return (
       <>
         <ProfessionIcon profession={profession} />
+        &nbsp;
         <a onClick={() => this.onProfessionClick(profession)}>{profession.label}</a>
       </>
     );
