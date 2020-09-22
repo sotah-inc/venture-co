@@ -96,7 +96,11 @@ export class ProfessionToggle extends React.Component<Props> {
         resetOnSelect={true}
         resetOnClose={true}
       >
-        <Button text={highlightedItem.label} rightIcon="double-caret-vertical" />
+        <Button
+          text={highlightedItem.label}
+          rightIcon="double-caret-vertical"
+          icon={<ProfessionIcon profession={highlightedItem} />}
+        />
       </ProfessionToggleSelect>
     );
   }
