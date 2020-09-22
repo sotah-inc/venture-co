@@ -15,6 +15,7 @@ import { TreeContentContainer } from "../../../containers/entry-point/PriceLists
 import { IClientRealm, IProfile } from "../../../types/global";
 import { AuthLevel, FetchLevel } from "../../../types/main";
 import { getItemFromPricelist } from "../../../util";
+import { ProfessionIcon } from "../../util";
 import { ItemIcon } from "../../util/ItemIcon";
 
 export interface IStateProps {
@@ -155,7 +156,8 @@ export class PricelistTree extends React.Component<Props, IState> {
     nodes.push({
       childNodes: this.getProfessionPricelistNodes(),
       hasCaret: true,
-      icon: "list",
+      icon:
+        selectedProfession === null ? "list" : <ProfessionIcon profession={selectedProfession} />,
       id: `top-${TopOpenKey.professions}`,
       isExpanded: topOpenMap[TopOpenKey.professions],
       label:
