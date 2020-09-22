@@ -44,6 +44,12 @@ export interface IStateProps {
 }
 
 export interface IRouteProps {
+  browseToProfession: (
+    region: IRegionComposite,
+    realm: IClientRealm,
+    expansion: IExpansion,
+    profession: IProfession,
+  ) => void;
   browseToProfessionPricelist: (
     region: IRegionComposite,
     realm: IClientRealm,
@@ -65,18 +71,6 @@ interface ICollapsedResultItem {
 }
 
 export class UnmetDemand extends React.Component<Props, IState> {
-  private static renderProfession(profession: IProfession | null) {
-    if (profession === null) {
-      return null;
-    }
-
-    return (
-      <>
-        <ProfessionIcon profession={profession} /> {profession.label}
-      </>
-    );
-  }
-
   public state = {
     page: 0,
   };
@@ -98,6 +92,16 @@ export class UnmetDemand extends React.Component<Props, IState> {
         {this.renderUnmetDemandContent()}
       </>
     );
+  }
+
+  public onProfessionClick(profession: IProfession) {
+    const { browseToProfession, currentRegion, currentRealm, selectedExpansion } = this.props;
+
+    if (currentRegion === null || currentRealm === null || selectedExpansion === null) {
+      return;
+    }
+
+    browseToProfession(currentRegion, currentRealm, selectedExpansion, profession);
   }
 
   public onPricelistClick(pricelist: IPricelistJson, professionName: ProfessionName) {
@@ -135,6 +139,19 @@ export class UnmetDemand extends React.Component<Props, IState> {
       selectedExpansion,
       profession,
       pricelist,
+    );
+  }
+
+  private renderProfession(profession: IProfession | null) {
+    if (profession === null) {
+      return null;
+    }
+
+    return (
+      <>
+        <ProfessionIcon profession={profession} />
+        <a onClick={() => this.onProfessionClick(profession)}>{profession.label}</a>
+      </>
     );
   }
 
@@ -292,7 +309,7 @@ export class UnmetDemand extends React.Component<Props, IState> {
       return (
         <tr key={index}>
           <td className={qualityToColorClass(ItemQuality.Common)}>{item_id}</td>
-          <td>{UnmetDemand.renderProfession(profession)}</td>
+          <td>{this.renderProfession(profession)}</td>
           <td>
             {this.renderPricelistCell(professionPricelist.pricelist!, professionPricelist.name)}
           </td>
@@ -305,7 +322,7 @@ export class UnmetDemand extends React.Component<Props, IState> {
         <td className={qualityToColorClass(item.quality.type)}>
           <ItemPopoverContainer interactive={false} item={item} />
         </td>
-        <td>{UnmetDemand.renderProfession(profession)}</td>
+        <td>{this.renderProfession(profession)}</td>
         <td>
           {this.renderPricelistCell(professionPricelist.pricelist!, professionPricelist.name)}
         </td>
