@@ -66,7 +66,7 @@ export class ProfessionToggle extends React.Component<Props> {
     const { items, itemsParentRef, renderItem } = params;
     const renderedItems = items.map(renderItem).filter(renderedItem => renderedItem !== null);
     return (
-      <Menu ulRef={itemsParentRef}>
+      <Menu ulRef={itemsParentRef} className="pricelist-profession-toggle-menu">
         <li>
           <H6>Select Profession</H6>
         </li>
