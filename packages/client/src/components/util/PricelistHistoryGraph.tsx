@@ -154,9 +154,6 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
             );
         })();
 
-        // tslint:disable-next-line:no-console
-        console.log(preferredLimits);
-
         const normalizedLimits = normalizeLimits(preferredLimits);
         const resolvedLimits: IPriceLimits = {
           ...normalizedLimits,
@@ -180,8 +177,6 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
     const { pricelistHistoryMap } = this.props;
 
     const data = convertPricelistHistoryMapToLineData(pricelistHistoryMap);
-
-    console.table(data);
 
     const { xAxisTicks, roundedNowDate, roundedTwoWeeksAgoDate } = getXAxisTimeRestrictions();
 
