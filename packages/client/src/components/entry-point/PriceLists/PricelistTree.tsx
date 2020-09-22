@@ -15,7 +15,6 @@ import { TreeContentContainer } from "../../../containers/entry-point/PriceLists
 import { IClientRealm, IProfile } from "../../../types/global";
 import { AuthLevel, FetchLevel } from "../../../types/main";
 import { getItemFromPricelist } from "../../../util";
-import { ProfessionIcon } from "../../util";
 import { ItemIcon } from "../../util/ItemIcon";
 
 export interface IStateProps {
@@ -126,7 +125,7 @@ export class PricelistTree extends React.Component<Props, IState> {
   }
 
   public render() {
-    const { authLevel, currentRealm, currentRegion } = this.props;
+    const { authLevel, currentRealm, currentRegion, selectedProfession } = this.props;
     const { topOpenMap } = this.state;
 
     const nodes: ITreeNode[] = [];
@@ -153,7 +152,17 @@ export class PricelistTree extends React.Component<Props, IState> {
     }
 
     // appending profession-pricelists
-    nodes.push(this.getLeadProfessionsNode());
+    nodes.push({
+      childNodes: this.getProfessionPricelistNodes(),
+      hasCaret: true,
+      icon: "list",
+      id: `top-${TopOpenKey.professions}`,
+      isExpanded: topOpenMap[TopOpenKey.professions],
+      label:
+        selectedProfession === null
+          ? "Profession Pricelists"
+          : `${selectedProfession.name} Pricelists`,
+    });
 
     return (
       <div style={{ marginTop: "10px" }}>
@@ -176,106 +185,44 @@ export class PricelistTree extends React.Component<Props, IState> {
       </div>
     );
   }
-
-  private getLeadProfessionsNode(): ITreeNode {
-    const { selectedExpansion } = this.props;
-    const { topOpenMap } = this.state;
-
-    if (selectedExpansion === null) {
-      return {
-        childNodes: this.getProfessionNodes(),
-        hasCaret: true,
-        icon: "list",
-        id: `top-${TopOpenKey.professions}`,
-        isExpanded: topOpenMap[TopOpenKey.professions],
-        label: "Professions",
-      };
-    }
-
-    return {
-      childNodes: this.getProfessionNodes(),
-      hasCaret: true,
-      icon: "list",
-      id: `top-${TopOpenKey.professions}`,
-      isExpanded: topOpenMap[TopOpenKey.professions],
-      label: "Professions",
-    };
-  }
-
   private isSummarySelected() {
     const { selectedList, selectedProfession } = this.props;
 
     return selectedList === null && selectedProfession === null;
   }
 
-  private getProfessionNodes() {
-    const { professions } = this.props;
-
-    return professions.map(v => this.getProfessionNode(v));
-  }
-
-  private getProfessionNode(v: IProfession) {
-    const { selectedProfession, getProfessionPricelistsLevel } = this.props;
-
-    const isSelected = selectedProfession !== null && selectedProfession.name === v.name;
-    const result: ITreeNode = {
-      className: "profession-node",
-      icon: <ProfessionIcon profession={v} />,
-      id: `profession-${v.name}`,
-      isSelected,
-      label: v.label,
-    };
-    if (!isSelected) {
-      return result;
-    }
-
-    result.isExpanded = true;
-    result.hasCaret = false;
+  private getProfessionPricelistNodes(): ITreeNode[] {
+    const { professionPricelists, getProfessionPricelistsLevel } = this.props;
 
     switch (getProfessionPricelistsLevel) {
+      case FetchLevel.success:
+        break;
       case FetchLevel.initial:
-        result.childNodes = [
+        return [
           {
             icon: <Spinner size={20} value={0} intent={Intent.NONE} />,
             id: "loading-0",
             label: <span style={{ marginLeft: "5px" }}>Loading</span>,
           },
         ];
-
-        break;
-      case FetchLevel.fetching:
-        result.childNodes = [
-          {
-            icon: <Spinner size={20} intent={Intent.PRIMARY} />,
-            id: "loading-0",
-            label: <span style={{ marginLeft: "5px" }}>Loading</span>,
-          },
-        ];
-
-        break;
       case FetchLevel.failure:
-        result.childNodes = [
+        return [
           {
             icon: <Spinner size={20} intent={Intent.DANGER} value={1} />,
             id: "loading-0",
             label: <span style={{ marginLeft: "5px" }}>Failed to load profession pricelists!</span>,
           },
         ];
-
-        break;
-      case FetchLevel.success:
-        result.childNodes = this.getProfessionPricelistNodes();
-
-        break;
       default:
-        break;
+      case FetchLevel.fetching:
+        return [
+          {
+            icon: <Spinner size={20} intent={Intent.PRIMARY} />,
+            id: "loading-0",
+            label: <span style={{ marginLeft: "5px" }}>Loading</span>,
+          },
+        ];
     }
-
-    return result;
-  }
-
-  private getProfessionPricelistNodes(): ITreeNode[] {
-    const { professionPricelists } = this.props;
 
     if (professionPricelists.length === 0) {
       return [{ id: "none-none", label: <em>None found.</em> }];
