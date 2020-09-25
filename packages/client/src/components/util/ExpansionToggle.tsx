@@ -74,15 +74,7 @@ export class ExpansionToggle extends React.Component<Props> {
   };
 
   public render() {
-    const { expansions, selectedExpansion, onExpansionChange } = this.props;
-
-    const highlightedItem: IExpansion = (() => {
-      if (selectedExpansion !== null) {
-        return selectedExpansion;
-      }
-
-      return expansions[0];
-    })();
+    const { expansions, onExpansionChange } = this.props;
 
     return (
       <ExpansionToggleSelect
@@ -94,12 +86,24 @@ export class ExpansionToggle extends React.Component<Props> {
         resetOnSelect={true}
         resetOnClose={true}
       >
-        <Button
-          style={{ color: highlightedItem.label_color }}
-          text={highlightedItem.label}
-          rightIcon="double-caret-vertical"
-        />
+        {this.renderToggleButton()}
       </ExpansionToggleSelect>
+    );
+  }
+
+  private renderToggleButton() {
+    const { selectedExpansion } = this.props;
+
+    if (selectedExpansion === null) {
+      return <Button text="Select Expansion" rightIcon="double-caret-vertical" />;
+    }
+
+    return (
+      <Button
+        style={{ color: selectedExpansion.label_color }}
+        text={selectedExpansion.label}
+        rightIcon="double-caret-vertical"
+      />
     );
   }
 }

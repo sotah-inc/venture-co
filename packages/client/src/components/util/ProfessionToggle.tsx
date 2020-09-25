@@ -76,15 +76,7 @@ export class ProfessionToggle extends React.Component<Props> {
   };
 
   public render() {
-    const { professions, selectedProfession, onProfessionChange } = this.props;
-
-    const highlightedItem: IProfession = (() => {
-      if (selectedProfession !== null) {
-        return selectedProfession;
-      }
-
-      return professions[0];
-    })();
+    const { professions, onProfessionChange } = this.props;
 
     return (
       <ProfessionToggleSelect
@@ -96,13 +88,31 @@ export class ProfessionToggle extends React.Component<Props> {
         resetOnSelect={true}
         resetOnClose={true}
       >
+        {this.renderToggleButton()}
+      </ProfessionToggleSelect>
+    );
+  }
+
+  private renderToggleButton() {
+    const { selectedProfession } = this.props;
+
+    if (selectedProfession === null) {
+      return (
         <Button
           className="profession-toggle-button"
-          text={highlightedItem.label}
+          text="Select Profession"
           rightIcon="double-caret-vertical"
-          icon={<ProfessionIcon profession={highlightedItem} />}
         />
-      </ProfessionToggleSelect>
+      );
+    }
+
+    return (
+      <Button
+        className="profession-toggle-button"
+        text={selectedProfession.label}
+        rightIcon="double-caret-vertical"
+        icon={<ProfessionIcon profession={selectedProfession} />}
+      />
     );
   }
 }

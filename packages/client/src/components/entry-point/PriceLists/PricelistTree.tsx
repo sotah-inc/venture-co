@@ -210,25 +210,12 @@ export class PricelistTree extends React.Component<Props, IState> {
       currentRealm,
       selectedProfession,
       browseToProfessionPricelist,
-      professions,
     } = this.props;
-
-    const foundProfession = ((): IProfession | null => {
-      if (selectedProfession !== null) {
-        return selectedProfession;
-      }
-
-      if (professions.length === 0) {
-        return null;
-      }
-
-      return professions[0];
-    })();
 
     if (
       currentRegion === null ||
       currentRealm === null ||
-      foundProfession === null ||
+      selectedProfession === null ||
       selectedExpansion === null
     ) {
       return;
@@ -248,7 +235,7 @@ export class PricelistTree extends React.Component<Props, IState> {
       currentRegion,
       currentRealm,
       selectedExpansion,
-      foundProfession,
+      selectedProfession,
       foundProfessionPricelist.pricelist,
     );
   }
