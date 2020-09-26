@@ -37,7 +37,10 @@ export interface IPriceListsState {
   isDeleteListDialogOpen: boolean;
   isAddEntryDialogOpen: boolean;
   deletePricelist: IFetchInfo;
-  selectedProfession: IProfession | null;
+  selectedProfession: {
+    isPredefined: boolean;
+    value: IProfession | null;
+  };
   selectedExpansion: IExpansion | null;
   pricelists: IFetchData<IItemsData<IPricelistJson[]>>;
   pricelistHistory: IFetchData<IItemsData<IPricelistHistoryState>>;
@@ -117,7 +120,10 @@ export const defaultPriceListsState: IPriceListsState = {
   },
   selectedExpansion: null,
   selectedList: null,
-  selectedProfession: null,
+  selectedProfession: {
+    isPredefined: false,
+    value: null,
+  },
   unmetDemand: {
     data: {
       data: {

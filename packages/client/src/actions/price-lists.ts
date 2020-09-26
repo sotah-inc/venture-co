@@ -208,7 +208,10 @@ export const FetchGetPricelistHistory = (opts: IGetPriceListHistoryOptions) => {
 };
 
 export interface ILoadPricelistsEntrypointFront {
-  professionName?: ProfessionName;
+  professionNameData?: {
+    isPredefined: boolean;
+    value: ProfessionName;
+  };
   expansionName?: ExpansionName;
   pricelistSlug?: string;
   pricelistHistory?: IGetPricelistHistoriesResponseData | null;

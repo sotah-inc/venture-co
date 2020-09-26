@@ -11,7 +11,7 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
   const { currentRealm, professions, currentRegion, expansions } = state.Main;
   const {
     selectedExpansion,
-    selectedProfession,
+    selectedProfession: { value: selectedProfession },
     selectedList,
     professionPricelists,
   } = state.PriceLists;

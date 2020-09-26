@@ -20,8 +20,7 @@ import { NewsButtonRouteContainer } from "../../route-containers/App/Topbar/News
 import { WorkOrdersButtonRouteContainer } from "../../route-containers/App/Topbar/WorkOrderButtons";
 import { LinkButtonRouteContainer } from "../../route-containers/util/LinkButton";
 import { IClientRealm } from "../../types/global";
-import { getPrimaryExpansion } from "../../util";
-import { toExpansion } from "../../util/routes";
+import { toExpansion } from "../../util";
 
 export interface IStateProps {
   user: IUserJson | null;
@@ -229,13 +228,13 @@ export class Topbar extends React.Component<Props> {
   }
 
   private renderProfessionsButton() {
-    const { expansions, currentRegion, currentRealm, selectedExpansion } = this.props;
+    const { currentRegion, currentRealm, selectedExpansion } = this.props;
 
     if (currentRegion === null || currentRealm === null) {
       return null;
     }
 
-    if (expansions.length === 0) {
+    if (selectedExpansion === null) {
       return (
         <LinkButtonRouteContainer
           destination={""}
@@ -249,10 +248,7 @@ export class Topbar extends React.Component<Props> {
       );
     }
 
-    const foundExpansion =
-      selectedExpansion === null ? getPrimaryExpansion(expansions) : selectedExpansion;
-
-    const { asDest, url } = toExpansion(currentRegion, currentRealm, foundExpansion);
+    const { asDest, url } = toExpansion(currentRegion, currentRealm, selectedExpansion);
 
     return (
       <LinkButtonRouteContainer

@@ -1,4 +1,4 @@
-import { IExpansion, IRegionComposite } from "@sotah-inc/core";
+import { IRegionComposite } from "@sotah-inc/core";
 import moment from "moment";
 
 import { IRegions } from "../types/global";
@@ -50,16 +50,6 @@ export const getColor = (index: number): string => {
   ];
 
   return choices[index % choices.length];
-};
-
-export const getPrimaryExpansion = (expansions: IExpansion[]): IExpansion => {
-  return expansions.reduce((previousValue: IExpansion, currentValue: IExpansion) => {
-    if (currentValue.primary) {
-      return currentValue;
-    }
-
-    return previousValue;
-  }, expansions[0]);
 };
 
 export const FormatRegionList = (regionList: IRegionComposite[]): IRegions =>

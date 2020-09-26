@@ -19,7 +19,7 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
     selectedList,
     isDeleteListDialogOpen,
     deletePricelist: { errors: deletePricelistErrors, level: deletePricelistLevel },
-    selectedProfession,
+    selectedProfession: { value: selectedProfession },
     selectedExpansion,
   } = state.PriceLists;
 

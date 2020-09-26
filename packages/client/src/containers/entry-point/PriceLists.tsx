@@ -23,7 +23,7 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
     expansions,
   } = state.Main;
   const {
-    selectedProfession,
+    selectedProfession: { value: selectedProfession },
     selectedExpansion,
     selectedList,
     professionPricelists: {

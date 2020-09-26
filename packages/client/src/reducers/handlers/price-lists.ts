@@ -27,7 +27,6 @@ import {
   IPriceListsState,
   IUnmetDemandState,
 } from "../../types/price-lists";
-import { getPrimaryExpansion } from "../../util";
 import { getPricelistIndex, getProfessionPricelistIndex } from "../helper";
 import { IKindHandlers, Runner } from "./index";
 
@@ -38,52 +37,13 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
         state: IPriceListsState,
         action: ReturnType<typeof LoadPricelistsEntrypoint>,
       ): IPriceListsState => {
-        const selectedProfession: IProfession | null = (() => {
-          return action.payload.professions.reduce<IProfession | null>(
-            (previousValue, currentValue) => {
-              if (previousValue !== null) {
-                return previousValue;
-              }
-
-              if (currentValue.name === action.payload!.professionName) {
-                return currentValue;
-              }
-
-              return null;
-            },
-            null,
-          );
-        })();
-
-        const selectedExpansion: IExpansion | null = (() => {
-          const foundExpansion = action.payload.expansions.reduce<IExpansion | null>(
-            (previousValue, currentValue) => {
-              if (previousValue !== null) {
-                return previousValue;
-              }
-
-              if (currentValue.name === action.payload!.expansionName) {
-                return currentValue;
-              }
-
-              return null;
-            },
-            null,
-          );
-          if (foundExpansion !== null) {
-            return foundExpansion;
-          }
-
-          return getPrimaryExpansion(action.payload.expansions);
-        })();
-
-        const selectedList: IPricelistJson | null = (() => {
-          if (typeof action.payload.selectedList === "undefined") {
-            return null;
-          }
-
-          return action.payload.selectedList;
-        })();
+        const selectedProfession: IProfession | null =
+          action.payload.professions.find(
+            v => v.name === action.payload.professionNameData?.value,
+          ) ?? null;
+        const selectedExpansion: IExpansion | null =
+          action.payload.expansions.find(v => v.name === action.payload.expansionName) ?? null;
+        const selectedList: IPricelistJson | null = action.payload.selectedList ?? null;
 
         const pricelistHistory: IFetchData<IItemsData<IPricelistHistoryState>> = (() => {
           if (typeof action.payload.pricelistHistory === "undefined") {
@@ -178,7 +138,10 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           professionPricelists,
           selectedExpansion,
           selectedList,
-          selectedProfession,
+          selectedProfession: {
+            isPredefined: !!action.payload.professionNameData?.isPredefined,
+            value: selectedProfession,
+          },
           unmetDemand,
         };
       },

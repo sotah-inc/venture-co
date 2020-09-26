@@ -16,7 +16,7 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
     updatePricelist: { level: updatePricelistLevel, errors: updatePricelistErrors },
     selectedList,
     selectedExpansion,
-    selectedProfession,
+    selectedProfession: { value: selectedProfession },
   } = state.PriceLists;
 
   return {

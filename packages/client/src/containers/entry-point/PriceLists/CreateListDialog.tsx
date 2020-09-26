@@ -18,7 +18,7 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
   const {
     isAddListDialogOpen,
     createPricelist,
-    selectedProfession,
+    selectedProfession: { value: selectedProfession },
     selectedExpansion,
     selectedList,
   } = state.PriceLists;
