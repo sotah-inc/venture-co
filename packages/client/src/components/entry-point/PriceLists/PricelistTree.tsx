@@ -19,7 +19,10 @@ import { ItemIcon } from "../../util/ItemIcon";
 export interface IStateProps {
   currentRegion: IRegionComposite | null;
   currentRealm: IClientRealm | null;
-  selectedProfession: IProfession | null;
+  selectedProfession: {
+    isPredefined: boolean;
+    value: IProfession | null;
+  };
   selectedExpansion: IExpansion | null;
   selectedList: IPricelistJson | null;
 
@@ -88,13 +91,17 @@ export class PricelistTree extends React.Component<Props, IState> {
       childNodes: this.getProfessionPricelistNodes(),
       hasCaret: true,
       icon:
-        selectedProfession === null ? "list" : <ProfessionIcon profession={selectedProfession} />,
+        selectedProfession.value === null ? (
+          "list"
+        ) : (
+          <ProfessionIcon profession={selectedProfession.value} />
+        ),
       id: `top-${TopOpenKey.professions}`,
       isExpanded: topOpenMap[TopOpenKey.professions],
       label:
-        selectedProfession === null
+        selectedProfession.value === null
           ? "Profession Pricelists"
-          : `${selectedProfession.label} Pricelists`,
+          : `${selectedProfession.value.label} Pricelists`,
     });
 
     return (
@@ -121,7 +128,10 @@ export class PricelistTree extends React.Component<Props, IState> {
   private isSummarySelected() {
     const { selectedList, selectedProfession } = this.props;
 
-    return selectedList === null && selectedProfession === null;
+    const hasSelectedProfession =
+      selectedProfession.value !== null && !selectedProfession.isPredefined;
+
+    return selectedList === null && !hasSelectedProfession;
   }
 
   private getProfessionPricelistNodes(): ITreeNode[] {
@@ -215,7 +225,7 @@ export class PricelistTree extends React.Component<Props, IState> {
     if (
       currentRegion === null ||
       currentRealm === null ||
-      selectedProfession === null ||
+      selectedProfession.value === null ||
       selectedExpansion === null
     ) {
       return;
@@ -235,7 +245,7 @@ export class PricelistTree extends React.Component<Props, IState> {
       currentRegion,
       currentRealm,
       selectedExpansion,
-      selectedProfession,
+      selectedProfession.value,
       foundProfessionPricelist.pricelist,
     );
   }
