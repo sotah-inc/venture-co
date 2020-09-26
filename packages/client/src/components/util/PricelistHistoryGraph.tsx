@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Icon, Intent, Position, Tab, Tabs, Tag } from "@blueprintjs/core";
+import { Icon, Intent, Tab, Tabs, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import {
   IItemPriceLimits,
@@ -13,7 +13,6 @@ import {
 } from "@sotah-inc/core";
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
-import { ItemPopoverContainer } from "../../containers/util/ItemPopover";
 import { ILineItemOpen } from "../../types/global";
 import {
   convertPricelistHistoryMapToLineData,
@@ -24,6 +23,7 @@ import {
   unixTimestampToText,
   zeroGraphValue,
 } from "../../util";
+import { ItemLink } from "./ItemLink";
 
 export interface IOwnProps {
   items: IShortItem[];
@@ -360,12 +360,11 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
     }
 
     return (
-      <ItemPopoverContainer
+      <ItemLink
         item={foundItem}
         itemTextFormatter={text => (
           <span className={qualityToColorClass(foundItem.quality.type)}>{text}</span>
         )}
-        position={Position.BOTTOM}
         onItemClick={() => {
           if (!hasData) {
             return;

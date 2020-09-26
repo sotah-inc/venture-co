@@ -5,6 +5,7 @@ import { IShortItem } from "@sotah-inc/core";
 
 import { IItemClasses } from "../../types/global";
 import { getItemIconUrl, getItemTextValue, qualityToColorClass } from "../../util";
+import { ItemLink } from "./ItemLink";
 
 export interface IStateProps {
   itemClasses: IItemClasses;
@@ -79,62 +80,22 @@ export class ItemPopover extends React.Component<Props> {
   };
 
   public render() {
-    const { item, itemClasses, position } = this.props;
+    const { item, itemClasses, position, interactive, itemTextFormatter, onItemClick } = this.props;
 
     return (
       <Popover
         content={renderPopoverContent(item, itemClasses)}
-        target={this.renderPopoverTarget(item)}
+        target={
+          <ItemLink
+            item={item}
+            interactive={interactive}
+            itemTextFormatter={itemTextFormatter}
+            onItemClick={onItemClick}
+          />
+        }
         interactionKind={PopoverInteractionKind.HOVER}
         position={position ?? Position.RIGHT}
       />
     );
-  }
-
-  private onItemClick() {
-    const { onItemClick } = this.props;
-    if (!onItemClick) {
-      return;
-    }
-
-    onItemClick();
-  }
-
-  private itemTextFormatter(itemText: string) {
-    const { itemTextFormatter } = this.props;
-    if (typeof itemTextFormatter === "undefined") {
-      return itemText;
-    }
-
-    return itemTextFormatter(itemText);
-  }
-
-  private renderDisplay(item: IShortItem) {
-    const itemIconUrl = getItemIconUrl(item);
-    if (itemIconUrl === null) {
-      return this.renderLink(item);
-    }
-
-    return (
-      <>
-        <img src={itemIconUrl} className="item-icon" alt="" /> {this.renderLink(item)}
-      </>
-    );
-  }
-
-  private renderLink(item: IShortItem) {
-    const { interactive } = this.props;
-
-    const itemText = this.itemTextFormatter(getItemTextValue(item));
-
-    if (typeof interactive === "undefined" || interactive) {
-      return <a onClick={() => this.onItemClick()}>{itemText}</a>;
-    }
-
-    return itemText;
-  }
-
-  private renderPopoverTarget(item: IShortItem) {
-    return <div className="item-icon-container">{this.renderDisplay(item)}</div>;
   }
 }
