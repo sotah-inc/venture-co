@@ -18,6 +18,7 @@ import { qualityToColorClass } from "../../../../../../util";
 import { Currency } from "../../../../../util";
 
 export interface IStateProps {
+  selectedList: IPricelistJson | null;
   priceTable: IFetchData<IItemsData<IPriceListMap>>;
   fetchRealmLevel: FetchLevel;
   currentRegion: IRegionComposite | null;
@@ -39,16 +40,14 @@ type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
 export class CurrentPricesTable extends React.Component<Props> {
   public componentDidUpdate(prevProps: Props) {
     const {
-      priceTable: {
-        level,
-        data: { items },
-      },
+      priceTable: { level },
+      selectedList,
       getPricelist,
       currentRegion,
       currentRealm,
     } = this.props;
 
-    if (currentRegion === null || currentRealm === null) {
+    if (currentRegion === null || currentRealm === null || selectedList === null) {
       return;
     }
 
@@ -56,7 +55,7 @@ export class CurrentPricesTable extends React.Component<Props> {
       switch (level) {
         case FetchLevel.prompted:
           getPricelist({
-            itemIds: items.map(v => v.id),
+            itemIds: selectedList.pricelist_entries.map(v => v.item_id),
             locale: Locale.EnUS,
             realmSlug: currentRealm.realm.slug,
             regionName: currentRegion.config_region.name,
@@ -137,22 +136,23 @@ export class CurrentPricesTable extends React.Component<Props> {
       },
     } = this.props;
 
-    const entries = [...list.pricelist_entries!].sort((a, b) => {
+    const entries = [...list.pricelist_entries].sort((a, b) => {
       const aItem = items.find(v => v.id === a.item_id);
+      const aEntry = pricelistMap[a.item_id];
+      const aResult = aEntry ? aEntry.min_buyout_per * a.quantity_modifier : 0;
+
       const bItem = items.find(v => v.id === b.item_id);
+      const bEntry = pricelistMap[b.item_id];
+      const bResult = bEntry ? bEntry.min_buyout_per * a.quantity_modifier : 0;
 
-      let aResult = 0;
-      if (a.item_id in pricelistMap) {
-        aResult = pricelistMap[a.item_id]!.min_buyout_per * a.quantity_modifier;
-      }
-
-      let bResult = 0;
-      if (b.item_id in pricelistMap) {
-        bResult = pricelistMap[b.item_id]!.min_buyout_per * b.quantity_modifier;
-      }
-
-      if (aResult === bResult && aItem && bItem) {
-        return aItem.sotah_meta.normalized_name.en_US! > bItem.sotah_meta.normalized_name.en_US!
+      if (
+        aResult === bResult &&
+        aItem &&
+        bItem &&
+        aItem.sotah_meta.normalized_name.en_US &&
+        bItem.sotah_meta.normalized_name.en_US
+      ) {
+        return aItem.sotah_meta.normalized_name.en_US > bItem.sotah_meta.normalized_name.en_US
           ? 1
           : -1;
       }
@@ -189,12 +189,14 @@ export class CurrentPricesTable extends React.Component<Props> {
     } = this.props;
     const { item_id, quantity_modifier } = entry;
 
-    let buyout: number = 0;
-    let volume: number = 0;
-    if (item_id in pricelistMap) {
-      buyout = pricelistMap[item_id]!.min_buyout_per;
-      volume = pricelistMap[item_id]!.volume;
-    }
+    const { buyout, volume } = ((): { buyout: number; volume: number } => {
+      const foundEntry = pricelistMap[item_id];
+
+      return {
+        buyout: foundEntry ? foundEntry.min_buyout_per : 0,
+        volume: foundEntry ? foundEntry.volume : 0,
+      };
+    })();
 
     const item = this.getItem(item_id);
     if (item === null) {
