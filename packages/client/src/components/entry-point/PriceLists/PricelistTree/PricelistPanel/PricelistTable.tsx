@@ -1,29 +1,25 @@
+import { H2, H4 } from "@blueprintjs/core";
+import { IPricelistJson, IRegionComposite, Locale } from "@sotah-inc/core";
 import React from "react";
 
-import { H2, H4 } from "@blueprintjs/core";
-import {
-  IItemPriceLimits,
-  IItemPricelistHistoryMap,
-  IPriceLimits,
-  IPricelistJson,
-  IPricesFlagged,
-  IRegionComposite,
-  IShortItem,
-} from "@sotah-inc/core";
-
 // tslint:disable-next-line:max-line-length
+import { IGetPriceListHistoryOptions } from "../../../../../api/data";
 import { CurrentPricesTableContainer } from "../../../../../containers/entry-point/PriceLists/PricelistTree/PricelistPanel/PricelistTable/CurrentPricesTable";
-import { IClientRealm } from "../../../../../types/global";
+import { IClientRealm, IFetchData, IItemsData } from "../../../../../types/global";
+import { FetchLevel } from "../../../../../types/main";
+import { IPricelistHistoryState } from "../../../../../types/price-lists";
 import { getItemFromPricelist } from "../../../../../util";
 import { ItemIcon } from "../../../../util/ItemIcon";
 import { PricelistHistoryGraph } from "../../../../util/PricelistHistoryGraph";
 
 export interface IStateProps {
-  items: IShortItem[];
-  pricelistHistoryMap: IItemPricelistHistoryMap<IPricesFlagged>;
-  overallPriceLimits: IPriceLimits;
-  itemPriceLimits: IItemPriceLimits;
+  pricelistHistory: IFetchData<IItemsData<IPricelistHistoryState>>;
+  selectedList: IPricelistJson | null;
   loadId: string;
+}
+
+export interface IDispatchProps {
+  getPricelistHistory: (opts: IGetPriceListHistoryOptions) => void;
 }
 
 export interface IOwnProps {
@@ -32,20 +28,35 @@ export interface IOwnProps {
   realm: IClientRealm;
 }
 
-type Props = Readonly<IStateProps & IOwnProps>;
+type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
 
 export class PricelistTable extends React.Component<Props> {
+  public componentDidUpdate(prevProps: Readonly<Props>) {
+    const { pricelistHistory, getPricelistHistory, region, realm, selectedList } = this.props;
+
+    if (selectedList === null) {
+      return;
+    }
+
+    if (pricelistHistory.level !== prevProps.pricelistHistory.level) {
+      switch (pricelistHistory.level) {
+        case FetchLevel.prompted:
+          break;
+        default:
+          return;
+      }
+
+      getPricelistHistory({
+        itemIds: selectedList.pricelist_entries.map(v => v.item_id),
+        locale: Locale.EnUS,
+        realmSlug: realm.realm.slug,
+        regionName: region.config_region.name,
+      });
+    }
+  }
+
   public render() {
-    const {
-      list,
-      region,
-      realm,
-      items,
-      pricelistHistoryMap,
-      overallPriceLimits,
-      loadId,
-      itemPriceLimits,
-    } = this.props;
+    const { list, region, realm, loadId, pricelistHistory } = this.props;
 
     return (
       <>
@@ -56,11 +67,11 @@ export class PricelistTable extends React.Component<Props> {
         <H4>History</H4>
         {
           <PricelistHistoryGraph
-            items={items}
-            pricelistHistoryMap={pricelistHistoryMap}
-            overallPriceLimits={overallPriceLimits}
+            items={pricelistHistory.data.items}
+            pricelistHistoryMap={pricelistHistory.data.data.history}
+            overallPriceLimits={pricelistHistory.data.data.overallPriceLimits}
             loadId={loadId}
-            itemPriceLimits={itemPriceLimits}
+            itemPriceLimits={pricelistHistory.data.data.itemPriceLimits}
           />
         }
         {<CurrentPricesTableContainer list={list} region={region} realm={realm} />}
@@ -69,9 +80,9 @@ export class PricelistTable extends React.Component<Props> {
   }
 
   private renderPricelistIcon() {
-    const { items, list } = this.props;
+    const { list, pricelistHistory } = this.props;
 
-    const item = getItemFromPricelist(items, list);
+    const item = getItemFromPricelist(pricelistHistory.data.items, list);
     if (item === null) {
       return null;
     }

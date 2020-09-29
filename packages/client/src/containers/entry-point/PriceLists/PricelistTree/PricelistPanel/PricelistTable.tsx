@@ -1,6 +1,8 @@
 import { connect } from "react-redux";
+import { FetchGetPricelistHistory } from "../../../../../actions/price-lists";
 
 import {
+  IDispatchProps,
   IStateProps,
   PricelistTable,
   // tslint:disable-next-line:max-line-length
@@ -8,19 +10,16 @@ import {
 import { IStoreState } from "../../../../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
-  const {
-    loadId,
-    pricelistHistory: {
-      data: {
-        data: { history: pricelistHistoryMap, overallPriceLimits, itemPriceLimits },
-        items,
-      },
-    },
-  } = state.PriceLists;
+  const { loadId, pricelistHistory, selectedList } = state.PriceLists;
 
-  return { items, loadId, pricelistHistoryMap, overallPriceLimits, itemPriceLimits };
+  return { loadId, pricelistHistory, selectedList };
 };
 
-export const PricelistTableContainer = connect<IStateProps, {}, {}, IStoreState>(mapStateToProps)(
-  PricelistTable,
-);
+export const mapDispatchToProps: IDispatchProps = {
+  getPricelistHistory: FetchGetPricelistHistory,
+};
+
+export const PricelistTableContainer = connect<IStateProps, IDispatchProps, {}, IStoreState>(
+  mapStateToProps,
+  mapDispatchToProps,
+)(PricelistTable);
