@@ -80,7 +80,7 @@ export class ListDialog extends React.Component<Props, State> {
   }
 
   public componentDidUpdate(prevProps: Props) {
-    const { resetTrigger, defaultName, defaultEntries } = this.props;
+    const { resetTrigger, defaultName, defaultSlug, defaultEntries } = this.props;
 
     if (prevProps.resetTrigger !== resetTrigger) {
       this.setState({
@@ -88,7 +88,7 @@ export class ListDialog extends React.Component<Props, State> {
         entriesItems: [],
         listDialogStep: ListDialogStep.list,
         listName: defaultName ?? "",
-        listSlug: defaultName ?? "",
+        listSlug: defaultSlug ?? "",
       });
 
       return;
