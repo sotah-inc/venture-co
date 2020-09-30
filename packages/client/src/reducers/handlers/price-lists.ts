@@ -96,6 +96,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
             return { ...defaultPriceListsState.professionPricelists, level: FetchLevel.failure };
           }
 
+          // tslint:disable-next-line:max-line-length
           const sortedProfessionPricelists = action.payload.professionPricelists.data.profession_pricelists.sort(
             (a, b) => {
               if (a.pricelist.name === b.pricelist.name) {
