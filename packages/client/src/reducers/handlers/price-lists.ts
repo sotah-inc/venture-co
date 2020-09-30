@@ -96,9 +96,19 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
             return { ...defaultPriceListsState.professionPricelists, level: FetchLevel.failure };
           }
 
+          const sortedProfessionPricelists = action.payload.professionPricelists.data.profession_pricelists.sort(
+            (a, b) => {
+              if (a.pricelist.name === b.pricelist.name) {
+                return 0;
+              }
+
+              return a.pricelist.name > b.pricelist.name ? 1 : -1;
+            },
+          );
+
           return {
             data: {
-              data: action.payload.professionPricelists.data.profession_pricelists,
+              data: sortedProfessionPricelists,
               items: action.payload.professionPricelists.data.items,
             },
             errors: {},
