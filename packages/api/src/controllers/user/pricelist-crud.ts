@@ -202,19 +202,22 @@ export class PricelistCrudController {
 
     // updating existing entries
     const receivedRequestEntries = result.data.entries.filter(v => v.id !== -1);
-    let receivedEntries = await this.dbConn
-      .getRepository(PricelistEntry)
-      .createQueryBuilder("entries")
-      .whereInIds(receivedRequestEntries.map(v => v.id))
-      .getMany();
-    receivedEntries = await Promise.all(
-      receivedEntries.map((v, i) => {
-        v.itemId = receivedRequestEntries[i].item_id;
-        v.quantityModifier = receivedRequestEntries[i].quantity_modifier;
+    let receivedEntries: PricelistEntry[] = [];
+    if (receivedRequestEntries.length > 0) {
+      receivedEntries = await this.dbConn
+        .getRepository(PricelistEntry)
+        .createQueryBuilder("entries")
+        .whereInIds(receivedRequestEntries.map(v => v.id))
+        .getMany();
+      receivedEntries = await Promise.all(
+        receivedEntries.map((v, i) => {
+          v.itemId = receivedRequestEntries[i].item_id;
+          v.quantityModifier = receivedRequestEntries[i].quantity_modifier;
 
-        return this.dbConn.manager.save(v);
-      }),
-    );
+          return this.dbConn.manager.save(v);
+        }),
+      );
+    }
 
     // gathering removed entries and deleting them
     const receivedEntryIds = receivedEntries.map(v => v.id);
