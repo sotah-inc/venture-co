@@ -43,7 +43,7 @@ export function resolveStatsStrings(stats: IShortItemStat[]): string[] {
   return stats.reduce<string[]>((result, v, i, initialInput) => {
     if (v.is_negated && i > 0) {
       return [
-        ...result.slice(0, i),
+        ...result.slice(0, i - 1),
         `+${v.value} [${[initialInput[i].type, initialInput[i - 1].type].join(" or ")}]`,
       ];
     }
