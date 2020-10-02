@@ -20,4 +20,9 @@ export interface IShortItem {
     header: string;
   };
   container_slots: string;
+  description: string;
+  level_requirement: string;
+  inventory_type: string;
+  item_subclass: string;
+  durability: string;
 }

@@ -11,6 +11,8 @@ export interface IItemSubClass {
 
 export enum ItemClass {
   Container = 1,
+  Armor = 4,
+  Recipe = 9,
 }
 
 export type ItemClassId = number;
