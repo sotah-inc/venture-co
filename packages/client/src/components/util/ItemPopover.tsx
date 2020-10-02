@@ -1,5 +1,5 @@
 import { Popover, PopoverInteractionKind, Position } from "@blueprintjs/core";
-import { IShortItem, ItemClass } from "@sotah-inc/core";
+import { IShortItem, IShortItemStat, ItemClass } from "@sotah-inc/core";
 import React from "react";
 
 import { IItemClasses } from "../../types/global";
@@ -39,6 +39,19 @@ const defaultItemDataRenderer: IItemDataRenderer = {
   },
 };
 
+export function resolveStatsStrings(stats: IShortItemStat[]): string[] {
+  return stats.reduce<string[]>((result, v, i, initialInput) => {
+    if (v.is_negated && i > 0) {
+      return [
+        ...result.slice(0, i),
+        `+${v.value} [${[initialInput[i].type, initialInput[i - 1].type].join(" or ")}]`,
+      ];
+    }
+
+    return [...result, v.display_value];
+  }, []);
+}
+
 const itemDataRenderers: IItemDataRenderer[] = [
   {
     itemClass: ItemClass.Container,
@@ -62,10 +75,10 @@ const itemDataRenderers: IItemDataRenderer[] = [
         <>
           <li className="item-level">Item level {item.level}</li>
           <li>{item.binding}</li>
-          <li>{item.inventory_type}</li>
           <li className="postscript">{item.item_subclass}</li>
+          <li>{item.inventory_type}</li>
           <li>{item.armor}</li>
-          {item.stats.map((v, statsIndex) => (
+          {resolveStatsStrings(item.stats).map((v, statsIndex) => (
             <li key={statsIndex}>{v}</li>
           ))}
           <li>{item.level_requirement}</li>
