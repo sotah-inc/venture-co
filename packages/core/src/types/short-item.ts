@@ -34,4 +34,5 @@ export interface IShortItem {
   durability: string;
   stats: IShortItemStat[];
   armor: string;
+  spells: string[];
 }
