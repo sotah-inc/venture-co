@@ -69,6 +69,25 @@ const itemDataRenderers: IItemDataRenderer[] = [
     },
   },
   {
+    itemClass: ItemClass.Consumable,
+    render: item => {
+      return (
+        <>
+          <li className="item-level">Item level {item.level}</li>
+          {item.spells.map((v, spellsIndex) => (
+            <li key={spellsIndex} className="on-use">
+              {v}
+            </li>
+          ))}
+          <li>{item.level_requirement}</li>
+          <li>
+            {item.sell_price.header} <Currency amount={item.sell_price.value} hideCopper={true} />
+          </li>
+        </>
+      );
+    },
+  },
+  {
     itemClass: ItemClass.Armor,
     render: item => {
       return (
@@ -79,7 +98,9 @@ const itemDataRenderers: IItemDataRenderer[] = [
           <li>{item.inventory_type}</li>
           <li>{item.armor}</li>
           {resolveStatsStrings(item.stats).map((v, statsIndex) => (
-            <li key={statsIndex}>{v}</li>
+            <li key={statsIndex} className="random-stats">
+              {v}
+            </li>
           ))}
           <li>{item.level_requirement}</li>
           <li>
