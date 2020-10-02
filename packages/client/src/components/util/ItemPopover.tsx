@@ -39,16 +39,30 @@ const defaultItemDataRenderer: IItemDataRenderer = {
   },
 };
 
-export function resolveStatsStrings(stats: IShortItemStat[]): string[] {
-  return stats.reduce<string[]>((result, v, i, initialInput) => {
+interface ResolvedStats {
+  value: string;
+  is_equippable_bonus: boolean;
+}
+
+export function resolveStatsStrings(stats: IShortItemStat[]): ResolvedStats[] {
+  return stats.reduce<ResolvedStats[]>((result, v, i, initialInput) => {
     if (v.is_negated && i > 0) {
       return [
         ...result.slice(0, i - 1),
-        `+${v.value} [${[initialInput[i].type, initialInput[i - 1].type].join(" or ")}]`,
+        {
+          is_equippable_bonus: v.is_equip_bonus,
+          value: `+${v.value} [${[initialInput[i].type, initialInput[i - 1].type].join(" or ")}]`,
+        },
       ];
     }
 
-    return [...result, v.display_value];
+    return [
+      ...result,
+      {
+        is_equippable_bonus: v.is_equip_bonus,
+        value: v.display_value,
+      },
+    ];
   }, []);
 }
 
@@ -98,8 +112,8 @@ const itemDataRenderers: IItemDataRenderer[] = [
           <li>{item.inventory_type}</li>
           <li>{item.armor}</li>
           {resolveStatsStrings(item.stats).map((v, statsIndex) => (
-            <li key={statsIndex} className="random-stats">
-              {v}
+            <li key={statsIndex} className={v.is_equippable_bonus ? "random-status" : ""}>
+              {v.value}
             </li>
           ))}
           <li>{item.level_requirement}</li>
