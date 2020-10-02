@@ -1,7 +1,6 @@
-import React from "react";
-
 import { Popover, PopoverInteractionKind, Position } from "@blueprintjs/core";
 import { IShortItem, ItemClass } from "@sotah-inc/core";
+import React from "react";
 
 import { IItemClasses } from "../../types/global";
 import { getItemIconUrl, getItemTextValue, qualityToColorClass } from "../../util";
@@ -49,6 +48,22 @@ const itemDataRenderers: IItemDataRenderer[] = [
           <li className="item-level">Item level {item.level}</li>
           <li>{item.binding}</li>
           <li>{item.container_slots}</li>
+          <li>
+            {item.sell_price.header} <Currency amount={item.sell_price.value} hideCopper={true} />
+          </li>
+        </>
+      );
+    },
+  },
+  {
+    itemClass: ItemClass.Armor,
+    render: item => {
+      return (
+        <>
+          <li className="item-level">Item level {item.level}</li>
+          <li>{item.binding}</li>
+          <li>{item.inventory_type}</li>
+          <li>{item.level_requirement}</li>
           <li>
             {item.sell_price.header} <Currency amount={item.sell_price.value} hideCopper={true} />
           </li>
