@@ -118,7 +118,14 @@ const itemDataRenderers: IItemDataRenderer[] = [
               {v.value}
             </li>
           ))}
+          <li>{item.durability}</li>
+          {item.spells.map((v, spellsIndex) => (
+            <li key={spellsIndex} className="on-use">
+              {v}
+            </li>
+          ))}
           <li>{item.level_requirement}</li>
+          <li>{item.skill_requirement}</li>
           <li>
             {item.sell_price.header}{" "}
             <Currency amount={item.sell_price.value} hideCopper={item.sell_price.value > 100} />
