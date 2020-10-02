@@ -2,6 +2,11 @@ import { ItemId, ItemQuality } from "./item";
 import { ItemClass, ItemClassId } from "./item-class";
 import { ISotahItemMeta } from "./sotah-item-meta";
 
+export interface IShortItemStat {
+  value: string;
+  is_negated: boolean;
+}
+
 export interface IShortItem {
   sotah_meta: ISotahItemMeta;
 
@@ -25,6 +30,6 @@ export interface IShortItem {
   inventory_type: string;
   item_subclass: string;
   durability: string;
-  stats: string[];
+  stats: IShortItemStat[];
   armor: string;
 }
