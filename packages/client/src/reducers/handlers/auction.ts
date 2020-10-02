@@ -84,6 +84,7 @@ export const handlers: IKindHandlers<IAuctionState, AuctionActions> = {
           ...state,
           options: {
             ...state.options,
+            currentPage: 0,
             selected: nextSelected,
           },
         };
