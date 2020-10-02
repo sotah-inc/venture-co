@@ -1,4 +1,5 @@
 import { ItemId, ItemQuality } from "./item";
+import { ItemClass, ItemClassId } from "./item-class";
 import { ISotahItemMeta } from "./sotah-item-meta";
 
 export interface IShortItem {
@@ -11,4 +12,11 @@ export interface IShortItem {
     name: string;
   };
   max_count: number;
+  level: number;
+  itemClassId: ItemClass | ItemClassId;
+  binding: string;
+  sell_price: {
+    value: number;
+    header: string;
+  };
 }

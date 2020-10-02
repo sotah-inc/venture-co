@@ -9,10 +9,14 @@ export interface IItemSubClass {
   id: ItemSubClassId;
 }
 
+export enum ItemClass {
+  Container = 1,
+}
+
 export type ItemClassId = number;
 
 export interface IItemClass extends ILinksBase {
-  class_id: ItemClassId;
+  class_id: ItemClass | ItemClassId;
   name: LocaleMapping;
   item_subclasses: IItemSubClass[];
 }

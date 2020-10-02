@@ -1,6 +1,7 @@
 import {
   IKeyHrefReference,
   ILinksBase,
+  ItemClass,
   ItemClassId,
   ItemSubClassId,
   ITypeNameTuple,
@@ -138,7 +139,7 @@ export interface IPreviewItem {
   name: LocaleMapping;
   item_class: IKeyHrefReference & {
     name: LocaleMapping;
-    id: ItemClassId;
+    id: ItemClass | ItemClassId;
   };
   item_subclass: IKeyHrefReference & {
     name: LocaleMapping;
@@ -184,7 +185,7 @@ export interface IItem {
     };
     item_class: IKeyHrefReference & {
       name: LocaleMapping;
-      id: ItemClassId;
+      id: ItemClass | ItemClassId;
     };
     item_subclass: IKeyHrefReference & {
       name: LocaleMapping;
