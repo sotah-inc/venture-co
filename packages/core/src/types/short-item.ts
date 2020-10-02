@@ -13,7 +13,7 @@ export interface IShortItem {
   };
   max_count: number;
   level: number;
-  itemClassId: ItemClass | ItemClassId;
+  item_class_id: ItemClass | ItemClassId;
   binding: string;
   sell_price: {
     value: number;
