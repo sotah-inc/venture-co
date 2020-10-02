@@ -36,4 +36,5 @@ export interface IShortItem {
   stats: IShortItemStat[];
   armor: string;
   spells: string[];
+  skill_requirement: string;
 }
