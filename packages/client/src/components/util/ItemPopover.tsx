@@ -76,7 +76,8 @@ const itemDataRenderers: IItemDataRenderer[] = [
           <li>{item.binding}</li>
           <li>{item.container_slots}</li>
           <li>
-            {item.sell_price.header} <Currency amount={item.sell_price.value} hideCopper={true} />
+            {item.sell_price.header}{" "}
+            <Currency amount={item.sell_price.value} hideCopper={item.sell_price.value > 100} />
           </li>
         </>
       );
@@ -95,7 +96,8 @@ const itemDataRenderers: IItemDataRenderer[] = [
           ))}
           <li>{item.level_requirement}</li>
           <li>
-            {item.sell_price.header} <Currency amount={item.sell_price.value} hideCopper={true} />
+            {item.sell_price.header}{" "}
+            <Currency amount={item.sell_price.value} hideCopper={item.sell_price.value > 100} />
           </li>
         </>
       );
@@ -118,7 +120,8 @@ const itemDataRenderers: IItemDataRenderer[] = [
           ))}
           <li>{item.level_requirement}</li>
           <li>
-            {item.sell_price.header} <Currency amount={item.sell_price.value} hideCopper={true} />
+            {item.sell_price.header}{" "}
+            <Currency amount={item.sell_price.value} hideCopper={item.sell_price.value > 100} />
           </li>
         </>
       );
