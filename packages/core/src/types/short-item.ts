@@ -25,4 +25,5 @@ export interface IShortItem {
   inventory_type: string;
   item_subclass: string;
   durability: string;
+  stats: string[];
 }
