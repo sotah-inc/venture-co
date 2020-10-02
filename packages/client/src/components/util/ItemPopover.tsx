@@ -62,10 +62,12 @@ const itemDataRenderers: IItemDataRenderer[] = [
         <>
           <li className="item-level">Item level {item.level}</li>
           <li>{item.binding}</li>
+          <li>{item.armor}</li>
           <li>{item.inventory_type}</li>
           {item.stats.map((v, statsIndex) => (
             <li key={statsIndex}>{v}</li>
           ))}
+          <li>{item.binding}</li>
           <li>{item.level_requirement}</li>
           <li>
             {item.sell_price.header} <Currency amount={item.sell_price.value} hideCopper={true} />
