@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Popover, PopoverInteractionKind, Position } from "@blueprintjs/core";
-import { IShortItem } from "@sotah-inc/core";
+import { IShortItem, ItemClass } from "@sotah-inc/core";
 
 import { IItemClasses } from "../../types/global";
 import { getItemIconUrl, getItemTextValue, qualityToColorClass } from "../../util";
@@ -24,21 +24,51 @@ export interface IOwnProps {
 
 type Props = Readonly<IStateProps & IOwnProps>;
 
-const renderData = (item: IShortItem, _itemClasses: IItemClasses) => {
-  return item.id;
+interface IItemDataRenderer {
+  itemClass?: ItemClass;
+  render: (item: IShortItem, _itemClasses: IItemClasses) => JSX.Element;
+}
+
+const defaultItemDataRenderer: IItemDataRenderer = {
+  render: item => {
+    return (
+      <>
+        <li className="item-level">Item level {item.level}</li>
+        <li>{item.binding}</li>
+        <li>{item.container_slots}</li>
+      </>
+    );
+  },
 };
+
+const itemDataRenderers: IItemDataRenderer[] = [
+  {
+    itemClass: ItemClass.Container,
+    render: item => {
+      return (
+        <>
+          <li className="item-level">Item level {item.level}</li>
+          <li>{item.binding}</li>
+          <li>{item.container_slots}</li>
+        </>
+      );
+    },
+  },
+];
 
 const renderPopoverContent = (item: IShortItem, itemClasses: IItemClasses) => {
   const itemTextClass = qualityToColorClass(item.quality.type);
   const itemIconUrl = getItemIconUrl(item);
   const itemText = getItemTextValue(item);
+  const itemDataRenderer: IItemDataRenderer =
+    itemDataRenderers.find(v => v.itemClass === item.itemClassId) ?? defaultItemDataRenderer;
 
   if (itemIconUrl === null) {
     return (
       <div className="item-popover-content">
         <ul>
           <li className={itemTextClass}>{itemText}</li>
-          {renderData(item, itemClasses)}
+          {itemDataRenderer.render(item, itemClasses)}
         </ul>
         <hr />
         <ul>
@@ -59,7 +89,7 @@ const renderPopoverContent = (item: IShortItem, itemClasses: IItemClasses) => {
         <div className="pure-u-4-5">
           <ul>
             <li className={itemTextClass}>{itemText}</li>
-            {renderData(item, itemClasses)}
+            {itemDataRenderer.render(item, itemClasses)}
           </ul>
           <hr />
           <ul>
