@@ -7,6 +7,7 @@ export interface IShortItemStat {
   is_negated: boolean;
   value: number;
   type: string;
+  is_equip_bonus: boolean;
 }
 
 export interface IShortItem {
