@@ -26,4 +26,5 @@ export interface IShortItem {
   item_subclass: string;
   durability: string;
   stats: string[];
+  armor: string;
 }
