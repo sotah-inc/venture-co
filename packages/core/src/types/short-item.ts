@@ -19,4 +19,5 @@ export interface IShortItem {
     value: number;
     header: string;
   };
+  container_slots: string;
 }
