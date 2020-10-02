@@ -3,8 +3,10 @@ import { ItemClass, ItemClassId } from "./item-class";
 import { ISotahItemMeta } from "./sotah-item-meta";
 
 export interface IShortItemStat {
-  value: string;
+  display_value: string;
   is_negated: boolean;
+  value: number;
+  type: string;
 }
 
 export interface IShortItem {
