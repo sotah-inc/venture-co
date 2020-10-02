@@ -1,7 +1,8 @@
 // tslint:disable-next-line:no-import-side-effect
 import "isomorphic-fetch";
+// tslint:disable-next-line:no-submodule-imports
 import getConfig from "next/config";
-import queryString from "query-string";
+import queryString, { StringifiableRecord } from "query-string";
 
 interface IConfig {
   publicRuntimeConfig?: {
@@ -95,7 +96,9 @@ export const gatherWithQuery = async <Q, A, B = {}>(
   const query =
     typeof opts.query === "undefined"
       ? null
-      : queryString.stringify(opts.query, { arrayFormat: "index" });
+      : queryString.stringify((opts.query as unknown) as StringifiableRecord, {
+          arrayFormat: "index",
+        });
   const method = typeof opts.method === "undefined" ? "GET" : opts.method;
   const headers: Headers = (() => {
     if (typeof opts.headers === "undefined") {

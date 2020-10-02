@@ -63,7 +63,7 @@ const renderPopoverContent = (item: IShortItem, itemClasses: IItemClasses) => {
   const itemIconUrl = getItemIconUrl(item);
   const itemText = getItemTextValue(item);
   const itemDataRenderer: IItemDataRenderer =
-    itemDataRenderers.find(v => v.itemClass === item.itemClassId) ?? defaultItemDataRenderer;
+    itemDataRenderers.find(v => v.itemClass === item.item_class_id) ?? defaultItemDataRenderer;
 
   if (itemIconUrl === null) {
     return (

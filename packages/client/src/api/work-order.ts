@@ -16,7 +16,7 @@ import {
 import * as HTTPStatus from "http-status";
 import queryString from "query-string";
 
-import { gather, getApiEndpoint } from "./index";
+import { gather, gatherWithQuery, getApiEndpoint } from "./index";
 
 interface IWorkOrderParams {
   gameVersion: GameVersion;
@@ -48,9 +48,10 @@ export async function queryWorkOrders(
     perPage: opts.perPage,
   };
 
-  const { body, status } = await gather<void, QueryWorkOrdersResponse>({
+  const { body, status } = await gatherWithQuery<IQueryWorkOrdersParams, QueryWorkOrdersResponse>({
     method: "GET",
-    url: `${baseUrl}?${queryString.stringify(queryParams)}`,
+    query: queryParams,
+    url: baseUrl,
   });
   switch (status) {
     case HTTPStatus.OK:
