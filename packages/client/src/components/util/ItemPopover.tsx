@@ -114,7 +114,7 @@ const itemDataRenderers: IItemDataRenderer[] = [
           <li>{item.inventory_type}</li>
           <li>{item.armor}</li>
           {resolveStatsStrings(item.stats).map((v, statsIndex) => (
-            <li key={statsIndex} className={v.is_equippable_bonus ? "random-status" : ""}>
+            <li key={statsIndex} className={v.is_equippable_bonus ? "random-stats" : ""}>
               {v.value}
             </li>
           ))}
