@@ -13,7 +13,7 @@ export function ItemCurrency({ item }: { item: IShortItem }) {
   return (
     <li>
       {item.sell_price.header}{" "}
-      <Currency amount={item.sell_price.value} hideCopper={item.sell_price.value > 100} />;
+      <Currency amount={item.sell_price.value} hideCopper={item.sell_price.value > 100} />
     </li>
   );
 }
