@@ -125,7 +125,11 @@ export const itemDataRenderers: IItemDataRenderer[] = [
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
-          <li>{item.description}</li>
+          {item.spells.map((v, spellsIndex) => (
+            <li key={spellsIndex} className="on-use">
+              {v}
+            </li>
+          ))}
         </>
       );
     },
