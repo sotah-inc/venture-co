@@ -16,9 +16,10 @@ export interface IItemSubClass {
 export enum ItemClass {
   Consumable = 0,
   Container = 1,
-  Misc = 15,
   Armor = 4,
+  Tradeskill = 7,
   Recipe = 9,
+  Misc = 15,
 }
 
 export type ItemClassId = number;
