@@ -134,6 +134,22 @@ export const itemDataRenderers: IItemDataRenderer[] = [
       );
     },
   },
+  {
+    itemClass: ItemClass.Tradeskill,
+    render: item => {
+      return (
+        <>
+          <li className="item-level">Item level {item.level}</li>
+          {item.spells.map((v, spellsIndex) => (
+            <li key={spellsIndex} className="on-use">
+              {v}
+            </li>
+          ))}
+          <li>{item.level_requirement}</li>
+        </>
+      );
+    },
+  },
 ];
 
 export function ItemDataRenderer({
