@@ -120,7 +120,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
     },
   },
   {
-    itemClass: ItemClass.CompanionPets,
+    itemClass: ItemClass.Misc,
     render: item => {
       return (
         <>
