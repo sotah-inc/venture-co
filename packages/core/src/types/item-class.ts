@@ -12,6 +12,7 @@ export interface IItemSubClass {
 export enum ItemClass {
   Consumable = 0,
   Container = 1,
+  CompanionPets = 2,
   Armor = 4,
   Recipe = 9,
 }
