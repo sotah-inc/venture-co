@@ -119,6 +119,17 @@ export const itemDataRenderers: IItemDataRenderer[] = [
       );
     },
   },
+  {
+    itemClass: ItemClass.CompanionPets,
+    render: item => {
+      return (
+        <>
+          <li className="item-level">Item level {item.level}</li>
+          <li>{item.description}</li>
+        </>
+      );
+    },
+  },
 ];
 
 export function ItemDataRenderer({
