@@ -1,5 +1,9 @@
 import { IHrefReference, ILinksBase, LocaleMapping } from "./index";
 
+export enum ItemSubClass {
+  CompanionPets = 2,
+}
+
 export type ItemSubClassId = number;
 
 export interface IItemSubClass {
@@ -12,7 +16,7 @@ export interface IItemSubClass {
 export enum ItemClass {
   Consumable = 0,
   Container = 1,
-  CompanionPets = 2,
+  Misc = 15,
   Armor = 4,
   Recipe = 9,
 }
