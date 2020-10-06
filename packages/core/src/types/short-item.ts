@@ -1,5 +1,5 @@
 import { ItemId, ItemQuality } from "./item";
-import { ItemClass, ItemClassId } from "./item-class";
+import { ItemClass, ItemClassId, ItemSubClass, ItemSubClassId } from "./item-class";
 import { ISotahItemMeta } from "./sotah-item-meta";
 
 export interface IShortItemStat {
@@ -37,4 +37,5 @@ export interface IShortItem {
   armor: string;
   spells: string[];
   skill_requirement: string;
+  item_subclass_id: ItemSubClass | ItemSubClassId;
 }
