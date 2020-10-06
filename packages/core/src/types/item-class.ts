@@ -20,6 +20,7 @@ export enum ItemClass {
   Tradeskill = 7,
   Recipe = 9,
   Misc = 15,
+  BattlePets = 17,
 }
 
 export type ItemClassId = number;
