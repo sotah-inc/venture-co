@@ -2,6 +2,7 @@ import { IHrefReference, ILinksBase, LocaleMapping } from "./index";
 
 export enum ItemSubClass {
   CompanionPets = 2,
+  Herb = 9,
 }
 
 export type ItemSubClassId = number;
