@@ -1,29 +1,8 @@
-import { IShortItem, IShortItemStat, ItemClass, ItemSubClass } from "@sotah-inc/core";
+import { IShortItem, ItemClass, ItemSubClass } from "@sotah-inc/core";
 import React from "react";
 
 import { IItemClasses } from "../../../types/global";
-import { Currency } from "../Currency";
-
-export function renderItemSpells(item: IShortItem) {
-  return item.spells.map((v, spellsIndex) => (
-    <li key={spellsIndex} className="on-use">
-      {v}
-    </li>
-  ));
-}
-
-export function ItemCurrency({ item }: { item: IShortItem }) {
-  if (item.sell_price.value === 0) {
-    return null;
-  }
-
-  return (
-    <li>
-      {item.sell_price.header}{" "}
-      <Currency amount={item.sell_price.value} hideCopper={item.sell_price.value > 100} />
-    </li>
-  );
-}
+import { ItemCurrency, renderItemSpells, resolveStatsStrings } from "./ItemDataRenderer/util";
 
 export interface IItemDataRenderer {
   itemClass?: ItemClass;
@@ -40,33 +19,6 @@ export const defaultItemDataRenderer: IItemDataRenderer = {
     );
   },
 };
-
-interface ResolvedStats {
-  value: string;
-  is_equippable_bonus: boolean;
-}
-
-export function resolveStatsStrings(stats: IShortItemStat[]): ResolvedStats[] {
-  return stats.reduce<ResolvedStats[]>((result, v, i, initialInput) => {
-    if (v.is_negated && i > 0) {
-      return [
-        ...result.slice(0, i - 1),
-        {
-          is_equippable_bonus: v.is_equip_bonus,
-          value: `+${v.value} [${[initialInput[i].type, initialInput[i - 1].type].join(" or ")}]`,
-        },
-      ];
-    }
-
-    return [
-      ...result,
-      {
-        is_equippable_bonus: v.is_equip_bonus,
-        value: v.display_value,
-      },
-    ];
-  }, []);
-}
 
 export const itemDataRenderers: IItemDataRenderer[] = [
   {
