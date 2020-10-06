@@ -11,7 +11,7 @@ export interface IItemSubClass {
   key: IHrefReference;
   subclass: number;
   name: LocaleMapping;
-  id: ItemSubClassId;
+  id: ItemSubClass | ItemSubClassId;
 }
 
 export enum ItemClass {
