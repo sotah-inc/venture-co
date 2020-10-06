@@ -38,4 +38,5 @@ export interface IShortItem {
   spells: string[];
   skill_requirement: string;
   item_subclass_id: ItemSubClass | ItemSubClassId;
+  crafting_reagent: string;
 }
