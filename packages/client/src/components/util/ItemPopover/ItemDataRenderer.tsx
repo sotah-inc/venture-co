@@ -72,6 +72,19 @@ export const itemDataRenderers: IItemDataRenderer[] = [
     },
   },
   {
+    itemClass: ItemClass.Armor,
+    itemSubClass: ItemSubClass.Misc,
+    render: item => {
+      return (
+        <>
+          <li className="item-level">Item level {item.level}</li>
+          <li>{item.binding}</li>
+          <li>{item.inventory_type}</li>
+        </>
+      );
+    },
+  },
+  {
     itemClass: ItemClass.Misc,
     render: item => {
       return (
