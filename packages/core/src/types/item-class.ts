@@ -19,6 +19,7 @@ export enum ItemClass {
   Container = 1,
   Armor = 4,
   Tradeskill = 7,
+  ItemEnhancement = 8,
   Recipe = 9,
   Misc = 15,
   BattlePets = 17,
