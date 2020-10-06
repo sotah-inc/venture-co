@@ -1,9 +1,16 @@
+import { IShortItem, IShortItemStat, ItemClass, ItemSubClass } from "@sotah-inc/core";
 import React from "react";
-
-import { IShortItem, IShortItemStat, ItemClass } from "@sotah-inc/core";
 
 import { IItemClasses } from "../../../types/global";
 import { Currency } from "../Currency";
+
+export function renderItemSpells(item: IShortItem) {
+  return item.spells.map((v, spellsIndex) => (
+    <li key={spellsIndex} className="on-use">
+      {v}
+    </li>
+  ));
+}
 
 export function ItemCurrency({ item }: { item: IShortItem }) {
   if (item.sell_price.value === 0) {
@@ -20,6 +27,7 @@ export function ItemCurrency({ item }: { item: IShortItem }) {
 
 export interface IItemDataRenderer {
   itemClass?: ItemClass;
+  itemSubClass?: ItemSubClass;
   render: (item: IShortItem, _itemClasses: IItemClasses) => JSX.Element;
 }
 
@@ -80,11 +88,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
-          {item.spells.map((v, spellsIndex) => (
-            <li key={spellsIndex} className="on-use">
-              {v}
-            </li>
-          ))}
+          {renderItemSpells(item)}
           <li>{item.level_requirement}</li>
           <ItemCurrency item={item} />
         </>
@@ -107,11 +111,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
             </li>
           ))}
           <li>{item.durability}</li>
-          {item.spells.map((v, spellsIndex) => (
-            <li key={spellsIndex} className="on-use">
-              {v}
-            </li>
-          ))}
+          {renderItemSpells(item)}
           <li>{item.level_requirement}</li>
           <li>{item.skill_requirement}</li>
           <ItemCurrency item={item} />
@@ -125,11 +125,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
-          {item.spells.map((v, spellsIndex) => (
-            <li key={spellsIndex} className="on-use">
-              {v}
-            </li>
-          ))}
+          {renderItemSpells(item)}
         </>
       );
     },
@@ -140,12 +136,22 @@ export const itemDataRenderers: IItemDataRenderer[] = [
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
-          {item.spells.map((v, spellsIndex) => (
-            <li key={spellsIndex} className="on-use">
-              {v}
-            </li>
-          ))}
+          {renderItemSpells(item)}
           <li>{item.level_requirement}</li>
+        </>
+      );
+    },
+  },
+  {
+    itemClass: ItemClass.Tradeskill,
+    itemSubClass: ItemSubClass.Herb,
+    render: item => {
+      return (
+        <>
+          <li className="item-level">Item level {item.level}</li>
+          <li>{item.description}</li>
+          <li>{item.crafting_reagent}</li>
+          <ItemCurrency item={item} />
         </>
       );
     },
@@ -160,7 +166,11 @@ export function ItemDataRenderer({
   itemClasses: IItemClasses;
 }) {
   const itemDataRenderer: IItemDataRenderer =
-    itemDataRenderers.find(v => v.itemClass === item.item_class_id) ?? defaultItemDataRenderer;
+    itemDataRenderers.find(
+      v => v.itemClass === item.item_class_id && v.itemSubClass === item.item_subclass_id,
+    ) ??
+    itemDataRenderers.find(v => v.itemClass === item.item_class_id) ??
+    defaultItemDataRenderer;
 
   return itemDataRenderer.render(item, itemClasses);
 }
