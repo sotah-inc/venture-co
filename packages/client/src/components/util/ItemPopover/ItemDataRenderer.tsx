@@ -156,6 +156,18 @@ export const itemDataRenderers: IItemDataRenderer[] = [
       );
     },
   },
+  {
+    itemClass: ItemClass.ItemEnhancement,
+    render: item => {
+      return (
+        <>
+          <li className="item-level">Item level {item.level}</li>
+          {renderItemSpells(item)}
+          <ItemCurrency item={item} />
+        </>
+      );
+    },
+  },
 ];
 
 export function ItemDataRenderer({
