@@ -4,6 +4,7 @@ export enum ItemSubClass {
   Misc = 0,
   CompanionPets = 2,
   Herb = 9,
+  Elemental = 10,
 }
 
 export type ItemSubClassId = number;
