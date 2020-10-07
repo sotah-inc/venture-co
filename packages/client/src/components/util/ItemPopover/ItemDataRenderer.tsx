@@ -2,7 +2,7 @@ import { IShortItem, ItemClass, ItemSubClass } from "@sotah-inc/core";
 import React from "react";
 
 import { IItemClasses } from "../../../types/global";
-import { ItemCurrency, renderItemSpells, resolveStatsStrings } from "./ItemDataRenderer/util";
+import { ItemCurrency, renderItemSpells, renderItemStats } from "./ItemDataRenderer/util";
 
 export interface IItemDataRenderer {
   itemClass?: ItemClass;
@@ -57,11 +57,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
           <li className="postscript">{item.item_subclass}</li>
           <li>{item.inventory_type}</li>
           <li>{item.armor}</li>
-          {resolveStatsStrings(item.stats).map((v, statsIndex) => (
-            <li key={statsIndex} className={v.is_equippable_bonus ? "random-stats" : ""}>
-              {v.value}
-            </li>
-          ))}
+          {renderItemStats(item)}
           <li>{item.durability}</li>
           {renderItemSpells(item)}
           <li>{item.level_requirement}</li>
@@ -128,6 +124,28 @@ export const itemDataRenderers: IItemDataRenderer[] = [
         <>
           <li className="item-level">Item level {item.level}</li>
           {renderItemSpells(item)}
+          <ItemCurrency item={item} />
+        </>
+      );
+    },
+  },
+  {
+    itemClass: ItemClass.Weapon,
+    render: item => {
+      return (
+        <>
+          <li className="item-level">Item level {item.level}</li>
+          <li>{item.binding}</li>
+          <li>{item.inventory_type}</li>
+          <li className="postscript">{item.item_subclass}</li>
+          <li>{item.damage}</li>
+          <li className="postscript">{item.attack_speed}</li>
+          <li>{item.dps}</li>
+          {renderItemStats(item)}
+          <li>{item.durability}</li>
+          {renderItemSpells(item)}
+          <li>{item.level_requirement}</li>
+          <li>{item.skill_requirement}</li>
           <ItemCurrency item={item} />
         </>
       );

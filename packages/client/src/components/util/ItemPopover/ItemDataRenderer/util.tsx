@@ -51,3 +51,11 @@ export function resolveStatsStrings(stats: IShortItemStat[]): ResolvedStats[] {
     ];
   }, []);
 }
+
+export function renderItemStats(item: IShortItem) {
+  return resolveStatsStrings(item.stats).map((v, statsIndex) => (
+    <li key={statsIndex} className={v.is_equippable_bonus ? "random-stats" : ""}>
+      {v.value}
+    </li>
+  ));
+}
