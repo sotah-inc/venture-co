@@ -12,6 +12,11 @@ import { ISotahItemMeta } from "./sotah-item-meta";
 
 export type ItemId = number;
 
+export enum SocketType {
+  Prismatic = "PRISMATIC",
+  Meta = "META",
+}
+
 export enum ItemQuality {
   Poor = "EPIC",
   Common = "COMMON",

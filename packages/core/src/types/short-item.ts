@@ -10,6 +10,11 @@ export interface IShortItemStat {
   is_equip_bonus: boolean;
 }
 
+export interface IShortItemSocket {
+  type: string;
+  name: string;
+}
+
 export interface IShortItem {
   sotah_meta: ISotahItemMeta;
 
@@ -45,4 +50,6 @@ export interface IShortItem {
   damage: string;
   attack_speed: string;
   dps: string;
+  socket_bonus: string;
+  sockets: IShortItemSocket[];
 }
