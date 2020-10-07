@@ -111,7 +111,21 @@ export const itemDataRenderers: IItemDataRenderer[] = [
         <>
           <li className="item-level">Item level {item.level}</li>
           <li>{item.description}</li>
-          <li>{item.crafting_reagent}</li>
+          <li className="crafting-reagent">{item.crafting_reagent}</li>
+          <ItemCurrency item={item} />
+        </>
+      );
+    },
+  },
+  {
+    itemClass: ItemClass.Tradeskill,
+    itemSubClass: ItemSubClass.Elemental,
+    render: item => {
+      return (
+        <>
+          <li className="item-level">Item level {item.level}</li>
+          <li className="description">"{item.description}"</li>
+          <li className="crafting-reagent">{item.crafting_reagent}</li>
           <ItemCurrency item={item} />
         </>
       );
