@@ -18,6 +18,7 @@ export interface IItemSubClass {
 export enum ItemClass {
   Consumable = 0,
   Container = 1,
+  Weapon = 2,
   Armor = 4,
   Tradeskill = 7,
   ItemEnhancement = 8,

@@ -39,4 +39,7 @@ export interface IShortItem {
   skill_requirement: string;
   item_subclass_id: ItemSubClass | ItemSubClassId;
   crafting_reagent: string;
+  damage: string;
+  attack_speed: string;
+  dps: string;
 }
