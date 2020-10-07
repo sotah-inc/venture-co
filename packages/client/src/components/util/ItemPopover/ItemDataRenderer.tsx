@@ -118,9 +118,9 @@ export const itemDataRenderers: IItemDataRenderer[] = [
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
+          <li className="crafting-reagent">{item.crafting_reagent}</li>
           <li>{item.description}</li>
           {renderItemSpells(item)}
-          <li className="crafting-reagent">{item.crafting_reagent}</li>
           <ItemCurrency item={item} />
         </>
       );
@@ -133,8 +133,8 @@ export const itemDataRenderers: IItemDataRenderer[] = [
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
-          <li className="description">"{item.description}"</li>
           <li className="crafting-reagent">{item.crafting_reagent}</li>
+          <li className="description">"{item.description}"</li>
           <ItemCurrency item={item} />
         </>
       );
@@ -159,8 +159,8 @@ export const itemDataRenderers: IItemDataRenderer[] = [
     render: item => {
       return (
         <>
-          <li className="crafting-reagent">{item.crafting_reagent}</li>
           <li className="item-level">Item level {item.level}</li>
+          <li className="crafting-reagent">{item.crafting_reagent}</li>
           {item.skill_requirement && <li>{item.skill_requirement}</li>}
           <ItemCurrency item={item} />
         </>
