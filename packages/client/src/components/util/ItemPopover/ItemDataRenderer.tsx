@@ -151,6 +151,17 @@ export const itemDataRenderers: IItemDataRenderer[] = [
       );
     },
   },
+  {
+    itemClass: ItemClass.BattlePets,
+    render: item => {
+      return (
+        <>
+          <li className="item-level">Item level {item.level}</li>
+          {renderItemSpells(item)}
+        </>
+      );
+    },
+  },
 ];
 
 export function ItemDataRenderer({
