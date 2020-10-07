@@ -33,13 +33,17 @@ interface ResolvedStats {
 export function resolveStatsStrings(stats: IShortItemStat[]): ResolvedStats[] {
   return stats.reduce<ResolvedStats[]>((result, v, i, initialInput) => {
     if (v.is_negated && i > 0) {
-      return [
-        ...result.slice(0, i - 1),
-        {
-          is_equippable_bonus: v.is_equip_bonus,
-          value: `+${v.value} [${[initialInput[i].type, initialInput[i - 1].type].join(" or ")}]`,
-        },
-      ];
+      const priorStat = initialInput[i - 1];
+
+      if (priorStat.value === v.value) {
+        return [
+          ...result.slice(0, i - 1),
+          {
+            is_equippable_bonus: v.is_equip_bonus,
+            value: `+${v.value} [${[initialInput[i].type, initialInput[i - 1].type].join(" or ")}]`,
+          },
+        ];
+      }
     }
 
     return [
