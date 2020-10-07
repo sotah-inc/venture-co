@@ -235,6 +235,19 @@ export const itemDataRenderers: IItemDataRenderer[] = [
       );
     },
   },
+  {
+    itemClass: ItemClass.Recipe,
+    render: item => {
+      return (
+        <>
+          <li className="item-level">Item level {item.level}</li>
+          {item.unique_equipped && <li>{item.unique_equipped}</li>}
+          <li>{item.level_requirement}</li>
+          <li className="description">"{item.description}"</li>
+        </>
+      );
+    },
+  },
 ];
 
 export function ItemDataRenderer({
