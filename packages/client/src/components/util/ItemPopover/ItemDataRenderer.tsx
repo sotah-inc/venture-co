@@ -75,7 +75,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
     itemClass: ItemClass.Armor,
     itemSubClass: ItemSubClass.Misc,
     render: item => {
-      if (item.inventory_type.type === InventoryType.Neck) {
+      if ([InventoryType.Neck, InventoryType.OffHand].includes(item.inventory_type.type)) {
         return renderArmor(item);
       }
 
