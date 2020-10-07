@@ -1,4 +1,4 @@
-import { ItemId, ItemQuality } from "./item";
+import { InventoryType, ItemId, ItemQuality } from "./item";
 import { ItemClass, ItemClassId, ItemSubClass, ItemSubClassId } from "./item-class";
 import { ISotahItemMeta } from "./sotah-item-meta";
 
@@ -30,7 +30,10 @@ export interface IShortItem {
   container_slots: string;
   description: string;
   level_requirement: string;
-  inventory_type: string;
+  inventory_type: {
+    type: InventoryType;
+    display_string: string;
+  };
   item_subclass: string;
   durability: string;
   stats: IShortItemStat[];

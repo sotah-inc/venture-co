@@ -1,8 +1,28 @@
-import { IShortItem, ItemClass, ItemSubClass } from "@sotah-inc/core";
+import { InventoryType, IShortItem, ItemClass, ItemSubClass } from "@sotah-inc/core";
 import React from "react";
 
 import { IItemClasses } from "../../../types/global";
 import { ItemCurrency, renderItemSpells, renderItemStats } from "./ItemDataRenderer/util";
+
+function renderArmor(item: IShortItem) {
+  return (
+    <>
+      <li className="item-level">Item level {item.level}</li>
+      <li>{item.binding}</li>
+      {item.item_subclass_id !== ItemSubClass.Misc && (
+        <li className="postscript">{item.item_subclass}</li>
+      )}
+      <li>{item.inventory_type.display_string}</li>
+      <li>{item.armor}</li>
+      {renderItemStats(item)}
+      <li>{item.durability}</li>
+      {renderItemSpells(item)}
+      <li>{item.level_requirement}</li>
+      <li>{item.skill_requirement}</li>
+      <ItemCurrency item={item} />
+    </>
+  );
+}
 
 export interface IItemDataRenderer {
   itemClass?: ItemClass;
@@ -49,33 +69,21 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   },
   {
     itemClass: ItemClass.Armor,
-    render: item => {
-      return (
-        <>
-          <li className="item-level">Item level {item.level}</li>
-          <li>{item.binding}</li>
-          <li className="postscript">{item.item_subclass}</li>
-          <li>{item.inventory_type}</li>
-          <li>{item.armor}</li>
-          {renderItemStats(item)}
-          <li>{item.durability}</li>
-          {renderItemSpells(item)}
-          <li>{item.level_requirement}</li>
-          <li>{item.skill_requirement}</li>
-          <ItemCurrency item={item} />
-        </>
-      );
-    },
+    render: renderArmor,
   },
   {
     itemClass: ItemClass.Armor,
     itemSubClass: ItemSubClass.Misc,
     render: item => {
+      if (item.inventory_type.type === InventoryType.Neck) {
+        return renderArmor(item);
+      }
+
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
           <li>{item.binding}</li>
-          <li>{item.inventory_type}</li>
+          <li>{item.inventory_type.display_string}</li>
         </>
       );
     },
@@ -137,7 +145,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
           <li className="item-level">Item level {item.level}</li>
           <li>{item.binding}</li>
           <li className="postscript">{item.item_subclass}</li>
-          <li>{item.inventory_type}</li>
+          <li>{item.inventory_type.display_string}</li>
           <li className="postscript">{item.attack_speed}</li>
           <li>{item.damage}</li>
           <li>{item.dps}</li>
