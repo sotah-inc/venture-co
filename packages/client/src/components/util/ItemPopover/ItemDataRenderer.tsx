@@ -14,6 +14,7 @@ function renderArmor(item: IShortItem) {
     <>
       <li className="item-level">Item level {item.level}</li>
       <li>{item.binding}</li>
+      {item.unique_equipped && <li>{item.unique_equipped}</li>}
       {item.item_subclass_id !== ItemSubClass.Misc && (
         <li className="postscript">{item.item_subclass}</li>
       )}
