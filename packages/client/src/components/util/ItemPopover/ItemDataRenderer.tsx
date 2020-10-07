@@ -258,6 +258,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
           <li className="on-use">Use: {item.description}</li>
           <li>{item.skill_requirement}</li>
           <ItemCurrency item={item} />
+          <li>&nbsp;</li>
           <li>{item.reagents_display_string}</li>
         </>
       );
