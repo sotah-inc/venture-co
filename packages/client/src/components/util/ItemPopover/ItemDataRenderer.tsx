@@ -140,6 +140,19 @@ export const itemDataRenderers: IItemDataRenderer[] = [
     },
   },
   {
+    itemClass: ItemClass.Tradeskill,
+    itemSubClass: ItemSubClass.Jewelcrafting,
+    render: item => {
+      return (
+        <>
+          <li className="item-level">Item level {item.level}</li>
+          <li className="crafting-reagent">{item.crafting_reagent}</li>
+          <ItemCurrency item={item} />
+        </>
+      );
+    },
+  },
+  {
     itemClass: ItemClass.ItemEnhancement,
     render: item => {
       return (
