@@ -136,10 +136,10 @@ export const itemDataRenderers: IItemDataRenderer[] = [
         <>
           <li className="item-level">Item level {item.level}</li>
           <li>{item.binding}</li>
-          <li>{item.inventory_type}</li>
           <li className="postscript">{item.item_subclass}</li>
-          <li>{item.damage}</li>
+          <li>{item.inventory_type}</li>
           <li className="postscript">{item.attack_speed}</li>
+          <li>{item.damage}</li>
           <li>{item.dps}</li>
           {renderItemStats(item)}
           <li>{item.durability}</li>
