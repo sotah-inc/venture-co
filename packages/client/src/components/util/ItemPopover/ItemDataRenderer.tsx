@@ -259,7 +259,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
           <li>{item.skill_requirement}</li>
           <ItemCurrency item={item} />
           <li>&nbsp;</li>
-          <li>{item.reagents_display_string}</li>
+          <li>Requires {item.reagents_display_string}</li>
         </>
       );
     },
