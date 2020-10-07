@@ -2,7 +2,12 @@ import { InventoryType, IShortItem, ItemClass, ItemSubClass } from "@sotah-inc/c
 import React from "react";
 
 import { IItemClasses } from "../../../types/global";
-import { ItemCurrency, renderItemSpells, renderItemStats } from "./ItemDataRenderer/util";
+import {
+  ItemCurrency,
+  renderItemSockets,
+  renderItemSpells,
+  renderItemStats,
+} from "./ItemDataRenderer/util";
 
 function renderArmor(item: IShortItem) {
   return (
@@ -15,6 +20,7 @@ function renderArmor(item: IShortItem) {
       <li>{item.inventory_type.display_string}</li>
       <li>{item.armor}</li>
       {renderItemStats(item)}
+      {renderItemSockets(item)}
       <li>{item.durability}</li>
       {renderItemSpells(item)}
       <li>{item.level_requirement}</li>

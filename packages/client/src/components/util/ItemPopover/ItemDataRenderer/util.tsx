@@ -63,3 +63,20 @@ export function renderItemStats(item: IShortItem) {
     </li>
   ));
 }
+
+export function renderItemSockets(item: IShortItem) {
+  if (item.sockets.length === 0) {
+    return null;
+  }
+
+  return (
+    <>
+      <li>&nbsp;</li>
+      {item.sockets.map((v, socketIndex) => (
+        <li key={socketIndex}>{v.name}</li>
+      ))}
+      {item.socket_bonus && <li>{item.socket_bonus}</li>}
+      <li>&nbsp;</li>
+    </>
+  );
+}
