@@ -52,4 +52,5 @@ export interface IShortItem {
   dps: string;
   socket_bonus: string;
   sockets: IShortItemSocket[];
+  unique_equipped: string;
 }
