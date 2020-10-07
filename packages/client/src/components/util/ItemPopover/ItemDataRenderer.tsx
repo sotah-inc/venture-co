@@ -24,6 +24,16 @@ function renderArmor(item: IShortItem) {
   );
 }
 
+function renderBasicCraftingReagent(item: IShortItem) {
+  return (
+    <>
+      <li className="item-level">Item level {item.level}</li>
+      <li className="crafting-reagent">{item.crafting_reagent}</li>
+      <ItemCurrency item={item} />
+    </>
+  );
+}
+
 export interface IItemDataRenderer {
   itemClass?: ItemClass;
   itemSubClass?: ItemSubClass;
@@ -143,15 +153,12 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   {
     itemClass: ItemClass.Tradeskill,
     itemSubClass: ItemSubClass.Jewelcrafting,
-    render: item => {
-      return (
-        <>
-          <li className="item-level">Item level {item.level}</li>
-          <li className="crafting-reagent">{item.crafting_reagent}</li>
-          <ItemCurrency item={item} />
-        </>
-      );
-    },
+    render: renderBasicCraftingReagent,
+  },
+  {
+    itemClass: ItemClass.Tradeskill,
+    itemSubClass: ItemSubClass.Other,
+    render: renderBasicCraftingReagent,
   },
   {
     itemClass: ItemClass.Tradeskill,
