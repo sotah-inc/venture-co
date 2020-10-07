@@ -167,6 +167,11 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   },
   {
     itemClass: ItemClass.Tradeskill,
+    itemSubClass: ItemSubClass.Leather,
+    render: renderBasicCraftingReagent,
+  },
+  {
+    itemClass: ItemClass.Tradeskill,
     itemSubClass: ItemSubClass.MetalAndStone,
     render: item => {
       return (
