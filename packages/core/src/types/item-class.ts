@@ -3,6 +3,7 @@ import { IHrefReference, ILinksBase, LocaleMapping } from "./index";
 export enum ItemSubClass {
   Misc = 0,
   CompanionPets = 2,
+  Jewelcrafting = 4,
   Herb = 9,
   Elemental = 10,
 }
