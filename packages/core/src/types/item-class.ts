@@ -3,8 +3,9 @@ import { IHrefReference, ILinksBase, LocaleMapping } from "./index";
 export enum ItemSubClass {
   Misc = 0,
   Book = 0, // item-class: Recipe (9)
-  CompanionPets = 2,
   Leatherworking = 1,
+  Tailoring = 2,
+  CompanionPets = 2,
   Jewelcrafting = 4,
   Blacksmithing = 4,
   Cloth = 5,
