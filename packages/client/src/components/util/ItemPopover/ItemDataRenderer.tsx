@@ -2,6 +2,7 @@ import { InventoryType, IShortItem, ItemClass, ItemSubClass } from "@sotah-inc/c
 import React from "react";
 
 import { IItemClasses } from "../../../types/global";
+import { getItemTextValue, qualityToColorClass } from "../../../util";
 import {
   ItemCurrency,
   renderItemSockets,
@@ -302,6 +303,13 @@ export function ItemDataRenderer({
     ) ??
     itemDataRenderers.find(v => v.itemClass === item.item_class_id) ??
     defaultItemDataRenderer;
+  const itemTextClass = qualityToColorClass(item.quality.type);
+  const itemText = getItemTextValue(item);
 
-  return itemDataRenderer.render(item, itemClasses);
+  return (
+    <>
+      <li className={itemTextClass}>{itemText}</li>
+      {itemDataRenderer.render(item, itemClasses)}
+    </>
+  );
 }
