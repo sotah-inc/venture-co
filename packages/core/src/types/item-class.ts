@@ -5,6 +5,7 @@ export enum ItemSubClass {
   Book = 0, // item-class: Recipe (9)
   CompanionPets = 2,
   Jewelcrafting = 4,
+  Blacksmithing = 4,
   Leather = 6,
   MetalAndStone = 7,
   Cooking = 8,

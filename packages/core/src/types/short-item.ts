@@ -53,4 +53,5 @@ export interface IShortItem {
   socket_bonus: string;
   sockets: IShortItemSocket[];
   unique_equipped: string;
+  reagents_display_string: string;
 }
