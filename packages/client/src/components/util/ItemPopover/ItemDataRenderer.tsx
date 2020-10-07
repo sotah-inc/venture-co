@@ -248,6 +248,21 @@ export const itemDataRenderers: IItemDataRenderer[] = [
       );
     },
   },
+  {
+    itemClass: ItemClass.Recipe,
+    itemSubClass: ItemSubClass.Blacksmithing,
+    render: item => {
+      return (
+        <>
+          <li className="item-level">Item level {item.level}</li>
+          <li className="on-use">Use: {item.description}</li>
+          <li>{item.skill_requirement}</li>
+          <ItemCurrency item={item} />
+          <li>{item.reagents_display_string}</li>
+        </>
+      );
+    },
+  },
 ];
 
 export function ItemDataRenderer({
