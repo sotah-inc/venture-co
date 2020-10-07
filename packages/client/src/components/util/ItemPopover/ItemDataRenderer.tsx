@@ -282,6 +282,11 @@ export const itemDataRenderers: IItemDataRenderer[] = [
     itemSubClass: ItemSubClass.Leatherworking,
     render: renderProfessionRecipe,
   },
+  {
+    itemClass: ItemClass.Recipe,
+    itemSubClass: ItemSubClass.Tailoring,
+    render: renderProfessionRecipe,
+  },
 ];
 
 export function ItemDataRenderer({
