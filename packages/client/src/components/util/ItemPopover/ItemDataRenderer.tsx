@@ -56,12 +56,18 @@ function renderProfessionRecipe(item: IShortItem | IShortItemBase, itemClasses: 
       <li className="on-use">Use: {item.description}</li>
       <li>{item.skill_requirement}</li>
       <ItemCurrency item={item} />
-      <li>&nbsp;</li>
       {"recipe_item" in item && (
-        <ItemDataRenderer item={item.recipe_item} itemClasses={itemClasses} />
+        <>
+          <li>&nbsp;</li>
+          <ItemDataRenderer item={item.recipe_item} itemClasses={itemClasses} />
+        </>
       )}
-      <li>&nbsp;</li>
-      {"reagents_display_string" in item && <li>Requires {item.reagents_display_string}</li>}
+      {"reagents_display_string" in item && (
+        <>
+          <li>Requires {item.reagents_display_string}</li>
+          <li>&nbsp;</li>
+        </>
+      )}
     </>
   );
 }
