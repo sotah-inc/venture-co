@@ -318,6 +318,11 @@ export const itemDataRenderers: IItemDataRenderer[] = [
       );
     },
   },
+  {
+    itemClass: ItemClass.Recipe,
+    itemSubClass: ItemSubClass.RecipeJewelcrafting,
+    render: renderProfessionRecipe,
+  },
 ];
 
 export function ItemDataRenderer({
