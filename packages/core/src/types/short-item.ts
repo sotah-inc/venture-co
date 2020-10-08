@@ -15,7 +15,7 @@ export interface IShortItemSocket {
   name: string;
 }
 
-export interface IShortItem {
+export interface IShortItemBase {
   sotah_meta: ISotahItemMeta;
 
   id: ItemId;
@@ -53,5 +53,9 @@ export interface IShortItem {
   socket_bonus: string;
   sockets: IShortItemSocket[];
   unique_equipped: string;
+}
+
+export interface IShortItem extends IShortItemBase {
   reagents_display_string: string;
+  recipe_item: IShortItemBase;
 }
