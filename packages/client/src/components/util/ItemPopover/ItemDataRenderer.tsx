@@ -1,4 +1,10 @@
-import { InventoryType, IShortItem, ItemClass, ItemSubClass } from "@sotah-inc/core";
+import {
+  InventoryType,
+  IShortItem,
+  IShortItemBase,
+  ItemClass,
+  ItemSubClass,
+} from "@sotah-inc/core";
 import React from "react";
 
 import { IItemClasses } from "../../../types/global";
@@ -10,7 +16,7 @@ import {
   renderItemStats,
 } from "./ItemDataRenderer/util";
 
-function renderArmor(item: IShortItem) {
+function renderArmor(item: IShortItemBase) {
   return (
     <>
       <li className="item-level">Item level {item.level}</li>
@@ -32,7 +38,7 @@ function renderArmor(item: IShortItem) {
   );
 }
 
-function renderBasicCraftingReagent(item: IShortItem) {
+function renderBasicCraftingReagent(item: IShortItemBase) {
   return (
     <>
       <li className="item-level">Item level {item.level}</li>
@@ -43,7 +49,7 @@ function renderBasicCraftingReagent(item: IShortItem) {
   );
 }
 
-function renderProfessionRecipe(item: IShortItem) {
+function renderProfessionRecipe(item: IShortItem | IShortItemBase, itemClasses: IItemClasses) {
   return (
     <>
       <li className="item-level">Item level {item.level}</li>
@@ -51,7 +57,11 @@ function renderProfessionRecipe(item: IShortItem) {
       <li>{item.skill_requirement}</li>
       <ItemCurrency item={item} />
       <li>&nbsp;</li>
-      <li>Requires {item.reagents_display_string}</li>
+      {"recipe_item" in item && (
+        <ItemDataRenderer item={item.recipe_item} itemClasses={itemClasses} />
+      )}
+      <li>&nbsp;</li>
+      {"reagents_display_string" in item && <li>Requires {item.reagents_display_string}</li>}
     </>
   );
 }
@@ -59,7 +69,7 @@ function renderProfessionRecipe(item: IShortItem) {
 export interface IItemDataRenderer {
   itemClass?: ItemClass;
   itemSubClass?: ItemSubClass;
-  render: (item: IShortItem, _itemClasses: IItemClasses) => JSX.Element;
+  render: (item: IShortItem | IShortItemBase, _itemClasses: IItemClasses) => JSX.Element;
 }
 
 export const defaultItemDataRenderer: IItemDataRenderer = {
@@ -294,7 +304,7 @@ export function ItemDataRenderer({
   item,
   itemClasses,
 }: {
-  item: IShortItem;
+  item: IShortItem | IShortItemBase;
   itemClasses: IItemClasses;
 }) {
   const itemDataRenderer: IItemDataRenderer =

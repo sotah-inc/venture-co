@@ -1,10 +1,10 @@
 import React from "react";
 
-import { IShortItem, IShortItemStat } from "@sotah-inc/core";
+import { IShortItemBase, IShortItemStat } from "@sotah-inc/core";
 
 import { Currency } from "../../Currency";
 
-export function renderItemSpells(item: IShortItem) {
+export function renderItemSpells(item: IShortItemBase) {
   return item.spells.map((v, spellsIndex) => (
     <li key={spellsIndex} className="on-use">
       {v}
@@ -12,7 +12,7 @@ export function renderItemSpells(item: IShortItem) {
   ));
 }
 
-export function ItemCurrency({ item }: { item: IShortItem }) {
+export function ItemCurrency({ item }: { item: IShortItemBase }) {
   if (item.sell_price.value === 0) {
     return null;
   }
@@ -56,7 +56,7 @@ export function resolveStatsStrings(stats: IShortItemStat[]): ResolvedStats[] {
   }, []);
 }
 
-export function renderItemStats(item: IShortItem) {
+export function renderItemStats(item: IShortItemBase) {
   return resolveStatsStrings(item.stats).map((v, statsIndex) => (
     <li key={statsIndex} className={v.is_equippable_bonus ? "random-stats" : ""}>
       {v.value}
@@ -64,7 +64,7 @@ export function renderItemStats(item: IShortItem) {
   ));
 }
 
-export function renderItemSockets(item: IShortItem) {
+export function renderItemSockets(item: IShortItemBase) {
   if (item.sockets.length === 0) {
     return null;
   }

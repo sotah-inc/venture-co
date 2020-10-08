@@ -3,6 +3,7 @@ import {
   InventoryType,
   IPricelistJson,
   IShortItem,
+  IShortItemBase,
   ItemQuality,
 } from "@sotah-inc/core";
 
@@ -43,7 +44,7 @@ export const getItemIconUrl = (item: IShortItem): string | null => {
   return `${getApiEndpoint()}/item-icons/${item.sotah_meta.item_icon_meta.icon}.jpg`;
 };
 
-export const getItemTextValue = (item: IShortItem): string => {
+export const getItemTextValue = (item: IShortItemBase): string => {
   const foundName = item.name;
   if (typeof foundName !== "undefined" && foundName.length > 0) {
     return foundName;
