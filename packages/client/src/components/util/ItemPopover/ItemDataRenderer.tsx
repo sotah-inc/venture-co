@@ -304,6 +304,20 @@ export const itemDataRenderers: IItemDataRenderer[] = [
     itemSubClass: ItemSubClass.Tailoring,
     render: renderProfessionRecipe,
   },
+  {
+    itemClass: ItemClass.Recipe,
+    itemSubClass: ItemSubClass.Enchanting,
+    render: item => {
+      return (
+        <>
+          <li className="item-level">Item level {item.level}</li>
+          {renderItemSpells(item)}
+          <li>{item.skill_requirement}</li>
+          <ItemCurrency item={item} />
+        </>
+      );
+    },
+  },
 ];
 
 export function ItemDataRenderer({
