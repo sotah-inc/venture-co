@@ -12,6 +12,7 @@ export enum ItemSubClass {
   Leather = 6,
   MetalAndStone = 7,
   Cooking = 8,
+  Enchanting = 8,
   Herb = 9,
   Elemental = 10,
   Other = 11,
