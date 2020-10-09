@@ -84,6 +84,7 @@ export const defaultItemDataRenderer: IItemDataRenderer = {
     return (
       <>
         <li className="item-level">Item level {item.level}</li>
+        <li>DEFAULT</li>
       </>
     );
   },
