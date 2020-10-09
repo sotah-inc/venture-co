@@ -118,13 +118,14 @@ export function renderPlayableClasses(item: IShortItemBase) {
 
   return (
     <li className="class-labels">
-      {`Classes: ${item.playable_classes
+      Classes:{" "}
+      {item.playable_classes
         .map((v, playableClassIndex) => (
           <span className={resolvePlayableClassClassName(v.id)} key={playableClassIndex}>
             {v.name}
           </span>
         ))
-        .join(", ")}`}
+        .join(", ")}
     </li>
   );
 }
