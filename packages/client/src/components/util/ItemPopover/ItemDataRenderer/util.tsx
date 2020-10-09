@@ -103,7 +103,14 @@ export interface PlayableClassClassNameMap {
 }
 
 export const playableClassClassNameMap: PlayableClassClassNameMap = {
+  [PlayableClass.Warrior]: "warrior",
+  [PlayableClass.Paladin]: "paladin",
   [PlayableClass.Hunter]: "hunter",
+  [PlayableClass.Priest]: "priest",
+  [PlayableClass.DeathKnight]: "death-knight",
+  [PlayableClass.Shaman]: "shaman",
+  [PlayableClass.Monk]: "monk",
+  [PlayableClass.Druid]: "druid",
 };
 
 export function resolvePlayableClassClassName(playableClass: PlayableClass): string {
