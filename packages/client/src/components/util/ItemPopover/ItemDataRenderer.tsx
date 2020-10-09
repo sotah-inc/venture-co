@@ -410,6 +410,24 @@ export const itemDataRenderers: IItemDataRenderer[] = [
       );
     },
   },
+  {
+    itemClass: ItemClass.Glyph,
+    render: item => {
+      return (
+        <>
+          <li className="item-level">Item level {item.level}</li>
+          <li className="glyph-kind">Minor Glyph</li>
+          <li>{item.playable_classes}</li>
+          {renderItemSpells({
+            ...item,
+            spells: item.spells.map(v => `Use: Permanently teaches you this glyph.\r\n${v}`),
+          })}
+          {item.level_requirement && <li>{item.level_requirement}</li>}
+          <ItemCurrency item={item} />
+        </>
+      );
+    },
+  },
 ];
 
 export function ItemDataRenderer({
