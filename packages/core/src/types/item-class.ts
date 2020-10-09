@@ -42,6 +42,7 @@ export enum ItemClass {
   Recipe = 9,
   Quest = 12,
   Misc = 15,
+  Glyph = 16,
   BattlePets = 17,
 }
 
