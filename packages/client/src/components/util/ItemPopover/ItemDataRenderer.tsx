@@ -64,8 +64,8 @@ function renderProfessionRecipe(item: IShortItem | IShortItemBase, itemClasses: 
       )}
       {"reagents_display_string" in item && (
         <>
-          <li>Requires {item.reagents_display_string}</li>
           <li>&nbsp;</li>
+          <li>Requires {item.reagents_display_string}</li>
         </>
       )}
     </>
