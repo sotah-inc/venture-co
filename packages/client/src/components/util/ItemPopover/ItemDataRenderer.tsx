@@ -219,6 +219,19 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   },
   {
     itemClass: ItemClass.Tradeskill,
+    itemSubClass: ItemSubClass.Enchanting,
+    render: item => {
+      return (
+        <>
+          <li className="item-level">Item level {item.level}</li>
+          <li className="crafting-reagent">{item.crafting_reagent}</li>
+          {renderItemSpells(item)}
+        </>
+      );
+    },
+  },
+  {
+    itemClass: ItemClass.Tradeskill,
     itemSubClass: ItemSubClass.MetalAndStone,
     render: item => {
       return (
