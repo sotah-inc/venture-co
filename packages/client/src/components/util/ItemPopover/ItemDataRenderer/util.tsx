@@ -106,10 +106,12 @@ export const playableClassClassNameMap: PlayableClassClassNameMap = {
   [PlayableClass.Warrior]: "warrior",
   [PlayableClass.Paladin]: "paladin",
   [PlayableClass.Hunter]: "hunter",
+  [PlayableClass.Rogue]: "rogue",
   [PlayableClass.Priest]: "priest",
   [PlayableClass.DeathKnight]: "death-knight",
   [PlayableClass.Shaman]: "shaman",
   [PlayableClass.Mage]: "mage",
+  [PlayableClass.Warlock]: "warlock",
   [PlayableClass.Monk]: "monk",
   [PlayableClass.Druid]: "druid",
 };
