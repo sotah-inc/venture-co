@@ -185,6 +185,19 @@ export const itemDataRenderers: IItemDataRenderer[] = [
     },
   },
   {
+    itemClass: ItemClass.Misc,
+    itemSubClass: ItemSubClass.Junk,
+    render: item => {
+      return (
+        <>
+          <li className="item-level">Item level {item.level}</li>
+          {item.description && <li className="description">"{item.description}"</li>}
+          {item.sell_price && <ItemCurrency item={item} />}
+        </>
+      );
+    },
+  },
+  {
     itemClass: ItemClass.Tradeskill,
     render: item => {
       return (
