@@ -20,6 +20,7 @@ export enum ItemSubClass {
   Elemental = 10,
   Other = 11,
   TradeskillEnchanting = 12,
+  TradeskillInscription = 16,
 }
 
 export type ItemSubClassId = number;
