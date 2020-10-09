@@ -30,6 +30,7 @@ function renderArmor(item: IShortItemBase) {
       {renderItemStats(item)}
       {renderItemSockets(item)}
       <li>{item.durability}</li>
+      {item.playable_classes && <li>{item.playable_classes}</li>}
       {renderItemSpells(item)}
       <li>{item.level_requirement}</li>
       <li>{item.skill_requirement}</li>
