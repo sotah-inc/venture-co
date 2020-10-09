@@ -112,6 +112,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
           <li className="item-level">Item level {item.level}</li>
           {renderItemSpells(item)}
           <li>{item.level_requirement}</li>
+          {item.reputation_requirement && <li>{item.reputation_requirement}</li>}
           <ItemCurrency item={item} />
         </>
       );
