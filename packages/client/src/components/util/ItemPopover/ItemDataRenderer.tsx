@@ -127,9 +127,12 @@ export const itemDataRenderers: IItemDataRenderer[] = [
     itemSubClass: ItemSubClass.Misc,
     render: item => {
       if (
-        [InventoryType.Neck, InventoryType.OffHand, InventoryType.Finger].includes(
-          item.inventory_type.type,
-        )
+        [
+          InventoryType.Neck,
+          InventoryType.OffHand,
+          InventoryType.Finger,
+          InventoryType.Trinket,
+        ].includes(item.inventory_type.type)
       ) {
         return renderArmor(item);
       }
