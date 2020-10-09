@@ -330,6 +330,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
         <>
           <li className="item-level">Item level {item.level}</li>
           <li>{item.gem_effect}</li>
+          {item.level_requirement && <li>{item.level_requirement}</li>}
           {item.description && <li className="description">"{item.description}"</li>}
           <ItemCurrency item={item} />
         </>
