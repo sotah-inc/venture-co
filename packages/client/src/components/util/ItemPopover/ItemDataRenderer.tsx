@@ -405,6 +405,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
+          {item.limit_category && <li>{item.limit_category}</li>}
           <li>{item.gem_effect}</li>
           {item.level_requirement && <li>{item.level_requirement}</li>}
           {item.gem_min_item_level && <li>{item.gem_min_item_level}</li>}
