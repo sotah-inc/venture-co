@@ -160,6 +160,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
+          {item.name_description && <li className="name-description">{item.name_description}</li>}
           {renderItemSpells(item)}
           {item.level_requirement && <li>{item.level_requirement}</li>}
           {item.description && <li className="description">"{item.description}"</li>}
