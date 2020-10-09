@@ -167,6 +167,22 @@ export const itemDataRenderers: IItemDataRenderer[] = [
     },
   },
   {
+    itemClass: ItemClass.Misc,
+    itemSubClass: ItemSubClass.MiscMount,
+    render: item => {
+      return (
+        <>
+          <li className="item-level">Item level {item.level}</li>
+          {item.unique_equipped && <li>{item.unique_equipped}</li>}
+          <li>Mount</li>
+          {renderItemSpells(item)}
+          {item.level_requirement && <li>{item.level_requirement}</li>}
+          <li>{item.ability_requirement}</li>
+        </>
+      );
+    },
+  },
+  {
     itemClass: ItemClass.Tradeskill,
     render: item => {
       return (
