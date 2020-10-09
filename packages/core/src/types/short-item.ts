@@ -15,6 +15,15 @@ export interface IShortItemSocket {
   name: string;
 }
 
+export enum PlayableClassId {
+  Hunter = 3,
+}
+
+export interface IShortItemPlayableClass {
+  name: string;
+  id: PlayableClassId;
+}
+
 export interface IShortItemBase {
   sotah_meta: ISotahItemMeta;
 
@@ -54,12 +63,12 @@ export interface IShortItemBase {
   sockets: IShortItemSocket[];
   unique_equipped: string;
   gem_effect: string;
-  playable_classes: string;
   gem_min_item_level: string;
   ability_requirement: string;
   limit_category: string;
   name_description: string;
   reputation_requirement: string;
+  playable_classes: string;
 }
 
 export interface IShortItem extends IShortItemBase {
