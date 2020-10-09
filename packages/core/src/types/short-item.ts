@@ -54,6 +54,7 @@ export interface IShortItemBase {
   sockets: IShortItemSocket[];
   unique_equipped: string;
   gem_effect: string;
+  playable_classes: string;
 }
 
 export interface IShortItem extends IShortItemBase {
