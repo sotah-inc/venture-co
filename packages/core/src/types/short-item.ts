@@ -16,7 +16,14 @@ export interface IShortItemSocket {
 }
 
 export enum PlayableClass {
+  Warrior = 1,
+  Paladin = 2,
   Hunter = 3,
+  Priest = 5,
+  DeathKnight = 6,
+  Shaman = 7,
+  Monk = 10,
+  Druid = 11,
 }
 
 export interface IShortItemPlayableClass {
