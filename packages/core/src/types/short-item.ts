@@ -55,6 +55,7 @@ export interface IShortItemBase {
   unique_equipped: string;
   gem_effect: string;
   playable_classes: string;
+  gem_min_item_level: string;
 }
 
 export interface IShortItem extends IShortItemBase {
