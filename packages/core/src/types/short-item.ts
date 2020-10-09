@@ -68,7 +68,7 @@ export interface IShortItemBase {
   limit_category: string;
   name_description: string;
   reputation_requirement: string;
-  playable_classes: string;
+  playable_classes: IShortItemPlayableClass[];
 }
 
 export interface IShortItem extends IShortItemBase {
