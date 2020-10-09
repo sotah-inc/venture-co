@@ -304,6 +304,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
           {renderItemSpells(item)}
           <li>{item.level_requirement}</li>
           <li>{item.skill_requirement}</li>
+          {item.description && <li>{item.description}</li>}
           <ItemCurrency item={item} />
         </>
       );
