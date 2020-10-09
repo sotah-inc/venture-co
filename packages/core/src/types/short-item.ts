@@ -53,6 +53,7 @@ export interface IShortItemBase {
   socket_bonus: string;
   sockets: IShortItemSocket[];
   unique_equipped: string;
+  gem_effect: string;
 }
 
 export interface IShortItem extends IShortItemBase {
