@@ -59,6 +59,7 @@ export interface IShortItemBase {
   ability_requirement: string;
   limit_category: string;
   name_description: string;
+  reputation_requirement: string;
 }
 
 export interface IShortItem extends IShortItemBase {
