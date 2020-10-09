@@ -323,6 +323,19 @@ export const itemDataRenderers: IItemDataRenderer[] = [
     itemSubClass: ItemSubClass.RecipeJewelcrafting,
     render: renderProfessionRecipe,
   },
+  {
+    itemClass: ItemClass.Gem,
+    render: item => {
+      return (
+        <>
+          <li className="item-level">Item level {item.level}</li>
+          <li>{item.gem_effect}</li>
+          {item.description && <li className="description">"{item.description}"</li>}
+          <ItemCurrency item={item} />
+        </>
+      );
+    },
+  },
 ];
 
 export function ItemDataRenderer({
