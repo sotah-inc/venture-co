@@ -271,7 +271,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
         <>
           <li className="item-level">Item level {item.level}</li>
           <li className="crafting-reagent">{item.crafting_reagent}</li>
-          {item.description && <li>"{item.description}"</li>}
+          {item.description && <li className="description">"{item.description}"</li>}
           {item.skill_requirement && <li>{item.skill_requirement}</li>}
           <ItemCurrency item={item} />
         </>
