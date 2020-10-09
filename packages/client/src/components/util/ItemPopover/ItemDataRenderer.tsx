@@ -352,6 +352,21 @@ export const itemDataRenderers: IItemDataRenderer[] = [
     render: renderProfessionRecipe,
   },
   {
+    itemClass: ItemClass.Recipe,
+    itemSubClass: ItemSubClass.Book,
+    render: item => {
+      return (
+        <>
+          <li className="item-level">Item level {item.level}</li>
+          {renderItemSpells(item)}
+          <li>{item.skill_requirement}</li>
+          {item.description && <li className="description">"{item.description}"</li>}
+          <ItemCurrency item={item} />
+        </>
+      );
+    },
+  },
+  {
     itemClass: ItemClass.Gem,
     render: item => {
       return (
