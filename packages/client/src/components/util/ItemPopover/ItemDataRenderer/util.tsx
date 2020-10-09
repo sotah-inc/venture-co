@@ -5,11 +5,28 @@ import { IShortItemBase, IShortItemStat } from "@sotah-inc/core";
 import { Currency } from "../../Currency";
 
 export function renderItemSpells(item: IShortItemBase) {
-  return item.spells.map((v, spellsIndex) => (
-    <li key={spellsIndex} className="on-use">
-      {v}
-    </li>
-  ));
+  return item.spells.map((v, spellsIndex) => {
+    const output = (() => {
+      if (v.includes("\r\n")) {
+        return v.split("\r\n").map((splitResult, splitIndex) => {
+          return (
+            <React.Fragment key={splitIndex}>
+              {splitIndex > 0 && <br />}
+              {splitResult}
+            </React.Fragment>
+          );
+        });
+      }
+
+      return v;
+    })();
+
+    return (
+      <li key={spellsIndex} className="on-use">
+        {output}
+      </li>
+    );
+  });
 }
 
 export function ItemCurrency({ item }: { item: IShortItemBase }) {
