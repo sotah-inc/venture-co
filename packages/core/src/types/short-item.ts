@@ -22,6 +22,7 @@ export enum PlayableClass {
   Priest = 5,
   DeathKnight = 6,
   Shaman = 7,
+  Mage = 8,
   Monk = 10,
   Druid = 11,
 }
