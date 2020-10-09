@@ -420,7 +420,9 @@ export const itemDataRenderers: IItemDataRenderer[] = [
           <li>{item.playable_classes}</li>
           {renderItemSpells({
             ...item,
-            spells: item.spells.map(v => `Use: Permanently teaches you this glyph.\r\n${v}`),
+            spells: item.spells.map(
+              v => `Use: Permanently teaches you this glyph.\r\n\r\n${v.substr("Use: ".length)}`,
+            ),
           })}
           {item.level_requirement && <li>{item.level_requirement}</li>}
           <ItemCurrency item={item} />
