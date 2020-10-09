@@ -1,3 +1,5 @@
+import React from "react";
+
 import {
   InventoryType,
   IShortItem,
@@ -5,7 +7,6 @@ import {
   ItemClass,
   ItemSubClass,
 } from "@sotah-inc/core";
-import React from "react";
 
 import { IItemClasses } from "../../../types/global";
 import { getItemTextValue, qualityToColorClass } from "../../../util";

@@ -1,7 +1,6 @@
 import React from "react";
 
-import { IShortItemBase, IShortItemStat } from "@sotah-inc/core";
-import { PlayableClass } from "../../../../../../core/src/types";
+import { IShortItemBase, IShortItemStat, PlayableClass } from "@sotah-inc/core";
 
 import { Currency } from "../../Currency";
 
