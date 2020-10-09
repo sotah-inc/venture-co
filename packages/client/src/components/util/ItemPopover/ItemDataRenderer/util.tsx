@@ -109,6 +109,7 @@ export const playableClassClassNameMap: PlayableClassClassNameMap = {
   [PlayableClass.Priest]: "priest",
   [PlayableClass.DeathKnight]: "death-knight",
   [PlayableClass.Shaman]: "shaman",
+  [PlayableClass.Mage]: "mage",
   [PlayableClass.Monk]: "monk",
   [PlayableClass.Druid]: "druid",
 };
