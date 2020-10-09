@@ -14,6 +14,7 @@ import {
   renderItemSockets,
   renderItemSpells,
   renderItemStats,
+  renderPlayableClasses,
 } from "./ItemDataRenderer/util";
 
 function renderArmor(item: IShortItemBase) {
@@ -30,7 +31,7 @@ function renderArmor(item: IShortItemBase) {
       {renderItemStats(item)}
       {renderItemSockets(item)}
       <li>{item.durability}</li>
-      {item.playable_classes && <li>{item.playable_classes}</li>}
+      {renderPlayableClasses(item)}
       {renderItemSpells(item)}
       <li>{item.level_requirement}</li>
       <li>{item.skill_requirement}</li>
@@ -439,7 +440,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
-          {item.playable_classes && <li>{item.playable_classes}</li>}
+          {renderPlayableClasses(item)}
           <ItemCurrency item={item} />
         </>
       );
@@ -452,7 +453,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
         <>
           <li className="item-level">Item level {item.level}</li>
           <li className="glyph-kind">Minor Glyph</li>
-          <li>{item.playable_classes}</li>
+          {renderPlayableClasses(item)}
           {renderItemSpells({
             ...item,
             spells: item.spells.map(
