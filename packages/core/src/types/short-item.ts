@@ -58,6 +58,7 @@ export interface IShortItemBase {
   gem_min_item_level: string;
   ability_requirement: string;
   limit_category: string;
+  name_description: string;
 }
 
 export interface IShortItem extends IShortItemBase {
