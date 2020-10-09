@@ -1,6 +1,7 @@
 import React from "react";
 
 import { IShortItemBase, IShortItemStat } from "@sotah-inc/core";
+import { PlayableClass } from "../../../../../../core/src/types";
 
 import { Currency } from "../../Currency";
 
@@ -95,5 +96,35 @@ export function renderItemSockets(item: IShortItemBase) {
       {item.socket_bonus && <li>{item.socket_bonus}</li>}
       <li>&nbsp;</li>
     </>
+  );
+}
+
+export interface PlayableClassClassNameMap {
+  [key: number]: string | undefined;
+}
+
+export const playableClassClassNameMap: PlayableClassClassNameMap = {
+  [PlayableClass.Hunter]: "hunter",
+};
+
+export function resolvePlayableClassClassName(playableClass: PlayableClass): string {
+  return playableClassClassNameMap[playableClass] ?? "";
+}
+
+export function renderPlayableClasses(item: IShortItemBase) {
+  if (item.playable_classes.length === 0) {
+    return null;
+  }
+
+  return (
+    <li className="class-labels">
+      {`Classes: ${item.playable_classes
+        .map((v, playableClassIndex) => (
+          <span className={resolvePlayableClassClassName(v.id)} key={playableClassIndex}>
+            {v.name}
+          </span>
+        ))
+        .join(", ")}`}
+    </li>
   );
 }
