@@ -15,13 +15,13 @@ export interface IShortItemSocket {
   name: string;
 }
 
-export enum PlayableClassId {
+export enum PlayableClass {
   Hunter = 3,
 }
 
 export interface IShortItemPlayableClass {
   name: string;
-  id: PlayableClassId;
+  id: PlayableClass;
 }
 
 export interface IShortItemBase {
