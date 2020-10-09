@@ -219,7 +219,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   },
   {
     itemClass: ItemClass.Tradeskill,
-    itemSubClass: ItemSubClass.Enchanting,
+    itemSubClass: ItemSubClass.TradeskillEnchanting,
     render: item => {
       return (
         <>
