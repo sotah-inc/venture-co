@@ -365,6 +365,18 @@ export const itemDataRenderers: IItemDataRenderer[] = [
       );
     },
   },
+  {
+    itemClass: ItemClass.Quest,
+    render: item => {
+      return (
+        <>
+          <li className="item-level">Item level {item.level}</li>
+          {item.playable_classes && <li>{item.playable_classes}</li>}
+          <ItemCurrency item={item} />
+        </>
+      );
+    },
+  },
 ];
 
 export function ItemDataRenderer({
