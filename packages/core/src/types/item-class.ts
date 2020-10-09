@@ -6,6 +6,7 @@ export enum ItemSubClass {
   Leatherworking = 1,
   Tailoring = 2,
   CompanionPets = 2,
+  MiscOther = 4,
   Jewelcrafting = 4,
   Blacksmithing = 4,
   Cloth = 5,
