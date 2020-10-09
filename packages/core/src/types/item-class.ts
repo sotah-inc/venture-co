@@ -39,6 +39,7 @@ export enum ItemClass {
   Tradeskill = 7,
   ItemEnhancement = 8,
   Recipe = 9,
+  Quest = 12,
   Misc = 15,
   BattlePets = 17,
 }
