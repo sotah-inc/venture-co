@@ -38,7 +38,8 @@
     }
 
     .item-level,
-    .description {
+    .description,
+    .set-name {
         color: $gold3;
     }
 
@@ -48,8 +49,28 @@
     }
     
     .crafting-reagent,
-    .glyph-kind {
+    .glyph-kind,
+    .legacy-bonus-message {
         color: $blue4;
+    }
+
+    .socket {
+        color: $gray2;
+    }
+
+    .set-item {
+        color: $gray2;
+        margin-left: 10px;
+    }
+
+    .class-labels {
+        span {
+            color: $sepia1;
+        }
+
+        .paladin {
+            color: $rose4;
+        }
     }
 }
 
