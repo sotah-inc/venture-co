@@ -19,7 +19,7 @@ export enum ItemSubClass {
   Herb = 9,
   RecipeJewelcrafting = 10,
   Elemental = 10,
-  Other = 11,
+  TradeskillOther = 11,
   TradeskillEnchanting = 12,
   TradeskillInscription = 16,
 }
