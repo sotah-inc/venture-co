@@ -253,7 +253,9 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   {
     itemClass: ItemClass.Tradeskill,
     itemSubClass: ItemSubClass.TradeskillOther,
-    render: renderBasicCraftingReagent,
+    render: () => {
+      return <li>fuck off</li>;
+    },
   },
   {
     itemClass: ItemClass.Tradeskill,
