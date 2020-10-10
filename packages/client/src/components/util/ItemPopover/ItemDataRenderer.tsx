@@ -441,8 +441,11 @@ export const itemDataRenderers: IItemDataRenderer[] = [
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
+          {item.item_starts_quest && <li>{item.item_starts_quest}</li>}
+          {item.level_requirement && <li>{item.level_requirement}</li>}
           {renderPlayableClasses(item)}
-          <ItemCurrency item={item} />
+          {item.description && <li className="description">"{item.description}"</li>}
+          {item.sell_price.value > 0 && <ItemCurrency item={item} />}
         </>
       );
     },
