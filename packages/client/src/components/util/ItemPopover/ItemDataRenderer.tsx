@@ -45,9 +45,10 @@ function renderBasicCraftingReagent(item: IShortItemBase) {
   return (
     <>
       <li className="item-level">Item level {item.level}</li>
-      <li className="crafting-reagent">{item.crafting_reagent}</li>
+      {item.crafting_reagent && <li className="crafting-reagent">{item.crafting_reagent}</li>}
+      {renderItemSpells(item)}
       {item.description && <li className="description">"{item.description}"</li>}
-      <ItemCurrency item={item} />
+      {item.sell_price.value > 0 && <ItemCurrency item={item} />}
     </>
   );
 }
@@ -253,9 +254,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   {
     itemClass: ItemClass.Tradeskill,
     itemSubClass: ItemSubClass.TradeskillOther,
-    render: () => {
-      return <li>fuck off</li>;
-    },
+    render: renderBasicCraftingReagent,
   },
   {
     itemClass: ItemClass.Tradeskill,
