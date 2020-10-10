@@ -114,6 +114,7 @@ export const playableClassClassNameMap: PlayableClassClassNameMap = {
   [PlayableClass.Warlock]: "warlock",
   [PlayableClass.Monk]: "monk",
   [PlayableClass.Druid]: "druid",
+  [PlayableClass.DemonHunter]: "demon-hunter",
 };
 
 export function resolvePlayableClassClassName(playableClass: PlayableClass): string {
