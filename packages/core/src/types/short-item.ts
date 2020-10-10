@@ -27,6 +27,7 @@ export enum PlayableClass {
   Warlock = 9,
   Monk = 10,
   Druid = 11,
+  DemonHunter = 12,
 }
 
 export interface IShortItemPlayableClass {
