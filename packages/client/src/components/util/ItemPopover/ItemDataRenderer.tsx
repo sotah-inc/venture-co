@@ -252,7 +252,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   },
   {
     itemClass: ItemClass.Tradeskill,
-    itemSubClass: ItemSubClass.Other,
+    itemSubClass: ItemSubClass.TradeskillOther,
     render: renderBasicCraftingReagent,
   },
   {
