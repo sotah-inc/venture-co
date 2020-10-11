@@ -228,13 +228,15 @@ export class Topbar extends React.Component<Props> {
   }
 
   private renderProfessionsButton() {
-    const { currentRegion, currentRealm, selectedExpansion } = this.props;
+    const { currentRegion, currentRealm, selectedExpansion, expansions } = this.props;
 
     if (currentRegion === null || currentRealm === null) {
       return null;
     }
 
-    if (selectedExpansion === null) {
+    const foundExpansion = selectedExpansion ?? expansions.find(v => v.primary) ?? null;
+
+    if (foundExpansion === null) {
       return (
         <LinkButtonRouteContainer
           destination={""}
@@ -248,7 +250,7 @@ export class Topbar extends React.Component<Props> {
       );
     }
 
-    const { asDest, url } = toExpansion(currentRegion, currentRealm, selectedExpansion);
+    const { asDest, url } = toExpansion(currentRegion, currentRealm, foundExpansion);
 
     return (
       <LinkButtonRouteContainer
