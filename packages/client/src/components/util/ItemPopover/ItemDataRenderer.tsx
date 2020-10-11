@@ -12,6 +12,7 @@ import { IItemClasses } from "../../../types/global";
 import { getItemTextValue, qualityToColorClass } from "../../../util";
 import {
   ItemCurrency,
+  renderItemSet,
   renderItemSockets,
   renderItemSpells,
   renderItemStats,
@@ -36,6 +37,7 @@ function renderArmor(item: IShortItemBase) {
       {renderItemSpells(item)}
       <li>{item.level_requirement}</li>
       <li>{item.skill_requirement}</li>
+      {renderItemSet(item)}
       <ItemCurrency item={item} />
     </>
   );

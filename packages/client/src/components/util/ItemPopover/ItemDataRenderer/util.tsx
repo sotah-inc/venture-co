@@ -119,9 +119,11 @@ export function renderItemSockets(item: IShortItemBase) {
     <>
       <li>&nbsp;</li>
       {item.sockets.map((v, socketIndex) => (
-        <li key={socketIndex}>{v.name}</li>
+        <li key={socketIndex} className="socket">
+          {v.name}
+        </li>
       ))}
-      {item.socket_bonus && <li>{item.socket_bonus}</li>}
+      {item.socket_bonus && <li className="socket">{item.socket_bonus}</li>}
       <li>&nbsp;</li>
     </>
   );
