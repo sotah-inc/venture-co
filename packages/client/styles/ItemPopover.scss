@@ -54,13 +54,14 @@
         color: $blue4;
     }
 
-    .socket {
+    .socket,
+    .set-effect {
         color: $gray2;
     }
 
     .set-item {
         color: $gray2;
-        margin-left: 10px;
+        padding: 10px;
     }
 
     .class-labels {

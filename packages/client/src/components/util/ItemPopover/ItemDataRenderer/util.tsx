@@ -4,6 +4,35 @@ import { IShortItemBase, IShortItemStat, PlayableClass } from "@sotah-inc/core";
 
 import { Currency } from "../../Currency";
 
+export function renderItemSet(item: IShortItemBase) {
+  if (item.set.display_string.length === 0) {
+    return null;
+  }
+
+  return (
+    <>
+      <li>&nbsp;</li>
+      <li className="set-name">{item.set.display_string}</li>
+      {item.set.items.map((v, setItemIndex) => {
+        return (
+          <li key={setItemIndex} className="set-item">
+            {v}
+          </li>
+        );
+      })}
+      <li>&nbsp;</li>
+      {item.set.legacy && <li className="legacy-bonus-message">{item.set.legacy}</li>}
+      {item.set.effects.map((v, setEffectIndex) => {
+        return (
+          <li key={setEffectIndex} className="set-effect">
+            {v}
+          </li>
+        );
+      })}
+    </>
+  );
+}
+
 export function renderItemSpells(item: IShortItemBase) {
   return item.spells.map((v, spellsIndex) => {
     const output = (() => {
