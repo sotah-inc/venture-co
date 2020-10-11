@@ -49,6 +49,7 @@ function renderBasicCraftingReagent(item: IShortItemBase) {
       <li className="item-level">Item level {item.level}</li>
       {item.crafting_reagent && <li className="crafting-reagent">{item.crafting_reagent}</li>}
       {renderItemSpells(item)}
+      {item.level_requirement && <li>{item.level_requirement}</li>}
       {item.description && <li className="description">"{item.description}"</li>}
       {item.sell_price.value > 0 && <ItemCurrency item={item} />}
     </>
