@@ -193,7 +193,6 @@ export class ActionBar extends React.Component<Props> {
           <Button
             icon="delete"
             onClick={() => changeIsDeleteListDialogOpen(true)}
-            text="Delete"
             disabled={!canMutateEntry}
           />
         </ButtonGroup>
