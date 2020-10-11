@@ -81,6 +81,12 @@ export interface IShortItemBase {
   reputation_requirement: string;
   playable_classes: IShortItemPlayableClass[];
   item_starts_quest: string;
+  set: {
+    display_string: string;
+    legacy: string;
+    effects: string[];
+    items: string[];
+  };
 }
 
 export interface IShortItem extends IShortItemBase {
