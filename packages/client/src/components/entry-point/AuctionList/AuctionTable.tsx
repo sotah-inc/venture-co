@@ -75,6 +75,7 @@ export class AuctionTable extends React.Component<Props> {
           <td>---</td>
           <td>---</td>
           <td>---</td>
+          <td>---</td>
         </tr>
       );
     }
@@ -91,6 +92,7 @@ export class AuctionTable extends React.Component<Props> {
             <Currency amount={auction.buyoutPer} hideCopper={true} />
           </td>
           <td className="auclist-container">{auction.aucList.length}</td>
+          <td>{auction.timeLeft}</td>
         </tr>
         {this.renderRelatedProfessionPricelists(foundItem)}
       </React.Fragment>
@@ -136,6 +138,7 @@ export class AuctionTable extends React.Component<Props> {
             <th>
               <SortToggleContainer label="Auctions" sortKind={SortKind.auctions} />
             </th>
+            <th>Time left</th>
           </tr>
         </thead>
         <tbody>{auctions.data.map((auction, index) => this.renderAuction(auction, index))}</tbody>
