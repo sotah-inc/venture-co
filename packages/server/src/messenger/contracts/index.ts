@@ -17,6 +17,7 @@ import {
   SortKind,
   UnixTimestamp,
 } from "@sotah-inc/core";
+import { IShortPet, PetId } from "../../../../core/src/types";
 
 export interface IGetAuctionsRequest {
   tuple: IRegionConnectedRealmTuple;
@@ -59,6 +60,14 @@ export interface IQueryItemsResponse {
   }>;
 }
 
+export interface IQueryItemsResponse {
+  items: Array<{
+    item_id: ItemId;
+    target: string;
+    rank: number;
+  }>;
+}
+
 export interface IGetItemsRequest {
   itemIds: ItemId[];
   locale: Locale;
@@ -66,6 +75,25 @@ export interface IGetItemsRequest {
 
 export interface IGetItemsResponse {
   items: IShortItem[];
+}
+
+export type QueryPetsRequest = IQueryItemsRequest;
+
+export interface IQueryPetsResponse {
+  items: Array<{
+    pet_id: PetId;
+    target: string;
+    rank: number;
+  }>;
+}
+
+export interface IGetPetsRequest {
+  petIds: PetId[];
+  locale: Locale;
+}
+
+export interface IGetPetsResponse {
+  pets: IShortPet[];
 }
 
 export interface IGetBootResponse {
