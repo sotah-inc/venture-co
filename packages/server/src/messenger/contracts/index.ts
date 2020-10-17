@@ -11,13 +11,14 @@ import {
   IProfession,
   IRegionConnectedRealmTuple,
   IShortItem,
+  IShortPet,
   ItemId,
   Locale,
+  PetId,
   SortDirection,
   SortKind,
   UnixTimestamp,
 } from "@sotah-inc/core";
-import { IShortPet, PetId } from "../../../../core/src/types";
 
 export interface IGetAuctionsRequest {
   tuple: IRegionConnectedRealmTuple;
