@@ -12,6 +12,7 @@ export * from "./region";
 export * from "./token";
 export * from "./work-order";
 export * from "./short-item";
+export * from "./short-pet";
 
 export enum SortDirection {
   none,
