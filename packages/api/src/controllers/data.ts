@@ -22,17 +22,17 @@ import {
   IPricelistHistoryMap,
   IPrices,
   IPricesFlagged,
-  IQueryItemsResponseData,
-  IQueryPetsResponseData,
+  IQueryResponseData,
   IRegionComposite,
   IRegionConnectedRealmTuple,
+  IShortItem,
+  IShortPet,
   ItemId,
   IValidationErrorResponse,
   Locale,
   ProfessionName,
   QueryAuctionStatsResponse,
-  QueryItemsResponse,
-  QueryPetsResponse,
+  QueryResponse,
   RealmSlug,
   RegionName,
 } from "@sotah-inc/core";
@@ -52,8 +52,7 @@ import { Connection } from "typeorm";
 
 import {
   AuctionsQueryParamsRules,
-  ItemsQueryParamRules,
-  PetsQueryParamRules,
+  QueryParamRules,
   validate,
   yupValidationErrorToResponse,
 } from "../lib/validator-rules";
@@ -499,9 +498,9 @@ export class DataController {
     };
   }
 
-  public async queryItems(query: ParsedQs): Promise<IRequestResult<QueryItemsResponse>> {
+  public async queryItems(query: ParsedQs): Promise<IRequestResult<QueryResponse<IShortItem>>> {
     // parsing request params
-    const validateParamsResult = await validate(ItemsQueryParamRules, query);
+    const validateParamsResult = await validate(QueryParamRules, query);
     if (validateParamsResult.error || !validateParamsResult.data) {
       return {
         data: yupValidationErrorToResponse(validateParamsResult.error),
@@ -549,7 +548,7 @@ export class DataController {
     const foundItems = getItemsResult.items;
 
     // formatting a response
-    const data: IQueryItemsResponseData = {
+    const data: IQueryResponseData<IShortItem> = {
       items: itemsQueryResult.items.map(v => {
         return {
           item: foundItems.find(foundItem => foundItem.id === v.item_id) ?? null,
@@ -565,9 +564,9 @@ export class DataController {
     };
   }
 
-  public async queryPets(query: ParsedQs): Promise<IRequestResult<QueryPetsResponse>> {
+  public async queryPets(query: ParsedQs): Promise<IRequestResult<QueryResponse<IShortPet>>> {
     // parsing request params
-    const validateParamsResult = await validate(PetsQueryParamRules, query);
+    const validateParamsResult = await validate(QueryParamRules, query);
     if (validateParamsResult.error || !validateParamsResult.data) {
       return {
         data: yupValidationErrorToResponse(validateParamsResult.error),
@@ -615,7 +614,7 @@ export class DataController {
     const foundPets = getPetsResult.pets;
 
     // formatting a response
-    const data: IQueryPetsResponseData = {
+    const data: IQueryResponseData<IShortPet> = {
       items: petsQueryResult.items.map(v => {
         return {
           item: foundPets.find(foundPet => foundPet.id === v.pet_id) ?? null,

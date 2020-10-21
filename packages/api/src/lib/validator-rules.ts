@@ -5,13 +5,12 @@ import {
   ICreateUserRequest,
   ICreateWorkOrderRequest,
   IGetAuctionsRequest,
-  IQueryItemsRequest,
+  IQueryRequest,
   IUpdateProfileRequest,
   IValidationErrorResponse,
   Locale,
   OrderDirection,
   OrderKind,
-  QueryPetsRequest,
   SortPerPage,
 } from "@sotah-inc/core";
 import { IFindByOptions, PostRepository, UserRepository } from "@sotah-inc/server";
@@ -147,16 +146,8 @@ export const AuctionsQueryParamsRules = yup
   .required()
   .noUnknown();
 
-export const ItemsQueryParamRules = yup
-  .object<IQueryItemsRequest>({
-    locale: yup.string().oneOf(Object.values(Locale)).required("locale is required"),
-    query: yup.string(),
-  })
-  .required()
-  .noUnknown();
-
-export const PetsQueryParamRules = yup
-  .object<QueryPetsRequest>({
+export const QueryParamRules = yup
+  .object<IQueryRequest>({
     locale: yup.string().oneOf(Object.values(Locale)).required("locale is required"),
     query: yup.string(),
   })
