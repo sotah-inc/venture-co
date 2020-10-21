@@ -22,12 +22,15 @@ import {
   IQueryAuctionStatsResponseData,
   IQueryItemsRequest,
   IQueryItemsResponseData,
+  IQueryPetsResponseData,
   IShortItem,
   ItemId,
   ITokenHistory,
   Locale,
   QueryAuctionStatsResponse,
   QueryItemsResponse,
+  QueryPetsRequest,
+  QueryPetsResponse,
   RealmSlug,
   RegionName,
 } from "@sotah-inc/core";
@@ -103,6 +106,19 @@ export const getItems = async (
   }
 
   return body as IQueryItemsResponseData;
+};
+
+export const getPets = async (req: QueryPetsRequest): Promise<IQueryPetsResponseData | null> => {
+  const { body, status } = await gatherWithQuery<QueryPetsRequest, QueryPetsResponse>({
+    method: "GET",
+    query: req,
+    url: `${getApiEndpoint()}/pets`,
+  });
+  if (status !== HTTPStatus.OK) {
+    return null;
+  }
+
+  return body as IQueryPetsResponseData;
 };
 
 export interface IGetItemResult {
