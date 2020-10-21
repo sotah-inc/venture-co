@@ -562,6 +562,72 @@ export class DataController {
     };
   }
 
+  public async queryPets(query: ParsedQs): Promise<IRequestResult<QueryItemsResponse>> {
+    // parsing request params
+    const validateParamsResult = await validate(ItemsQueryParamRules, query);
+    if (validateParamsResult.error || !validateParamsResult.data) {
+      return {
+        data: yupValidationErrorToResponse(validateParamsResult.error),
+        status: HTTPStatus.BAD_REQUEST,
+      };
+    }
+
+    // resolving items-query message
+    const itemsQueryMessage = await this.messenger.queryItems({
+      locale: validateParamsResult.data.locale as Locale,
+      query: validateParamsResult.data.query ?? "",
+    });
+    if (itemsQueryMessage.code !== code.ok) {
+      return {
+        data: { error: itemsQueryMessage.error?.message ?? "" },
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+    const itemsQueryResult = await itemsQueryMessage.decode();
+    if (itemsQueryResult === null) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    // resolving items from item-ids in items-query response data
+    const getItemsMessage = await this.messenger.getItems({
+      itemIds: itemsQueryResult.items.map(v => v.item_id),
+      locale: validateParamsResult.data.locale as Locale,
+    });
+    if (getItemsMessage.code !== code.ok) {
+      return {
+        data: { error: itemsQueryMessage.error?.message ?? "" },
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+    const getItemsResult = await getItemsMessage.decode();
+    if (getItemsResult === null) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+    const foundItems = getItemsResult.items;
+
+    // formatting a response
+    const data: IQueryItemsResponseData = {
+      items: itemsQueryResult.items.map(v => {
+        return {
+          item: foundItems.find(foundItem => foundItem.id === v.item_id) ?? null,
+          rank: v.rank,
+          target: v.target,
+        };
+      }),
+    };
+
+    return {
+      data,
+      status: HTTPStatus.OK,
+    };
+  }
+
   public async getPricelist(
     regionName: RegionName,
     realmSlug: RealmSlug,
