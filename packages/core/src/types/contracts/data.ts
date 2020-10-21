@@ -6,6 +6,7 @@ import {
   IErrorResponse,
   IPricesFlagged,
   IRegionComposite,
+  IShortPet,
   ITokenHistory,
   IValidationErrorResponse,
   Locale,
@@ -98,6 +99,24 @@ export interface IQueryItemsResponseData {
 
 export type QueryItemsResponse =
   | IQueryItemsResponseData
+  | IErrorResponse
+  | IValidationErrorResponse
+  | null;
+
+export type QueryPetsRequest = IQueryItemsRequest;
+
+export interface IQueryPetsItem {
+  item: IShortPet | null;
+  target: string;
+  rank: number;
+}
+
+export interface IQueryPetsResponseData {
+  items: IQueryPetsItem[];
+}
+
+export type QueryPetsResponse =
+  | IQueryPetsResponseData
   | IErrorResponse
   | IValidationErrorResponse
   | null;
