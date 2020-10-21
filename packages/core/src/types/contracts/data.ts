@@ -23,7 +23,7 @@ import {
 import { IProfession } from "../profession";
 import { IShortItem } from "../short-item";
 
-export * from "./data";
+export * from "./data/index";
 
 export interface IGetBootResponseData {
   regions: IRegionComposite[];
