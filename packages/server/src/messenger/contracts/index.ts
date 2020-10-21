@@ -11,8 +11,10 @@ import {
   IProfession,
   IRegionConnectedRealmTuple,
   IShortItem,
+  IShortPet,
   ItemId,
   Locale,
+  PetId,
   SortDirection,
   SortKind,
   UnixTimestamp,
@@ -59,14 +61,9 @@ export interface IQueryItemsResponse {
   }>;
 }
 
-export interface IQueryPetsRequest {
-  query: string;
-  locale: Locale;
-}
-
-export interface IQueryPetsResponse {
+export interface IQueryItemsResponse {
   items: Array<{
-    pet_id: PetId;
+    item_id: ItemId;
     target: string;
     rank: number;
   }>;
@@ -79,6 +76,25 @@ export interface IGetItemsRequest {
 
 export interface IGetItemsResponse {
   items: IShortItem[];
+}
+
+export type QueryPetsRequest = IQueryItemsRequest;
+
+export interface IQueryPetsResponse {
+  items: Array<{
+    pet_id: PetId;
+    target: string;
+    rank: number;
+  }>;
+}
+
+export interface IGetPetsRequest {
+  petIds: PetId[];
+  locale: Locale;
+}
+
+export interface IGetPetsResponse {
+  pets: IShortPet[];
 }
 
 export interface IGetBootResponse {

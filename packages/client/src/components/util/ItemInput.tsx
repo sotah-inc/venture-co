@@ -28,15 +28,15 @@ export interface IOwnProps {
 
 type Props = Readonly<IOwnProps>;
 
-const inputValueRenderer = (result: IQueryItemsItem): string => {
+function inputValueRenderer(result: IQueryItemsItem): string {
   if (result.item === null || result.item.id === 0) {
     return "n/a";
   }
 
   return getItemTextValue(result.item);
-};
+}
 
-const renderItemAsItemRendererText = (item: IShortItem) => {
+function renderItemAsItemRendererText(item: IShortItem) {
   const itemText = getItemTextValue(item);
   const itemIconUrl = getItemIconUrl(item);
 
@@ -49,19 +49,19 @@ const renderItemAsItemRendererText = (item: IShortItem) => {
       <img src={itemIconUrl} className="item-icon" alt="" /> {itemText}
     </>
   );
-};
+}
 
-const renderItemRendererTextContent = (item: IShortItem | null) => {
+function renderItemRendererTextContent(item: IShortItem | null) {
   if (item === null || item.id === 0) {
     return "n/a";
   }
 
   return renderItemAsItemRendererText(item);
-};
+}
 
-const renderItemRendererText = (item: IShortItem | null) => {
+function renderItemRendererText(item: IShortItem | null) {
   return <span className="item-input-menu-item">{renderItemRendererTextContent(item)}</span>;
-};
+}
 
 const itemPredicate: ItemPredicate<IQueryItemsItem> = (_: string, result: IQueryItemsItem) => {
   return result.rank > -1;

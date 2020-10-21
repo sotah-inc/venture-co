@@ -23,6 +23,7 @@ import {
   IPrices,
   IPricesFlagged,
   IQueryItemsResponseData,
+  IQueryPetsResponseData,
   IRegionComposite,
   IRegionConnectedRealmTuple,
   ItemId,
@@ -31,6 +32,7 @@ import {
   ProfessionName,
   QueryAuctionStatsResponse,
   QueryItemsResponse,
+  QueryPetsResponse,
   RealmSlug,
   RegionName,
 } from "@sotah-inc/core";
@@ -51,6 +53,7 @@ import { Connection } from "typeorm";
 import {
   AuctionsQueryParamsRules,
   ItemsQueryParamRules,
+  PetsQueryParamRules,
   validate,
   yupValidationErrorToResponse,
 } from "../lib/validator-rules";
@@ -550,6 +553,72 @@ export class DataController {
       items: itemsQueryResult.items.map(v => {
         return {
           item: foundItems.find(foundItem => foundItem.id === v.item_id) ?? null,
+          rank: v.rank,
+          target: v.target,
+        };
+      }),
+    };
+
+    return {
+      data,
+      status: HTTPStatus.OK,
+    };
+  }
+
+  public async queryPets(query: ParsedQs): Promise<IRequestResult<QueryPetsResponse>> {
+    // parsing request params
+    const validateParamsResult = await validate(PetsQueryParamRules, query);
+    if (validateParamsResult.error || !validateParamsResult.data) {
+      return {
+        data: yupValidationErrorToResponse(validateParamsResult.error),
+        status: HTTPStatus.BAD_REQUEST,
+      };
+    }
+
+    // resolving pets-query message
+    const petsQueryMessage = await this.messenger.queryPets({
+      locale: validateParamsResult.data.locale as Locale,
+      query: validateParamsResult.data.query ?? "",
+    });
+    if (petsQueryMessage.code !== code.ok) {
+      return {
+        data: { error: petsQueryMessage.error?.message ?? "" },
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+    const petsQueryResult = await petsQueryMessage.decode();
+    if (petsQueryResult === null) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    // resolving pets from pet-ids in pets-query response data
+    const getPetsMessage = await this.messenger.getPets({
+      locale: validateParamsResult.data.locale as Locale,
+      petIds: petsQueryResult.items.map(v => v.pet_id),
+    });
+    if (getPetsMessage.code !== code.ok) {
+      return {
+        data: { error: getPetsMessage.error?.message ?? "" },
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+    const getPetsResult = await getPetsMessage.decode();
+    if (getPetsResult === null) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+    const foundPets = getPetsResult.pets;
+
+    // formatting a response
+    const data: IQueryPetsResponseData = {
+      items: petsQueryResult.items.map(v => {
+        return {
+          item: foundPets.find(foundPet => foundPet.id === v.pet_id) ?? null,
           rank: v.rank,
           target: v.target,
         };

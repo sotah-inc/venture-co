@@ -15,6 +15,8 @@ import {
   IGetBootResponse,
   IGetItemsRequest,
   IGetItemsResponse,
+  IGetPetsRequest,
+  IGetPetsResponse,
   IGetPricelistHistoriesRequest,
   IGetPricelistHistoriesResponse,
   IGetPricelistRequest,
@@ -23,9 +25,11 @@ import {
   IQueryAuctionStatsResponse,
   IQueryItemsRequest,
   IQueryItemsResponse,
+  IQueryPetsResponse,
   IRealmModificationDatesResponse,
   IResolveConnectedRealmResponse,
   IValidateRegionConnectedRealmResponse,
+  QueryPetsRequest,
   ValidateRegionRealmResponse,
 } from "./contracts";
 import { Message, ParseKind } from "./message";
@@ -36,6 +40,9 @@ const DEFAULT_TIMEOUT = 5 * 1000;
 export enum subjects {
   items = "items",
   itemsQuery = "itemsQuery",
+
+  pets = "pets",
+  petsQuery = "petsQuery",
 
   tokenHistory = "tokenHistory",
 
@@ -98,6 +105,18 @@ export class Messenger {
 
   public queryItems(request: IQueryItemsRequest): Promise<Message<IQueryItemsResponse>> {
     return this.request(subjects.itemsQuery, { body: JSON.stringify(request) });
+  }
+
+  // via pets
+  public async getPets(request: IGetPetsRequest): Promise<Message<IGetPetsResponse>> {
+    return this.request(subjects.pets, {
+      body: JSON.stringify(request),
+      parseKind: ParseKind.GzipJsonEncoded,
+    });
+  }
+
+  public queryPets(request: QueryPetsRequest): Promise<Message<IQueryPetsResponse>> {
+    return this.request(subjects.petsQuery, { body: JSON.stringify(request) });
   }
 
   // via token-histories

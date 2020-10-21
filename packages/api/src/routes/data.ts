@@ -80,6 +80,12 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
       handleResult(res, await controller.getItem(itemId, String(req.query["locale"])));
     }),
   );
+  router.get(
+    "/pets",
+    wrap(async (req: Request, res: Response) => {
+      handleResult(res, await controller.queryPets(req.query));
+    }),
+  );
   router.post(
     "/price-list/:regionName/:realmSlug",
     wrap(async (req: Request, res: Response) => {

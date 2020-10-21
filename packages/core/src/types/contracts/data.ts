@@ -23,7 +23,8 @@ import {
 import { IProfession } from "../profession";
 import { IShortItem } from "../short-item";
 
-// new
+export * from "./data/index";
+
 export interface IGetBootResponseData {
   regions: IRegionComposite[];
   item_classes: IItemClass[];
@@ -77,27 +78,6 @@ export interface IGetAuctionsResponseData {
 
 export type GetAuctionsResponse =
   | IGetAuctionsResponseData
-  | IErrorResponse
-  | IValidationErrorResponse
-  | null;
-
-export interface IQueryItemsRequest {
-  query?: string;
-  locale: string;
-}
-
-export interface IQueryItemsItem {
-  item: IShortItem | null;
-  target: string;
-  rank: number;
-}
-
-export interface IQueryItemsResponseData {
-  items: IQueryItemsItem[];
-}
-
-export type QueryItemsResponse =
-  | IQueryItemsResponseData
   | IErrorResponse
   | IValidationErrorResponse
   | null;

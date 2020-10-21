@@ -11,6 +11,7 @@ import {
   Locale,
   OrderDirection,
   OrderKind,
+  QueryPetsRequest,
   SortPerPage,
 } from "@sotah-inc/core";
 import { IFindByOptions, PostRepository, UserRepository } from "@sotah-inc/server";
@@ -148,6 +149,14 @@ export const AuctionsQueryParamsRules = yup
 
 export const ItemsQueryParamRules = yup
   .object<IQueryItemsRequest>({
+    locale: yup.string().oneOf(Object.values(Locale)).required("locale is required"),
+    query: yup.string(),
+  })
+  .required()
+  .noUnknown();
+
+export const PetsQueryParamRules = yup
+  .object<QueryPetsRequest>({
     locale: yup.string().oneOf(Object.values(Locale)).required("locale is required"),
     query: yup.string(),
   })
