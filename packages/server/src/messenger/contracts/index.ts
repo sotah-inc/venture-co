@@ -59,6 +59,19 @@ export interface IQueryItemsResponse {
   }>;
 }
 
+export interface IQueryPetsRequest {
+  query: string;
+  locale: Locale;
+}
+
+export interface IQueryPetsResponse {
+  items: Array<{
+    pet_id: PetId;
+    target: string;
+    rank: number;
+  }>;
+}
+
 export interface IGetItemsRequest {
   itemIds: ItemId[];
   locale: Locale;
