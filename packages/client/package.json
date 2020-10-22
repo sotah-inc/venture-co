@@ -35,7 +35,7 @@
     "@blueprintjs/core": "^3.34.1",
     "@blueprintjs/icons": "^3.22.0",
     "@blueprintjs/select": "^3.14.3",
-    "@sotah-inc/core": "^2.0.97",
+    "@sotah-inc/core": "^2.0.98",
     "@types/http-status": "^1.1.2",
     "@types/isomorphic-fetch": "0.0.35",
     "@types/lodash": "^4.14.162",
@@ -58,8 +58,8 @@
     "query-string": "^6.13.6",
     "react": "^16.10.1",
     "react-cookie": "^4.0.3",
-    "react-dom": "^17.0.0",
-    "react-markdown": "^5.0.0",
+    "react-dom": "^17.0.1",
+    "react-markdown": "^5.0.1",
     "react-redux": "^7.2.1",
     "recharts": "^1.8.5",
     "redux": "^4.0.5",
@@ -89,7 +89,7 @@
     "typescript": "^4.0.3"
   },
   "peerDependencies": {
-    "react": "^17.0.0"
+    "react": "^17.0.1"
   },
   "gitHead": "04815ff39e8767b2b57e767b2420736cd30af7af"
 }
