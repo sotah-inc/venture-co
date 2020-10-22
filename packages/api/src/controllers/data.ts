@@ -22,6 +22,7 @@ import {
   IPricelistHistoryMap,
   IPrices,
   IPricesFlagged,
+  IQueryGeneralResponseData,
   IQueryResponseData,
   IRegionComposite,
   IRegionConnectedRealmTuple,
@@ -32,6 +33,7 @@ import {
   Locale,
   ProfessionName,
   QueryAuctionStatsResponse,
+  QueryGeneralResponse,
   QueryResponse,
   RealmSlug,
   RegionName,
@@ -541,7 +543,7 @@ export class DataController {
       };
     }
 
-    // resolving items-query message
+    // resolving pets-query message
     const results = await this.messenger.resolveQueryPets({
       locale: validateParamsResult.data.locale as Locale,
       query: validateParamsResult.data.query ?? "",
@@ -555,6 +557,39 @@ export class DataController {
 
     // formatting a response
     const data: IQueryResponseData<IShortPet> = {
+      items: results,
+    };
+
+    return {
+      data,
+      status: HTTPStatus.OK,
+    };
+  }
+
+  public async queryGeneral(query: ParsedQs): Promise<IRequestResult<QueryGeneralResponse>> {
+    // parsing request params
+    const validateParamsResult = await validate(QueryParamRules, query);
+    if (validateParamsResult.error || !validateParamsResult.data) {
+      return {
+        data: yupValidationErrorToResponse(validateParamsResult.error),
+        status: HTTPStatus.BAD_REQUEST,
+      };
+    }
+
+    // resolving pets-query message
+    const results = await this.messenger.queryGeneral({
+      locale: validateParamsResult.data.locale as Locale,
+      query: validateParamsResult.data.query ?? "",
+    });
+    if (results === null) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    // formatting a response
+    const data: IQueryGeneralResponseData = {
       items: results,
     };
 

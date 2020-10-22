@@ -86,6 +86,12 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
       handleResult(res, await controller.queryPets(req.query));
     }),
   );
+  router.get(
+    "/query-general",
+    wrap(async (req: Request, res: Response) => {
+      handleResult(res, await controller.queryGeneral(req.query));
+    }),
+  );
   router.post(
     "/price-list/:regionName/:realmSlug",
     wrap(async (req: Request, res: Response) => {
