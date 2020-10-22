@@ -11,7 +11,7 @@ export interface IQueryGeneralItemItem {
 }
 
 export interface IQueryGeneralItem {
-  item: IQueryGeneralItemItem | null;
+  item: IQueryGeneralItemItem;
   target: string;
   rank: number;
 }
