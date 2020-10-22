@@ -8,27 +8,27 @@ import {
   ItemPredicate,
   Suggest,
 } from "@blueprintjs/select";
-import { IQueryItemsItem, IShortItem, ItemId, Locale } from "@sotah-inc/core";
+import { IQueryItem, IShortItem, ItemId, Locale } from "@sotah-inc/core";
 import { debounce } from "lodash";
 
 import { getItems } from "../../api/data";
 import { getItemIconUrl, getItemTextValue, qualityToColorClass } from "../../util";
 
-const ItemSuggest = Suggest.ofType<IQueryItemsItem>();
+const ItemSuggest = Suggest.ofType<IQueryItem<IShortItem>>();
 
 export interface IOwnProps {
   autoFocus?: boolean;
   itemIdBlacklist?: ItemId[];
   closeOnSelect?: boolean;
   itemIdActiveList?: ItemId[];
-  initialResults?: IQueryItemsItem[];
+  initialResults?: Array<IQueryItem<IShortItem>>;
 
   onSelect(item: IShortItem): void;
 }
 
 type Props = Readonly<IOwnProps>;
 
-function inputValueRenderer(result: IQueryItemsItem): string {
+function inputValueRenderer(result: IQueryItem<IShortItem>): string {
   if (result.item === null || result.item.id === 0) {
     return "n/a";
   }
@@ -63,12 +63,15 @@ function renderItemRendererText(item: IShortItem | null) {
   return <span className="item-input-menu-item">{renderItemRendererTextContent(item)}</span>;
 }
 
-const itemPredicate: ItemPredicate<IQueryItemsItem> = (_: string, result: IQueryItemsItem) => {
+const itemPredicate: ItemPredicate<IQueryItem<IShortItem>> = (
+  _: string,
+  result: IQueryItem<IShortItem>,
+) => {
   return result.rank > -1;
 };
 
-const itemListRenderer: ItemListRenderer<IQueryItemsItem> = (
-  params: IItemListRendererProps<IQueryItemsItem>,
+const itemListRenderer: ItemListRenderer<IQueryItem<IShortItem>> = (
+  params: IItemListRendererProps<IQueryItem<IShortItem>>,
 ) => {
   const { items, itemsParentRef, renderItem } = params;
   const renderedItems = items.map(renderItem).filter(renderedItem => renderedItem !== null);
@@ -105,7 +108,7 @@ export function ItemInput(props: Props) {
     initialResults,
   } = props;
 
-  const [results, setResults] = useState<IQueryItemsItem[]>(initialResults ?? []);
+  const [results, setResults] = useState<Array<IQueryItem<IShortItem>>>(initialResults ?? []);
 
   return (
     <ItemSuggest
