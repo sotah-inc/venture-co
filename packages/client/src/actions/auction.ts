@@ -1,9 +1,4 @@
-import {
-  IGetAuctionsResponseData,
-  IQueryItemsItem,
-  IShortItem,
-  SortPerPage,
-} from "@sotah-inc/core";
+import { IGetAuctionsResponseData, IQueryItem, IShortItem, SortPerPage } from "@sotah-inc/core";
 import { Dispatch } from "redux";
 
 import { getAuctions, IGetAuctionsOptions } from "../api/data";
@@ -45,7 +40,7 @@ export const ActiveSelectChange = (payload: boolean) => createAction(ACTIVESELEC
 export interface ILoadAuctionListEntrypoint {
   auctions: IGetAuctionsResponseData | null;
   querySelected: IShortItem[];
-  initialQueryResults: IQueryItemsItem[];
+  initialQueryResults: Array<IQueryItem<IShortItem>>;
 }
 
 export const LOAD_AUCTIONLIST_ENTRYPOINT = "LOAD_AUCTIONLIST_ENTRYPOINT";

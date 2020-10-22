@@ -1,8 +1,8 @@
-import { IQueryItemsItem } from "@sotah-inc/core";
+import { IQueryItem, IShortItem } from "@sotah-inc/core";
 
 export const getSelectedResultIndex = (
-  result: IQueryItemsItem,
-  selectedItems: IQueryItemsItem[],
+  result: IQueryItem<IShortItem>,
+  selectedItems: Array<IQueryItem<IShortItem>>,
 ): number => {
   if (selectedItems.length === 0) {
     return -1;

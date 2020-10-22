@@ -20,17 +20,18 @@ import {
   IGetPricelistResponseData,
   IPostJson,
   IQueryAuctionStatsResponseData,
-  IQueryItemsRequest,
-  IQueryItemsResponseData,
-  IQueryPetsResponseData,
+  IQueryGeneralResponseData,
+  IQueryRequest,
+  IQueryResponseData,
   IShortItem,
+  IShortPet,
   ItemId,
   ITokenHistory,
   Locale,
   QueryAuctionStatsResponse,
-  QueryItemsResponse,
-  QueryPetsRequest,
-  QueryPetsResponse,
+  QueryGeneralRequest,
+  QueryGeneralResponse,
+  QueryResponse,
   RealmSlug,
   RegionName,
 } from "@sotah-inc/core";
@@ -94,9 +95,9 @@ export const getAuctions = async (
 };
 
 export const getItems = async (
-  req: IQueryItemsRequest,
-): Promise<IQueryItemsResponseData | null> => {
-  const { body, status } = await gatherWithQuery<IQueryItemsRequest, QueryItemsResponse>({
+  req: IQueryRequest,
+): Promise<IQueryResponseData<IShortItem> | null> => {
+  const { body, status } = await gatherWithQuery<IQueryRequest, QueryResponse<IShortItem>>({
     method: "GET",
     query: req,
     url: `${getApiEndpoint()}/items`,
@@ -105,11 +106,13 @@ export const getItems = async (
     return null;
   }
 
-  return body as IQueryItemsResponseData;
+  return body as IQueryResponseData<IShortItem>;
 };
 
-export const getPets = async (req: QueryPetsRequest): Promise<IQueryPetsResponseData | null> => {
-  const { body, status } = await gatherWithQuery<QueryPetsRequest, QueryPetsResponse>({
+export const getPets = async (
+  req: IQueryRequest,
+): Promise<IQueryResponseData<IShortPet> | null> => {
+  const { body, status } = await gatherWithQuery<IQueryRequest, QueryResponse<IShortPet>>({
     method: "GET",
     query: req,
     url: `${getApiEndpoint()}/pets`,
@@ -118,7 +121,22 @@ export const getPets = async (req: QueryPetsRequest): Promise<IQueryPetsResponse
     return null;
   }
 
-  return body as IQueryPetsResponseData;
+  return body as IQueryResponseData<IShortPet>;
+};
+
+export const queryGeneral = async (
+  req: QueryGeneralRequest,
+): Promise<IQueryGeneralResponseData | null> => {
+  const { body, status } = await gatherWithQuery<QueryGeneralRequest, QueryGeneralResponse>({
+    method: "GET",
+    query: req,
+    url: `${getApiEndpoint()}/query-general`,
+  });
+  if (status !== HTTPStatus.OK) {
+    return null;
+  }
+
+  return body as IQueryGeneralResponseData;
 };
 
 export interface IGetItemResult {

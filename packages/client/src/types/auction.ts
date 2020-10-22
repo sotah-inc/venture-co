@@ -1,7 +1,7 @@
 import {
   IAuction,
   IProfessionPricelistJson,
-  IQueryItemsItem,
+  IQueryItem,
   IShortItem,
   SortDirection,
   SortKind,
@@ -25,7 +25,7 @@ export interface AuctionsOptions {
   sortDirection: SortDirection;
   sortKind: SortKind;
   selected: IShortItem[];
-  initialQueryResults: IQueryItemsItem[];
+  initialQueryResults: Array<IQueryItem<IShortItem>>;
 }
 
 export interface ISortChangeOptions {
