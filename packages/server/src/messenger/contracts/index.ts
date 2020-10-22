@@ -146,3 +146,23 @@ export type ValidateRegionRealmResponse = IValidateRegionConnectedRealmResponse;
 export interface IResolveConnectedRealmResponse {
   connected_realm: IConnectedRealmComposite;
 }
+
+export interface IQueryGeneralRequest {
+  query?: string;
+  locale: string;
+}
+
+export interface IQueryGeneralItemItem {
+  item: IShortItem | null;
+  pet: IShortPet | null;
+}
+
+export interface IQueryGeneralItem {
+  item: IQueryGeneralItemItem | null;
+  target: string;
+  rank: number;
+}
+
+export interface IQueryGeneralResponse {
+  items: IQueryGeneralItem[];
+}
