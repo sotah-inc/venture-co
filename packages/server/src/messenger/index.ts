@@ -9,6 +9,7 @@ import {
   IRegionRealmTuple,
   IRegionTuple,
   IShortItem,
+  IShortPet,
   ITokenHistory,
 } from "@sotah-inc/core";
 import * as nats from "nats";
@@ -143,11 +144,10 @@ export class Messenger {
     if (getItemsResult === null) {
       return null;
     }
-    const foundItems = getItemsResult.items;
 
     return itemsQueryResult.items.map(v => {
       return {
-        item: foundItems.find(foundItem => foundItem.id === v.item_id) ?? null,
+        item: getItemsResult.items.find(foundItem => foundItem.id === v.item_id) ?? null,
         rank: v.rank,
         target: v.target,
       };
@@ -164,6 +164,43 @@ export class Messenger {
 
   public queryPets(request: QueryPetsRequest): Promise<Message<IQueryPetsResponse>> {
     return this.request(subjects.petsQuery, { body: JSON.stringify(request) });
+  }
+
+  public async resolveQueryPets(
+    request: IQueryItemsRequest,
+  ): Promise<Array<IQueryItem<IShortPet>> | null> {
+    // resolving pets-query message
+    const petsQueryMessage = await this.queryPets(request);
+    if (petsQueryMessage.code !== code.ok) {
+      return null;
+    }
+
+    const petsQueryResult = await petsQueryMessage.decode();
+    if (petsQueryResult === null) {
+      return null;
+    }
+
+    // resolving pets from pet-ids in pets-query response data
+    const getPetsMessage = await this.getPets({
+      locale: request.locale,
+      petIds: petsQueryResult.items.map(v => v.pet_id),
+    });
+    if (getPetsMessage.code !== code.ok) {
+      return null;
+    }
+
+    const getPetsResult = await getPetsMessage.decode();
+    if (getPetsResult === null) {
+      return null;
+    }
+
+    return petsQueryResult.items.map(v => {
+      return {
+        item: getPetsResult.pets.find(foundPet => foundPet.id === v.pet_id) ?? null,
+        rank: v.rank,
+        target: v.target,
+      };
+    });
   }
 
   // via token-histories
