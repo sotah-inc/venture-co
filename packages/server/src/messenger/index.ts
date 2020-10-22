@@ -1,9 +1,7 @@
 import {
   IConnectedRealmComposite,
   IConnectedRealmModificationDates,
-  IQueryGeneralItem,
   IQueryItem,
-  IQueryItemWithId,
   IRegionComposite,
   IRegionConnectedRealmTuple,
   IRegionRealmTuple,
@@ -28,8 +26,8 @@ import {
   IGetPricelistResponse,
   IGetSessionSecretResponse,
   IQueryAuctionStatsResponse,
+  IQueryGeneralItem,
   IQueryGeneralRequest,
-  IQueryGeneralResponse,
   IQueryItemsRequest,
   IQueryItemsResponse,
   IQueryPetsResponse,
@@ -103,7 +101,48 @@ export class Messenger {
   }
 
   // via general
-  public async queryGeneral(request: IQueryGeneralRequest): Promise<IQueryGeneralResponse> {}
+  public async queryGeneral(request: IQueryGeneralRequest): Promise<IQueryGeneralItem[] | null> {
+    const queriedItems = await this.resolveQueryItems(request);
+    if (queriedItems === null) {
+      return null;
+    }
+
+    const queriedPets = await this.resolveQueryPets(request);
+    if (queriedPets === null) {
+      return null;
+    }
+
+    return [
+      ...queriedItems.map<IQueryGeneralItem>(v => {
+        return {
+          item: {
+            item: v.item,
+            pet: null,
+          },
+          rank: v.rank,
+          target: v.target,
+        };
+      }),
+      ...queriedPets.map<IQueryGeneralItem>(v => {
+        return {
+          item: {
+            item: null,
+            pet: v.item,
+          },
+          rank: v.rank,
+          target: v.target,
+        };
+      }),
+    ]
+      .sort((a, b) => {
+        if (a.rank === b.rank) {
+          return a.target.localeCompare(b.target);
+        }
+
+        return a.rank > b.rank ? -1 : 1;
+      })
+      .slice(0, 10);
+  }
 
   // via items
   public async getItems(request: IGetItemsRequest): Promise<Message<IGetItemsResponse>> {

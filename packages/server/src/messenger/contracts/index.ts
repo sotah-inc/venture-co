@@ -148,8 +148,8 @@ export interface IResolveConnectedRealmResponse {
 }
 
 export interface IQueryGeneralRequest {
-  query?: string;
-  locale: string;
+  query: string;
+  locale: Locale;
 }
 
 export interface IQueryGeneralItemItem {
@@ -158,11 +158,7 @@ export interface IQueryGeneralItemItem {
 }
 
 export interface IQueryGeneralItem {
-  item: IQueryGeneralItemItem | null;
+  item: IQueryGeneralItemItem;
   target: string;
   rank: number;
-}
-
-export interface IQueryGeneralResponse {
-  items: IQueryGeneralItem[];
 }
