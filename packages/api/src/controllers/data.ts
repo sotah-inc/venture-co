@@ -509,53 +509,20 @@ export class DataController {
     }
 
     // resolving items-query message
-    const itemsQueryMessage = await this.messenger.queryItems({
+    const results = await this.messenger.resolveQueryItems({
       locale: validateParamsResult.data.locale as Locale,
       query: validateParamsResult.data.query ?? "",
     });
-    if (itemsQueryMessage.code !== code.ok) {
-      return {
-        data: { error: itemsQueryMessage.error?.message ?? "" },
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-    const itemsQueryResult = await itemsQueryMessage.decode();
-    if (itemsQueryResult === null) {
+    if (results === null) {
       return {
         data: null,
         status: HTTPStatus.INTERNAL_SERVER_ERROR,
       };
     }
-
-    // resolving items from item-ids in items-query response data
-    const getItemsMessage = await this.messenger.getItems({
-      itemIds: itemsQueryResult.items.map(v => v.item_id),
-      locale: validateParamsResult.data.locale as Locale,
-    });
-    if (getItemsMessage.code !== code.ok) {
-      return {
-        data: { error: itemsQueryMessage.error?.message ?? "" },
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-    const getItemsResult = await getItemsMessage.decode();
-    if (getItemsResult === null) {
-      return {
-        data: null,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-    const foundItems = getItemsResult.items;
 
     // formatting a response
     const data: IQueryResponseData<IShortItem> = {
-      items: itemsQueryResult.items.map(v => {
-        return {
-          item: foundItems.find(foundItem => foundItem.id === v.item_id) ?? null,
-          rank: v.rank,
-          target: v.target,
-        };
-      }),
+      items: results,
     };
 
     return {
@@ -574,54 +541,21 @@ export class DataController {
       };
     }
 
-    // resolving pets-query message
-    const petsQueryMessage = await this.messenger.queryPets({
+    // resolving items-query message
+    const results = await this.messenger.resolveQueryPets({
       locale: validateParamsResult.data.locale as Locale,
       query: validateParamsResult.data.query ?? "",
     });
-    if (petsQueryMessage.code !== code.ok) {
-      return {
-        data: { error: petsQueryMessage.error?.message ?? "" },
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-    const petsQueryResult = await petsQueryMessage.decode();
-    if (petsQueryResult === null) {
+    if (results === null) {
       return {
         data: null,
         status: HTTPStatus.INTERNAL_SERVER_ERROR,
       };
     }
-
-    // resolving pets from pet-ids in pets-query response data
-    const getPetsMessage = await this.messenger.getPets({
-      locale: validateParamsResult.data.locale as Locale,
-      petIds: petsQueryResult.items.map(v => v.pet_id),
-    });
-    if (getPetsMessage.code !== code.ok) {
-      return {
-        data: { error: getPetsMessage.error?.message ?? "" },
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-    const getPetsResult = await getPetsMessage.decode();
-    if (getPetsResult === null) {
-      return {
-        data: null,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-    const foundPets = getPetsResult.pets;
 
     // formatting a response
     const data: IQueryResponseData<IShortPet> = {
-      items: petsQueryResult.items.map(v => {
-        return {
-          item: foundPets.find(foundPet => foundPet.id === v.pet_id) ?? null,
-          rank: v.rank,
-          target: v.target,
-        };
-      }),
+      items: results,
     };
 
     return {
