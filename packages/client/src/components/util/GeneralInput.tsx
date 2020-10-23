@@ -8,70 +8,52 @@ import {
   ItemPredicate,
   Suggest,
 } from "@blueprintjs/select";
-import { IQueryItem, IShortItem, ItemId, Locale } from "@sotah-inc/core";
+import { IQueryGeneralItem, Locale } from "@sotah-inc/core";
 import { debounce } from "lodash";
 
 import { getItems } from "../../api/data";
-import { getItemIconUrl, getItemTextValue, qualityToColorClass } from "../../util";
+import {
+  inputValueRenderer as itemInputValueRenderer,
+  renderItemAsItemRendererText,
+} from "./ItemInput";
 
-const ItemSuggest = Suggest.ofType<IQueryItem<IShortItem>>();
+const GeneralItemSuggest = Suggest.ofType<IQueryGeneralItem>();
 
 export interface IOwnProps {
   autoFocus?: boolean;
-  itemIdBlacklist?: ItemId[];
   closeOnSelect?: boolean;
-  itemIdActiveList?: ItemId[];
-  initialResults?: Array<IQueryItem<IShortItem>>;
 
-  onSelect(item: IShortItem): void;
+  onSelect(item: IQueryGeneralItem): void;
 }
 
 type Props = Readonly<IOwnProps>;
 
-function inputValueRenderer(result: IQueryItem<IShortItem>): string {
-  if (result.item === null || result.item.id === 0) {
-    return "n/a";
+function inputValueRenderer(result: IQueryGeneralItem): string {
+  if (result.item.item !== null) {
+    return itemInputValueRenderer(result.item.item);
   }
 
-  return getItemTextValue(result.item);
+  return "n/a";
 }
 
-function renderItemAsItemRendererText(item: IShortItem) {
-  const itemText = getItemTextValue(item);
-  const itemIconUrl = getItemIconUrl(item);
-
-  if (itemIconUrl === null) {
-    return itemText;
+function renderItemRendererTextContent(item: IQueryGeneralItem) {
+  if (item.item.item !== null) {
+    return renderItemAsItemRendererText(item.item.item);
   }
 
-  return (
-    <>
-      <img src={itemIconUrl} className="item-icon" alt="" /> {itemText}
-    </>
-  );
+  return "n/a";
 }
 
-function renderItemRendererTextContent(item: IShortItem | null) {
-  if (item === null || item.id === 0) {
-    return "n/a";
-  }
-
-  return renderItemAsItemRendererText(item);
-}
-
-function renderItemRendererText(item: IShortItem | null) {
+function renderItemRendererText(item: IQueryGeneralItem) {
   return <span className="item-input-menu-item">{renderItemRendererTextContent(item)}</span>;
 }
 
-const itemPredicate: ItemPredicate<IQueryItem<IShortItem>> = (
-  _: string,
-  result: IQueryItem<IShortItem>,
-) => {
+const itemPredicate: ItemPredicate<IQueryGeneralItem> = (_: string, result: IQueryGeneralItem) => {
   return result.rank > -1;
 };
 
-const itemListRenderer: ItemListRenderer<IQueryItem<IShortItem>> = (
-  params: IItemListRendererProps<IQueryItem<IShortItem>>,
+const itemListRenderer: ItemListRenderer<IQueryGeneralItem> = (
+  params: IItemListRendererProps<IQueryGeneralItem>,
 ) => {
   const { items, itemsParentRef, renderItem } = params;
   const renderedItems = items.map(renderItem).filter(renderedItem => renderedItem !== null);
@@ -98,47 +80,24 @@ const itemListRenderer: ItemListRenderer<IQueryItem<IShortItem>> = (
   );
 };
 
-export function ItemInput(props: Props) {
-  const {
-    autoFocus,
-    onSelect,
-    closeOnSelect,
-    itemIdBlacklist,
-    itemIdActiveList,
-    initialResults,
-  } = props;
+export function GeneralInput(props: Props) {
+  const { autoFocus, onSelect, closeOnSelect } = props;
 
-  const [results, setResults] = useState<Array<IQueryItem<IShortItem>>>(initialResults ?? []);
+  const [results, setResults] = useState<IQueryGeneralItem[]>([]);
 
   return (
-    <ItemSuggest
+    <GeneralItemSuggest
       inputValueRenderer={inputValueRenderer}
       itemRenderer={(result, itemRendererProps: IItemRendererProps) => {
         const { handleClick, modifiers, index } = itemRendererProps;
-        const { item } = result;
-
-        const disabled: boolean = (() => {
-          if (typeof itemIdBlacklist === "undefined") {
-            return false;
-          }
-
-          if (item === null) {
-            return true;
-          }
-
-          return itemIdBlacklist.includes(item.id);
-        })();
 
         if (!modifiers.matchesPredicate) {
           return null;
         }
 
-        const hasFullItem = (item?.sotah_meta.normalized_name.en_US ?? "") !== "";
-        const label = item && hasFullItem ? `#${item.id}` : "";
         const classNames = [
           modifiers.active ? Classes.INTENT_PRIMARY : "",
-          modifiers.active || (item && itemIdActiveList?.includes(item.id)) ? Classes.ACTIVE : "",
-          item && hasFullItem ? qualityToColorClass(item.quality.type) : "",
+          modifiers.active ? Classes.ACTIVE : "",
         ].filter(v => v.length > 0);
 
         return (
@@ -146,7 +105,7 @@ export function ItemInput(props: Props) {
             key={index}
             className={classNames.join(" ")}
             onClick={handleClick}
-            text={renderItemRendererText(item)}
+            text={renderItemRendererText(result)}
             label={label}
             disabled={disabled}
           />

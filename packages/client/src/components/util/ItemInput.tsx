@@ -1,3 +1,4 @@
+import { IItemModifiers } from "@blueprintjs/select/src/common/itemRenderer";
 import React, { useState } from "react";
 
 import { Classes, H6, Menu, MenuItem } from "@blueprintjs/core";
@@ -28,15 +29,15 @@ export interface IOwnProps {
 
 type Props = Readonly<IOwnProps>;
 
-function inputValueRenderer(result: IQueryItem<IShortItem>): string {
-  if (result.item === null || result.item.id === 0) {
+export function inputValueRenderer(item: IShortItem | null): string {
+  if (item === null || item.id === 0) {
     return "n/a";
   }
 
-  return getItemTextValue(result.item);
+  return getItemTextValue(item);
 }
 
-function renderItemAsItemRendererText(item: IShortItem) {
+export function renderItemAsItemRendererText(item: IShortItem) {
   const itemText = getItemTextValue(item);
   const itemIconUrl = getItemIconUrl(item);
 
@@ -98,6 +99,26 @@ const itemListRenderer: ItemListRenderer<IQueryItem<IShortItem>> = (
   );
 };
 
+export function renderItemLabel(item: IShortItem | null): string {
+  const hasFullItem = (item?.sotah_meta.normalized_name.en_US ?? "") !== "";
+
+  return item && hasFullItem ? `#${item.id}` : "";
+}
+
+export function resolveItemClassNames(
+  item: IShortItem | null,
+  modifiers: IItemModifiers,
+  itemIdActiveList?: ItemId[],
+): string[] {
+  const hasFullItem = (item?.sotah_meta.normalized_name.en_US ?? "") !== "";
+
+  return [
+    modifiers.active ? Classes.INTENT_PRIMARY : "",
+    modifiers.active || (item && itemIdActiveList?.includes(item.id)) ? Classes.ACTIVE : "",
+    item && hasFullItem ? qualityToColorClass(item.quality.type) : "",
+  ].filter(v => v.length > 0);
+}
+
 export function ItemInput(props: Props) {
   const {
     autoFocus,
@@ -112,7 +133,7 @@ export function ItemInput(props: Props) {
 
   return (
     <ItemSuggest
-      inputValueRenderer={inputValueRenderer}
+      inputValueRenderer={v => inputValueRenderer(v.item)}
       itemRenderer={(result, itemRendererProps: IItemRendererProps) => {
         const { handleClick, modifiers, index } = itemRendererProps;
         const { item } = result;
@@ -133,21 +154,13 @@ export function ItemInput(props: Props) {
           return null;
         }
 
-        const hasFullItem = (item?.sotah_meta.normalized_name.en_US ?? "") !== "";
-        const label = item && hasFullItem ? `#${item.id}` : "";
-        const classNames = [
-          modifiers.active ? Classes.INTENT_PRIMARY : "",
-          modifiers.active || (item && itemIdActiveList?.includes(item.id)) ? Classes.ACTIVE : "",
-          item && hasFullItem ? qualityToColorClass(item.quality.type) : "",
-        ].filter(v => v.length > 0);
-
         return (
           <MenuItem
             key={index}
-            className={classNames.join(" ")}
+            className={resolveItemClassNames(item, modifiers, itemIdActiveList).join(" ")}
             onClick={handleClick}
             text={renderItemRendererText(item)}
-            label={label}
+            label={renderItemLabel(item)}
             disabled={disabled}
           />
         );
