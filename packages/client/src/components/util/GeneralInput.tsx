@@ -16,6 +16,10 @@ import {
   inputValueRenderer as itemInputValueRenderer,
   itemRenderer as itemItemRenderer,
 } from "./ItemInput";
+import {
+  inputValueRenderer as petInputValueRenderer,
+  itemRenderer as petItemRenderer,
+} from "./PetInput";
 
 const GeneralItemSuggest = Suggest.ofType<IQueryGeneralItem>();
 
@@ -31,6 +35,10 @@ type Props = Readonly<IOwnProps>;
 function inputValueRenderer(result: IQueryGeneralItem): string {
   if (result.item.item !== null) {
     return itemInputValueRenderer(result.item.item);
+  }
+
+  if (result.item.pet !== null) {
+    return petInputValueRenderer(result.item.pet);
   }
 
   return "n/a";
@@ -68,6 +76,18 @@ const itemListRenderer: ItemListRenderer<IQueryGeneralItem> = (
   );
 };
 
+export function itemRenderer(result: IQueryGeneralItem, itemRendererProps: IItemRendererProps) {
+  if (result.item.item !== null) {
+    return itemItemRenderer(result.item.item, itemRendererProps);
+  }
+
+  if (result.item.pet !== null) {
+    return petItemRenderer(result.item.pet, itemRendererProps);
+  }
+
+  return null;
+}
+
 export function GeneralInput(props: Props) {
   const { autoFocus, onSelect, closeOnSelect } = props;
 
@@ -77,11 +97,7 @@ export function GeneralInput(props: Props) {
     <GeneralItemSuggest
       inputValueRenderer={inputValueRenderer}
       itemRenderer={(result, itemRendererProps: IItemRendererProps) => {
-        if (result.item.item !== null) {
-          return itemItemRenderer(result.item.item, itemRendererProps);
-        }
-
-        return null;
+        return itemRenderer(result, itemRendererProps);
       }}
       items={results}
       onItemSelect={onSelect}
