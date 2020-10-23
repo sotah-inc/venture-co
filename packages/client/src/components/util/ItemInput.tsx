@@ -119,6 +119,42 @@ export function resolveItemClassNames(
   ].filter(v => v.length > 0);
 }
 
+export function itemRenderer(
+  item: IShortItem | null,
+  itemRendererProps: IItemRendererProps,
+  itemIdBlacklist?: ItemId[],
+  itemIdActiveList?: ItemId[],
+) {
+  const { handleClick, modifiers, index } = itemRendererProps;
+
+  const disabled: boolean = (() => {
+    if (typeof itemIdBlacklist === "undefined") {
+      return false;
+    }
+
+    if (item === null) {
+      return true;
+    }
+
+    return itemIdBlacklist.includes(item.id);
+  })();
+
+  if (!modifiers.matchesPredicate) {
+    return null;
+  }
+
+  return (
+    <MenuItem
+      key={index}
+      className={resolveItemClassNames(item, modifiers, itemIdActiveList).join(" ")}
+      onClick={handleClick}
+      text={renderItemRendererText(item)}
+      label={renderItemLabel(item)}
+      disabled={disabled}
+    />
+  );
+}
+
 export function ItemInput(props: Props) {
   const {
     autoFocus,
@@ -135,35 +171,7 @@ export function ItemInput(props: Props) {
     <ItemSuggest
       inputValueRenderer={v => inputValueRenderer(v.item)}
       itemRenderer={(result, itemRendererProps: IItemRendererProps) => {
-        const { handleClick, modifiers, index } = itemRendererProps;
-        const { item } = result;
-
-        const disabled: boolean = (() => {
-          if (typeof itemIdBlacklist === "undefined") {
-            return false;
-          }
-
-          if (item === null) {
-            return true;
-          }
-
-          return itemIdBlacklist.includes(item.id);
-        })();
-
-        if (!modifiers.matchesPredicate) {
-          return null;
-        }
-
-        return (
-          <MenuItem
-            key={index}
-            className={resolveItemClassNames(item, modifiers, itemIdActiveList).join(" ")}
-            onClick={handleClick}
-            text={renderItemRendererText(item)}
-            label={renderItemLabel(item)}
-            disabled={disabled}
-          />
-        );
+        return itemRenderer(result.item, itemRendererProps, itemIdBlacklist, itemIdActiveList);
       }}
       items={results}
       onItemSelect={v => {

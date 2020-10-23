@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { Classes, H6, Menu, MenuItem } from "@blueprintjs/core";
+import { Classes, H6, Menu } from "@blueprintjs/core";
 import {
   IItemListRendererProps,
   IItemRendererProps,
@@ -11,10 +11,10 @@ import {
 import { IQueryGeneralItem, Locale } from "@sotah-inc/core";
 import { debounce } from "lodash";
 
-import { getItems } from "../../api/data";
+import { queryGeneral } from "../../api/data";
 import {
   inputValueRenderer as itemInputValueRenderer,
-  renderItemAsItemRendererText,
+  itemRenderer as itemItemRenderer,
 } from "./ItemInput";
 
 const GeneralItemSuggest = Suggest.ofType<IQueryGeneralItem>();
@@ -34,18 +34,6 @@ function inputValueRenderer(result: IQueryGeneralItem): string {
   }
 
   return "n/a";
-}
-
-function renderItemRendererTextContent(item: IQueryGeneralItem) {
-  if (item.item.item !== null) {
-    return renderItemAsItemRendererText(item.item.item);
-  }
-
-  return "n/a";
-}
-
-function renderItemRendererText(item: IQueryGeneralItem) {
-  return <span className="item-input-menu-item">{renderItemRendererTextContent(item)}</span>;
 }
 
 const itemPredicate: ItemPredicate<IQueryGeneralItem> = (_: string, result: IQueryGeneralItem) => {
@@ -89,39 +77,17 @@ export function GeneralInput(props: Props) {
     <GeneralItemSuggest
       inputValueRenderer={inputValueRenderer}
       itemRenderer={(result, itemRendererProps: IItemRendererProps) => {
-        const { handleClick, modifiers, index } = itemRendererProps;
-
-        if (!modifiers.matchesPredicate) {
-          return null;
+        if (result.item.item !== null) {
+          return itemItemRenderer(result.item.item, itemRendererProps);
         }
 
-        const classNames = [
-          modifiers.active ? Classes.INTENT_PRIMARY : "",
-          modifiers.active ? Classes.ACTIVE : "",
-        ].filter(v => v.length > 0);
-
-        return (
-          <MenuItem
-            key={index}
-            className={classNames.join(" ")}
-            onClick={handleClick}
-            text={renderItemRendererText(result)}
-            label={label}
-            disabled={disabled}
-          />
-        );
+        return null;
       }}
       items={results}
-      onItemSelect={v => {
-        if (v.item === null) {
-          return;
-        }
-
-        onSelect(v.item);
-      }}
+      onItemSelect={onSelect}
       closeOnSelect={typeof closeOnSelect === "undefined" ? true : closeOnSelect}
       onQueryChange={debounce(async (filterValue: string) => {
-        const res = await getItems({ query: filterValue, locale: Locale.EnUS });
+        const res = await queryGeneral({ query: filterValue, locale: Locale.EnUS });
         if (res === null) {
           return;
         }
