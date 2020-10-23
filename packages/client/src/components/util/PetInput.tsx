@@ -9,13 +9,13 @@ import {
   ItemPredicate,
   Suggest,
 } from "@blueprintjs/select";
-import { IQueryItem, IShortItem, IShortPet, ItemId, Locale, PetId } from "@sotah-inc/core";
+import { IQueryItem, IShortPet, ItemId, Locale, PetId } from "@sotah-inc/core";
 import { debounce } from "lodash";
 
-import { getItems } from "../../api/data";
-import { getPetIconUrl, qualityToColorClass } from "../../util";
+import { getPets } from "../../api/data";
+import { getPetIconUrl, petQualityToColorClass } from "../../util";
 
-const ItemSuggest = Suggest.ofType<IQueryItem<IShortPet>>();
+const PetSuggest = Suggest.ofType<IQueryItem<IShortPet>>();
 
 export interface IOwnProps {
   autoFocus?: boolean;
@@ -98,38 +98,36 @@ export function renderItemLabel(_pet: IShortPet | null): string {
   return "";
 }
 
-export function resolveItemClassNames(
+export function resolvePetClassNames(
   pet: IShortPet | null,
   modifiers: IItemModifiers,
-  itemIdActiveList?: ItemId[],
+  idActiveList?: PetId[],
 ): string[] {
-  const hasFullItem = (item?.sotah_meta.normalized_name.en_US ?? "") !== "";
-
   return [
     modifiers.active ? Classes.INTENT_PRIMARY : "",
-    modifiers.active || (item && itemIdActiveList?.includes(item.id)) ? Classes.ACTIVE : "",
-    item && hasFullItem ? qualityToColorClass(item.quality.type) : "",
+    modifiers.active || (pet && idActiveList?.includes(pet.id)) ? Classes.ACTIVE : "",
+    pet ? petQualityToColorClass(pet.quality) : "",
   ].filter(v => v.length > 0);
 }
 
 export function itemRenderer(
   pet: IShortPet | null,
   itemRendererProps: IItemRendererProps,
-  itemIdBlacklist?: ItemId[],
-  itemIdActiveList?: ItemId[],
+  idBlacklist?: ItemId[],
+  idActiveList?: ItemId[],
 ) {
   const { handleClick, modifiers, index } = itemRendererProps;
 
   const disabled: boolean = (() => {
-    if (typeof itemIdBlacklist === "undefined") {
+    if (typeof idBlacklist === "undefined") {
       return false;
     }
 
-    if (item === null) {
+    if (pet === null) {
       return true;
     }
 
-    return itemIdBlacklist.includes(item.id);
+    return idBlacklist.includes(pet.id);
   })();
 
   if (!modifiers.matchesPredicate) {
@@ -139,32 +137,25 @@ export function itemRenderer(
   return (
     <MenuItem
       key={index}
-      className={resolveItemClassNames(item, modifiers, itemIdActiveList).join(" ")}
+      className={resolvePetClassNames(pet, modifiers, idActiveList).join(" ")}
       onClick={handleClick}
-      text={renderItemRendererText(item)}
-      label={renderItemLabel(item)}
+      text={renderItemRendererText(pet)}
+      label={renderItemLabel(pet)}
       disabled={disabled}
     />
   );
 }
 
-export function ItemInput(props: Props) {
-  const {
-    autoFocus,
-    onSelect,
-    closeOnSelect,
-    itemIdBlacklist,
-    itemIdActiveList,
-    initialResults,
-  } = props;
+export function PetInput(props: Props) {
+  const { autoFocus, onSelect, closeOnSelect, idActiveList, idBlacklist, initialResults } = props;
 
-  const [results, setResults] = useState<Array<IQueryItem<IShortItem>>>(initialResults ?? []);
+  const [results, setResults] = useState<Array<IQueryItem<IShortPet>>>(initialResults ?? []);
 
   return (
-    <ItemSuggest
+    <PetSuggest
       inputValueRenderer={v => inputValueRenderer(v.item)}
       itemRenderer={(result, itemRendererProps: IItemRendererProps) => {
-        return itemRenderer(result.item, itemRendererProps, itemIdBlacklist, itemIdActiveList);
+        return itemRenderer(result.item, itemRendererProps, idBlacklist, idActiveList);
       }}
       items={results}
       onItemSelect={v => {
@@ -176,7 +167,7 @@ export function ItemInput(props: Props) {
       }}
       closeOnSelect={typeof closeOnSelect === "undefined" ? true : closeOnSelect}
       onQueryChange={debounce(async (filterValue: string) => {
-        const res = await getItems({ query: filterValue, locale: Locale.EnUS });
+        const res = await getPets({ query: filterValue, locale: Locale.EnUS });
         if (res === null) {
           return;
         }
