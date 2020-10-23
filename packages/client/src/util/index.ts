@@ -11,6 +11,7 @@ export * from "./item";
 export * from "./query-items-item";
 export * from "./routes";
 export * from "./slider";
+export * from "./pet";
 
 const hostname: string = (() => {
   if (typeof window === "undefined") {

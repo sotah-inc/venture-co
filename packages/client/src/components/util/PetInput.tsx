@@ -9,70 +9,65 @@ import {
   ItemPredicate,
   Suggest,
 } from "@blueprintjs/select";
-import { IQueryItem, IShortItem, ItemId, Locale } from "@sotah-inc/core";
+import { IQueryItem, IShortItem, IShortPet, ItemId, Locale, PetId } from "@sotah-inc/core";
 import { debounce } from "lodash";
 
 import { getItems } from "../../api/data";
-import { getItemIconUrl, getItemTextValue, qualityToColorClass } from "../../util";
+import { getPetIconUrl, qualityToColorClass } from "../../util";
 
-const ItemSuggest = Suggest.ofType<IQueryItem<IShortItem>>();
+const ItemSuggest = Suggest.ofType<IQueryItem<IShortPet>>();
 
 export interface IOwnProps {
   autoFocus?: boolean;
-  idBlacklist?: ItemId[];
+  idBlacklist?: PetId[];
   closeOnSelect?: boolean;
-  idActiveList?: ItemId[];
-  initialResults?: Array<IQueryItem<IShortItem>>;
+  idActiveList?: PetId[];
+  initialResults?: Array<IQueryItem<IShortPet>>;
 
-  onSelect(item: IShortItem): void;
+  onSelect(pet: IShortPet): void;
 }
 
 type Props = Readonly<IOwnProps>;
 
-export function inputValueRenderer(item: IShortItem | null): string {
-  if (item === null || item.id === 0) {
+export function inputValueRenderer(pet: IShortPet | null): string {
+  if (pet === null || pet.id === 0) {
     return "n/a";
   }
 
-  return getItemTextValue(item);
+  return pet.name;
 }
 
-export function renderItemAsItemRendererText(item: IShortItem) {
-  const itemText = getItemTextValue(item);
-  const itemIconUrl = getItemIconUrl(item);
-
-  if (itemIconUrl === null) {
-    return itemText;
-  }
+export function renderPetAsItemRendererText(pet: IShortPet) {
+  const petIconUrl = getPetIconUrl(pet);
 
   return (
     <>
-      <img src={itemIconUrl} className="item-icon" alt="" /> {itemText}
+      <img src={petIconUrl} className="pet-icon" alt="" /> {pet.name}
     </>
   );
 }
 
-function renderItemRendererTextContent(item: IShortItem | null) {
-  if (item === null || item.id === 0) {
+function renderPetRendererTextContent(pet: IShortPet | null) {
+  if (pet === null || pet.id === 0) {
     return "n/a";
   }
 
-  return renderItemAsItemRendererText(item);
+  return renderPetAsItemRendererText(pet);
 }
 
-function renderItemRendererText(item: IShortItem | null) {
-  return <span className="item-input-menu-item">{renderItemRendererTextContent(item)}</span>;
+function renderItemRendererText(pet: IShortPet | null) {
+  return <span className="pet-input-menu-item">{renderPetRendererTextContent(pet)}</span>;
 }
 
-const itemPredicate: ItemPredicate<IQueryItem<IShortItem>> = (
+const itemPredicate: ItemPredicate<IQueryItem<IShortPet>> = (
   _: string,
-  result: IQueryItem<IShortItem>,
+  result: IQueryItem<IShortPet>,
 ) => {
   return result.rank > -1;
 };
 
-const itemListRenderer: ItemListRenderer<IQueryItem<IShortItem>> = (
-  params: IItemListRendererProps<IQueryItem<IShortItem>>,
+const itemListRenderer: ItemListRenderer<IQueryItem<IShortPet>> = (
+  params: IItemListRendererProps<IQueryItem<IShortPet>>,
 ) => {
   const { items, itemsParentRef, renderItem } = params;
   const renderedItems = items.map(renderItem).filter(renderedItem => renderedItem !== null);
@@ -99,36 +94,34 @@ const itemListRenderer: ItemListRenderer<IQueryItem<IShortItem>> = (
   );
 };
 
-export function renderItemLabel(item: IShortItem | null): string {
-  const hasFullItem = (item?.sotah_meta.normalized_name.en_US ?? "") !== "";
-
-  return item && hasFullItem ? `#${item.id}` : "";
+export function renderItemLabel(_pet: IShortPet | null): string {
+  return "";
 }
 
 export function resolveItemClassNames(
-  item: IShortItem | null,
+  pet: IShortPet | null,
   modifiers: IItemModifiers,
-  idActiveList?: ItemId[],
+  itemIdActiveList?: ItemId[],
 ): string[] {
   const hasFullItem = (item?.sotah_meta.normalized_name.en_US ?? "") !== "";
 
   return [
     modifiers.active ? Classes.INTENT_PRIMARY : "",
-    modifiers.active || (item && idActiveList?.includes(item.id)) ? Classes.ACTIVE : "",
+    modifiers.active || (item && itemIdActiveList?.includes(item.id)) ? Classes.ACTIVE : "",
     item && hasFullItem ? qualityToColorClass(item.quality.type) : "",
   ].filter(v => v.length > 0);
 }
 
 export function itemRenderer(
-  item: IShortItem | null,
+  pet: IShortPet | null,
   itemRendererProps: IItemRendererProps,
-  idBlacklist?: ItemId[],
-  idActiveList?: ItemId[],
+  itemIdBlacklist?: ItemId[],
+  itemIdActiveList?: ItemId[],
 ) {
   const { handleClick, modifiers, index } = itemRendererProps;
 
   const disabled: boolean = (() => {
-    if (typeof idBlacklist === "undefined") {
+    if (typeof itemIdBlacklist === "undefined") {
       return false;
     }
 
@@ -136,7 +129,7 @@ export function itemRenderer(
       return true;
     }
 
-    return idBlacklist.includes(item.id);
+    return itemIdBlacklist.includes(item.id);
   })();
 
   if (!modifiers.matchesPredicate) {
@@ -146,7 +139,7 @@ export function itemRenderer(
   return (
     <MenuItem
       key={index}
-      className={resolveItemClassNames(item, modifiers, idActiveList).join(" ")}
+      className={resolveItemClassNames(item, modifiers, itemIdActiveList).join(" ")}
       onClick={handleClick}
       text={renderItemRendererText(item)}
       label={renderItemLabel(item)}
@@ -156,7 +149,14 @@ export function itemRenderer(
 }
 
 export function ItemInput(props: Props) {
-  const { autoFocus, onSelect, closeOnSelect, idBlacklist, idActiveList, initialResults } = props;
+  const {
+    autoFocus,
+    onSelect,
+    closeOnSelect,
+    itemIdBlacklist,
+    itemIdActiveList,
+    initialResults,
+  } = props;
 
   const [results, setResults] = useState<Array<IQueryItem<IShortItem>>>(initialResults ?? []);
 
@@ -164,7 +164,7 @@ export function ItemInput(props: Props) {
     <ItemSuggest
       inputValueRenderer={v => inputValueRenderer(v.item)}
       itemRenderer={(result, itemRendererProps: IItemRendererProps) => {
-        return itemRenderer(result.item, itemRendererProps, idBlacklist, idActiveList);
+        return itemRenderer(result.item, itemRendererProps, itemIdBlacklist, itemIdActiveList);
       }}
       items={results}
       onItemSelect={v => {

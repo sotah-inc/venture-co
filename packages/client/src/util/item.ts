@@ -10,22 +10,21 @@ import {
 import { getApiEndpoint } from "../api";
 import { IItemClasses, IItemClassWithSub, ISubItemClasses } from "../types/global";
 
+interface ItemQualityColorClassMap {
+  [key: string]: string | undefined;
+}
+
+const itemQualityColorClassMap: ItemQualityColorClassMap = {
+  [ItemQuality.Poor]: "poor-text",
+  [ItemQuality.Common]: "common-text",
+  [ItemQuality.Uncommon]: "uncommon-text",
+  [ItemQuality.Rare]: "rare-text",
+  [ItemQuality.Epic]: "epic-text",
+  [ItemQuality.Legendary]: "legendary-text",
+};
+
 export const qualityToColorClass = (quality: ItemQuality): string => {
-  switch (quality) {
-    case ItemQuality.Legendary:
-      return "legendary-text";
-    case ItemQuality.Epic:
-      return "epic-text";
-    case ItemQuality.Rare:
-      return "rare-text";
-    case ItemQuality.Uncommon:
-      return "uncommon-text";
-    case ItemQuality.Poor:
-      return "poor-text";
-    case ItemQuality.Common:
-    default:
-      return "common-text";
-  }
+  return itemQualityColorClassMap[quality] ?? "common-text";
 };
 
 export const getItemIconUrl = (item: IShortItem): string | null => {
