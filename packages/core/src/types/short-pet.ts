@@ -10,5 +10,4 @@ export interface IShortPet {
   id: PetId;
   name: string;
   icon_url: string;
-  quality: PetQuality;
 }
