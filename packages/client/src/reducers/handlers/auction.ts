@@ -1,4 +1,5 @@
-import { IAuction, IShortItem } from "@sotah-inc/core";
+import { IAuction } from "@sotah-inc/core";
+import { IQueryGeneralItemItem } from "../../../../core/src/types/contracts/data";
 
 import { AuctionActions } from "../../actions";
 import {
@@ -63,8 +64,14 @@ export const handlers: IKindHandlers<IAuctionState, AuctionActions> = {
         state: IAuctionState,
         action: ReturnType<typeof SelectItemQueryAuctions>,
       ): IAuctionState => {
-        const nextSelected = ((): IShortItem[] => {
-          const foundIndex = state.options.selected.findIndex(v => v.id === action.payload.id);
+        const nextSelected = ((): IQueryGeneralItemItem[] => {
+          const foundIndex = state.options.selected.findIndex(v => {
+            if (v.pet?.id === action.payload.pet?.id) {
+              return true;
+            }
+
+            return v.item?.id === action.payload.item?.id;
+          });
 
           if (foundIndex === -1) {
             return [...state.options.selected, action.payload];

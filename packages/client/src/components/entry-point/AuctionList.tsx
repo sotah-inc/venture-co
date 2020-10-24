@@ -9,7 +9,14 @@ import {
   NonIdealState,
   Spinner,
 } from "@blueprintjs/core";
-import { IAuction, IPreferenceJson, IRegionComposite, Locale, SortPerPage } from "@sotah-inc/core";
+import {
+  IAuction,
+  IPreferenceJson,
+  IRegionComposite,
+  ItemId,
+  Locale,
+  SortPerPage,
+} from "@sotah-inc/core";
 import React from "react";
 import { ILoadAuctionListEntrypoint } from "../../actions/auction";
 import { ILoadRealmEntrypoint } from "../../actions/main";
@@ -163,7 +170,13 @@ export class AuctionList extends React.Component<Props> {
       regionName: currentRegion.config_region.name,
       request: {
         count: options.auctionsPerPage,
-        itemFilters: options.selected.map(v => v.id),
+        itemFilters: options.selected.reduce<ItemId[]>((result, v) => {
+          if (v.item !== null) {
+            return [...result, v.item.id];
+          }
+
+          return result;
+        }, []),
         locale: Locale.EnUS,
         page: options.currentPage,
         sortDirection: options.sortDirection,
@@ -352,7 +365,10 @@ export class AuctionList extends React.Component<Props> {
 
       if (
         activeSelect &&
-        (hasNewItems(options.selected, prevProps.options.selected) ||
+        (hasNewItems(
+          options.selected.map(v => v.item),
+          prevProps.options.selected,
+        ) ||
           options.selected.length !== prevProps.options.selected.length)
       ) {
         return true;

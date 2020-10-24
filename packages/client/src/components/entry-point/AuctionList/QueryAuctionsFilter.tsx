@@ -10,7 +10,7 @@ import {
   Switch,
   Tag,
 } from "@blueprintjs/core";
-import { IShortItem } from "@sotah-inc/core";
+import { IQueryGeneralItemItem, ItemId } from "@sotah-inc/core";
 
 import { AuctionsOptions } from "../../../types/auction";
 import { getItemTextValue } from "../../../util";
@@ -22,7 +22,7 @@ export interface IStateProps {
 }
 
 export interface IDispatchProps {
-  selectItemQueryAuctions: (item: IShortItem) => void;
+  selectItemQueryAuctions: (item: IQueryGeneralItemItem) => void;
   activeSelectChange: (v: boolean) => void;
 }
 
@@ -42,10 +42,22 @@ export class QueryAuctionsFilter extends React.Component<Props> {
         <Navbar>
           <NavbarGroup align={Alignment.LEFT}>
             <ItemInput
-              onSelect={selectItemQueryAuctions}
+              onSelect={v => selectItemQueryAuctions({ item: v, pet: null })}
               closeOnSelect={activeSelect}
-              idActiveList={selectedItems.map(v => v.id)}
-              initialResults={initialQueryResults}
+              idActiveList={selectedItems.reduce<ItemId[]>((result, v) => {
+                if (v.item !== null) {
+                  return [...result, v.item.id];
+                }
+
+                return result;
+              }, [])}
+              initialResults={initialQueryResults.map(v => {
+                return {
+                  item: v.item.item,
+                  rank: v.rank,
+                  target: v.target,
+                };
+              })}
             />
           </NavbarGroup>
           <NavbarGroup align={Alignment.RIGHT}>
@@ -62,8 +74,16 @@ export class QueryAuctionsFilter extends React.Component<Props> {
     );
   }
 
-  private renderSelectedItem(index: number, item: IShortItem) {
+  private renderSelectedItem(index: number, item: IQueryGeneralItemItem) {
     const { selectItemQueryAuctions } = this.props;
+
+    const textValue = ((): string => {
+      if (item.item !== null) {
+        return getItemTextValue(item.item);
+      }
+
+      return "n/a";
+    })();
 
     return (
       <Tag
@@ -71,12 +91,12 @@ export class QueryAuctionsFilter extends React.Component<Props> {
         onRemove={() => selectItemQueryAuctions(item)}
         style={{ marginRight: "5px" }}
       >
-        {getItemTextValue(item)}
+        {textValue}
       </Tag>
     );
   }
 
-  private renderSelectedItems(selectedItems: IShortItem[]) {
+  private renderSelectedItems(selectedItems: IQueryGeneralItemItem[]) {
     if (selectedItems.length === 0) {
       return;
     }
