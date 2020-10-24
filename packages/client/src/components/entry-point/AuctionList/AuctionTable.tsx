@@ -23,7 +23,6 @@ type ListAuction = IAuction | null;
 
 export interface IStateProps {
   auctions: IItemsData<ListAuction[]>;
-  selectedItems: IShortItem[];
   relatedProfessionPricelists: IProfessionPricelistJson[];
   expansions: IExpansion[];
   professions: IProfession[];

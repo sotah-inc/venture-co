@@ -66,15 +66,11 @@ export const handlers: IKindHandlers<IAuctionState, AuctionActions> = {
       ): IAuctionState => {
         const nextSelected = ((): IQueryGeneralItemItem[] => {
           const foundIndex = state.options.selected.findIndex(v => {
-            if (v.pet?.id === action.payload.pet?.id) {
-              return true;
-            }
-
-            return v.item?.id === action.payload.item?.id;
+            return v.item?.id === action.payload?.id;
           });
 
           if (foundIndex === -1) {
-            return [...state.options.selected, action.payload];
+            return [...state.options.selected, { pet: null, item: action.payload }];
           }
 
           if (foundIndex === 0) {

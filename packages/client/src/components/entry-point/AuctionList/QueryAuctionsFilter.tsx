@@ -10,7 +10,7 @@ import {
   Switch,
   Tag,
 } from "@blueprintjs/core";
-import { IQueryGeneralItemItem, ItemId } from "@sotah-inc/core";
+import { IQueryGeneralItemItem, IShortItem, ItemId } from "@sotah-inc/core";
 
 import { AuctionsOptions } from "../../../types/auction";
 import { getItemTextValue } from "../../../util";
@@ -22,7 +22,7 @@ export interface IStateProps {
 }
 
 export interface IDispatchProps {
-  selectItemQueryAuctions: (item: IQueryGeneralItemItem) => void;
+  selectItemQueryAuctions: (item: IShortItem) => void;
   activeSelectChange: (v: boolean) => void;
 }
 
@@ -42,7 +42,7 @@ export class QueryAuctionsFilter extends React.Component<Props> {
         <Navbar>
           <NavbarGroup align={Alignment.LEFT}>
             <ItemInput
-              onSelect={v => selectItemQueryAuctions({ item: v, pet: null })}
+              onSelect={selectItemQueryAuctions}
               closeOnSelect={activeSelect}
               idActiveList={selectedItems.reduce<ItemId[]>((result, v) => {
                 if (v.item !== null) {
@@ -82,13 +82,23 @@ export class QueryAuctionsFilter extends React.Component<Props> {
         return getItemTextValue(item.item);
       }
 
+      if (item.pet !== null) {
+        return item.pet.name;
+      }
+
       return "n/a";
     })();
 
     return (
       <Tag
         key={index}
-        onRemove={() => selectItemQueryAuctions(item)}
+        onRemove={() => {
+          if (item.item === null) {
+            return;
+          }
+
+          selectItemQueryAuctions(item.item);
+        }}
         style={{ marginRight: "5px" }}
       >
         {textValue}

@@ -13,7 +13,6 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
   const {
     relatedProfessionPricelists,
     auctionsResult: { data: auctions },
-    options: { selected: selectedItems },
   } = state.Auction;
 
   return {
@@ -23,7 +22,6 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
     expansions,
     professions,
     relatedProfessionPricelists,
-    selectedItems,
   };
 };
 

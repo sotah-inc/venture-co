@@ -13,6 +13,7 @@ import {
   IAuction,
   IPreferenceJson,
   IRegionComposite,
+  IShortItem,
   ItemId,
   Locale,
   SortPerPage,
@@ -366,8 +367,20 @@ export class AuctionList extends React.Component<Props> {
       if (
         activeSelect &&
         (hasNewItems(
-          options.selected.map(v => v.item),
-          prevProps.options.selected,
+          options.selected.reduce<IShortItem[]>((result, v) => {
+            if (v.item === null) {
+              return result;
+            }
+
+            return [...result, v.item];
+          }, []),
+          prevProps.options.selected.reduce<IShortItem[]>((result, v) => {
+            if (v.item === null) {
+              return result;
+            }
+
+            return [...result, v.item];
+          }, []),
         ) ||
           options.selected.length !== prevProps.options.selected.length)
       ) {
