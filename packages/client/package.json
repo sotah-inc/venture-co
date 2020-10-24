@@ -1,6 +1,6 @@
 {
   "name": "@sotah-inc/client",
-  "version": "2.0.206",
+  "version": "2.0.207",
   "description": "SotAH Web Client SDK",
   "main": "./build/dist/index.js",
   "typings": "build/dist/index.d.ts",
@@ -32,7 +32,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@blueprintjs/core": "^3.34.1",
+    "@blueprintjs/core": "^3.35.0",
     "@blueprintjs/icons": "^3.22.0",
     "@blueprintjs/select": "^3.14.3",
     "@sotah-inc/core": "^2.0.102",
@@ -46,7 +46,7 @@
     "@types/speakingurl": "^13.0.2",
     "@types/webpack": "^4.41.23",
     "@types/yup": "^0.29.8",
-    "formik": "^2.2.0",
+    "formik": "^2.2.1",
     "http-status": "^1.4.2",
     "isomorphic-fetch": "^3.0.0",
     "lodash": "^4.17.20",
@@ -56,10 +56,10 @@
     "normalize.css": "^8.0.1",
     "purecss": "^2.0.3",
     "query-string": "^6.13.6",
-    "react": "^16.10.1",
+    "react": "^17.0.1",
     "react-cookie": "^4.0.3",
     "react-dom": "^17.0.1",
-    "react-markdown": "^5.0.1",
+    "react-markdown": "^5.0.2",
     "react-redux": "^7.2.1",
     "recharts": "^1.8.5",
     "redux": "^4.0.5",
