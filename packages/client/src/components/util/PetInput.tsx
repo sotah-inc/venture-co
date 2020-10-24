@@ -13,7 +13,7 @@ import { IQueryItem, IShortPet, ItemId, Locale, PetId } from "@sotah-inc/core";
 import { debounce } from "lodash";
 
 import { getPets } from "../../api/data";
-import { getPetIconUrl, petQualityToColorClass } from "../../util";
+import { getPetIconUrl } from "../../util";
 
 const PetSuggest = Suggest.ofType<IQueryItem<IShortPet>>();
 
@@ -106,7 +106,6 @@ export function resolvePetClassNames(
   return [
     modifiers.active ? Classes.INTENT_PRIMARY : "",
     modifiers.active || (pet && idActiveList?.includes(pet.id)) ? Classes.ACTIVE : "",
-    pet ? petQualityToColorClass(pet.quality) : "",
   ].filter(v => v.length > 0);
 }
 

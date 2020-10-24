@@ -44,7 +44,7 @@ export class QueryAuctionsFilter extends React.Component<Props> {
             <ItemInput
               onSelect={selectItemQueryAuctions}
               closeOnSelect={activeSelect}
-              itemIdActiveList={selectedItems.map(v => v.id)}
+              idActiveList={selectedItems.map(v => v.id)}
               initialResults={initialQueryResults}
             />
           </NavbarGroup>

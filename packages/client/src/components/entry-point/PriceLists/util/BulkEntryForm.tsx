@@ -57,7 +57,7 @@ export class BulkEntryForm extends React.Component<Props> {
                   intent={itemIntent}
                 >
                   <ItemInput
-                    itemIdBlacklist={itemIdBlacklist}
+                    idBlacklist={itemIdBlacklist}
                     onSelect={(v: IShortItem) => this.onItemSelect(v)}
                     autoFocus={true}
                     closeOnSelect={false}

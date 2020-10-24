@@ -82,7 +82,7 @@ export class CreateEntryForm extends React.Component<Props> {
                   intent={itemIntent}
                 >
                   <ItemInput
-                    itemIdBlacklist={itemIdBlacklist}
+                    idBlacklist={itemIdBlacklist}
                     onSelect={v => this.onItemSelect(v)}
                     autoFocus={false}
                   />
