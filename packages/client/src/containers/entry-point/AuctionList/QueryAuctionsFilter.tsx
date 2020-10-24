@@ -1,6 +1,10 @@
 import { connect } from "react-redux";
 
-import { ActiveSelectChange, SelectItemQueryAuctions } from "../../../actions/auction";
+import {
+  ActiveSelectChange,
+  SelectItemQueryAuctions,
+  SelectPetQueryAuctions,
+} from "../../../actions/auction";
 import {
   IDispatchProps,
   IStateProps,
@@ -20,6 +24,7 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
 const mapDispatchToProps: IDispatchProps = {
   activeSelectChange: ActiveSelectChange,
   selectItemQueryAuctions: SelectItemQueryAuctions,
+  selectPetQueryAuctions: SelectPetQueryAuctions,
 };
 
 export const QueryAuctionsFilterContainer = connect<IStateProps, IDispatchProps, {}, IStoreState>(

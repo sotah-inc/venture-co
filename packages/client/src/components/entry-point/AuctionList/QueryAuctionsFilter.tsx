@@ -10,7 +10,7 @@ import {
   Switch,
   Tag,
 } from "@blueprintjs/core";
-import { IQueryGeneralItemItem, IShortItem, ItemId } from "@sotah-inc/core";
+import { IQueryGeneralItemItem, IShortItem, IShortPet, ItemId } from "@sotah-inc/core";
 
 import { AuctionsOptions } from "../../../types/auction";
 import { getItemTextValue } from "../../../util";
@@ -23,6 +23,7 @@ export interface IStateProps {
 
 export interface IDispatchProps {
   selectItemQueryAuctions: (item: IShortItem) => void;
+  selectPetQueryAuctions: (pet: IShortPet) => void;
   activeSelectChange: (v: boolean) => void;
 }
 
@@ -75,7 +76,7 @@ export class QueryAuctionsFilter extends React.Component<Props> {
   }
 
   private renderSelectedItem(index: number, item: IQueryGeneralItemItem) {
-    const { selectItemQueryAuctions } = this.props;
+    const { selectItemQueryAuctions, selectPetQueryAuctions } = this.props;
 
     const textValue = ((): string => {
       if (item.item !== null) {
@@ -93,11 +94,13 @@ export class QueryAuctionsFilter extends React.Component<Props> {
       <Tag
         key={index}
         onRemove={() => {
-          if (item.item === null) {
-            return;
+          if (item.item !== null) {
+            selectItemQueryAuctions(item.item);
           }
 
-          selectItemQueryAuctions(item.item);
+          if (item.pet !== null) {
+            selectPetQueryAuctions(item.pet);
+          }
         }}
         style={{ marginRight: "5px" }}
       >

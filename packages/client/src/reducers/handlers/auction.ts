@@ -5,6 +5,7 @@ import { AuctionActions } from "../../actions";
 import {
   LoadAuctionListEntrypoint,
   SelectItemQueryAuctions,
+  SelectPetQueryAuctions,
   SetCurrentPageQueryAuctions,
   SetPerPageQueryAuctions,
   SetSortQueryAuctions,
@@ -104,6 +105,40 @@ export const handlers: IKindHandlers<IAuctionState, AuctionActions> = {
             ...state.options,
             auctionsPerPage: action.payload,
             currentPage: defaultAuctionState.options.currentPage,
+          },
+        };
+      },
+    },
+    pet: {
+      select: (
+        state: IAuctionState,
+        action: ReturnType<typeof SelectPetQueryAuctions>,
+      ): IAuctionState => {
+        const nextSelected = ((): IQueryGeneralItemItem[] => {
+          const foundIndex = state.options.selected.findIndex(v => {
+            return v.pet?.id === action.payload?.id;
+          });
+
+          if (foundIndex === -1) {
+            return [...state.options.selected, { item: null, pet: action.payload }];
+          }
+
+          if (foundIndex === 0) {
+            return [...state.options.selected.slice(1)];
+          }
+
+          return [
+            ...state.options.selected.slice(0, foundIndex),
+            ...state.options.selected.slice(foundIndex + 1),
+          ];
+        })();
+
+        return {
+          ...state,
+          options: {
+            ...state.options,
+            currentPage: 0,
+            selected: nextSelected,
           },
         };
       },

@@ -3,6 +3,7 @@ import {
   IQueryGeneralItem,
   IQueryGeneralItemItem,
   IShortItem,
+  IShortPet,
   SortPerPage,
 } from "@sotah-inc/core";
 import { Dispatch } from "redux";
@@ -27,6 +28,10 @@ export const FetchAuctions = (opts: IGetAuctionsOptions) => {
 export const SELECT_ITEM_QUERYAUCTIONS = "SELECT_ITEM_QUERYAUCTIONS";
 export const SelectItemQueryAuctions = (payload: IShortItem) =>
   createAction(SELECT_ITEM_QUERYAUCTIONS, payload);
+
+export const SELECT_PET_QUERYAUCTIONS = "SELECT_PET_QUERYAUCTIONS";
+export const SelectPetQueryAuctions = (payload: IShortPet) =>
+  createAction(SELECT_PET_QUERYAUCTIONS, payload);
 
 export const SET_CURRENTPAGE_QUERYAUCTIONS = "SET_CURRENTPAGE_QUERYAUCTIONS";
 export const SetCurrentPageQueryAuctions = (payload: number) =>
@@ -59,6 +64,7 @@ export const AuctionActions = {
   ReceiveAuctions,
   RequestAuctions,
   SelectItemQueryAuctions,
+  SelectPetQueryAuctions,
   SetCurrentPageQueryAuctions,
   SetPerPageQueryAuctions,
   SetSortQueryAuctions,
