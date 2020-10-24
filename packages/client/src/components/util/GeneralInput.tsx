@@ -26,6 +26,7 @@ const GeneralItemSuggest = Suggest.ofType<IQueryGeneralItem>();
 export interface IOwnProps {
   autoFocus?: boolean;
   closeOnSelect?: boolean;
+  initialResults?: IQueryGeneralItem[];
 
   onSelect(item: IQueryGeneralItem): void;
 }
@@ -89,9 +90,9 @@ export function itemRenderer(result: IQueryGeneralItem, itemRendererProps: IItem
 }
 
 export function GeneralInput(props: Props) {
-  const { autoFocus, onSelect, closeOnSelect } = props;
+  const { autoFocus, onSelect, closeOnSelect, initialResults } = props;
 
-  const [results, setResults] = useState<IQueryGeneralItem[]>([]);
+  const [results, setResults] = useState<IQueryGeneralItem[]>(initialResults ?? []);
 
   return (
     <GeneralItemSuggest

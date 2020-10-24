@@ -10,11 +10,11 @@ import {
   Switch,
   Tag,
 } from "@blueprintjs/core";
-import { IQueryGeneralItemItem, IShortItem, IShortPet, ItemId } from "@sotah-inc/core";
+import { IQueryGeneralItemItem, IShortItem, IShortPet } from "@sotah-inc/core";
 
 import { AuctionsOptions } from "../../../types/auction";
 import { getItemTextValue } from "../../../util";
-import { ItemInput } from "../../util";
+import { GeneralInput } from "../../util/GeneralInput";
 
 export interface IStateProps {
   queryAuctionsOptions: AuctionsOptions;
@@ -36,29 +36,27 @@ export class QueryAuctionsFilter extends React.Component<Props> {
       queryAuctionsOptions: { selected: selectedItems, initialQueryResults },
       activeSelectChange,
       selectItemQueryAuctions,
+      selectPetQueryAuctions,
     } = this.props;
 
     return (
       <>
         <Navbar>
           <NavbarGroup align={Alignment.LEFT}>
-            <ItemInput
-              onSelect={selectItemQueryAuctions}
-              closeOnSelect={activeSelect}
-              idActiveList={selectedItems.reduce<ItemId[]>((result, v) => {
-                if (v.item !== null) {
-                  return [...result, v.item.id];
+            <GeneralInput
+              onSelect={v => {
+                if (v.item.item !== null) {
+                  selectItemQueryAuctions(v.item.item);
+
+                  return;
                 }
 
-                return result;
-              }, [])}
-              initialResults={initialQueryResults.map(v => {
-                return {
-                  item: v.item.item,
-                  rank: v.rank,
-                  target: v.target,
-                };
-              })}
+                if (v.item.pet !== null) {
+                  selectPetQueryAuctions(v.item.pet);
+                }
+              }}
+              closeOnSelect={activeSelect}
+              initialResults={initialQueryResults}
             />
           </NavbarGroup>
           <NavbarGroup align={Alignment.RIGHT}>
