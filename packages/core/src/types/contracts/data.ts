@@ -10,6 +10,7 @@ import {
   ITokenHistory,
   IValidationErrorResponse,
   Locale,
+  PetId,
   SortDirection,
   SortKind,
 } from "../index";
@@ -67,6 +68,7 @@ export interface IGetAuctionsRequest {
   locale: Locale;
 
   itemFilters?: ItemId[];
+  petFilters?: PetId[];
 }
 
 export interface IGetAuctionsResponseData {
