@@ -477,6 +477,7 @@ export class DataController {
       data: {
         ...resolveAuctionsResponse.data.auctions,
         items: [...resolveAuctionsResponse.data.items.items, ...pricelistItemsResult.items],
+        pets: [...resolveAuctionsResponse.data.pets.pets],
         professionPricelists: professionPricelists.map(v => v.toJson()),
       },
       headers: {
