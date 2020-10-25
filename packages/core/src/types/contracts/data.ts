@@ -6,6 +6,7 @@ import {
   IErrorResponse,
   IPricesFlagged,
   IRegionComposite,
+  IShortPet,
   ITokenHistory,
   IValidationErrorResponse,
   Locale,
@@ -73,6 +74,7 @@ export interface IGetAuctionsResponseData {
   total: number;
   total_count: number;
   items: IShortItem[];
+  pets: IShortPet[];
   professionPricelists: IProfessionPricelistJson[];
 }
 
