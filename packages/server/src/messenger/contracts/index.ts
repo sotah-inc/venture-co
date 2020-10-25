@@ -20,6 +20,14 @@ import {
   UnixTimestamp,
 } from "@sotah-inc/core";
 
+export enum code {
+  ok = 1,
+  genericError = -1,
+  msgJsonParseError = -2,
+  notFound = -3,
+  userError = -4,
+}
+
 export interface IGetAuctionsRequest {
   tuple: IRegionConnectedRealmTuple;
   page: number;
@@ -27,6 +35,7 @@ export interface IGetAuctionsRequest {
   sort_kind: SortKind;
   sort_direction: SortDirection;
   item_filters: ItemId[];
+  pet_filters: PetId[];
 }
 
 export interface IGetAuctionsResponse {
@@ -162,3 +171,15 @@ export interface IQueryGeneralItem {
   target: string;
   rank: number;
 }
+
+export interface IResolveResponse<T> {
+  data: T | null;
+  code: code;
+  error: string | null;
+}
+
+export type ResolveAuctionsResponse = IResolveResponse<{
+  auctions: IGetAuctionsResponse;
+  items: IGetItemsResponse;
+  pets: IGetPetsResponse;
+}>;

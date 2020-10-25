@@ -1,4 +1,4 @@
-import { code } from "./index";
+import { code } from "./contracts";
 
 export class MessageError {
   public message: string;

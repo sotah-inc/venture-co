@@ -4,7 +4,8 @@ import { ExtractJwt, Strategy, StrategyOptions } from "passport-jwt";
 import { Connection } from "typeorm";
 
 import { User } from "./db/entities";
-import { code, Messenger } from "./messenger";
+import { Messenger } from "./messenger";
+import { code } from "./messenger/contracts";
 
 export interface IJwtOptions {
   audience: string;
