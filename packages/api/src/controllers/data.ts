@@ -39,12 +39,12 @@ import {
   RegionName,
 } from "@sotah-inc/core";
 import {
-  code,
   Messenger,
   Post,
   ProfessionPricelist,
   ProfessionPricelistRepository,
 } from "@sotah-inc/server";
+import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
 // @ts-ignore
 import boll from "bollinger-bands";
 import HTTPStatus from "http-status";
@@ -391,67 +391,50 @@ export class DataController {
     const { count, page, sortDirection, sortKind, itemFilters, locale } = validateParamsResult.data;
 
     // gathering auctions
-    const auctionsMessage = await this.messenger.getAuctions({
-      count,
-      item_filters: itemFilters ?? [],
-      page,
-      sort_direction: sortDirection,
-      sort_kind: sortKind,
-      tuple: {
-        connected_realm_id: resolveResult.connected_realm.connected_realm.id,
-        region_name: regionName,
+    const resolveAuctionsResponse = await this.messenger.resolveAuctions(
+      {
+        count,
+        item_filters: itemFilters ?? [],
+        page,
+        pet_filters: [],
+        sort_direction: sortDirection,
+        sort_kind: sortKind,
+        tuple: {
+          connected_realm_id: resolveResult.connected_realm.connected_realm.id,
+          region_name: regionName,
+        },
       },
-    });
-    switch (auctionsMessage.code) {
+      locale,
+    );
+    switch (resolveAuctionsResponse.code) {
       case code.ok:
         break;
       case code.notFound:
         return {
-          data: { error: `${auctionsMessage.error?.message ?? ""} (auctions)` },
+          data: { error: `${resolveAuctionsResponse.error ?? ""} (auctions)` },
           status: HTTPStatus.NOT_FOUND,
         };
       case code.userError:
         return {
-          data: { error: auctionsMessage.error?.message ?? "" },
+          data: { error: resolveAuctionsResponse.error ?? "" },
           status: HTTPStatus.BAD_REQUEST,
         };
       default:
         return {
-          data: { error: auctionsMessage.error?.message ?? "" },
+          data: { error: resolveAuctionsResponse.error ?? "" },
           status: HTTPStatus.INTERNAL_SERVER_ERROR,
         };
     }
 
-    const auctionsResult = await auctionsMessage.decode();
-    if (auctionsResult === null) {
+    if (resolveAuctionsResponse.data === null) {
       return {
-        data: null,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-
-    const itemIds = [...Array.from(new Set(auctionsResult.auctions.map(v => v.itemId)))];
-    const itemsMsg = await this.messenger.getItems({
-      itemIds,
-      locale,
-    });
-    if (itemsMsg.code !== code.ok) {
-      return {
-        data: { error: itemsMsg.error?.message ?? "" },
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-
-    const itemsResult = await itemsMsg.decode();
-    if (itemsResult === null) {
-      return {
-        data: null,
+        data: { error: resolveAuctionsResponse.error ?? "" },
         status: HTTPStatus.INTERNAL_SERVER_ERROR,
       };
     }
 
     const professionPricelists = await (async () => {
-      if (itemsResult.items.length === 0) {
+      if (resolveAuctionsResponse.data!.items.items.length === 0) {
         return [];
       }
 
@@ -460,7 +443,11 @@ export class DataController {
         .createQueryBuilder("professionpricelist")
         .leftJoinAndSelect("professionpricelist.pricelist", "pricelist")
         .leftJoinAndSelect("pricelist.entries", "entry")
-        .where(`entry.itemId IN (${itemIds.join(", ")})`)
+        .where(
+          `entry.itemId IN (${resolveAuctionsResponse
+            .data!.items.items.map(v => v.id)
+            .join(", ")})`,
+        )
         .getMany();
     })();
 
@@ -488,8 +475,8 @@ export class DataController {
 
     return {
       data: {
-        ...auctionsResult,
-        items: [...itemsResult.items, ...pricelistItemsResult.items],
+        ...resolveAuctionsResponse.data.auctions,
+        items: [...resolveAuctionsResponse.data.items.items, ...pricelistItemsResult.items],
         professionPricelists: professionPricelists.map(v => v.toJson()),
       },
       headers: {

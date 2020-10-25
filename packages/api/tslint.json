@@ -4,5 +4,8 @@
     "exclude": [
       "./src/migrations/*.ts"
     ]
+  },
+  "rules": {
+    "no-submodule-imports": false
   }
 }

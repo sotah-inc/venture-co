@@ -4,7 +4,8 @@ import {
   QueryAuctionStatsResponse,
   RegionName,
 } from "@sotah-inc/core";
-import { code, Messenger } from "@sotah-inc/server";
+import { Messenger } from "@sotah-inc/server";
+import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
 import HTTPStatus from "http-status";
 
 import { IRequestResult } from "../index";

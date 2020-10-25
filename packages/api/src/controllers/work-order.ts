@@ -13,7 +13,8 @@ import {
   RegionName,
   UserLevel,
 } from "@sotah-inc/core";
-import { code, Messenger, User, WorkOrder, WorkOrderRepository } from "@sotah-inc/server";
+import { Messenger, User, WorkOrder, WorkOrderRepository } from "@sotah-inc/server";
+import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
 import { Response } from "express";
 import HTTPStatus from "http-status";
 import { ParsedQs } from "qs";
