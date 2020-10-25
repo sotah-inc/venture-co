@@ -271,7 +271,7 @@ export class DataController {
       };
     }
 
-    const foundItem = itemsResult.items[itemId];
+    const foundItem = itemsResult.items.find(v => v.id === itemId);
     if (typeof foundItem === "undefined") {
       const errorResponse: IErrorResponse = { error: "item not found" };
 
