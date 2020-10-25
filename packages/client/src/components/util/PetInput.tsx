@@ -94,8 +94,12 @@ const itemListRenderer: ItemListRenderer<IQueryItem<IShortPet>> = (
   );
 };
 
-export function renderItemLabel(_pet: IShortPet | null): string {
-  return "";
+export function renderItemLabel(pet: IShortPet | null): string {
+  if (pet === null) {
+    return "";
+  }
+
+  return `#${pet.id}`;
 }
 
 export function resolvePetClassNames(

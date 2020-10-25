@@ -1,4 +1,4 @@
-import { IRegionComposite, IShortItem } from "@sotah-inc/core";
+import { IRegionComposite, IShortItem, IShortPet } from "@sotah-inc/core";
 
 import { IClientRealm } from "../types/global";
 
@@ -29,6 +29,10 @@ export const didRealmChange = (
 };
 
 export function hasNewItems(firstList: IShortItem[], secondList: IShortItem[]): boolean {
+  return diff(new Set(firstList.map(v => v.id)), new Set(secondList.map(v => v.id))).size > 0;
+}
+
+export function hasNewPets(firstList: IShortPet[], secondList: IShortPet[]): boolean {
   return diff(new Set(firstList.map(v => v.id)), new Set(secondList.map(v => v.id))).size > 0;
 }
 

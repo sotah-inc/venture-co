@@ -14,8 +14,10 @@ import {
   IPreferenceJson,
   IRegionComposite,
   IShortItem,
+  IShortPet,
   ItemId,
   Locale,
+  PetId,
   SortPerPage,
 } from "@sotah-inc/core";
 import React from "react";
@@ -33,7 +35,7 @@ import { AuctionTableRouteContainer } from "../../route-containers/entry-point/A
 import { AuctionsOptions } from "../../types/auction";
 import { IClientRealm, IFetchData, IItemsData, IRegions } from "../../types/global";
 import { AuthLevel, FetchLevel } from "../../types/main";
-import { hasNewItems, setTitle } from "../../util";
+import { hasNewItems, hasNewPets, setTitle } from "../../util";
 import { LastModified, Pagination } from "../util";
 
 type ListAuction = IAuction | null;
@@ -180,6 +182,13 @@ export class AuctionList extends React.Component<Props> {
         }, []),
         locale: Locale.EnUS,
         page: options.currentPage,
+        petFilters: options.selected.reduce<PetId[]>((result, v) => {
+          if (v.pet !== null) {
+            return [...result, v.pet.id];
+          }
+
+          return result;
+        }, []),
         sortDirection: options.sortDirection,
         sortKind: options.sortKind,
       },
@@ -364,24 +373,44 @@ export class AuctionList extends React.Component<Props> {
         return true;
       }
 
+      const didItemsChange = hasNewItems(
+        options.selected.reduce<IShortItem[]>((result, v) => {
+          if (v.item === null) {
+            return result;
+          }
+
+          return [...result, v.item];
+        }, []),
+        prevProps.options.selected.reduce<IShortItem[]>((result, v) => {
+          if (v.item === null) {
+            return result;
+          }
+
+          return [...result, v.item];
+        }, []),
+      );
+
+      const didPetsChange = hasNewPets(
+        options.selected.reduce<IShortPet[]>((result, v) => {
+          if (v.pet === null) {
+            return result;
+          }
+
+          return [...result, v.pet];
+        }, []),
+        prevProps.options.selected.reduce<IShortPet[]>((result, v) => {
+          if (v.pet === null) {
+            return result;
+          }
+
+          return [...result, v.pet];
+        }, []),
+      );
+
       if (
         activeSelect &&
-        (hasNewItems(
-          options.selected.reduce<IShortItem[]>((result, v) => {
-            if (v.item === null) {
-              return result;
-            }
-
-            return [...result, v.item];
-          }, []),
-          prevProps.options.selected.reduce<IShortItem[]>((result, v) => {
-            if (v.item === null) {
-              return result;
-            }
-
-            return [...result, v.item];
-          }, []),
-        ) ||
+        (didItemsChange ||
+          didPetsChange ||
           options.selected.length !== prevProps.options.selected.length)
       ) {
         return true;
