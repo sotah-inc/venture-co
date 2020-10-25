@@ -1,5 +1,4 @@
-import { IAuction } from "@sotah-inc/core";
-import { IQueryGeneralItemItem } from "../../../../core/src/types/contracts/data";
+import { IAuction, IQueryGeneralItemItem } from "@sotah-inc/core";
 
 import { AuctionActions } from "../../actions";
 import {

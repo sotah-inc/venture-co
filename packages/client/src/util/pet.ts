@@ -1,5 +1,4 @@
-import { IShortPet } from "@sotah-inc/core";
-import { PetQuality } from "../../../core/src/types";
+import { IShortPet, PetQuality } from "@sotah-inc/core";
 
 interface PetQualityColorClassMap {
   [key: number]: string | undefined;

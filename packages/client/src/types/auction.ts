@@ -2,11 +2,11 @@ import {
   IAuction,
   IProfessionPricelistJson,
   IQueryGeneralItem,
+  IQueryGeneralItemItem,
   SortDirection,
   SortKind,
   SortPerPage,
 } from "@sotah-inc/core";
-import { IQueryGeneralItemItem } from "../../../core/src/types/contracts/data";
 import { IFetchData, IItemsData } from "./global";
 
 import { FetchLevel } from "./main";
