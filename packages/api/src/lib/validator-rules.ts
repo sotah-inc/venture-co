@@ -134,6 +134,7 @@ export const AuctionsQueryParamsRules = yup
     itemFilters: yup.array(yup.number().required().integer("item-id must be an integer")),
     locale: yup.string().oneOf(Object.values(Locale)).required("locale is required"),
     page: yup.number().integer("page must be an integer").required("page is required"),
+    petFilters: yup.array(yup.number().required().integer("pet-id must be an integer")),
     sortDirection: yup
       .number()
       .integer("sort-direction must be an integer")
