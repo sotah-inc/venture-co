@@ -388,7 +388,15 @@ export class DataController {
       };
     }
 
-    const { count, page, sortDirection, sortKind, itemFilters, locale } = validateParamsResult.data;
+    const {
+      count,
+      page,
+      sortDirection,
+      sortKind,
+      itemFilters,
+      locale,
+      petFilters,
+    } = validateParamsResult.data;
 
     // gathering auctions
     const resolveAuctionsResponse = await this.messenger.resolveAuctions(
@@ -396,7 +404,7 @@ export class DataController {
         count,
         item_filters: itemFilters ?? [],
         page,
-        pet_filters: [],
+        pet_filters: petFilters ?? [],
         sort_direction: sortDirection,
         sort_kind: sortKind,
         tuple: {
