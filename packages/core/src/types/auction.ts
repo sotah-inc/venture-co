@@ -7,6 +7,7 @@ export interface IAuction {
   itemId: ItemId;
   pet_species_id: PetId;
   pet_quality_id: PetQuality;
+  pet_level: number;
   buyout: number;
   buyoutPer: number;
   quantity: number;
