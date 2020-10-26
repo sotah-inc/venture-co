@@ -10,4 +10,7 @@ export interface IShortPet {
   id: PetId;
   name: string;
   icon_url: string;
+  description: string;
+  type: string;
+  type_name: string;
 }
