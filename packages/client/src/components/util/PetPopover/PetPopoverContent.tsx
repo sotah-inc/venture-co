@@ -13,19 +13,19 @@ export interface IOwnProps {
 type Props = Readonly<IOwnProps>;
 
 export function PetPopoverContent({ pet, quality, level }: Props) {
-  const itemTextClass = petQualityToColorClass(quality);
+  const petTextClass = petQualityToColorClass(quality);
 
   return (
-    <div className="item-popover-content">
+    <div className="pet-popover-content">
       <div className="pure-g">
         <div className="pure-u-1-5">
-          <p className={itemTextClass} style={{ paddingBottom: "17px", marginBottom: 0 }}>
-            <img src={pet.icon_url} className="item-icon" alt="" />
+          <p className={petTextClass} style={{ paddingBottom: "17px", marginBottom: 0 }}>
+            <img src={pet.icon_url} className="pet-icon" alt="" />
           </p>
         </div>
         <div className="pure-u-4-5">
           <ul>
-            <li className={itemTextClass}>{pet.name}</li>
+            <li className={petTextClass}>{pet.name}</li>
             <li className="pet-level">Pet level {level}</li>
           </ul>
           <hr />

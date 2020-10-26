@@ -124,7 +124,8 @@ body.bp3-dark,
     width: 100%;
     margin: 10px 0;
 
-    .item-icon {
+    .item-icon,
+    .pet-icon{
         width: 24px;
         height: 24px;
         border-radius: 3px;
@@ -188,7 +189,7 @@ body.bp3-dark,
 }
 
 .pricelist-profession-toggle-menu,
-.profession-toggle-button{
+.profession-toggle-button {
     .item-icon {
         width: 20px;
         height: 20px;

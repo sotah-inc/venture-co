@@ -37,7 +37,7 @@ export class PetLink extends React.Component<Props> {
   private renderDisplay(pet: IShortPet) {
     return (
       <>
-        <img src={pet.icon_url} className="item-icon" alt="" /> {this.renderLink(pet)}
+        <img src={pet.icon_url} className="pet-icon" alt="" /> {this.renderLink(pet)}
       </>
     );
   }
