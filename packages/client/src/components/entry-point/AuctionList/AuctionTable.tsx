@@ -142,7 +142,9 @@ export class AuctionTable extends React.Component<Props> {
       return <td className={petQualityToColorClass(quality)}>{petId}</td>;
     }
 
-    return <td className={petQualityToColorClass(quality)}>{pet.name}</td>;
+    return (
+      <td className={petQualityToColorClass(quality)}>{this.renderPetPopover(pet, quality)}</td>
+    );
   }
 
   public render() {
