@@ -31,7 +31,9 @@ export class PetPopover extends React.Component<Props> {
     return (
       <Popover
         content={<PetPopoverContent level={level} pet={pet} quality={quality} />}
-        target={<PetLink pet={pet} interactive={interactive} onPetClick={onPetClick} />}
+        target={
+          <PetLink pet={pet} interactive={interactive} onPetClick={onPetClick} level={level} />
+        }
         interactionKind={PopoverInteractionKind.HOVER}
         position={position ?? Position.RIGHT}
       />
