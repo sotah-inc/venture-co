@@ -26,7 +26,7 @@ export function PetPopoverContent({ pet, quality, level }: Props) {
         <div className="pure-u-4-5">
           <ul>
             <li className={itemTextClass}>{pet.name}</li>
-            <li>Pet level {level}</li>
+            <li className="pet-level">Pet level {level}</li>
           </ul>
           <hr />
           <ul>
