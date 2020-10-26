@@ -4,6 +4,7 @@ import { IShortPet } from "@sotah-inc/core";
 
 export interface IOwnProps {
   pet: IShortPet;
+  level: number;
 
   onPetClick?: () => void;
   interactive?: boolean;
@@ -42,12 +43,16 @@ export class PetLink extends React.Component<Props> {
   }
 
   private renderLink(pet: IShortPet) {
-    const { interactive } = this.props;
+    const { interactive, level } = this.props;
 
     if (typeof interactive === "undefined" || interactive) {
-      return <a onClick={() => this.onPetClick()}>{pet.name}</a>;
+      return (
+        <a onClick={() => this.onPetClick()}>
+          {pet.name} ({level})
+        </a>
+      );
     }
 
-    return pet.name;
+    return `${pet.name} (${level})`;
   }
 }

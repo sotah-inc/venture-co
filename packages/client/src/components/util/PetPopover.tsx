@@ -9,6 +9,7 @@ import { PetPopoverContent } from "./PetPopover/PetPopoverContent";
 export interface IOwnProps {
   pet: IShortPet;
   quality: PetQuality;
+  level: number;
 
   onPetClick?: () => void;
   position?: Position;
@@ -25,11 +26,11 @@ export class PetPopover extends React.Component<Props> {
   };
 
   public render() {
-    const { pet, position, interactive, onPetClick, quality } = this.props;
+    const { pet, position, interactive, onPetClick, quality, level } = this.props;
 
     return (
       <Popover
-        content={<PetPopoverContent pet={pet} quality={quality} />}
+        content={<PetPopoverContent level={level} pet={pet} quality={quality} />}
         target={<PetLink pet={pet} interactive={interactive} onPetClick={onPetClick} />}
         interactionKind={PopoverInteractionKind.HOVER}
         position={position ?? Position.RIGHT}

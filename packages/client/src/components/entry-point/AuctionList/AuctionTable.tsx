@@ -69,11 +69,16 @@ export class AuctionTable extends React.Component<Props> {
     return <ItemPopoverContainer item={item} onItemClick={() => selectItemQueryAuctions(item)} />;
   }
 
-  public renderPetPopover(pet: IShortPet, quality: PetQuality) {
+  public renderPetPopover(pet: IShortPet, quality: PetQuality, level: number) {
     const { selectPetQueryAuctions } = this.props;
 
     return (
-      <PetPopover pet={pet} quality={quality} onPetClick={() => selectPetQueryAuctions(pet)} />
+      <PetPopover
+        pet={pet}
+        quality={quality}
+        onPetClick={() => selectPetQueryAuctions(pet)}
+        level={level}
+      />
     );
   }
 
@@ -121,7 +126,12 @@ export class AuctionTable extends React.Component<Props> {
 
     const foundPet = auctionsResultData.pets.find(v => v.id === auction.pet_species_id);
     if (foundPet) {
-      return this.renderPetCell(auction.pet_species_id, foundPet, auction.pet_quality_id);
+      return this.renderPetCell(
+        auction.pet_species_id,
+        foundPet,
+        auction.pet_quality_id,
+        auction.pet_level,
+      );
     }
 
     return null;
@@ -137,13 +147,20 @@ export class AuctionTable extends React.Component<Props> {
     );
   }
 
-  public renderPetCell(petId: PetId, pet: IShortPet | undefined, quality: PetQuality) {
+  public renderPetCell(
+    petId: PetId,
+    pet: IShortPet | undefined,
+    quality: PetQuality,
+    level: number,
+  ) {
     if (typeof pet === "undefined") {
       return <td className={petQualityToColorClass(quality)}>{petId}</td>;
     }
 
     return (
-      <td className={petQualityToColorClass(quality)}>{this.renderPetPopover(pet, quality)}</td>
+      <td className={petQualityToColorClass(quality)}>
+        {this.renderPetPopover(pet, quality, level)}
+      </td>
     );
   }
 

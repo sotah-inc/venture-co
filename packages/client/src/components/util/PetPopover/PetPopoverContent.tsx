@@ -4,7 +4,15 @@ import { IShortPet, PetQuality } from "@sotah-inc/core";
 
 import { petQualityToColorClass } from "../../../util";
 
-export function PetPopoverContent({ pet, quality }: { pet: IShortPet; quality: PetQuality }) {
+export interface IOwnProps {
+  pet: IShortPet;
+  quality: PetQuality;
+  level: number;
+}
+
+type Props = Readonly<IOwnProps>;
+
+export function PetPopoverContent({ pet, quality, level }: Props) {
   const itemTextClass = petQualityToColorClass(quality);
 
   return (
@@ -18,6 +26,7 @@ export function PetPopoverContent({ pet, quality }: { pet: IShortPet; quality: P
         <div className="pure-u-4-5">
           <ul>
             <li className={itemTextClass}>{pet.name}</li>
+            <li>Pet level {level}</li>
           </ul>
           <hr />
           <ul>
