@@ -102,7 +102,7 @@ const itemListRenderer: ItemListRenderer<IQueryItem<IShortItem>> = (
 export function renderItemLabel(item: IShortItem | null): string {
   const hasFullItem = (item?.sotah_meta.normalized_name.en_US ?? "") !== "";
 
-  return item && hasFullItem ? `#${item.id}` : "";
+  return item && hasFullItem ? `I#${item.id}` : "";
 }
 
 export function resolveItemClassNames(

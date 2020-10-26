@@ -99,7 +99,7 @@ export function renderItemLabel(pet: IShortPet | null): string {
     return "";
   }
 
-  return `#${pet.id}`;
+  return `P#${pet.id}`;
 }
 
 export function resolvePetClassNames(
