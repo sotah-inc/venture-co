@@ -10,7 +10,6 @@ import {
   Spinner,
 } from "@blueprintjs/core";
 import {
-  IAuction,
   IPreferenceJson,
   IRegionComposite,
   IShortItem,
@@ -18,7 +17,6 @@ import {
   ItemId,
   Locale,
   PetId,
-  SortPerPage,
 } from "@sotah-inc/core";
 import React from "react";
 import { ILoadAuctionListEntrypoint } from "../../actions/auction";
@@ -32,17 +30,15 @@ import { RealmToggleContainer } from "../../containers/util/RealmToggle";
 import { RegionToggleContainer } from "../../containers/util/RegionToggle";
 // tslint:disable-next-line:max-line-length
 import { AuctionTableRouteContainer } from "../../route-containers/entry-point/AuctionList/AuctionTable";
-import { AuctionsOptions } from "../../types/auction";
-import { IClientRealm, IFetchData, IItemsData, IRegions } from "../../types/global";
+import { AuctionsOptions, IAuctionResultData } from "../../types/auction";
+import { IClientRealm, IFetchData, IRegions } from "../../types/global";
 import { AuthLevel, FetchLevel } from "../../types/main";
 import { hasNewItems, hasNewPets, setTitle } from "../../util";
 import { LastModified, Pagination } from "../util";
 
-type ListAuction = IAuction | null;
-
 export interface IStateProps {
   options: AuctionsOptions;
-  auctionsResult: IFetchData<IItemsData<ListAuction[]>>;
+  auctionsResult: IFetchData<IAuctionResultData>;
   totalResults: number;
   fetchUserPreferencesLevel: FetchLevel;
   userPreferences: IPreferenceJson | null;
@@ -485,26 +481,7 @@ export class AuctionList extends React.Component<Props> {
   }
 
   private renderAuctions() {
-    const {
-      totalResults,
-      setCurrentPage,
-      options,
-      auctionsResult: {
-        data: { data: auctions },
-      },
-    } = this.props;
-
-    // optionally appending blank auction lines
-    if (totalResults > 0) {
-      if (
-        options.auctionsPerPage === SortPerPage.Ten &&
-        auctions.length < options.auctionsPerPage
-      ) {
-        for (let i = auctions.length; i < options.auctionsPerPage; i++) {
-          auctions[i] = null;
-        }
-      }
-    }
+    const { setCurrentPage, options } = this.props;
 
     const pageCount = this.getPageCount();
 

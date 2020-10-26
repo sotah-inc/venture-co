@@ -12,25 +12,27 @@ import {
   PetId,
   PetQuality,
   SortKind,
+  SortPerPage,
 } from "@sotah-inc/core";
 import React from "react";
 
 import { SortToggleContainer } from "../../../containers/entry-point/AuctionList/SortToggle";
 import { ItemPopoverContainer } from "../../../containers/util/ItemPopover";
-import { IClientRealm, IItemsData } from "../../../types/global";
+import { AuctionsOptions, IAuctionResultData } from "../../../types/auction";
+import { IClientRealm } from "../../../types/global";
 import { getItemFromPricelist, petQualityToColorClass, qualityToColorClass } from "../../../util";
 import { Currency, ProfessionIcon } from "../../util";
 import { ItemIcon } from "../../util/ItemIcon";
 
-type ListAuction = IAuction | null;
-
 export interface IStateProps {
-  auctions: IItemsData<ListAuction[]>;
+  auctionsResultData: IAuctionResultData;
   relatedProfessionPricelists: IProfessionPricelistJson[];
+  options: AuctionsOptions;
   expansions: IExpansion[];
   professions: IProfession[];
   currentRealm: IClientRealm | null;
   currentRegion: IRegionComposite | null;
+  totalResults: number;
 }
 
 export interface IDispatchProps {
@@ -100,11 +102,16 @@ export class AuctionTable extends React.Component<Props> {
   }
 
   public renderTargetCell(auction: IAuction) {
-    const { auctions } = this.props;
+    const { auctionsResultData } = this.props;
 
-    const foundItem = auctions.items.find(v => v.id === auction?.itemId);
+    const foundItem = auctionsResultData.items.find(v => v.id === auction.itemId);
     if (foundItem) {
       return this.renderItemCell(auction.itemId, foundItem);
+    }
+
+    const foundPet = auctionsResultData.pets.find(v => v.id === auction.pet_species_id);
+    if (foundPet) {
+      return this.renderPetCell(auction.pet_species_id, foundPet, auction.pet_quality_id);
     }
 
     return null;
@@ -129,7 +136,7 @@ export class AuctionTable extends React.Component<Props> {
   }
 
   public render() {
-    const { auctions } = this.props;
+    const { auctionsResultData, totalResults, options } = this.props;
 
     const classNames = [
       Classes.HTML_TABLE,
@@ -137,6 +144,18 @@ export class AuctionTable extends React.Component<Props> {
       Classes.SMALL,
       "auction-table",
     ];
+
+    const auctions: Array<IAuction | null> = [...auctionsResultData.auctions];
+    if (totalResults > 0) {
+      if (
+        options.auctionsPerPage === SortPerPage.Ten &&
+        auctions.length < options.auctionsPerPage
+      ) {
+        for (let i = auctions.length; i < options.auctionsPerPage; i++) {
+          auctions[i] = null;
+        }
+      }
+    }
 
     return (
       <HTMLTable className={classNames.join(" ")}>
@@ -160,15 +179,15 @@ export class AuctionTable extends React.Component<Props> {
             <th>Time left</th>
           </tr>
         </thead>
-        <tbody>{auctions.data.map((auction, index) => this.renderAuction(auction, index))}</tbody>
+        <tbody>{auctions.map((auction, index) => this.renderAuction(auction, index))}</tbody>
       </HTMLTable>
     );
   }
 
   private renderSecondaryRow(auction: IAuction) {
-    const { auctions } = this.props;
+    const { auctionsResultData } = this.props;
 
-    const foundItem = auctions.items.find(v => v.id === auction?.itemId);
+    const foundItem = auctionsResultData.items.find(v => v.id === auction?.itemId);
     if (foundItem) {
       return this.renderRelatedProfessionPricelists(foundItem);
     }
@@ -195,7 +214,7 @@ export class AuctionTable extends React.Component<Props> {
 
   private renderPricelistIcon(list: IPricelistJson) {
     const {
-      auctions: { items },
+      auctionsResultData: { items },
     } = this.props;
 
     const item = getItemFromPricelist(items, list);

@@ -12,16 +12,20 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
   const { professions, expansions, currentRealm, currentRegion } = state.Main;
   const {
     relatedProfessionPricelists,
-    auctionsResult: { data: auctions },
+    auctionsResult: { data: auctionsResultData },
+    options,
+    totalResults,
   } = state.Auction;
 
   return {
-    auctions,
+    auctionsResultData,
     currentRealm,
     currentRegion,
     expansions,
+    options,
     professions,
     relatedProfessionPricelists,
+    totalResults,
   };
 };
 

@@ -3,20 +3,28 @@ import {
   IProfessionPricelistJson,
   IQueryGeneralItem,
   IQueryGeneralItemItem,
+  IShortItem,
+  IShortPet,
   SortDirection,
   SortKind,
   SortPerPage,
 } from "@sotah-inc/core";
-import { IFetchData, IItemsData } from "./global";
+import { IFetchData } from "./global";
 
 import { FetchLevel } from "./main";
 
 export interface IAuctionState {
-  auctionsResult: IFetchData<IItemsData<IAuction[]>>;
+  auctionsResult: IFetchData<IAuctionResultData>;
   options: AuctionsOptions;
   totalResults: number;
   activeSelect: boolean;
   relatedProfessionPricelists: IProfessionPricelistJson[];
+}
+
+export interface IAuctionResultData {
+  auctions: IAuction[];
+  items: IShortItem[];
+  pets: IShortPet[];
 }
 
 export interface AuctionsOptions {
@@ -37,8 +45,9 @@ export const defaultAuctionState: IAuctionState = {
   activeSelect: true,
   auctionsResult: {
     data: {
-      data: [],
+      auctions: [],
       items: [],
+      pets: [],
     },
     errors: {},
     level: FetchLevel.initial,

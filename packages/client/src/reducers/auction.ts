@@ -46,8 +46,9 @@ export const auction = (state: State | undefined, action: AuctionActions): State
         auctionsResult: {
           ...state.auctionsResult,
           data: {
-            data: auctions,
+            auctions,
             items: action.payload.items,
+            pets: action.payload.pets,
           },
           level: FetchLevel.success,
         },
