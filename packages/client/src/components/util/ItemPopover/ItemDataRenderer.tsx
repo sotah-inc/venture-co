@@ -425,6 +425,11 @@ export const itemDataRenderers: IItemDataRenderer[] = [
     },
   },
   {
+    itemClass: ItemClass.Recipe,
+    itemSubClass: ItemSubClass.RecipeCooking,
+    render: renderProfessionRecipe,
+  },
+  {
     itemClass: ItemClass.Gem,
     render: item => {
       return (
