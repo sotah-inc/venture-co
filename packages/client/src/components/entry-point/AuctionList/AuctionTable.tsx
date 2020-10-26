@@ -119,11 +119,6 @@ export class AuctionTable extends React.Component<Props> {
   public renderTargetCell(auction: IAuction) {
     const { auctionsResultData } = this.props;
 
-    const foundItem = auctionsResultData.items.find(v => v.id === auction.itemId);
-    if (foundItem) {
-      return this.renderItemCell(auction.itemId, foundItem);
-    }
-
     const foundPet = auctionsResultData.pets.find(v => v.id === auction.pet_species_id);
     if (foundPet) {
       return this.renderPetCell(
@@ -132,6 +127,11 @@ export class AuctionTable extends React.Component<Props> {
         auction.pet_quality_id,
         auction.pet_level,
       );
+    }
+
+    const foundItem = auctionsResultData.items.find(v => v.id === auction.itemId);
+    if (foundItem) {
+      return this.renderItemCell(auction.itemId, foundItem);
     }
 
     return null;
