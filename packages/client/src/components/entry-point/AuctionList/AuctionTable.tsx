@@ -7,7 +7,10 @@ import {
   IProfessionPricelistJson,
   IRegionComposite,
   IShortItem,
+  IShortPet,
   ItemQuality,
+  PetId,
+  PetQuality,
   SortKind,
 } from "@sotah-inc/core";
 import React from "react";
@@ -15,7 +18,7 @@ import React from "react";
 import { SortToggleContainer } from "../../../containers/entry-point/AuctionList/SortToggle";
 import { ItemPopoverContainer } from "../../../containers/util/ItemPopover";
 import { IClientRealm, IItemsData } from "../../../types/global";
-import { getItemFromPricelist, qualityToColorClass } from "../../../util";
+import { getItemFromPricelist, petQualityToColorClass, qualityToColorClass } from "../../../util";
 import { Currency, ProfessionIcon } from "../../util";
 import { ItemIcon } from "../../util/ItemIcon";
 
@@ -63,10 +66,8 @@ export class AuctionTable extends React.Component<Props> {
   }
 
   public renderAuction(auction: IAuction | null, index: number) {
-    const { auctions } = this.props;
-
-    const foundItem = auctions.items.find(v => v.id === auction?.itemId);
-    if (auction === null || !foundItem) {
+    const renderedCell = auction ? this.renderTargetCell(auction) : null;
+    if (auction === null || renderedCell === null) {
       return (
         <tr key={index}>
           <td>---</td>
@@ -82,7 +83,7 @@ export class AuctionTable extends React.Component<Props> {
     return (
       <React.Fragment key={index}>
         <tr>
-          {this.renderItemCell(auction.itemId, foundItem)}
+          {renderedCell}
           <td className="quantity-container">{auction.quantity}</td>
           <td className="currency-container">
             <Currency amount={auction.buyout} hideCopper={true} />
@@ -93,9 +94,20 @@ export class AuctionTable extends React.Component<Props> {
           <td className="auclist-container">{auction.aucList.length}</td>
           <td>{auction.timeLeft}</td>
         </tr>
-        {this.renderRelatedProfessionPricelists(foundItem)}
+        {this.renderSecondaryRow(auction)}
       </React.Fragment>
     );
+  }
+
+  public renderTargetCell(auction: IAuction) {
+    const { auctions } = this.props;
+
+    const foundItem = auctions.items.find(v => v.id === auction?.itemId);
+    if (foundItem) {
+      return this.renderItemCell(auction.itemId, foundItem);
+    }
+
+    return null;
   }
 
   public renderItemCell(itemId: number, item: IShortItem | undefined) {
@@ -106,6 +118,14 @@ export class AuctionTable extends React.Component<Props> {
     return (
       <td className={qualityToColorClass(item.quality.type)}>{this.renderItemPopover(item)}</td>
     );
+  }
+
+  public renderPetCell(petId: PetId, pet: IShortPet | undefined, quality: PetQuality) {
+    if (typeof pet === "undefined") {
+      return <td className={petQualityToColorClass(quality)}>{petId}</td>;
+    }
+
+    return <td className={petQualityToColorClass(quality)}>{pet.name}</td>;
   }
 
   public render() {
@@ -143,6 +163,17 @@ export class AuctionTable extends React.Component<Props> {
         <tbody>{auctions.data.map((auction, index) => this.renderAuction(auction, index))}</tbody>
       </HTMLTable>
     );
+  }
+
+  private renderSecondaryRow(auction: IAuction) {
+    const { auctions } = this.props;
+
+    const foundItem = auctions.items.find(v => v.id === auction?.itemId);
+    if (foundItem) {
+      return this.renderRelatedProfessionPricelists(foundItem);
+    }
+
+    return null;
   }
 
   private renderRelatedProfessionPricelists(item: IShortItem | undefined) {
