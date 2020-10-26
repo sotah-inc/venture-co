@@ -23,6 +23,7 @@ import { IClientRealm } from "../../../types/global";
 import { getItemFromPricelist, petQualityToColorClass, qualityToColorClass } from "../../../util";
 import { Currency, ProfessionIcon } from "../../util";
 import { ItemIcon } from "../../util/ItemIcon";
+import { PetPopover } from "../../util/PetPopover";
 
 export interface IStateProps {
   auctionsResultData: IAuctionResultData;
@@ -37,6 +38,7 @@ export interface IStateProps {
 
 export interface IDispatchProps {
   selectItemQueryAuctions: (item: IShortItem) => void;
+  selectPetQueryAuctions: (pet: IShortPet) => void;
 }
 
 export interface IRouteProps {
@@ -65,6 +67,14 @@ export class AuctionTable extends React.Component<Props> {
     const { selectItemQueryAuctions } = this.props;
 
     return <ItemPopoverContainer item={item} onItemClick={() => selectItemQueryAuctions(item)} />;
+  }
+
+  public renderPetPopover(pet: IShortPet, quality: PetQuality) {
+    const { selectPetQueryAuctions } = this.props;
+
+    return (
+      <PetPopover pet={pet} quality={quality} onPetClick={() => selectPetQueryAuctions(pet)} />
+    );
   }
 
   public renderAuction(auction: IAuction | null, index: number) {

@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 
-import { SelectItemQueryAuctions } from "../../../actions/auction";
+import { SelectItemQueryAuctions, SelectPetQueryAuctions } from "../../../actions/auction";
 import {
   AuctionTable,
   IDispatchProps,
@@ -31,6 +31,7 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
 
 const mapDispatchToProps: IDispatchProps = {
   selectItemQueryAuctions: SelectItemQueryAuctions,
+  selectPetQueryAuctions: SelectPetQueryAuctions,
 };
 
 export const AuctionTableContainer = connect<IStateProps, IDispatchProps, {}, IStoreState>(
