@@ -31,8 +31,7 @@ import {
   ItemId,
   IValidationErrorResponse,
   Locale,
-  ProfessionName,
-  ProfessionResponse,
+  ProfessionName, ProfessionsResponse,
   QueryAuctionStatsResponse,
   QueryGeneralResponse,
   QueryResponse,
@@ -1316,7 +1315,7 @@ export class DataController {
     };
   }
 
-  public async getProfessions(locale: string): Promise<IRequestResult<ProfessionResponse>> {
+  public async getProfessions(locale: string): Promise<IRequestResult<ProfessionsResponse>> {
     if (!Object.values(Locale).includes(locale as Locale)) {
       const validationErrors: IValidationErrorResponse = {
         error: "could not validate locale",
