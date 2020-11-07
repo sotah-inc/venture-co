@@ -5,4 +5,4 @@ export interface IProfessionsResponseData {
   professions: IShortProfession[];
 }
 
-export type ProfessionResponse = IProfessionsResponseData | IValidationErrorResponse | null;
+export type ProfessionsResponse = IProfessionsResponseData | IValidationErrorResponse | null;
