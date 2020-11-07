@@ -19,6 +19,7 @@ import {
   IGetPricelistRequest,
   IGetPricelistResponseData,
   IPostJson,
+  IProfessionsResponseData,
   IQueryAuctionStatsResponseData,
   IQueryGeneralResponseData,
   IQueryRequest,
@@ -28,6 +29,7 @@ import {
   ItemId,
   ITokenHistory,
   Locale,
+  ProfessionsResponse,
   QueryAuctionStatsResponse,
   QueryGeneralRequest,
   QueryGeneralResponse,
@@ -296,3 +298,28 @@ export const queryAuctionStats = async ({
 
   return { response: body, error: null };
 };
+
+export interface IProfessionsResult {
+  response: IProfessionsResponseData | null;
+  error: string | null;
+}
+
+export async function professions(locale: Locale): Promise<IProfessionsResult> {
+  const url = [getApiEndpoint(), "professions"];
+
+  const { body, status } = await gatherWithQuery<{ locale: Locale }, ProfessionsResponse>({
+    headers: new Headers({ "content-type": "application/json" }),
+    method: "GET",
+    query: { locale },
+    url,
+  });
+
+  switch (status) {
+    case HTTPStatus.OK:
+      break;
+    default:
+      return { response: null, error: "Failure" };
+  }
+
+  return { response: body as IProfessionsResponseData, error: null };
+}
