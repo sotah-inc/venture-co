@@ -170,6 +170,12 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
       );
     }),
   );
+  router.get(
+    "/professions",
+    wrap(async (req: Request, res: Response) => {
+      handleResult(res, await controller.getProfessions(String(req.query["locale"])));
+    }),
+  );
 
   return router;
 };

@@ -32,6 +32,7 @@ import {
   IValidationErrorResponse,
   Locale,
   ProfessionName,
+  ProfessionResponse,
   QueryAuctionStatsResponse,
   QueryGeneralResponse,
   QueryResponse,
@@ -1311,6 +1312,40 @@ export class DataController {
 
     return {
       data: professionPricelist.toJson(),
+      status: HTTPStatus.OK,
+    };
+  }
+
+  public async getProfessions(locale: string): Promise<IRequestResult<ProfessionResponse>> {
+    if (!Object.values(Locale).includes(locale as Locale)) {
+      const validationErrors: IValidationErrorResponse = {
+        error: "could not validate locale",
+      };
+
+      return {
+        data: validationErrors,
+        status: HTTPStatus.BAD_REQUEST,
+      };
+    }
+
+    const professionsMsg = await this.messenger.getProfessions(locale as Locale);
+    if (professionsMsg.code !== code.ok) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    const professionsResult = await professionsMsg.decode();
+    if (professionsResult === null) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    return {
+      data: { professions: professionsResult.professions },
       status: HTTPStatus.OK,
     };
   }
