@@ -1,6 +1,6 @@
 {
   "name": "@sotah-inc/core",
-  "version": "2.0.108",
+  "version": "2.0.109",
   "description": "SotAH Core SDK",
   "main": "build/dist/index.js",
   "typings": "build/dist/index.d.ts",
@@ -28,5 +28,8 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "04815ff39e8767b2b57e767b2420736cd30af7af"
+  "gitHead": "04815ff39e8767b2b57e767b2420736cd30af7af",
+  "dependencies": {
+    "@types/node": "^14.14.6"
+  }
 }

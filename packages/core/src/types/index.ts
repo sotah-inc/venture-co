@@ -13,6 +13,8 @@ export * from "./token";
 export * from "./work-order";
 export * from "./short-item";
 export * from "./short-pet";
+export * from "./short-profession";
+export * from "./short-skilltier";
 
 export enum SortDirection {
   none,
