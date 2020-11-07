@@ -40,6 +40,7 @@ import {
   ResolveAuctionsResponse,
   ValidateRegionRealmResponse,
 } from "./contracts";
+import { IProfessionsResponse } from "./contracts/professions";
 import { Message, ParseKind } from "./message";
 import { MessageError } from "./message-error";
 
@@ -70,6 +71,8 @@ export enum subjects {
   priceList = "priceList",
 
   priceListHistory = "priceListHistory",
+
+  professions = "professions",
 }
 
 export interface IMessage {
@@ -409,6 +412,14 @@ export class Messenger {
   ): Promise<Message<IGetPricelistHistoriesResponse>> {
     return this.request(subjects.priceListHistory, {
       body: JSON.stringify(req),
+      parseKind: ParseKind.GzipJsonEncoded,
+    });
+  }
+
+  // via professions
+  public async getProfessions(locale: Locale): Promise<Message<IProfessionsResponse>> {
+    return this.request(subjects.professions, {
+      body: JSON.stringify({ locale }),
       parseKind: ParseKind.GzipJsonEncoded,
     });
   }
