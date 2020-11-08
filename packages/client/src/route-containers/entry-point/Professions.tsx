@@ -8,11 +8,12 @@ import { ProfessionsContainer } from "../../containers/entry-point/Professions";
 
 type Props = Readonly<WithRouterProps & IOwnProps>;
 
-function RouteContainer({ router, entrypointData }: Props) {
+function RouteContainer({ router, entrypointData, realmEntrypointData }: Props) {
   return (
     <ProfessionsContainer
       historyPush={(destination, asDest) => router.replace(destination, asDest)}
       entrypointData={entrypointData}
+      realmEntrypointData={realmEntrypointData}
     />
   );
 }

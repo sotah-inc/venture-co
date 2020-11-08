@@ -1,5 +1,6 @@
 import { connect } from "react-redux";
 
+import { LoadRealmEntrypoint } from "../../actions/main";
 import { LoadProfessionsEntrypoint } from "../../actions/professions";
 import {
   IDispatchProps,
@@ -18,6 +19,7 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
 
 const mapDispatchToProps: IDispatchProps = {
   loadEntrypointData: LoadProfessionsEntrypoint,
+  loadRealmEntrypoint: LoadRealmEntrypoint,
 };
 
 export const ProfessionsContainer = connect<
