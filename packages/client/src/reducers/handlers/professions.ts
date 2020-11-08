@@ -14,7 +14,7 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
         action: ReturnType<typeof LoadProfessionsEntrypoint>,
       ): IProfessionsState => {
         const professions = ((): IFetchData<IShortProfession[]> => {
-          if (action.payload.professions === null) {
+          if (action.payload.professions.response === null) {
             return {
               ...state.professions,
               level: FetchLevel.failure,
@@ -23,7 +23,7 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
 
           return {
             ...state.professions,
-            data: action.payload.professions,
+            data: action.payload.professions.response.professions,
             level: FetchLevel.success,
           };
         })();

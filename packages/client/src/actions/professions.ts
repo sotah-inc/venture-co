@@ -1,10 +1,9 @@
-import { IShortProfession } from "@sotah-inc/core";
-
+import { IGetProfessionsResult } from "../api/data";
 import { ActionsUnion, createAction } from "./helpers";
 
 export interface ILoadProfessionsEndpoint {
   loadId: string;
-  professions: IShortProfession[] | null;
+  professions: IGetProfessionsResult;
 }
 
 export const LOAD_PROFESSIONS_ENTRYPOINT = "LOAD_PROFESSIONS_ENTRYPOINT";

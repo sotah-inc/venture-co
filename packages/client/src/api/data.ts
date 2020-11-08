@@ -299,12 +299,12 @@ export const queryAuctionStats = async ({
   return { response: body, error: null };
 };
 
-export interface IProfessionsResult {
+export interface IGetProfessionsResult {
   response: IProfessionsResponseData | null;
   error: string | null;
 }
 
-export async function getProfessions(locale: Locale): Promise<IProfessionsResult> {
+export async function getProfessions(locale: Locale): Promise<IGetProfessionsResult> {
   const url = [getApiEndpoint(), "professions"];
 
   const { body, status } = await gatherWithQuery<{ locale: Locale }, ProfessionsResponse>({
