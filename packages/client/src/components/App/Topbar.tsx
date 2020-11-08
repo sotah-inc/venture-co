@@ -20,7 +20,7 @@ import { NewsButtonRouteContainer } from "../../route-containers/App/Topbar/News
 import { WorkOrdersButtonRouteContainer } from "../../route-containers/App/Topbar/WorkOrderButtons";
 import { LinkButtonRouteContainer } from "../../route-containers/util/LinkButton";
 import { IClientRealm } from "../../types/global";
-import { toExpansion } from "../../util";
+import { toExpansionProfessionPricelists } from "../../util";
 
 export interface IStateProps {
   user: IUserJson | null;
@@ -250,7 +250,11 @@ export class Topbar extends React.Component<Props> {
       );
     }
 
-    const { asDest, url } = toExpansion(currentRegion, currentRealm, foundExpansion);
+    const { asDest, url } = toExpansionProfessionPricelists(
+      currentRegion,
+      currentRealm,
+      foundExpansion,
+    );
 
     return (
       <LinkButtonRouteContainer

@@ -4,7 +4,7 @@ import { WithRouterProps } from "next/dist/client/with-router";
 import { withRouter } from "next/router";
 
 import { UnmetDemandContainer } from "../../../../../../containers/entry-point/PriceLists/PricelistTree/TreeContent/RealmSummaryPanel/UnmetDemand";
-import { toProfession, toProfessionPricelist } from "../../../../../../util";
+import { toProfessionPricelist, toProfessionPricelistsProfession } from "../../../../../../util";
 
 type Props = Readonly<WithRouterProps>;
 
@@ -25,7 +25,12 @@ function RouteContainer({ router }: Props) {
         })();
       }}
       browseToProfession={(region, realm, expansion, profession) => {
-        const { url, asDest } = toProfession(region, realm, expansion, profession);
+        const { url, asDest } = toProfessionPricelistsProfession(
+          region,
+          realm,
+          expansion,
+          profession,
+        );
 
         (async () => {
           await router.replace(`/${url}`, `/${asDest}`);

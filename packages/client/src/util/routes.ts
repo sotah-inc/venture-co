@@ -1,9 +1,14 @@
 import { IExpansion, IPricelistJson, IProfession, IRegionComposite } from "@sotah-inc/core";
 import { IClientRealm } from "../types/global";
 
-export const toProfessions = (region: IRegionComposite, realm: IClientRealm) => {
-  const asDest = ["data", region.config_region.name, realm.realm.slug, "professions"].join("/");
-  const url = ["data", "[region_name]", "[realm_slug]", "professions"].join("/");
+export const toRealmProfessionPricelists = (region: IRegionComposite, realm: IClientRealm) => {
+  const asDest = [
+    "data",
+    region.config_region.name,
+    realm.realm.slug,
+    "profession-pricelists",
+  ].join("/");
+  const url = ["data", "[region_name]", "[realm_slug]", "profession-pricelists"].join("/");
 
   return { url, asDest };
 };
@@ -33,7 +38,7 @@ export const toProfessionPricelist = (
     region.config_region.name,
     realm.realm.slug,
     expansion.name,
-    "professions",
+    "profession-pricelists",
     profession.name,
     pricelist.slug,
   ].join("/");
@@ -42,7 +47,7 @@ export const toProfessionPricelist = (
     "[region_name]",
     "[realm_slug]",
     "[expansion_name]",
-    "professions",
+    "profession-pricelists",
     "[profession_name]",
     "[pricelist_slug]",
   ].join("/");
@@ -50,7 +55,7 @@ export const toProfessionPricelist = (
   return { url, asDest };
 };
 
-export const toProfession = (
+export const toProfessionPricelistsProfession = (
   region: IRegionComposite,
   realm: IClientRealm,
   expansion: IExpansion,
@@ -61,7 +66,7 @@ export const toProfession = (
     region.config_region.name,
     realm.realm.slug,
     expansion.name,
-    "professions",
+    "profession-pricelists",
     profession.name,
   ].join("/");
   const url = [
@@ -69,14 +74,14 @@ export const toProfession = (
     "[region_name]",
     "[realm_slug]",
     "[expansion_name]",
-    "professions",
+    "profession-pricelists",
     "[profession_name]",
   ].join("/");
 
   return { url, asDest };
 };
 
-export const toExpansion = (
+export const toExpansionProfessionPricelists = (
   region: IRegionComposite,
   realm: IClientRealm,
   expansion: IExpansion,
@@ -86,11 +91,15 @@ export const toExpansion = (
     region.config_region.name,
     realm.realm.slug,
     expansion.name,
-    "professions",
+    "profession-pricelists",
   ].join("/");
-  const url = ["data", "[region_name]", "[realm_slug]", "[expansion_name]", "professions"].join(
-    "/",
-  );
+  const url = [
+    "data",
+    "[region_name]",
+    "[realm_slug]",
+    "[expansion_name]",
+    "profession-pricelists",
+  ].join("/");
 
   return { url, asDest };
 };

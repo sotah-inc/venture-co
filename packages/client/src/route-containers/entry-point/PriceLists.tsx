@@ -5,8 +5,7 @@ import { withRouter } from "next/router";
 
 import { IOwnProps } from "../../components/entry-point/PriceLists";
 import { PriceListsContainer } from "../../containers/entry-point/PriceLists";
-import { extractString } from "../../util";
-import { toProfessionPricelist } from "../../util/routes";
+import { extractString, toProfessionPricelist } from "../../util";
 
 type Props = Readonly<WithRouterProps & IOwnProps>;
 

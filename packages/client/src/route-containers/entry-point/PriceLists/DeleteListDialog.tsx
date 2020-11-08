@@ -5,7 +5,12 @@ import { withRouter } from "next/router";
 
 // tslint:disable-next-line:max-line-length
 import { DeleteListDialogContainer } from "../../../containers/entry-point/PriceLists/DeleteListDialog";
-import { toProfession, toProfessionPricelist, toProfessions, toUserPricelist } from "../../../util";
+import {
+  toProfessionPricelist,
+  toProfessionPricelistsProfession,
+  toRealmProfessionPricelists,
+  toUserPricelist,
+} from "../../../util";
 
 type Props = Readonly<WithRouterProps>;
 
@@ -16,7 +21,7 @@ function RouteContainer({ router }: Props) {
         const { asDest, url } = (() => {
           if (professionData) {
             if (!list) {
-              return toProfession(
+              return toProfessionPricelistsProfession(
                 region,
                 realm,
                 professionData.expansion,
@@ -34,7 +39,7 @@ function RouteContainer({ router }: Props) {
           }
 
           if (!list) {
-            return toProfessions(region, realm);
+            return toRealmProfessionPricelists(region, realm);
           }
 
           return toUserPricelist(region, realm, list);
