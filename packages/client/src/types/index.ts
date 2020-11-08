@@ -3,6 +3,7 @@ import { IMainState } from "./main";
 import { IOvenState } from "./oven";
 import { IPostsState } from "./posts";
 import { IPriceListsState } from "./price-lists";
+import { IProfessionsState } from "./professions";
 import { IProfileState } from "./profile";
 import { IWorkOrderState } from "./work-order";
 
@@ -22,4 +23,5 @@ export interface IStoreState {
   Posts: IPostsState;
   Profile: IProfileState;
   WorkOrder: IWorkOrderState;
+  Professions: IProfessionsState;
 }
