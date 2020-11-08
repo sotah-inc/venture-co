@@ -2,6 +2,7 @@ import { handlers as auctionHandlers, run as auctionRunner } from "./auction";
 import { handlers as mainHandlers, run as mainRunner } from "./main";
 import { handlers as postsHandlers, run as postsRunner } from "./posts";
 import { handlers as pricelistsHandlers, run as pricelistsRunner } from "./price-lists";
+import { handlers as professionsHandlers, run as professionsRunner } from "./professions";
 import { handlers as profileHandlers, run as profileRunner } from "./profile";
 import { handlers as workOrderHandlers, run as workOrderRunner } from "./work-order";
 
@@ -24,6 +25,7 @@ export const runners = {
   main: mainRunner,
   post: postsRunner,
   pricelist: pricelistsRunner,
+  profession: professionsRunner,
   profile: profileRunner,
   workOrder: workOrderRunner,
 };
@@ -33,6 +35,7 @@ export const handlers = {
   main: mainHandlers,
   post: postsHandlers,
   pricelist: pricelistsHandlers,
+  profession: professionsHandlers,
   profile: profileHandlers,
   workOrder: workOrderHandlers,
 };
