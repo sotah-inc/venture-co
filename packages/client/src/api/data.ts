@@ -304,7 +304,7 @@ export interface IProfessionsResult {
   error: string | null;
 }
 
-export async function professions(locale: Locale): Promise<IProfessionsResult> {
+export async function getProfessions(locale: Locale): Promise<IProfessionsResult> {
   const url = [getApiEndpoint(), "professions"];
 
   const { body, status } = await gatherWithQuery<{ locale: Locale }, ProfessionsResponse>({
