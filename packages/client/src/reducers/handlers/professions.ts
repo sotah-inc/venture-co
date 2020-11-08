@@ -1,32 +1,37 @@
-import { ProfessionsActions, ReceiveGetProfessions } from "../../actions/professions";
+import { IShortProfession } from "@sotah-inc/core";
+
+import { LoadProfessionsEntrypoint, ProfessionsActions } from "../../actions/professions";
+import { IFetchData } from "../../types/global";
 import { FetchLevel } from "../../types/main";
 import { IProfessionsState } from "../../types/professions";
 import { IKindHandlers, Runner } from "./index";
 
 export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
-  professions: {
-    get: {
-      receive: (
+  entrypoint: {
+    professions: {
+      load: (
         state: IProfessionsState,
-        action: ReturnType<typeof ReceiveGetProfessions>,
+        action: ReturnType<typeof LoadProfessionsEntrypoint>,
       ): IProfessionsState => {
-        if (action.payload === null || action.payload.response === null) {
-          return {
-            ...state,
-            professions: {
+        const professions = ((): IFetchData<IShortProfession[]> => {
+          if (action.payload.professions === null) {
+            return {
               ...state.professions,
               level: FetchLevel.failure,
-            },
+            };
+          }
+
+          return {
+            ...state.professions,
+            data: action.payload.professions,
+            level: FetchLevel.success,
           };
-        }
+        })();
 
         return {
           ...state,
-          professions: {
-            ...state.professions,
-            data: action.payload.response.professions,
-            level: FetchLevel.success,
-          },
+          loadId: action.payload.loadId,
+          professions,
         };
       },
       request: (state): IProfessionsState => {

@@ -1,27 +1,18 @@
-import { Locale } from "@sotah-inc/core";
-import { Dispatch } from "redux";
+import { IShortProfession } from "@sotah-inc/core";
 
-import { IProfessionsResult, professions } from "../api/data";
 import { ActionsUnion, createAction } from "./helpers";
 
-export const REQUEST_GET_PROFESSIONS = "REQUEST_GET_PROFESSIONS";
-export const RequestGetProfessions = () => createAction(REQUEST_GET_PROFESSIONS);
-export const RECEIVE_GET_PROFESSIONS = "RECEIVE_GET_PROFESSIONS";
-export const ReceiveGetProfessions = (payload: IProfessionsResult | null) =>
-  createAction(RECEIVE_GET_PROFESSIONS, payload);
-type FetchGetProfessionsType = ReturnType<
-  typeof RequestGetProfessions | typeof ReceiveGetProfessions
->;
-export const FetchGetProfessions = (locale: Locale) => {
-  return async (dispatch: Dispatch<FetchGetProfessionsType>) => {
-    dispatch(RequestGetProfessions());
-    dispatch(ReceiveGetProfessions(await professions(locale)));
-  };
-};
+export interface ILoadProfessionsEndpoint {
+  loadId: string;
+  professions: IShortProfession[] | null;
+}
+
+export const LOAD_PROFESSIONS_ENTRYPOINT = "LOAD_PROFESSIONS_ENTRYPOINT";
+export const LoadProfessionsEntrypoint = (payload: ILoadProfessionsEndpoint) =>
+  createAction(LOAD_PROFESSIONS_ENTRYPOINT, payload);
 
 export const ProfessionsActions = {
-  ReceiveGetProfessions,
-  RequestGetProfessions,
+  LoadProfessionsEntrypoint,
 };
 
 export type ProfessionsActions = ActionsUnion<typeof ProfessionsActions>;
