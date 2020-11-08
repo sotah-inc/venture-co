@@ -1,6 +1,13 @@
 import { IExpansion, IPricelistJson, IProfession, IRegionComposite } from "@sotah-inc/core";
 import { IClientRealm } from "../types/global";
 
+export const toRealmProfessions = (region: IRegionComposite, realm: IClientRealm) => {
+  const asDest = ["data", region.config_region.name, realm.realm.slug, "professions"].join("/");
+  const url = ["data", "[region_name]", "[realm_slug]", "profession"].join("/");
+
+  return { url, asDest };
+};
+
 export const toRealmProfessionPricelists = (region: IRegionComposite, realm: IClientRealm) => {
   const asDest = [
     "data",

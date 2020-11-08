@@ -20,7 +20,7 @@ import { NewsButtonRouteContainer } from "../../route-containers/App/Topbar/News
 import { WorkOrdersButtonRouteContainer } from "../../route-containers/App/Topbar/WorkOrderButtons";
 import { LinkButtonRouteContainer } from "../../route-containers/util/LinkButton";
 import { IClientRealm } from "../../types/global";
-import { toExpansionProfessionPricelists } from "../../util";
+import { toExpansionProfessionPricelists, toRealmProfessions } from "../../util";
 
 export interface IStateProps {
   user: IUserJson | null;
@@ -223,11 +223,13 @@ export class Topbar extends React.Component<Props> {
         {this.renderRegionRealmButton("/auctions", "dollar", "Auctions")}
         <NavbarDivider />
         {this.renderProfessionsButton()}
+        <NavbarDivider />
+        {this.renderProfessionPricelistsButton()}
       </>
     );
   }
 
-  private renderProfessionsButton() {
+  private renderProfessionPricelistsButton() {
     const { currentRegion, currentRealm, selectedExpansion, expansions } = this.props;
 
     if (currentRegion === null || currentRealm === null) {
@@ -244,7 +246,7 @@ export class Topbar extends React.Component<Props> {
             disabled: true,
             icon: "polygon-filter",
             minimal: true,
-            text: "Professions",
+            text: "Profession Pricelists",
           }}
         />
       );
@@ -262,6 +264,29 @@ export class Topbar extends React.Component<Props> {
         asDestination={`/${asDest}`}
         buttonProps={{
           icon: "polygon-filter",
+          minimal: true,
+          text: "Profession Pricelists",
+        }}
+        prefix={true}
+      />
+    );
+  }
+
+  private renderProfessionsButton() {
+    const { currentRegion, currentRealm } = this.props;
+
+    if (currentRegion === null || currentRealm === null) {
+      return null;
+    }
+
+    const { asDest, url } = toRealmProfessions(currentRegion, currentRealm);
+
+    return (
+      <LinkButtonRouteContainer
+        destination={`/${url}`}
+        asDestination={`/${asDest}`}
+        buttonProps={{
+          icon: "series-search",
           minimal: true,
           text: "Professions",
         }}
