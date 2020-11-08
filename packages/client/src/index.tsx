@@ -14,6 +14,7 @@ import {
   defaultOvenState,
   defaultPostsState,
   defaultPriceListsState,
+  defaultProfessionsState,
   defaultProfileState,
   defaultWorkOrderState,
   IStoreState,
@@ -25,6 +26,7 @@ export const defaultState: IStoreState = {
   Oven: defaultOvenState,
   Posts: defaultPostsState,
   PriceLists: defaultPriceListsState,
+  Professions: defaultProfessionsState,
   Profile: defaultProfileState,
   WorkOrder: defaultWorkOrderState,
 };

@@ -14,6 +14,7 @@ export { defaultPostsState } from "./posts";
 export { defaultPriceListsState } from "./price-lists";
 export { defaultProfileState } from "./profile";
 export { defaultWorkOrderState } from "./work-order";
+export { defaultProfessionsState } from "./professions";
 
 export interface IStoreState {
   Main: IMainState;
