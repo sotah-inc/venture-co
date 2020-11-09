@@ -4,6 +4,7 @@ import { IShortProfession } from "@sotah-inc/core";
 
 import { ILoadRealmEntrypoint } from "../../actions/main";
 import { ILoadProfessionsEndpoint } from "../../actions/professions";
+import { ProfessionsTreeContainer } from "../../containers/entry-point/Professions/ProfessionsTree";
 import { IFetchData } from "../../types/global";
 import { setTitle } from "../../util";
 
@@ -61,6 +62,6 @@ export class Professions extends React.Component<Props> {
   }
 
   public render() {
-    return <p>Hello, world!</p>;
+    return <ProfessionsTreeContainer />;
   }
 }
