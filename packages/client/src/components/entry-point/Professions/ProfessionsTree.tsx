@@ -1,10 +1,12 @@
 import React from "react";
 
-import { Classes, ITreeNode, Tree } from "@blueprintjs/core";
+import { Classes, Intent, ITreeNode, Spinner, Tree } from "@blueprintjs/core";
 import { IRegionComposite, IShortProfession } from "@sotah-inc/core";
 
 import { IClientRealm, IFetchData } from "../../../types/global";
+import { FetchLevel } from "../../../types/main";
 
+// props
 export interface IStateProps {
   currentRegion: IRegionComposite | null;
   currentRealm: IClientRealm | null;
@@ -13,18 +15,42 @@ export interface IStateProps {
 
 export type Props = Readonly<IStateProps>;
 
+// state
 interface INodeClickMap {
   [key: string]: (v: string) => void;
 }
 
-export class ProfessionsTree extends React.Component<Props> {
+enum TopOpenKey {
+  professions = "professions",
+}
+
+interface IState {
+  topOpenMap: {
+    [key: string]: boolean;
+  };
+}
+
+export class ProfessionsTree extends React.Component<Props, IState> {
+  public state: IState = {
+    topOpenMap: {
+      [TopOpenKey.professions]: true,
+    },
+  };
+
   public render() {
-    const { currentRealm, currentRegion } = this.props;
+    const { topOpenMap } = this.state;
 
     const nodes: ITreeNode[] = [];
-    if (currentRegion !== null && currentRealm !== null) {
-      return null;
-    }
+
+    // appending profession nodes
+    nodes.push({
+      childNodes: this.getProfessionNodes(),
+      hasCaret: true,
+      icon: "list",
+      id: `top-${TopOpenKey.professions}`,
+      isExpanded: topOpenMap[TopOpenKey.professions],
+      label: "Professions",
+    });
 
     return (
       <div style={{ marginTop: "10px" }}>
@@ -48,6 +74,78 @@ export class ProfessionsTree extends React.Component<Props> {
     );
   }
 
+  private getProfessionNodes(): ITreeNode[] {
+    const { professions } = this.props;
+
+    switch (professions.level) {
+      case FetchLevel.success:
+        break;
+      case FetchLevel.initial:
+        return [
+          {
+            icon: <Spinner size={20} value={0} intent={Intent.NONE} />,
+            id: "loading-0",
+            label: <span style={{ marginLeft: "5px" }}>Loading</span>,
+          },
+        ];
+      case FetchLevel.failure:
+        return [
+          {
+            icon: <Spinner size={20} intent={Intent.DANGER} value={1} />,
+            id: "loading-0",
+            label: <span style={{ marginLeft: "5px" }}>Failed to load professions!</span>,
+          },
+        ];
+      default:
+      case FetchLevel.fetching:
+        return [
+          {
+            icon: <Spinner size={20} intent={Intent.PRIMARY} />,
+            id: "loading-0",
+            label: <span style={{ marginLeft: "5px" }}>Loading</span>,
+          },
+        ];
+    }
+
+    if (professions.data.length === 0) {
+      return [{ id: "none-none", label: <em>None found.</em> }];
+    }
+
+    return professions.data.map(v => this.getProfessionNode(v));
+  }
+
+  private getProfessionNode(v: IShortProfession) {
+    const result: ITreeNode = {
+      className: "profession-node",
+      id: `profession-${v.id}`,
+      label: v.name,
+    };
+
+    return result;
+  }
+
+  private onTopNodeClick(id: TopOpenKey) {
+    const { currentRegion, currentRealm } = this.props;
+    const { topOpenMap } = this.state;
+
+    if (currentRegion === null || currentRealm === null) {
+      return;
+    }
+
+    this.setState({ topOpenMap: { ...topOpenMap, [id]: !topOpenMap[id] } });
+  }
+
+  private onProfessionNodeClick(id: string) {
+    const { currentRegion, currentRealm } = this.props;
+
+    if (currentRegion === null || currentRealm === null) {
+      return;
+    }
+
+    // tslint:disable-next-line:no-console
+    console.log(`profession ${id}`);
+  }
+
   private onNodeClick(node: ITreeNode) {
     const separatorIndex = node.id.toString().indexOf("-");
     if (separatorIndex === -1) {
@@ -58,7 +156,10 @@ export class ProfessionsTree extends React.Component<Props> {
       node.id.toString().substr(0, separatorIndex),
       node.id.toString().substr(separatorIndex + 1),
     ];
-    const nodeClickMap: INodeClickMap = {};
+    const nodeClickMap: INodeClickMap = {
+      profession: (v: string) => this.onProfessionNodeClick(v),
+      top: (v: string) => this.onTopNodeClick(v as TopOpenKey),
+    };
 
     if (!Object.keys(nodeClickMap).includes(kind)) {
       return;
