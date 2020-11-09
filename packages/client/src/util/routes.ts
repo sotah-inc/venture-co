@@ -3,7 +3,7 @@ import { IClientRealm } from "../types/global";
 
 export const toRealmProfessions = (region: IRegionComposite, realm: IClientRealm) => {
   const asDest = ["data", region.config_region.name, realm.realm.slug, "professions"].join("/");
-  const url = ["data", "[region_name]", "[realm_slug]", "profession"].join("/");
+  const url = ["data", "[region_name]", "[realm_slug]", "professions"].join("/");
 
   return { url, asDest };
 };
