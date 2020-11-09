@@ -1,9 +1,12 @@
+import { ProfessionId } from "@sotah-inc/core";
+
 import { IGetProfessionsResult } from "../api/data";
 import { ActionsUnion, createAction } from "./helpers";
 
 export interface ILoadProfessionsEndpoint {
   loadId: string;
   professions: IGetProfessionsResult;
+  selectedProfessionId?: ProfessionId;
 }
 
 export const LOAD_PROFESSIONS_ENTRYPOINT = "LOAD_PROFESSIONS_ENTRYPOINT";

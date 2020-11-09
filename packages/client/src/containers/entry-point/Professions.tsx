@@ -5,7 +5,6 @@ import { LoadProfessionsEntrypoint } from "../../actions/professions";
 import {
   IDispatchProps,
   IOwnProps,
-  IRouteProps,
   IStateProps,
   Professions,
 } from "../../components/entry-point/Professions";
@@ -22,12 +21,7 @@ const mapDispatchToProps: IDispatchProps = {
   loadRealmEntrypoint: LoadRealmEntrypoint,
 };
 
-export const ProfessionsContainer = connect<
-  IStateProps,
-  IDispatchProps,
-  IOwnProps & IRouteProps,
-  IStoreState
->(
+export const ProfessionsContainer = connect<IStateProps, IDispatchProps, IOwnProps, IStoreState>(
   mapStateToProps,
   mapDispatchToProps,
 )(Professions);

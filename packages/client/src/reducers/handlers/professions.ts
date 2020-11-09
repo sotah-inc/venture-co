@@ -27,11 +27,17 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
             level: FetchLevel.success,
           };
         })();
+        const selectedProfession: IShortProfession | null =
+          professions.data.find(
+            v =>
+              action.payload.selectedProfessionId && v.id === action.payload.selectedProfessionId,
+          ) ?? null;
 
         return {
           ...state,
           loadId: action.payload.loadId,
           professions,
+          selectedProfession,
         };
       },
       request: (state): IProfessionsState => {

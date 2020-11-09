@@ -12,9 +12,18 @@ export interface IStateProps {
   currentRegion: IRegionComposite | null;
   currentRealm: IClientRealm | null;
   professions: IFetchData<IShortProfession[]>;
+  selectedProfession: IShortProfession | null;
 }
 
-export type Props = Readonly<IStateProps>;
+export interface IRouteProps {
+  browseToProfession: (
+    region: IRegionComposite,
+    realm: IClientRealm,
+    profession: IShortProfession,
+  ) => void;
+}
+
+export type Props = Readonly<IStateProps & IRouteProps>;
 
 interface INodeClickMap {
   [key: string]: (v: string) => void;
@@ -85,10 +94,13 @@ export class ProfessionsTree extends React.Component<Props> {
   }
 
   private getProfessionNode(v: IShortProfession) {
+    const { selectedProfession } = this.props;
+
     const result: ITreeNode = {
       className: "profession-node",
       icon: <ShortProfessionIcon profession={v} />,
       id: `profession-${v.id}`,
+      isSelected: selectedProfession !== null && v.id === selectedProfession.id,
       label: v.name,
     };
 
@@ -96,14 +108,18 @@ export class ProfessionsTree extends React.Component<Props> {
   }
 
   private onProfessionNodeClick(id: string) {
-    const { currentRegion, currentRealm } = this.props;
+    const { currentRegion, currentRealm, professions, browseToProfession } = this.props;
 
     if (currentRegion === null || currentRealm === null) {
       return;
     }
 
-    // tslint:disable-next-line:no-console
-    console.log(`profession ${id}`);
+    const foundProfession = professions.data.find(v => v.id.toString() === id);
+    if (!foundProfession) {
+      return;
+    }
+
+    browseToProfession(currentRegion, currentRealm, foundProfession);
   }
 
   private onNodeClick(node: ITreeNode) {

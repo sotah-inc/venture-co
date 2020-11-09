@@ -6,6 +6,7 @@ import { FetchLevel } from "./main";
 export interface IProfessionsState {
   loadId: string;
   professions: IFetchData<IShortProfession[]>;
+  selectedProfession: IShortProfession | null;
 }
 
 export const defaultProfessionsState: IProfessionsState = {
@@ -15,4 +16,5 @@ export const defaultProfessionsState: IProfessionsState = {
     errors: {},
     level: FetchLevel.initial,
   },
+  selectedProfession: null,
 };

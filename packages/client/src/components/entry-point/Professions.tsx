@@ -4,7 +4,7 @@ import { IShortProfession } from "@sotah-inc/core";
 
 import { ILoadRealmEntrypoint } from "../../actions/main";
 import { ILoadProfessionsEndpoint } from "../../actions/professions";
-import { ProfessionsTreeContainer } from "../../containers/entry-point/Professions/ProfessionsTree";
+import { ProfessionsTreeRouteContainer } from "../../route-containers/entry-point/Professions/ProfessionsTree";
 import { IFetchData } from "../../types/global";
 import { setTitle } from "../../util";
 
@@ -22,11 +22,7 @@ export interface IOwnProps {
   entrypointData: ILoadProfessionsEndpoint;
 }
 
-export interface IRouteProps {
-  historyPush: (destination: string, asDest?: string) => void;
-}
-
-type Props = Readonly<IStateProps & IDispatchProps & IOwnProps & IRouteProps>;
+type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
 
 export class Professions extends React.Component<Props> {
   public componentDidMount() {
@@ -62,6 +58,6 @@ export class Professions extends React.Component<Props> {
   }
 
   public render() {
-    return <ProfessionsTreeContainer />;
+    return <ProfessionsTreeRouteContainer />;
   }
 }
