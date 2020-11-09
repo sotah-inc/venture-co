@@ -9,9 +9,10 @@ export interface IShortProfession {
   type: {
     type: string;
     name: string;
-  }
+  };
   skilltiers: Array<{
     id: SkillTierId;
     name: string;
-  }>
+  }>;
+  icon_url: string;
 }
