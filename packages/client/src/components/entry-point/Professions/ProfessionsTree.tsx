@@ -5,6 +5,7 @@ import { IRegionComposite, IShortProfession } from "@sotah-inc/core";
 
 import { IClientRealm, IFetchData } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
+import { ShortProfessionIcon } from "../../util/ShortProfessionIcon";
 
 // props
 export interface IStateProps {
@@ -55,7 +56,7 @@ export class ProfessionsTree extends React.Component<Props, IState> {
     return (
       <div style={{ marginTop: "10px" }}>
         <div className="pure-g">
-          <div className="pure-u-1-4 pricelist-tree">
+          <div className="pure-u-1-4 profession-tree">
             <Tree
               contents={nodes}
               className={Classes.ELEVATION_0}
@@ -117,6 +118,7 @@ export class ProfessionsTree extends React.Component<Props, IState> {
   private getProfessionNode(v: IShortProfession) {
     const result: ITreeNode = {
       className: "profession-node",
+      icon: <ShortProfessionIcon profession={v} />,
       id: `profession-${v.id}`,
       label: v.name,
     };
