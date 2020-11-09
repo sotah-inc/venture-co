@@ -16,49 +16,18 @@ export interface IStateProps {
 
 export type Props = Readonly<IStateProps>;
 
-// state
 interface INodeClickMap {
   [key: string]: (v: string) => void;
 }
 
-enum TopOpenKey {
-  professions = "professions",
-}
-
-interface IState {
-  topOpenMap: {
-    [key: string]: boolean;
-  };
-}
-
-export class ProfessionsTree extends React.Component<Props, IState> {
-  public state: IState = {
-    topOpenMap: {
-      [TopOpenKey.professions]: true,
-    },
-  };
-
+export class ProfessionsTree extends React.Component<Props> {
   public render() {
-    const { topOpenMap } = this.state;
-
-    const nodes: ITreeNode[] = [];
-
-    // appending profession nodes
-    nodes.push({
-      childNodes: this.getProfessionNodes(),
-      hasCaret: true,
-      icon: "list",
-      id: `top-${TopOpenKey.professions}`,
-      isExpanded: topOpenMap[TopOpenKey.professions],
-      label: "Professions",
-    });
-
     return (
       <div style={{ marginTop: "10px" }}>
         <div className="pure-g">
           <div className="pure-u-1-4 profession-tree">
             <Tree
-              contents={nodes}
+              contents={this.getProfessionNodes()}
               className={Classes.ELEVATION_0}
               onNodeClick={v => this.onNodeClick(v)}
               onNodeExpand={v => this.onNodeClick(v)}
@@ -126,17 +95,6 @@ export class ProfessionsTree extends React.Component<Props, IState> {
     return result;
   }
 
-  private onTopNodeClick(id: TopOpenKey) {
-    const { currentRegion, currentRealm } = this.props;
-    const { topOpenMap } = this.state;
-
-    if (currentRegion === null || currentRealm === null) {
-      return;
-    }
-
-    this.setState({ topOpenMap: { ...topOpenMap, [id]: !topOpenMap[id] } });
-  }
-
   private onProfessionNodeClick(id: string) {
     const { currentRegion, currentRealm } = this.props;
 
@@ -160,7 +118,6 @@ export class ProfessionsTree extends React.Component<Props, IState> {
     ];
     const nodeClickMap: INodeClickMap = {
       profession: (v: string) => this.onProfessionNodeClick(v),
-      top: (v: string) => this.onTopNodeClick(v as TopOpenKey),
     };
 
     if (!Object.keys(nodeClickMap).includes(kind)) {
