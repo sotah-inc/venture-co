@@ -11,9 +11,10 @@ import {
 import { IStoreState } from "../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
-  const { professions } = state.Professions;
+  const { currentRegion, currentRealm } = state.Main;
+  const { professions, selectedProfession } = state.Professions;
 
-  return { professions };
+  return { professions, currentRegion, currentRealm, selectedProfession };
 };
 
 const mapDispatchToProps: IDispatchProps = {

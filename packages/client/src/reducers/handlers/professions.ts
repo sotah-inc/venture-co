@@ -23,7 +23,9 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
 
           return {
             ...state.professions,
-            data: action.payload.professions.response.professions,
+            data: action.payload.professions.response.professions.sort((a, b) =>
+              a.name.localeCompare(b.name),
+            ),
             level: FetchLevel.success,
           };
         })();

@@ -1,15 +1,18 @@
 import React from "react";
 
-import { IShortProfession } from "@sotah-inc/core";
+import { IRegionComposite, IShortProfession } from "@sotah-inc/core";
 
 import { ILoadRealmEntrypoint } from "../../actions/main";
 import { ILoadProfessionsEndpoint } from "../../actions/professions";
 import { ProfessionsTreeRouteContainer } from "../../route-containers/entry-point/Professions/ProfessionsTree";
-import { IFetchData } from "../../types/global";
+import { IClientRealm, IFetchData } from "../../types/global";
 import { setTitle } from "../../util";
 
 export interface IStateProps {
   professions: IFetchData<IShortProfession[]>;
+  currentRegion: IRegionComposite | null;
+  currentRealm: IClientRealm | null;
+  selectedProfession: IShortProfession | null;
 }
 
 export interface IDispatchProps {
@@ -22,7 +25,15 @@ export interface IOwnProps {
   entrypointData: ILoadProfessionsEndpoint;
 }
 
-type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
+export interface IRouteProps {
+  redirectToProfession: (
+    region: IRegionComposite,
+    realm: IClientRealm,
+    profession: IShortProfession,
+  ) => void;
+}
+
+type Props = Readonly<IStateProps & IDispatchProps & IOwnProps & IRouteProps>;
 
 export class Professions extends React.Component<Props> {
   public componentDidMount() {
@@ -45,6 +56,11 @@ export class Professions extends React.Component<Props> {
       loadEntrypointData,
       loadRealmEntrypoint,
       realmEntrypointData,
+      currentRegion,
+      currentRealm,
+      selectedProfession,
+      redirectToProfession,
+      professions,
     } = this.props;
 
     if (entrypointData.loadId !== prevProps.entrypointData.loadId) {
@@ -55,9 +71,36 @@ export class Professions extends React.Component<Props> {
 
       return;
     }
+
+    if (currentRegion === null || currentRealm === null) {
+      return;
+    }
+
+    if (selectedProfession !== null) {
+      return;
+    }
+
+    const nextProfession = ((): IShortProfession | null => {
+      if (professions.data.length === 0) {
+        return null;
+      }
+
+      return professions.data[0];
+    })();
+    if (nextProfession === null) {
+      return;
+    }
+
+    redirectToProfession(currentRegion, currentRealm, nextProfession);
   }
 
   public render() {
+    const { currentRegion, currentRealm, selectedProfession } = this.props;
+
+    if (currentRegion === null || currentRealm === null || selectedProfession === null) {
+      return null;
+    }
+
     return <ProfessionsTreeRouteContainer />;
   }
 }
