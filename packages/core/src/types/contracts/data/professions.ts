@@ -1,4 +1,5 @@
 import { IShortProfession } from "../../short-profession";
+import { IShortSkillTier } from "../../short-skilltier";
 import { IValidationErrorResponse } from "../index";
 
 export interface IProfessionsResponseData {
@@ -6,3 +7,9 @@ export interface IProfessionsResponseData {
 }
 
 export type ProfessionsResponse = IProfessionsResponseData | IValidationErrorResponse | null;
+
+export interface ISkillTierResponseData {
+  skillTier: IShortSkillTier;
+}
+
+export type SkillTierResponse = ISkillTierResponseData | IValidationErrorResponse | null;
