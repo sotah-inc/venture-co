@@ -93,10 +93,20 @@ export class ProfessionsTree extends React.Component<Props> {
     return professions.data.map(v => this.getProfessionNode(v));
   }
 
+  // profession nodes
   private getProfessionNode(v: IShortProfession) {
     const { selectedProfession } = this.props;
 
+    const childNodes = ((): ITreeNode[] => {
+      if (!selectedProfession || v.id !== selectedProfession.id) {
+        return [];
+      }
+
+      return v.skilltiers.map(skillTier => this.getSkillTierNode(skillTier));
+    })();
+
     const result: ITreeNode = {
+      childNodes,
       className: "profession-node",
       icon: <ShortProfessionIcon profession={v} />,
       id: `profession-${v.id}`,
@@ -122,6 +132,33 @@ export class ProfessionsTree extends React.Component<Props> {
     browseToProfession(currentRegion, currentRealm, foundProfession);
   }
 
+  // skill-tier nodes
+  private getSkillTierNode(v: IShortProfession["skilltiers"][0]) {
+    const result: ITreeNode = {
+      className: "skilltier-node",
+      id: `skilltier-${v.id}`,
+      label: v.name,
+    };
+
+    return result;
+  }
+
+  private onSkillTierNodeClick(id: string) {
+    const { currentRegion, currentRealm, professions } = this.props;
+
+    if (currentRegion === null || currentRealm === null) {
+      return;
+    }
+
+    const foundProfession = professions.data.find(v => v.id.toString() === id);
+    if (!foundProfession) {
+      return;
+    }
+
+    // tslint:disable-next-line:no-console
+    console.log(`skill-tier ${id}`);
+  }
+
   private onNodeClick(node: ITreeNode) {
     const separatorIndex = node.id.toString().indexOf("-");
     if (separatorIndex === -1) {
@@ -134,6 +171,7 @@ export class ProfessionsTree extends React.Component<Props> {
     ];
     const nodeClickMap: INodeClickMap = {
       profession: (v: string) => this.onProfessionNodeClick(v),
+      skilltier: (v: string) => this.onSkillTierNodeClick(v),
     };
 
     if (!Object.keys(nodeClickMap).includes(kind)) {
