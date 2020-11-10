@@ -99,13 +99,9 @@ export class ProfessionsTree extends React.Component<Props> {
 
     const isSelected = !selectedProfession || v.id !== selectedProfession.id;
 
-    const childNodes = ((): ITreeNode[] => {
-      if (isSelected) {
-        return [];
-      }
-
-      return v.skilltiers.map(skillTier => this.getSkillTierNode(skillTier));
-    })();
+    const childNodes: ITreeNode[] = !isSelected
+      ? []
+      : v.skilltiers.map(skillTier => this.getSkillTierNode(skillTier));
 
     const result: ITreeNode = {
       childNodes,
@@ -114,7 +110,7 @@ export class ProfessionsTree extends React.Component<Props> {
       icon: <ShortProfessionIcon profession={v} />,
       id: `profession-${v.id}`,
       isExpanded: isSelected,
-      isSelected: selectedProfession !== null && v.id === selectedProfession.id,
+      isSelected,
       label: v.name,
     };
 
