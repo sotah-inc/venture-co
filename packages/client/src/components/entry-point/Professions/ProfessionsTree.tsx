@@ -97,7 +97,7 @@ export class ProfessionsTree extends React.Component<Props> {
   private getProfessionNode(v: IShortProfession) {
     const { selectedProfession } = this.props;
 
-    const isSelected = !selectedProfession || v.id !== selectedProfession.id;
+    const isSelected = selectedProfession !== null && v.id === selectedProfession.id;
 
     const childNodes: ITreeNode[] = !isSelected
       ? []
