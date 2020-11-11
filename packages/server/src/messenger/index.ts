@@ -10,6 +10,9 @@ import {
   IShortPet,
   ITokenHistory,
   Locale,
+  ProfessionId,
+  SkillTierId,
+  SkillTierResponse,
 } from "@sotah-inc/core";
 import * as nats from "nats";
 
@@ -73,6 +76,7 @@ export enum subjects {
   priceListHistory = "priceListHistory",
 
   professions = "professions",
+  skillTier = "skillTier",
 }
 
 export interface IMessage {
@@ -420,6 +424,17 @@ export class Messenger {
   public async getProfessions(locale: Locale): Promise<Message<IProfessionsResponse>> {
     return this.request(subjects.professions, {
       body: JSON.stringify({ locale }),
+      parseKind: ParseKind.GzipJsonEncoded,
+    });
+  }
+
+  public async getSkillTier(
+    professionId: ProfessionId,
+    skillTierId: SkillTierId,
+    locale: Locale,
+  ): Promise<Message<SkillTierResponse>> {
+    return this.request(subjects.professions, {
+      body: JSON.stringify({ profession_id: professionId, skilltier_id: skillTierId, locale }),
       parseKind: ParseKind.GzipJsonEncoded,
     });
   }
