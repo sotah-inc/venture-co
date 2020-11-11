@@ -22,6 +22,19 @@ export interface IRouteProps {
     realm: IClientRealm,
     profession: IShortProfession,
   ) => void;
+  browseToSkillTier: (
+    region: IRegionComposite,
+    realm: IClientRealm,
+    profession: IShortProfession,
+    skillTier: IShortProfession["skilltiers"][0],
+  ) => void;
+  browseToRecipe: (
+    region: IRegionComposite,
+    realm: IClientRealm,
+    profession: IShortProfession,
+    skillTier: IShortSkillTier,
+    recipe: IShortSkillTier["categories"][0]["recipes"][0],
+  ) => void;
 }
 
 export type Props = Readonly<IStateProps & IRouteProps>;
@@ -133,26 +146,31 @@ export class ProfessionsTree extends React.Component<Props> {
     browseToProfession(currentRegion, currentRealm, foundProfession);
   }
 
+  private getSelectedSkillTierRecipes(): Array<IShortSkillTier["categories"][0]["recipes"][0]> {
+    const { selectedSkillTier } = this.props;
+
+    if (selectedSkillTier === null) {
+      return [];
+    }
+
+    return selectedSkillTier.categories.reduce<
+      Array<IShortSkillTier["categories"][0]["recipes"][0]>
+    >((recipesResult, category) => {
+      return [...recipesResult, ...category.recipes];
+    }, []);
+  }
+
   // skill-tier nodes
   private getSkillTierNode(v: IShortProfession["skilltiers"][0]) {
     const { selectedSkillTier } = this.props;
 
-    const skillTierRecipes = ((): Array<IShortSkillTier["categories"][0]["recipes"][0]> => {
-      if (selectedSkillTier === null) {
-        return [];
-      }
-
-      return selectedSkillTier.categories.reduce<
-        Array<IShortSkillTier["categories"][0]["recipes"][0]>
-      >((recipesResult, category) => {
-        return [...recipesResult, ...category.recipes];
-      }, []);
-    })();
-
     const result: ITreeNode = {
-      childNodes: skillTierRecipes.map(skillTierRecipe => this.getRecipeNode(skillTierRecipe)),
+      childNodes: this.getSelectedSkillTierRecipes().map(skillTierRecipe =>
+        this.getRecipeNode(skillTierRecipe),
+      ),
       className: "skilltier-node",
       id: `skilltier-${v.id}`,
+      isSelected: selectedSkillTier !== null && selectedSkillTier.id === v.id,
       label: v.name,
     };
 
@@ -160,22 +178,21 @@ export class ProfessionsTree extends React.Component<Props> {
   }
 
   private onSkillTierNodeClick(id: string) {
-    const { currentRegion, currentRealm, professions } = this.props;
+    const { currentRegion, currentRealm, browseToSkillTier, selectedProfession } = this.props;
 
-    if (currentRegion === null || currentRealm === null) {
+    if (currentRegion === null || currentRealm === null || selectedProfession === null) {
       return;
     }
 
-    const foundProfession = professions.data.find(v => v.id.toString() === id);
-    if (!foundProfession) {
+    const foundSkillTier = selectedProfession.skilltiers.find(v => v.id.toString() === id);
+    if (!foundSkillTier) {
       return;
     }
 
-    // tslint:disable-next-line:no-console
-    console.log(`skill-tier ${id}`);
+    browseToSkillTier(currentRegion, currentRealm, selectedProfession, foundSkillTier);
   }
 
-  // skill-tier nodes
+  // recipe nodes
   private getRecipeNode(v: IShortSkillTier["categories"][0]["recipes"][0]) {
     const result: ITreeNode = {
       className: "recipe-node",
@@ -187,19 +204,29 @@ export class ProfessionsTree extends React.Component<Props> {
   }
 
   private onRecipeNodeClick(id: string) {
-    const { currentRegion, currentRealm, selectedSkillTier } = this.props;
+    const {
+      currentRegion,
+      currentRealm,
+      selectedSkillTier,
+      selectedProfession,
+      browseToRecipe,
+    } = this.props;
 
-    if (currentRegion === null || currentRealm === null || selectedSkillTier === null) {
+    if (
+      currentRegion === null ||
+      currentRealm === null ||
+      selectedProfession === null ||
+      selectedSkillTier === null
+    ) {
       return;
     }
 
-    const foundRecipe = selectedSkillTier.categories.map(v => v.recipes).find(v => v);
-    if (!foundProfession) {
+    const foundRecipe = this.getSelectedSkillTierRecipes().find(v => v.id.toString() === id);
+    if (!foundRecipe) {
       return;
     }
 
-    // tslint:disable-next-line:no-console
-    console.log(`recipe ${id}`);
+    browseToRecipe(currentRegion, currentRealm, selectedProfession, selectedSkillTier, foundRecipe);
   }
 
   private onNodeClick(node: ITreeNode) {
@@ -214,6 +241,7 @@ export class ProfessionsTree extends React.Component<Props> {
     ];
     const nodeClickMap: INodeClickMap = {
       profession: (v: string) => this.onProfessionNodeClick(v),
+      recipe: (v: string) => this.onRecipeNodeClick(v),
       skilltier: (v: string) => this.onSkillTierNodeClick(v),
     };
 

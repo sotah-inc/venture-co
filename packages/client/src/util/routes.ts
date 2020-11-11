@@ -4,6 +4,7 @@ import {
   IProfession,
   IRegionComposite,
   IShortProfession,
+  IShortSkillTier,
 } from "@sotah-inc/core";
 import { IClientRealm } from "../types/global";
 
@@ -27,6 +28,61 @@ export const toRealmProfession = (
     profession.id,
   ].join("/");
   const url = ["data", "[region_name]", "[realm_slug]", "professions", "[profession_id]"].join("/");
+
+  return { url, asDest };
+};
+
+export const toRealmSkillTier = (
+  region: IRegionComposite,
+  realm: IClientRealm,
+  profession: IShortProfession,
+  skillTier: IShortProfession["skilltiers"][0],
+) => {
+  const asDest = [
+    "data",
+    region.config_region.name,
+    realm.realm.slug,
+    "professions",
+    profession.id,
+    skillTier.id,
+  ].join("/");
+  const url = [
+    "data",
+    "[region_name]",
+    "[realm_slug]",
+    "professions",
+    "[profession_id]",
+    "[skilltier_id]",
+  ].join("/");
+
+  return { url, asDest };
+};
+
+export const toRealmRecipe = (
+  region: IRegionComposite,
+  realm: IClientRealm,
+  profession: IShortProfession,
+  skillTier: IShortSkillTier,
+  recipe: IShortSkillTier["categories"][0]["recipes"][0],
+) => {
+  const asDest = [
+    "data",
+    region.config_region.name,
+    realm.realm.slug,
+    "professions",
+    profession.id,
+    skillTier.id,
+    recipe.id,
+  ].join("/");
+  const url = [
+    "data",
+    "[region_name]",
+    "[realm_slug]",
+    "professions",
+    "[profession_id]",
+    "[skilltier_id]",
+    "[recipe_id]",
+  ].join("/");
 
   return { url, asDest };
 };
