@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Classes, Intent, ITreeNode, Spinner, Tree } from "@blueprintjs/core";
-import { IRegionComposite, IShortProfession } from "@sotah-inc/core";
+import { IRegionComposite, IShortProfession, IShortSkillTier } from "@sotah-inc/core";
 
 import { IClientRealm, IFetchData } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
@@ -13,6 +13,7 @@ export interface IStateProps {
   currentRealm: IClientRealm | null;
   professions: IFetchData<IShortProfession[]>;
   selectedProfession: IShortProfession | null;
+  selectedSkillTier: IShortSkillTier | null;
 }
 
 export interface IRouteProps {
@@ -134,7 +135,22 @@ export class ProfessionsTree extends React.Component<Props> {
 
   // skill-tier nodes
   private getSkillTierNode(v: IShortProfession["skilltiers"][0]) {
+    const { selectedSkillTier } = this.props;
+
+    const skillTierRecipes = ((): Array<IShortSkillTier["categories"][0]["recipes"][0]> => {
+      if (selectedSkillTier === null) {
+        return [];
+      }
+
+      return selectedSkillTier.categories.reduce<
+        Array<IShortSkillTier["categories"][0]["recipes"][0]>
+      >((recipesResult, category) => {
+        return [...recipesResult, ...category.recipes];
+      }, []);
+    })();
+
     const result: ITreeNode = {
+      childNodes: skillTierRecipes.map(skillTierRecipe => this.getRecipeNode(skillTierRecipe)),
       className: "skilltier-node",
       id: `skilltier-${v.id}`,
       label: v.name,
@@ -157,6 +173,33 @@ export class ProfessionsTree extends React.Component<Props> {
 
     // tslint:disable-next-line:no-console
     console.log(`skill-tier ${id}`);
+  }
+
+  // skill-tier nodes
+  private getRecipeNode(v: IShortSkillTier["categories"][0]["recipes"][0]) {
+    const result: ITreeNode = {
+      className: "recipe-node",
+      id: `recipe-${v.id}`,
+      label: v.name,
+    };
+
+    return result;
+  }
+
+  private onRecipeNodeClick(id: string) {
+    const { currentRegion, currentRealm, selectedSkillTier } = this.props;
+
+    if (currentRegion === null || currentRealm === null || selectedSkillTier === null) {
+      return;
+    }
+
+    const foundRecipe = selectedSkillTier.categories.map(v => v.recipes).find(v => v);
+    if (!foundProfession) {
+      return;
+    }
+
+    // tslint:disable-next-line:no-console
+    console.log(`recipe ${id}`);
   }
 
   private onNodeClick(node: ITreeNode) {

@@ -1,4 +1,4 @@
-import { IShortProfession } from "@sotah-inc/core";
+import { IShortProfession, IShortSkillTier } from "@sotah-inc/core";
 
 import { LoadProfessionsEntrypoint, ProfessionsActions } from "../../actions/professions";
 import { IFetchData } from "../../types/global";
@@ -38,12 +38,14 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
             v =>
               action.payload.selectedProfessionId && v.id === action.payload.selectedProfessionId,
           ) ?? null;
+        const selectedSkillTier: IShortSkillTier | null = action.payload.selectedSkillTier ?? null;
 
         return {
           ...state,
           loadId: action.payload.loadId,
           professions,
           selectedProfession,
+          selectedSkillTier,
         };
       },
       request: (state): IProfessionsState => {
