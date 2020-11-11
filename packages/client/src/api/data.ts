@@ -26,9 +26,11 @@ import {
   IQueryResponseData,
   IShortItem,
   IShortPet,
+  ISkillTierResponseData,
   ItemId,
   ITokenHistory,
   Locale,
+  ProfessionId,
   ProfessionsResponse,
   QueryAuctionStatsResponse,
   QueryGeneralRequest,
@@ -36,6 +38,8 @@ import {
   QueryResponse,
   RealmSlug,
   RegionName,
+  SkillTierId,
+  SkillTierResponse,
 } from "@sotah-inc/core";
 import * as HTTPStatus from "http-status";
 
@@ -322,4 +326,33 @@ export async function getProfessions(locale: Locale): Promise<IGetProfessionsRes
   }
 
   return { response: body as IProfessionsResponseData, error: null };
+}
+
+export interface IGetSkillTierResult {
+  response: ISkillTierResponseData | null;
+  error: string | null;
+}
+
+export async function getSkillTier(
+  professionId: ProfessionId,
+  skillTierId: SkillTierId,
+  locale: Locale,
+): Promise<IGetSkillTierResult> {
+  const url = [getApiEndpoint(), "skill-tier", professionId.toString(), skillTierId.toString()];
+
+  const { body, status } = await gatherWithQuery<{ locale: Locale }, SkillTierResponse>({
+    headers: new Headers({ "content-type": "application/json" }),
+    method: "GET",
+    query: { locale },
+    url,
+  });
+
+  switch (status) {
+    case HTTPStatus.OK:
+      break;
+    default:
+      return { response: null, error: "Failure" };
+  }
+
+  return { response: body as ISkillTierResponseData, error: null };
 }
