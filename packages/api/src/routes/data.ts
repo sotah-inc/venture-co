@@ -176,6 +176,21 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
       handleResult(res, await controller.getProfessions(String(req.query["locale"])));
     }),
   );
+  router.get(
+    "/skill-tier/:profession/:skillTier",
+    wrap(async (req: Request, res: Response) => {
+      const professionId = req.params["profession"];
+      const skillTierId = req.params["skillTier"];
+      handleResult(
+        res,
+        await controller.getSkillTier(
+          Number(professionId),
+          Number(skillTierId),
+          String(req.query["locale"]),
+        ),
+      );
+    }),
+  );
 
   return router;
 };

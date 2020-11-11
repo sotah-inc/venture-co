@@ -31,12 +31,16 @@ import {
   ItemId,
   IValidationErrorResponse,
   Locale,
-  ProfessionName, ProfessionsResponse,
+  ProfessionId,
+  ProfessionName,
+  ProfessionsResponse,
   QueryAuctionStatsResponse,
   QueryGeneralResponse,
   QueryResponse,
   RealmSlug,
   RegionName,
+  SkillTierId,
+  SkillTierResponse,
 } from "@sotah-inc/core";
 import {
   Messenger,
@@ -1345,6 +1349,48 @@ export class DataController {
 
     return {
       data: { professions: professionsResult.professions },
+      status: HTTPStatus.OK,
+    };
+  }
+
+  public async getSkillTier(
+    professionId: ProfessionId,
+    skillTierId: SkillTierId,
+    locale: string,
+  ): Promise<IRequestResult<SkillTierResponse>> {
+    if (!Object.values(Locale).includes(locale as Locale)) {
+      const validationErrors: IValidationErrorResponse = {
+        error: "could not validate locale",
+      };
+
+      return {
+        data: validationErrors,
+        status: HTTPStatus.BAD_REQUEST,
+      };
+    }
+
+    const skillTierMsg = await this.messenger.getSkillTier(
+      professionId,
+      skillTierId,
+      locale as Locale,
+    );
+    if (skillTierMsg.code !== code.ok) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    const skillTierResult = await skillTierMsg.decode();
+    if (skillTierResult === null) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    return {
+      data: { skillTier: skillTierResult.skillTier },
       status: HTTPStatus.OK,
     };
   }
