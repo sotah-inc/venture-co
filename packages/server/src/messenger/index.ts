@@ -432,7 +432,7 @@ export class Messenger {
     skillTierId: SkillTierId,
     locale: Locale,
   ): Promise<Message<ISkillTierResponse>> {
-    return this.request(subjects.professions, {
+    return this.request(subjects.skillTier, {
       body: JSON.stringify({ profession_id: professionId, skilltier_id: skillTierId, locale }),
       parseKind: ParseKind.GzipJsonEncoded,
     });
