@@ -169,6 +169,7 @@ export class ProfessionsTree extends React.Component<Props> {
         this.getRecipeNode(skillTierRecipe),
       ),
       className: "skilltier-node",
+      hasCaret: false,
       id: `skilltier-${v.id}`,
       isSelected: selectedSkillTier !== null && selectedSkillTier.id === v.id,
       label: v.name,

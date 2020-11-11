@@ -38,7 +38,8 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
             v =>
               action.payload.selectedProfessionId && v.id === action.payload.selectedProfessionId,
           ) ?? null;
-        const selectedSkillTier: IShortSkillTier | null = action.payload.selectedSkillTier ?? null;
+        const selectedSkillTier: IShortSkillTier | null =
+          action.payload.skillTier?.response?.skillTier ?? null;
 
         return {
           ...state,
