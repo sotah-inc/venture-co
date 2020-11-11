@@ -12,7 +12,6 @@ import {
   Locale,
   ProfessionId,
   SkillTierId,
-  SkillTierResponse,
 } from "@sotah-inc/core";
 import * as nats from "nats";
 
@@ -43,7 +42,7 @@ import {
   ResolveAuctionsResponse,
   ValidateRegionRealmResponse,
 } from "./contracts";
-import { IProfessionsResponse } from "./contracts/professions";
+import { IProfessionsResponse, ISkillTierResponse } from "./contracts/professions";
 import { Message, ParseKind } from "./message";
 import { MessageError } from "./message-error";
 
@@ -432,7 +431,7 @@ export class Messenger {
     professionId: ProfessionId,
     skillTierId: SkillTierId,
     locale: Locale,
-  ): Promise<Message<SkillTierResponse>> {
+  ): Promise<Message<ISkillTierResponse>> {
     return this.request(subjects.professions, {
       body: JSON.stringify({ profession_id: professionId, skilltier_id: skillTierId, locale }),
       parseKind: ParseKind.GzipJsonEncoded,
