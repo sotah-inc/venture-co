@@ -1,6 +1,10 @@
 import { IShortProfession, IShortRecipe, IShortSkillTier } from "@sotah-inc/core";
 
-import { LoadProfessionsEntrypoint, ProfessionsActions } from "../../actions/professions";
+import {
+  LoadProfessionsEntrypoint,
+  ProfessionsActions,
+  SetSkillSetCategoryIndex,
+} from "../../actions/professions";
 import { IFetchData } from "../../types/global";
 import { FetchLevel } from "../../types/main";
 import { IProfessionsState } from "../../types/professions";
@@ -79,6 +83,16 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
             ...state.professions,
             level: FetchLevel.fetching,
           },
+        };
+      },
+    },
+  },
+  index: {
+    skilltiercategory: {
+      set: (state, action: ReturnType<typeof SetSkillSetCategoryIndex>) => {
+        return {
+          ...state,
+          selectedSkillTierCategoryIndex: action.payload,
         };
       },
     },

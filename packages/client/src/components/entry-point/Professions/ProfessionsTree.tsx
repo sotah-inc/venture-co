@@ -18,6 +18,10 @@ export interface IStateProps {
   selectedSkillTierCategoryIndex: number;
 }
 
+export interface IDispatchProps {
+  setSkillTierCategoryIndex: (v: number) => void;
+}
+
 export interface IRouteProps {
   browseToProfession: (
     region: IRegionComposite,
@@ -39,7 +43,7 @@ export interface IRouteProps {
   ) => void;
 }
 
-export type Props = Readonly<IStateProps & IRouteProps>;
+export type Props = Readonly<IStateProps & IDispatchProps & IRouteProps>;
 
 interface INodeClickMap {
   [key: string]: (v: string) => void;
@@ -47,7 +51,7 @@ interface INodeClickMap {
 
 export class ProfessionsTree extends React.Component<Props> {
   public render() {
-    const { selectedSkillTierCategoryIndex } = this.props;
+    const { selectedSkillTierCategoryIndex, selectedRecipe } = this.props;
 
     return (
       <div style={{ marginTop: "10px" }}>
@@ -65,6 +69,7 @@ export class ProfessionsTree extends React.Component<Props> {
             <div style={{ paddingLeft: "10px" }}>
               <p>Hello, world!</p>
               <p>{selectedSkillTierCategoryIndex}</p>
+              <p>recipe: {selectedRecipe?.id ?? "none"}</p>
             </div>
           </div>
         </div>
@@ -171,10 +176,18 @@ export class ProfessionsTree extends React.Component<Props> {
 
     const isSelected = selectedSkillTier !== null && selectedSkillTier.id === v.id;
 
+    const childNodes = ((): ITreeNode[] => {
+      if (selectedSkillTier === null) {
+        return [{ id: "", label: "Loading...", disabled: true }];
+      }
+
+      return selectedSkillTier.categories.map((skillTierCategory, i) =>
+        this.getSkillTierCategoryNode(skillTierCategory, i),
+      );
+    })();
+
     const result: ITreeNode = {
-      childNodes: this.getSelectedSkillTierRecipes().map(skillTierRecipe =>
-        this.getRecipeNode(skillTierRecipe),
-      ),
+      childNodes,
       className: "skilltier-node",
       hasCaret: false,
       id: `skilltier-${v.id}`,
@@ -199,6 +212,45 @@ export class ProfessionsTree extends React.Component<Props> {
     }
 
     browseToSkillTier(currentRegion, currentRealm, selectedProfession, foundSkillTier);
+  }
+
+  // skill-tier category nodes
+  private getSkillTierCategoryNode(
+    v: IShortSkillTier["categories"][0],
+    categoryIndex: number,
+  ): ITreeNode {
+    const { selectedSkillTierCategoryIndex, selectedSkillTier } = this.props;
+
+    const isSelected = selectedSkillTierCategoryIndex === categoryIndex;
+
+    const childNodes = ((): ITreeNode[] => {
+      if (!isSelected || selectedSkillTier === null) {
+        return [];
+      }
+
+      const foundCategory = selectedSkillTier.categories[selectedSkillTierCategoryIndex];
+      if (!foundCategory) {
+        return [];
+      }
+
+      return foundCategory.recipes.map(recipeCategory => this.getRecipeNode(recipeCategory));
+    })();
+
+    return {
+      childNodes,
+      className: "skilltier-category-node",
+      hasCaret: false,
+      id: `skilltier-category-${categoryIndex}`,
+      isExpanded: isSelected,
+      isSelected,
+      label: v.name,
+    };
+  }
+
+  private onSkillTierCategoryNodeClick(index: string) {
+    const { setSkillTierCategoryIndex } = this.props;
+
+    setSkillTierCategoryIndex(Number(index));
   }
 
   // recipe nodes
@@ -242,7 +294,7 @@ export class ProfessionsTree extends React.Component<Props> {
   }
 
   private onNodeClick(node: ITreeNode) {
-    const separatorIndex = node.id.toString().indexOf("-");
+    const separatorIndex = node.id.toString().lastIndexOf("-");
     if (separatorIndex === -1) {
       return;
     }
@@ -255,6 +307,7 @@ export class ProfessionsTree extends React.Component<Props> {
       profession: (v: string) => this.onProfessionNodeClick(v),
       recipe: (v: string) => this.onRecipeNodeClick(v),
       skilltier: (v: string) => this.onSkillTierNodeClick(v),
+      "skilltier-category": (v: string) => this.onSkillTierCategoryNodeClick(v),
     };
 
     if (!Object.keys(nodeClickMap).includes(kind)) {

@@ -1,6 +1,8 @@
 import { connect } from "react-redux";
 
+import { SetSkillSetCategoryIndex } from "../../../actions/professions";
 import {
+  IDispatchProps,
   IStateProps,
   ProfessionsTree,
 } from "../../../components/entry-point/Professions/ProfessionsTree";
@@ -27,6 +29,11 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
   };
 };
 
-export const ProfessionsTreeContainer = connect<IStateProps, {}, {}, IStoreState>(mapStateToProps)(
-  ProfessionsTree,
-);
+const mapDispatchToProps: IDispatchProps = {
+  setSkillTierCategoryIndex: SetSkillSetCategoryIndex,
+};
+
+export const ProfessionsTreeContainer = connect<IStateProps, IDispatchProps, {}, IStoreState>(
+  mapStateToProps,
+  mapDispatchToProps,
+)(ProfessionsTree);
