@@ -5,5 +5,5 @@ export interface IProfessionsResponse {
 }
 
 export interface ISkillTierResponse {
-  skillTier: IShortSkillTier;
+  skilltier: IShortSkillTier;
 }
