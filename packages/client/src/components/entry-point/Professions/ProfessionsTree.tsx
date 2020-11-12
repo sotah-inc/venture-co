@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Classes, Intent, ITreeNode, Spinner, Tree } from "@blueprintjs/core";
-import { IRegionComposite, IShortProfession, IShortSkillTier } from "@sotah-inc/core";
+import { IRegionComposite, IShortProfession, IShortRecipe, IShortSkillTier } from "@sotah-inc/core";
 
 import { IClientRealm, IFetchData } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
@@ -14,6 +14,7 @@ export interface IStateProps {
   professions: IFetchData<IShortProfession[]>;
   selectedProfession: IShortProfession | null;
   selectedSkillTier: IShortSkillTier | null;
+  selectedRecipe: IShortRecipe | null;
 }
 
 export interface IRouteProps {
@@ -198,9 +199,12 @@ export class ProfessionsTree extends React.Component<Props> {
 
   // recipe nodes
   private getRecipeNode(v: IShortSkillTier["categories"][0]["recipes"][0]) {
+    const { selectedRecipe } = this.props;
+
     const result: ITreeNode = {
       className: "recipe-node",
       id: `recipe-${v.id}`,
+      isSelected: selectedRecipe !== null && selectedRecipe.id === v.id,
       label: v.name,
     };
 

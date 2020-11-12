@@ -1,4 +1,4 @@
-import { IShortProfession, IShortSkillTier } from "@sotah-inc/core";
+import { IShortProfession, IShortRecipe, IShortSkillTier } from "@sotah-inc/core";
 
 import { IFetchData } from "./global";
 import { FetchLevel } from "./main";
@@ -8,6 +8,7 @@ export interface IProfessionsState {
   professions: IFetchData<IShortProfession[]>;
   selectedProfession: IShortProfession | null;
   selectedSkillTier: IShortSkillTier | null;
+  selectedRecipe: IShortRecipe | null;
 }
 
 export const defaultProfessionsState: IProfessionsState = {
@@ -18,5 +19,6 @@ export const defaultProfessionsState: IProfessionsState = {
     level: FetchLevel.initial,
   },
   selectedProfession: null,
+  selectedRecipe: null,
   selectedSkillTier: null,
 };

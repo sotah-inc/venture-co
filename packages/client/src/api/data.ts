@@ -24,6 +24,7 @@ import {
   IQueryGeneralResponseData,
   IQueryRequest,
   IQueryResponseData,
+  IRecipeResponseData,
   IShortItem,
   IShortPet,
   ISkillTierResponseData,
@@ -37,6 +38,8 @@ import {
   QueryGeneralResponse,
   QueryResponse,
   RealmSlug,
+  RecipeId,
+  RecipeResponse,
   RegionName,
   SkillTierId,
   SkillTierResponse,
@@ -355,4 +358,29 @@ export async function getSkillTier(
   }
 
   return { response: body as ISkillTierResponseData, error: null };
+}
+
+export interface IGetRecipeResult {
+  response: IRecipeResponseData | null;
+  error: string | null;
+}
+
+export async function getRecipe(recipeId: RecipeId, locale: Locale): Promise<IGetRecipeResult> {
+  const url = [getApiEndpoint(), "recipe", recipeId.toString()];
+
+  const { body, status } = await gatherWithQuery<{ locale: Locale }, RecipeResponse>({
+    headers: new Headers({ "content-type": "application/json" }),
+    method: "GET",
+    query: { locale },
+    url,
+  });
+
+  switch (status) {
+    case HTTPStatus.OK:
+      break;
+    default:
+      return { response: null, error: "Failure" };
+  }
+
+  return { response: body as IRecipeResponseData, error: null };
 }
