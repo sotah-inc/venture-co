@@ -189,7 +189,7 @@ export class ProfessionsTree extends React.Component<Props> {
     const result: ITreeNode = {
       childNodes,
       className: "skilltier-node",
-      hasCaret: false,
+      hasCaret: true,
       id: `skilltier-${v.id}`,
       isExpanded: isSelected,
       isSelected,
@@ -239,7 +239,7 @@ export class ProfessionsTree extends React.Component<Props> {
     return {
       childNodes,
       className: "skilltier-category-node",
-      hasCaret: false,
+      hasCaret: true,
       id: `skilltier-category-${categoryIndex}`,
       isExpanded: isSelected,
       isSelected,
@@ -248,9 +248,12 @@ export class ProfessionsTree extends React.Component<Props> {
   }
 
   private onSkillTierCategoryNodeClick(index: string) {
-    const { setSkillTierCategoryIndex } = this.props;
+    const { setSkillTierCategoryIndex, selectedSkillTierCategoryIndex } = this.props;
 
-    setSkillTierCategoryIndex(Number(index));
+    const parsedIndex = Number(index);
+    const nextIndex = selectedSkillTierCategoryIndex === parsedIndex ? -1 : parsedIndex;
+
+    setSkillTierCategoryIndex(nextIndex);
   }
 
   // recipe nodes

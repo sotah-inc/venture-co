@@ -161,7 +161,8 @@ body.bp3-dark,
 
     .profession-node > .bp3-tree-node-content > .bp3-tree-node-caret-none,
     .skilltier-node > .bp3-tree-node-content > .bp3-tree-node-caret-none,
-    .recipe-node > .bp3-tree-node-content > .bp3-tree-node-caret-none{
+    .skilltier-category-node > .bp3-tree-node-content > .bp3-tree-node-caret-none,
+    .recipe-node > .bp3-tree-node-content > .bp3-tree-node-caret-none {
         min-width: 10px;
     }
 }

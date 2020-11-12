@@ -90,8 +90,11 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
   index: {
     skilltiercategory: {
       set: (state, action: ReturnType<typeof SetSkillSetCategoryIndex>) => {
+        const selectedRecipe = action.payload === -1 ? null : state.selectedRecipe;
+
         return {
           ...state,
+          selectedRecipe,
           selectedSkillTierCategoryIndex: action.payload,
         };
       },
