@@ -1,4 +1,4 @@
-import { IItem } from "../../item";
+import { IShortItem } from "../../short-item";
 import { IShortProfession } from "../../short-profession";
 import { IShortRecipe } from "../../short-recipe";
 import { IShortSkillTier } from "../../short-skilltier";
@@ -18,7 +18,7 @@ export type SkillTierResponse = ISkillTierResponseData | IValidationErrorRespons
 
 export interface IRecipeResponseData {
   recipe: IShortRecipe;
-  items: IItem[];
+  items: IShortItem[];
 }
 
 export type RecipeResponse = IRecipeResponseData | IValidationErrorResponse | null;
