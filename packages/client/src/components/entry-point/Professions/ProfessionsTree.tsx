@@ -164,6 +164,8 @@ export class ProfessionsTree extends React.Component<Props> {
   private getSkillTierNode(v: IShortProfession["skilltiers"][0]) {
     const { selectedSkillTier } = this.props;
 
+    const isSelected = selectedSkillTier !== null && selectedSkillTier.id === v.id;
+
     const result: ITreeNode = {
       childNodes: this.getSelectedSkillTierRecipes().map(skillTierRecipe =>
         this.getRecipeNode(skillTierRecipe),
@@ -171,7 +173,8 @@ export class ProfessionsTree extends React.Component<Props> {
       className: "skilltier-node",
       hasCaret: false,
       id: `skilltier-${v.id}`,
-      isSelected: selectedSkillTier !== null && selectedSkillTier.id === v.id,
+      isExpanded: isSelected,
+      isSelected,
       label: v.name,
     };
 
