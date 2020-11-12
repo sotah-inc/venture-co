@@ -1412,16 +1412,8 @@ export class DataController {
       };
     }
 
-    const recipeMsg = await this.messenger.getRecipe(recipeId, locale as Locale);
-    if (recipeMsg.code !== code.ok) {
-      return {
-        data: null,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-
-    const recipeResult = await recipeMsg.decode();
-    if (recipeResult === null) {
+    const resolveRecipeResult = await this.messenger.resolveRecipe(recipeId, locale as Locale);
+    if (resolveRecipeResult.code !== code.ok || resolveRecipeResult.data === null) {
       return {
         data: null,
         status: HTTPStatus.INTERNAL_SERVER_ERROR,
@@ -1429,7 +1421,10 @@ export class DataController {
     }
 
     return {
-      data: { recipe: recipeResult.recipe },
+      data: {
+        items: resolveRecipeResult.data.items.items,
+        recipe: resolveRecipeResult.data.recipe.recipe,
+      },
       status: HTTPStatus.OK,
     };
   }
