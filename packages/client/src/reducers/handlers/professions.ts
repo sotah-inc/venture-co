@@ -5,7 +5,7 @@ import {
   ProfessionsActions,
   SetSkillSetCategoryIndex,
 } from "../../actions/professions";
-import { IFetchData } from "../../types/global";
+import { IFetchData, IItemsData } from "../../types/global";
 import { FetchLevel } from "../../types/main";
 import { IProfessionsState } from "../../types/professions";
 import { IKindHandlers, Runner } from "./index";
@@ -44,7 +44,16 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
           ) ?? null;
         const selectedSkillTier: IShortSkillTier | null =
           action.payload.skillTier?.response?.skillTier ?? null;
-        const selectedRecipe: IShortRecipe | null = action.payload.recipe?.response?.recipe ?? null;
+        const selectedRecipe = ((): IItemsData<IShortRecipe> | null => {
+          if (!action.payload.recipe || !action.payload.recipe.response) {
+            return null;
+          }
+
+          return {
+            data: action.payload.recipe.response.recipe,
+            items: action.payload.recipe.response.items,
+          };
+        })();
         const selectedSkillTierCategoryIndex = ((): number => {
           const skillTierCategories =
             action.payload.skillTier?.response?.skillTier.categories ?? null;
@@ -58,7 +67,9 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
               return foundIndex;
             }
 
-            if (category.recipes.some(categoryRecipe => categoryRecipe.id === selectedRecipe.id)) {
+            if (
+              category.recipes.some(categoryRecipe => categoryRecipe.id === selectedRecipe.data.id)
+            ) {
               return categoryIndex;
             }
 

@@ -3,7 +3,7 @@ import React from "react";
 import { Classes, Intent, ITreeNode, Spinner, Tree } from "@blueprintjs/core";
 import { IRegionComposite, IShortProfession, IShortRecipe, IShortSkillTier } from "@sotah-inc/core";
 
-import { IClientRealm, IFetchData } from "../../../types/global";
+import { IClientRealm, IFetchData, IItemsData } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
 import { ShortProfessionIcon } from "../../util/ShortProfessionIcon";
 
@@ -14,7 +14,7 @@ export interface IStateProps {
   professions: IFetchData<IShortProfession[]>;
   selectedProfession: IShortProfession | null;
   selectedSkillTier: IShortSkillTier | null;
-  selectedRecipe: IShortRecipe | null;
+  selectedRecipe: IItemsData<IShortRecipe> | null;
   selectedSkillTierCategoryIndex: number;
 }
 
@@ -69,7 +69,7 @@ export class ProfessionsTree extends React.Component<Props> {
             <div style={{ paddingLeft: "10px" }}>
               <p>Hello, world!</p>
               <p>{selectedSkillTierCategoryIndex}</p>
-              <p>recipe: {selectedRecipe?.id ?? "none"}</p>
+              <p>recipe: {selectedRecipe?.data.id ?? "none"}</p>
             </div>
           </div>
         </div>
@@ -263,7 +263,7 @@ export class ProfessionsTree extends React.Component<Props> {
     const result: ITreeNode = {
       className: "recipe-node",
       id: `recipe-${v.id}`,
-      isSelected: selectedRecipe !== null && selectedRecipe.id === v.id,
+      isSelected: selectedRecipe !== null && selectedRecipe.data.id === v.id,
       label: v.name,
     };
 

@@ -1,6 +1,6 @@
 import { IShortProfession, IShortRecipe, IShortSkillTier } from "@sotah-inc/core";
 
-import { IFetchData } from "./global";
+import { IFetchData, IItemsData } from "./global";
 import { FetchLevel } from "./main";
 
 export interface IProfessionsState {
@@ -8,7 +8,7 @@ export interface IProfessionsState {
   professions: IFetchData<IShortProfession[]>;
   selectedProfession: IShortProfession | null;
   selectedSkillTier: IShortSkillTier | null;
-  selectedRecipe: IShortRecipe | null;
+  selectedRecipe: IItemsData<IShortRecipe> | null;
   selectedSkillTierCategoryIndex: number;
 }
 
