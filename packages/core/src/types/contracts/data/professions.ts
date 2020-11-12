@@ -1,4 +1,5 @@
 import { IShortProfession } from "../../short-profession";
+import { IShortRecipe } from "../../short-recipe";
 import { IShortSkillTier } from "../../short-skilltier";
 import { IValidationErrorResponse } from "../index";
 
@@ -13,3 +14,9 @@ export interface ISkillTierResponseData {
 }
 
 export type SkillTierResponse = ISkillTierResponseData | IValidationErrorResponse | null;
+
+export interface IRecipeResponseData {
+  recipe: IShortRecipe;
+}
+
+export type RecipeResponse = IRecipeResponseData | IValidationErrorResponse | null;
