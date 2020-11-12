@@ -15,6 +15,7 @@ export * from "./short-item";
 export * from "./short-pet";
 export * from "./short-profession";
 export * from "./short-skilltier";
+export * from "./short-recipe";
 
 export enum SortDirection {
   none,
