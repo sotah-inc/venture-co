@@ -11,6 +11,7 @@ import {
   ITokenHistory,
   Locale,
   ProfessionId,
+  RecipeId,
   SkillTierId,
 } from "@sotah-inc/core";
 import * as nats from "nats";
@@ -42,7 +43,7 @@ import {
   ResolveAuctionsResponse,
   ValidateRegionRealmResponse,
 } from "./contracts";
-import { IProfessionsResponse, ISkillTierResponse } from "./contracts/professions";
+import { IProfessionsResponse, IRecipeResponse, ISkillTierResponse } from "./contracts/professions";
 import { Message, ParseKind } from "./message";
 import { MessageError } from "./message-error";
 
@@ -76,6 +77,7 @@ export enum subjects {
 
   professions = "professions",
   skillTier = "skillTier",
+  recipe = "recipe",
 }
 
 export interface IMessage {
@@ -434,6 +436,13 @@ export class Messenger {
   ): Promise<Message<ISkillTierResponse>> {
     return this.request(subjects.skillTier, {
       body: JSON.stringify({ profession_id: professionId, skilltier_id: skillTierId, locale }),
+      parseKind: ParseKind.GzipJsonEncoded,
+    });
+  }
+
+  public async getRecipe(recipeId: RecipeId, locale: Locale): Promise<Message<IRecipeResponse>> {
+    return this.request(subjects.recipe, {
+      body: JSON.stringify({ recipe_id: recipeId, locale }),
       parseKind: ParseKind.GzipJsonEncoded,
     });
   }
