@@ -8,6 +8,7 @@ import {
   IRegionTuple,
   IShortItem,
   IShortPet,
+  ItemId,
   ITokenHistory,
   Locale,
   ProfessionId,
@@ -43,7 +44,12 @@ import {
   ResolveAuctionsResponse,
   ValidateRegionRealmResponse,
 } from "./contracts";
-import { IProfessionsResponse, IRecipeResponse, ISkillTierResponse } from "./contracts/professions";
+import {
+  IProfessionsResponse,
+  IRecipeResponse,
+  ISkillTierResponse,
+  ResolveRecipeResponse,
+} from "./contracts/professions";
 import { Message, ParseKind } from "./message";
 import { MessageError } from "./message-error";
 
@@ -445,6 +451,69 @@ export class Messenger {
       body: JSON.stringify({ recipe_id: recipeId, locale }),
       parseKind: ParseKind.GzipJsonEncoded,
     });
+  }
+
+  public async resolveRecipe(recipeId: RecipeId, locale: Locale): Promise<ResolveRecipeResponse> {
+    const recipeMsg = await this.getRecipe(recipeId, locale);
+    if (recipeMsg.code !== code.ok) {
+      return {
+        code: recipeMsg.code,
+        data: null,
+        error: recipeMsg.error?.message ?? null,
+      };
+    }
+
+    const recipeResult = await recipeMsg.decode();
+    if (recipeResult === null) {
+      return {
+        code: code.msgJsonParseError,
+        data: null,
+        error: "failed to decode recipe message",
+      };
+    }
+
+    const itemIds = ((): ItemId[] => {
+      const out = new Set<ItemId>();
+      if (recipeResult.recipe.crafted_item.id > 0) {
+        out.add(recipeResult.recipe.crafted_item.id);
+      }
+      if (recipeResult.recipe.alliance_crafted_item.id > 0) {
+        out.add(recipeResult.recipe.alliance_crafted_item.id);
+      }
+      if (recipeResult.recipe.horde_crafted_item.id > 0) {
+        out.add(recipeResult.recipe.horde_crafted_item.id);
+      }
+
+      recipeResult.recipe.reagents.forEach(v => out.add(v.reagent.id));
+
+      return Array.from(out);
+    })();
+    const itemsMsg = await this.getItems({
+      itemIds,
+      locale,
+    });
+    if (itemsMsg.code !== code.ok) {
+      return {
+        code: itemsMsg.code,
+        data: null,
+        error: itemsMsg.error?.message ?? null,
+      };
+    }
+
+    const itemsResult = await itemsMsg.decode();
+    if (itemsResult === null) {
+      return {
+        code: code.msgJsonParseError,
+        data: null,
+        error: "failed to decode items-message",
+      };
+    }
+
+    return {
+      code: code.ok,
+      data: { recipe: recipeResult, items: itemsResult },
+      error: null,
+    };
   }
 
   // etc
