@@ -8,7 +8,13 @@ import { IStoreState } from "../../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
   const { currentRealm, currentRegion } = state.Main;
-  const { professions, selectedProfession, selectedSkillTier, selectedRecipe } = state.Professions;
+  const {
+    professions,
+    selectedProfession,
+    selectedSkillTier,
+    selectedRecipe,
+    selectedSkillTierCategoryIndex,
+  } = state.Professions;
 
   return {
     currentRealm,
@@ -17,6 +23,7 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
     selectedProfession,
     selectedRecipe,
     selectedSkillTier,
+    selectedSkillTierCategoryIndex,
   };
 };
 

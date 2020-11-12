@@ -15,6 +15,7 @@ export interface IStateProps {
   selectedProfession: IShortProfession | null;
   selectedSkillTier: IShortSkillTier | null;
   selectedRecipe: IShortRecipe | null;
+  selectedSkillTierCategoryIndex: number;
 }
 
 export interface IRouteProps {
@@ -46,6 +47,8 @@ interface INodeClickMap {
 
 export class ProfessionsTree extends React.Component<Props> {
   public render() {
+    const { selectedSkillTierCategoryIndex } = this.props;
+
     return (
       <div style={{ marginTop: "10px" }}>
         <div className="pure-g">
@@ -61,6 +64,7 @@ export class ProfessionsTree extends React.Component<Props> {
           <div className="pure-u-3-4">
             <div style={{ paddingLeft: "10px" }}>
               <p>Hello, world!</p>
+              <p>{selectedSkillTierCategoryIndex}</p>
             </div>
           </div>
         </div>

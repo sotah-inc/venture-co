@@ -41,6 +41,26 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
         const selectedSkillTier: IShortSkillTier | null =
           action.payload.skillTier?.response?.skillTier ?? null;
         const selectedRecipe: IShortRecipe | null = action.payload.recipe?.response?.recipe ?? null;
+        const selectedSkillTierCategoryIndex = ((): number => {
+          const skillTierCategories =
+            action.payload.skillTier?.response?.skillTier.categories ?? null;
+
+          if (selectedRecipe === null || skillTierCategories === null) {
+            return -1;
+          }
+
+          return skillTierCategories.reduce<number>((foundIndex, category, categoryIndex) => {
+            if (foundIndex > -1) {
+              return foundIndex;
+            }
+
+            if (category.recipes.some(categoryRecipe => categoryRecipe.id === selectedRecipe.id)) {
+              return categoryIndex;
+            }
+
+            return -1;
+          }, -1);
+        })();
 
         return {
           ...state,
@@ -49,6 +69,7 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
           selectedProfession,
           selectedRecipe,
           selectedSkillTier,
+          selectedSkillTierCategoryIndex,
         };
       },
       request: (state): IProfessionsState => {

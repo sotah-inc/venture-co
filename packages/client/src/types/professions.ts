@@ -9,6 +9,7 @@ export interface IProfessionsState {
   selectedProfession: IShortProfession | null;
   selectedSkillTier: IShortSkillTier | null;
   selectedRecipe: IShortRecipe | null;
+  selectedSkillTierCategoryIndex: number;
 }
 
 export const defaultProfessionsState: IProfessionsState = {
@@ -21,4 +22,5 @@ export const defaultProfessionsState: IProfessionsState = {
   selectedProfession: null,
   selectedRecipe: null,
   selectedSkillTier: null,
+  selectedSkillTierCategoryIndex: -1,
 };

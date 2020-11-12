@@ -14,7 +14,12 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
   const { currentRegion, currentRealm } = state.Main;
   const { professions, selectedProfession } = state.Professions;
 
-  return { professions, currentRegion, currentRealm, selectedProfession };
+  return {
+    currentRealm,
+    currentRegion,
+    professions,
+    selectedProfession,
+  };
 };
 
 const mapDispatchToProps: IDispatchProps = {
