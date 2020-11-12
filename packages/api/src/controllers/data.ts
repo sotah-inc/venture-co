@@ -1390,7 +1390,7 @@ export class DataController {
     }
 
     return {
-      data: { skillTier: skillTierResult.skillTier },
+      data: { skillTier: skillTierResult.skilltier },
       status: HTTPStatus.OK,
     };
   }
