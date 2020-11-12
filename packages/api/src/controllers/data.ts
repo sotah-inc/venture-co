@@ -38,6 +38,8 @@ import {
   QueryGeneralResponse,
   QueryResponse,
   RealmSlug,
+  RecipeId,
+  RecipeResponse,
   RegionName,
   SkillTierId,
   SkillTierResponse,
@@ -1391,6 +1393,43 @@ export class DataController {
 
     return {
       data: { skillTier: skillTierResult.skilltier },
+      status: HTTPStatus.OK,
+    };
+  }
+
+  public async getRecipe(
+    recipeId: RecipeId,
+    locale: string,
+  ): Promise<IRequestResult<RecipeResponse>> {
+    if (!Object.values(Locale).includes(locale as Locale)) {
+      const validationErrors: IValidationErrorResponse = {
+        error: "could not validate locale",
+      };
+
+      return {
+        data: validationErrors,
+        status: HTTPStatus.BAD_REQUEST,
+      };
+    }
+
+    const recipeMsg = await this.messenger.getRecipe(recipeId, locale as Locale);
+    if (recipeMsg.code !== code.ok) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    const recipeResult = await recipeMsg.decode();
+    if (recipeResult === null) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    return {
+      data: { recipe: recipeResult.recipe },
       status: HTTPStatus.OK,
     };
   }

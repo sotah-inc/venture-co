@@ -191,6 +191,13 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
       );
     }),
   );
+  router.get(
+    "/recipe/:recipe",
+    wrap(async (req: Request, res: Response) => {
+      const recipeId = req.params["recipe"];
+      handleResult(res, await controller.getRecipe(Number(recipeId), String(req.query["locale"])));
+    }),
+  );
 
   return router;
 };
