@@ -12,7 +12,6 @@ export type ProfessionsResponse = IProfessionsResponseData | IValidationErrorRes
 
 export interface ISkillTierResponseData {
   skillTier: IShortSkillTier;
-  items: IShortItem[];
 }
 
 export type SkillTierResponse = ISkillTierResponseData | IValidationErrorResponse | null;

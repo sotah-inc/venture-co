@@ -5,6 +5,7 @@ export type SkillTierId = number;
 export interface IShortSkillTierCategoryRecipe {
   id: RecipeId;
   name: string;
+  icon_url: string;
 }
 
 export interface IShortSkillTierCategory {
