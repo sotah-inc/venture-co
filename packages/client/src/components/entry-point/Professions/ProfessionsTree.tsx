@@ -262,12 +262,21 @@ export class ProfessionsTree extends React.Component<Props> {
 
     const result: ITreeNode = {
       className: "recipe-node",
+      icon: this.renderRecipeNodeIcon(v.icon_url),
       id: `recipe-${v.id}`,
       isSelected: selectedRecipe !== null && selectedRecipe.data.id === v.id,
       label: v.name,
     };
 
     return result;
+  }
+
+  private renderRecipeNodeIcon(iconUrl: string) {
+    if (iconUrl.length === 0) {
+      return null;
+    }
+
+    return <img src={iconUrl} className="profession-icon" alt="" />;
   }
 
   private onRecipeNodeClick(id: string) {
