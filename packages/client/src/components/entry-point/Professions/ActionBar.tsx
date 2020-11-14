@@ -44,11 +44,15 @@ export class ActionBar extends React.Component<Props> {
   public render() {
     return (
       <Navbar className="professions-actionbar">
-        <NavbarGroup align={Alignment.RIGHT}>
+        <NavbarGroup align={Alignment.LEFT}>
           <ButtonGroup>
             <ProfessionsProfessionToggleContainer
               onProfessionChange={(v: IShortProfession) => this.onProfessionChange(v)}
             />
+          </ButtonGroup>
+        </NavbarGroup>
+        <NavbarGroup align={Alignment.RIGHT}>
+          <ButtonGroup>
             <RealmToggleContainer onRealmChange={(v: IClientRealm) => this.onRealmChange(v)} />
             <RegionToggleContainer />
           </ButtonGroup>
