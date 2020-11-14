@@ -16,12 +16,12 @@ export const LoadProfessionsEntrypoint = (payload: ILoadProfessionsEndpoint) =>
   createAction(LOAD_PROFESSIONS_ENTRYPOINT, payload);
 
 export const SET_SKILLTIERCATEGORY_INDEX = "SET_SKILLTIERCATEGORY_INDEX";
-export const SetSkillSetCategoryIndex = (payload: number) =>
+export const SetSkillTierCategoryIndex = (payload: number) =>
   createAction(SET_SKILLTIERCATEGORY_INDEX, payload);
 
 export const ProfessionsActions = {
   LoadProfessionsEntrypoint,
-  SetSkillSetCategoryIndex,
+  SetSkillSetCategoryIndex: SetSkillTierCategoryIndex,
 };
 
 export type ProfessionsActions = ActionsUnion<typeof ProfessionsActions>;
