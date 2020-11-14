@@ -3,6 +3,7 @@ import React from "react";
 import { Alignment, ButtonGroup, Navbar, NavbarGroup } from "@blueprintjs/core";
 import { IRegionComposite, IShortProfession, IShortRecipe, IShortSkillTier } from "@sotah-inc/core";
 
+import { ProfessionsProfessionToggleContainer } from "../../../containers/util/ProfessionsProfessionToggle";
 import { RealmToggleContainer } from "../../../containers/util/RealmToggle";
 import { RegionToggleContainer } from "../../../containers/util/RegionToggle";
 import { IClientRealm, IItemsData } from "../../../types/global";
@@ -45,6 +46,9 @@ export class ActionBar extends React.Component<Props> {
       <Navbar className="professions-actionbar">
         <NavbarGroup align={Alignment.RIGHT}>
           <ButtonGroup>
+            <ProfessionsProfessionToggleContainer
+              onProfessionChange={(v: IShortProfession) => this.onProfessionChange(v)}
+            />
             <RealmToggleContainer onRealmChange={(v: IClientRealm) => this.onRealmChange(v)} />
             <RegionToggleContainer />
           </ButtonGroup>
@@ -94,5 +98,15 @@ export class ActionBar extends React.Component<Props> {
       selectedSkillTier,
       selectedRecipe.data,
     );
+  }
+
+  private onProfessionChange(profession: IShortProfession) {
+    const { currentRegion, currentRealm, browseToProfession } = this.props;
+
+    if (currentRegion === null || currentRealm === null) {
+      return;
+    }
+
+    browseToProfession(currentRegion, currentRealm, profession);
   }
 }
