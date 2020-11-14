@@ -1,17 +1,14 @@
 import React from "react";
 
-import { Classes, Intent, ITreeNode, Spinner, Tree } from "@blueprintjs/core";
+import { Classes, ITreeNode, Tree } from "@blueprintjs/core";
 import { IRegionComposite, IShortProfession, IShortRecipe, IShortSkillTier } from "@sotah-inc/core";
 
-import { IClientRealm, IFetchData, IItemsData } from "../../../types/global";
-import { FetchLevel } from "../../../types/main";
-import { ShortProfessionIcon } from "../../util/ShortProfessionIcon";
+import { IClientRealm, IItemsData } from "../../../types/global";
 
 // props
 export interface IStateProps {
   currentRegion: IRegionComposite | null;
   currentRealm: IClientRealm | null;
-  professions: IFetchData<IShortProfession[]>;
   selectedProfession: IShortProfession | null;
   selectedSkillTier: IShortSkillTier | null;
   selectedRecipe: IItemsData<IShortRecipe> | null;
@@ -58,7 +55,7 @@ export class ProfessionsTree extends React.Component<Props> {
         <div className="pure-g">
           <div className="pure-u-1-4 profession-tree">
             <Tree
-              contents={this.getProfessionNodes()}
+              contents={this.getSkillTierNodes()}
               className={Classes.ELEVATION_0}
               onNodeClick={v => this.onNodeClick(v)}
               onNodeExpand={v => this.onNodeClick(v)}
@@ -77,85 +74,6 @@ export class ProfessionsTree extends React.Component<Props> {
     );
   }
 
-  private getProfessionNodes(): ITreeNode[] {
-    const { professions } = this.props;
-
-    switch (professions.level) {
-      case FetchLevel.success:
-        break;
-      case FetchLevel.initial:
-        return [
-          {
-            icon: <Spinner size={20} value={0} intent={Intent.NONE} />,
-            id: "loading-0",
-            label: <span style={{ marginLeft: "5px" }}>Loading</span>,
-          },
-        ];
-      case FetchLevel.failure:
-        return [
-          {
-            icon: <Spinner size={20} intent={Intent.DANGER} value={1} />,
-            id: "loading-0",
-            label: <span style={{ marginLeft: "5px" }}>Failed to load professions!</span>,
-          },
-        ];
-      default:
-      case FetchLevel.fetching:
-        return [
-          {
-            icon: <Spinner size={20} intent={Intent.PRIMARY} />,
-            id: "loading-0",
-            label: <span style={{ marginLeft: "5px" }}>Loading</span>,
-          },
-        ];
-    }
-
-    if (professions.data.length === 0) {
-      return [{ id: "none-none", label: <em>None found.</em> }];
-    }
-
-    return professions.data.map(v => this.getProfessionNode(v));
-  }
-
-  // profession nodes
-  private getProfessionNode(v: IShortProfession) {
-    const { selectedProfession } = this.props;
-
-    const isSelected = selectedProfession !== null && v.id === selectedProfession.id;
-
-    const childNodes: ITreeNode[] = !isSelected
-      ? []
-      : v.skilltiers.map(skillTier => this.getSkillTierNode(skillTier));
-
-    const result: ITreeNode = {
-      childNodes,
-      className: "profession-node",
-      hasCaret: false,
-      icon: <ShortProfessionIcon profession={v} />,
-      id: `profession-${v.id}`,
-      isExpanded: isSelected,
-      isSelected,
-      label: v.name,
-    };
-
-    return result;
-  }
-
-  private onProfessionNodeClick(id: string) {
-    const { currentRegion, currentRealm, professions, browseToProfession } = this.props;
-
-    if (currentRegion === null || currentRealm === null) {
-      return;
-    }
-
-    const foundProfession = professions.data.find(v => v.id.toString() === id);
-    if (!foundProfession) {
-      return;
-    }
-
-    browseToProfession(currentRegion, currentRealm, foundProfession);
-  }
-
   private getSelectedSkillTierRecipes(): Array<IShortSkillTier["categories"][0]["recipes"][0]> {
     const { selectedSkillTier } = this.props;
 
@@ -171,6 +89,16 @@ export class ProfessionsTree extends React.Component<Props> {
   }
 
   // skill-tier nodes
+  private getSkillTierNodes(): ITreeNode[] {
+    const { selectedProfession } = this.props;
+
+    if (selectedProfession === null) {
+      return [];
+    }
+
+    return selectedProfession.skilltiers.map(v => this.getSkillTierNode(v));
+  }
+
   private getSkillTierNode(v: IShortProfession["skilltiers"][0]) {
     const { selectedSkillTier } = this.props;
 
@@ -316,7 +244,6 @@ export class ProfessionsTree extends React.Component<Props> {
       node.id.toString().substr(separatorIndex + 1),
     ];
     const nodeClickMap: INodeClickMap = {
-      profession: (v: string) => this.onProfessionNodeClick(v),
       recipe: (v: string) => this.onRecipeNodeClick(v),
       skilltier: (v: string) => this.onSkillTierNodeClick(v),
       "skilltier-category": (v: string) => this.onSkillTierCategoryNodeClick(v),
