@@ -26,7 +26,7 @@ export interface IOwnProps {
 
 type Props = Readonly<IStateProps & IOwnProps>;
 
-export class ProfessionToggle extends React.Component<Props> {
+export class PricelistProfessionToggle extends React.Component<Props> {
   public itemPredicate: ItemPredicate<IProfession> = (query: string, item: IProfession) => {
     query = query.toLowerCase();
     return (

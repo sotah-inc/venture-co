@@ -21,7 +21,7 @@ import {
 } from "@sotah-inc/core";
 
 import { ExpansionToggleContainer } from "../../../containers/util/ExpansionToggle";
-import { ProfessionToggleContainer } from "../../../containers/util/ProfessionToggle";
+import { PricelistProfessionToggleContainer } from "../../../containers/util/PricelistProfessionToggle";
 import { RealmToggleContainer } from "../../../containers/util/RealmToggle";
 import { RegionToggleContainer } from "../../../containers/util/RegionToggle";
 import { IClientRealm, IProfile } from "../../../types/global";
@@ -74,7 +74,7 @@ export class ActionBar extends React.Component<Props> {
         <NavbarGroup align={Alignment.LEFT}>{this.renderButtons()}</NavbarGroup>
         <NavbarGroup align={Alignment.RIGHT}>
           <ButtonGroup>
-            <ProfessionToggleContainer
+            <PricelistProfessionToggleContainer
               onProfessionChange={profession => this.onProfessionChange(profession)}
             />
             <ExpansionToggleContainer

@@ -1,6 +1,10 @@
 import { connect } from "react-redux";
 
-import { IOwnProps, IStateProps, ProfessionToggle } from "../../components/util/ProfessionToggle";
+import {
+  IOwnProps,
+  IStateProps,
+  PricelistProfessionToggle,
+} from "../../components/util/PricelistProfessionToggle";
 import { IStoreState } from "../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
@@ -15,6 +19,6 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
   };
 };
 
-export const ProfessionToggleContainer = connect<IStateProps, {}, IOwnProps>(mapStateToProps)(
-  ProfessionToggle,
-);
+export const PricelistProfessionToggleContainer = connect<IStateProps, {}, IOwnProps>(
+  mapStateToProps,
+)(PricelistProfessionToggle);
