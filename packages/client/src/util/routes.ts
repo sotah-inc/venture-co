@@ -4,6 +4,7 @@ import {
   IProfession,
   IRegionComposite,
   IShortProfession,
+  IShortRecipe,
   IShortSkillTier,
 } from "@sotah-inc/core";
 import { IClientRealm } from "../types/global";
@@ -59,6 +60,35 @@ export const toRealmSkillTier = (
 };
 
 export const toRealmRecipe = (
+  region: IRegionComposite,
+  realm: IClientRealm,
+  profession: IShortProfession,
+  skillTier: IShortSkillTier,
+  recipe: IShortRecipe,
+) => {
+  const asDest = [
+    "data",
+    region.config_region.name,
+    realm.realm.slug,
+    "professions",
+    profession.id,
+    skillTier.id,
+    recipe.id,
+  ].join("/");
+  const url = [
+    "data",
+    "[region_name]",
+    "[realm_slug]",
+    "professions",
+    "[profession_id]",
+    "[skilltier_id]",
+    "[recipe_id]",
+  ].join("/");
+
+  return { url, asDest };
+};
+
+export const toRealmCategoryRecipe = (
   region: IRegionComposite,
   realm: IClientRealm,
   profession: IShortProfession,

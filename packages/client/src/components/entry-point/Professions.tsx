@@ -4,7 +4,7 @@ import { IRegionComposite, IShortProfession } from "@sotah-inc/core";
 
 import { ILoadRealmEntrypoint } from "../../actions/main";
 import { ILoadProfessionsEndpoint } from "../../actions/professions";
-import { ActionBarContainer } from "../../containers/entry-point/Professions/ActionBar";
+import { ActionBarRouteContainer } from "../../route-containers/entry-point/Professions/ActionBar";
 import { ProfessionsTreeRouteContainer } from "../../route-containers/entry-point/Professions/ProfessionsTree";
 import { IClientRealm, IFetchData } from "../../types/global";
 import { setTitle } from "../../util";
@@ -104,7 +104,7 @@ export class Professions extends React.Component<Props> {
 
     return (
       <>
-        <ActionBarContainer />
+        <ActionBarRouteContainer />
         <ProfessionsTreeRouteContainer />
       </>
     );

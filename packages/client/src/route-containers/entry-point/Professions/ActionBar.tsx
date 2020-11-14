@@ -3,14 +3,26 @@ import React from "react";
 import { WithRouterProps } from "next/dist/client/with-router";
 import { withRouter } from "next/router";
 
-import { ProfessionsTreeContainer } from "../../../containers/entry-point/Professions/ProfessionsTree";
-import { toRealmCategoryRecipe, toRealmProfession, toRealmSkillTier } from "../../../util";
+import { ActionBarContainer } from "../../../containers/entry-point/Professions/ActionBar";
+import {
+  toRealmProfession,
+  toRealmProfessions,
+  toRealmRecipe,
+  toRealmSkillTier,
+} from "../../../util";
 
 type Props = Readonly<WithRouterProps>;
 
 function RouteContainer({ router }: Props) {
   return (
-    <ProfessionsTreeContainer
+    <ActionBarContainer
+      browseToRealm={(region, realm) => {
+        const { url, asDest } = toRealmProfessions(region, realm);
+
+        (async () => {
+          await router.replace(`/${url}`, `/${asDest}`);
+        })();
+      }}
       browseToProfession={(region, realm, profession) => {
         const { url, asDest } = toRealmProfession(region, realm, profession);
 
@@ -26,7 +38,7 @@ function RouteContainer({ router }: Props) {
         })();
       }}
       browseToRecipe={(region, realm, profession, skillTier, recipe) => {
-        const { url, asDest } = toRealmCategoryRecipe(region, realm, profession, skillTier, recipe);
+        const { url, asDest } = toRealmRecipe(region, realm, profession, skillTier, recipe);
 
         (async () => {
           await router.replace(`/${url}`, `/${asDest}`);
@@ -36,4 +48,4 @@ function RouteContainer({ router }: Props) {
   );
 }
 
-export const ProfessionsTreeRouteContainer = withRouter(RouteContainer);
+export const ActionBarRouteContainer = withRouter(RouteContainer);
