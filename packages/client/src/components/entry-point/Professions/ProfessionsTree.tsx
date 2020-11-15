@@ -107,9 +107,16 @@ export class ProfessionsTree extends React.Component<Props> {
   private getSkillTierNode(v: IShortProfession["skilltiers"][0]) {
     const { selectedSkillTier } = this.props;
 
-    const isSelected = selectedSkillTier.data !== null && selectedSkillTier.data.id === v.id;
+    const isSelected =
+      selectedSkillTier.data !== null &&
+      selectedSkillTier.data.id === v.id &&
+      selectedSkillTier.isSelected;
 
     const childNodes = ((): ITreeNode[] => {
+      if (!selectedSkillTier.isSelected) {
+        return [];
+      }
+
       if (selectedSkillTier.data === null) {
         return [{ id: "", label: "Loading...", disabled: true }];
       }
