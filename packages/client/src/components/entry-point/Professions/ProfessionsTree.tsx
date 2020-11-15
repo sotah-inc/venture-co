@@ -254,6 +254,7 @@ export class ProfessionsTree extends React.Component<Props> {
       currentRealm,
       selectedSkillTier,
       selectedProfession,
+      selectedRecipe,
       browseToRecipe,
     } = this.props;
 
@@ -263,6 +264,10 @@ export class ProfessionsTree extends React.Component<Props> {
       selectedProfession === null ||
       selectedSkillTier.data === null
     ) {
+      return;
+    }
+
+    if (selectedRecipe !== null && selectedRecipe.data.id.toString() === id) {
       return;
     }
 
