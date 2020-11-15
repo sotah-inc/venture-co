@@ -1,6 +1,11 @@
 import { connect } from "react-redux";
 
-import { DeselectSkillTierCategory, SelectSkillTierCategory } from "../../../actions/professions";
+import {
+  DeselectSkillTierCategory,
+  DeselectSkillTierFlag,
+  SelectSkillTierCategory,
+  SelectSkillTierFlag,
+} from "../../../actions/professions";
 import {
   IDispatchProps,
   IStateProps,
@@ -29,7 +34,9 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
 
 const mapDispatchToProps: IDispatchProps = {
   deselectSkillTierCategory: DeselectSkillTierCategory,
+  deselectSkillTierFlag: DeselectSkillTierFlag,
   selectSkillTierCategory: SelectSkillTierCategory,
+  selectSkillTierFlag: SelectSkillTierFlag,
 };
 
 export const ProfessionsTreeContainer = connect<IStateProps, IDispatchProps, {}, IStoreState>(

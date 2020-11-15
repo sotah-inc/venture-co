@@ -1,4 +1,4 @@
-import { IShortProfession, IShortRecipe, IShortSkillTier } from "@sotah-inc/core";
+import { IShortProfession, IShortRecipe } from "@sotah-inc/core";
 
 import {
   DeselectSkillTierCategory,
@@ -8,7 +8,11 @@ import {
 } from "../../actions/professions";
 import { IFetchData, IItemsData } from "../../types/global";
 import { FetchLevel } from "../../types/main";
-import { IProfessionsState, ISelectedSkillTierCategory } from "../../types/professions";
+import {
+  IProfessionsState,
+  ISelectedSkillTier,
+  ISelectedSkillTierCategory,
+} from "../../types/professions";
 import { IKindHandlers, Runner } from "./index";
 
 export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
@@ -67,8 +71,20 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
             v =>
               action.payload.selectedProfessionId && v.id === action.payload.selectedProfessionId,
           ) ?? null;
-        const selectedSkillTier: IShortSkillTier | null =
-          action.payload.skillTier?.response?.skillTier ?? null;
+        const selectedSkillTier = ((): ISelectedSkillTier => {
+          const foundSkillTier = action.payload.skillTier?.response?.skillTier ?? null;
+          if (foundSkillTier === null) {
+            return {
+              data: null,
+              isSelected: false,
+            };
+          }
+
+          return {
+            data: foundSkillTier,
+            isSelected: true,
+          };
+        })();
         const selectedRecipe = ((): IItemsData<IShortRecipe> | null => {
           if (!action.payload.recipe || !action.payload.recipe.response) {
             return null;
@@ -140,6 +156,28 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
           professions: {
             ...state.professions,
             level: FetchLevel.fetching,
+          },
+        };
+      },
+    },
+  },
+  flag: {
+    skilltier: {
+      deselect: state => {
+        return {
+          ...state,
+          selectedSkillTier: {
+            ...state.selectedSkillTier,
+            isSelected: false,
+          },
+        };
+      },
+      select: state => {
+        return {
+          ...state,
+          selectedSkillTier: {
+            ...state.selectedSkillTier,
+            isSelected: true,
           },
         };
       },

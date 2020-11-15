@@ -7,7 +7,7 @@ import { ILoadProfessionsEndpoint } from "../../actions/professions";
 import { ActionBarRouteContainer } from "../../route-containers/entry-point/Professions/ActionBar";
 import { ProfessionsTreeRouteContainer } from "../../route-containers/entry-point/Professions/ProfessionsTree";
 import { IClientRealm, IFetchData } from "../../types/global";
-import { ISelectedSkillTierCategory } from "../../types/professions";
+import { ISelectedSkillTier, ISelectedSkillTierCategory } from "../../types/professions";
 import { setTitle } from "../../util";
 
 export interface IStateProps {
@@ -17,14 +17,12 @@ export interface IStateProps {
   selectedProfession: IShortProfession | null;
   selectedSkillTierCategory: ISelectedSkillTierCategory;
   selectedRecipe: IShortRecipe | null;
-  selectedSkillTier: IShortSkillTier | null;
+  selectedSkillTier: ISelectedSkillTier;
 }
 
 export interface IDispatchProps {
   loadRealmEntrypoint: (payload: ILoadRealmEntrypoint) => void;
   loadEntrypointData: (payload: ILoadProfessionsEndpoint) => void;
-  selectSkillTierCategory: (v: number) => void;
-  deselectSkillTierCategory: () => void;
 }
 
 export interface IOwnProps {
@@ -118,7 +116,7 @@ export class Professions extends React.Component<Props> {
       return;
     }
 
-    if (selectedSkillTier === null) {
+    if (selectedSkillTier.data === null) {
       const nextSkillTier = ((): IShortProfession["skilltiers"][0] | null => {
         if (selectedProfession.skilltiers.length === 0) {
           return null;
@@ -136,11 +134,12 @@ export class Professions extends React.Component<Props> {
       return;
     }
 
-    if (selectedSkillTier.categories.length === 0) {
+    if (selectedSkillTier.data.categories.length === 0) {
       return;
     }
 
-    const foundSkillTierCategory = selectedSkillTier.categories[selectedSkillTierCategory.index];
+    const foundSkillTierCategory =
+      selectedSkillTier.data.categories[selectedSkillTierCategory.index];
     if (!foundSkillTierCategory) {
       return;
     }
@@ -162,7 +161,7 @@ export class Professions extends React.Component<Props> {
         currentRegion,
         currentRealm,
         selectedProfession,
-        selectedSkillTier,
+        selectedSkillTier.data,
         nextRecipe,
       );
     }

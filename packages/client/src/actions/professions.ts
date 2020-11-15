@@ -22,10 +22,18 @@ export const SelectSkillTierCategory = (payload: number) =>
 export const DESELECT_SKILLTIER_CATEGORY = "DESELECT_SKILLTIER_CATEGORY";
 export const DeselectSkillTierCategory = () => createAction(DESELECT_SKILLTIER_CATEGORY);
 
+export const SELECT_SKILLTIER_FLAG = "SELECT_SKILLTIER_FLAG";
+export const SelectSkillTierFlag = () => createAction(SELECT_SKILLTIER_FLAG);
+
+export const DESELECT_SKILLTIER_FLAG = "DESELECT_SKILLTIER_FLAG";
+export const DeselectSkillTierFlag = () => createAction(DESELECT_SKILLTIER_FLAG);
+
 export const ProfessionsActions = {
   DeselectSkillTierCategory,
+  DeselectSkillTierFlag,
   LoadProfessionsEntrypoint,
   SelectSkillTierCategory,
+  SelectSkillTierFlag,
 };
 
 export type ProfessionsActions = ActionsUnion<typeof ProfessionsActions>;

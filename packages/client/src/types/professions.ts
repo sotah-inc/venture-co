@@ -8,11 +8,16 @@ export interface ISelectedSkillTierCategory {
   isSelected: boolean;
 }
 
+export interface ISelectedSkillTier {
+  data: IShortSkillTier | null;
+  isSelected: boolean;
+}
+
 export interface IProfessionsState {
   loadId: string;
   professions: IFetchData<IShortProfession[]>;
   selectedProfession: IShortProfession | null;
-  selectedSkillTier: IShortSkillTier | null;
+  selectedSkillTier: ISelectedSkillTier;
   selectedRecipe: IItemsData<IShortRecipe> | null;
   selectedSkillTierCategory: ISelectedSkillTierCategory;
 }
@@ -26,7 +31,10 @@ export const defaultProfessionsState: IProfessionsState = {
   },
   selectedProfession: null,
   selectedRecipe: null,
-  selectedSkillTier: null,
+  selectedSkillTier: {
+    data: null,
+    isSelected: false,
+  },
   selectedSkillTierCategory: {
     index: -1,
     isSelected: false,

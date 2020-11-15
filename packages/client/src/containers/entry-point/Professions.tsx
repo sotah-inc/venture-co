@@ -1,11 +1,7 @@
 import { connect } from "react-redux";
 
 import { LoadRealmEntrypoint } from "../../actions/main";
-import {
-  DeselectSkillTierCategory,
-  LoadProfessionsEntrypoint,
-  SelectSkillTierCategory,
-} from "../../actions/professions";
+import { LoadProfessionsEntrypoint } from "../../actions/professions";
 import {
   IDispatchProps,
   IOwnProps,
@@ -36,10 +32,8 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
 };
 
 const mapDispatchToProps: IDispatchProps = {
-  deselectSkillTierCategory: DeselectSkillTierCategory,
   loadEntrypointData: LoadProfessionsEntrypoint,
   loadRealmEntrypoint: LoadRealmEntrypoint,
-  selectSkillTierCategory: SelectSkillTierCategory,
 };
 
 export const ProfessionsContainer = connect<IStateProps, IDispatchProps, IOwnProps, IStoreState>(

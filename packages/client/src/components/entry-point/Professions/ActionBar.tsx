@@ -7,12 +7,13 @@ import { ProfessionsProfessionToggleContainer } from "../../../containers/util/P
 import { RealmToggleContainer } from "../../../containers/util/RealmToggle";
 import { RegionToggleContainer } from "../../../containers/util/RegionToggle";
 import { IClientRealm, IItemsData } from "../../../types/global";
+import { ISelectedSkillTier } from "../../../types/professions";
 
 export interface IStateProps {
   currentRegion: IRegionComposite | null;
   currentRealm: IClientRealm | null;
   selectedProfession: IShortProfession | null;
-  selectedSkillTier: IShortSkillTier | null;
+  selectedSkillTier: ISelectedSkillTier;
   selectedRecipe: IItemsData<IShortRecipe> | null;
 }
 
@@ -83,14 +84,14 @@ export class ActionBar extends React.Component<Props> {
       return;
     }
 
-    if (selectedSkillTier === null) {
+    if (selectedSkillTier.data === null) {
       browseToProfession(currentRegion, realm, selectedProfession);
 
       return;
     }
 
     if (selectedRecipe === null) {
-      browseToSkillTier(currentRegion, realm, selectedProfession, selectedSkillTier);
+      browseToSkillTier(currentRegion, realm, selectedProfession, selectedSkillTier.data);
 
       return;
     }
@@ -99,7 +100,7 @@ export class ActionBar extends React.Component<Props> {
       currentRegion,
       realm,
       selectedProfession,
-      selectedSkillTier,
+      selectedSkillTier.data,
       selectedRecipe.data,
     );
   }

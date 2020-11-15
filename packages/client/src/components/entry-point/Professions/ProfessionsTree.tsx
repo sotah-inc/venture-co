@@ -4,14 +4,14 @@ import { Classes, ITreeNode, Tree } from "@blueprintjs/core";
 import { IRegionComposite, IShortProfession, IShortRecipe, IShortSkillTier } from "@sotah-inc/core";
 
 import { IClientRealm, IItemsData } from "../../../types/global";
-import { ISelectedSkillTierCategory } from "../../../types/professions";
+import { ISelectedSkillTier, ISelectedSkillTierCategory } from "../../../types/professions";
 
 // props
 export interface IStateProps {
   currentRegion: IRegionComposite | null;
   currentRealm: IClientRealm | null;
   selectedProfession: IShortProfession | null;
-  selectedSkillTier: IShortSkillTier | null;
+  selectedSkillTier: ISelectedSkillTier;
   selectedRecipe: IItemsData<IShortRecipe> | null;
   selectedSkillTierCategory: ISelectedSkillTierCategory;
 }
@@ -19,6 +19,8 @@ export interface IStateProps {
 export interface IDispatchProps {
   selectSkillTierCategory: (v: number) => void;
   deselectSkillTierCategory: () => void;
+  deselectSkillTierFlag: () => void;
+  selectSkillTierFlag: () => void;
 }
 
 export interface IRouteProps {
@@ -80,11 +82,11 @@ export class ProfessionsTree extends React.Component<Props> {
   private getSelectedSkillTierRecipes(): Array<IShortSkillTier["categories"][0]["recipes"][0]> {
     const { selectedSkillTier } = this.props;
 
-    if (selectedSkillTier === null) {
+    if (selectedSkillTier.data === null) {
       return [];
     }
 
-    return selectedSkillTier.categories.reduce<
+    return selectedSkillTier.data.categories.reduce<
       Array<IShortSkillTier["categories"][0]["recipes"][0]>
     >((recipesResult, category) => {
       return [...recipesResult, ...category.recipes];
@@ -105,14 +107,14 @@ export class ProfessionsTree extends React.Component<Props> {
   private getSkillTierNode(v: IShortProfession["skilltiers"][0]) {
     const { selectedSkillTier } = this.props;
 
-    const isSelected = selectedSkillTier !== null && selectedSkillTier.id === v.id;
+    const isSelected = selectedSkillTier.data !== null && selectedSkillTier.data.id === v.id;
 
     const childNodes = ((): ITreeNode[] => {
-      if (selectedSkillTier === null) {
+      if (selectedSkillTier.data === null) {
         return [{ id: "", label: "Loading...", disabled: true }];
       }
 
-      return selectedSkillTier.categories.map((skillTierCategory, i) =>
+      return selectedSkillTier.data.categories.map((skillTierCategory, i) =>
         this.getSkillTierCategoryNode(skillTierCategory, i),
       );
     })();
@@ -131,9 +133,29 @@ export class ProfessionsTree extends React.Component<Props> {
   }
 
   private onSkillTierNodeClick(id: string) {
-    const { currentRegion, currentRealm, browseToSkillTier, selectedProfession } = this.props;
+    const {
+      currentRegion,
+      currentRealm,
+      browseToSkillTier,
+      selectedProfession,
+      selectedSkillTier,
+      deselectSkillTierFlag,
+      selectSkillTierFlag,
+    } = this.props;
 
     if (currentRegion === null || currentRealm === null || selectedProfession === null) {
+      return;
+    }
+
+    if (selectedSkillTier.data !== null && selectedSkillTier.data.id.toString() === id) {
+      if (selectedSkillTier.isSelected) {
+        deselectSkillTierFlag();
+
+        return;
+      }
+
+      selectSkillTierFlag();
+
       return;
     }
 
@@ -156,11 +178,11 @@ export class ProfessionsTree extends React.Component<Props> {
       selectedSkillTierCategory.index === categoryIndex && selectedSkillTierCategory.isSelected;
 
     const childNodes = ((): ITreeNode[] => {
-      if (!isSelected || selectedSkillTier === null) {
+      if (!isSelected || selectedSkillTier.data === null) {
         return [];
       }
 
-      const foundCategory = selectedSkillTier.categories[selectedSkillTierCategory.index];
+      const foundCategory = selectedSkillTier.data.categories[selectedSkillTierCategory.index];
       if (!foundCategory) {
         return [];
       }
@@ -232,7 +254,7 @@ export class ProfessionsTree extends React.Component<Props> {
       currentRegion === null ||
       currentRealm === null ||
       selectedProfession === null ||
-      selectedSkillTier === null
+      selectedSkillTier.data === null
     ) {
       return;
     }
@@ -242,7 +264,13 @@ export class ProfessionsTree extends React.Component<Props> {
       return;
     }
 
-    browseToRecipe(currentRegion, currentRealm, selectedProfession, selectedSkillTier, foundRecipe);
+    browseToRecipe(
+      currentRegion,
+      currentRealm,
+      selectedProfession,
+      selectedSkillTier.data,
+      foundRecipe,
+    );
   }
 
   private onNodeClick(node: ITreeNode) {
