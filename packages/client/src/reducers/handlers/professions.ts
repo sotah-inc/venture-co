@@ -1,16 +1,41 @@
 import { IShortProfession, IShortRecipe, IShortSkillTier } from "@sotah-inc/core";
 
 import {
+  DeselectSkillTierCategory,
   LoadProfessionsEntrypoint,
   ProfessionsActions,
-  SetSkillTierCategoryIndex,
+  SelectSkillTierCategory,
 } from "../../actions/professions";
 import { IFetchData, IItemsData } from "../../types/global";
 import { FetchLevel } from "../../types/main";
-import { IProfessionsState } from "../../types/professions";
+import { IProfessionsState, ISelectedSkillTierCategory } from "../../types/professions";
 import { IKindHandlers, Runner } from "./index";
 
 export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
+  category: {
+    skilltier: {
+      deselect: (state, _action: ReturnType<typeof DeselectSkillTierCategory>) => {
+        return {
+          ...state,
+          selectedRecipe: null,
+          selectedSkillTierCategory: {
+            index: -1,
+            isSelected: false,
+          },
+        };
+      },
+      select: (state, action: ReturnType<typeof SelectSkillTierCategory>) => {
+        return {
+          ...state,
+          selectedRecipe: null,
+          selectedSkillTierCategory: {
+            index: action.payload,
+            isSelected: true,
+          },
+        };
+      },
+    },
+  },
   entrypoint: {
     professions: {
       load: (
@@ -54,27 +79,49 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
             items: action.payload.recipe.response.items,
           };
         })();
-        const selectedSkillTierCategoryIndex = ((): number => {
+        const selectedSkillTierCategory = ((): ISelectedSkillTierCategory => {
           const skillTierCategories =
             action.payload.skillTier?.response?.skillTier.categories ?? null;
 
-          if (selectedRecipe === null || skillTierCategories === null) {
-            return -1;
+          if (skillTierCategories === null) {
+            return {
+              index: -1,
+              isSelected: false,
+            };
           }
 
-          return skillTierCategories.reduce<number>((foundIndex, category, categoryIndex) => {
-            if (foundIndex > -1) {
-              return foundIndex;
+          if (selectedRecipe === null) {
+            if (skillTierCategories.length === 0) {
+              return {
+                index: -1,
+                isSelected: false,
+              };
             }
 
-            if (
-              category.recipes.some(categoryRecipe => categoryRecipe.id === selectedRecipe.data.id)
-            ) {
-              return categoryIndex;
-            }
+            return {
+              index: 0,
+              isSelected: true,
+            };
+          }
 
-            return -1;
-          }, -1);
+          return skillTierCategories.reduce<ISelectedSkillTierCategory>(
+            (selectedCategory, category, categoryIndex) => {
+              if (selectedCategory.index > -1) {
+                return selectedCategory;
+              }
+
+              if (
+                category.recipes.some(
+                  categoryRecipe => categoryRecipe.id === selectedRecipe.data.id,
+                )
+              ) {
+                return { index: categoryIndex, isSelected: true };
+              }
+
+              return { index: -1, isSelected: false };
+            },
+            { index: -1, isSelected: false },
+          );
         })();
 
         return {
@@ -84,7 +131,7 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
           selectedProfession,
           selectedRecipe,
           selectedSkillTier,
-          selectedSkillTierCategoryIndex,
+          selectedSkillTierCategory,
         };
       },
       request: (state): IProfessionsState => {
@@ -94,19 +141,6 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
             ...state.professions,
             level: FetchLevel.fetching,
           },
-        };
-      },
-    },
-  },
-  index: {
-    skilltiercategory: {
-      set: (state, action: ReturnType<typeof SetSkillTierCategoryIndex>) => {
-        const selectedRecipe = action.payload === -1 ? null : state.selectedRecipe;
-
-        return {
-          ...state,
-          selectedRecipe,
-          selectedSkillTierCategoryIndex: action.payload,
         };
       },
     },

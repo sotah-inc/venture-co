@@ -15,13 +15,17 @@ export const LOAD_PROFESSIONS_ENTRYPOINT = "LOAD_PROFESSIONS_ENTRYPOINT";
 export const LoadProfessionsEntrypoint = (payload: ILoadProfessionsEndpoint) =>
   createAction(LOAD_PROFESSIONS_ENTRYPOINT, payload);
 
-export const SET_SKILLTIERCATEGORY_INDEX = "SET_SKILLTIERCATEGORY_INDEX";
-export const SetSkillTierCategoryIndex = (payload: number) =>
-  createAction(SET_SKILLTIERCATEGORY_INDEX, payload);
+export const SELECT_SKILLTIER_CATEGORY = "SELECT_SKILLTIER_CATEGORY";
+export const SelectSkillTierCategory = (payload: number) =>
+  createAction(SELECT_SKILLTIER_CATEGORY, payload);
+
+export const DESELECT_SKILLTIER_CATEGORY = "DESELECT_SKILLTIER_CATEGORY";
+export const DeselectSkillTierCategory = () => createAction(DESELECT_SKILLTIER_CATEGORY);
 
 export const ProfessionsActions = {
+  DeselectSkillTierCategory,
   LoadProfessionsEntrypoint,
-  SetSkillSetCategoryIndex: SetSkillTierCategoryIndex,
+  SelectSkillTierCategory,
 };
 
 export type ProfessionsActions = ActionsUnion<typeof ProfessionsActions>;

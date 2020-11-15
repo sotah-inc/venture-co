@@ -7,6 +7,7 @@ import { ILoadProfessionsEndpoint } from "../../actions/professions";
 import { ActionBarRouteContainer } from "../../route-containers/entry-point/Professions/ActionBar";
 import { ProfessionsTreeRouteContainer } from "../../route-containers/entry-point/Professions/ProfessionsTree";
 import { IClientRealm, IFetchData } from "../../types/global";
+import { ISelectedSkillTierCategory } from "../../types/professions";
 import { setTitle } from "../../util";
 
 export interface IStateProps {
@@ -14,7 +15,7 @@ export interface IStateProps {
   currentRegion: IRegionComposite | null;
   currentRealm: IClientRealm | null;
   selectedProfession: IShortProfession | null;
-  selectedSkillTierCategoryIndex: number;
+  selectedSkillTierCategory: ISelectedSkillTierCategory;
   selectedRecipe: IShortRecipe | null;
   selectedSkillTier: IShortSkillTier | null;
 }
@@ -22,7 +23,8 @@ export interface IStateProps {
 export interface IDispatchProps {
   loadRealmEntrypoint: (payload: ILoadRealmEntrypoint) => void;
   loadEntrypointData: (payload: ILoadProfessionsEndpoint) => void;
-  setSkillTierCategoryIndex: (v: number) => void;
+  selectSkillTierCategory: (v: number) => void;
+  deselectSkillTierCategory: () => void;
 }
 
 export interface IOwnProps {
@@ -80,11 +82,10 @@ export class Professions extends React.Component<Props> {
       redirectToProfession,
       professions,
       selectedSkillTier,
-      selectedSkillTierCategoryIndex,
       selectedRecipe,
       redirectToRecipe,
       redirectToSkillTier,
-      setSkillTierCategoryIndex,
+      selectedSkillTierCategory,
     } = this.props;
 
     if (entrypointData.loadId !== prevProps.entrypointData.loadId) {
@@ -139,19 +140,18 @@ export class Professions extends React.Component<Props> {
       return;
     }
 
-    if (selectedSkillTierCategoryIndex === -1) {
-      setSkillTierCategoryIndex(0);
-
+    const foundSkillTierCategory = selectedSkillTier.categories[selectedSkillTierCategory.index];
+    if (!foundSkillTierCategory) {
       return;
     }
 
-    if (selectedRecipe === null) {
+    if (selectedRecipe === null && selectedSkillTierCategory.isSelected) {
       const nextRecipe = ((): IShortSkillTier["categories"][0]["recipes"][0] | null => {
-        if (selectedSkillTier.categories[0].recipes.length === 0) {
+        if (foundSkillTierCategory.recipes.length === 0) {
           return null;
         }
 
-        return selectedSkillTier.categories[0].recipes[0];
+        return foundSkillTierCategory.recipes[0];
       })();
 
       if (nextRecipe === null) {
@@ -165,8 +165,6 @@ export class Professions extends React.Component<Props> {
         selectedSkillTier,
         nextRecipe,
       );
-
-      return;
     }
   }
 

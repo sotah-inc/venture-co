@@ -3,13 +3,18 @@ import { IShortProfession, IShortRecipe, IShortSkillTier } from "@sotah-inc/core
 import { IFetchData, IItemsData } from "./global";
 import { FetchLevel } from "./main";
 
+export interface ISelectedSkillTierCategory {
+  index: number;
+  isSelected: boolean;
+}
+
 export interface IProfessionsState {
   loadId: string;
   professions: IFetchData<IShortProfession[]>;
   selectedProfession: IShortProfession | null;
   selectedSkillTier: IShortSkillTier | null;
   selectedRecipe: IItemsData<IShortRecipe> | null;
-  selectedSkillTierCategoryIndex: number;
+  selectedSkillTierCategory: ISelectedSkillTierCategory;
 }
 
 export const defaultProfessionsState: IProfessionsState = {
@@ -22,5 +27,8 @@ export const defaultProfessionsState: IProfessionsState = {
   selectedProfession: null,
   selectedRecipe: null,
   selectedSkillTier: null,
-  selectedSkillTierCategoryIndex: -1,
+  selectedSkillTierCategory: {
+    index: -1,
+    isSelected: false,
+  },
 };

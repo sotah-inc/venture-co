@@ -4,6 +4,7 @@ import { Classes, ITreeNode, Tree } from "@blueprintjs/core";
 import { IRegionComposite, IShortProfession, IShortRecipe, IShortSkillTier } from "@sotah-inc/core";
 
 import { IClientRealm, IItemsData } from "../../../types/global";
+import { ISelectedSkillTierCategory } from "../../../types/professions";
 
 // props
 export interface IStateProps {
@@ -12,11 +13,12 @@ export interface IStateProps {
   selectedProfession: IShortProfession | null;
   selectedSkillTier: IShortSkillTier | null;
   selectedRecipe: IItemsData<IShortRecipe> | null;
-  selectedSkillTierCategoryIndex: number;
+  selectedSkillTierCategory: ISelectedSkillTierCategory;
 }
 
 export interface IDispatchProps {
-  setSkillTierCategoryIndex: (v: number) => void;
+  selectSkillTierCategory: (v: number) => void;
+  deselectSkillTierCategory: () => void;
 }
 
 export interface IRouteProps {
@@ -48,7 +50,7 @@ interface INodeClickMap {
 
 export class ProfessionsTree extends React.Component<Props> {
   public render() {
-    const { selectedSkillTierCategoryIndex, selectedRecipe } = this.props;
+    const { selectedSkillTierCategory, selectedRecipe } = this.props;
 
     return (
       <div style={{ marginTop: "10px" }}>
@@ -65,7 +67,8 @@ export class ProfessionsTree extends React.Component<Props> {
           <div className="pure-u-3-4">
             <div style={{ paddingLeft: "10px" }}>
               <p>Hello, world!</p>
-              <p>{selectedSkillTierCategoryIndex}</p>
+              <p>{selectedSkillTierCategory.index}</p>
+              <p>{selectedSkillTierCategory.isSelected ? "isSelected" : "not isSelected"}</p>
               <p>recipe: {selectedRecipe?.data.id ?? "none"}</p>
             </div>
           </div>
@@ -147,16 +150,17 @@ export class ProfessionsTree extends React.Component<Props> {
     v: IShortSkillTier["categories"][0],
     categoryIndex: number,
   ): ITreeNode {
-    const { selectedSkillTierCategoryIndex, selectedSkillTier } = this.props;
+    const { selectedSkillTierCategory, selectedSkillTier } = this.props;
 
-    const isSelected = selectedSkillTierCategoryIndex === categoryIndex;
+    const isSelected =
+      selectedSkillTierCategory.index === categoryIndex && selectedSkillTierCategory.isSelected;
 
     const childNodes = ((): ITreeNode[] => {
       if (!isSelected || selectedSkillTier === null) {
         return [];
       }
 
-      const foundCategory = selectedSkillTier.categories[selectedSkillTierCategoryIndex];
+      const foundCategory = selectedSkillTier.categories[selectedSkillTierCategory.index];
       if (!foundCategory) {
         return [];
       }
@@ -176,12 +180,20 @@ export class ProfessionsTree extends React.Component<Props> {
   }
 
   private onSkillTierCategoryNodeClick(index: string) {
-    const { setSkillTierCategoryIndex, selectedSkillTierCategoryIndex } = this.props;
+    const {
+      selectedSkillTierCategory,
+      deselectSkillTierCategory,
+      selectSkillTierCategory,
+    } = this.props;
 
     const parsedIndex = Number(index);
-    const nextIndex = selectedSkillTierCategoryIndex === parsedIndex ? -1 : parsedIndex;
+    if (parsedIndex === selectedSkillTierCategory.index) {
+      deselectSkillTierCategory();
 
-    setSkillTierCategoryIndex(nextIndex);
+      return;
+    }
+
+    selectSkillTierCategory(parsedIndex);
   }
 
   // recipe nodes
