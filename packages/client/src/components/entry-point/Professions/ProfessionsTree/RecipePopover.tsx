@@ -24,7 +24,7 @@ export interface IOwnProps {
 
 type Props = Readonly<IStateProps & IOwnProps>;
 
-export class ItemPopover extends React.Component<Props> {
+export class RecipePopover extends React.Component<Props> {
   public static defaultProps: Partial<Props> = {
     itemTextFormatter: (itemText: string) => itemText,
     onItemClick: () => {
