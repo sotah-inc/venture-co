@@ -3,6 +3,7 @@ import React from "react";
 import { Classes, ITreeNode, Tree } from "@blueprintjs/core";
 import { IRegionComposite, IShortProfession, IShortRecipe, IShortSkillTier } from "@sotah-inc/core";
 
+import { TreeContentContainer } from "../../../containers/entry-point/Professions/ProfessionsTree/TreeContent";
 import { IClientRealm, IItemsData } from "../../../types/global";
 import { ISelectedSkillTier, ISelectedSkillTierCategory } from "../../../types/professions";
 
@@ -52,8 +53,6 @@ interface INodeClickMap {
 
 export class ProfessionsTree extends React.Component<Props> {
   public render() {
-    const { selectedSkillTierCategory, selectedRecipe } = this.props;
-
     return (
       <div style={{ marginTop: "10px" }}>
         <div className="pure-g">
@@ -68,10 +67,7 @@ export class ProfessionsTree extends React.Component<Props> {
           </div>
           <div className="pure-u-2-3">
             <div style={{ paddingLeft: "10px" }}>
-              <p>Hello, world!</p>
-              <p>{selectedSkillTierCategory.index}</p>
-              <p>{selectedSkillTierCategory.isSelected ? "isSelected" : "not isSelected"}</p>
-              <p>recipe: {selectedRecipe?.data.id ?? "none"}</p>
+              <TreeContentContainer />
             </div>
           </div>
         </div>
