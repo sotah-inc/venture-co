@@ -229,12 +229,14 @@ export class ProfessionsTree extends React.Component<Props> {
   private getRecipeNode(v: IShortSkillTier["categories"][0]["recipes"][0]) {
     const { selectedRecipe } = this.props;
 
+    const label = v.rank > 0 ? `${v.name} (Rank ${v.rank})` : v.name;
+
     const result: ITreeNode = {
       className: "recipe-node",
       icon: this.renderRecipeNodeIcon(v.icon_url),
       id: `recipe-${v.id}`,
       isSelected: selectedRecipe !== null && selectedRecipe.data.id === v.id,
-      label: v.name,
+      label,
     };
 
     return result;
