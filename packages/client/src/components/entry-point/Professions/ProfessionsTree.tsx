@@ -57,7 +57,7 @@ export class ProfessionsTree extends React.Component<Props> {
     return (
       <div style={{ marginTop: "10px" }}>
         <div className="pure-g">
-          <div className="pure-u-1-4 profession-tree">
+          <div className="pure-u-1-3 profession-tree">
             <Tree
               contents={this.getSkillTierNodes()}
               className={Classes.ELEVATION_0}
@@ -66,7 +66,7 @@ export class ProfessionsTree extends React.Component<Props> {
               onNodeCollapse={v => this.onNodeClick(v)}
             />
           </div>
-          <div className="pure-u-3-4">
+          <div className="pure-u-2-3">
             <div style={{ paddingLeft: "10px" }}>
               <p>Hello, world!</p>
               <p>{selectedSkillTierCategory.index}</p>
