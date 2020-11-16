@@ -6,6 +6,7 @@ export interface IShortSkillTierCategoryRecipe {
   id: RecipeId;
   name: string;
   icon_url: string;
+  rank: number;
 }
 
 export interface IShortSkillTierCategory {
