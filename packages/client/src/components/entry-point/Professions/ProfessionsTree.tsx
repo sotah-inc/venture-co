@@ -235,7 +235,7 @@ export class ProfessionsTree extends React.Component<Props> {
 
     const result: ITreeNode = {
       className: "recipe-node",
-      icon: this.renderRecipeNodeIcon(v.icon_url),
+      icon: this.renderRecipeNodeIcon(v.recipe.icon_url),
       id: `recipe-${v.id}`,
       isSelected: selectedRecipe !== null && selectedRecipe.data.id === v.id,
       label: <RecipePopover recipe={v} />,
