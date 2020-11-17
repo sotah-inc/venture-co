@@ -21,7 +21,7 @@ export class RecipePopover extends React.Component<Props> {
   private renderReagent(reagent: IShortRecipeReagent, reagentIndex: number) {
     return (
       <li key={reagentIndex}>
-        {reagent.reagent.name}: {reagent.quantity}
+        {reagent.quantity}x {reagent.reagent.name}
       </li>
     );
   }
@@ -45,8 +45,10 @@ export class RecipePopover extends React.Component<Props> {
           </div>
           <div className="pure-u-5-6">
             <ul>
+              {recipe.recipe.rank > 0 && (
+                <li className="postscript">{`Rank ${recipe.recipe.rank}`}</li>
+              )}
               <li>{recipe.recipe.name}</li>
-              {recipe.recipe.rank > 0 && <li className="postscript">{recipe.recipe.rank}</li>}
               <li className="description">{recipe.recipe.description}</li>
               {this.renderReagents()}
             </ul>
