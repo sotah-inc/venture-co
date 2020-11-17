@@ -3,9 +3,6 @@ import React from "react";
 import { Popover, PopoverInteractionKind, Position } from "@blueprintjs/core";
 import { IShortSkillTierCategoryRecipe } from "@sotah-inc/core";
 
-import { ItemLink } from "../../../util/ItemLink";
-import { ItemPopoverContent } from "../../../util/ItemPopover/ItemPopoverContent";
-
 export interface IOwnProps {
   recipe: IShortSkillTierCategoryRecipe;
 
@@ -21,22 +18,42 @@ export class RecipePopover extends React.Component<Props> {
     },
   };
 
+  private renderPopoverContent() {
+    const { recipe } = this.props;
+
+    return (
+      <div className="recipe-popover-content">
+        <div className="pure-g">
+          <div className="pure-u-1-5">
+            <p style={{ paddingBottom: "17px", marginBottom: 0 }}>
+              <img src={recipe.icon_url} className="recipe-icon" alt="" />
+            </p>
+          </div>
+          <div className="pure-u-4-5">
+            <ul>
+              <li>{recipe.name}</li>
+            </ul>
+            <hr />
+            <ul>
+              <li>Recipe id: {recipe.id}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   public render() {
-    const { item, itemClasses, position, interactive, itemTextFormatter, onItemClick } = this.props;
+    const { recipe } = this.props;
+
+    const label = recipe.rank > 0 ? `${recipe.name} (Rank ${recipe.rank})` : recipe.name;
 
     return (
       <Popover
-        content={<ItemPopoverContent item={item} itemClasses={itemClasses} />}
-        target={
-          <ItemLink
-            item={item}
-            interactive={interactive}
-            itemTextFormatter={itemTextFormatter}
-            onItemClick={onItemClick}
-          />
-        }
+        content={this.renderPopoverContent()}
+        target={label}
         interactionKind={PopoverInteractionKind.HOVER}
-        position={position ?? Position.RIGHT}
+        position={Position.RIGHT}
       />
     );
   }

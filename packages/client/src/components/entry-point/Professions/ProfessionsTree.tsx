@@ -12,6 +12,7 @@ import {
 import { TreeContentContainer } from "../../../containers/entry-point/Professions/ProfessionsTree/TreeContent";
 import { IClientRealm, IItemsData } from "../../../types/global";
 import { ISelectedSkillTier, ISelectedSkillTierCategory } from "../../../types/professions";
+import { RecipePopover } from "./ProfessionsTree/RecipePopover";
 
 // props
 export interface IStateProps {
@@ -232,14 +233,12 @@ export class ProfessionsTree extends React.Component<Props> {
   private getRecipeNode(v: IShortSkillTierCategoryRecipe) {
     const { selectedRecipe } = this.props;
 
-    const label = v.rank > 0 ? `${v.name} (Rank ${v.rank})` : v.name;
-
     const result: ITreeNode = {
       className: "recipe-node",
       icon: this.renderRecipeNodeIcon(v.icon_url),
       id: `recipe-${v.id}`,
       isSelected: selectedRecipe !== null && selectedRecipe.data.id === v.id,
-      label,
+      label: <RecipePopover recipe={v} />,
     };
 
     return result;
