@@ -1,0 +1,38 @@
+@import "./vendor/blueprint-variables.scss";
+
+.recipe-popover-content {
+  padding: 10px;
+  width: 450px;
+
+  ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+
+  .postscript {
+    float: right;
+  }
+
+  .recipe-icon {
+    border-radius: 3px;
+    width: 56px;
+    height: 56px;
+    margin-bottom: -22px;
+    border-width: 3px;
+    border-style: solid;
+  }
+
+  .description {
+    color: $gold3;
+  }
+
+}
+
+.bp3-dark {
+  .recipe-popover-content {
+    .description {
+      color: $gold5;
+    }
+  }
+}
