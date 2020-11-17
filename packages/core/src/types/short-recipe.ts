@@ -22,4 +22,5 @@ export interface IShortRecipe {
   reagents: IShortRecipeReagent[];
   rank: number;
   crafted_quantity: number;
+  icon_url: string;
 }
