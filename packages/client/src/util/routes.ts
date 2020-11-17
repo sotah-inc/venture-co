@@ -6,6 +6,7 @@ import {
   IShortProfession,
   IShortRecipe,
   IShortSkillTier,
+  IShortSkillTierCategoryRecipe,
 } from "@sotah-inc/core";
 import { IClientRealm } from "../types/global";
 
@@ -93,7 +94,7 @@ export const toRealmCategoryRecipe = (
   realm: IClientRealm,
   profession: IShortProfession,
   skillTier: IShortSkillTier,
-  recipe: IShortSkillTier["categories"][0]["recipes"][0],
+  recipe: IShortSkillTierCategoryRecipe,
 ) => {
   const asDest = [
     "data",

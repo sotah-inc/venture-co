@@ -1,7 +1,13 @@
 import React from "react";
 
 import { Classes, ITreeNode, Tree } from "@blueprintjs/core";
-import { IRegionComposite, IShortProfession, IShortRecipe, IShortSkillTier } from "@sotah-inc/core";
+import {
+  IRegionComposite,
+  IShortProfession,
+  IShortRecipe,
+  IShortSkillTier,
+  IShortSkillTierCategoryRecipe,
+} from "@sotah-inc/core";
 
 import { TreeContentContainer } from "../../../containers/entry-point/Professions/ProfessionsTree/TreeContent";
 import { IClientRealm, IItemsData } from "../../../types/global";
@@ -41,7 +47,7 @@ export interface IRouteProps {
     realm: IClientRealm,
     profession: IShortProfession,
     skillTier: IShortSkillTier,
-    recipe: IShortSkillTier["categories"][0]["recipes"][0],
+    recipe: IShortSkillTierCategoryRecipe,
   ) => void;
 }
 
@@ -75,18 +81,19 @@ export class ProfessionsTree extends React.Component<Props> {
     );
   }
 
-  private getSelectedSkillTierRecipes(): Array<IShortSkillTier["categories"][0]["recipes"][0]> {
+  private getSelectedSkillTierRecipes(): IShortSkillTierCategoryRecipe[] {
     const { selectedSkillTier } = this.props;
 
     if (selectedSkillTier.data === null) {
       return [];
     }
 
-    return selectedSkillTier.data.categories.reduce<
-      Array<IShortSkillTier["categories"][0]["recipes"][0]>
-    >((recipesResult, category) => {
-      return [...recipesResult, ...category.recipes];
-    }, []);
+    return selectedSkillTier.data.categories.reduce<IShortSkillTierCategoryRecipe[]>(
+      (recipesResult, category) => {
+        return [...recipesResult, ...category.recipes];
+      },
+      [],
+    );
   }
 
   // skill-tier nodes
@@ -222,7 +229,7 @@ export class ProfessionsTree extends React.Component<Props> {
   }
 
   // recipe nodes
-  private getRecipeNode(v: IShortSkillTier["categories"][0]["recipes"][0]) {
+  private getRecipeNode(v: IShortSkillTierCategoryRecipe) {
     const { selectedRecipe } = this.props;
 
     const label = v.rank > 0 ? `${v.name} (Rank ${v.rank})` : v.name;

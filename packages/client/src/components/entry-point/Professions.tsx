@@ -1,6 +1,12 @@
 import React from "react";
 
-import { IRegionComposite, IShortProfession, IShortRecipe, IShortSkillTier } from "@sotah-inc/core";
+import {
+  IRegionComposite,
+  IShortProfession,
+  IShortRecipe,
+  IShortSkillTier,
+  IShortSkillTierCategoryRecipe,
+} from "@sotah-inc/core";
 
 import { ILoadRealmEntrypoint } from "../../actions/main";
 import { ILoadProfessionsEndpoint } from "../../actions/professions";
@@ -47,7 +53,7 @@ export interface IRouteProps {
     realm: IClientRealm,
     profession: IShortProfession,
     skillTier: IShortSkillTier,
-    recipe: IShortSkillTier["categories"][0]["recipes"][0],
+    recipe: IShortSkillTierCategoryRecipe,
   ) => void;
 }
 
@@ -145,7 +151,7 @@ export class Professions extends React.Component<Props> {
     }
 
     if (selectedRecipe === null && selectedSkillTierCategory.isSelected) {
-      const nextRecipe = ((): IShortSkillTier["categories"][0]["recipes"][0] | null => {
+      const nextRecipe = ((): IShortSkillTierCategoryRecipe | null => {
         if (foundSkillTierCategory.recipes.length === 0) {
           return null;
         }
