@@ -1,12 +1,10 @@
-import { RecipeId } from "./short-recipe";
+import { IShortRecipe, RecipeId } from "./short-recipe";
 
 export type SkillTierId = number;
 
 export interface IShortSkillTierCategoryRecipe {
   id: RecipeId;
-  name: string;
-  icon_url: string;
-  rank: number;
+  recipe: IShortRecipe;
 }
 
 export interface IShortSkillTierCategory {
