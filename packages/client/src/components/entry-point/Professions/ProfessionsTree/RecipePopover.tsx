@@ -24,12 +24,12 @@ export class RecipePopover extends React.Component<Props> {
     return (
       <div className="recipe-popover-content">
         <div className="pure-g">
-          <div className="pure-u-1-5">
+          <div className="pure-u-1-6">
             <p style={{ paddingBottom: "17px", marginBottom: 0 }}>
               <img src={recipe.icon_url} className="recipe-icon" alt="" />
             </p>
           </div>
-          <div className="pure-u-4-5">
+          <div className="pure-u-5-6">
             <ul>
               <li>{recipe.name}</li>
             </ul>

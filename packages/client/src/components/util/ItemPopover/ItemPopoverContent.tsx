@@ -33,12 +33,12 @@ export function ItemPopoverContent({
   return (
     <div className="item-popover-content">
       <div className="pure-g">
-        <div className="pure-u-1-5">
+        <div className="pure-u-1-6">
           <p className={itemTextClass} style={{ paddingBottom: "17px", marginBottom: 0 }}>
             <img src={itemIconUrl} className="item-icon" alt="" />
           </p>
         </div>
-        <div className="pure-u-4-5">
+        <div className="pure-u-5-6">
           <ul>
             <ItemDataRenderer item={item} itemClasses={itemClasses} />
           </ul>
