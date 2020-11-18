@@ -36,7 +36,7 @@ export class RecipePopover extends React.Component<Props> {
     const { recipe } = this.props;
 
     return (
-      <div className="recipe-popover-content">
+      <div className="recipe-popover-content" onClick={e => e.stopPropagation()}>
         <div className="pure-g">
           <div className="pure-u-1-6">
             <p style={{ paddingBottom: "17px", marginBottom: 0 }}>
