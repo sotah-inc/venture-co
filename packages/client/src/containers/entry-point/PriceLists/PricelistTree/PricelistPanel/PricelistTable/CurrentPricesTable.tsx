@@ -4,7 +4,6 @@ import { FetchGetPricelist } from "../../../../../../actions/price-lists";
 import {
   CurrentPricesTable,
   IDispatchProps,
-  IOwnProps,
   IStateProps,
   // tslint:disable-next-line:max-line-length
 } from "../../../../../../components/entry-point/PriceLists/PricelistTree/PricelistPanel/PricelistTable/CurrentPricesTable";
@@ -21,12 +20,7 @@ const mapDispatchToProps: IDispatchProps = {
   getPricelist: FetchGetPricelist,
 };
 
-export const CurrentPricesTableContainer = connect<
-  IStateProps,
-  IDispatchProps,
-  IOwnProps,
-  IStoreState
->(
+export const CurrentPricesTableContainer = connect<IStateProps, IDispatchProps, {}, IStoreState>(
   mapStateToProps,
   mapDispatchToProps,
 )(CurrentPricesTable);

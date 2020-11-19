@@ -60,7 +60,7 @@ export class PricelistTable extends React.Component<Props> {
   }
 
   public render() {
-    const { list, region, realm, loadId, pricelistHistory } = this.props;
+    const { list, loadId, pricelistHistory } = this.props;
 
     return (
       <>
@@ -78,7 +78,7 @@ export class PricelistTable extends React.Component<Props> {
             itemPriceLimits={pricelistHistory.data.data.itemPriceLimits}
           />
         }
-        {<CurrentPricesTableContainer list={list} region={region} realm={realm} />}
+        {<CurrentPricesTableContainer />}
       </>
     );
   }

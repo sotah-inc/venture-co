@@ -1,21 +1,55 @@
 import React from "react";
 
-import { IShortRecipe } from "@sotah-inc/core";
+import { IPriceListMap, IShortRecipe } from "@sotah-inc/core";
 
-import { IItemsData } from "../../../../types/global";
+import { IFetchData, IItemsData } from "../../../../types/global";
 import { ISelectedSkillTierCategory } from "../../../../types/professions";
+import { IEntryRow, PricesTable } from "../../../util/PricesTable";
 
 // props
 export interface IStateProps {
   selectedRecipe: IItemsData<IShortRecipe> | null;
   selectedSkillTierCategory: ISelectedSkillTierCategory;
+  priceTable: IFetchData<IItemsData<IPriceListMap>>;
 }
 
 export type Props = Readonly<IStateProps>;
 
 export class TreeContent extends React.Component<Props> {
   public render() {
-    const { selectedSkillTierCategory, selectedRecipe } = this.props;
+    const { selectedSkillTierCategory, selectedRecipe, priceTable } = this.props;
+
+    if (selectedRecipe === null) {
+      return null;
+    }
+
+    const entryRows = ((): IEntryRow[] => {
+      const result = [];
+
+      result.push(
+        ...selectedRecipe.data.reagents.map<IEntryRow>(v => {
+          return {
+            item_id: v.reagent.id,
+            quantity_modifier: v.quantity,
+          };
+        }),
+      );
+
+      if (selectedRecipe.data.crafted_item.id > 0) {
+        result.push({ item_id: selectedRecipe.data.crafted_item.id, quantity_modifier: 1 });
+      }
+      if (selectedRecipe.data.alliance_crafted_item.id > 0) {
+        result.push({
+          item_id: selectedRecipe.data.alliance_crafted_item.id,
+          quantity_modifier: 1,
+        });
+      }
+      if (selectedRecipe.data.horde_crafted_item.id > 0) {
+        result.push({ item_id: selectedRecipe.data.horde_crafted_item.id, quantity_modifier: 1 });
+      }
+
+      return result;
+    })();
 
     return (
       <>
@@ -23,6 +57,7 @@ export class TreeContent extends React.Component<Props> {
         <p>{selectedSkillTierCategory.index}</p>
         <p>{selectedSkillTierCategory.isSelected ? "isSelected" : "not isSelected"}</p>
         <p>recipe: {selectedRecipe?.data.id ?? "none"}</p>
+        <PricesTable priceTable={priceTable} entryRows={entryRows} />
       </>
     );
   }
