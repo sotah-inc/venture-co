@@ -23,33 +23,12 @@ export class TreeContent extends React.Component<Props> {
       return null;
     }
 
-    const entryRows = ((): IEntryRow[] => {
-      const result = [];
-
-      result.push(
-        ...selectedRecipe.data.reagents.map<IEntryRow>(v => {
-          return {
-            item_id: v.reagent.id,
-            quantity_modifier: v.quantity,
-          };
-        }),
-      );
-
-      if (selectedRecipe.data.crafted_item.id > 0) {
-        result.push({ item_id: selectedRecipe.data.crafted_item.id, quantity_modifier: 1 });
-      }
-      if (selectedRecipe.data.alliance_crafted_item.id > 0) {
-        result.push({
-          item_id: selectedRecipe.data.alliance_crafted_item.id,
-          quantity_modifier: 1,
-        });
-      }
-      if (selectedRecipe.data.horde_crafted_item.id > 0) {
-        result.push({ item_id: selectedRecipe.data.horde_crafted_item.id, quantity_modifier: 1 });
-      }
-
-      return result;
-    })();
+    const entryRows = selectedRecipe.data.reagents.map<IEntryRow>(v => {
+      return {
+        item_id: v.reagent.id,
+        quantity_modifier: v.quantity,
+      };
+    });
 
     return (
       <>
