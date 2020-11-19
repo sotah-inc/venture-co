@@ -19,11 +19,10 @@ import {
   ReceiveGetProfessionPricelists,
   ReceiveUpdatePricelist,
 } from "../../actions/price-lists";
-import { IFetchData, IItemsData } from "../../types/global";
+import { IFetchData, IItemsData, IPricelistHistoryState } from "../../types/global";
 import { FetchLevel } from "../../types/main";
 import {
   defaultPriceListsState,
-  IPricelistHistoryState,
   IPriceListsState,
   IUnmetDemandState,
 } from "../../types/price-lists";

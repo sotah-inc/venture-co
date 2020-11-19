@@ -1,4 +1,8 @@
-import { ProfessionId } from "@sotah-inc/core";
+import {
+  IGetPricelistHistoriesResponseData,
+  IGetPricelistResponseData,
+  ProfessionId,
+} from "@sotah-inc/core";
 
 import { IGetProfessionsResult, IGetRecipeResult, IGetSkillTierResult } from "../api/data";
 import { ActionsUnion, createAction } from "./helpers";
@@ -9,6 +13,8 @@ export interface ILoadProfessionsEndpoint {
   selectedProfessionId?: ProfessionId;
   skillTier?: IGetSkillTierResult;
   recipe?: IGetRecipeResult;
+  pricelistHistory?: IGetPricelistHistoriesResponseData | null;
+  currentPrices?: IGetPricelistResponseData | null;
 }
 
 export const LOAD_PROFESSIONS_ENTRYPOINT = "LOAD_PROFESSIONS_ENTRYPOINT";

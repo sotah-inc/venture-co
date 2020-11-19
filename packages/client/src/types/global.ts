@@ -3,7 +3,11 @@ import {
   IConnectedRealmComposite,
   IConnectedRealmModificationDates,
   IItemClass,
+  IItemPriceLimits,
+  IItemPricelistHistoryMap,
   IItemSubClass,
+  IPriceLimits,
+  IPricesFlagged,
   IRealm,
   IRegionComposite,
   IShortItem,
@@ -67,4 +71,10 @@ export interface IClientRealm {
   realm: IRealm;
   population: IConnectedRealmComposite["connected_realm"]["population"];
   realmModificationDates: IConnectedRealmModificationDates;
+}
+
+export interface IPricelistHistoryState {
+  history: IItemPricelistHistoryMap<IPricesFlagged>;
+  itemPriceLimits: IItemPriceLimits;
+  overallPriceLimits: IPriceLimits;
 }

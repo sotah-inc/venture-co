@@ -5,9 +5,13 @@ import React from "react";
 // tslint:disable-next-line:max-line-length
 import { IGetPriceListHistoryOptions } from "../../../../../api/data";
 import { CurrentPricesTableContainer } from "../../../../../containers/entry-point/PriceLists/PricelistTree/PricelistPanel/PricelistTable/CurrentPricesTable";
-import { IClientRealm, IFetchData, IItemsData } from "../../../../../types/global";
+import {
+  IClientRealm,
+  IFetchData,
+  IItemsData,
+  IPricelistHistoryState,
+} from "../../../../../types/global";
 import { FetchLevel } from "../../../../../types/main";
-import { IPricelistHistoryState } from "../../../../../types/price-lists";
 import { getItemFromPricelist } from "../../../../../util";
 import { ItemIcon } from "../../../../util/ItemIcon";
 import { PricelistHistoryGraph } from "../../../../util/PricelistHistoryGraph";

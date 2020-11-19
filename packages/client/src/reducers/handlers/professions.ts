@@ -1,4 +1,4 @@
-import { IShortProfession, IShortRecipe } from "@sotah-inc/core";
+import { IPriceListMap, IShortProfession, IShortRecipe } from "@sotah-inc/core";
 
 import {
   DeselectSkillTierCategory,
@@ -6,7 +6,8 @@ import {
   ProfessionsActions,
   SelectSkillTierCategory,
 } from "../../actions/professions";
-import { IFetchData, IItemsData } from "../../types/global";
+import { defaultPriceListsState } from "../../types";
+import { IFetchData, IItemsData, IPricelistHistoryState } from "../../types/global";
 import { FetchLevel } from "../../types/main";
 import {
   IProfessionsState,
@@ -140,9 +141,53 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
           );
         })();
 
+        const pricelistHistory: IFetchData<IItemsData<IPricelistHistoryState>> = (() => {
+          if (typeof action.payload.pricelistHistory === "undefined") {
+            return defaultPriceListsState.pricelistHistory;
+          }
+
+          if (action.payload.pricelistHistory === null) {
+            return { ...defaultPriceListsState.pricelistHistory, level: FetchLevel.failure };
+          }
+
+          return {
+            data: {
+              data: {
+                history: action.payload.pricelistHistory.history,
+                itemPriceLimits: action.payload.pricelistHistory.itemPriceLimits,
+                overallPriceLimits: action.payload.pricelistHistory.overallPriceLimits,
+              },
+              items: action.payload.pricelistHistory.items,
+            },
+            errors: {},
+            level: FetchLevel.success,
+          };
+        })();
+
+        const priceTable: IFetchData<IItemsData<IPriceListMap>> = (() => {
+          if (typeof action.payload.currentPrices === "undefined") {
+            return defaultPriceListsState.priceTable;
+          }
+
+          if (action.payload.currentPrices === null) {
+            return { ...defaultPriceListsState.priceTable, level: FetchLevel.failure };
+          }
+
+          return {
+            data: {
+              data: action.payload.currentPrices.price_list,
+              items: action.payload.currentPrices.items,
+            },
+            errors: {},
+            level: FetchLevel.success,
+          };
+        })();
+
         return {
           ...state,
           loadId: action.payload.loadId,
+          priceTable,
+          pricelistHistory,
           professions,
           selectedProfession,
           selectedRecipe,

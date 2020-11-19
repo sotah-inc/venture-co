@@ -1,11 +1,7 @@
 import {
   IExpansion,
-  IItemPriceLimits,
-  IItemPricelistHistoryMap,
-  IPriceLimits,
   IPricelistJson,
   IPriceListMap,
-  IPricesFlagged,
   IProfession,
   IProfessionPricelistJson,
   ItemId,
@@ -13,14 +9,8 @@ import {
 } from "@sotah-inc/core";
 
 import { IUpdatePricelistResult } from "../api/price-lists";
-import { IFetchData, IFetchInfo, IItemsData } from "./global";
+import { IFetchData, IFetchInfo, IItemsData, IPricelistHistoryState } from "./global";
 import { FetchLevel } from "./main";
-
-export interface IPricelistHistoryState {
-  history: IItemPricelistHistoryMap<IPricesFlagged>;
-  itemPriceLimits: IItemPriceLimits;
-  overallPriceLimits: IPriceLimits;
-}
 
 export interface IUnmetDemandState {
   professionPricelists: IProfessionPricelistJson[];
