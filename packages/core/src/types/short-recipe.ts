@@ -24,3 +24,19 @@ export interface IShortRecipe {
   crafted_quantity: number;
   icon_url: string;
 }
+
+export function resolveCraftedItemIds(recipe: IShortRecipe): ItemId[] {
+  const out: ItemId[] = [];
+
+  if (recipe.crafted_item.id > 0) {
+    out.push(recipe.horde_crafted_item.id);
+  }
+  if (recipe.alliance_crafted_item.id > 0) {
+    out.push(recipe.horde_crafted_item.id);
+  }
+  if (recipe.horde_crafted_item.id > 0) {
+    out.push(recipe.horde_crafted_item.id);
+  }
+
+  return out;
+}
