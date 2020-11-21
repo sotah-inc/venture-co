@@ -1,6 +1,6 @@
 import React from "react";
 
-import { IPriceListMap, IShortRecipe } from "@sotah-inc/core";
+import { IPriceListMap, IShortRecipe, ItemId, resolveCraftedItemIds } from "@sotah-inc/core";
 
 import { IFetchData, IItemsData } from "../../../../types/global";
 import { ISelectedSkillTierCategory } from "../../../../types/professions";
@@ -47,14 +47,14 @@ export class TreeContent extends React.Component<Props> {
     );
   }
 
-  private renderFooter() {
+  private getRecipeReagentTotalCost(): number {
     const { selectedRecipe, priceTable } = this.props;
 
     if (selectedRecipe === null) {
-      return null;
+      return 0;
     }
 
-    const total = selectedRecipe.data.reagents.reduce((foundTotal, v): number => {
+    return selectedRecipe.data.reagents.reduce((foundTotal, v): number => {
       const foundPrice = priceTable.data.data[v.reagent.id];
       if (!foundPrice) {
         return foundTotal;
@@ -62,12 +62,50 @@ export class TreeContent extends React.Component<Props> {
 
       return foundTotal + foundPrice.min_buyout_per * v.quantity;
     }, 0);
+  }
+
+  private renderFooter() {
+    const { selectedRecipe } = this.props;
+
+    if (selectedRecipe === null) {
+      return null;
+    }
+
+    const craftedItemIds = resolveCraftedItemIds(selectedRecipe.data);
+
+    return (
+      <>
+        <tr>
+          <th style={{ textAlign: "right" }}>Total</th>
+          <td colSpan={2}>
+            <Currency amount={this.getRecipeReagentTotalCost()} />
+          </td>
+        </tr>
+        {craftedItemIds.map(v => this.renderItemProfit(v))}
+      </>
+    );
+  }
+
+  private renderItemProfit(id: ItemId) {
+    const { priceTable } = this.props;
+
+    const itemCost: number | null = priceTable.data.data[id]?.min_buyout_per ?? null;
+    if (itemCost === null) {
+      return (
+        <tr>
+          <th style={{ textAlign: "right" }}>Profit for {id}</th>
+          <td colSpan={2}>
+            <em>No data found for this item.</em>
+          </td>
+        </tr>
+      );
+    }
 
     return (
       <tr>
-        <th style={{ textAlign: "right" }}>Total</th>
+        <th style={{ textAlign: "right" }}>Profit for {id}</th>
         <td colSpan={2}>
-          <Currency amount={total} />
+          <Currency amount={itemCost - this.getRecipeReagentTotalCost()} />
         </td>
       </tr>
     );
