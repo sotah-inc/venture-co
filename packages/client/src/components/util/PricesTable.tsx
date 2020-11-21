@@ -164,6 +164,7 @@ export class PricesTable extends React.Component<Props> {
           <ItemPopoverContainer
             item={item}
             itemTextFormatter={(itemText: string) => `${itemText} \u00D7${quantity_modifier}`}
+            interactive={false}
           />
         </td>
         <td>

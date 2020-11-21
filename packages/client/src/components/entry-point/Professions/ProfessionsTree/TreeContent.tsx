@@ -103,14 +103,14 @@ export class TreeContent extends React.Component<Props> {
         return `Item #${id}`;
       }
 
-      return <ItemPopover item={foundItem} interactive={false} position={Position.BOTTOM} />;
+      return <ItemPopover item={foundItem} interactive={false} position={Position.LEFT} />;
     })();
 
     const itemCost: number | null = priceTable.data.data[id]?.min_buyout_per ?? null;
     if (itemCost === null) {
       return (
         <tr>
-          <th style={{ textAlign: "right" }}>Current price of for {item}</th>
+          <th style={{ textAlign: "right" }}>Current price of {item}</th>
           <td colSpan={2}>
             <em>No data found for this item.</em>
           </td>
