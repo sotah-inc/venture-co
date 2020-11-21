@@ -4,8 +4,9 @@ import { IPriceListMap, IShortRecipe, ItemId, resolveCraftedItemIds } from "@sot
 
 import { IFetchData, IItemsData } from "../../../../types/global";
 import { ISelectedSkillTierCategory } from "../../../../types/professions";
-import { Currency } from "../../../util";
+import { Currency, ItemPopover } from "../../../util";
 import { IEntryRow, PricesTable } from "../../../util/PricesTable";
+import { Position } from "@blueprintjs/core/lib/esm/common/position";
 
 // props
 export interface IStateProps {
@@ -73,13 +74,20 @@ export class TreeContent extends React.Component<Props> {
 
     const craftedItemIds = resolveCraftedItemIds(selectedRecipe.data);
 
+    const foundTotalCost = (() => {
+      const reagentTotalCost = this.getRecipeReagentTotalCost();
+      if (reagentTotalCost === 0) {
+        return <em>No data found.</em>;
+      }
+
+      return <Currency amount={reagentTotalCost} />;
+    })();
+
     return (
       <>
         <tr>
           <th style={{ textAlign: "right" }}>Total</th>
-          <td colSpan={2}>
-            <Currency amount={this.getRecipeReagentTotalCost()} />
-          </td>
+          <td colSpan={2}>{foundTotalCost}</td>
         </tr>
         {craftedItemIds.map(v => this.renderItemProfit(v))}
       </>
@@ -89,11 +97,20 @@ export class TreeContent extends React.Component<Props> {
   private renderItemProfit(id: ItemId) {
     const { priceTable } = this.props;
 
+    const item = (() => {
+      const foundItem = priceTable.data.items.find(v => v.id === id);
+      if (!foundItem) {
+        return `Item #${id}`;
+      }
+
+      return <ItemPopover item={foundItem} interactive={false} position={Position.BOTTOM} />;
+    })();
+
     const itemCost: number | null = priceTable.data.data[id]?.min_buyout_per ?? null;
     if (itemCost === null) {
       return (
         <tr>
-          <th style={{ textAlign: "right" }}>Profit for {id}</th>
+          <th style={{ textAlign: "right" }}>Current price of for {item}</th>
           <td colSpan={2}>
             <em>No data found for this item.</em>
           </td>
@@ -101,13 +118,28 @@ export class TreeContent extends React.Component<Props> {
       );
     }
 
+    const expectedProfit = (() => {
+      const reagentTotalCost = this.getRecipeReagentTotalCost();
+      if (reagentTotalCost === 0) {
+        return <em>Not enough data for comparison.</em>;
+      }
+
+      return <Currency amount={itemCost - reagentTotalCost} />;
+    })();
+
     return (
-      <tr>
-        <th style={{ textAlign: "right" }}>Profit for {id}</th>
-        <td colSpan={2}>
-          <Currency amount={itemCost - this.getRecipeReagentTotalCost()} />
-        </td>
-      </tr>
+      <>
+        <tr>
+          <th style={{ textAlign: "right" }}>Current price of {item}</th>
+          <td colSpan={2}>
+            <Currency amount={itemCost} />
+          </td>
+        </tr>
+        <tr>
+          <th style={{ textAlign: "right" }}>Expected profit for for {item}</th>
+          <td colSpan={2}>{expectedProfit}</td>
+        </tr>
+      </>
     );
   }
 }
