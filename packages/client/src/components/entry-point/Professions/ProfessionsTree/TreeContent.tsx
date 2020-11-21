@@ -1,12 +1,12 @@
 import React from "react";
 
+import { Position } from "@blueprintjs/core";
 import { IPriceListMap, IShortRecipe, ItemId, resolveCraftedItemIds } from "@sotah-inc/core";
 
 import { IFetchData, IItemsData } from "../../../../types/global";
 import { ISelectedSkillTierCategory } from "../../../../types/professions";
 import { Currency, ItemPopover } from "../../../util";
 import { IEntryRow, PricesTable } from "../../../util/PricesTable";
-import { Position } from "@blueprintjs/core/lib/esm/common/position";
 
 // props
 export interface IStateProps {
