@@ -29,10 +29,10 @@ export function resolveCraftedItemIds(recipe: IShortRecipe): ItemId[] {
   const out: ItemId[] = [];
 
   if (recipe.crafted_item.id > 0) {
-    out.push(recipe.horde_crafted_item.id);
+    out.push(recipe.crafted_item.id);
   }
   if (recipe.alliance_crafted_item.id > 0) {
-    out.push(recipe.horde_crafted_item.id);
+    out.push(recipe.alliance_crafted_item.id);
   }
   if (recipe.horde_crafted_item.id > 0) {
     out.push(recipe.horde_crafted_item.id);
