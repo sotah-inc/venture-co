@@ -36,7 +36,7 @@ export class TreeContent extends React.Component<Props> {
         <p>{selectedSkillTierCategory.index}</p>
         <p>{selectedSkillTierCategory.isSelected ? "isSelected" : "not isSelected"}</p>
         <p>recipe: {selectedRecipe?.data.id ?? "none"}</p>
-        <PricesTable priceTable={priceTable} entryRows={entryRows} />
+        <PricesTable priceTable={priceTable} entryRows={entryRows} title="Reagent Prices" />
       </>
     );
   }

@@ -17,15 +17,22 @@ export interface IEntryRow {
 export interface IOwnProps {
   entryRows: IEntryRow[];
   priceTable: IFetchData<IItemsData<IPriceListMap>>;
+  title: string;
 }
 
 type Props = Readonly<IOwnProps>;
 
 export class PricesTable extends React.Component<Props> {
+  public static defaultProps: Partial<Props> = {
+    title: "Current Prices",
+  };
+
   public render() {
+    const { title } = this.props;
+
     return (
       <>
-        <H4>Current Prices</H4>
+        <H4>{title}</H4>
         {this.renderContent()}
       </>
     );
@@ -117,22 +124,25 @@ export class PricesTable extends React.Component<Props> {
     );
   }
 
-  private renderEntry(index: number, entry: IEntryRow) {
+  private getItemInfo(itemId: ItemId) {
     const {
       priceTable: {
         data: { data: pricelistMap },
       },
     } = this.props;
+
+    const foundEntry = pricelistMap[itemId];
+
+    return {
+      buyout: foundEntry ? foundEntry.min_buyout_per : 0,
+      volume: foundEntry ? foundEntry.volume : 0,
+    };
+  }
+
+  private renderEntry(index: number, entry: IEntryRow) {
     const { item_id, quantity_modifier } = entry;
 
-    const { buyout, volume } = ((): { buyout: number; volume: number } => {
-      const foundEntry = pricelistMap[item_id];
-
-      return {
-        buyout: foundEntry ? foundEntry.min_buyout_per : 0,
-        volume: foundEntry ? foundEntry.volume : 0,
-      };
-    })();
+    const { buyout, volume } = this.getItemInfo(item_id);
 
     const item = this.getItem(item_id);
     if (item === null) {
