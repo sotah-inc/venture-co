@@ -18,6 +18,7 @@ export interface IOwnProps {
   entryRows: IEntryRow[];
   priceTable: IFetchData<IItemsData<IPriceListMap>>;
   title: string;
+  footerContent?: React.ReactNode;
 }
 
 type Props = Readonly<IOwnProps>;
@@ -77,6 +78,7 @@ export class PricesTable extends React.Component<Props> {
       priceTable: {
         data: { items, data: pricelistMap },
       },
+      footerContent,
     } = this.props;
 
     const entries = entryRows.sort((a, b) => {
@@ -120,6 +122,7 @@ export class PricesTable extends React.Component<Props> {
           </tr>
         </thead>
         <tbody>{entries.map((v, i) => this.renderEntry(i, v))}</tbody>
+        {footerContent && <tfoot>{footerContent}</tfoot>}
       </HTMLTable>
     );
   }
@@ -148,7 +151,7 @@ export class PricesTable extends React.Component<Props> {
     if (item === null) {
       return (
         <tr key={index}>
-          <td colSpan={4}>
+          <td colSpan={3}>
             <Spinner intent={Intent.WARNING} />
           </td>
         </tr>
