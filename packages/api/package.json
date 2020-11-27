@@ -20,7 +20,8 @@
     "test-coverage": "nyc --reporter=lcov npm -s test",
     "test-coverage-report": "nyc report",
     "test-coverage-check": "nyc check-coverage --lines 95 --functions 75 --branches 95",
-    "coveralls-coverage": "nyc report --reporter=text-lcov | coveralls"
+    "coveralls-coverage": "nyc report --reporter=text-lcov | coveralls",
+    "ar-login": "artifactregistry-auth ./.npmrc"
   },
   "repository": {
     "type": "git",
@@ -37,6 +38,7 @@
     "ava": "^3.13.0",
     "chokidar-cli": "^2.1.0",
     "coveralls": "^3.1.0",
+    "google-artifactregistry-auth": "^2.0.4",
     "npm-run-all": "^4.1.5",
     "nyc": "^15.1.0",
     "prettier": "^2.1.2",
@@ -53,7 +55,7 @@
     "@google-cloud/pubsub": "^2.6.0",
     "@google-cloud/storage": "^5.5.0",
     "@sendgrid/mail": "^7.4.0",
-    "@sotah-inc/core": "^2.0.119",
+    "@sotah-inc/core": "^2.0.126",
     "@sotah-inc/server": "^2.0.25",
     "@types/bcrypt": "^3.0.0",
     "@types/compression": "1.7.0",
