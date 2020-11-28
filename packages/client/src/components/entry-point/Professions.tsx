@@ -20,7 +20,7 @@ export interface IStateProps {
   professions: IFetchData<IShortProfession[]>;
   currentRegion: IRegionComposite | null;
   currentRealm: IClientRealm | null;
-  selectedProfession: IShortProfession | null;
+  selectedProfession: IShortProfession | null | undefined;
   selectedSkillTierCategory: ISelectedSkillTierCategory;
   selectedRecipe: IShortRecipe | null;
   selectedSkillTier: ISelectedSkillTier;
@@ -105,7 +105,7 @@ export class Professions extends React.Component<Props> {
       return;
     }
 
-    if (selectedProfession === null) {
+    if (typeof selectedProfession === "undefined") {
       const nextProfession = ((): IShortProfession | null => {
         if (professions.data.length === 0) {
           return null;
@@ -119,6 +119,10 @@ export class Professions extends React.Component<Props> {
 
       redirectToProfession(currentRegion, currentRealm, nextProfession);
 
+      return;
+    }
+
+    if (selectedProfession === null) {
       return;
     }
 

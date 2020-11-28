@@ -12,7 +12,7 @@ import { ISelectedSkillTier } from "../../../types/professions";
 export interface IStateProps {
   currentRegion: IRegionComposite | null;
   currentRealm: IClientRealm | null;
-  selectedProfession: IShortProfession | null;
+  selectedProfession: IShortProfession | null | undefined;
   selectedSkillTier: ISelectedSkillTier;
   selectedRecipe: IItemsData<IShortRecipe> | null;
 }
@@ -78,9 +78,13 @@ export class ActionBar extends React.Component<Props> {
       return;
     }
 
-    if (selectedProfession === null) {
+    if (typeof selectedProfession === "undefined") {
       browseToRealm(currentRegion, realm);
 
+      return;
+    }
+
+    if (selectedProfession === null) {
       return;
     }
 

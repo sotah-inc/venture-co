@@ -16,7 +16,7 @@ export interface ISelectedSkillTier {
 export interface IProfessionsState {
   loadId: string;
   professions: IFetchData<IShortProfession[]>;
-  selectedProfession: IShortProfession | null;
+  selectedProfession: IShortProfession | null | undefined;
   selectedSkillTier: ISelectedSkillTier;
   selectedRecipe: IItemsData<IShortRecipe> | null;
   selectedSkillTierCategory: ISelectedSkillTierCategory;
@@ -51,7 +51,7 @@ export const defaultProfessionsState: IProfessionsState = {
     errors: {},
     level: FetchLevel.initial,
   },
-  selectedProfession: null,
+  selectedProfession: undefined,
   selectedRecipe: null,
   selectedSkillTier: {
     data: null,

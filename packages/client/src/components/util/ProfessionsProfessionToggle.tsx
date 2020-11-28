@@ -15,7 +15,7 @@ const ProfessionToggleSelect = Select.ofType<IShortProfession>();
 
 export interface IStateProps {
   professions: IShortProfession[];
-  selectedProfession: IShortProfession | null;
+  selectedProfession: IShortProfession | null | undefined;
 }
 
 export interface IOwnProps {
@@ -44,10 +44,7 @@ export class ProfessionsProfessionToggle extends React.Component<Props> {
     }
 
     const { selectedProfession } = this.props;
-    const intent =
-      selectedProfession !== null && item.name === selectedProfession.name
-        ? Intent.PRIMARY
-        : Intent.NONE;
+    const intent = item.name === selectedProfession?.name ? Intent.PRIMARY : Intent.NONE;
 
     return (
       <MenuItem
@@ -56,7 +53,7 @@ export class ProfessionsProfessionToggle extends React.Component<Props> {
         className={modifiers.active ? Classes.ACTIVE : ""}
         onClick={handleClick}
         text={item.name}
-        icon={<img src={item.icon_url} className="item-icon" />}
+        icon={<img src={item.icon_url} className="item-icon" alt={item.name} />}
       />
     );
   };
@@ -97,7 +94,7 @@ export class ProfessionsProfessionToggle extends React.Component<Props> {
   private renderToggleButton() {
     const { selectedProfession } = this.props;
 
-    if (selectedProfession === null) {
+    if (typeof selectedProfession === "undefined" || selectedProfession === null) {
       return (
         <Button
           className="profession-toggle-button"

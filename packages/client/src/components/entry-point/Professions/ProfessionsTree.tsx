@@ -18,7 +18,7 @@ import { RecipePopover } from "./ProfessionsTree/RecipePopover";
 export interface IStateProps {
   currentRegion: IRegionComposite | null;
   currentRealm: IClientRealm | null;
-  selectedProfession: IShortProfession | null;
+  selectedProfession: IShortProfession | null | undefined;
   selectedSkillTier: ISelectedSkillTier;
   selectedRecipe: IItemsData<IShortRecipe> | null;
   selectedSkillTierCategory: ISelectedSkillTierCategory;
@@ -101,7 +101,7 @@ export class ProfessionsTree extends React.Component<Props> {
   private getSkillTierNodes(): ITreeNode[] {
     const { selectedProfession } = this.props;
 
-    if (selectedProfession === null) {
+    if (typeof selectedProfession === "undefined" || selectedProfession === null) {
       return [];
     }
 
@@ -154,7 +154,12 @@ export class ProfessionsTree extends React.Component<Props> {
       selectSkillTierFlag,
     } = this.props;
 
-    if (currentRegion === null || currentRealm === null || selectedProfession === null) {
+    if (
+      currentRegion === null ||
+      currentRealm === null ||
+      typeof selectedProfession === "undefined" ||
+      selectedProfession === null
+    ) {
       return;
     }
 
@@ -265,6 +270,7 @@ export class ProfessionsTree extends React.Component<Props> {
     if (
       currentRegion === null ||
       currentRealm === null ||
+      typeof selectedProfession === "undefined" ||
       selectedProfession === null ||
       selectedSkillTier.data === null
     ) {

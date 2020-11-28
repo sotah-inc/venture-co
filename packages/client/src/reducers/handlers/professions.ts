@@ -67,11 +67,20 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
             level: FetchLevel.success,
           };
         })();
-        const selectedProfession: IShortProfession | null =
-          professions.data.find(
-            v =>
-              action.payload.selectedProfessionId && v.id === action.payload.selectedProfessionId,
-          ) ?? null;
+        const selectedProfession = ((): IShortProfession | null | undefined => {
+          if (typeof action.payload.selectedProfessionId === "undefined") {
+            return undefined;
+          }
+
+          const foundProfession = professions.data.find(
+            v => v.id === action.payload.selectedProfessionId,
+          );
+          if (typeof foundProfession === "undefined") {
+            return null;
+          }
+
+          return foundProfession;
+        })();
         const selectedSkillTier = ((): ISelectedSkillTier => {
           const foundSkillTier = action.payload.skillTier?.response?.skillTier ?? null;
           if (foundSkillTier === null) {
@@ -87,7 +96,10 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
           };
         })();
         const selectedRecipe = ((): IItemsData<IShortRecipe> | null => {
-          if (!action.payload.recipe || !action.payload.recipe.response) {
+          if (
+            typeof action.payload.recipe === "undefined" ||
+            action.payload.recipe.response === null
+          ) {
             return null;
           }
 
