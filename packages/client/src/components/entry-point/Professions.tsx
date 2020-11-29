@@ -187,7 +187,9 @@ export class Professions extends React.Component<Props> {
     return (
       <>
         <ActionBarRouteContainer />
-        <ProfessionsTreeRouteContainer />
+        <div style={{ marginTop: "10px" }}>
+          <ProfessionsTreeRouteContainer />
+        </div>
       </>
     );
   }
