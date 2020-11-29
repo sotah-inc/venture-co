@@ -20,12 +20,14 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
     selectedSkillTier,
     selectedRecipe,
     selectedSkillTierCategory,
+    selectedProfessionId,
   } = state.Professions;
 
   return {
     currentRealm,
     currentRegion,
     selectedProfession,
+    selectedProfessionId,
     selectedRecipe,
     selectedSkillTier,
     selectedSkillTierCategory,

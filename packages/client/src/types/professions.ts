@@ -1,4 +1,10 @@
-import { IPriceListMap, IShortProfession, IShortRecipe, IShortSkillTier } from "@sotah-inc/core";
+import {
+  IPriceListMap,
+  IShortProfession,
+  IShortRecipe,
+  IShortSkillTier,
+  ProfessionId,
+} from "@sotah-inc/core";
 
 import { IFetchData, IItemsData, IPricelistHistoryState } from "./global";
 import { FetchLevel } from "./main";
@@ -16,6 +22,7 @@ export interface ISelectedSkillTier {
 export interface IProfessionsState {
   loadId: string;
   professions: IFetchData<IShortProfession[]>;
+  selectedProfessionId: ProfessionId;
   selectedProfession: IShortProfession | null | undefined;
   selectedSkillTier: ISelectedSkillTier;
   selectedRecipe: IItemsData<IShortRecipe> | null;
@@ -52,6 +59,7 @@ export const defaultProfessionsState: IProfessionsState = {
     level: FetchLevel.initial,
   },
   selectedProfession: undefined,
+  selectedProfessionId: 0,
   selectedRecipe: null,
   selectedSkillTier: {
     data: null,

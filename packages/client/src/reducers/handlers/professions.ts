@@ -202,6 +202,7 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
           pricelistHistory,
           professions,
           selectedProfession,
+          selectedProfessionId: action.payload.selectedProfessionId ?? 0,
           selectedRecipe,
           selectedSkillTier,
           selectedSkillTierCategory,

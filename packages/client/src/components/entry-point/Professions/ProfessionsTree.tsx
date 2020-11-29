@@ -1,12 +1,13 @@
 import React from "react";
 
-import { Classes, ITreeNode, Tree } from "@blueprintjs/core";
+import { Classes, Intent, ITreeNode, NonIdealState, Spinner, Tree } from "@blueprintjs/core";
 import {
   IRegionComposite,
   IShortProfession,
   IShortRecipe,
   IShortSkillTier,
   IShortSkillTierCategoryRecipe,
+  ProfessionId,
 } from "@sotah-inc/core";
 
 import { TreeContentContainer } from "../../../containers/entry-point/Professions/ProfessionsTree/TreeContent";
@@ -19,6 +20,7 @@ export interface IStateProps {
   currentRegion: IRegionComposite | null;
   currentRealm: IClientRealm | null;
   selectedProfession: IShortProfession | null | undefined;
+  selectedProfessionId: ProfessionId;
   selectedSkillTier: ISelectedSkillTier;
   selectedRecipe: IItemsData<IShortRecipe> | null;
   selectedSkillTierCategory: ISelectedSkillTierCategory;
@@ -60,6 +62,17 @@ interface INodeClickMap {
 
 export class ProfessionsTree extends React.Component<Props> {
   public render() {
+    const { selectedProfession, selectedProfessionId } = this.props;
+
+    if (selectedProfession === null) {
+      return (
+        <NonIdealState
+          title={`Profession #${selectedProfessionId} not found`}
+          icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={1} />}
+        />
+      );
+    }
+
     return (
       <div style={{ marginTop: "10px" }}>
         <div className="pure-g">
