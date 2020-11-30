@@ -8,6 +8,7 @@ import {
   IShortSkillTier,
   IShortSkillTierCategoryRecipe,
   ProfessionId,
+  RecipeId,
 } from "@sotah-inc/core";
 
 import { TreeContentContainer } from "../../../containers/entry-point/Professions/ProfessionsTree/TreeContent";
@@ -22,7 +23,8 @@ export interface IStateProps {
   selectedProfession: IShortProfession | null | undefined;
   selectedProfessionId: ProfessionId;
   selectedSkillTier: ISelectedSkillTier;
-  selectedRecipe: IItemsData<IShortRecipe> | null;
+  selectedRecipe: IItemsData<IShortRecipe> | null | undefined;
+  selectedRecipeId: RecipeId;
   selectedSkillTierCategory: ISelectedSkillTierCategory;
 }
 
@@ -62,12 +64,26 @@ interface INodeClickMap {
 
 export class ProfessionsTree extends React.Component<Props> {
   public render() {
-    const { selectedProfession, selectedProfessionId } = this.props;
+    const {
+      selectedProfession,
+      selectedProfessionId,
+      selectedRecipe,
+      selectedRecipeId,
+    } = this.props;
 
     if (selectedProfession === null) {
       return (
         <NonIdealState
           title={`Profession #${selectedProfessionId} not found`}
+          icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={1} />}
+        />
+      );
+    }
+
+    if (selectedRecipe === null) {
+      return (
+        <NonIdealState
+          title={`Recipe #${selectedRecipeId} not found`}
           icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={1} />}
         />
       );
@@ -255,7 +271,10 @@ export class ProfessionsTree extends React.Component<Props> {
       className: "recipe-node",
       icon: this.renderRecipeNodeIcon(v.recipe.icon_url),
       id: `recipe-${v.id}`,
-      isSelected: selectedRecipe !== null && selectedRecipe.data.id === v.id,
+      isSelected:
+        typeof selectedRecipe !== "undefined" &&
+        selectedRecipe !== null &&
+        selectedRecipe.data.id === v.id,
       label: <RecipePopover recipe={v} />,
     };
 
@@ -285,12 +304,14 @@ export class ProfessionsTree extends React.Component<Props> {
       currentRealm === null ||
       typeof selectedProfession === "undefined" ||
       selectedProfession === null ||
-      selectedSkillTier.data === null
+      selectedSkillTier.data === null ||
+      typeof selectedRecipe === "undefined" ||
+      selectedRecipe === null
     ) {
       return;
     }
 
-    if (selectedRecipe !== null && selectedRecipe.data.id.toString() === id) {
+    if (selectedRecipe.data.id.toString() === id) {
       return;
     }
 

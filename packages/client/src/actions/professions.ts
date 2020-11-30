@@ -2,6 +2,7 @@ import {
   IGetPricelistHistoriesResponseData,
   IGetPricelistResponseData,
   ProfessionId,
+  RecipeId,
 } from "@sotah-inc/core";
 
 import { IGetProfessionsResult, IGetRecipeResult, IGetSkillTierResult } from "../api/data";
@@ -13,6 +14,7 @@ export interface ILoadProfessionsEndpoint {
   selectedProfessionId?: ProfessionId;
   skillTier?: IGetSkillTierResult;
   recipe?: IGetRecipeResult;
+  selectedRecipeId?: RecipeId;
   pricelistHistory?: IGetPricelistHistoriesResponseData | null;
   currentPrices?: IGetPricelistResponseData | null;
 }

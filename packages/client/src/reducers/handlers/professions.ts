@@ -116,11 +116,12 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
             isSelected: true,
           };
         })();
-        const selectedRecipe = ((): IItemsData<IShortRecipe> | null => {
-          if (
-            typeof action.payload.recipe === "undefined" ||
-            action.payload.recipe.response === null
-          ) {
+        const selectedRecipe = ((): IItemsData<IShortRecipe> | null | undefined => {
+          if (typeof action.payload.recipe === "undefined") {
+            return undefined;
+          }
+
+          if (action.payload.recipe.response === null) {
             return null;
           }
 
@@ -140,7 +141,7 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
             };
           }
 
-          if (selectedRecipe === null) {
+          if (typeof selectedRecipe === "undefined" || selectedRecipe === null) {
             if (skillTierCategories.length === 0) {
               return {
                 index: -1,
@@ -225,6 +226,7 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
           selectedProfession,
           selectedProfessionId: action.payload.selectedProfessionId ?? 0,
           selectedRecipe,
+          selectedRecipeId: action.payload.selectedRecipeId ?? 0,
           selectedSkillTier,
           selectedSkillTierCategory,
         };

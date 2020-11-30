@@ -14,7 +14,7 @@ export interface IStateProps {
   currentRealm: IClientRealm | null;
   selectedProfession: IShortProfession | null | undefined;
   selectedSkillTier: ISelectedSkillTier;
-  selectedRecipe: IItemsData<IShortRecipe> | null;
+  selectedRecipe: IItemsData<IShortRecipe> | null | undefined;
 }
 
 export interface IRouteProps {
@@ -94,13 +94,17 @@ export class ActionBar extends React.Component<Props> {
       return;
     }
 
-    if (selectedRecipe === null) {
+    if (typeof selectedRecipe === "undefined") {
       browseToSkillTier(currentRegion, realm, selectedProfession, {
         id: selectedSkillTier.data.id,
         is_primary: false,
         name: selectedSkillTier.data.name,
       });
 
+      return;
+    }
+
+    if (selectedRecipe === null) {
       return;
     }
 

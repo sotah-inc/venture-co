@@ -22,7 +22,7 @@ export interface IStateProps {
   currentRealm: IClientRealm | null;
   selectedProfession: IShortProfession | null | undefined;
   selectedSkillTierCategory: ISelectedSkillTierCategory;
-  selectedRecipe: IShortRecipe | null;
+  selectedRecipe: IShortRecipe | null | undefined;
   selectedSkillTier: ISelectedSkillTier;
 }
 
@@ -154,7 +154,7 @@ export class Professions extends React.Component<Props> {
       return;
     }
 
-    if (selectedRecipe === null && selectedSkillTierCategory.isSelected) {
+    if (typeof selectedRecipe === "undefined" && selectedSkillTierCategory.isSelected) {
       const nextRecipe = ((): IShortSkillTierCategoryRecipe | null => {
         if (foundSkillTierCategory.recipes.length === 0) {
           return null;

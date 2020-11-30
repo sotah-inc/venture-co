@@ -10,7 +10,7 @@ import { IEntryRow, PricesTable } from "../../../util/PricesTable";
 
 // props
 export interface IStateProps {
-  selectedRecipe: IItemsData<IShortRecipe> | null;
+  selectedRecipe: IItemsData<IShortRecipe> | null | undefined;
   selectedSkillTierCategory: ISelectedSkillTierCategory;
   priceTable: IFetchData<IItemsData<IPriceListMap>>;
 }
@@ -21,7 +21,7 @@ export class TreeContent extends React.Component<Props> {
   public render() {
     const { selectedSkillTierCategory, selectedRecipe, priceTable } = this.props;
 
-    if (selectedRecipe === null) {
+    if (typeof selectedRecipe === "undefined" || selectedRecipe === null) {
       return null;
     }
 
@@ -51,7 +51,7 @@ export class TreeContent extends React.Component<Props> {
   private getRecipeReagentTotalCost(): number {
     const { selectedRecipe, priceTable } = this.props;
 
-    if (selectedRecipe === null) {
+    if (typeof selectedRecipe === "undefined" || selectedRecipe === null) {
       return 0;
     }
 
@@ -68,7 +68,7 @@ export class TreeContent extends React.Component<Props> {
   private renderFooter() {
     const { selectedRecipe } = this.props;
 
-    if (selectedRecipe === null) {
+    if (typeof selectedRecipe === "undefined" || selectedRecipe === null) {
       return null;
     }
 

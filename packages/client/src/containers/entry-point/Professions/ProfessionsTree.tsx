@@ -21,6 +21,7 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
     selectedRecipe,
     selectedSkillTierCategory,
     selectedProfessionId,
+    selectedRecipeId,
   } = state.Professions;
 
   return {
@@ -29,6 +30,7 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
     selectedProfession,
     selectedProfessionId,
     selectedRecipe,
+    selectedRecipeId,
     selectedSkillTier,
     selectedSkillTierCategory,
   };

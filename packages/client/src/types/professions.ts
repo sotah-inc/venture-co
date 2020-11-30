@@ -4,6 +4,7 @@ import {
   IShortRecipe,
   IShortSkillTier,
   ProfessionId,
+  RecipeId,
 } from "@sotah-inc/core";
 
 import { IFetchData, IItemsData, IPricelistHistoryState } from "./global";
@@ -25,7 +26,8 @@ export interface IProfessionsState {
   selectedProfessionId: ProfessionId;
   selectedProfession: IShortProfession | null | undefined;
   selectedSkillTier: ISelectedSkillTier;
-  selectedRecipe: IItemsData<IShortRecipe> | null;
+  selectedRecipeId: RecipeId;
+  selectedRecipe: IItemsData<IShortRecipe> | null | undefined;
   selectedSkillTierCategory: ISelectedSkillTierCategory;
   pricelistHistory: IFetchData<IItemsData<IPricelistHistoryState>>;
   priceTable: IFetchData<IItemsData<IPriceListMap>>;
@@ -61,6 +63,7 @@ export const defaultProfessionsState: IProfessionsState = {
   selectedProfession: undefined,
   selectedProfessionId: 0,
   selectedRecipe: null,
+  selectedRecipeId: 0,
   selectedSkillTier: {
     data: null,
     isSelected: false,
