@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 
 import { Provider } from "react-redux";
-import { applyMiddleware, createStore, Middleware, Store } from "redux";
+import { applyMiddleware, createStore, Middleware, Store, compose } from "redux";
 import thunk from "redux-thunk";
 
 import { ILoadRootEntrypoint, USER_LOGIN, USER_REGISTER } from "./actions/main";
@@ -71,11 +71,12 @@ interface IProps {
 export const Boot = ({ viewport, predefinedState, rootEntrypointData }: IProps) => {
   if (store === null) {
     const preloadedState = typeof predefinedState === "undefined" ? defaultState : predefinedState;
+    const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
     store = createStore(
       rootReducer,
       preloadedState,
-      applyMiddleware(localStorageMiddleware, thunk),
+      composeEnhancers(applyMiddleware(localStorageMiddleware, thunk)),
     );
   }
 

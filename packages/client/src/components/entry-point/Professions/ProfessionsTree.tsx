@@ -305,13 +305,12 @@ export class ProfessionsTree extends React.Component<Props> {
       typeof selectedProfession === "undefined" ||
       selectedProfession === null ||
       selectedSkillTier.data === null ||
-      typeof selectedRecipe === "undefined" ||
       selectedRecipe === null
     ) {
       return;
     }
 
-    if (selectedRecipe.data.id.toString() === id) {
+    if (typeof selectedRecipe !== "undefined" && selectedRecipe.data.id.toString() === id) {
       return;
     }
 
