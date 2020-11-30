@@ -5,3 +5,5 @@ coverage
 .nyc_output
 app.log
 .npmrc
+etc/*
+!etc/.gitkeep
