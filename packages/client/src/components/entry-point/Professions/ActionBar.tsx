@@ -95,7 +95,11 @@ export class ActionBar extends React.Component<Props> {
     }
 
     if (selectedRecipe === null) {
-      browseToSkillTier(currentRegion, realm, selectedProfession, selectedSkillTier.data);
+      browseToSkillTier(currentRegion, realm, selectedProfession, {
+        id: selectedSkillTier.data.id,
+        is_primary: false,
+        name: selectedSkillTier.data.name,
+      });
 
       return;
     }

@@ -57,13 +57,34 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
 
           return {
             ...state.professions,
-            data: action.payload.professions.response.professions.sort((a, b) => {
-              if (a.id === b.id) {
-                return 0;
-              }
+            data: action.payload.professions.response.professions
+              .sort((a, b) => {
+                if (a.id === b.id) {
+                  return 0;
+                }
 
-              return a.id > b.id ? 1 : -1;
-            }),
+                return a.id > b.id ? 1 : -1;
+              })
+              .map(professionItem => {
+                return {
+                  ...professionItem,
+                  skilltiers: professionItem.skilltiers.sort((a, b) => {
+                    if (a.id === b.id) {
+                      return 0;
+                    }
+
+                    if (a.is_primary && !b.is_primary) {
+                      return 1;
+                    }
+
+                    if (b.is_primary && !a.is_primary) {
+                      return -1;
+                    }
+
+                    return a.id > b.id ? 1 : -1;
+                  }),
+                };
+              }),
             level: FetchLevel.success,
           };
         })();
