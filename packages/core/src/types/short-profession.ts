@@ -13,6 +13,7 @@ export interface IShortProfession {
   skilltiers: Array<{
     id: SkillTierId;
     name: string;
+    is_primary: boolean;
   }>;
   icon_url: string;
 }
