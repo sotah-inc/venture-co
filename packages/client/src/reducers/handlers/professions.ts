@@ -74,11 +74,11 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
                     }
 
                     if (a.is_primary && !b.is_primary) {
-                      return 1;
+                      return -1;
                     }
 
                     if (b.is_primary && !a.is_primary) {
-                      return -1;
+                      return 1;
                     }
 
                     return a.id > b.id ? 1 : -1;
