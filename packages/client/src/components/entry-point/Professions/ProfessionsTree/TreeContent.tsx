@@ -103,20 +103,13 @@ export class TreeContent extends React.Component<Props> {
         return `Item #${id}`;
       }
 
-      return (
-        <ItemPopover
-          key={itemProfitIndex}
-          item={foundItem}
-          interactive={false}
-          position={Position.LEFT}
-        />
-      );
+      return <ItemPopover item={foundItem} interactive={false} position={Position.LEFT} />;
     })();
 
     const itemCost: number | null = priceTable.data.data[id]?.min_buyout_per ?? null;
     if (itemCost === null) {
       return (
-        <tr>
+        <tr key={itemProfitIndex}>
           <th style={{ textAlign: "right" }}>Current price of {item}</th>
           <td colSpan={2}>
             <em>No data found for this item.</em>
@@ -135,7 +128,7 @@ export class TreeContent extends React.Component<Props> {
     })();
 
     return (
-      <>
+      <React.Fragment key={itemProfitIndex}>
         <tr>
           <th style={{ textAlign: "right" }}>Current price of {item}</th>
           <td colSpan={2}>
@@ -146,7 +139,7 @@ export class TreeContent extends React.Component<Props> {
           <th style={{ textAlign: "right" }}>Expected profit for for {item}</th>
           <td colSpan={2}>{expectedProfit}</td>
         </tr>
-      </>
+      </React.Fragment>
     );
   }
 }
