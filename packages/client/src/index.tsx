@@ -71,7 +71,7 @@ interface IProps {
 export const Boot = ({ viewport, predefinedState, rootEntrypointData }: IProps) => {
   if (store === null) {
     const preloadedState = typeof predefinedState === "undefined" ? defaultState : predefinedState;
-    const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+    const composeEnhancers = (window as any)?.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
     store = createStore(
       rootReducer,
