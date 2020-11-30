@@ -89,12 +89,12 @@ export class TreeContent extends React.Component<Props> {
           <th style={{ textAlign: "right" }}>Total</th>
           <td colSpan={2}>{foundTotalCost}</td>
         </tr>
-        {craftedItemIds.map(v => this.renderItemProfit(v))}
+        {craftedItemIds.map((v, i) => this.renderItemProfit(v, i))}
       </>
     );
   }
 
-  private renderItemProfit(id: ItemId) {
+  private renderItemProfit(id: ItemId, itemProfitIndex: number) {
     const { priceTable } = this.props;
 
     const item = (() => {
@@ -103,7 +103,14 @@ export class TreeContent extends React.Component<Props> {
         return `Item #${id}`;
       }
 
-      return <ItemPopover item={foundItem} interactive={false} position={Position.LEFT} />;
+      return (
+        <ItemPopover
+          key={itemProfitIndex}
+          item={foundItem}
+          interactive={false}
+          position={Position.LEFT}
+        />
+      );
     })();
 
     const itemCost: number | null = priceTable.data.data[id]?.min_buyout_per ?? null;
