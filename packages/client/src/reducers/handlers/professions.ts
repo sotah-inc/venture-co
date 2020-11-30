@@ -22,7 +22,7 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
       deselect: (state, _action: ReturnType<typeof DeselectSkillTierCategory>) => {
         return {
           ...state,
-          selectedRecipe: null,
+          selectedRecipe: undefined,
           selectedSkillTierCategory: {
             index: -1,
             isSelected: false,
@@ -32,7 +32,7 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
       select: (state, action: ReturnType<typeof SelectSkillTierCategory>) => {
         return {
           ...state,
-          selectedRecipe: null,
+          selectedRecipe: undefined,
           selectedSkillTierCategory: {
             index: action.payload,
             isSelected: true,

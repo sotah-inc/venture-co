@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 
 import { Provider } from "react-redux";
-import { applyMiddleware, createStore, Middleware, Store, compose } from "redux";
+import { applyMiddleware, compose, createStore, Middleware, Store } from "redux";
 import thunk from "redux-thunk";
 
 import { ILoadRootEntrypoint, USER_LOGIN, USER_REGISTER } from "./actions/main";
