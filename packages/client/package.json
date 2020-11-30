@@ -1,6 +1,6 @@
 {
   "name": "@sotah-inc/client",
-  "version": "2.0.288",
+  "version": "2.0.289",
   "description": "SotAH Web Client SDK",
   "main": "./build/dist/index.js",
   "typings": "build/dist/index.d.ts",
@@ -29,14 +29,11 @@
     "url": "https://github.com/sotah-inc/venture-co/issues"
   },
   "homepage": "https://github.com/sotah-inc/venture-co#readme",
-  "publishConfig": {
-    "access": "public"
-  },
   "dependencies": {
     "@blueprintjs/core": "^3.35.0",
     "@blueprintjs/icons": "^3.22.0",
     "@blueprintjs/select": "^3.14.3",
-    "@sotah-inc/core": "^2.0.126",
+    "@sotah-inc/core": "^2.0.128",
     "@types/http-status": "^1.1.2",
     "@types/isomorphic-fetch": "0.0.35",
     "@types/lodash": "^4.14.165",
@@ -92,6 +89,5 @@
   },
   "peerDependencies": {
     "react": "^17.0.1"
-  },
-  "gitHead": "04815ff39e8767b2b57e767b2420736cd30af7af"
+  }
 }
