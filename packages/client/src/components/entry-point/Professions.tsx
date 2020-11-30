@@ -12,7 +12,7 @@ import { ILoadRealmEntrypoint } from "../../actions/main";
 import { ILoadProfessionsEndpoint } from "../../actions/professions";
 import { ActionBarRouteContainer } from "../../route-containers/entry-point/Professions/ActionBar";
 import { ProfessionsTreeRouteContainer } from "../../route-containers/entry-point/Professions/ProfessionsTree";
-import { IClientRealm, IFetchData } from "../../types/global";
+import { IClientRealm, IFetchData, IItemsData } from "../../types/global";
 import { ISelectedSkillTier, ISelectedSkillTierCategory } from "../../types/professions";
 import { setTitle } from "../../util";
 
@@ -22,7 +22,7 @@ export interface IStateProps {
   currentRealm: IClientRealm | null;
   selectedProfession: IShortProfession | null | undefined;
   selectedSkillTierCategory: ISelectedSkillTierCategory;
-  selectedRecipe: IShortRecipe | null | undefined;
+  selectedRecipe: IItemsData<IShortRecipe> | null | undefined;
   selectedSkillTier: ISelectedSkillTier;
 }
 

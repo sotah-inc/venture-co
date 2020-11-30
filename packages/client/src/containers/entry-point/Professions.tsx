@@ -25,7 +25,7 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
     currentRegion,
     professions,
     selectedProfession,
-    selectedRecipe: selectedRecipe?.data ?? null,
+    selectedRecipe,
     selectedSkillTier,
     selectedSkillTierCategory,
   };
