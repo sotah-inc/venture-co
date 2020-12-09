@@ -22,12 +22,12 @@ import {
   IGetAuctionsRequest,
   IGetAuctionsResponse,
   IGetBootResponse,
+  IGetItemPricesHistoryRequest,
+  IGetItemPricesHistoryResponse,
   IGetItemsRequest,
   IGetItemsResponse,
   IGetPetsRequest,
   IGetPetsResponse,
-  IGetPricelistHistoriesRequest,
-  IGetPricelistHistoriesResponse,
   IGetPricelistRequest,
   IGetPricelistResponse,
   IGetSessionSecretResponse,
@@ -50,6 +50,10 @@ import {
   ISkillTierResponse,
   ResolveRecipeResponse,
 } from "./contracts/professions";
+import {
+  IGetRecipePricesHistoryRequest,
+  IGetRecipePricesHistoryResponse,
+} from "./contracts/recipe-prices";
 import { Message, ParseKind } from "./message";
 import { MessageError } from "./message-error";
 
@@ -79,7 +83,8 @@ export enum subjects {
   queryAuctionStats = "queryAuctionStats",
   priceList = "priceList",
 
-  priceListHistory = "priceListHistory",
+  itemPricesHistory = "itemPricesHistory",
+  recipePricesHistory = "recipePricesHistory",
 
   professions = "professions",
   skillTier = "skillTier",
@@ -418,10 +423,19 @@ export class Messenger {
   }
 
   // via pricelist-histories
-  public async getPricelistHistories(
-    req: IGetPricelistHistoriesRequest,
-  ): Promise<Message<IGetPricelistHistoriesResponse>> {
-    return this.request(subjects.priceListHistory, {
+  public async getItemPricesHistory(
+    req: IGetItemPricesHistoryRequest,
+  ): Promise<Message<IGetItemPricesHistoryResponse>> {
+    return this.request(subjects.itemPricesHistory, {
+      body: JSON.stringify(req),
+      parseKind: ParseKind.GzipJsonEncoded,
+    });
+  }
+
+  public async getRecipePricesHistory(
+    req: IGetRecipePricesHistoryRequest,
+  ): Promise<Message<IGetRecipePricesHistoryResponse>> {
+    return this.request(subjects.recipePricesHistory, {
       body: JSON.stringify(req),
       parseKind: ParseKind.GzipJsonEncoded,
     });

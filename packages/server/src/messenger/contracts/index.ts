@@ -12,6 +12,7 @@ export * from "./price-lists";
 export * from "./items";
 export * from "./query-general";
 export * from "./pets";
+export * from "./item-prices";
 
 export enum code {
   ok = 1,
