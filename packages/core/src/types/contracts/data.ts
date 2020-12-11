@@ -165,6 +165,11 @@ export type GetProfessionPricelistResponse =
   | IValidationErrorResponse
   | null;
 
-export interface IGetRecipePricesHistoryResponse {
+export interface IGetRecipePricesHistoryResponseData {
   history: IRecipePriceHistories;
 }
+
+export type GetRecipePricesHistoryResponseData =
+  | IGetRecipePricesHistoryResponseData
+  | IValidationErrorResponse
+  | null;
