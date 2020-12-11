@@ -5,6 +5,7 @@ import {
   IConnectedRealmComposite,
   IErrorResponse,
   IPricesFlagged,
+  IRecipePriceHistories,
   IRegionComposite,
   IShortPet,
   ITokenHistory,
@@ -163,3 +164,7 @@ export type GetProfessionPricelistResponse =
   | IProfessionPricelistJson
   | IValidationErrorResponse
   | null;
+
+export interface IGetRecipePricesHistoryResponse {
+  history: IRecipePriceHistories;
+}
