@@ -106,7 +106,7 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
     }),
   );
   router.post(
-    "/price-list-history/:regionName/:realmSlug",
+    "/item-price-histories/:regionName/:realmSlug",
     wrap(async (req: Request, res: Response) => {
       const regionName = req.params["regionName"];
       const realmSlug = req.params["realmSlug"];
@@ -114,10 +114,28 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
 
       handleResult(
         res,
-        await controller.getPricelistHistories(
+        await controller.getItemPriceHistories(
           regionName,
           realmSlug,
           itemIds,
+          String(req.query["locale"]),
+        ),
+      );
+    }),
+  );
+  router.get(
+    "/recipe-price-histories/:regionName/:realmSlug/:recipeId",
+    wrap(async (req: Request, res: Response) => {
+      const regionName = req.params["regionName"];
+      const realmSlug = req.params["realmSlug"];
+      const recipeId = req.params["recipeId"];
+
+      handleResult(
+        res,
+        await controller.getRecipePriceHistories(
+          regionName,
+          realmSlug,
+          Number(recipeId),
           String(req.query["locale"]),
         ),
       );

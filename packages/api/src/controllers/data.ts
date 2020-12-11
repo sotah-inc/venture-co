@@ -11,6 +11,7 @@ import {
   GetPricelistResponse,
   GetProfessionPricelistResponse,
   GetProfessionPricelistsResponse,
+  GetRecipePricesHistoryResponse,
   GetTokenHistoryResponse,
   GetUnmetDemandResponse,
   IBollingerBands,
@@ -698,7 +699,7 @@ export class DataController {
     };
   }
 
-  public async getPricelistHistories(
+  public async getItemPriceHistories(
     regionName: RegionName,
     realmSlug: RealmSlug,
     itemIds: ItemId[],
@@ -753,7 +754,7 @@ export class DataController {
 
     const currentUnixTimestamp = Math.floor(Date.now() / 1000);
     const lowerBounds = currentUnixTimestamp - 60 * 60 * 24 * 14;
-    const historyMessage = await this.messenger.getPricelistHistories({
+    const historyMessage = await this.messenger.getItemPricesHistory({
       item_ids: itemIds,
       lower_bounds: lowerBounds,
       tuple: {
@@ -985,6 +986,91 @@ export class DataController {
 
     return {
       data: { history: historyResult, items, itemPriceLimits, overallPriceLimits },
+      status: HTTPStatus.OK,
+    };
+  }
+
+  public async getRecipePriceHistories(
+    regionName: RegionName,
+    realmSlug: RealmSlug,
+    recipeId: RecipeId,
+    locale: string,
+  ): Promise<IRequestResult<GetRecipePricesHistoryResponse>> {
+    if (!Object.values(Locale).includes(locale as Locale)) {
+      const validationErrors: IValidationErrorResponse = {
+        error: "could not validate locale",
+      };
+
+      return {
+        data: validationErrors,
+        status: HTTPStatus.BAD_REQUEST,
+      };
+    }
+
+    // resolving connected-realm
+    const resolveMessage = await this.messenger.resolveConnectedRealm({
+      realm_slug: realmSlug,
+      region_name: regionName,
+    });
+    switch (resolveMessage.code) {
+      case code.ok:
+        break;
+      case code.notFound:
+        const notFoundValidationErrors: IValidationErrorResponse = {
+          error: "could not resolve connected-realm",
+        };
+
+        return {
+          data: notFoundValidationErrors,
+          status: HTTPStatus.NOT_FOUND,
+        };
+      default:
+        const defaultValidationErrors: IValidationErrorResponse = {
+          error: "could not resolve connected-realm",
+        };
+
+        return {
+          data: defaultValidationErrors,
+          status: HTTPStatus.INTERNAL_SERVER_ERROR,
+        };
+    }
+
+    const resolveResult = await resolveMessage.decode();
+    if (resolveResult === null) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    const currentUnixTimestamp = Math.floor(Date.now() / 1000);
+    const lowerBounds = currentUnixTimestamp - 60 * 60 * 24 * 14;
+    const historyMessage = await this.messenger.getRecipePricesHistory({
+      lower_bounds: lowerBounds,
+      recipe_ids: [recipeId],
+      tuple: {
+        connected_realm_id: resolveResult.connected_realm.connected_realm.id,
+        region_name: regionName,
+      },
+      upper_bounds: currentUnixTimestamp,
+    });
+    if (historyMessage.code !== code.ok) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+    const historyMessageResult = await historyMessage.decode();
+    if (!historyMessageResult) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+    const foundHistory = historyMessageResult.history;
+
+    return {
+      data: { history: foundHistory },
       status: HTTPStatus.OK,
     };
   }
