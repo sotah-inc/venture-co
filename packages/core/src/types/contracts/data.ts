@@ -169,7 +169,7 @@ export interface IGetRecipePricesHistoryResponseData {
   history: IRecipePriceHistories;
 }
 
-export type GetRecipePricesHistoryResponseData =
+export type GetRecipePricesHistoryResponse =
   | IGetRecipePricesHistoryResponseData
   | IValidationErrorResponse
   | null;
