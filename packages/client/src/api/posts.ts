@@ -1,6 +1,7 @@
 import {
   CreatePostResponse,
   GetPostResponse,
+  GetPostsResponse,
   ICreatePostRequest,
   ICreatePostResponseData,
   IGetPostResponseData,
@@ -119,4 +120,26 @@ export const deletePost = async (token: string, id: number): Promise<number | nu
     default:
       return null;
   }
+};
+
+export interface IGetPostsResult {
+  posts: IPostJson[];
+  error?: string;
+}
+
+export const getPosts = async (): Promise<IGetPostsResult> => {
+  const { body, status } = await gather<null, GetPostsResponse>({
+    headers: new Headers({ "content-type": "application/json" }),
+    method: "GET",
+    url: `${getApiEndpoint()}/posts`,
+  });
+
+  switch (status) {
+    case HTTPStatus.OK:
+      break;
+    default:
+      return { posts: [], error: "Failure" };
+  }
+
+  return { posts: body!.posts };
 };

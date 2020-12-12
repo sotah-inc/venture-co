@@ -1,48 +1,21 @@
 import {
-  ConnectedRealmId,
-  GetAuctionsResponse,
   GetBootResponse,
   GetConnectedRealmsResponse,
-  GetItemResponse,
-  GetPostsResponse,
   GetPricelistHistoriesResponse,
   GetPricelistResponse,
-  GetTokenHistoryResponse,
   IConnectedRealmComposite,
-  IErrorResponse,
-  IGetAuctionsRequest,
-  IGetAuctionsResponseData,
   IGetBootResponseData,
-  IGetItemResponseData,
   IGetPricelistHistoriesRequest,
   IGetPricelistHistoriesResponseData,
   IGetPricelistRequest,
   IGetPricelistResponseData,
-  IPostJson,
-  IProfessionsResponseData,
-  IQueryAuctionStatsResponseData,
   IQueryGeneralResponseData,
-  IQueryRequest,
-  IQueryResponseData,
-  IRecipeResponseData,
-  IShortItem,
-  IShortPet,
-  ISkillTierResponseData,
   ItemId,
-  ITokenHistory,
   Locale,
-  ProfessionId,
-  ProfessionsResponse,
-  QueryAuctionStatsResponse,
   QueryGeneralRequest,
   QueryGeneralResponse,
-  QueryResponse,
   RealmSlug,
-  RecipeId,
-  RecipeResponse,
   RegionName,
-  SkillTierId,
-  SkillTierResponse,
 } from "@sotah-inc/core";
 import * as HTTPStatus from "http-status";
 
@@ -81,58 +54,6 @@ export const getConnectedRealms = async (
   return body!.connectedRealms;
 };
 
-export interface IGetAuctionsOptions {
-  regionName: RegionName;
-  realmSlug: RealmSlug;
-  request: IGetAuctionsRequest;
-}
-
-export const getAuctions = async (
-  opts: IGetAuctionsOptions,
-): Promise<IGetAuctionsResponseData | null> => {
-  const { regionName, realmSlug, request } = opts;
-  const { body, status } = await gatherWithQuery<IGetAuctionsRequest, GetAuctionsResponse>({
-    method: "GET",
-    query: request,
-    url: `${getApiEndpoint()}/auctions/${regionName}/${realmSlug}`,
-  });
-  if (status !== HTTPStatus.OK) {
-    return null;
-  }
-
-  return body as IGetAuctionsResponseData;
-};
-
-export const getItems = async (
-  req: IQueryRequest,
-): Promise<IQueryResponseData<IShortItem> | null> => {
-  const { body, status } = await gatherWithQuery<IQueryRequest, QueryResponse<IShortItem>>({
-    method: "GET",
-    query: req,
-    url: `${getApiEndpoint()}/items`,
-  });
-  if (status !== HTTPStatus.OK) {
-    return null;
-  }
-
-  return body as IQueryResponseData<IShortItem>;
-};
-
-export const getPets = async (
-  req: IQueryRequest,
-): Promise<IQueryResponseData<IShortPet> | null> => {
-  const { body, status } = await gatherWithQuery<IQueryRequest, QueryResponse<IShortPet>>({
-    method: "GET",
-    query: req,
-    url: `${getApiEndpoint()}/pets`,
-  });
-  if (status !== HTTPStatus.OK) {
-    return null;
-  }
-
-  return body as IQueryResponseData<IShortPet>;
-};
-
 export const queryGeneral = async (
   req: QueryGeneralRequest,
 ): Promise<IQueryGeneralResponseData | null> => {
@@ -146,29 +67,6 @@ export const queryGeneral = async (
   }
 
   return body as IQueryGeneralResponseData;
-};
-
-export interface IGetItemResult {
-  item: IShortItem | null;
-  error: string | null;
-}
-
-export const getItem = async (itemId: ItemId): Promise<IGetItemResult> => {
-  const { body, status } = await gather<null, GetItemResponse>({
-    method: "GET",
-    url: `${getApiEndpoint()}/item/${itemId}`,
-  });
-  if (status !== HTTPStatus.OK) {
-    return {
-      error: (body as IErrorResponse).error,
-      item: null,
-    };
-  }
-
-  return {
-    error: null,
-    item: (body as IGetItemResponseData).item,
-  };
 };
 
 export interface IGetPriceListOptions {
@@ -229,158 +127,3 @@ export const getPriceListHistory = async (
 
   return body as IGetPricelistHistoriesResponseData;
 };
-
-export interface IGetPostsResult {
-  posts: IPostJson[];
-  error?: string;
-}
-
-export const getPosts = async (): Promise<IGetPostsResult> => {
-  const { body, status } = await gather<null, GetPostsResponse>({
-    headers: new Headers({ "content-type": "application/json" }),
-    method: "GET",
-    url: `${getApiEndpoint()}/posts`,
-  });
-
-  switch (status) {
-    case HTTPStatus.OK:
-      break;
-    default:
-      return { posts: [], error: "Failure" };
-  }
-
-  return { posts: body!.posts };
-};
-
-export interface IGetTokenHistoryResult {
-  history: ITokenHistory | null;
-  error: string | null;
-}
-
-export const getTokenHistory = async (regionName: RegionName): Promise<IGetTokenHistoryResult> => {
-  const { body, status } = await gather<null, GetTokenHistoryResponse>({
-    headers: new Headers({ "content-type": "application/json" }),
-    method: "GET",
-    url: `${getApiEndpoint()}/token-history/${regionName}`,
-  });
-
-  switch (status) {
-    case HTTPStatus.OK:
-      break;
-    default:
-      return { history: null, error: "Failure" };
-  }
-
-  return { history: body!.history, error: null };
-};
-
-export interface IQueryAuctionStatsOptions {
-  regionName?: RegionName;
-  connectedRealmId?: ConnectedRealmId;
-}
-
-export interface IQueryAuctionStatsResult {
-  response: IQueryAuctionStatsResponseData | null;
-  error: string | null;
-}
-
-export const queryAuctionStats = async ({
-  regionName,
-  connectedRealmId,
-}: IQueryAuctionStatsOptions): Promise<IQueryAuctionStatsResult> => {
-  const url = [getApiEndpoint(), "query-auction-stats", regionName, connectedRealmId?.toString()];
-
-  const { body, status } = await gather<null, QueryAuctionStatsResponse>({
-    headers: new Headers({ "content-type": "application/json" }),
-    method: "GET",
-    url,
-  });
-
-  switch (status) {
-    case HTTPStatus.OK:
-      break;
-    default:
-      return { response: null, error: "Failure" };
-  }
-
-  return { response: body, error: null };
-};
-
-export interface IGetProfessionsResult {
-  response: IProfessionsResponseData | null;
-  error: string | null;
-}
-
-export async function getProfessions(locale: Locale): Promise<IGetProfessionsResult> {
-  const url = [getApiEndpoint(), "professions"];
-
-  const { body, status } = await gatherWithQuery<{ locale: Locale }, ProfessionsResponse>({
-    headers: new Headers({ "content-type": "application/json" }),
-    method: "GET",
-    query: { locale },
-    url,
-  });
-
-  switch (status) {
-    case HTTPStatus.OK:
-      break;
-    default:
-      return { response: null, error: "Failure" };
-  }
-
-  return { response: body as IProfessionsResponseData, error: null };
-}
-
-export interface IGetSkillTierResult {
-  response: ISkillTierResponseData | null;
-  error: string | null;
-}
-
-export async function getSkillTier(
-  professionId: ProfessionId,
-  skillTierId: SkillTierId,
-  locale: Locale,
-): Promise<IGetSkillTierResult> {
-  const url = [getApiEndpoint(), "skill-tier", professionId.toString(), skillTierId.toString()];
-
-  const { body, status } = await gatherWithQuery<{ locale: Locale }, SkillTierResponse>({
-    headers: new Headers({ "content-type": "application/json" }),
-    method: "GET",
-    query: { locale },
-    url,
-  });
-
-  switch (status) {
-    case HTTPStatus.OK:
-      break;
-    default:
-      return { response: null, error: "Failure" };
-  }
-
-  return { response: body as ISkillTierResponseData, error: null };
-}
-
-export interface IGetRecipeResult {
-  response: IRecipeResponseData | null;
-  error: string | null;
-}
-
-export async function getRecipe(recipeId: RecipeId, locale: Locale): Promise<IGetRecipeResult> {
-  const url = [getApiEndpoint(), "recipe", recipeId.toString()];
-
-  const { body, status } = await gatherWithQuery<{ locale: Locale }, RecipeResponse>({
-    headers: new Headers({ "content-type": "application/json" }),
-    method: "GET",
-    query: { locale },
-    url,
-  });
-
-  switch (status) {
-    case HTTPStatus.OK:
-      break;
-    default:
-      return { response: null, error: "Failure" };
-  }
-
-  return { response: body as IRecipeResponseData, error: null };
-}
