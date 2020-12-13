@@ -4,8 +4,6 @@ import { ExpansionName, IExpansion } from "../expansion";
 import {
   IConnectedRealmComposite,
   IErrorResponse,
-  IPricesFlagged,
-  IRecipePriceHistories,
   IRegionComposite,
   IShortPet,
   ITokenHistory,
@@ -17,12 +15,7 @@ import {
 } from "../index";
 import { ItemId } from "../item";
 import { IItemClass } from "../item-class";
-import {
-  IItemPriceLimits,
-  IItemPricelistHistoryMap,
-  IPriceLimits,
-  IPriceListMap,
-} from "../pricelist";
+import { IPriceListMap } from "../pricelist";
 import { IProfession } from "../profession";
 import { IShortItem } from "../short-item";
 
@@ -98,24 +91,6 @@ export interface IGetPricelistResponseData {
 
 export type GetPricelistResponse = IGetPricelistResponseData | IValidationErrorResponse | null;
 
-export interface IGetPricelistHistoriesRequest {
-  item_ids: ItemId[];
-  lower_bounds?: number;
-  upper_bounds?: number;
-}
-
-export interface IGetPricelistHistoriesResponseData {
-  history: IItemPricelistHistoryMap<IPricesFlagged>;
-  items: IShortItem[];
-  itemPriceLimits: IItemPriceLimits;
-  overallPriceLimits: IPriceLimits;
-}
-
-export type GetPricelistHistoriesResponse =
-  | IGetPricelistHistoriesResponseData
-  | IValidationErrorResponse
-  | null;
-
 export interface IGetUnmetDemandRequest {
   expansion: ExpansionName;
 }
@@ -162,14 +137,5 @@ export type QueryAuctionStatsResponse = IQueryAuctionStatsResponseData | null;
 
 export type GetProfessionPricelistResponse =
   | IProfessionPricelistJson
-  | IValidationErrorResponse
-  | null;
-
-export interface IGetRecipePricesHistoryResponseData {
-  history: IRecipePriceHistories;
-}
-
-export type GetRecipePricesHistoryResponse =
-  | IGetRecipePricesHistoryResponseData
   | IValidationErrorResponse
   | null;
