@@ -4,10 +4,10 @@ import {
   GetAuctionsResponse,
   GetBootResponse,
   GetConnectedRealmsResponse,
+  GetItemPriceHistoriesResponse,
   GetItemResponse,
   GetPostResponse,
   GetPostsResponse,
-  GetPricelistHistoriesResponse,
   GetPricelistResponse,
   GetProfessionPricelistResponse,
   GetProfessionPricelistsResponse,
@@ -704,7 +704,7 @@ export class DataController {
     realmSlug: RealmSlug,
     itemIds: ItemId[],
     locale: string,
-  ): Promise<IRequestResult<GetPricelistHistoriesResponse>> {
+  ): Promise<IRequestResult<GetItemPriceHistoriesResponse>> {
     if (!Object.values(Locale).includes(locale as Locale)) {
       const validationErrors: IValidationErrorResponse = {
         error: "could not validate locale",

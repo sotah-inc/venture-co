@@ -1,5 +1,5 @@
 import {
-  IGetPricelistHistoriesRequest,
+  IGetItemPriceHistoriesRequest,
   IGetPricelistRequest,
   IGetUnmetDemandRequest,
 } from "@sotah-inc/core";
@@ -110,7 +110,7 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
     wrap(async (req: Request, res: Response) => {
       const regionName = req.params["regionName"];
       const realmSlug = req.params["realmSlug"];
-      const itemIds = (req.body as IGetPricelistHistoriesRequest).item_ids;
+      const itemIds = (req.body as IGetItemPriceHistoriesRequest).item_ids;
 
       handleResult(
         res,
