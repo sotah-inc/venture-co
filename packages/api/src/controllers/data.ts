@@ -11,7 +11,7 @@ import {
   GetPricelistResponse,
   GetProfessionPricelistResponse,
   GetProfessionPricelistsResponse,
-  GetRecipePricesHistoryResponse,
+  GetRecipePriceHistoriesResponse,
   GetTokenHistoryResponse,
   GetUnmetDemandResponse,
   IBollingerBands,
@@ -995,7 +995,7 @@ export class DataController {
     realmSlug: RealmSlug,
     recipeId: RecipeId,
     locale: string,
-  ): Promise<IRequestResult<GetRecipePricesHistoryResponse>> {
+  ): Promise<IRequestResult<GetRecipePriceHistoriesResponse>> {
     if (!Object.values(Locale).includes(locale as Locale)) {
       const validationErrors: IValidationErrorResponse = {
         error: "could not validate locale",
