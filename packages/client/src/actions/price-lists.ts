@@ -3,7 +3,6 @@ import {
   ICreatePricelistRequest,
   ICreateProfessionPricelistRequest,
   IExpansion,
-  IGetPricelistHistoriesResponseData,
   IGetPricelistResponseData,
   IGetPricelistsResponseData,
   IPricelistJson,
@@ -13,12 +12,7 @@ import {
 } from "@sotah-inc/core";
 import { Dispatch } from "redux";
 
-import {
-  getPriceList,
-  getPriceListHistory,
-  IGetPriceListHistoryOptions,
-  IGetPriceListOptions,
-} from "../api/data";
+import { getPriceList, IGetPriceListOptions } from "../api/data";
 import {
   createPricelist,
   createProfessionPricelist,

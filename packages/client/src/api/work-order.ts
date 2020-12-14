@@ -16,7 +16,8 @@ import {
 import * as HTTPStatus from "http-status";
 import queryString from "query-string";
 
-import { gather, gatherWithQuery, getApiEndpoint } from "./index";
+import { getApiEndpoint } from "./config";
+import { gather, gatherWithQuery } from "./gather";
 
 interface IWorkOrderParams {
   gameVersion: GameVersion;

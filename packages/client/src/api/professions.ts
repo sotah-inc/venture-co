@@ -12,7 +12,8 @@ import {
 } from "@sotah-inc/core";
 import * as HTTPStatus from "http-status";
 
-import { gatherWithQuery, getApiEndpoint } from "./index";
+import { getApiEndpoint } from "./config";
+import { gatherWithQuery } from "./gather";
 
 export interface IGetProfessionsResult {
   response: IProfessionsResponseData | null;

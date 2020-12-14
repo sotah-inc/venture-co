@@ -1,7 +1,8 @@
 import { GetTokenHistoryResponse, ITokenHistory, RegionName } from "@sotah-inc/core";
 import * as HTTPStatus from "http-status";
 
-import { gather, getApiEndpoint } from "./index";
+import { getApiEndpoint } from "./config";
+import { gather } from "./gather";
 
 export interface IGetTokenHistoryResult {
   history: ITokenHistory | null;

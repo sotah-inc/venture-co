@@ -10,7 +10,8 @@ import {
 } from "@sotah-inc/core";
 import * as HTTPStatus from "http-status";
 
-import { gather, gatherWithQuery, getApiEndpoint } from "./index";
+import { getApiEndpoint } from "./config";
+import { gather, gatherWithQuery } from "./gather";
 
 export const getItems = async (
   req: IQueryRequest,

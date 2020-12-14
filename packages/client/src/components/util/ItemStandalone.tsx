@@ -3,7 +3,7 @@ import React from "react";
 import { Position } from "@blueprintjs/core";
 import { IShortItem } from "@sotah-inc/core";
 
-import { getItem } from "../../api/data";
+import { getItem } from "../../api/items";
 import { ItemPopoverContainer } from "../../containers/util/ItemPopover";
 import { IFetchData } from "../../types/global";
 import { FetchLevel } from "../../types/main";

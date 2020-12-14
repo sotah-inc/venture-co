@@ -7,7 +7,7 @@ import {
   ItemQuality,
 } from "@sotah-inc/core";
 
-import { getApiEndpoint } from "../api";
+import { getApiEndpoint } from "../api/config";
 import { IItemClasses, IItemClassWithSub, ISubItemClasses } from "../types/global";
 
 interface ItemQualityColorClassMap {

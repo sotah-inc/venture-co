@@ -13,7 +13,8 @@ import {
 import * as HTTPStatus from "http-status";
 
 import { IErrors } from "../types/global";
-import { gather, getApiEndpoint } from "./index";
+import { getApiEndpoint } from "./config";
+import { gather } from "./gather";
 
 export interface ICreatePostResult {
   post: IPostJson | null;

@@ -1,9 +1,9 @@
-import { H2, H4 } from "@blueprintjs/core";
-import { IPricelistJson, IRegionComposite, Locale } from "@sotah-inc/core";
 import React from "react";
 
-// tslint:disable-next-line:max-line-length
-import { IGetPriceListHistoryOptions } from "../../../../../api/data";
+import { H2, H4 } from "@blueprintjs/core";
+import { IPricelistJson, IRegionComposite, Locale } from "@sotah-inc/core";
+
+import { IGetItemPriceHistoriesOptions } from "../../../../../api/item-price-histories";
 import { CurrentPricesTableContainer } from "../../../../../containers/entry-point/PriceLists/PricelistTree/PricelistPanel/PricelistTable/CurrentPricesTable";
 import {
   IClientRealm,
@@ -23,7 +23,7 @@ export interface IStateProps {
 }
 
 export interface IDispatchProps {
-  getPricelistHistory: (opts: IGetPriceListHistoryOptions) => void;
+  getPricelistHistory: (opts: IGetItemPriceHistoriesOptions) => void;
 }
 
 export interface IOwnProps {

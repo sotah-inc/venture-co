@@ -1,3 +1,5 @@
+import React from "react";
+
 import {
   Alignment,
   ButtonGroup,
@@ -18,17 +20,14 @@ import {
   Locale,
   PetId,
 } from "@sotah-inc/core";
-import React from "react";
+
 import { ILoadAuctionListEntrypoint } from "../../actions/auction";
 import { ILoadRealmEntrypoint } from "../../actions/main";
-
-import { IGetAuctionsOptions } from "../../api/data";
+import { IGetAuctionsOptions } from "../../api/auctions";
 import { CountToggleContainer } from "../../containers/entry-point/AuctionList/CountToggle";
-// tslint:disable-next-line:max-line-length
 import { QueryAuctionsFilterContainer } from "../../containers/entry-point/AuctionList/QueryAuctionsFilter";
 import { RealmToggleContainer } from "../../containers/util/RealmToggle";
 import { RegionToggleContainer } from "../../containers/util/RegionToggle";
-// tslint:disable-next-line:max-line-length
 import { AuctionTableRouteContainer } from "../../route-containers/entry-point/AuctionList/AuctionTable";
 import { AuctionsOptions, IAuctionResultData } from "../../types/auction";
 import { IClientRealm, IFetchData, IRegions } from "../../types/global";

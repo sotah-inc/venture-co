@@ -1,7 +1,8 @@
 import { IQueryRequest, IQueryResponseData, IShortPet, QueryResponse } from "@sotah-inc/core";
 import * as HTTPStatus from "http-status";
 
-import { gatherWithQuery, getApiEndpoint } from "./index";
+import { getApiEndpoint } from "./config";
+import { gatherWithQuery } from "./gather";
 
 export const getPets = async (
   req: IQueryRequest,

@@ -1,7 +1,5 @@
 // tslint:disable-next-line:no-import-side-effect
 import "isomorphic-fetch";
-// tslint:disable-next-line:no-submodule-imports
-import getConfig from "next/config";
 import queryString, { StringifiableRecord } from "query-string";
 
 export interface IGatherOptions<T> {

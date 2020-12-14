@@ -1,12 +1,9 @@
 import {
   GetBootResponse,
   GetConnectedRealmsResponse,
-  GetPricelistHistoriesResponse,
   GetPricelistResponse,
   IConnectedRealmComposite,
   IGetBootResponseData,
-  IGetPricelistHistoriesRequest,
-  IGetPricelistHistoriesResponseData,
   IGetPricelistRequest,
   IGetPricelistResponseData,
   IQueryGeneralResponseData,
@@ -19,7 +16,8 @@ import {
 } from "@sotah-inc/core";
 import * as HTTPStatus from "http-status";
 
-import { gather, gatherWithQuery, getApiEndpoint } from "./index";
+import { getApiEndpoint } from "./config";
+import { gather, gatherWithQuery } from "./gather";
 
 export const getPing = async (): Promise<boolean> => {
   try {
@@ -95,35 +93,4 @@ export const getPriceList = async (
   }
 
   return body as IGetPricelistResponseData;
-};
-
-export interface IGetPriceListHistoryOptions {
-  regionName: RegionName;
-  realmSlug: RealmSlug;
-  itemIds: ItemId[];
-  locale: Locale;
-}
-
-export const getPriceListHistory = async (
-  opts: IGetPriceListHistoryOptions,
-): Promise<IGetPricelistHistoriesResponseData | null> => {
-  const { regionName, realmSlug, itemIds } = opts;
-  const { body, status } = await gatherWithQuery<
-    { locale: Locale },
-    GetPricelistHistoriesResponse,
-    IGetPricelistHistoriesRequest
-  >({
-    body: { item_ids: itemIds },
-    headers: new Headers({
-      "content-type": "application/json",
-    }),
-    method: "POST",
-    query: { locale: opts.locale },
-    url: `${getApiEndpoint()}/price-list-history/${regionName}/${realmSlug}`,
-  });
-  if (status !== HTTPStatus.OK) {
-    return null;
-  }
-
-  return body as IGetPricelistHistoriesResponseData;
 };

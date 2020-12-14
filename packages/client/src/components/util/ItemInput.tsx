@@ -1,4 +1,3 @@
-import { IItemModifiers } from "@blueprintjs/select/src/common/itemRenderer";
 import React, { useState } from "react";
 
 import { Classes, H6, Menu, MenuItem } from "@blueprintjs/core";
@@ -9,10 +8,11 @@ import {
   ItemPredicate,
   Suggest,
 } from "@blueprintjs/select";
+import { IItemModifiers } from "@blueprintjs/select/src/common/itemRenderer";
 import { IQueryItem, IShortItem, ItemId, Locale } from "@sotah-inc/core";
 import { debounce } from "lodash";
 
-import { getItems } from "../../api/data";
+import { getItems } from "../../api/items";
 import { getItemIconUrl, getItemTextValue, qualityToColorClass } from "../../util";
 
 const ItemSuggest = Suggest.ofType<IQueryItem<IShortItem>>();
