@@ -3,6 +3,7 @@ import {
   ICreatePricelistRequest,
   ICreateProfessionPricelistRequest,
   IExpansion,
+  IGetItemPriceHistoriesResponseData,
   IGetPricelistResponseData,
   IGetPricelistsResponseData,
   IPricelistJson,
@@ -13,6 +14,7 @@ import {
 import { Dispatch } from "redux";
 
 import { getPriceList, IGetPriceListOptions } from "../api/data";
+import { getItemPriceHistories, IGetItemPriceHistoriesOptions } from "../api/item-price-histories";
 import {
   createPricelist,
   createProfessionPricelist,
@@ -186,18 +188,18 @@ export const FetchGetPricelist = (opts: IGetPriceListOptions) => {
   };
 };
 
-export const REQUEST_GET_PRICELISTHISTORY = "REQUEST_GET_PRICELISTHISTORY";
-export const RequestGetPricelistHistory = () => createAction(REQUEST_GET_PRICELISTHISTORY);
-export const RECEIVE_GET_PRICELISTHISTORY = "RECEIVE_GET_PRICELISTHISTORY";
-export const ReceiveGetPricelistHistory = (payload: IGetPricelistHistoriesResponseData | null) =>
-  createAction(RECEIVE_GET_PRICELISTHISTORY, payload);
+export const REQUEST_GET_ITEMPRICEHISTORIES = "REQUEST_GET_ITEMPRICEHISTORIES";
+export const RequestGetItemPriceHistories = () => createAction(REQUEST_GET_ITEMPRICEHISTORIES);
+export const RECEIVE_GET_ITEMPRICEHISTORIES = "RECEIVE_GET_ITEMPRICEHISTORIES";
+export const ReceiveGetItemPriceHistories = (payload: IGetItemPriceHistoriesResponseData | null) =>
+  createAction(RECEIVE_GET_ITEMPRICEHISTORIES, payload);
 type FetchGetPricelistHistory = ReturnType<
-  typeof RequestGetPricelistHistory | typeof ReceiveGetPricelistHistory
+  typeof RequestGetItemPriceHistories | typeof ReceiveGetItemPriceHistories
 >;
-export const FetchGetPricelistHistory = (opts: IGetPriceListHistoryOptions) => {
+export const FetchGetItemPriceHistories = (opts: IGetItemPriceHistoriesOptions) => {
   return async (dispatch: Dispatch<FetchGetPricelistHistory>) => {
-    dispatch(RequestGetPricelistHistory());
-    dispatch(ReceiveGetPricelistHistory(await getPriceListHistory(opts)));
+    dispatch(RequestGetItemPriceHistories());
+    dispatch(ReceiveGetItemPriceHistories(await getItemPriceHistories(opts)));
   };
 };
 
@@ -208,7 +210,7 @@ export interface ILoadPricelistsEntrypointFront {
   };
   expansionName?: ExpansionName;
   pricelistSlug?: string;
-  pricelistHistory?: IGetPricelistHistoriesResponseData | null;
+  itemPriceHistories?: IGetItemPriceHistoriesResponseData | null;
   currentPrices?: IGetPricelistResponseData | null;
   selectedList?: IPricelistJson | null;
   professionPricelists?: IGetProfessionPricelistsResult;
@@ -236,8 +238,8 @@ export const PriceListsActions = {
   ReceiveCreateProfessionPricelist,
   ReceiveDeletePricelist,
   ReceiveDeleteProfessionPricelist,
+  ReceiveGetItemPriceHistories,
   ReceiveGetPricelist,
-  ReceiveGetPricelistHistory,
   ReceiveGetPricelists,
   ReceiveGetProfessionPricelists,
   ReceiveUpdatePricelist,
@@ -245,8 +247,8 @@ export const PriceListsActions = {
   RequestCreateProfessionPricelist,
   RequestDeletePricelist,
   RequestDeleteProfessionPricelist,
+  RequestGetItemPriceHistories,
   RequestGetPricelist,
-  RequestGetPricelistHistory,
   RequestGetPricelists,
   RequestGetProfessionPricelists,
   RequestUpdatePricelist,

@@ -73,7 +73,7 @@ export interface IClientRealm {
   realmModificationDates: IConnectedRealmModificationDates;
 }
 
-export interface IPricelistHistoryState {
+export interface IItemPriceHistoriesState {
   history: IItemPricelistHistoryMap<IPricesFlagged>;
   itemPriceLimits: IItemPriceLimits;
   overallPriceLimits: IPriceLimits;
