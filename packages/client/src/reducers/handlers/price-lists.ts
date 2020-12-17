@@ -13,13 +13,13 @@ import {
   ReceiveCreateProfessionPricelist,
   ReceiveDeletePricelist,
   ReceiveDeleteProfessionPricelist,
+  ReceiveGetItemPriceHistories,
   ReceiveGetPricelist,
-  ReceiveGetPricelistHistory,
   ReceiveGetPricelists,
   ReceiveGetProfessionPricelists,
   ReceiveUpdatePricelist,
 } from "../../actions/price-lists";
-import { IFetchData, IItemsData, IPricelistHistoryState } from "../../types/global";
+import { IFetchData, IItemPriceHistoriesState, IItemsData } from "../../types/global";
 import { FetchLevel } from "../../types/main";
 import {
   defaultPriceListsState,
@@ -44,23 +44,23 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           action.payload.expansions.find(v => v.name === action.payload.expansionName) ?? null;
         const selectedList: IPricelistJson | null = action.payload.selectedList ?? null;
 
-        const pricelistHistory: IFetchData<IItemsData<IPricelistHistoryState>> = (() => {
-          if (typeof action.payload.pricelistHistory === "undefined") {
-            return defaultPriceListsState.pricelistHistory;
+        const itemPriceHistories: IFetchData<IItemsData<IItemPriceHistoriesState>> = (() => {
+          if (typeof action.payload.itemPriceHistories === "undefined") {
+            return defaultPriceListsState.itemPriceHistories;
           }
 
-          if (action.payload.pricelistHistory === null) {
-            return { ...defaultPriceListsState.pricelistHistory, level: FetchLevel.failure };
+          if (action.payload.itemPriceHistories === null) {
+            return { ...defaultPriceListsState.itemPriceHistories, level: FetchLevel.failure };
           }
 
           return {
             data: {
               data: {
-                history: action.payload.pricelistHistory.history,
-                itemPriceLimits: action.payload.pricelistHistory.itemPriceLimits,
-                overallPriceLimits: action.payload.pricelistHistory.overallPriceLimits,
+                history: action.payload.itemPriceHistories.history,
+                itemPriceLimits: action.payload.itemPriceHistories.itemPriceLimits,
+                overallPriceLimits: action.payload.itemPriceHistories.overallPriceLimits,
               },
-              items: action.payload.pricelistHistory.items,
+              items: action.payload.itemPriceHistories.items,
             },
             errors: {},
             level: FetchLevel.success,
@@ -142,9 +142,9 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
 
         return {
           ...state,
+          itemPriceHistories,
           loadId,
           priceTable,
-          pricelistHistory,
           professionPricelists,
           selectedExpansion,
           selectedList,
@@ -153,6 +153,43 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
             value: selectedProfession,
           },
           unmetDemand,
+        };
+      },
+    },
+  },
+  itempricehistories: {
+    get: {
+      receive: (
+        state: IPriceListsState,
+        action: ReturnType<typeof ReceiveGetItemPriceHistories>,
+      ) => {
+        if (action.payload === null) {
+          return {
+            ...state,
+            itemPriceHistories: { ...state.itemPriceHistories, level: FetchLevel.failure },
+          };
+        }
+
+        return {
+          ...state,
+          itemPriceHistories: {
+            data: {
+              data: {
+                history: action.payload.history,
+                itemPriceLimits: action.payload.itemPriceLimits,
+                overallPriceLimits: action.payload.overallPriceLimits,
+              },
+              items: action.payload.items,
+            },
+            errors: {},
+            level: FetchLevel.success,
+          },
+        };
+      },
+      request: (state: IPriceListsState) => {
+        return {
+          ...state,
+          itemPriceHistories: { ...state.itemPriceHistories, level: FetchLevel.fetching },
         };
       },
     },
@@ -338,12 +375,12 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
         return {
           ...state,
           ...action.payload.meta,
-          priceTable: {
-            ...state.priceTable,
+          itemPriceHistories: {
+            ...state.itemPriceHistories,
             level: FetchLevel.prompted,
           },
-          pricelistHistory: {
-            ...state.pricelistHistory,
+          priceTable: {
+            ...state.priceTable,
             level: FetchLevel.prompted,
           },
           professionPricelists: {
@@ -358,40 +395,6 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
         return {
           ...state,
           updatePricelist: { ...state.updatePricelist, level: FetchLevel.fetching },
-        };
-      },
-    },
-  },
-  pricelisthistory: {
-    get: {
-      receive: (state: IPriceListsState, action: ReturnType<typeof ReceiveGetPricelistHistory>) => {
-        if (action.payload === null) {
-          return {
-            ...state,
-            pricelistHistory: { ...state.pricelistHistory, level: FetchLevel.failure },
-          };
-        }
-
-        return {
-          ...state,
-          pricelistHistory: {
-            data: {
-              data: {
-                history: action.payload.history,
-                itemPriceLimits: action.payload.itemPriceLimits,
-                overallPriceLimits: action.payload.overallPriceLimits,
-              },
-              items: action.payload.items,
-            },
-            errors: {},
-            level: FetchLevel.success,
-          },
-        };
-      },
-      request: (state: IPriceListsState) => {
-        return {
-          ...state,
-          pricelistHistory: { ...state.pricelistHistory, level: FetchLevel.fetching },
         };
       },
     },

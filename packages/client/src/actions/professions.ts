@@ -15,7 +15,7 @@ export interface ILoadProfessionsEndpoint {
   skillTier?: IGetSkillTierResult;
   recipe?: IGetRecipeResult;
   selectedRecipeId?: RecipeId;
-  pricelistHistory?: IGetItemPriceHistoriesResponseData | null;
+  itemPriceHistories?: IGetItemPriceHistoriesResponseData | null;
   currentPrices?: IGetPricelistResponseData | null;
 }
 

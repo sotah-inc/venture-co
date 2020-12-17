@@ -33,7 +33,7 @@ export interface IPriceListsState {
   };
   selectedExpansion: IExpansion | null;
   pricelists: IFetchData<IItemsData<IPricelistJson[]>>;
-  pricelistHistory: IFetchData<IItemsData<IItemPriceHistoriesState>>;
+  itemPriceHistories: IFetchData<IItemsData<IItemPriceHistoriesState>>;
   priceTable: IFetchData<IItemsData<IPriceListMap>>;
   professionPricelists: IFetchData<IItemsData<IProfessionPricelistJson[]>>;
   unmetDemand: IFetchData<IItemsData<IUnmetDemandState>>;
@@ -71,22 +71,22 @@ export const defaultPriceListsState: IPriceListsState = {
   isAddListDialogOpen: false,
   isDeleteListDialogOpen: false,
   isEditListDialogOpen: false,
-  loadId: "",
-  priceTable: {
-    data: {
-      data: {},
-      items: [],
-    },
-    errors: {},
-    level: FetchLevel.initial,
-  },
-  pricelistHistory: {
+  itemPriceHistories: {
     data: {
       data: {
         history: {},
         itemPriceLimits: {},
         overallPriceLimits: { lower: 0, upper: 0 },
       },
+      items: [],
+    },
+    errors: {},
+    level: FetchLevel.initial,
+  },
+  loadId: "",
+  priceTable: {
+    data: {
+      data: {},
       items: [],
     },
     errors: {},

@@ -7,7 +7,7 @@ import {
   SelectSkillTierCategory,
 } from "../../actions/professions";
 import { defaultPriceListsState } from "../../types";
-import { IFetchData, IItemsData, IPricelistHistoryState } from "../../types/global";
+import { IFetchData, IItemsData, IItemPriceHistoriesState } from "../../types/global";
 import { FetchLevel } from "../../types/main";
 import {
   IProfessionsState,
@@ -175,23 +175,23 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
           );
         })();
 
-        const pricelistHistory: IFetchData<IItemsData<IPricelistHistoryState>> = (() => {
-          if (typeof action.payload.pricelistHistory === "undefined") {
-            return defaultPriceListsState.pricelistHistory;
+        const itemPriceHistories: IFetchData<IItemsData<IItemPriceHistoriesState>> = (() => {
+          if (typeof action.payload.itemPriceHistories === "undefined") {
+            return defaultPriceListsState.itemPriceHistories;
           }
 
-          if (action.payload.pricelistHistory === null) {
-            return { ...defaultPriceListsState.pricelistHistory, level: FetchLevel.failure };
+          if (action.payload.itemPriceHistories === null) {
+            return { ...defaultPriceListsState.itemPriceHistories, level: FetchLevel.failure };
           }
 
           return {
             data: {
               data: {
-                history: action.payload.pricelistHistory.history,
-                itemPriceLimits: action.payload.pricelistHistory.itemPriceLimits,
-                overallPriceLimits: action.payload.pricelistHistory.overallPriceLimits,
+                history: action.payload.itemPriceHistories.history,
+                itemPriceLimits: action.payload.itemPriceHistories.itemPriceLimits,
+                overallPriceLimits: action.payload.itemPriceHistories.overallPriceLimits,
               },
-              items: action.payload.pricelistHistory.items,
+              items: action.payload.itemPriceHistories.items,
             },
             errors: {},
             level: FetchLevel.success,
@@ -219,9 +219,9 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
 
         return {
           ...state,
+          itemPriceHistories,
           loadId: action.payload.loadId,
           priceTable,
-          pricelistHistory,
           professions,
           selectedProfession,
           selectedProfessionId: action.payload.selectedProfessionId ?? 0,
