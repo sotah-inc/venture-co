@@ -28,7 +28,6 @@
     "typescript": "^3.9.2"
   },
   "dependencies": {
-    "@sotah-inc/core": "^2.0.135",
     "@types/node": "^14.14.6"
   }
 }
