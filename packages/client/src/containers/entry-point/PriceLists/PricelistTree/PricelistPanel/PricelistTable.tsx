@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
-import { FetchGetPricelistHistory } from "../../../../../actions/price-lists";
 
+import { FetchGetItemPriceHistories } from "../../../../../actions/price-lists";
 import {
   IDispatchProps,
   IStateProps,
@@ -10,13 +10,13 @@ import {
 import { IStoreState } from "../../../../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
-  const { loadId, pricelistHistory, selectedList } = state.PriceLists;
+  const { loadId, itemPriceHistories, selectedList } = state.PriceLists;
 
-  return { loadId, pricelistHistory, selectedList };
+  return { loadId, itemPriceHistories, selectedList };
 };
 
 export const mapDispatchToProps: IDispatchProps = {
-  getPricelistHistory: FetchGetPricelistHistory,
+  getItemPriceHistories: FetchGetItemPriceHistories,
 };
 
 export const PricelistTableContainer = connect<IStateProps, IDispatchProps, {}, IStoreState>(

@@ -8,8 +8,8 @@ import { CurrentPricesTableContainer } from "../../../../../containers/entry-poi
 import {
   IClientRealm,
   IFetchData,
+  IItemPriceHistoriesState,
   IItemsData,
-  IPricelistHistoryState,
 } from "../../../../../types/global";
 import { FetchLevel } from "../../../../../types/main";
 import { getItemFromPricelist } from "../../../../../util";
@@ -17,13 +17,13 @@ import { ItemIcon } from "../../../../util/ItemIcon";
 import { PricelistHistoryGraph } from "../../../../util/PricelistHistoryGraph";
 
 export interface IStateProps {
-  pricelistHistory: IFetchData<IItemsData<IPricelistHistoryState>>;
+  itemPriceHistories: IFetchData<IItemsData<IItemPriceHistoriesState>>;
   selectedList: IPricelistJson | null;
   loadId: string;
 }
 
 export interface IDispatchProps {
-  getPricelistHistory: (opts: IGetItemPriceHistoriesOptions) => void;
+  getItemPriceHistories: (opts: IGetItemPriceHistoriesOptions) => void;
 }
 
 export interface IOwnProps {
@@ -36,21 +36,21 @@ type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
 
 export class PricelistTable extends React.Component<Props> {
   public componentDidUpdate(prevProps: Readonly<Props>) {
-    const { pricelistHistory, getPricelistHistory, region, realm, selectedList } = this.props;
+    const { itemPriceHistories, getItemPriceHistories, region, realm, selectedList } = this.props;
 
     if (selectedList === null) {
       return;
     }
 
-    if (pricelistHistory.level !== prevProps.pricelistHistory.level) {
-      switch (pricelistHistory.level) {
+    if (itemPriceHistories.level !== prevProps.itemPriceHistories.level) {
+      switch (itemPriceHistories.level) {
         case FetchLevel.prompted:
           break;
         default:
           return;
       }
 
-      getPricelistHistory({
+      getItemPriceHistories({
         itemIds: selectedList.pricelist_entries.map(v => v.item_id),
         locale: Locale.EnUS,
         realmSlug: realm.realm.slug,
@@ -60,7 +60,7 @@ export class PricelistTable extends React.Component<Props> {
   }
 
   public render() {
-    const { list, loadId, pricelistHistory } = this.props;
+    const { list, loadId, itemPriceHistories } = this.props;
 
     return (
       <>
@@ -71,11 +71,11 @@ export class PricelistTable extends React.Component<Props> {
         <H4>History</H4>
         {
           <PricelistHistoryGraph
-            items={pricelistHistory.data.items}
-            pricelistHistoryMap={pricelistHistory.data.data.history}
-            overallPriceLimits={pricelistHistory.data.data.overallPriceLimits}
+            items={itemPriceHistories.data.items}
+            pricelistHistoryMap={itemPriceHistories.data.data.history}
+            overallPriceLimits={itemPriceHistories.data.data.overallPriceLimits}
             loadId={loadId}
-            itemPriceLimits={pricelistHistory.data.data.itemPriceLimits}
+            itemPriceLimits={itemPriceHistories.data.data.itemPriceLimits}
           />
         }
         {<CurrentPricesTableContainer />}
@@ -84,9 +84,9 @@ export class PricelistTable extends React.Component<Props> {
   }
 
   private renderPricelistIcon() {
-    const { list, pricelistHistory } = this.props;
+    const { list, itemPriceHistories } = this.props;
 
-    const item = getItemFromPricelist(pricelistHistory.data.items, list);
+    const item = getItemFromPricelist(itemPriceHistories.data.items, list);
     if (item === null) {
       return null;
     }
