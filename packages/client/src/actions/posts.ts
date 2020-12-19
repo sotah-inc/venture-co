@@ -6,20 +6,18 @@ import {
 } from "@sotah-inc/core";
 import { Dispatch } from "redux";
 
-import {
-  getPosts,
-  IGetPostsResult,
-  IGetTokenHistoryResult,
-  IQueryAuctionStatsResult,
-} from "../api/data";
+import { IQueryAuctionStatsResult } from "../api/auctions";
 import {
   createPost,
   deletePost,
   getPost,
+  getPosts,
   ICreatePostResult,
+  IGetPostsResult,
   IUpdatePostResult,
   updatePost,
 } from "../api/posts";
+import { IGetTokenHistoryResult } from "../api/token-history";
 import { ActionsUnion, createAction } from "./helpers";
 
 export const REQUEST_CREATE_POST = "REQUEST_CREATE_POST";

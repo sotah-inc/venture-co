@@ -8,7 +8,7 @@ import {
 } from "@sotah-inc/core";
 import { Dispatch } from "redux";
 
-import { getAuctions, IGetAuctionsOptions } from "../api/data";
+import { getAuctions, IGetAuctionsOptions } from "../api/auctions";
 import { ISortChangeOptions } from "../types/auction";
 import { ActionsUnion, createAction } from "./helpers";
 

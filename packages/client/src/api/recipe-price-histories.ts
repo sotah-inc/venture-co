@@ -11,7 +11,7 @@ import * as HTTPStatus from "http-status";
 import { getApiEndpoint } from "./config";
 import { gatherWithQuery } from "./gather";
 
-export interface IGetPriceListHistoryOptions {
+export interface IGetRecipePriceHistoriesOptions {
   regionName: RegionName;
   realmSlug: RealmSlug;
   recipeId: RecipeId;
@@ -19,7 +19,7 @@ export interface IGetPriceListHistoryOptions {
 }
 
 export const getRecipePriceHistories = async (
-  opts: IGetPriceListHistoryOptions,
+  opts: IGetRecipePriceHistoriesOptions,
 ): Promise<IGetRecipePriceHistoriesResponseData | null> => {
   const { regionName, realmSlug, recipeId } = opts;
   const { body, status } = await gatherWithQuery<
