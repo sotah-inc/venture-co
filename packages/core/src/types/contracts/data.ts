@@ -4,6 +4,7 @@ import { ExpansionName, IExpansion } from "../expansion";
 import {
   IConnectedRealmComposite,
   IErrorResponse,
+  IItemPrices,
   IRegionComposite,
   IShortPet,
   ITokenHistory,
@@ -15,7 +16,6 @@ import {
 } from "../index";
 import { ItemId } from "../item";
 import { IItemClass } from "../item-class";
-import { IPriceListMap } from "../pricelist";
 import { IProfession } from "../profession";
 import { IShortItem } from "../short-item";
 
@@ -85,7 +85,7 @@ export interface IGetPricelistRequest {
 }
 
 export interface IGetPricelistResponseData {
-  price_list: IPriceListMap;
+  price_list: IItemPrices;
   items: IShortItem[];
 }
 

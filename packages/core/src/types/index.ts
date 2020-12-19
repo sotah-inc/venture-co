@@ -6,7 +6,8 @@ export * from "./entities";
 export * from "./expansion";
 export * from "./item";
 export * from "./item-class";
-export * from "./pricelist";
+export * from "./item-prices";
+export * from "./prices";
 export * from "./profession";
 export * from "./region";
 export * from "./token";
@@ -16,7 +17,7 @@ export * from "./short-pet";
 export * from "./short-profession";
 export * from "./short-skilltier";
 export * from "./short-recipe";
-export * from './recipe-prices';
+export * from "./recipe-prices";
 
 export enum SortDirection {
   none,

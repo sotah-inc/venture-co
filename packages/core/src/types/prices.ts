@@ -10,29 +10,13 @@ export interface IPricesFlagged extends IPrices {
   is_blank: boolean;
 }
 
-export interface IPriceListMap {
-  [itemId: number]: IPrices | undefined;
-}
-
-export interface IItemPricelistHistoryMap<T extends IPrices> {
-  [itemId: number]: IPricelistHistoryMap<T> | undefined;
-}
-
-export interface IPricelistHistoryMap<T extends IPrices> {
+export interface IPriceHistories<T extends IPrices> {
   [unixTimestamp: number]: T | undefined;
 }
 
 export interface IPriceLimits {
   upper: number;
   lower: number;
-}
-
-export interface IItemPriceLimits {
-  [itemId: number]: IPriceLimits | undefined;
-}
-
-export interface IItemMarketPrices {
-  [itemId: number]: number | undefined;
 }
 
 export interface IBollingerBands {
