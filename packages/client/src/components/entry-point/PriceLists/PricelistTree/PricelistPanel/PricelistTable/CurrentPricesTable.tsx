@@ -1,7 +1,7 @@
 import React from "react";
 
 import { H4, Intent, Spinner } from "@blueprintjs/core";
-import { IPricelistJson, IPriceListMap, IRegionComposite, Locale } from "@sotah-inc/core";
+import { IItemPrices, IPricelistJson, IRegionComposite, Locale } from "@sotah-inc/core";
 
 import { IGetPriceListOptions } from "../../../../../../api/data";
 import { IClientRealm, IFetchData, IItemsData } from "../../../../../../types/global";
@@ -10,7 +10,7 @@ import { PricesTable } from "../../../../../util/PricesTable";
 
 export interface IStateProps {
   selectedList: IPricelistJson | null;
-  priceTable: IFetchData<IItemsData<IPriceListMap>>;
+  priceTable: IFetchData<IItemsData<IItemPrices>>;
   fetchRealmLevel: FetchLevel;
   currentRegion: IRegionComposite | null;
   currentRealm: IClientRealm | null;

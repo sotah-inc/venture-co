@@ -1,5 +1,5 @@
 import {
-  IItemPricelistHistoryMap,
+  IItemPriceHistories,
   IPricesFlagged,
   IQueryAuctionStatsResponseData,
 } from "@sotah-inc/core";
@@ -122,7 +122,7 @@ export function convertAuctionStatsToLineData(
 }
 
 export function convertPricelistHistoryMapToLineData(
-  pricelistHistoryMap: IItemPricelistHistoryMap<IPricesFlagged>,
+  pricelistHistoryMap: IItemPriceHistories<IPricesFlagged>,
 ): ILineItemOpen[] {
   return Object.keys(pricelistHistoryMap).reduce<ILineItemOpen[]>(
     (dataPreviousValue: ILineItemOpen[], itemIdKey: string) => {

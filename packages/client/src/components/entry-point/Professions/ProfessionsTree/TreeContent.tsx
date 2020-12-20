@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Position } from "@blueprintjs/core";
-import { IPriceListMap, IShortRecipe, ItemId, resolveCraftedItemIds } from "@sotah-inc/core";
+import { IItemPrices, IShortRecipe, ItemId, resolveCraftedItemIds } from "@sotah-inc/core";
 
 import { IFetchData, IItemsData } from "../../../../types/global";
 import { ISelectedSkillTierCategory } from "../../../../types/professions";
@@ -12,7 +12,7 @@ import { IEntryRow, PricesTable } from "../../../util/PricesTable";
 export interface IStateProps {
   selectedRecipe: IItemsData<IShortRecipe> | null | undefined;
   selectedSkillTierCategory: ISelectedSkillTierCategory;
-  priceTable: IFetchData<IItemsData<IPriceListMap>>;
+  priceTable: IFetchData<IItemsData<IItemPrices>>;
 }
 
 export type Props = Readonly<IStateProps>;

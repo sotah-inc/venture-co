@@ -1,7 +1,7 @@
 import {
   IExpansion,
+  IItemPrices,
   IPricelistJson,
-  IPriceListMap,
   IProfession,
   IProfessionPricelistJson,
 } from "@sotah-inc/core";
@@ -67,7 +67,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           };
         })();
 
-        const priceTable: IFetchData<IItemsData<IPriceListMap>> = (() => {
+        const priceTable: IFetchData<IItemsData<IItemPrices>> = (() => {
           if (typeof action.payload.currentPrices === "undefined") {
             return defaultPriceListsState.priceTable;
           }

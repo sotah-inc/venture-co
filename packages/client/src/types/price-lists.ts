@@ -1,7 +1,7 @@
 import {
   IExpansion,
+  IItemPrices,
   IPricelistJson,
-  IPriceListMap,
   IProfession,
   IProfessionPricelistJson,
   ItemId,
@@ -9,7 +9,7 @@ import {
 } from "@sotah-inc/core";
 
 import { IUpdatePricelistResult } from "../api/price-lists";
-import { IFetchData, IFetchInfo, IItemsData, IItemPriceHistoriesState } from "./global";
+import { IFetchData, IFetchInfo, IItemPriceHistoriesState, IItemsData } from "./global";
 import { FetchLevel } from "./main";
 
 export interface IUnmetDemandState {
@@ -34,7 +34,7 @@ export interface IPriceListsState {
   selectedExpansion: IExpansion | null;
   pricelists: IFetchData<IItemsData<IPricelistJson[]>>;
   itemPriceHistories: IFetchData<IItemsData<IItemPriceHistoriesState>>;
-  priceTable: IFetchData<IItemsData<IPriceListMap>>;
+  priceTable: IFetchData<IItemsData<IItemPrices>>;
   professionPricelists: IFetchData<IItemsData<IProfessionPricelistJson[]>>;
   unmetDemand: IFetchData<IItemsData<IUnmetDemandState>>;
   loadId: string;

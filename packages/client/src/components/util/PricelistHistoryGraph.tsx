@@ -3,8 +3,8 @@ import React from "react";
 import { Icon, Intent, Tab, Tabs, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import {
+  IItemPriceHistories,
   IItemPriceLimits,
-  IItemPricelistHistoryMap,
   IPriceLimits,
   IPricesFlagged,
   IShortItem,
@@ -27,7 +27,7 @@ import { ItemLink } from "./ItemLink";
 
 export interface IOwnProps {
   items: IShortItem[];
-  pricelistHistoryMap: IItemPricelistHistoryMap<IPricesFlagged>;
+  pricelistHistoryMap: IItemPriceHistories<IPricesFlagged>;
   overallPriceLimits: IPriceLimits;
   itemPriceLimits: IItemPriceLimits;
   loadId: string;

@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Classes, H4, HTMLTable, Intent, Spinner } from "@blueprintjs/core";
-import { IPriceListMap, IShortItem, ItemId } from "@sotah-inc/core";
+import { IItemPrices, IShortItem, ItemId } from "@sotah-inc/core";
 
 import { ItemPopoverContainer } from "../../containers/util/ItemPopover";
 import { IFetchData, IItemsData } from "../../types/global";
@@ -16,7 +16,7 @@ export interface IEntryRow {
 
 export interface IOwnProps {
   entryRows: IEntryRow[];
-  priceTable: IFetchData<IItemsData<IPriceListMap>>;
+  priceTable: IFetchData<IItemsData<IItemPrices>>;
   title: string;
   footerContent?: React.ReactNode;
 }

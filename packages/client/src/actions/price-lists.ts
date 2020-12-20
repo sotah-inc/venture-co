@@ -193,11 +193,11 @@ export const RequestGetItemPriceHistories = () => createAction(REQUEST_GET_ITEMP
 export const RECEIVE_GET_ITEMPRICEHISTORIES = "RECEIVE_GET_ITEMPRICEHISTORIES";
 export const ReceiveGetItemPriceHistories = (payload: IGetItemPriceHistoriesResponseData | null) =>
   createAction(RECEIVE_GET_ITEMPRICEHISTORIES, payload);
-type FetchGetPricelistHistory = ReturnType<
+type FetchGetItemPriceHistories = ReturnType<
   typeof RequestGetItemPriceHistories | typeof ReceiveGetItemPriceHistories
 >;
 export const FetchGetItemPriceHistories = (opts: IGetItemPriceHistoriesOptions) => {
-  return async (dispatch: Dispatch<FetchGetPricelistHistory>) => {
+  return async (dispatch: Dispatch<FetchGetItemPriceHistories>) => {
     dispatch(RequestGetItemPriceHistories());
     dispatch(ReceiveGetItemPriceHistories(await getItemPriceHistories(opts)));
   };
