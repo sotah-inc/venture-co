@@ -1,22 +1,22 @@
 import {
-  IPricelistHistoryMap,
+  IPriceHistories,
   IPrices,
   IRegionConnectedRealmTuple,
   ItemId,
   UnixTimestamp,
 } from "@sotah-inc/core";
 
-export interface IGetItemPricesHistoryRequest {
+export interface IGetItemPriceHistoriesRequest {
   tuple: IRegionConnectedRealmTuple;
   item_ids: ItemId[];
   lower_bounds: UnixTimestamp;
   upper_bounds: UnixTimestamp;
 }
 
-export interface IItemPricelistHistoryMap {
-  [itemId: number]: IPricelistHistoryMap<IPrices> | undefined;
+export interface IItemPriceHistoriesMap {
+  [itemId: number]: IPriceHistories<IPrices> | undefined;
 }
 
-export interface IGetItemPricesHistoryResponse {
-  history: IItemPricelistHistoryMap;
+export interface IGetItemPriceHistoriesResponse {
+  history: IItemPriceHistoriesMap;
 }

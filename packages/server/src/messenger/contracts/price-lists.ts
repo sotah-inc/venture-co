@@ -1,4 +1,4 @@
-import { IPriceListMap, IRegionConnectedRealmTuple, ItemId } from "@sotah-inc/core";
+import { IItemPrices, IRegionConnectedRealmTuple, ItemId } from "@sotah-inc/core";
 
 export interface IGetPricelistRequest {
   tuple: IRegionConnectedRealmTuple;
@@ -6,5 +6,5 @@ export interface IGetPricelistRequest {
 }
 
 export interface IGetPricelistResponse {
-  price_list: IPriceListMap;
+  price_list: IItemPrices;
 }

@@ -22,8 +22,8 @@ import {
   IGetAuctionsRequest,
   IGetAuctionsResponse,
   IGetBootResponse,
-  IGetItemPricesHistoryRequest,
-  IGetItemPricesHistoryResponse,
+  IGetItemPriceHistoriesRequest,
+  IGetItemPriceHistoriesResponse,
   IGetItemsRequest,
   IGetItemsResponse,
   IGetPetsRequest,
@@ -424,8 +424,8 @@ export class Messenger {
 
   // via pricelist-histories
   public async getItemPricesHistory(
-    req: IGetItemPricesHistoryRequest,
-  ): Promise<Message<IGetItemPricesHistoryResponse>> {
+    req: IGetItemPriceHistoriesRequest,
+  ): Promise<Message<IGetItemPriceHistoriesResponse>> {
     return this.request(subjects.itemPricesHistory, {
       body: JSON.stringify(req),
       parseKind: ParseKind.GzipJsonEncoded,
