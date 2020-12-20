@@ -17,10 +17,10 @@ import {
   IBollingerBands,
   IErrorResponse,
   IGetItemResponseData,
+  IItemPriceHistories,
   IItemPriceLimits,
-  IItemPricelistHistoryMap,
+  IPriceHistories,
   IPriceLimits,
-  IPricelistHistoryMap,
   IPrices,
   IPricesFlagged,
   IQueryGeneralResponseData,
@@ -816,28 +816,29 @@ export class DataController {
     );
 
     // normalizing all histories to have zeroed data where missing
-    const historyResult = itemIds.reduce<IItemPricelistHistoryMap<IPricesFlagged>>(
+    const historyResult = itemIds.reduce<IItemPriceHistories<IPricesFlagged>>(
       (previousHistory, itemId) => {
         // generating a full zeroed pricelist-history for this item
         const currentItemHistory = foundHistory[itemId];
         if (typeof currentItemHistory === "undefined") {
-          const blankItemHistory = historyUnixTimestamps.reduce<
-            IPricelistHistoryMap<IPricesFlagged>
-          >((previousBlankItemHistory, unixTimestamp) => {
-            const blankPrices: IPricesFlagged = {
-              average_buyout_per: 0,
-              is_blank: true,
-              max_buyout_per: 0,
-              median_buyout_per: 0,
-              min_buyout_per: 0,
-              volume: 0,
-            };
+          const blankItemHistory = historyUnixTimestamps.reduce<IPriceHistories<IPricesFlagged>>(
+            (previousBlankItemHistory, unixTimestamp) => {
+              const blankPrices: IPricesFlagged = {
+                average_buyout_per: 0,
+                is_blank: true,
+                max_buyout_per: 0,
+                median_buyout_per: 0,
+                min_buyout_per: 0,
+                volume: 0,
+              };
 
-            return {
-              ...previousBlankItemHistory,
-              [unixTimestamp]: blankPrices,
-            };
-          }, {});
+              return {
+                ...previousBlankItemHistory,
+                [unixTimestamp]: blankPrices,
+              };
+            },
+            {},
+          );
 
           return {
             ...previousHistory,
@@ -846,7 +847,7 @@ export class DataController {
         }
 
         // reforming the item-history with zeroed blank prices where none found
-        const newItemHistory = historyUnixTimestamps.reduce<IPricelistHistoryMap<IPricesFlagged>>(
+        const newItemHistory = historyUnixTimestamps.reduce<IPriceHistories<IPricesFlagged>>(
           (previousNewItemHistory, unixTimestamp) => {
             const itemHistoryAtTime = currentItemHistory[unixTimestamp];
             if (typeof itemHistoryAtTime === "undefined") {
