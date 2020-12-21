@@ -34,7 +34,7 @@ export const getItemPriceHistories = async (
     }),
     method: "POST",
     query: { locale: opts.locale },
-    url: `${getApiEndpoint()}/price-list-history/${regionName}/${realmSlug}`,
+    url: `${getApiEndpoint()}/item-price-histories/${regionName}/${realmSlug}`,
   });
   if (status !== HTTPStatus.OK) {
     return null;
