@@ -27,7 +27,7 @@ import { ItemLink } from "./ItemLink";
 
 export interface IOwnProps {
   items: IShortItem[];
-  pricelistHistoryMap: IItemPriceHistories<IPricesFlagged>;
+  itemPriceHistories: IItemPriceHistories<IPricesFlagged>;
   overallPriceLimits: IPriceLimits;
   itemPriceLimits: IItemPriceLimits;
   loadId: string;
@@ -46,7 +46,7 @@ type State = Readonly<{
   selectedItems: Set<ItemId>;
 }>;
 
-export class PricelistHistoryGraph extends React.Component<Props, State> {
+export class ItemPriceHistoriesGraph extends React.Component<Props, State> {
   public state: State = {
     currentTabKind: TabKind.prices,
     highlightedItemId: null,
@@ -174,9 +174,9 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
   }
 
   private renderContent() {
-    const { pricelistHistoryMap } = this.props;
+    const { itemPriceHistories } = this.props;
 
-    const data = convertPricelistHistoryMapToLineData(pricelistHistoryMap);
+    const data = convertPricelistHistoryMapToLineData(itemPriceHistories);
 
     const { xAxisTicks, roundedNowDate, roundedTwoWeeksAgoDate } = getXAxisTimeRestrictions();
 
@@ -203,9 +203,9 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
   }
 
   private renderLegend() {
-    const { pricelistHistoryMap } = this.props;
+    const { itemPriceHistories } = this.props;
 
-    const itemIds: ItemId[] = Object.keys(pricelistHistoryMap).map(Number);
+    const itemIds: ItemId[] = Object.keys(itemPriceHistories).map(Number);
 
     const groupedItemIds = itemIds.reduce<Array<Array<[ItemId, number]>>>((result, v, i) => {
       const column = i % 3;
@@ -271,10 +271,10 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
   }
 
   private renderLegendColumnTag(itemId: ItemId, originalIndex: number, i: number) {
-    const { pricelistHistoryMap } = this.props;
+    const { itemPriceHistories } = this.props;
     const { selectedItems, highlightedItemId } = this.state;
 
-    const foundItemPriceHistory = pricelistHistoryMap[itemId];
+    const foundItemPriceHistory = itemPriceHistories[itemId];
     if (typeof foundItemPriceHistory === "undefined") {
       return null;
     }
@@ -404,10 +404,10 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
   }
 
   private renderLine(index: number, itemId: ItemId) {
-    const { items, pricelistHistoryMap } = this.props;
+    const { items, itemPriceHistories } = this.props;
     const { highlightedItemId, selectedItems } = this.state;
 
-    const foundItemPriceHistory = pricelistHistoryMap[itemId];
+    const foundItemPriceHistory = itemPriceHistories[itemId];
     if (typeof foundItemPriceHistory === "undefined") {
       return null;
     }
@@ -505,7 +505,7 @@ export class PricelistHistoryGraph extends React.Component<Props, State> {
   }
 
   private renderLines() {
-    const { pricelistHistoryMap: data } = this.props;
+    const { itemPriceHistories: data } = this.props;
 
     return Object.keys(data).map((itemIdKey: string, index: number) =>
       this.renderLine(index, Number(itemIdKey)),

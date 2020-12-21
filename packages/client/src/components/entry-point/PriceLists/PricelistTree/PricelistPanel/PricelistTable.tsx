@@ -14,7 +14,7 @@ import {
 import { FetchLevel } from "../../../../../types/main";
 import { getItemFromPricelist } from "../../../../../util";
 import { ItemIcon } from "../../../../util/ItemIcon";
-import { PricelistHistoryGraph } from "../../../../util/PricelistHistoryGraph";
+import { ItemPriceHistoriesGraph } from "../../../../util/ItemPriceHistoriesGraph";
 
 export interface IStateProps {
   itemPriceHistories: IFetchData<IItemsData<IItemPriceHistoriesState>>;
@@ -70,9 +70,9 @@ export class PricelistTable extends React.Component<Props> {
         </H2>
         <H4>History</H4>
         {
-          <PricelistHistoryGraph
+          <ItemPriceHistoriesGraph
             items={itemPriceHistories.data.items}
-            pricelistHistoryMap={itemPriceHistories.data.data.history}
+            itemPriceHistories={itemPriceHistories.data.data.history}
             overallPriceLimits={itemPriceHistories.data.data.overallPriceLimits}
             loadId={loadId}
             itemPriceLimits={itemPriceHistories.data.data.itemPriceLimits}
