@@ -100,11 +100,13 @@ export interface IMessage {
 interface IRequestOptions {
   body?: string;
   parseKind?: ParseKind;
+  timeout?: number;
 }
 
 interface IDefaultRequestOptions {
   body: string;
   parseKind: ParseKind;
+  timeout: number;
 }
 
 export class Messenger {
@@ -410,7 +412,10 @@ export class Messenger {
   public queryAuctionStats(
     tuple: Partial<IRegionConnectedRealmTuple>,
   ): Promise<Message<IQueryAuctionStatsResponse>> {
-    return this.request(subjects.queryAuctionStats, { body: JSON.stringify(tuple) });
+    return this.request(subjects.queryAuctionStats, {
+      body: JSON.stringify(tuple),
+      timeout: 15 * 1000,
+    });
   }
 
   public async getPriceList(
@@ -532,14 +537,15 @@ export class Messenger {
 
   // etc
   private request<T>(subject: string, opts?: IRequestOptions): Promise<Message<T>> {
-    const { body, parseKind }: IDefaultRequestOptions = {
+    const { body, parseKind, timeout }: IDefaultRequestOptions = {
       body: "",
       parseKind: ParseKind.JsonEncoded,
+      timeout: DEFAULT_TIMEOUT,
       ...opts,
     };
 
     return new Promise<Message<T>>((resolve, reject) => {
-      const tId = setTimeout(() => reject(new Error("Timed out!")), DEFAULT_TIMEOUT);
+      const tId = setTimeout(() => reject(new Error("Timed out!")), timeout);
 
       this.client.request(subject, body, (natsMsg: string) => {
         (async () => {
