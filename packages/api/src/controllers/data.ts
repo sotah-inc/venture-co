@@ -25,6 +25,7 @@ import {
   IPricesFlagged,
   IQueryGeneralResponseData,
   IQueryResponseData,
+  IRecipePrices,
   IRegionComposite,
   IRegionConnectedRealmTuple,
   IShortItem,
@@ -58,6 +59,7 @@ import HTTPStatus from "http-status";
 import moment from "moment";
 import { ParsedQs } from "qs";
 import { Connection } from "typeorm";
+import { IRecipePriceHistory } from "../../../core/src/types";
 
 import {
   AuctionsQueryParamsRules,
@@ -1070,8 +1072,23 @@ export class DataController {
     }
     const foundHistory = historyMessageResult.history;
 
+    const overallPriceLimits = Object.values(foundHistory).reduce<IPriceLimits>(
+      (foundOverallPriceLimits, recipeHistories: IRecipePriceHistory) => {
+        return Object.values(recipeHistories).reduce<IPriceLimits>(
+          (recipeHistoriesPriceLimits, recipePrices: IRecipePrices) => {
+            return {
+              lower: Math.min(recipePrices.average_buyout_per, recipeHistoriesPriceLimits.lower),
+              upper: Math.max(recipePrices.average_buyout_per, recipeHistoriesPriceLimits.upper),
+            };
+          },
+          foundOverallPriceLimits,
+        );
+      },
+      { lower: 0, upper: 0 },
+    );
+
     return {
-      data: { history: foundHistory },
+      data: { history: foundHistory, overallPriceLimits },
       status: HTTPStatus.OK,
     };
   }
