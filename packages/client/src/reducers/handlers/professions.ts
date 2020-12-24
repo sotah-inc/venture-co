@@ -1,4 +1,9 @@
-import { IItemPrices, IShortProfession, IShortRecipe } from "@sotah-inc/core";
+import {
+  IItemPrices,
+  IRecipePriceHistories,
+  IShortProfession,
+  IShortRecipe,
+} from "@sotah-inc/core";
 
 import {
   DeselectSkillTierCategory,
@@ -6,7 +11,7 @@ import {
   ProfessionsActions,
   SelectSkillTierCategory,
 } from "../../actions/professions";
-import { defaultPriceListsState } from "../../types";
+import { defaultPriceListsState, defaultProfessionsState } from "../../types";
 import { IFetchData, IItemsData } from "../../types/global";
 import { FetchLevel } from "../../types/main";
 import {
@@ -174,7 +179,24 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
             { index: -1, isSelected: false },
           );
         })();
+        const recipePriceHistories = ((): IFetchData<IRecipePriceHistories> => {
+          if (typeof action.payload.recipePriceHistories === "undefined") {
+            return defaultProfessionsState.recipePriceHistories;
+          }
 
+          if (action.payload.recipePriceHistories === null) {
+            return {
+              ...state.recipePriceHistories,
+              level: FetchLevel.failure,
+            };
+          }
+
+          return {
+            data: action.payload.recipePriceHistories.history,
+            errors: {},
+            level: FetchLevel.success,
+          };
+        })();
         const priceTable: IFetchData<IItemsData<IItemPrices>> = (() => {
           if (typeof action.payload.currentPrices === "undefined") {
             return defaultPriceListsState.priceTable;
@@ -199,6 +221,7 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
           loadId: action.payload.loadId,
           priceTable,
           professions,
+          recipePriceHistories,
           selectedProfession,
           selectedProfessionId: action.payload.selectedProfessionId ?? 0,
           selectedRecipe,

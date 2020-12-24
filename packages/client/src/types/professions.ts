@@ -1,5 +1,6 @@
 import {
   IItemPrices,
+  IRecipePriceHistories,
   IShortProfession,
   IShortRecipe,
   IShortSkillTier,
@@ -29,6 +30,7 @@ export interface IProfessionsState {
   selectedRecipeId: RecipeId;
   selectedRecipe: IItemsData<IShortRecipe> | null | undefined;
   selectedSkillTierCategory: ISelectedSkillTierCategory;
+  recipePriceHistories: IFetchData<IRecipePriceHistories>;
   priceTable: IFetchData<IItemsData<IItemPrices>>;
 }
 
@@ -44,6 +46,11 @@ export const defaultProfessionsState: IProfessionsState = {
   },
   professions: {
     data: [],
+    errors: {},
+    level: FetchLevel.initial,
+  },
+  recipePriceHistories: {
+    data: {},
     errors: {},
     level: FetchLevel.initial,
   },
