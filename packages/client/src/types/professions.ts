@@ -7,7 +7,7 @@ import {
   RecipeId,
 } from "@sotah-inc/core";
 
-import { IFetchData, IItemPriceHistoriesState, IItemsData } from "./global";
+import { IFetchData, IItemsData } from "./global";
 import { FetchLevel } from "./main";
 
 export interface ISelectedSkillTierCategory {
@@ -29,23 +29,10 @@ export interface IProfessionsState {
   selectedRecipeId: RecipeId;
   selectedRecipe: IItemsData<IShortRecipe> | null | undefined;
   selectedSkillTierCategory: ISelectedSkillTierCategory;
-  itemPriceHistories: IFetchData<IItemsData<IItemPriceHistoriesState>>;
   priceTable: IFetchData<IItemsData<IItemPrices>>;
 }
 
 export const defaultProfessionsState: IProfessionsState = {
-  itemPriceHistories: {
-    data: {
-      data: {
-        history: {},
-        itemPriceLimits: {},
-        overallPriceLimits: { lower: 0, upper: 0 },
-      },
-      items: [],
-    },
-    errors: {},
-    level: FetchLevel.initial,
-  },
   loadId: "",
   priceTable: {
     data: {

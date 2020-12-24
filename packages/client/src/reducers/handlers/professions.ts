@@ -7,7 +7,7 @@ import {
   SelectSkillTierCategory,
 } from "../../actions/professions";
 import { defaultPriceListsState } from "../../types";
-import { IFetchData, IItemPriceHistoriesState, IItemsData } from "../../types/global";
+import { IFetchData, IItemsData } from "../../types/global";
 import { FetchLevel } from "../../types/main";
 import {
   IProfessionsState,
@@ -175,29 +175,6 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
           );
         })();
 
-        const itemPriceHistories: IFetchData<IItemsData<IItemPriceHistoriesState>> = (() => {
-          if (typeof action.payload.itemPriceHistories === "undefined") {
-            return defaultPriceListsState.itemPriceHistories;
-          }
-
-          if (action.payload.itemPriceHistories === null) {
-            return { ...defaultPriceListsState.itemPriceHistories, level: FetchLevel.failure };
-          }
-
-          return {
-            data: {
-              data: {
-                history: action.payload.itemPriceHistories.history,
-                itemPriceLimits: action.payload.itemPriceHistories.itemPriceLimits,
-                overallPriceLimits: action.payload.itemPriceHistories.overallPriceLimits,
-              },
-              items: action.payload.itemPriceHistories.items,
-            },
-            errors: {},
-            level: FetchLevel.success,
-          };
-        })();
-
         const priceTable: IFetchData<IItemsData<IItemPrices>> = (() => {
           if (typeof action.payload.currentPrices === "undefined") {
             return defaultPriceListsState.priceTable;
@@ -219,7 +196,6 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
 
         return {
           ...state,
-          itemPriceHistories,
           loadId: action.payload.loadId,
           priceTable,
           professions,
