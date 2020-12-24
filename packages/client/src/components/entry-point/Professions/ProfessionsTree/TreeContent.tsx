@@ -3,6 +3,7 @@ import React from "react";
 import { Position } from "@blueprintjs/core";
 import { IItemPrices, IShortRecipe, ItemId, resolveCraftedItemIds } from "@sotah-inc/core";
 
+import { RecipePriceHistoriesGraphContainer } from "../../../../containers/entry-point/Professions/ProfessionsTree/TreeContent/RecipePriceHistoriesGraph";
 import { IFetchData, IItemsData } from "../../../../types/global";
 import { ISelectedSkillTierCategory } from "../../../../types/professions";
 import { Currency, ItemPopover } from "../../../util";
@@ -34,6 +35,7 @@ export class TreeContent extends React.Component<Props> {
 
     return (
       <>
+        <RecipePriceHistoriesGraphContainer />
         <p>Hello, world!</p>
         <p>{selectedSkillTierCategory.index}</p>
         <p>{selectedSkillTierCategory.isSelected ? "isSelected" : "not isSelected"}</p>
