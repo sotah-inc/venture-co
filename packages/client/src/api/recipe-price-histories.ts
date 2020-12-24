@@ -29,7 +29,7 @@ export const getRecipePriceHistories = async (
     headers: new Headers({
       "content-type": "application/json",
     }),
-    method: "POST",
+    method: "GET",
     query: { locale: opts.locale },
     url: `${getApiEndpoint()}/recipe-price-histories/${regionName}/${realmSlug}/${recipeId}`,
   });
