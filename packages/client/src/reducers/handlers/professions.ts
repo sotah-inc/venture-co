@@ -1,9 +1,4 @@
-import {
-  IItemPrices,
-  IRecipePriceHistories,
-  IShortProfession,
-  IShortRecipe,
-} from "@sotah-inc/core";
+import { IItemPrices, IShortProfession, IShortRecipe } from "@sotah-inc/core";
 
 import {
   DeselectSkillTierCategory,
@@ -16,6 +11,7 @@ import { IFetchData, IItemsData } from "../../types/global";
 import { FetchLevel } from "../../types/main";
 import {
   IProfessionsState,
+  IRecipePriceHistoriesState,
   ISelectedSkillTier,
   ISelectedSkillTierCategory,
 } from "../../types/professions";
@@ -179,7 +175,7 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
             { index: -1, isSelected: false },
           );
         })();
-        const recipePriceHistories = ((): IFetchData<IRecipePriceHistories> => {
+        const recipePriceHistories = ((): IFetchData<IRecipePriceHistoriesState> => {
           if (typeof action.payload.recipePriceHistories === "undefined") {
             return defaultProfessionsState.recipePriceHistories;
           }
@@ -192,7 +188,10 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
           }
 
           return {
-            data: action.payload.recipePriceHistories.history,
+            data: {
+              histories: action.payload.recipePriceHistories.history,
+              overallPriceLimits: action.payload.recipePriceHistories.overallPriceLimits,
+            },
             errors: {},
             level: FetchLevel.success,
           };

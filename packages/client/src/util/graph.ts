@@ -2,8 +2,10 @@ import {
   IItemPriceHistories,
   IPricesFlagged,
   IQueryAuctionStatsResponseData,
+  IRecipePriceHistories,
 } from "@sotah-inc/core";
 import moment from "moment";
+import { IRecipePriceHistory, IRecipePrices } from "../../../core/src/types";
 
 import { ILineItemOpen } from "../types/global";
 import { IRegionTokenHistories } from "../types/posts";
@@ -121,12 +123,62 @@ export function convertAuctionStatsToLineData(
   });
 }
 
-export function convertPricelistHistoryMapToLineData(
-  pricelistHistoryMap: IItemPriceHistories<IPricesFlagged>,
+export function convertRecipePriceHistoriesToLineData(
+  recipePriceHistories: IRecipePriceHistories,
 ): ILineItemOpen[] {
-  return Object.keys(pricelistHistoryMap).reduce<ILineItemOpen[]>(
+  return Object.keys(recipePriceHistories).reduce<ILineItemOpen[]>((result1, recipeId) => {
+    const recipePriceHistory: IRecipePriceHistory = recipePriceHistories[Number(recipeId)];
+
+    return Object.keys(recipePriceHistory).reduce<ILineItemOpen[]>((result2, unixTimestamp) => {
+      const recipePrices: IRecipePrices = recipePriceHistory[Number(unixTimestamp)];
+
+      if (recipePrices.crafted_item_prices.id > 0) {
+        result2.push({
+          data: {
+            [`${recipePrices.crafted_item_prices.id}_average_buyout_per`]: recipePrices
+              .crafted_item_prices.prices.average_buyout_per,
+          },
+          name: Number(unixTimestamp),
+        });
+      }
+      if (recipePrices.alliance_crafted_item_prices.id > 0) {
+        result2.push({
+          data: {
+            [`${recipePrices.alliance_crafted_item_prices.id}_average_buyout_per`]: recipePrices
+              .alliance_crafted_item_prices.prices.average_buyout_per,
+          },
+          name: Number(unixTimestamp),
+        });
+      }
+      if (recipePrices.horde_crafted_item_prices.id > 0) {
+        result2.push({
+          data: {
+            [`${recipePrices.horde_crafted_item_prices.id}_average_buyout_per`]: recipePrices
+              .horde_crafted_item_prices.prices.average_buyout_per,
+          },
+          name: Number(unixTimestamp),
+        });
+      }
+
+      result2.push({
+        data: {
+          ["total_reagent_prices_average_buyout_per"]:
+            recipePrices.total_reagent_prices.average_buyout_per,
+        },
+        name: Number(unixTimestamp),
+      });
+
+      return result2;
+    }, result1);
+  }, []);
+}
+
+export function convertItemPriceHistoriesToLineData(
+  itemPriceHistories: IItemPriceHistories<IPricesFlagged>,
+): ILineItemOpen[] {
+  return Object.keys(itemPriceHistories).reduce<ILineItemOpen[]>(
     (dataPreviousValue: ILineItemOpen[], itemIdKey: string) => {
-      const itemPricelistHistory = pricelistHistoryMap[Number(itemIdKey)];
+      const itemPricelistHistory = itemPriceHistories[Number(itemIdKey)];
       const itemId = Number(itemIdKey);
       if (typeof itemPricelistHistory === "undefined") {
         return dataPreviousValue;

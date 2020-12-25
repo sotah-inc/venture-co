@@ -15,7 +15,7 @@ import { CartesianGrid, Line, LineChart, ResponsiveContainer, XAxis, YAxis } fro
 
 import { ILineItemOpen } from "../../types/global";
 import {
-  convertPricelistHistoryMapToLineData,
+  convertItemPriceHistoriesToLineData,
   currencyToText,
   getColor,
   getXAxisTimeRestrictions,
@@ -176,7 +176,7 @@ export class ItemPriceHistoriesGraph extends React.Component<Props, State> {
   private renderContent() {
     const { itemPriceHistories } = this.props;
 
-    const data = convertPricelistHistoryMapToLineData(itemPriceHistories);
+    const data = convertItemPriceHistoriesToLineData(itemPriceHistories);
 
     const { xAxisTicks, roundedNowDate, roundedTwoWeeksAgoDate } = getXAxisTimeRestrictions();
 
