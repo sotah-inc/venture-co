@@ -25,6 +25,7 @@ import {
   IPricesFlagged,
   IQueryGeneralResponseData,
   IQueryResponseData,
+  IRecipePriceHistory,
   IRecipePrices,
   IRegionComposite,
   IRegionConnectedRealmTuple,
@@ -59,7 +60,6 @@ import HTTPStatus from "http-status";
 import moment from "moment";
 import { ParsedQs } from "qs";
 import { Connection } from "typeorm";
-import { IRecipePriceHistory } from "../../../core/src/types";
 
 import {
   AuctionsQueryParamsRules,
