@@ -1078,10 +1078,12 @@ export class DataController {
           (recipeHistoriesPriceLimits, recipePrices: IRecipePrices) => {
             return {
               lower: Math.min(
-                recipePrices.alliance_crafted_item_prices.prices.average_buyout_per,
-                recipePrices.horde_crafted_item_prices.prices.average_buyout_per,
-                recipePrices.crafted_item_prices.prices.average_buyout_per,
-                recipeHistoriesPriceLimits.lower,
+                ...[
+                  recipePrices.alliance_crafted_item_prices.prices.average_buyout_per,
+                  recipePrices.horde_crafted_item_prices.prices.average_buyout_per,
+                  recipePrices.crafted_item_prices.prices.average_buyout_per,
+                  recipeHistoriesPriceLimits.lower,
+                ].filter(v => v > 0),
               ),
               upper: Math.max(
                 recipePrices.alliance_crafted_item_prices.prices.average_buyout_per,
