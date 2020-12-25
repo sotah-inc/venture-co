@@ -3,9 +3,10 @@ import {
   IPricesFlagged,
   IQueryAuctionStatsResponseData,
   IRecipePriceHistories,
+  IRecipePriceHistory,
+  IRecipePrices,
 } from "@sotah-inc/core";
 import moment from "moment";
-import { IRecipePriceHistory, IRecipePrices } from "../../../core/src/types";
 
 import { ILineItemOpen } from "../types/global";
 import { IRegionTokenHistories } from "../types/posts";
