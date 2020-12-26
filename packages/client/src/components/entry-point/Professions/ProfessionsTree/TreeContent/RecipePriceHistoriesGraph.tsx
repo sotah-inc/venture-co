@@ -52,32 +52,17 @@ export class RecipePriceHistoriesGraph extends React.Component<Props> {
     );
   }
 
-  private renderLine(index: number, recipeId: RecipeId) {
-    const { stroke, strokeWidth } = (() => {
-      return {
-        stroke: "#5C7080",
-        strokeWidth: 1,
-      };
-    })();
-
-    const opacity = (() => {
-      return 1;
-    })();
-
-    const dot = true;
-
+  private renderLine(index: number, _recipeId: RecipeId) {
     return (
       <Line
         key={index}
-        name={recipeId.toString()}
-        dataKey={(item: ILineItemOpen) => item.data["total_reagent_prices_average_buyout_per"]}
-        stroke={stroke}
-        strokeWidth={strokeWidth}
-        dot={dot}
-        animationDuration={500}
-        animationEasing={"ease-in-out"}
-        opacity={opacity}
-        type={"basis"}
+        dataKey={(item: ILineItemOpen) => {
+          // tslint:disable-next-line:no-console
+          console.log(item.data["total_reagent_prices_average_buyout_per"]);
+
+          return item.data["total_reagent_prices_average_buyout_per"];
+        }}
+        type={"monotone"}
       />
     );
   }
