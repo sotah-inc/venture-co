@@ -1046,6 +1046,22 @@ export class DataController {
       };
     }
 
+    const recipeMessage = await this.messenger.getRecipe(recipeId, locale as Locale);
+    if (recipeMessage.code !== code.ok) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    const recipeResult = await recipeMessage.decode();
+    if (recipeResult === null) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
     const currentUnixTimestamp = Math.floor(Date.now() / 1000);
     const lowerBounds = currentUnixTimestamp - 60 * 60 * 24 * 14;
     const historyMessage = await this.messenger.getRecipePricesHistory({
@@ -1102,7 +1118,17 @@ export class DataController {
     );
 
     return {
-      data: { history: foundHistory, overallPriceLimits },
+      data: {
+        history: foundHistory,
+        overallPriceLimits,
+        recipeItemIds: {
+          [recipeId]: [
+            recipeResult.recipe.alliance_crafted_item.id,
+            recipeResult.recipe.horde_crafted_item.id,
+            recipeResult.recipe.crafted_item.id,
+          ].filter(v => v !== 0),
+        },
+      },
       status: HTTPStatus.OK,
     };
   }
