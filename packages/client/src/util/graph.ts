@@ -136,8 +136,8 @@ export function convertRecipePriceHistoriesToLineData(
       if (recipePrices.crafted_item_prices.id > 0) {
         result2.push({
           data: {
-            [`${recipePrices.crafted_item_prices.id}_average_buyout_per`]: recipePrices
-              .crafted_item_prices.prices.average_buyout_per,
+            [`${recipePrices.crafted_item_prices.id}_average_buyout_per`]:
+              recipePrices.crafted_item_prices.prices.average_buyout_per / 10 / 10,
           },
           name: Number(unixTimestamp),
         });
@@ -145,8 +145,8 @@ export function convertRecipePriceHistoriesToLineData(
       if (recipePrices.alliance_crafted_item_prices.id > 0) {
         result2.push({
           data: {
-            [`${recipePrices.alliance_crafted_item_prices.id}_average_buyout_per`]: recipePrices
-              .alliance_crafted_item_prices.prices.average_buyout_per,
+            [`${recipePrices.alliance_crafted_item_prices.id}_average_buyout_per`]:
+              recipePrices.alliance_crafted_item_prices.prices.average_buyout_per / 10 / 10,
           },
           name: Number(unixTimestamp),
         });
@@ -154,8 +154,8 @@ export function convertRecipePriceHistoriesToLineData(
       if (recipePrices.horde_crafted_item_prices.id > 0) {
         result2.push({
           data: {
-            [`${recipePrices.horde_crafted_item_prices.id}_average_buyout_per`]: recipePrices
-              .horde_crafted_item_prices.prices.average_buyout_per,
+            [`${recipePrices.horde_crafted_item_prices.id}_average_buyout_per`]:
+              recipePrices.horde_crafted_item_prices.prices.average_buyout_per / 10 / 10,
           },
           name: Number(unixTimestamp),
         });
@@ -164,7 +164,7 @@ export function convertRecipePriceHistoriesToLineData(
       result2.push({
         data: {
           ["total_reagent_prices_average_buyout_per"]:
-            recipePrices.total_reagent_prices.average_buyout_per,
+            recipePrices.total_reagent_prices.average_buyout_per / 10 / 10,
         },
         name: Number(unixTimestamp),
       });
