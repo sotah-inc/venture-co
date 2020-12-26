@@ -8,9 +8,9 @@ import {
 import { IStoreState } from "../../../../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
-  const { recipePriceHistories } = state.Professions;
+  const { recipePriceHistories, selectedRecipeId } = state.Professions;
 
-  return { recipePriceHistories };
+  return { recipePriceHistories, selectedRecipeId };
 };
 
 export const RecipePriceHistoriesGraphContainer = connect<IStateProps, {}, {}, IStoreState>(

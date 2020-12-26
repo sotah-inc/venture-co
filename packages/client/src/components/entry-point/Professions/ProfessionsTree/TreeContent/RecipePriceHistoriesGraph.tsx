@@ -1,3 +1,4 @@
+import { RecipeId } from "@sotah-inc/core";
 import React from "react";
 
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
@@ -15,6 +16,7 @@ import {
 
 // props
 export interface IStateProps {
+  selectedRecipeId: RecipeId;
   recipePriceHistories: IFetchData<IRecipePriceHistoriesState>;
 }
 
@@ -61,25 +63,33 @@ export class RecipePriceHistoriesGraph extends React.Component<Props> {
       };
     })();
 
+    const dot = false;
+
     return (
       <Line
         key={index}
-        dataKey={(item: ILineItemOpen) => item.data[dataKey]}
+        dataKey={(item: ILineItemOpen) => item.data[dataKey] ?? null}
         animationDuration={500}
         animationEasing={"ease-in-out"}
         type={"monotone"}
         stroke={stroke}
         strokeWidth={strokeWidth}
         fill={stroke}
+        dot={dot}
       />
     );
   }
 
   private renderLines() {
+    const {
+      selectedRecipeId,
+      recipePriceHistories: {
+        data: { recipeItemIds },
+      },
+    } = this.props;
+
     const dataKeys = [
-      "crafted_item_buyout_per",
-      "alliance_crafted_buyout_per",
-      "horde_crafted_buyout_per",
+      ...recipeItemIds[selectedRecipeId].map(v => `${v}_buyout_per`),
       "total_reagent_cost",
     ];
 

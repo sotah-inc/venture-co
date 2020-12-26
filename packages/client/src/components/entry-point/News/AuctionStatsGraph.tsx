@@ -131,7 +131,7 @@ export class AuctionStatsGraph extends React.Component<Props> {
             {AuctionStatsGraph.renderYAxis()}
             <Line
               name="Total Buyout"
-              dataKey={(item: ILineItemOpen) => item.data["total_buyout"]}
+              dataKey={(item: ILineItemOpen) => item.data["total_buyout"] ?? null}
               animationDuration={500}
               animationEasing={"ease-in-out"}
               type={"basis"}

@@ -119,11 +119,7 @@ export class TokenHistoryGraph extends React.Component<Props, State> {
     }
 
     const data = convertRegionTokenHistoriesToLineData(regionTokenHistories.data).filter(
-      v =>
-        v.name >
-        moment(roundedEarliestDateLimit)
-          .add(1, "day")
-          .unix(),
+      v => v.name > moment(roundedEarliestDateLimit).add(1, "day").unix(),
     );
 
     return (
@@ -206,7 +202,9 @@ export class TokenHistoryGraph extends React.Component<Props, State> {
       <Line
         key={index}
         name={regionName}
-        dataKey={(item: ILineItemOpen) => item.data[TokenHistoryGraph.getDataKey(regionName)]}
+        dataKey={(item: ILineItemOpen) =>
+          item.data[TokenHistoryGraph.getDataKey(regionName)] ?? null
+        }
         animationDuration={500}
         animationEasing={"ease-in-out"}
         type={"basis"}

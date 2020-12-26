@@ -5,6 +5,7 @@ import {
   IShortProfession,
   IShortRecipe,
   IShortSkillTier,
+  ItemId,
   ProfessionId,
   RecipeId,
 } from "@sotah-inc/core";
@@ -25,6 +26,7 @@ export interface ISelectedSkillTier {
 export interface IRecipePriceHistoriesState {
   histories: IRecipePriceHistories;
   overallPriceLimits: IPriceLimits;
+  recipeItemIds: { [key: number]: ItemId[] };
 }
 
 export interface IProfessionsState {
@@ -62,6 +64,7 @@ export const defaultProfessionsState: IProfessionsState = {
         lower: 0,
         upper: 0,
       },
+      recipeItemIds: [],
     },
     errors: {},
     level: FetchLevel.initial,

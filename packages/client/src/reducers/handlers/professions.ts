@@ -191,6 +191,7 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
             data: {
               histories: action.payload.recipePriceHistories.history,
               overallPriceLimits: action.payload.recipePriceHistories.overallPriceLimits,
+              recipeItemIds: action.payload.recipePriceHistories.recipeItemIds,
             },
             errors: {},
             level: FetchLevel.success,

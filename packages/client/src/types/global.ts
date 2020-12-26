@@ -63,7 +63,7 @@ export interface ILineItem<T> {
   data: T;
 }
 
-export type ILineItemOpen = ILineItem<{ [dataKey: string]: number | null }>;
+export type ILineItemOpen = ILineItem<{ [dataKey: string]: number | null | undefined }>;
 
 export interface IClientRealm {
   regionName: RegionName;

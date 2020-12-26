@@ -471,7 +471,7 @@ export class ItemPriceHistoriesGraph extends React.Component<Props, State> {
         name={
           items.find(v => v.id === itemId)?.sotah_meta.normalized_name.en_US ?? itemId.toString()
         }
-        dataKey={(item: ILineItemOpen) => item.data[this.getDataKey(itemId)]}
+        dataKey={(item: ILineItemOpen) => item.data[this.getDataKey(itemId)] ?? null}
         stroke={stroke}
         strokeWidth={strokeWidth}
         dot={dot}
