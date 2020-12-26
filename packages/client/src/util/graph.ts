@@ -2,12 +2,12 @@ import {
   IItemPriceHistories,
   IPricesFlagged,
   IQueryAuctionStatsResponseData,
+  IRecipeItemPrices,
   IRecipePriceHistories,
   IRecipePriceHistory,
   IRecipePrices,
 } from "@sotah-inc/core";
 import moment from "moment";
-import { IRecipeItemPrices } from "../../../core/src/types";
 
 import { ILineItemOpen } from "../types/global";
 import { IRegionTokenHistories } from "../types/posts";
