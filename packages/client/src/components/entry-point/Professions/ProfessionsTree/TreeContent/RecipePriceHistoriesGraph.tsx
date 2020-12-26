@@ -1,5 +1,5 @@
-import { RecipeId } from "@sotah-inc/core";
 import React from "react";
+
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
 import { IFetchData, ILineItemOpen } from "../../../../../types/global";
@@ -8,6 +8,7 @@ import { IRecipePriceHistoriesState } from "../../../../../types/professions";
 import {
   convertRecipePriceHistoriesToLineData,
   currencyToText,
+  getColor,
   getXAxisTimeRestrictions,
   unixTimestampToText,
 } from "../../../../../util";
@@ -52,27 +53,37 @@ export class RecipePriceHistoriesGraph extends React.Component<Props> {
     );
   }
 
-  private renderLine(index: number, _recipeId: RecipeId) {
+  private renderRecipeItemLine(dataKey: string, index: number) {
+    const { stroke, strokeWidth } = (() => {
+      return {
+        stroke: getColor(index),
+        strokeWidth: 2,
+      };
+    })();
+
     return (
       <Line
         key={index}
-        dataKey={(item: ILineItemOpen) => {
-          // tslint:disable-next-line:no-console
-          console.log(item.data["total_reagent_prices_average_buyout_per"]);
-
-          return item.data["total_reagent_prices_average_buyout_per"];
-        }}
+        dataKey={(item: ILineItemOpen) => item.data[dataKey]}
+        animationDuration={500}
+        animationEasing={"ease-in-out"}
         type={"monotone"}
+        stroke={stroke}
+        strokeWidth={strokeWidth}
+        fill={stroke}
       />
     );
   }
 
   private renderLines() {
-    const { recipePriceHistories } = this.props;
+    const dataKeys = [
+      "crafted_item_buyout_per",
+      "alliance_crafted_buyout_per",
+      "horde_crafted_buyout_per",
+      "total_reagent_cost",
+    ];
 
-    return Object.keys(recipePriceHistories.data.histories).map((recipeId, index) => {
-      return this.renderLine(index, Number(recipeId));
-    });
+    return dataKeys.map((v, i) => this.renderRecipeItemLine(v, i));
   }
 
   private renderYAxis() {

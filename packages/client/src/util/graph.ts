@@ -7,6 +7,7 @@ import {
   IRecipePrices,
 } from "@sotah-inc/core";
 import moment from "moment";
+import { IRecipeItemPrices } from "../../../core/src/types";
 
 import { ILineItemOpen } from "../types/global";
 import { IRegionTokenHistories } from "../types/posts";
@@ -124,6 +125,14 @@ export function convertAuctionStatsToLineData(
   });
 }
 
+function resolveRecipeItemPricesValue(prices: IRecipeItemPrices): number | null {
+  if (prices.id === 0) {
+    return null;
+  }
+
+  return prices.prices.average_buyout_per / 10 / 10;
+}
+
 export function convertRecipePriceHistoriesToLineData(
   recipePriceHistories: IRecipePriceHistories,
 ): ILineItemOpen[] {
@@ -133,23 +142,17 @@ export function convertRecipePriceHistoriesToLineData(
     return Object.keys(recipePriceHistory).reduce<ILineItemOpen[]>((result2, unixTimestamp) => {
       const recipePrices: IRecipePrices = recipePriceHistory[Number(unixTimestamp)];
 
-      const data: { [key: string]: number } = {};
-
-      if (recipePrices.crafted_item_prices.id > 0) {
-        data[`${recipePrices.crafted_item_prices.id}_average_buyout_per`] =
-          recipePrices.crafted_item_prices.prices.average_buyout_per / 10 / 10;
-      }
-      if (recipePrices.alliance_crafted_item_prices.id > 0) {
-        data[`${recipePrices.alliance_crafted_item_prices.id}_average_buyout_per`] =
-          recipePrices.alliance_crafted_item_prices.prices.average_buyout_per / 10 / 10;
-      }
-      if (recipePrices.horde_crafted_item_prices.id > 0) {
-        data[`${recipePrices.horde_crafted_item_prices.id}_average_buyout_per`] =
-          recipePrices.horde_crafted_item_prices.prices.average_buyout_per / 10 / 10;
-      }
-
-      data["total_reagent_prices_average_buyout_per"] =
-        recipePrices.total_reagent_prices.average_buyout_per / 10 / 10;
+      const data: { [key: string]: number | null } = {};
+      data["crafted_item_buyout_per"] = resolveRecipeItemPricesValue(
+        recipePrices.crafted_item_prices,
+      );
+      data["alliance_crafted_buyout_per"] = resolveRecipeItemPricesValue(
+        recipePrices.alliance_crafted_item_prices,
+      );
+      data["horde_crafted_buyout_per"] = resolveRecipeItemPricesValue(
+        recipePrices.horde_crafted_item_prices,
+      );
+      data["total_reagent_cost"] = recipePrices.total_reagent_prices.average_buyout_per / 10 / 10;
 
       result2.push({
         data,
