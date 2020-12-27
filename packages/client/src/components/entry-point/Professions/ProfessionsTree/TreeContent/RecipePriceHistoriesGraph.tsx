@@ -29,11 +29,21 @@ export type Props = Readonly<IStateProps>;
 
 type State = Readonly<{
   highlightedDataKey: string | null;
+  recipeItemsSelected: Set<number>;
+  totalReagentCostSelected: boolean;
 }>;
+
+const TotalReagentCostDataKey = "total_reagent_cost";
+
+function resolveItemDataKey(id: ItemId): string {
+  return `${id}_buyout_per`;
+}
 
 export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
   public state: State = {
     highlightedDataKey: null,
+    recipeItemsSelected: new Set([]),
+    totalReagentCostSelected: false,
   };
 
   public render() {
@@ -97,7 +107,7 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
       <>
         <div className="pure-g">
           <div className="pure-u-1-3">
-            <div style={{ marginRight: "10px" }}>{this.renderSelectAll()}</div>
+            <div style={{ marginRight: "10px" }}>{this.renderSelectAllTag()}</div>
           </div>
           <div className="pure-u-1-3">
             <div style={{ marginRight: "10px" }}>{this.renderLegendReagentTotalCostTag(0)}</div>
@@ -123,6 +133,8 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
   }
 
   private renderLegendReagentTotalCostTag(colorIndex: number) {
+    const { highlightedDataKey } = this.state;
+
     const { intent, rightIcon, interactive } = (() => {
       const rightIconElement = <Icon icon={IconNames.CHART} color={getColor(colorIndex)} />;
 
@@ -141,12 +153,15 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
         style={{ marginBottom: "5px" }}
         intent={intent}
         rightIcon={rightIcon}
-        active={true}
+        active={highlightedDataKey === TotalReagentCostDataKey}
         onMouseEnter={() => {
-          this.setState({ ...this.state, highlightedDataKey: "total_reagent_cost" });
+          this.setState({ ...this.state, highlightedDataKey: TotalReagentCostDataKey });
         }}
         onMouseLeave={() => {
           this.setState({ ...this.state, highlightedDataKey: null });
+        }}
+        onClick={() => {
+          this.setState({ ...this.state, totalReagentCostSelected: true });
         }}
       >
         Total Reagent Cost
@@ -155,6 +170,8 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
   }
 
   private renderLegendColumnTag(itemId: ItemId, colorIndex: number, keyIndex: number) {
+    const { highlightedDataKey, recipeItemsSelected } = this.state;
+
     const { intent, rightIcon, interactive } = (() => {
       const rightIconElement = <Icon icon={IconNames.CHART} color={getColor(colorIndex)} />;
 
@@ -174,12 +191,16 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
         style={{ marginBottom: "5px" }}
         intent={intent}
         rightIcon={rightIcon}
-        active={true}
+        active={highlightedDataKey === resolveItemDataKey(itemId)}
         onMouseEnter={() => {
-          this.setState({ ...this.state, highlightedDataKey: `${itemId}_buyout_per` });
+          this.setState({ ...this.state, highlightedDataKey: resolveItemDataKey(itemId) });
         }}
         onMouseLeave={() => {
           this.setState({ ...this.state, highlightedDataKey: null });
+        }}
+        onClick={() => {
+          recipeItemsSelected.add(itemId);
+          this.setState({ ...this.state, recipeItemsSelected });
         }}
       >
         {this.renderLegendItem(itemId)}
@@ -189,6 +210,7 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
 
   private renderLegendItem(itemId: ItemId) {
     const { selectedRecipe } = this.props;
+    const { recipeItemsSelected } = this.state;
 
     if (selectedRecipe === null || typeof selectedRecipe === "undefined") {
       return null;
@@ -206,15 +228,15 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
           <span className={qualityToColorClass(foundItem.quality.type)}>{text}</span>
         )}
         onItemClick={() => {
-          // tslint:disable-next-line:no-console
-          console.log("renderLegendItem().onItemClick()");
+          recipeItemsSelected.add(itemId);
+          this.setState({ ...this.state, recipeItemsSelected });
         }}
         interactive={false}
       />
     );
   }
 
-  private renderSelectAll() {
+  private renderSelectAllTag() {
     return (
       <Tag
         fill={true}
@@ -224,8 +246,11 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
         intent={Intent.NONE}
         icon={IconNames.DOUBLE_CHEVRON_UP}
         onClick={() => {
-          // tslint:disable-next-line:no-console
-          console.log("renderSelectAll().onClick()");
+          this.setState({
+            ...this.state,
+            recipeItemsSelected: new Set([]),
+            totalReagentCostSelected: false,
+          });
         }}
       >
         Select All
@@ -287,8 +312,8 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
     }
 
     const dataKeys = [
-      "total_reagent_cost",
-      ...recipeItemIds[selectedRecipe.data.id].map(v => `${v}_buyout_per`),
+      TotalReagentCostDataKey,
+      ...recipeItemIds[selectedRecipe.data.id].map(resolveItemDataKey),
     ];
 
     return dataKeys.map((v, i) => this.renderRecipeItemLine(v, i));
