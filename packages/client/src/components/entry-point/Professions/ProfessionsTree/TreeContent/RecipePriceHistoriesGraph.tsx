@@ -1,9 +1,12 @@
-import { RecipeId } from "@sotah-inc/core";
 import React from "react";
+
+import { Icon, Intent, Tag } from "@blueprintjs/core";
+import { IconNames } from "@blueprintjs/icons";
+import { IShortRecipe, ItemId } from "@sotah-inc/core";
 
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
-import { IFetchData, ILineItemOpen } from "../../../../../types/global";
+import { IFetchData, IItemsData, ILineItemOpen } from "../../../../../types/global";
 import { FetchLevel } from "../../../../../types/main";
 import { IRecipePriceHistoriesState } from "../../../../../types/professions";
 import {
@@ -11,12 +14,14 @@ import {
   currencyToText,
   getColor,
   getXAxisTimeRestrictions,
+  qualityToColorClass,
   unixTimestampToText,
 } from "../../../../../util";
+import { ItemLink } from "../../../../util/ItemLink";
 
 // props
 export interface IStateProps {
-  selectedRecipeId: RecipeId;
+  selectedRecipe: IItemsData<IShortRecipe> | null | undefined;
   recipePriceHistories: IFetchData<IRecipePriceHistoriesState>;
 }
 
@@ -59,7 +64,133 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
             {this.renderLines()}
           </LineChart>
         </ResponsiveContainer>
+        {this.renderLegend()}
       </>
+    );
+  }
+
+  private renderLegend() {
+    const { recipePriceHistories, selectedRecipe } = this.props;
+
+    if (selectedRecipe === null || typeof selectedRecipe === "undefined") {
+      return null;
+    }
+
+    const itemIds: ItemId[] = recipePriceHistories.data.recipeItemIds[selectedRecipe.data.id];
+
+    const groupedItemIds = itemIds.reduce<Array<Array<[ItemId, number]>>>((result, v, i) => {
+      const column = i % 3;
+      if (Object.keys(result).indexOf(column.toString()) === -1) {
+        result[column] = [];
+      }
+
+      result[column].push([v, i]);
+
+      return result;
+    }, []);
+
+    return (
+      <>
+        <div className="pure-g">
+          <div className="pure-u-1-3">
+            <div style={{ marginRight: "10px" }}>{this.renderSelectAll()}</div>
+          </div>
+        </div>
+        <div className="pure-g recipe-price-histories-graph-legend">
+          {groupedItemIds.map((v, i) => this.renderLegendColumn(v, i))}
+        </div>
+      </>
+    );
+  }
+
+  private renderLegendColumn(itemIdIndexTuples: Array<[ItemId, number]>, index: number) {
+    return (
+      <div className="pure-u-1-3" key={index}>
+        <div style={index < 2 ? { marginRight: "10px" } : {}}>
+          {itemIdIndexTuples.map(([itemId, originalIndex], i) =>
+            this.renderLegendColumnTag(itemId, originalIndex, i),
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  private renderLegendColumnTag(itemId: ItemId, originalIndex: number, i: number) {
+    const { intent, rightIcon, interactive } = (() => {
+      const rightIconElement = <Icon icon={IconNames.CHART} color={getColor(originalIndex)} />;
+
+      return {
+        intent: Intent.PRIMARY,
+        interactive: true,
+        rightIcon: rightIconElement,
+      };
+    })();
+
+    return (
+      <Tag
+        fill={true}
+        key={i}
+        minimal={true}
+        interactive={interactive}
+        style={{ marginBottom: "5px" }}
+        intent={intent}
+        rightIcon={rightIcon}
+        active={true}
+        onMouseEnter={() => {
+          this.setState({ ...this.state, highlightedDataKey: `${itemId}_buyout_per` });
+        }}
+        onMouseLeave={() => {
+          this.setState({ ...this.state, highlightedDataKey: null });
+        }}
+      >
+        {this.renderLegendItem(itemId)}
+      </Tag>
+    );
+  }
+
+  private renderLegendItem(itemId: ItemId) {
+    const { selectedRecipe } = this.props;
+
+    if (selectedRecipe === null || typeof selectedRecipe === "undefined") {
+      return null;
+    }
+
+    const foundItem = selectedRecipe.items.find(v => v.id === itemId);
+    if (typeof foundItem === "undefined") {
+      return itemId;
+    }
+
+    return (
+      <ItemLink
+        item={foundItem}
+        itemTextFormatter={text => (
+          <span className={qualityToColorClass(foundItem.quality.type)}>{text}</span>
+        )}
+        onItemClick={() => {
+          // tslint:disable-next-line:no-console
+          console.log("renderLegendItem().onItemClick()");
+        }}
+        interactive={false}
+      />
+    );
+  }
+
+  private renderSelectAll() {
+    return (
+      <Tag
+        fill={true}
+        minimal={true}
+        interactive={false}
+        style={{ marginBottom: "5px" }}
+        intent={Intent.NONE}
+        icon={IconNames.DOUBLE_CHEVRON_UP}
+        onClick={() => {
+          // tslint:disable-next-line:no-console
+          console.log("renderSelectAll().onClick()");
+        }}
+      >
+        Select All
+      </Tag>
     );
   }
 
@@ -105,14 +236,18 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
 
   private renderLines() {
     const {
-      selectedRecipeId,
+      selectedRecipe,
       recipePriceHistories: {
         data: { recipeItemIds },
       },
     } = this.props;
 
+    if (selectedRecipe === null || typeof selectedRecipe === "undefined") {
+      return null;
+    }
+
     const dataKeys = [
-      ...recipeItemIds[selectedRecipeId].map(v => `${v}_buyout_per`),
+      ...recipeItemIds[selectedRecipe.data.id].map(v => `${v}_buyout_per`),
       "total_reagent_cost",
     ];
 
