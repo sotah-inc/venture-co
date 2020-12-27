@@ -20,7 +20,7 @@ export type Props = Readonly<IStateProps>;
 
 export class TreeContent extends React.Component<Props> {
   public render() {
-    const { selectedSkillTierCategory, selectedRecipe, priceTable } = this.props;
+    const { selectedRecipe, priceTable } = this.props;
 
     if (typeof selectedRecipe === "undefined" || selectedRecipe === null) {
       return null;
@@ -36,10 +36,6 @@ export class TreeContent extends React.Component<Props> {
     return (
       <>
         <RecipePriceHistoriesGraphContainer />
-        <p>Hello, world!</p>
-        <p>{selectedSkillTierCategory.index}</p>
-        <p>{selectedSkillTierCategory.isSelected ? "isSelected" : "not isSelected"}</p>
-        <p>recipe: {selectedRecipe?.data.id ?? "none"}</p>
         <PricesTable
           priceTable={priceTable}
           entryRows={entryRows}
