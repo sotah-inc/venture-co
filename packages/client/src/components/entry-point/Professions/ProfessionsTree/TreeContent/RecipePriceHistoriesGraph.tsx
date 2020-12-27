@@ -22,7 +22,15 @@ export interface IStateProps {
 
 export type Props = Readonly<IStateProps>;
 
-export class RecipePriceHistoriesGraph extends React.Component<Props> {
+type State = Readonly<{
+  highlightedDataKey: string | null;
+}>;
+
+export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
+  public state: State = {
+    highlightedDataKey: null,
+  };
+
   public render() {
     const { recipePriceHistories } = this.props;
 
@@ -56,14 +64,23 @@ export class RecipePriceHistoriesGraph extends React.Component<Props> {
   }
 
   private renderRecipeItemLine(dataKey: string, index: number) {
+    const { highlightedDataKey } = this.state;
+
     const { stroke, strokeWidth } = (() => {
+      if (highlightedDataKey === null || highlightedDataKey === dataKey) {
+        return {
+          stroke: getColor(index),
+          strokeWidth: highlightedDataKey === dataKey ? 4 : 2,
+        };
+      }
+
       return {
-        stroke: getColor(index),
-        strokeWidth: 2,
+        stroke: "#5C7080",
+        strokeWidth: 1,
       };
     })();
 
-    const dot = false;
+    const dot = highlightedDataKey === dataKey;
 
     return (
       <Line
@@ -76,6 +93,12 @@ export class RecipePriceHistoriesGraph extends React.Component<Props> {
         strokeWidth={strokeWidth}
         fill={stroke}
         dot={dot}
+        onMouseEnter={() => {
+          this.setState({ ...this.state, highlightedDataKey: dataKey });
+        }}
+        onMouseLeave={() => {
+          this.setState({ ...this.state, highlightedDataKey: null });
+        }}
       />
     );
   }
