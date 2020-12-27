@@ -1,6 +1,6 @@
 import React from "react";
 
-import { H2, Position } from "@blueprintjs/core";
+import { Callout, H2, Intent, Position } from "@blueprintjs/core";
 import { IItemPrices, IShortRecipe, ItemId, resolveCraftedItemIds } from "@sotah-inc/core";
 
 import { RecipePriceHistoriesGraphContainer } from "../../../../containers/entry-point/Professions/ProfessionsTree/TreeContent/RecipePriceHistoriesGraph";
@@ -43,6 +43,7 @@ export class TreeContent extends React.Component<Props> {
           title="Reagent Prices"
           footerContent={this.renderFooter()}
         />
+        <Callout intent={Intent.PRIMARY}>Price table is of lowest-posted prices.</Callout>
       </>
     );
   }
