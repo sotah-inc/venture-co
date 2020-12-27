@@ -183,9 +183,17 @@ body.bp3-dark,
     }
 }
 
-.pricelist-table-heading,
-.recipe-price-histories-table-heading{
+.pricelist-table-heading {
     .item-icon {
+        width: 24px;
+        height: 24px;
+        border-radius: 3px;
+        margin-right: 10px;
+    }
+}
+
+.recipe-price-histories-table-heading {
+    .profession-icon {
         width: 24px;
         height: 24px;
         border-radius: 3px;

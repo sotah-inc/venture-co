@@ -1,6 +1,6 @@
 import React from "react";
 
-import { H4, Icon, Intent, Tag } from "@blueprintjs/core";
+import { Callout, H4, Icon, Intent, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { IShortRecipe, ItemId } from "@sotah-inc/core";
 
@@ -66,6 +66,7 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
           </LineChart>
         </ResponsiveContainer>
         {this.renderLegend()}
+        <Callout intent={Intent.PRIMARY}>Price graph is of average prices.</Callout>
       </>
     );
   }
