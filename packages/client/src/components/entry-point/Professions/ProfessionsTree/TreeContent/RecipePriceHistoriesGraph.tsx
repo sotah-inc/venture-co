@@ -95,6 +95,9 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
           <div className="pure-u-1-3">
             <div style={{ marginRight: "10px" }}>{this.renderSelectAll()}</div>
           </div>
+          <div className="pure-u-1-3">
+            <div style={{ marginRight: "10px" }}>{this.renderLegendReagentTotalCostTag(0)}</div>
+          </div>
         </div>
         <div className="pure-g recipe-price-histories-graph-legend">
           {groupedItemIds.map((v, i) => this.renderLegendColumn(v, i))}
@@ -107,17 +110,17 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
     return (
       <div className="pure-u-1-3" key={index}>
         <div style={index < 2 ? { marginRight: "10px" } : {}}>
-          {itemIdIndexTuples.map(([itemId, originalIndex], i) =>
-            this.renderLegendColumnTag(itemId, originalIndex, i),
+          {itemIdIndexTuples.map(([itemId, originalIndex], keyIndex) =>
+            this.renderLegendColumnTag(itemId, originalIndex + 1, keyIndex),
           )}
         </div>
       </div>
     );
   }
 
-  private renderLegendColumnTag(itemId: ItemId, originalIndex: number, i: number) {
+  private renderLegendReagentTotalCostTag(colorIndex: number) {
     const { intent, rightIcon, interactive } = (() => {
-      const rightIconElement = <Icon icon={IconNames.CHART} color={getColor(originalIndex)} />;
+      const rightIconElement = <Icon icon={IconNames.CHART} color={getColor(colorIndex)} />;
 
       return {
         intent: Intent.PRIMARY,
@@ -129,7 +132,39 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
     return (
       <Tag
         fill={true}
-        key={i}
+        minimal={true}
+        interactive={interactive}
+        style={{ marginBottom: "5px" }}
+        intent={intent}
+        rightIcon={rightIcon}
+        active={true}
+        onMouseEnter={() => {
+          this.setState({ ...this.state, highlightedDataKey: "total_reagent_cost" });
+        }}
+        onMouseLeave={() => {
+          this.setState({ ...this.state, highlightedDataKey: null });
+        }}
+      >
+        Total Reagent Cost
+      </Tag>
+    );
+  }
+
+  private renderLegendColumnTag(itemId: ItemId, colorIndex: number, keyIndex: number) {
+    const { intent, rightIcon, interactive } = (() => {
+      const rightIconElement = <Icon icon={IconNames.CHART} color={getColor(colorIndex)} />;
+
+      return {
+        intent: Intent.PRIMARY,
+        interactive: true,
+        rightIcon: rightIconElement,
+      };
+    })();
+
+    return (
+      <Tag
+        fill={true}
+        key={keyIndex}
         minimal={true}
         interactive={interactive}
         style={{ marginBottom: "5px" }}
@@ -230,6 +265,7 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
         onMouseLeave={() => {
           this.setState({ ...this.state, highlightedDataKey: null });
         }}
+        connectNulls={true}
       />
     );
   }
@@ -247,8 +283,8 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
     }
 
     const dataKeys = [
-      ...recipeItemIds[selectedRecipe.data.id].map(v => `${v}_buyout_per`),
       "total_reagent_cost",
+      ...recipeItemIds[selectedRecipe.data.id].map(v => `${v}_buyout_per`),
     ];
 
     return dataKeys.map((v, i) => this.renderRecipeItemLine(v, i));

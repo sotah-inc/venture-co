@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Position } from "@blueprintjs/core";
+import { Callout, Intent, Position } from "@blueprintjs/core";
 import { IItemPrices, IShortRecipe, ItemId, resolveCraftedItemIds } from "@sotah-inc/core";
 
 import { RecipePriceHistoriesGraphContainer } from "../../../../containers/entry-point/Professions/ProfessionsTree/TreeContent/RecipePriceHistoriesGraph";
@@ -136,6 +136,13 @@ export class TreeContent extends React.Component<Props> {
         <tr>
           <th style={{ textAlign: "right" }}>Expected profit for for {item}</th>
           <td colSpan={2}>{expectedProfit}</td>
+        </tr>
+        <tr>
+          <td colSpan={3}>
+            <Callout intent={Intent.WARNING}>
+              Current price is the current posted lower auction price.
+            </Callout>
+          </td>
         </tr>
       </React.Fragment>
     );
