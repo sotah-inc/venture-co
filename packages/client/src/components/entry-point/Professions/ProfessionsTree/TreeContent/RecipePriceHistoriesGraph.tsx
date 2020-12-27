@@ -66,7 +66,9 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
           </LineChart>
         </ResponsiveContainer>
         {this.renderLegend()}
-        <Callout intent={Intent.PRIMARY}>Price graph is of average prices.</Callout>
+        <Callout intent={Intent.PRIMARY} style={{ marginBottom: "10px" }}>
+          Price graph is of average prices.
+        </Callout>
       </>
     );
   }
