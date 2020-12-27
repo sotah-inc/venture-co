@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Icon, Intent, Tag } from "@blueprintjs/core";
+import { H4, Icon, Intent, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { IShortRecipe, ItemId } from "@sotah-inc/core";
 
@@ -49,6 +49,7 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
 
     return (
       <>
+        <H4>History</H4>
         <ResponsiveContainer width="100%" height={250}>
           <LineChart data={data}>
             <CartesianGrid vertical={false} strokeWidth={0.25} strokeOpacity={0.25} />

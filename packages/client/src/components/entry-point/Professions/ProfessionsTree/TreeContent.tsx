@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Callout, Intent, Position } from "@blueprintjs/core";
+import { H2, Position } from "@blueprintjs/core";
 import { IItemPrices, IShortRecipe, ItemId, resolveCraftedItemIds } from "@sotah-inc/core";
 
 import { RecipePriceHistoriesGraphContainer } from "../../../../containers/entry-point/Professions/ProfessionsTree/TreeContent/RecipePriceHistoriesGraph";
@@ -35,6 +35,7 @@ export class TreeContent extends React.Component<Props> {
 
     return (
       <>
+        {this.renderTitle()}
         <RecipePriceHistoriesGraphContainer />
         <PricesTable
           priceTable={priceTable}
@@ -137,14 +138,26 @@ export class TreeContent extends React.Component<Props> {
           <th style={{ textAlign: "right" }}>Expected profit for for {item}</th>
           <td colSpan={2}>{expectedProfit}</td>
         </tr>
-        <tr>
-          <td colSpan={3}>
-            <Callout intent={Intent.WARNING}>
-              Current price is the current posted lower auction price.
-            </Callout>
-          </td>
-        </tr>
       </React.Fragment>
+    );
+  }
+
+  private renderTitle() {
+    const { selectedRecipe } = this.props;
+
+    if (selectedRecipe === null || typeof selectedRecipe === "undefined") {
+      return null;
+    }
+
+    if (selectedRecipe.data.icon_url.length === 0) {
+      return <H2>{selectedRecipe.data.name}</H2>;
+    }
+
+    return (
+      <H2 className="recipe-price-histories-table-heading">
+        <img src={selectedRecipe.data.icon_url} className="profession-icon" alt="" />{" "}
+        {selectedRecipe.data.name}
+      </H2>
     );
   }
 }
