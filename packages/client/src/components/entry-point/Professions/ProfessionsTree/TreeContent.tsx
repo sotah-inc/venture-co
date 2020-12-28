@@ -1,145 +1,28 @@
 import React from "react";
 
-import { Callout, H2, Intent, Position } from "@blueprintjs/core";
-import { IItemPrices, IShortRecipe, ItemId, resolveCraftedItemIds } from "@sotah-inc/core";
+import { H2, H4 } from "@blueprintjs/core";
+import { IShortRecipe } from "@sotah-inc/core";
+import { ReagentPricesTableContainer } from "../../../../containers/entry-point/Professions/ProfessionsTree/TreeContent/ReagentPricesTable";
 
 import { RecipePriceHistoriesGraphContainer } from "../../../../containers/entry-point/Professions/ProfessionsTree/TreeContent/RecipePriceHistoriesGraph";
-import { IFetchData, IItemsData } from "../../../../types/global";
-import { ISelectedSkillTierCategory } from "../../../../types/professions";
-import { Currency, ItemPopover } from "../../../util";
-import { IEntryRow, PricesTable } from "../../../util/PricesTable";
+import { IItemsData } from "../../../../types/global";
 
 // props
 export interface IStateProps {
   selectedRecipe: IItemsData<IShortRecipe> | null | undefined;
-  selectedSkillTierCategory: ISelectedSkillTierCategory;
-  priceTable: IFetchData<IItemsData<IItemPrices>>;
 }
 
 export type Props = Readonly<IStateProps>;
 
 export class TreeContent extends React.Component<Props> {
   public render() {
-    const { selectedRecipe, priceTable } = this.props;
-
-    if (typeof selectedRecipe === "undefined" || selectedRecipe === null) {
-      return null;
-    }
-
-    const entryRows = selectedRecipe.data.reagents.map<IEntryRow>(v => {
-      return {
-        item_id: v.reagent.id,
-        quantity_modifier: v.quantity,
-      };
-    });
-
     return (
       <>
         {this.renderTitle()}
+        <H4>History</H4>
         <RecipePriceHistoriesGraphContainer />
-        <PricesTable
-          priceTable={priceTable}
-          entryRows={entryRows}
-          title="Reagent Prices"
-          footerContent={this.renderFooter()}
-        />
-        <Callout intent={Intent.PRIMARY}>Price table is of lowest-posted prices.</Callout>
+        <ReagentPricesTableContainer />
       </>
-    );
-  }
-
-  private getRecipeReagentTotalCost(): number {
-    const { selectedRecipe, priceTable } = this.props;
-
-    if (typeof selectedRecipe === "undefined" || selectedRecipe === null) {
-      return 0;
-    }
-
-    return selectedRecipe.data.reagents.reduce((foundTotal, v): number => {
-      const foundPrice = priceTable.data.data[v.reagent.id];
-      if (!foundPrice) {
-        return foundTotal;
-      }
-
-      return foundTotal + foundPrice.min_buyout_per * v.quantity;
-    }, 0);
-  }
-
-  private renderFooter() {
-    const { selectedRecipe } = this.props;
-
-    if (typeof selectedRecipe === "undefined" || selectedRecipe === null) {
-      return null;
-    }
-
-    const craftedItemIds = resolveCraftedItemIds(selectedRecipe.data);
-
-    const foundTotalCost = (() => {
-      const reagentTotalCost = this.getRecipeReagentTotalCost();
-      if (reagentTotalCost === 0) {
-        return <em>No data found.</em>;
-      }
-
-      return <Currency amount={reagentTotalCost} />;
-    })();
-
-    return (
-      <>
-        <tr>
-          <th style={{ textAlign: "right" }}>Total Reagent Cost</th>
-          <td colSpan={2}>{foundTotalCost}</td>
-        </tr>
-        {craftedItemIds.map((v, i) => this.renderItemProfit(v, i))}
-      </>
-    );
-  }
-
-  private renderItemProfit(id: ItemId, itemProfitIndex: number) {
-    const { priceTable } = this.props;
-
-    const item = (() => {
-      const foundItem = priceTable.data.items.find(v => v.id === id);
-      if (!foundItem) {
-        return `Item #${id}`;
-      }
-
-      return <ItemPopover item={foundItem} interactive={false} position={Position.LEFT} />;
-    })();
-
-    const itemCost: number | null = priceTable.data.data[id]?.min_buyout_per ?? null;
-    if (itemCost === null) {
-      return (
-        <tr key={itemProfitIndex}>
-          <th style={{ textAlign: "right" }}>Current price of {item}</th>
-          <td colSpan={2}>
-            <em>No data found for this item.</em>
-          </td>
-        </tr>
-      );
-    }
-
-    const expectedProfit = (() => {
-      const reagentTotalCost = this.getRecipeReagentTotalCost();
-      if (reagentTotalCost === 0) {
-        return <em>Not enough data for comparison.</em>;
-      }
-
-      return <Currency amount={itemCost - reagentTotalCost} />;
-    })();
-
-    return (
-      <React.Fragment key={itemProfitIndex}>
-        <tr>
-          <th style={{ textAlign: "right" }}>Current price of {item}</th>
-          <td colSpan={2}>
-            <Currency amount={itemCost} />
-          </td>
-        </tr>
-        <tr>
-          <th style={{ textAlign: "right" }}>Expected profit for for {item}</th>
-          <td colSpan={2}>{expectedProfit}</td>
-        </tr>
-      </React.Fragment>
     );
   }
 
