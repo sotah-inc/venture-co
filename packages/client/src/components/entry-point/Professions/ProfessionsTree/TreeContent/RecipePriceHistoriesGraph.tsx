@@ -318,9 +318,6 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
       return hasHighlightButNotHighlighted ? 0.5 : 1;
     })();
 
-    // tslint:disable-next-line:no-console
-    console.log({ hasSelections, isSelected, highlightedDataKey, dataKey, opacity });
-
     return (
       <Line
         key={index}
