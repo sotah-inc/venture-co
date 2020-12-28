@@ -86,7 +86,7 @@ export class TreeContent extends React.Component<Props> {
     return (
       <>
         <tr>
-          <th style={{ textAlign: "right" }}>Total</th>
+          <th style={{ textAlign: "right" }}>Total Reagent Cost</th>
           <td colSpan={2}>{foundTotalCost}</td>
         </tr>
         {craftedItemIds.map((v, i) => this.renderItemProfit(v, i))}
