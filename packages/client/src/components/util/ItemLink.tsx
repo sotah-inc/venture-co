@@ -12,6 +12,7 @@ export interface IOwnProps {
   onItemClick?: () => void;
   itemTextFormatter?: (itemText: string) => ItemTextFormatterResult;
   interactive?: boolean;
+  showIcon?: boolean;
 }
 
 type Props = Readonly<IOwnProps>;
@@ -22,12 +23,22 @@ export class ItemLink extends React.Component<Props> {
     onItemClick: () => {
       return;
     },
+    showIcon: true,
   };
 
   public render() {
-    const { item } = this.props;
+    const { item, showIcon } = this.props;
 
-    return <div className="item-icon-container">{this.renderDisplay(item)}</div>;
+    const itemIconUrl = getItemIconUrl(item);
+    if (itemIconUrl === null || showIcon === false) {
+      return this.renderLink(item);
+    }
+
+    return (
+      <div className="item-icon-container">
+        <img src={itemIconUrl} className="item-icon" alt="" /> {this.renderLink(item)}
+      </div>
+    );
   }
 
   private onItemClick() {
@@ -46,19 +57,6 @@ export class ItemLink extends React.Component<Props> {
     }
 
     return itemTextFormatter(itemText);
-  }
-
-  private renderDisplay(item: IShortItem) {
-    const itemIconUrl = getItemIconUrl(item);
-    if (itemIconUrl === null) {
-      return this.renderLink(item);
-    }
-
-    return (
-      <>
-        <img src={itemIconUrl} className="item-icon" alt="" /> {this.renderLink(item)}
-      </>
-    );
   }
 
   private renderLink(item: IShortItem) {

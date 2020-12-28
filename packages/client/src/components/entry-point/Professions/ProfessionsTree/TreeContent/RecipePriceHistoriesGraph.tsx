@@ -177,6 +177,7 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
         interactive={true}
         style={{ marginBottom: "5px" }}
         intent={intent}
+        icon={null}
         rightIcon={<Icon icon={IconNames.CHART} color={getColor(colorIndex)} />}
         active={highlightedDataKey === resolveItemDataKey(itemId)}
         onMouseEnter={() => {
@@ -210,6 +211,7 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
 
     return (
       <ItemLink
+        showIcon={false}
         item={foundItem}
         itemTextFormatter={text => (
           <span className={qualityToColorClass(foundItem.quality.type)}>{text}</span>
