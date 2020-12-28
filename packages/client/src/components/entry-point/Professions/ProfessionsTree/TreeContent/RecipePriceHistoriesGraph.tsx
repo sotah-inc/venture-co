@@ -13,6 +13,7 @@ import {
   convertRecipePriceHistoriesToLineData,
   currencyToText,
   getColor,
+  getItemIconUrl,
   getXAxisTimeRestrictions,
   qualityToColorClass,
   unixTimestampToText,
@@ -177,7 +178,7 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
         interactive={true}
         style={{ marginBottom: "5px" }}
         intent={intent}
-        icon={null}
+        icon={this.renderLegendItemIcon(itemId)}
         rightIcon={<Icon icon={IconNames.CHART} color={getColor(colorIndex)} />}
         active={highlightedDataKey === resolveItemDataKey(itemId)}
         onMouseEnter={() => {
@@ -194,6 +195,26 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
         {this.renderLegendItem(itemId)}
       </Tag>
     );
+  }
+
+  private renderLegendItemIcon(itemId: ItemId) {
+    const { selectedRecipe } = this.props;
+
+    if (selectedRecipe === null || typeof selectedRecipe === "undefined") {
+      return null;
+    }
+
+    const foundItem = selectedRecipe.items.find(v => v.id === itemId);
+    if (typeof foundItem === "undefined") {
+      return null;
+    }
+
+    const itemIconUrl = getItemIconUrl(foundItem);
+    if (itemIconUrl === null) {
+      return null;
+    }
+
+    return <img src={itemIconUrl} className="item-icon" alt="" />;
   }
 
   private renderLegendItem(itemId: ItemId) {
