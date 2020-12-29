@@ -14,7 +14,11 @@ import {
   getXAxisTimeRestrictions,
   unixTimestampToText,
 } from "../../../../../util";
-import { TabKind } from "./RecipePriceHistoriesGraph/common";
+import {
+  resolveItemDataKey,
+  TabKind,
+  TotalReagentCostDataKey,
+} from "./RecipePriceHistoriesGraph/common";
 import { Legend } from "./RecipePriceHistoriesGraph/Legend";
 import { RecipeYAxis } from "./RecipePriceHistoriesGraph/RecipeYAxis";
 
@@ -32,12 +36,6 @@ type State = Readonly<{
   totalReagentCostSelected: boolean;
   currentTabKind: TabKind;
 }>;
-
-const TotalReagentCostDataKey = "total_reagent_cost";
-
-function resolveItemDataKey(id: ItemId): string {
-  return `${id}_buyout_per`;
-}
 
 export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
   public state: State = {
