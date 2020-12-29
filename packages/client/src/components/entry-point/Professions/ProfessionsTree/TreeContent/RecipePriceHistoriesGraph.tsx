@@ -20,7 +20,7 @@ import {
   TotalReagentCostDataKey,
 } from "./RecipePriceHistoriesGraph/common";
 import { Legend } from "./RecipePriceHistoriesGraph/Legend";
-import { RecipeYAxis } from "./RecipePriceHistoriesGraph/RecipeYAxis";
+import { YAxis } from "./RecipePriceHistoriesGraph/YAxis";
 
 // props
 export interface IStateProps {
@@ -79,10 +79,10 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
               ticks={xAxisTicks}
               tick={{ fill: "#fff" }}
             />
-            <RecipeYAxis
-              currentTabKind={currentTabKind}
-              overallPriceLimits={recipePriceHistories.data.overallPriceLimits}
-            />
+            {YAxis({
+              currentTabKind,
+              overallPriceLimits: recipePriceHistories.data.overallPriceLimits,
+            })}
             {this.renderLines()}
           </LineChart>
         </ResponsiveContainer>
