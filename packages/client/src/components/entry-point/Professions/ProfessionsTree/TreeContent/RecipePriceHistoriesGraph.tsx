@@ -1,7 +1,6 @@
 import React from "react";
 
-import { Callout, Icon, Intent, Tag } from "@blueprintjs/core";
-import { IconNames } from "@blueprintjs/icons";
+import { Callout, Intent } from "@blueprintjs/core";
 import { IShortRecipe, ItemId } from "@sotah-inc/core";
 
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
@@ -13,12 +12,11 @@ import {
   convertRecipePriceHistoriesToLineData,
   currencyToText,
   getColor,
-  getItemIconUrl,
   getXAxisTimeRestrictions,
-  qualityToColorClass,
   unixTimestampToText,
 } from "../../../../../util";
-import { ItemLink } from "../../../../util/ItemLink";
+import { TabKind } from "./RecipePriceHistoriesGraph/common";
+import { Legend } from "./RecipePriceHistoriesGraph/Legend";
 
 // props
 export interface IStateProps {
@@ -32,6 +30,7 @@ type State = Readonly<{
   highlightedDataKey: string | null;
   recipeItemsSelected: Set<number>;
   totalReagentCostSelected: boolean;
+  currentTabKind: TabKind;
 }>;
 
 const TotalReagentCostDataKey = "total_reagent_cost";
@@ -42,13 +41,24 @@ function resolveItemDataKey(id: ItemId): string {
 
 export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
   public state: State = {
+    currentTabKind: TabKind.craftingCost,
     highlightedDataKey: null,
     recipeItemsSelected: new Set<ItemId>(),
     totalReagentCostSelected: false,
   };
 
   public render() {
-    const { recipePriceHistories } = this.props;
+    const { recipePriceHistories, selectedRecipe } = this.props;
+    const {
+      currentTabKind,
+      highlightedDataKey,
+      recipeItemsSelected,
+      totalReagentCostSelected,
+    } = this.state;
+
+    if (selectedRecipe === null || typeof selectedRecipe === "undefined") {
+      return null;
+    }
 
     if (recipePriceHistories.level !== FetchLevel.success) {
       return <p>fail!</p>;
@@ -75,203 +85,38 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
             {this.renderLines()}
           </LineChart>
         </ResponsiveContainer>
-        {this.renderLegend()}
+        <Legend
+          currentTabKind={currentTabKind}
+          craftingCostOptions={{
+            highlightedDataKey,
+            onDataKeyHighlight: v => this.setState({ ...this.state, highlightedDataKey: v }),
+            onRecipeItemSelect: v => {
+              recipeItemsSelected.add(v);
+              this.setState({ ...this.state, recipeItemsSelected });
+            },
+            onReset: () => {
+              this.setState({
+                ...this.state,
+                recipeItemsSelected: new Set<ItemId>(),
+                totalReagentCostSelected: false,
+              });
+            },
+            onTotalReagentCostSelect: () => {
+              this.setState({
+                ...this.state,
+                totalReagentCostSelected: true,
+              });
+            },
+            recipeItems: selectedRecipe.items,
+            recipeItemsSelected,
+            totalReagentCostSelected,
+          }}
+        />
+
         <Callout intent={Intent.PRIMARY} style={{ marginBottom: "10px" }}>
           Price graph is of average prices.
         </Callout>
       </>
-    );
-  }
-
-  private renderLegend() {
-    const { recipePriceHistories, selectedRecipe } = this.props;
-
-    if (selectedRecipe === null || typeof selectedRecipe === "undefined") {
-      return null;
-    }
-
-    const itemIds: ItemId[] = recipePriceHistories.data.recipeItemIds[selectedRecipe.data.id];
-
-    const groupedItemIds = itemIds.reduce<Array<Array<[ItemId, number]>>>((result, v, i) => {
-      const column = i % 3;
-      if (Object.keys(result).indexOf(column.toString()) === -1) {
-        result[column] = [];
-      }
-
-      result[column].push([v, i]);
-
-      return result;
-    }, []);
-
-    return (
-      <>
-        <div className="pure-g">
-          <div className="pure-u-1-3">
-            <div style={{ marginRight: "10px" }}>{this.renderSelectAllTag()}</div>
-          </div>
-          <div className="pure-u-1-3">
-            <div style={{ marginRight: "10px" }}>{this.renderLegendReagentTotalCostTag(0)}</div>
-          </div>
-        </div>
-        <div className="pure-g recipe-price-histories-graph-legend">
-          {groupedItemIds.map((v, i) => this.renderLegendColumn(v, i))}
-        </div>
-      </>
-    );
-  }
-
-  private renderLegendColumn(itemIdIndexTuples: Array<[ItemId, number]>, index: number) {
-    return (
-      <div className="pure-u-1-3" key={index}>
-        <div style={index < 2 ? { marginRight: "10px" } : {}}>
-          {itemIdIndexTuples.map(([itemId, originalIndex], keyIndex) =>
-            this.renderLegendColumnTag(itemId, originalIndex + 1, keyIndex),
-          )}
-        </div>
-      </div>
-    );
-  }
-
-  private renderLegendReagentTotalCostTag(colorIndex: number) {
-    const { highlightedDataKey, recipeItemsSelected, totalReagentCostSelected } = this.state;
-
-    const intent =
-      recipeItemsSelected.size > 0 && !totalReagentCostSelected ? Intent.NONE : Intent.PRIMARY;
-
-    return (
-      <Tag
-        fill={true}
-        minimal={true}
-        interactive={true}
-        style={{ marginBottom: "5px" }}
-        intent={intent}
-        rightIcon={<Icon icon={IconNames.CHART} color={getColor(colorIndex)} />}
-        active={highlightedDataKey === TotalReagentCostDataKey}
-        onMouseEnter={() => {
-          this.setState({ ...this.state, highlightedDataKey: TotalReagentCostDataKey });
-        }}
-        onMouseLeave={() => {
-          this.setState({ ...this.state, highlightedDataKey: null });
-        }}
-        onClick={() => {
-          this.setState({ ...this.state, totalReagentCostSelected: true });
-        }}
-      >
-        Total Reagent Cost
-      </Tag>
-    );
-  }
-
-  private renderLegendColumnTag(itemId: ItemId, colorIndex: number, keyIndex: number) {
-    const { highlightedDataKey, recipeItemsSelected, totalReagentCostSelected } = this.state;
-
-    const hasSelections = recipeItemsSelected.size > 0 || totalReagentCostSelected;
-
-    const intent = !hasSelections || recipeItemsSelected.has(itemId) ? Intent.PRIMARY : Intent.NONE;
-
-    return (
-      <Tag
-        fill={true}
-        key={keyIndex}
-        minimal={true}
-        interactive={true}
-        style={{ marginBottom: "5px" }}
-        intent={intent}
-        icon={this.renderLegendItemIcon(itemId)}
-        rightIcon={<Icon icon={IconNames.CHART} color={getColor(colorIndex)} />}
-        active={highlightedDataKey === resolveItemDataKey(itemId)}
-        onMouseEnter={() => {
-          this.setState({ ...this.state, highlightedDataKey: resolveItemDataKey(itemId) });
-        }}
-        onMouseLeave={() => {
-          this.setState({ ...this.state, highlightedDataKey: null });
-        }}
-        onClick={() => {
-          recipeItemsSelected.add(itemId);
-          this.setState({ ...this.state, recipeItemsSelected });
-        }}
-      >
-        {this.renderLegendItem(itemId)}
-      </Tag>
-    );
-  }
-
-  private renderLegendItemIcon(itemId: ItemId) {
-    const { selectedRecipe } = this.props;
-
-    if (selectedRecipe === null || typeof selectedRecipe === "undefined") {
-      return null;
-    }
-
-    const foundItem = selectedRecipe.items.find(v => v.id === itemId);
-    if (typeof foundItem === "undefined") {
-      return null;
-    }
-
-    const itemIconUrl = getItemIconUrl(foundItem);
-    if (itemIconUrl === null) {
-      return null;
-    }
-
-    return <img src={itemIconUrl} className="item-icon" alt="" />;
-  }
-
-  private renderLegendItem(itemId: ItemId) {
-    const { selectedRecipe } = this.props;
-    const { recipeItemsSelected } = this.state;
-
-    if (selectedRecipe === null || typeof selectedRecipe === "undefined") {
-      return null;
-    }
-
-    const foundItem = selectedRecipe.items.find(v => v.id === itemId);
-    if (typeof foundItem === "undefined") {
-      return itemId;
-    }
-
-    return (
-      <ItemLink
-        showIcon={false}
-        item={foundItem}
-        itemTextFormatter={text => (
-          <span className={qualityToColorClass(foundItem.quality.type)}>{text}</span>
-        )}
-        onItemClick={() => {
-          recipeItemsSelected.add(itemId);
-          this.setState({ ...this.state, recipeItemsSelected });
-        }}
-        interactive={false}
-      />
-    );
-  }
-
-  private renderSelectAllTag() {
-    const { totalReagentCostSelected, recipeItemsSelected } = this.state;
-
-    const canSelectAll = totalReagentCostSelected || recipeItemsSelected.size > 0;
-
-    return (
-      <Tag
-        fill={true}
-        minimal={true}
-        interactive={canSelectAll}
-        style={{ marginBottom: "5px" }}
-        intent={canSelectAll ? Intent.PRIMARY : Intent.NONE}
-        icon={IconNames.DOUBLE_CHEVRON_UP}
-        onClick={() => {
-          if (!canSelectAll) {
-            return;
-          }
-
-          this.setState({
-            ...this.state,
-            recipeItemsSelected: new Set<ItemId>(),
-            totalReagentCostSelected: false,
-          });
-        }}
-      >
-        Select All
-      </Tag>
     );
   }
 
