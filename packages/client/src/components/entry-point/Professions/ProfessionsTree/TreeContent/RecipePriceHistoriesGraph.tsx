@@ -3,7 +3,7 @@ import React from "react";
 import { Callout, Intent, Tab, Tabs } from "@blueprintjs/core";
 import { IShortRecipe, ItemId } from "@sotah-inc/core";
 
-import { CartesianGrid, LineChart, ResponsiveContainer, XAxis } from "recharts";
+import { CartesianGrid, ComposedChart, ResponsiveContainer, XAxis } from "recharts";
 
 import { IFetchData, IItemsData } from "../../../../../types/global";
 import { FetchLevel } from "../../../../../types/main";
@@ -85,7 +85,7 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
     return (
       <>
         <ResponsiveContainer width="100%" height={250}>
-          <LineChart data={data}>
+          <ComposedChart data={data}>
             <CartesianGrid vertical={false} strokeWidth={0.25} strokeOpacity={0.25} />
             <XAxis
               dataKey="name"
@@ -111,7 +111,7 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
               },
               currentTabKind,
             })}
-          </LineChart>
+          </ComposedChart>
         </ResponsiveContainer>
         <Legend
           currentTabKind={currentTabKind}
