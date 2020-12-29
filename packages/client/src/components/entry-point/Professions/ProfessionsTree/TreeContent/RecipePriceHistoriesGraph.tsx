@@ -3,20 +3,20 @@ import React from "react";
 import { Callout, Intent } from "@blueprintjs/core";
 import { IShortRecipe, ItemId } from "@sotah-inc/core";
 
-import { CartesianGrid, Line, LineChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
+import { CartesianGrid, Line, LineChart, ResponsiveContainer, XAxis } from "recharts";
 
 import { IFetchData, IItemsData, ILineItemOpen } from "../../../../../types/global";
 import { FetchLevel } from "../../../../../types/main";
 import { IRecipePriceHistoriesState } from "../../../../../types/professions";
 import {
   convertRecipePriceHistoriesToLineData,
-  currencyToText,
   getColor,
   getXAxisTimeRestrictions,
   unixTimestampToText,
 } from "../../../../../util";
 import { TabKind } from "./RecipePriceHistoriesGraph/common";
 import { Legend } from "./RecipePriceHistoriesGraph/Legend";
+import { RecipeYAxis } from "./RecipePriceHistoriesGraph/RecipeYAxis";
 
 // props
 export interface IStateProps {
@@ -81,7 +81,10 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
               ticks={xAxisTicks}
               tick={{ fill: "#fff" }}
             />
-            {this.renderYAxis()}
+            <RecipeYAxis
+              currentTabKind={currentTabKind}
+              overallPriceLimits={recipePriceHistories.data.overallPriceLimits}
+            />
             {this.renderLines()}
           </LineChart>
         </ResponsiveContainer>
@@ -226,24 +229,5 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
     ];
 
     return dataKeys.map((v, i) => this.renderLine(v, i));
-  }
-
-  private renderYAxis() {
-    const {
-      recipePriceHistories: {
-        data: { overallPriceLimits },
-      },
-    } = this.props;
-
-    return (
-      <YAxis
-        tickFormatter={v => currencyToText(v * 10 * 10)}
-        domain={[overallPriceLimits.lower / 10 / 10, overallPriceLimits.upper / 10 / 10]}
-        tick={{ fill: "#fff" }}
-        scale="log"
-        allowDataOverflow={true}
-        mirror={true}
-      />
-    );
   }
 }
