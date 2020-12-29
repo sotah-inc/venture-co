@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Callout, Intent } from "@blueprintjs/core";
+import { Callout, Intent, Tab, Tabs } from "@blueprintjs/core";
 import { IShortRecipe, ItemId } from "@sotah-inc/core";
 
 import { CartesianGrid, LineChart, ResponsiveContainer, XAxis } from "recharts";
@@ -42,6 +42,26 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
   };
 
   public render() {
+    const { currentTabKind } = this.state;
+
+    return (
+      <>
+        <div style={{ marginBottom: "10px" }}>
+          <Tabs
+            id="recipe-price-histories-tabs"
+            selectedTabId={currentTabKind}
+            onChange={(tabKind: TabKind) => this.setState({ currentTabKind: tabKind })}
+          >
+            <Tab id={TabKind.craftingCost} title="Crafting Cost" />
+            <Tab id={TabKind.reagentPrices} title="Reagent Prices" />
+          </Tabs>
+        </div>
+        <div style={{ marginBottom: "10px" }}>{this.renderContent()}</div>
+      </>
+    );
+  }
+
+  private renderContent() {
     const { recipePriceHistories, selectedRecipe } = this.props;
     const {
       currentTabKind,
@@ -83,7 +103,7 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
               craftingCostOptions: {
                 highlightedDataKey,
                 onDataKeyHighlight: v => {
-                  this.setState({ ...this.state, highlightedDataKey: v });
+                  this.setState({ highlightedDataKey: v });
                 },
                 recipeItemIds: selectedRecipe.items.map(v => v.id),
                 recipeItemsSelected,
@@ -96,22 +116,21 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
         <Legend
           currentTabKind={currentTabKind}
           craftingCostOptions={{
+            craftedRecipeItemIds: recipePriceHistories.data.recipeItemIds[selectedRecipe.data.id],
             highlightedDataKey,
-            onDataKeyHighlight: v => this.setState({ ...this.state, highlightedDataKey: v }),
+            onDataKeyHighlight: v => this.setState({ highlightedDataKey: v }),
             onRecipeItemSelect: v => {
               recipeItemsSelected.add(v);
-              this.setState({ ...this.state, recipeItemsSelected });
+              this.setState({ recipeItemsSelected });
             },
             onReset: () => {
               this.setState({
-                ...this.state,
                 recipeItemsSelected: new Set<ItemId>(),
                 totalReagentCostSelected: false,
               });
             },
             onTotalReagentCostSelect: () => {
               this.setState({
-                ...this.state,
                 totalReagentCostSelected: true,
               });
             },
@@ -120,11 +139,24 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
             totalReagentCostSelected,
           }}
         />
-
-        <Callout intent={Intent.PRIMARY} style={{ marginBottom: "10px" }}>
-          Price graph is of average prices.
-        </Callout>
+        {this.renderGraphFooter()}
       </>
     );
+  }
+
+  private renderGraphFooter() {
+    const { currentTabKind } = this.state;
+
+    switch (currentTabKind) {
+      case TabKind.craftingCost:
+        return (
+          <Callout intent={Intent.PRIMARY} style={{ marginBottom: "10px" }}>
+            Crating cost price graph is of average prices.
+          </Callout>
+        );
+      case TabKind.reagentPrices:
+      default:
+        return null;
+    }
   }
 }

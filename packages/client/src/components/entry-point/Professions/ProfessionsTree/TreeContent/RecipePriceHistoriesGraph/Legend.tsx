@@ -37,12 +37,11 @@ export class Legend extends React.Component<Props> {
 
   private renderCraftingCostLegend() {
     const {
-      craftingCostOptions: { recipeItems },
+      craftingCostOptions: { craftedRecipeItemIds },
     } = this.props;
 
-    const groupedItemIds = recipeItems
-      .map(v => v.id)
-      .reduce<Array<Array<[ItemId, number]>>>((result, v, i) => {
+    const groupedItemIds = craftedRecipeItemIds.reduce<Array<Array<[ItemId, number]>>>(
+      (result, v, i) => {
         const column = i % 3;
         if (Object.keys(result).indexOf(column.toString()) === -1) {
           result[column] = [];
@@ -51,7 +50,9 @@ export class Legend extends React.Component<Props> {
         result[column].push([v, i]);
 
         return result;
-      }, []);
+      },
+      [],
+    );
 
     return (
       <>

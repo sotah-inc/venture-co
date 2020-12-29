@@ -14,7 +14,7 @@ export function resolveItemDataKey(id: ItemId): string {
 export interface ICraftingCostLinesOptions {
   recipeItemIds: ItemId[];
   highlightedDataKey: string | null;
-  recipeItemsSelected: Set<number>;
+  recipeItemsSelected: Set<ItemId>;
   totalReagentCostSelected: boolean;
 
   onDataKeyHighlight: (dataKey: string | null) => void;
@@ -23,8 +23,9 @@ export interface ICraftingCostLinesOptions {
 export interface ICraftingCostLegendOptions {
   recipeItems: IShortItem[];
   highlightedDataKey: string | null;
-  recipeItemsSelected: Set<number>;
+  recipeItemsSelected: Set<ItemId>;
   totalReagentCostSelected: boolean;
+  craftedRecipeItemIds: ItemId[];
 
   onDataKeyHighlight: (dataKey: string | null) => void;
   onTotalReagentCostSelect: () => void;
