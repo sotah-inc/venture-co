@@ -1,10 +1,16 @@
 import {
+  IItemPriceHistories,
+  IItemPriceLimits,
   IPriceHistories,
+  IPriceLimits,
   IPrices,
+  IPricesFlagged,
   IRegionConnectedRealmTuple,
   ItemId,
   UnixTimestamp,
 } from "@sotah-inc/core";
+
+import { IResolveResponse } from "./index";
 
 export interface IGetItemPriceHistoriesRequest {
   tuple: IRegionConnectedRealmTuple;
@@ -20,3 +26,9 @@ export interface IItemPriceHistoriesMap {
 export interface IGetItemPriceHistoriesResponse {
   history: IItemPriceHistoriesMap;
 }
+
+export type ResolveItemPriceHistoriesResponse = IResolveResponse<{
+  history: IItemPriceHistories<IPricesFlagged>;
+  itemPriceLimits: IItemPriceLimits;
+  overallPriceLimits: IPriceLimits;
+}>;

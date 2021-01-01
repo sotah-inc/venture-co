@@ -1,6 +1,13 @@
 import {
+  IBollingerBands,
   IConnectedRealmComposite,
   IConnectedRealmModificationDates,
+  IItemPriceHistories,
+  IItemPriceLimits,
+  IPriceHistories,
+  IPriceLimits,
+  IPrices,
+  IPricesFlagged,
   IQueryItem,
   IRegionComposite,
   IRegionConnectedRealmTuple,
@@ -15,6 +22,8 @@ import {
   RecipeId,
   SkillTierId,
 } from "@sotah-inc/core";
+// @ts-ignore
+import boll from "bollinger-bands";
 import * as nats from "nats";
 
 import {
@@ -42,6 +51,7 @@ import {
   IValidateRegionConnectedRealmResponse,
   QueryPetsRequest,
   ResolveAuctionsResponse,
+  ResolveItemPriceHistoriesResponse,
   ValidateRegionRealmResponse,
 } from "./contracts";
 import {
@@ -427,7 +437,7 @@ export class Messenger {
     });
   }
 
-  // via pricelist-histories
+  // via item-price-histories
   public async getItemPricesHistory(
     req: IGetItemPriceHistoriesRequest,
   ): Promise<Message<IGetItemPriceHistoriesResponse>> {
@@ -437,6 +447,212 @@ export class Messenger {
     });
   }
 
+  public async resolveItemPricesHistory(
+    req: IGetItemPriceHistoriesRequest,
+  ): Promise<ResolveItemPriceHistoriesResponse> {
+    // gathering item-price-histories
+    const itemPriceHistoriesMessage = await this.getItemPricesHistory(req);
+    if (itemPriceHistoriesMessage.code !== code.ok) {
+      return {
+        code: itemPriceHistoriesMessage.code,
+        data: null,
+        error: itemPriceHistoriesMessage.error?.message ?? null,
+      };
+    }
+
+    const itemPriceHistoriesResult = await itemPriceHistoriesMessage.decode();
+    if (itemPriceHistoriesResult === null) {
+      return {
+        code: code.msgJsonParseError,
+        data: null,
+        error: "failed to decode item-price histories",
+      };
+    }
+    const foundHistory = itemPriceHistoriesResult.history;
+
+    // gathering unix timestamps for all items
+    const historyUnixTimestamps: number[] = req.item_ids.reduce(
+      (previousHistoryUnixTimestamps: number[], itemId) => {
+        const itemHistory = foundHistory[itemId];
+        if (typeof itemHistory === "undefined") {
+          return previousHistoryUnixTimestamps;
+        }
+
+        const itemUnixTimestamps = Object.keys(itemHistory).map(Number);
+        for (const itemUnixTimestamp of itemUnixTimestamps) {
+          if (previousHistoryUnixTimestamps.indexOf(itemUnixTimestamp) > -1) {
+            continue;
+          }
+
+          previousHistoryUnixTimestamps.push(itemUnixTimestamp);
+        }
+
+        return previousHistoryUnixTimestamps;
+      },
+      [],
+    );
+
+    // normalizing all histories to have zeroed data where missing
+    const historyResult = req.item_ids.reduce<IItemPriceHistories<IPricesFlagged>>(
+      (previousHistory, itemId) => {
+        // generating a full zeroed pricelist-history for this item
+        const currentItemHistory = foundHistory[itemId];
+        if (typeof currentItemHistory === "undefined") {
+          const blankItemHistory = historyUnixTimestamps.reduce<IPriceHistories<IPricesFlagged>>(
+            (previousBlankItemHistory, unixTimestamp) => {
+              const blankPrices: IPricesFlagged = {
+                average_buyout_per: 0,
+                is_blank: true,
+                max_buyout_per: 0,
+                median_buyout_per: 0,
+                min_buyout_per: 0,
+                volume: 0,
+              };
+
+              return {
+                ...previousBlankItemHistory,
+                [unixTimestamp]: blankPrices,
+              };
+            },
+            {},
+          );
+
+          return {
+            ...previousHistory,
+            [itemId]: blankItemHistory,
+          };
+        }
+
+        // reforming the item-history with zeroed blank prices where none found
+        const newItemHistory = historyUnixTimestamps.reduce<IPriceHistories<IPricesFlagged>>(
+          (previousNewItemHistory, unixTimestamp) => {
+            const itemHistoryAtTime = currentItemHistory[unixTimestamp];
+            if (typeof itemHistoryAtTime === "undefined") {
+              const blankPrices: IPricesFlagged = {
+                average_buyout_per: 0,
+                is_blank: true,
+                max_buyout_per: 0,
+                median_buyout_per: 0,
+                min_buyout_per: 0,
+                volume: 0,
+              };
+
+              return {
+                ...previousNewItemHistory,
+                [unixTimestamp]: blankPrices,
+              };
+            }
+
+            return {
+              ...previousNewItemHistory,
+              [unixTimestamp]: {
+                ...itemHistoryAtTime,
+                is_blank: false,
+              },
+            };
+          },
+          {},
+        );
+
+        return {
+          ...previousHistory,
+          [itemId]: newItemHistory,
+        };
+      },
+      {},
+    );
+
+    const itemPriceLimits = req.item_ids.reduce<IItemPriceLimits>(
+      (previousItemPriceLimits, itemId) => {
+        const out: IPriceLimits = {
+          lower: 0,
+          upper: 0,
+        };
+
+        const itemPriceHistory = historyResult[itemId];
+        if (typeof itemPriceHistory === "undefined") {
+          return {
+            ...previousItemPriceLimits,
+            [itemId]: out,
+          };
+        }
+
+        const itemPrices = Object.keys(itemPriceHistory).reduce<IPrices[]>(
+          (itemPricesResult, itemIdString) => {
+            const foundItemPrices = itemPriceHistory[Number(itemIdString)];
+            if (typeof foundItemPrices === "undefined") {
+              return itemPricesResult;
+            }
+
+            return [...itemPricesResult, foundItemPrices];
+          },
+          [],
+        );
+        if (itemPrices.length > 0) {
+          const bands: IBollingerBands = boll(
+            itemPrices.map(v => v.min_buyout_per),
+            Math.min(itemPrices.length, 4),
+          );
+          const minBandMid = bands.mid.reduce((previousValue, v) => {
+            if (v === 0) {
+              return previousValue;
+            }
+
+            if (previousValue === 0) {
+              return v;
+            }
+
+            return Math.min(v, previousValue);
+          }, 0);
+          const maxBandUpper = bands.upper
+            .filter(v => !!v)
+            .reduce((previousValue, v) => Math.max(previousValue, v), 0);
+          out.lower = minBandMid;
+          out.upper = maxBandUpper;
+        }
+
+        return {
+          ...previousItemPriceLimits,
+          [itemId]: out,
+        };
+      },
+      {},
+    );
+
+    const overallPriceLimits: IPriceLimits = { lower: 0, upper: 0 };
+    overallPriceLimits.lower = req.item_ids.reduce((overallLower, itemId) => {
+      const priceLimits = itemPriceLimits[itemId];
+      if (typeof priceLimits === "undefined" || priceLimits.lower === 0) {
+        return overallLower;
+      }
+
+      if (overallLower === 0) {
+        return priceLimits.lower;
+      }
+
+      return Math.min(overallLower, priceLimits.lower);
+    }, 0);
+    overallPriceLimits.upper = req.item_ids.reduce((overallUpper, itemId) => {
+      const priceLimits = itemPriceLimits[itemId];
+      if (typeof priceLimits === "undefined") {
+        return overallUpper;
+      }
+
+      return Math.max(priceLimits.upper, overallUpper);
+    }, 0);
+
+    return {
+      code: code.ok,
+      data: {
+        history: historyResult,
+        itemPriceLimits,
+        overallPriceLimits,
+      },
+      error: null,
+    };
+  }
+
+  // via recipe-price-histories
   public async getRecipePricesHistory(
     req: IGetRecipePricesHistoryRequest,
   ): Promise<Message<IGetRecipePricesHistoryResponse>> {
