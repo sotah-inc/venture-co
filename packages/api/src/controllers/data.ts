@@ -14,15 +14,9 @@ import {
   GetRecipePriceHistoriesResponse,
   GetTokenHistoryResponse,
   GetUnmetDemandResponse,
-  IBollingerBands,
   IErrorResponse,
   IGetItemResponseData,
-  IItemPriceHistories,
-  IItemPriceLimits,
-  IPriceHistories,
   IPriceLimits,
-  IPrices,
-  IPricesFlagged,
   IQueryGeneralResponseData,
   IQueryResponseData,
   IRecipePriceHistory,
@@ -54,8 +48,6 @@ import {
   ProfessionPricelistRepository,
 } from "@sotah-inc/server";
 import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
-// @ts-ignore
-import boll from "bollinger-bands";
 import HTTPStatus from "http-status";
 import moment from "moment";
 import { ParsedQs } from "qs";
@@ -756,7 +748,7 @@ export class DataController {
 
     const currentUnixTimestamp = Math.floor(Date.now() / 1000);
     const lowerBounds = currentUnixTimestamp - 60 * 60 * 24 * 14;
-    const historyMessage = await this.messenger.getItemPricesHistory({
+    const itemPricesHistoryMessage = await this.messenger.resolveItemPricesHistory({
       item_ids: itemIds,
       lower_bounds: lowerBounds,
       tuple: {
@@ -765,20 +757,13 @@ export class DataController {
       },
       upper_bounds: currentUnixTimestamp,
     });
-    if (historyMessage.code !== code.ok) {
+    if (itemPricesHistoryMessage.code !== code.ok || itemPricesHistoryMessage.data === null) {
       return {
         data: null,
         status: HTTPStatus.INTERNAL_SERVER_ERROR,
       };
     }
-    const historyMessageResult = await historyMessage.decode();
-    if (!historyMessageResult) {
-      return {
-        data: null,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-    const foundHistory = historyMessageResult.history;
+
     const itemsMessage = await this.messenger.getItems({ itemIds, locale: locale as Locale });
     if (itemsMessage.code !== code.ok) {
       return {
@@ -795,200 +780,13 @@ export class DataController {
     }
     const items = itemsResult.items;
 
-    // gathering unix timestamps for all items
-    const historyUnixTimestamps: number[] = itemIds.reduce(
-      (previousHistoryUnixTimestamps: number[], itemId) => {
-        const itemHistory = foundHistory[itemId];
-        if (typeof itemHistory === "undefined") {
-          return previousHistoryUnixTimestamps;
-        }
-
-        const itemUnixTimestamps = Object.keys(itemHistory).map(Number);
-        for (const itemUnixTimestamp of itemUnixTimestamps) {
-          if (previousHistoryUnixTimestamps.indexOf(itemUnixTimestamp) > -1) {
-            continue;
-          }
-
-          previousHistoryUnixTimestamps.push(itemUnixTimestamp);
-        }
-
-        return previousHistoryUnixTimestamps;
-      },
-      [],
-    );
-
-    // normalizing all histories to have zeroed data where missing
-    const historyResult = itemIds.reduce<IItemPriceHistories<IPricesFlagged>>(
-      (previousHistory, itemId) => {
-        // generating a full zeroed pricelist-history for this item
-        const currentItemHistory = foundHistory[itemId];
-        if (typeof currentItemHistory === "undefined") {
-          const blankItemHistory = historyUnixTimestamps.reduce<IPriceHistories<IPricesFlagged>>(
-            (previousBlankItemHistory, unixTimestamp) => {
-              const blankPrices: IPricesFlagged = {
-                average_buyout_per: 0,
-                is_blank: true,
-                max_buyout_per: 0,
-                median_buyout_per: 0,
-                min_buyout_per: 0,
-                volume: 0,
-              };
-
-              return {
-                ...previousBlankItemHistory,
-                [unixTimestamp]: blankPrices,
-              };
-            },
-            {},
-          );
-
-          return {
-            ...previousHistory,
-            [itemId]: blankItemHistory,
-          };
-        }
-
-        // reforming the item-history with zeroed blank prices where none found
-        const newItemHistory = historyUnixTimestamps.reduce<IPriceHistories<IPricesFlagged>>(
-          (previousNewItemHistory, unixTimestamp) => {
-            const itemHistoryAtTime = currentItemHistory[unixTimestamp];
-            if (typeof itemHistoryAtTime === "undefined") {
-              const blankPrices: IPricesFlagged = {
-                average_buyout_per: 0,
-                is_blank: true,
-                max_buyout_per: 0,
-                median_buyout_per: 0,
-                min_buyout_per: 0,
-                volume: 0,
-              };
-
-              return {
-                ...previousNewItemHistory,
-                [unixTimestamp]: blankPrices,
-              };
-            }
-
-            return {
-              ...previousNewItemHistory,
-              [unixTimestamp]: {
-                ...itemHistoryAtTime,
-                is_blank: false,
-              },
-            };
-          },
-          {},
-        );
-
-        return {
-          ...previousHistory,
-          [itemId]: newItemHistory,
-        };
-      },
-      {},
-    );
-
-    const itemPriceLimits = itemIds.reduce<IItemPriceLimits>((previousItemPriceLimits, itemId) => {
-      const out: IPriceLimits = {
-        lower: 0,
-        upper: 0,
-      };
-
-      const itemPriceHistory = historyResult[itemId];
-      if (typeof itemPriceHistory === "undefined") {
-        return {
-          ...previousItemPriceLimits,
-          [itemId]: out,
-        };
-      }
-
-      const itemPrices = Object.keys(itemPriceHistory).reduce<IPrices[]>(
-        (itemPricesResult, itemIdString) => {
-          const foundItemPrices = itemPriceHistory[Number(itemIdString)];
-          if (typeof foundItemPrices === "undefined") {
-            return itemPricesResult;
-          }
-
-          return [...itemPricesResult, foundItemPrices];
-        },
-        [],
-      );
-      if (itemPrices.length > 0) {
-        const bands: IBollingerBands = boll(
-          itemPrices.map(v => v.min_buyout_per),
-          itemPrices.length > 4 ? 4 : itemPrices.length,
-        );
-        const minBandMid = bands.mid
-          .filter(v => !!v)
-          .reduce((previousValue, v) => {
-            if (v === 0) {
-              return previousValue;
-            }
-
-            if (previousValue === 0) {
-              return v;
-            }
-
-            if (v < previousValue) {
-              return v;
-            }
-
-            return previousValue;
-          }, 0);
-        const maxBandUpper = bands.upper
-          .filter(v => !!v)
-          .reduce((previousValue, v) => {
-            if (v === 0) {
-              return previousValue;
-            }
-
-            if (previousValue === 0) {
-              return v;
-            }
-
-            if (v > previousValue) {
-              return v;
-            }
-
-            return previousValue;
-          }, 0);
-        out.lower = minBandMid;
-        out.upper = maxBandUpper;
-      }
-
-      return {
-        ...previousItemPriceLimits,
-        [itemId]: out,
-      };
-    }, {});
-
-    const overallPriceLimits: IPriceLimits = { lower: 0, upper: 0 };
-    overallPriceLimits.lower = itemIds.reduce((overallLower, itemId) => {
-      const priceLimits = itemPriceLimits[itemId];
-      if (typeof priceLimits === "undefined") {
-        return overallLower;
-      }
-
-      if (overallLower === 0 || (priceLimits.lower > 0 && priceLimits.lower < overallLower)) {
-        return priceLimits.lower;
-      }
-
-      return overallLower;
-    }, 0);
-    overallPriceLimits.upper = itemIds.reduce((overallUpper, itemId) => {
-      const priceLimits = itemPriceLimits[itemId];
-      if (typeof priceLimits === "undefined") {
-        return overallUpper;
-      }
-
-      if (priceLimits.upper > overallUpper) {
-        return priceLimits.upper;
-      }
-
-      return overallUpper;
-    }, 0);
-
     return {
-      data: { history: historyResult, items, itemPriceLimits, overallPriceLimits },
+      data: {
+        history: itemPricesHistoryMessage.data.history,
+        itemPriceLimits: itemPricesHistoryMessage.data.itemPriceLimits,
+        items,
+        overallPriceLimits: itemPricesHistoryMessage.data.overallPriceLimits,
+      },
       status: HTTPStatus.OK,
     };
   }
