@@ -106,6 +106,9 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
                 overallPriceLimits: recipePriceHistories.data.recipeData.overallPriceLimits,
               },
               currentTabKind,
+              reagentPricesOptions: {
+                aggregatePriceLimits: recipePriceHistories.data.itemData.aggregatePriceLimits,
+              },
             })}
             {Lines({
               craftingCostOptions: {

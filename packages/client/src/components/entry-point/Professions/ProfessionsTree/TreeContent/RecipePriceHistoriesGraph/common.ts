@@ -36,3 +36,7 @@ export interface ICraftingCostLegendOptions {
 export interface ICraftingCostYAxisOptions {
   overallPriceLimits: IPriceLimits;
 }
+
+export interface IReagentPricesYAxisOptions {
+  aggregatePriceLimits: IPriceLimits;
+}
