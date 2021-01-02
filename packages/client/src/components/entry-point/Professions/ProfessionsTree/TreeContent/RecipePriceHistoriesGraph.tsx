@@ -27,18 +27,24 @@ export interface IStateProps {
 export type Props = Readonly<IStateProps>;
 
 type State = Readonly<{
-  highlightedDataKey: string | null;
-  recipeItemsSelected: Set<number>;
-  totalReagentCostSelected: boolean;
   currentTabKind: TabKind;
+
+  craftingCostState: {
+    highlightedDataKey: string | null;
+    recipeItemsSelected: Set<number>;
+    totalReagentCostSelected: boolean;
+  };
 }>;
 
 export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
   public state: State = {
     currentTabKind: TabKind.craftingCost,
-    highlightedDataKey: null,
-    recipeItemsSelected: new Set<ItemId>(),
-    totalReagentCostSelected: false,
+
+    craftingCostState: {
+      highlightedDataKey: null,
+      recipeItemsSelected: new Set<ItemId>(),
+      totalReagentCostSelected: false,
+    },
   };
 
   public render() {
@@ -65,9 +71,7 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
     const { recipePriceHistories, selectedRecipe } = this.props;
     const {
       currentTabKind,
-      highlightedDataKey,
-      recipeItemsSelected,
-      totalReagentCostSelected,
+      craftingCostState: { highlightedDataKey, recipeItemsSelected, totalReagentCostSelected },
     } = this.state;
 
     if (selectedRecipe === null || typeof selectedRecipe === "undefined") {
@@ -105,7 +109,10 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
               craftingCostOptions: {
                 highlightedDataKey,
                 onDataKeyHighlight: v => {
-                  this.setState({ highlightedDataKey: v });
+                  this.setState({
+                    ...this.state,
+                    craftingCostState: { ...this.state.craftingCostState, highlightedDataKey: v },
+                  });
                 },
                 recipeItemIds: selectedRecipe.items.map(v => v.id),
                 recipeItemsSelected,
@@ -121,20 +128,35 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
             craftedRecipeItemIds:
               recipePriceHistories.data.recipeData.recipeItemIds[selectedRecipe.data.id],
             highlightedDataKey,
-            onDataKeyHighlight: v => this.setState({ highlightedDataKey: v }),
+            onDataKeyHighlight: v =>
+              this.setState({
+                ...this.state,
+                craftingCostState: { ...this.state.craftingCostState, highlightedDataKey: v },
+              }),
             onRecipeItemSelect: v => {
               recipeItemsSelected.add(v);
-              this.setState({ recipeItemsSelected });
+              this.setState({
+                ...this.state,
+                craftingCostState: { ...this.state.craftingCostState, recipeItemsSelected },
+              });
             },
             onReset: () => {
               this.setState({
-                recipeItemsSelected: new Set<ItemId>(),
-                totalReagentCostSelected: false,
+                ...this.state,
+                craftingCostState: {
+                  ...this.state.craftingCostState,
+                  recipeItemsSelected: new Set<ItemId>(),
+                  totalReagentCostSelected: false,
+                },
               });
             },
             onTotalReagentCostSelect: () => {
               this.setState({
-                totalReagentCostSelected: true,
+                ...this.state,
+                craftingCostState: {
+                  ...this.state.craftingCostState,
+                  totalReagentCostSelected: true,
+                },
               });
             },
             recipeItems: selectedRecipe.items,
