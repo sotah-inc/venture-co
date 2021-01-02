@@ -1,4 +1,4 @@
-import { IShortItem, ItemId } from "@sotah-inc/core";
+import { IPriceLimits, IShortItem, ItemId } from "@sotah-inc/core";
 
 export enum TabKind {
   craftingCost = "craftingCost",
@@ -31,4 +31,8 @@ export interface ICraftingCostLegendOptions {
   onTotalReagentCostSelect: () => void;
   onRecipeItemSelect: (id: ItemId) => void;
   onReset: () => void;
+}
+
+export interface ICraftingCostYAxisOptions {
+  overallPriceLimits: IPriceLimits;
 }

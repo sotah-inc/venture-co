@@ -102,8 +102,10 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
               tick={{ fill: "#fff" }}
             />
             {YAxis({
+              craftingCostOptions: {
+                overallPriceLimits: recipePriceHistories.data.recipeData.overallPriceLimits,
+              },
               currentTabKind,
-              overallPriceLimits: recipePriceHistories.data.recipeData.overallPriceLimits,
             })}
             {Lines({
               craftingCostOptions: {

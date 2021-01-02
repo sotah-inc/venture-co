@@ -1,26 +1,29 @@
 import React from "react";
 
-import { IPriceLimits } from "@sotah-inc/core";
 import { YAxis as RechartsYAxis } from "recharts";
 
 import { currencyToText } from "../../../../../../util";
-import { TabKind } from "./common";
+import { ICraftingCostYAxisOptions, TabKind } from "./common";
 
 // props
 export interface IOwnProps {
   currentTabKind: TabKind;
-  overallPriceLimits: IPriceLimits;
+
+  craftingCostOptions: ICraftingCostYAxisOptions;
 }
 
 export type Props = Readonly<IOwnProps>;
 
-export function YAxis({ currentTabKind, overallPriceLimits }: Props) {
+export function YAxis({ currentTabKind, craftingCostOptions }: Props) {
   switch (currentTabKind) {
     case TabKind.craftingCost:
       return (
         <RechartsYAxis
           tickFormatter={v => currencyToText(v * 10 * 10)}
-          domain={[overallPriceLimits.lower / 10 / 10, overallPriceLimits.upper / 10 / 10]}
+          domain={[
+            craftingCostOptions.overallPriceLimits.lower / 10 / 10,
+            craftingCostOptions.overallPriceLimits.upper / 10 / 10,
+          ]}
           tick={{ fill: "#fff" }}
           scale="log"
           allowDataOverflow={true}
