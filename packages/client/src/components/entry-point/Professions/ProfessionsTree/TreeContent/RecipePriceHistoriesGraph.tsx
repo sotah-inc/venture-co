@@ -78,7 +78,9 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
       return <p>fail!</p>;
     }
 
-    const data = convertRecipePriceHistoriesToLineData(recipePriceHistories.data.histories);
+    const data = convertRecipePriceHistoriesToLineData(
+      recipePriceHistories.data.recipeData.histories,
+    );
 
     const { xAxisTicks, roundedNowDate, roundedTwoWeeksAgoDate } = getXAxisTimeRestrictions();
 
@@ -97,7 +99,7 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
             />
             {YAxis({
               currentTabKind,
-              overallPriceLimits: recipePriceHistories.data.overallPriceLimits,
+              overallPriceLimits: recipePriceHistories.data.recipeData.overallPriceLimits,
             })}
             {Lines({
               craftingCostOptions: {
@@ -116,7 +118,8 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
         <Legend
           currentTabKind={currentTabKind}
           craftingCostOptions={{
-            craftedRecipeItemIds: recipePriceHistories.data.recipeItemIds[selectedRecipe.data.id],
+            craftedRecipeItemIds:
+              recipePriceHistories.data.recipeData.recipeItemIds[selectedRecipe.data.id],
             highlightedDataKey,
             onDataKeyHighlight: v => this.setState({ highlightedDataKey: v }),
             onRecipeItemSelect: v => {
