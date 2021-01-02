@@ -915,16 +915,61 @@ export class DataController {
       { lower: 0, upper: 0 },
     );
 
+    const itemPricesHistoryMessage = await this.messenger.resolveItemPricesHistory({
+      item_ids: recipeResult.recipe.reagents.map(v => v.reagent.id),
+      lower_bounds: lowerBounds,
+      tuple: {
+        connected_realm_id: resolveResult.connected_realm.connected_realm.id,
+        region_name: regionName,
+      },
+      upper_bounds: currentUnixTimestamp,
+    });
+    if (itemPricesHistoryMessage.code !== code.ok) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+    if (itemPricesHistoryMessage.data === null) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    const aggregatePriceLimits = recipeResult.recipe.reagents
+      .map(v => v.reagent.id)
+      .reduce<IPriceLimits>(
+        (result, itemId) => {
+          const foundItemPriceLimits = itemPricesHistoryMessage.data!.itemPriceLimits[itemId];
+          if (typeof foundItemPriceLimits === "undefined") {
+            return result;
+          }
+
+          return {
+            lower: Math.min(foundItemPriceLimits.lower, result.lower),
+            upper: result.upper + foundItemPriceLimits.upper,
+          };
+        },
+        { lower: 0, upper: 0 },
+      );
+
     return {
       data: {
-        history: foundHistory,
-        overallPriceLimits,
-        recipeItemIds: {
-          [recipeId]: [
-            recipeResult.recipe.alliance_crafted_item.id,
-            recipeResult.recipe.horde_crafted_item.id,
-            recipeResult.recipe.crafted_item.id,
-          ].filter(v => v !== 0),
+        itemData: {
+          aggregatePriceLimits,
+          history: itemPricesHistoryMessage.data.history,
+        },
+        recipeData: {
+          history: foundHistory,
+          overallPriceLimits,
+          recipeItemIds: {
+            [recipeId]: [
+              recipeResult.recipe.alliance_crafted_item.id,
+              recipeResult.recipe.horde_crafted_item.id,
+              recipeResult.recipe.crafted_item.id,
+            ].filter(v => v !== 0),
+          },
         },
       },
       status: HTTPStatus.OK,
