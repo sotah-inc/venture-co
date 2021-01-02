@@ -946,8 +946,20 @@ export class DataController {
             return result;
           }
 
+          const lower = ((): number => {
+            if (result.lower === 0) {
+              return foundItemPriceLimits.lower;
+            }
+
+            if (foundItemPriceLimits.lower === 0) {
+              return result.lower;
+            }
+
+            return Math.min(result.lower, foundItemPriceLimits.lower);
+          })();
+
           return {
-            lower: Math.min(foundItemPriceLimits.lower, result.lower),
+            lower,
             upper: result.upper + foundItemPriceLimits.upper,
           };
         },
