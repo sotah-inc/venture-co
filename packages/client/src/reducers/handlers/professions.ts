@@ -189,9 +189,17 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
 
           return {
             data: {
-              histories: action.payload.recipePriceHistories.history,
-              overallPriceLimits: action.payload.recipePriceHistories.overallPriceLimits,
-              recipeItemIds: action.payload.recipePriceHistories.recipeItemIds,
+              itemData: {
+                aggregatePriceLimits:
+                  action.payload.recipePriceHistories.itemData.aggregatePriceLimits,
+                history: action.payload.recipePriceHistories.itemData.history,
+              },
+              recipeData: {
+                histories: action.payload.recipePriceHistories.recipeData.history,
+                overallPriceLimits:
+                  action.payload.recipePriceHistories.recipeData.overallPriceLimits,
+                recipeItemIds: action.payload.recipePriceHistories.recipeData.recipeItemIds,
+              },
             },
             errors: {},
             level: FetchLevel.success,

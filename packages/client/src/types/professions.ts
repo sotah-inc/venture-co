@@ -1,6 +1,8 @@
 import {
+  IItemPriceHistories,
   IItemPrices,
   IPriceLimits,
+  IPricesFlagged,
   IRecipePriceHistories,
   IShortProfession,
   IShortRecipe,
@@ -24,9 +26,15 @@ export interface ISelectedSkillTier {
 }
 
 export interface IRecipePriceHistoriesState {
-  histories: IRecipePriceHistories;
-  overallPriceLimits: IPriceLimits;
-  recipeItemIds: { [key: number]: ItemId[] };
+  recipeData: {
+    histories: IRecipePriceHistories;
+    overallPriceLimits: IPriceLimits;
+    recipeItemIds: { [key: string]: ItemId[] };
+  };
+  itemData: {
+    history: IItemPriceHistories<IPricesFlagged>;
+    aggregatePriceLimits: IPriceLimits;
+  };
 }
 
 export interface IProfessionsState {
@@ -59,12 +67,21 @@ export const defaultProfessionsState: IProfessionsState = {
   },
   recipePriceHistories: {
     data: {
-      histories: {},
-      overallPriceLimits: {
-        lower: 0,
-        upper: 0,
+      itemData: {
+        aggregatePriceLimits: {
+          lower: 0,
+          upper: 0,
+        },
+        history: {},
       },
-      recipeItemIds: [],
+      recipeData: {
+        histories: {},
+        overallPriceLimits: {
+          lower: 0,
+          upper: 0,
+        },
+        recipeItemIds: {},
+      },
     },
     errors: {},
     level: FetchLevel.initial,
