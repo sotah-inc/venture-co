@@ -937,34 +937,39 @@ export class DataController {
       };
     }
 
-    const aggregatePriceLimits = recipeResult.recipe.reagents
-      .map(v => v.reagent.id)
-      .reduce<IPriceLimits>(
-        (result, itemId) => {
-          const foundItemPriceLimits = itemPricesHistoryMessage.data!.itemPriceLimits[itemId];
-          if (typeof foundItemPriceLimits === "undefined") {
-            return result;
+    const aggregatePriceLimits = recipeResult.recipe.reagents.reduce<IPriceLimits>(
+      (result, reagent) => {
+        const foundItemPriceLimits = itemPricesHistoryMessage.data!.itemPriceLimits[
+          reagent.reagent.id
+        ];
+        if (typeof foundItemPriceLimits === "undefined") {
+          return result;
+        }
+
+        const translatedPriceLimits: IPriceLimits = {
+          lower: foundItemPriceLimits.lower * reagent.quantity,
+          upper: foundItemPriceLimits.upper * reagent.quantity,
+        };
+
+        const lower = ((): number => {
+          if (result.lower === 0) {
+            return translatedPriceLimits.lower;
           }
 
-          const lower = ((): number => {
-            if (result.lower === 0) {
-              return foundItemPriceLimits.lower;
-            }
+          if (translatedPriceLimits.lower === 0) {
+            return result.lower;
+          }
 
-            if (foundItemPriceLimits.lower === 0) {
-              return result.lower;
-            }
+          return Math.min(result.lower, translatedPriceLimits.lower);
+        })();
 
-            return Math.min(result.lower, foundItemPriceLimits.lower);
-          })();
-
-          return {
-            lower,
-            upper: result.upper + foundItemPriceLimits.upper,
-          };
-        },
-        { lower: 0, upper: 0 },
-      );
+        return {
+          lower,
+          upper: result.upper + translatedPriceLimits.upper,
+        };
+      },
+      { lower: 0, upper: 0 },
+    );
 
     return {
       data: {
