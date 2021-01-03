@@ -16,6 +16,7 @@ import {
   GetUnmetDemandResponse,
   IErrorResponse,
   IGetItemResponseData,
+  IItemPriceLimits,
   IPriceLimits,
   IQueryGeneralResponseData,
   IQueryResponseData,
@@ -937,7 +938,7 @@ export class DataController {
       };
     }
 
-    const aggregatePriceLimits = recipeResult.recipe.reagents.reduce<IPriceLimits>(
+    const transformedItemPriceLimits = recipeResult.recipe.reagents.reduce<IItemPriceLimits>(
       (result, reagent) => {
         const foundItemPriceLimits = itemPricesHistoryMessage.data!.itemPriceLimits[
           reagent.reagent.id
@@ -946,26 +947,27 @@ export class DataController {
           return result;
         }
 
-        const translatedPriceLimits: IPriceLimits = {
-          lower: foundItemPriceLimits.lower * reagent.quantity,
-          upper: foundItemPriceLimits.upper * reagent.quantity,
+        return {
+          ...result,
+          [reagent.reagent.id]: {
+            lower: foundItemPriceLimits.lower * reagent.quantity,
+            upper: foundItemPriceLimits.upper * reagent.quantity,
+          },
         };
+      },
+      {},
+    );
 
-        const lower = ((): number => {
-          if (result.lower === 0) {
-            return translatedPriceLimits.lower;
-          }
-
-          if (translatedPriceLimits.lower === 0) {
-            return result.lower;
-          }
-
-          return Math.min(result.lower, translatedPriceLimits.lower);
-        })();
+    const aggregatePriceLimits = recipeResult.recipe.reagents.reduce<IPriceLimits>(
+      (result, reagent) => {
+        const foundItemPriceLimits = transformedItemPriceLimits[reagent.reagent.id];
+        if (typeof foundItemPriceLimits === "undefined") {
+          return result;
+        }
 
         return {
-          lower,
-          upper: result.upper + translatedPriceLimits.upper,
+          lower: Math.min(result.lower, foundItemPriceLimits.lower) || foundItemPriceLimits.lower,
+          upper: result.upper + foundItemPriceLimits.upper,
         };
       },
       { lower: 0, upper: 0 },
