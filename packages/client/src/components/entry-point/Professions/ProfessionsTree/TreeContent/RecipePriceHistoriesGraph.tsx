@@ -1,14 +1,14 @@
-import React from "react";
-
 import { Callout, Intent, Tab, Tabs } from "@blueprintjs/core";
 import { IShortRecipe, ItemId } from "@sotah-inc/core";
+import React from "react";
 
 import { CartesianGrid, ComposedChart, ResponsiveContainer, XAxis } from "recharts";
 
-import { IFetchData, IItemsData } from "../../../../../types/global";
+import { IFetchData, IItemsData, ILineItemOpen } from "../../../../../types/global";
 import { FetchLevel } from "../../../../../types/main";
 import { IRecipePriceHistoriesState } from "../../../../../types/professions";
 import {
+  convertItemPriceHistoriesToLineData,
   convertRecipePriceHistoriesToLineData,
   getXAxisTimeRestrictions,
   unixTimestampToText,
@@ -82,9 +82,18 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
       return <p>fail!</p>;
     }
 
-    const data = convertRecipePriceHistoriesToLineData(
-      recipePriceHistories.data.recipeData.histories,
-    );
+    const data = ((): ILineItemOpen[] => {
+      switch (currentTabKind) {
+        case TabKind.craftingCost:
+          return convertRecipePriceHistoriesToLineData(
+            recipePriceHistories.data.recipeData.histories,
+          );
+        case TabKind.reagentPrices:
+          return convertItemPriceHistoriesToLineData(recipePriceHistories.data.itemData.history);
+        default:
+          return [];
+      }
+    })();
 
     const { xAxisTicks, roundedNowDate, roundedTwoWeeksAgoDate } = getXAxisTimeRestrictions();
 
@@ -124,6 +133,9 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
                 totalReagentCostSelected,
               },
               currentTabKind,
+              reagentPricesOptions: {
+                reagentItemIds: Object.keys(recipePriceHistories.data.itemData.history).map(Number),
+              },
             })}
           </ComposedChart>
         </ResponsiveContainer>

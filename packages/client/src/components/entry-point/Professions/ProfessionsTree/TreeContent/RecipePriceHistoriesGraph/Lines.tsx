@@ -1,11 +1,12 @@
 import React from "react";
 
-import { Line } from "recharts";
+import { Area, Line } from "recharts";
 
 import { ILineItemOpen } from "../../../../../../types/global";
 import { getColor } from "../../../../../../util";
 import {
   ICraftingCostLinesOptions,
+  IReagentPricesLinesOptions,
   resolveItemDataKey,
   TabKind,
   TotalReagentCostDataKey,
@@ -16,9 +17,36 @@ export interface IOwnProps {
   currentTabKind: TabKind;
 
   craftingCostOptions: ICraftingCostLinesOptions;
+  reagentPricesOptions: IReagentPricesLinesOptions;
 }
 
 export type Props = Readonly<IOwnProps>;
+
+function ReagentPricesLines(props: Props) {
+  const dataKeys = props.reagentPricesOptions.reagentItemIds.map(v => `${v}_buyout`);
+
+  return dataKeys.map((v, i) => ReagentPricesLine({ ...props, dataKey: v, index: i }));
+}
+
+function ReagentPricesLine({ dataKey, index }: Props & { dataKey: string; index: number }) {
+  const { stroke, strokeWidth } = (() => {
+    return {
+      stroke: getColor(index),
+      strokeWidth: 2,
+    };
+  })();
+
+  return (
+    <Area
+      dataKey={dataKey}
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      fill={stroke}
+      type={"monotone"}
+      stackId={1}
+    />
+  );
+}
 
 function CraftingCostLines(props: Props) {
   const {
@@ -120,6 +148,7 @@ export function Lines(props: Props) {
     case TabKind.craftingCost:
       return CraftingCostLines(props);
     case TabKind.reagentPrices:
+      return ReagentPricesLines(props);
     default:
       return null;
   }

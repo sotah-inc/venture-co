@@ -20,6 +20,10 @@ export interface ICraftingCostLinesOptions {
   onDataKeyHighlight: (dataKey: string | null) => void;
 }
 
+export interface IReagentPricesLinesOptions {
+  reagentItemIds: ItemId[];
+}
+
 export interface ICraftingCostLegendOptions {
   recipeItems: IShortItem[];
   highlightedDataKey: string | null;
