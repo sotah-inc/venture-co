@@ -1,72 +1,32 @@
 import React from "react";
 
-import { Area, Line } from "recharts";
+import { IPriceLimits, ItemId } from "@sotah-inc/core";
+import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
 import { ILineItemOpen } from "../../../../../../types/global";
-import { getColor } from "../../../../../../util";
 import {
-  ICraftingCostLinesOptions,
-  IReagentPricesLinesOptions,
-  resolveItemDataKey,
-  TabKind,
-  TotalReagentCostDataKey,
-} from "./common";
+  currencyToText,
+  getColor,
+  getXAxisTimeRestrictions,
+  unixTimestampToText,
+} from "../../../../../../util";
+import { resolveItemDataKey, TotalReagentCostDataKey } from "./common";
 
-// props
 export interface IOwnProps {
-  currentTabKind: TabKind;
+  data: ILineItemOpen[];
+  overallPriceLimits: IPriceLimits;
+  recipeItemIds: ItemId[];
+  totalReagentCostSelected: boolean;
+  highlightedDataKey: string | null;
+  recipeItemsSelected: Set<ItemId>;
 
-  craftingCostOptions: ICraftingCostLinesOptions;
-  reagentPricesOptions: IReagentPricesLinesOptions;
+  onDataKeyHighlight: (dataKey: string | null) => void;
 }
 
 export type Props = Readonly<IOwnProps>;
 
-function ReagentPricesLines(props: Props) {
-  const dataKeys = props.reagentPricesOptions.reagentItemIds.map(v => `${v}_buyout`);
-
-  return dataKeys.map((v, i) => ReagentPricesLine({ ...props, dataKey: v, index: i }));
-}
-
-function ReagentPricesLine({ dataKey, index }: Props & { dataKey: string; index: number }) {
-  const { stroke, strokeWidth } = (() => {
-    return {
-      stroke: getColor(index),
-      strokeWidth: 2,
-    };
-  })();
-
-  const dot = true;
-
-  const opacity = 1;
-
-  return (
-    <Area
-      stackId={1}
-      key={index}
-      dataKey={(item: ILineItemOpen) => {
-        // tslint:disable-next-line:no-console
-        console.log("Area.dataKey()", dataKey, item, item.data[dataKey] ?? null);
-
-        return item.data[dataKey] ?? null;
-      }}
-      animationDuration={500}
-      animationEasing={"ease-in-out"}
-      type={"monotone"}
-      stroke={stroke}
-      strokeWidth={strokeWidth}
-      fill={stroke}
-      dot={dot}
-      opacity={opacity}
-      connectNulls={true}
-    />
-  );
-}
-
 function CraftingCostLines(props: Props) {
-  const {
-    craftingCostOptions: { recipeItemIds },
-  } = props;
+  const { recipeItemIds } = props;
 
   const dataKeys = [TotalReagentCostDataKey, ...recipeItemIds.map(resolveItemDataKey)];
 
@@ -74,13 +34,11 @@ function CraftingCostLines(props: Props) {
 }
 
 function CraftingCostLine({
-  craftingCostOptions: {
-    recipeItemsSelected,
-    totalReagentCostSelected,
-    recipeItemIds,
-    highlightedDataKey,
-    onDataKeyHighlight,
-  },
+  recipeItemIds,
+  highlightedDataKey,
+  totalReagentCostSelected,
+  recipeItemsSelected,
+  onDataKeyHighlight,
   dataKey,
   index,
 }: Props & {
@@ -158,13 +116,32 @@ function CraftingCostLine({
   );
 }
 
-export function Lines(props: Props) {
-  switch (props.currentTabKind) {
-    case TabKind.craftingCost:
-      return CraftingCostLines(props);
-    case TabKind.reagentPrices:
-      return ReagentPricesLines(props);
-    default:
-      return null;
-  }
+export function CraftingCostChart(props: Props) {
+  const { xAxisTicks, roundedNowDate, roundedTwoWeeksAgoDate } = getXAxisTimeRestrictions();
+
+  return (
+    <LineChart data={props.data}>
+      <CartesianGrid vertical={false} strokeWidth={0.25} strokeOpacity={0.25} />
+      <XAxis
+        dataKey="name"
+        tickFormatter={unixTimestampToText}
+        domain={[roundedTwoWeeksAgoDate.unix(), roundedNowDate.unix()]}
+        type="number"
+        ticks={xAxisTicks}
+        tick={{ fill: "#fff" }}
+      />
+      <YAxis
+        tickFormatter={v => currencyToText(v * 10 * 10)}
+        domain={[
+          props.overallPriceLimits.lower / 10 / 10,
+          props.overallPriceLimits.upper / 10 / 10,
+        ]}
+        tick={{ fill: "#fff" }}
+        scale="log"
+        allowDataOverflow={true}
+        mirror={true}
+      />
+      {CraftingCostLines(props)}
+    </LineChart>
+  );
 }

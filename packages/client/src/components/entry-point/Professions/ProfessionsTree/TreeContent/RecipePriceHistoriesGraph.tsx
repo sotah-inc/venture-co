@@ -2,8 +2,7 @@ import React from "react";
 
 import { Callout, Intent, Tab, Tabs } from "@blueprintjs/core";
 import { IShortRecipe, ItemId } from "@sotah-inc/core";
-
-import { CartesianGrid, ResponsiveContainer, XAxis } from "recharts";
+import { ResponsiveContainer } from "recharts";
 
 import { IFetchData, IItemsData } from "../../../../../types/global";
 import { FetchLevel } from "../../../../../types/main";
@@ -11,14 +10,11 @@ import { IRecipePriceHistoriesState } from "../../../../../types/professions";
 import {
   convertItemPriceHistoriesToLineData,
   convertRecipePriceHistoriesToLineData,
-  getXAxisTimeRestrictions,
-  unixTimestampToText,
 } from "../../../../../util";
 import { TabKind } from "./RecipePriceHistoriesGraph/common";
-import { ComposedChart } from "./RecipePriceHistoriesGraph/ComposedChart";
+import { CraftingCostChart } from "./RecipePriceHistoriesGraph/CraftingCostChart";
 import { Legend } from "./RecipePriceHistoriesGraph/Legend";
-import { Lines } from "./RecipePriceHistoriesGraph/Lines";
-import { YAxis } from "./RecipePriceHistoriesGraph/YAxis";
+import { ReagentPricesChart } from "./RecipePriceHistoriesGraph/ReagentPricesChart";
 
 // props
 export interface IStateProps {
@@ -84,65 +80,10 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
       return <p>fail!</p>;
     }
 
-    const { xAxisTicks, roundedNowDate, roundedTwoWeeksAgoDate } = getXAxisTimeRestrictions();
-
     return (
       <>
         <ResponsiveContainer width="100%" height={250}>
-          {ComposedChart({
-            children: (
-              <>
-                <CartesianGrid vertical={false} strokeWidth={0.25} strokeOpacity={0.25} />
-                <XAxis
-                  dataKey="name"
-                  tickFormatter={unixTimestampToText}
-                  domain={[roundedTwoWeeksAgoDate.unix(), roundedNowDate.unix()]}
-                  type="number"
-                  ticks={xAxisTicks}
-                  tick={{ fill: "#fff" }}
-                />
-                {YAxis({
-                  craftingCostOptions: {
-                    overallPriceLimits: recipePriceHistories.data.recipeData.overallPriceLimits,
-                  },
-                  currentTabKind,
-                  reagentPricesOptions: {
-                    aggregatePriceLimits: recipePriceHistories.data.itemData.aggregatePriceLimits,
-                  },
-                })}
-                {Lines({
-                  craftingCostOptions: {
-                    highlightedDataKey,
-                    onDataKeyHighlight: v => {
-                      this.setState({
-                        ...this.state,
-                        craftingCostState: {
-                          ...this.state.craftingCostState,
-                          highlightedDataKey: v,
-                        },
-                      });
-                    },
-                    recipeItemIds: selectedRecipe.items.map(v => v.id),
-                    recipeItemsSelected,
-                    totalReagentCostSelected,
-                  },
-                  currentTabKind,
-                  reagentPricesOptions: {
-                    reagentItemIds: Object.keys(recipePriceHistories.data.itemData.history).map(
-                      Number,
-                    ),
-                  },
-                })}
-              </>
-            ),
-            craftingCostData: convertRecipePriceHistoriesToLineData(
-              recipePriceHistories.data.recipeData.histories,
-            ),
-            currentTabKind,
-            reagentPricesData: convertItemPriceHistoriesToLineData(
-              recipePriceHistories.data.itemData.history,
-            ),
-          })}
+          {this.renderChart()}
         </ResponsiveContainer>
         <Legend
           currentTabKind={currentTabKind}
@@ -189,6 +130,55 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
         {this.renderGraphFooter()}
       </>
     );
+  }
+
+  private renderChart() {
+    const {
+      recipePriceHistories: {
+        data: {
+          recipeData: { overallPriceLimits, histories: recipePriceHistories },
+          itemData: { aggregatePriceLimits, history: recipeItemPriceHistories },
+        },
+      },
+      selectedRecipe,
+    } = this.props;
+    const {
+      currentTabKind,
+      craftingCostState: { highlightedDataKey, recipeItemsSelected, totalReagentCostSelected },
+    } = this.state;
+
+    if (selectedRecipe === null || typeof selectedRecipe === "undefined") {
+      return null;
+    }
+
+    switch (currentTabKind) {
+      case TabKind.craftingCost:
+        return CraftingCostChart({
+          data: convertRecipePriceHistoriesToLineData(recipePriceHistories),
+          highlightedDataKey,
+          onDataKeyHighlight: v => {
+            this.setState({
+              ...this.state,
+              craftingCostState: {
+                ...this.state.craftingCostState,
+                highlightedDataKey: v,
+              },
+            });
+          },
+          overallPriceLimits,
+          recipeItemIds: selectedRecipe.items.map(v => v.id),
+          recipeItemsSelected,
+          totalReagentCostSelected,
+        });
+      case TabKind.reagentPrices:
+        return ReagentPricesChart({
+          aggregatePriceLimits,
+          data: convertItemPriceHistoriesToLineData(recipeItemPriceHistories),
+          reagentItemIds: Object.keys(recipeItemPriceHistories).map(Number),
+        });
+      default:
+        return null;
+    }
   }
 
   private renderGraphFooter() {
