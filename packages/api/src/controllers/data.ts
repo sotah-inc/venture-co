@@ -894,18 +894,18 @@ export class DataController {
             return {
               lower: Math.min(
                 ...[
-                  recipePrices.alliance_crafted_item_prices.prices.average_buyout_per,
-                  recipePrices.horde_crafted_item_prices.prices.average_buyout_per,
-                  recipePrices.crafted_item_prices.prices.average_buyout_per,
-                  recipePrices.total_reagent_prices.average_buyout_per,
+                  recipePrices.alliance_crafted_item_prices.prices.min_buyout_per,
+                  recipePrices.horde_crafted_item_prices.prices.min_buyout_per,
+                  recipePrices.crafted_item_prices.prices.min_buyout_per,
+                  recipePrices.total_reagent_prices.min_buyout_per,
                   recipeHistoriesPriceLimits.lower,
                 ].filter(v => v !== 0),
               ),
               upper: Math.max(
-                recipePrices.alliance_crafted_item_prices.prices.average_buyout_per,
-                recipePrices.horde_crafted_item_prices.prices.average_buyout_per,
-                recipePrices.crafted_item_prices.prices.average_buyout_per,
-                recipePrices.total_reagent_prices.average_buyout_per,
+                recipePrices.alliance_crafted_item_prices.prices.min_buyout_per,
+                recipePrices.horde_crafted_item_prices.prices.min_buyout_per,
+                recipePrices.crafted_item_prices.prices.min_buyout_per,
+                recipePrices.total_reagent_prices.min_buyout_per,
                 recipeHistoriesPriceLimits.upper,
               ),
             };
