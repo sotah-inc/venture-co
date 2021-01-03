@@ -36,14 +36,24 @@ function ReagentPricesLine({ dataKey, index }: Props & { dataKey: string; index:
     };
   })();
 
+  const dot = true;
+
+  const opacity = 1;
+
   return (
     <Area
-      dataKey={dataKey}
+      stackId={1}
+      key={index}
+      dataKey={(item: ILineItemOpen) => item.data[dataKey] ?? null}
+      animationDuration={500}
+      animationEasing={"ease-in-out"}
+      type={"monotone"}
       stroke={stroke}
       strokeWidth={strokeWidth}
       fill={stroke}
-      type={"monotone"}
-      stackId={1}
+      dot={dot}
+      opacity={opacity}
+      connectNulls={true}
     />
   );
 }
