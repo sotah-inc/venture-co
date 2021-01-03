@@ -1,10 +1,11 @@
-import { Callout, Intent, Tab, Tabs } from "@blueprintjs/core";
-import { IShortRecipe, ItemId } from "@sotah-inc/core";
 import React from "react";
 
-import { CartesianGrid, ComposedChart, ResponsiveContainer, XAxis } from "recharts";
+import { Callout, Intent, Tab, Tabs } from "@blueprintjs/core";
+import { IShortRecipe, ItemId } from "@sotah-inc/core";
 
-import { IFetchData, IItemsData, ILineItemOpen } from "../../../../../types/global";
+import { CartesianGrid, ResponsiveContainer, XAxis } from "recharts";
+
+import { IFetchData, IItemsData } from "../../../../../types/global";
 import { FetchLevel } from "../../../../../types/main";
 import { IRecipePriceHistoriesState } from "../../../../../types/professions";
 import {
@@ -14,6 +15,7 @@ import {
   unixTimestampToText,
 } from "../../../../../util";
 import { TabKind } from "./RecipePriceHistoriesGraph/common";
+import { ComposedChart } from "./RecipePriceHistoriesGraph/ComposedChart";
 import { Legend } from "./RecipePriceHistoriesGraph/Legend";
 import { Lines } from "./RecipePriceHistoriesGraph/Lines";
 import { YAxis } from "./RecipePriceHistoriesGraph/YAxis";
@@ -82,62 +84,65 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
       return <p>fail!</p>;
     }
 
-    const data = ((): ILineItemOpen[] => {
-      switch (currentTabKind) {
-        case TabKind.craftingCost:
-          return convertRecipePriceHistoriesToLineData(
-            recipePriceHistories.data.recipeData.histories,
-          );
-        case TabKind.reagentPrices:
-          return convertItemPriceHistoriesToLineData(recipePriceHistories.data.itemData.history);
-        default:
-          return [];
-      }
-    })();
-
     const { xAxisTicks, roundedNowDate, roundedTwoWeeksAgoDate } = getXAxisTimeRestrictions();
 
     return (
       <>
         <ResponsiveContainer width="100%" height={250}>
-          <ComposedChart data={data}>
-            <CartesianGrid vertical={false} strokeWidth={0.25} strokeOpacity={0.25} />
-            <XAxis
-              dataKey="name"
-              tickFormatter={unixTimestampToText}
-              domain={[roundedTwoWeeksAgoDate.unix(), roundedNowDate.unix()]}
-              type="number"
-              ticks={xAxisTicks}
-              tick={{ fill: "#fff" }}
-            />
-            {YAxis({
-              craftingCostOptions: {
-                overallPriceLimits: recipePriceHistories.data.recipeData.overallPriceLimits,
-              },
-              currentTabKind,
-              reagentPricesOptions: {
-                aggregatePriceLimits: recipePriceHistories.data.itemData.aggregatePriceLimits,
-              },
-            })}
-            {Lines({
-              craftingCostOptions: {
-                highlightedDataKey,
-                onDataKeyHighlight: v => {
-                  this.setState({
-                    ...this.state,
-                    craftingCostState: { ...this.state.craftingCostState, highlightedDataKey: v },
-                  });
-                },
-                recipeItemIds: selectedRecipe.items.map(v => v.id),
-                recipeItemsSelected,
-                totalReagentCostSelected,
-              },
-              currentTabKind,
-              reagentPricesOptions: {
-                reagentItemIds: Object.keys(recipePriceHistories.data.itemData.history).map(Number),
-              },
-            })}
-          </ComposedChart>
+          {ComposedChart({
+            children: (
+              <>
+                <CartesianGrid vertical={false} strokeWidth={0.25} strokeOpacity={0.25} />
+                <XAxis
+                  dataKey="name"
+                  tickFormatter={unixTimestampToText}
+                  domain={[roundedTwoWeeksAgoDate.unix(), roundedNowDate.unix()]}
+                  type="number"
+                  ticks={xAxisTicks}
+                  tick={{ fill: "#fff" }}
+                />
+                {YAxis({
+                  craftingCostOptions: {
+                    overallPriceLimits: recipePriceHistories.data.recipeData.overallPriceLimits,
+                  },
+                  currentTabKind,
+                  reagentPricesOptions: {
+                    aggregatePriceLimits: recipePriceHistories.data.itemData.aggregatePriceLimits,
+                  },
+                })}
+                {Lines({
+                  craftingCostOptions: {
+                    highlightedDataKey,
+                    onDataKeyHighlight: v => {
+                      this.setState({
+                        ...this.state,
+                        craftingCostState: {
+                          ...this.state.craftingCostState,
+                          highlightedDataKey: v,
+                        },
+                      });
+                    },
+                    recipeItemIds: selectedRecipe.items.map(v => v.id),
+                    recipeItemsSelected,
+                    totalReagentCostSelected,
+                  },
+                  currentTabKind,
+                  reagentPricesOptions: {
+                    reagentItemIds: Object.keys(recipePriceHistories.data.itemData.history).map(
+                      Number,
+                    ),
+                  },
+                })}
+              </>
+            ),
+            craftingCostData: convertRecipePriceHistoriesToLineData(
+              recipePriceHistories.data.recipeData.histories,
+            ),
+            currentTabKind,
+            reagentPricesData: convertItemPriceHistoriesToLineData(
+              recipePriceHistories.data.itemData.history,
+            ),
+          })}
         </ResponsiveContainer>
         <Legend
           currentTabKind={currentTabKind}
