@@ -44,7 +44,12 @@ function ReagentPricesLine({ dataKey, index }: Props & { dataKey: string; index:
     <Area
       stackId={1}
       key={index}
-      dataKey={(item: ILineItemOpen) => item.data[dataKey] ?? null}
+      dataKey={(item: ILineItemOpen) => {
+        // tslint:disable-next-line:no-console
+        console.log("Area.dataKey()", dataKey, item, item.data[dataKey] ?? null);
+
+        return item.data[dataKey] ?? null;
+      }}
       animationDuration={500}
       animationEasing={"ease-in-out"}
       type={"monotone"}

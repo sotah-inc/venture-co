@@ -5,10 +5,12 @@ import {
   IRecipePriceHistories,
   IRecipePriceHistory,
   IRecipePrices,
+  ItemId,
+  UnixTimestamp,
 } from "@sotah-inc/core";
 import moment from "moment";
 
-import { ILineItemOpen } from "../types/global";
+import { ILineItemOpen, ILineItemOpenData } from "../types/global";
 import { IRegionTokenHistories } from "../types/posts";
 
 export function getXAxisTimeRestrictions() {
@@ -161,50 +163,68 @@ export function convertRecipePriceHistoriesToLineData(
 export function convertItemPriceHistoriesToLineData(
   itemPriceHistories: IItemPriceHistories<IPricesFlagged>,
 ): ILineItemOpen[] {
-  return Object.keys(itemPriceHistories).reduce<ILineItemOpen[]>(
-    (dataPreviousValue: ILineItemOpen[], itemIdKey: string) => {
-      const itemPricelistHistory = itemPriceHistories[Number(itemIdKey)];
-      const itemId = Number(itemIdKey);
-      if (typeof itemPricelistHistory === "undefined") {
-        return dataPreviousValue;
+  // gathering unix timestamps
+  const unixTimestamps = Object.values(itemPriceHistories).reduce<Set<UnixTimestamp>>(
+    (result, priceHistories) => {
+      const unixTimestampKeys = Object.keys(priceHistories);
+      for (const unixTimestampKey of unixTimestampKeys) {
+        result.add(Number(unixTimestampKey));
       }
 
-      return Object.keys(itemPricelistHistory).reduce(
-        (previousValue: ILineItemOpen[], unixTimestampKey) => {
-          const unixTimestamp = Number(unixTimestampKey);
-          const prices = itemPricelistHistory[unixTimestamp];
-          if (typeof prices === "undefined" || prices.min_buyout_per === 0) {
-            return previousValue;
-          }
-
-          const buyoutValue: number = (() => {
-            if (prices.min_buyout_per === 0) {
-              return zeroGraphValue;
-            }
-
-            return prices.min_buyout_per / 10 / 10;
-          })();
-          const volumeValue: number = (() => {
-            if (prices.volume === 0) {
-              return zeroGraphValue;
-            }
-
-            return prices.volume;
-          })();
-
-          previousValue.push({
-            data: {
-              [`${itemId}_buyout`]: buyoutValue,
-              [`${itemId}_volume`]: volumeValue,
-            },
-            name: unixTimestamp,
-          });
-
-          return previousValue;
-        },
-        dataPreviousValue,
-      );
+      return result;
     },
-    [],
+    new Set<UnixTimestamp>(),
   );
+
+  // gathering item-ids
+  const itemIds: ItemId[] = Object.keys(itemPriceHistories).map(Number);
+
+  // going over it all
+  return Array.from(unixTimestamps).map<ILineItemOpen>(unixTimestamp => {
+    const data = itemIds.reduce<ILineItemOpenData>((result, itemId) => {
+      const itemPriceHistory = itemPriceHistories[itemId];
+      if (typeof itemPriceHistory === "undefined") {
+        return {
+          ...result,
+          [`${itemId}_buyout`]: null,
+          [`${itemId}_volume`]: null,
+        };
+      }
+
+      const prices = itemPriceHistory[unixTimestamp];
+      if (typeof prices === "undefined" || prices.min_buyout_per === 0) {
+        return {
+          ...result,
+          [`${itemId}_buyout`]: null,
+          [`${itemId}_volume`]: null,
+        };
+      }
+
+      const buyoutValue: number = (() => {
+        if (prices.min_buyout_per === 0) {
+          return zeroGraphValue;
+        }
+
+        return prices.min_buyout_per / 10 / 10;
+      })();
+      const volumeValue: number = (() => {
+        if (prices.volume === 0) {
+          return zeroGraphValue;
+        }
+
+        return prices.volume;
+      })();
+
+      return {
+        ...result,
+        [`${itemId}_buyout`]: buyoutValue,
+        [`${itemId}_volume`]: volumeValue,
+      };
+    }, {});
+
+    return {
+      data,
+      name: unixTimestamp,
+    };
+  });
 }
