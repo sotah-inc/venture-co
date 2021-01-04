@@ -1,9 +1,9 @@
 import React from "react";
 
-import { IPriceLimits, ItemId } from "@sotah-inc/core";
+import { IPriceLimits, IShortRecipe, ItemId } from "@sotah-inc/core";
 import { Bar, CartesianGrid, ComposedChart, Line, XAxis, YAxis } from "recharts";
 
-import { ILineItemOpen } from "../../../../../../types/global";
+import { IItemsData, ILineItemOpen } from "../../../../../../types/global";
 import {
   currencyToText,
   getColor,
@@ -17,14 +17,14 @@ export interface IOwnProps {
   aggregatePriceLimits: IPriceLimits;
 
   reagentItemIds: ItemId[];
-  recipeItemIds: ItemId[];
+  selectedRecipe: IItemsData<IShortRecipe>;
 }
 
 export type Props = Readonly<IOwnProps>;
 
 function RecipeItemPricesLines(props: Props) {
-  return props.recipeItemIds.map((v, i) =>
-    RecipeItemPricesLine({ ...props, dataKey: resolveItemDataKey(v), index: i }),
+  return props.selectedRecipe.data.reagents.map((v, i) =>
+    RecipeItemPricesLine({ ...props, dataKey: resolveItemDataKey(v.reagent.id), index: i }),
   );
 }
 
@@ -51,7 +51,7 @@ function ReagentItemPricesBars(props: Props) {
     ReagentItemPricesBar({
       ...props,
       dataKey: `${v}_buyout`,
-      index: i + props.recipeItemIds.length,
+      index: i + props.selectedRecipe.data.reagents.length,
     }),
   );
 }
@@ -59,6 +59,7 @@ function ReagentItemPricesBars(props: Props) {
 function ReagentItemPricesBar({
   dataKey,
   index,
+  selectedRecipe,
 }: Props & {
   dataKey: string;
   index: number;
@@ -67,7 +68,21 @@ function ReagentItemPricesBar({
     <Bar
       stackId={1}
       key={index}
-      dataKey={(item: ILineItemOpen) => item.data[dataKey] ?? null}
+      dataKey={(item: ILineItemOpen) => {
+        const dataPoint = item.data[dataKey];
+        if (dataPoint === null || typeof dataPoint === "undefined") {
+          return null;
+        }
+
+        const foundReagent = selectedRecipe.data.reagents.find(
+          v => `${v.reagent.id}_buyout` === dataKey,
+        );
+        if (typeof foundReagent === "undefined") {
+          return null;
+        }
+
+        return dataPoint * foundReagent.quantity;
+      }}
       animationDuration={500}
       animationEasing={"ease-in-out"}
       fill={getColor(index)}

@@ -179,7 +179,7 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
           aggregatePriceLimits,
           data: mergeLineData(craftingCostData, reagentPricesData),
           reagentItemIds: Object.keys(recipeItemPriceHistories).map(Number),
-          recipeItemIds: selectedRecipe.items.map(v => v.id),
+          selectedRecipe,
         });
       default:
         return null;
