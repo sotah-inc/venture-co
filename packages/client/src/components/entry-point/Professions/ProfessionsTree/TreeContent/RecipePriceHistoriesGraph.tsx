@@ -57,8 +57,8 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
             selectedTabId={currentTabKind}
             onChange={(tabKind: TabKind) => this.setState({ currentTabKind: tabKind })}
           >
-            <Tab id={TabKind.craftingCost} title="Crafting Cost" />
             <Tab id={TabKind.reagentPrices} title="Reagent Prices" />
+            <Tab id={TabKind.craftingCost} title="Crafting Cost" />
           </Tabs>
         </div>
         <div style={{ marginBottom: "10px" }}>{this.renderContent()}</div>

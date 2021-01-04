@@ -25,7 +25,11 @@ export type Props = Readonly<IOwnProps>;
 
 function RecipeItemPricesLines(props: Props) {
   return props.recipeItemIds.map((v, i) =>
-    RecipeItemPricesLine({ ...props, dataKey: resolveItemDataKey(v), index: i }),
+    RecipeItemPricesLine({
+      ...props,
+      dataKey: resolveItemDataKey(v),
+      index: i + props.reagentItemIds.length,
+    }),
   );
 }
 
@@ -42,7 +46,9 @@ function RecipeItemPricesLine({
       dataKey={(item: ILineItemOpen) => item.data[dataKey] ?? null}
       animationDuration={500}
       animationEasing={"ease-in-out"}
-      fill={getColor(index)}
+      type={"monotone"}
+      stroke={getColor(index)}
+      strokeWidth={4}
     />
   );
 }
@@ -52,7 +58,7 @@ function ReagentItemPricesBars(props: Props) {
     ReagentItemPricesBar({
       ...props,
       dataKey: `${v}_buyout`,
-      index: i + props.selectedRecipe.data.reagents.length,
+      index: i,
     }),
   );
 }
@@ -110,7 +116,7 @@ export function ReagentPricesChart(props: Props) {
         domain={[0, props.aggregatePriceLimits.upper / 10 / 10]}
         tick={{ fill: "#fff" }}
       />
-      {[...RecipeItemPricesLines(props), ...ReagentItemPricesBars(props)]}
+      {[...ReagentItemPricesBars(props), ...RecipeItemPricesLines(props)]}
     </ComposedChart>
   );
 }
