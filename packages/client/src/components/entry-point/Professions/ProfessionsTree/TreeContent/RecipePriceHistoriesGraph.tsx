@@ -10,6 +10,7 @@ import { IRecipePriceHistoriesState } from "../../../../../types/professions";
 import {
   convertItemPriceHistoriesToLineData,
   convertRecipePriceHistoriesToLineData,
+  mergeLineData,
 } from "../../../../../util";
 import { TabKind } from "./RecipePriceHistoriesGraph/common";
 import { CraftingCostChart } from "./RecipePriceHistoriesGraph/CraftingCostChart";
@@ -151,10 +152,16 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
       return null;
     }
 
+    const craftingCostData = convertRecipePriceHistoriesToLineData(recipePriceHistories);
+    const reagentPricesData = convertItemPriceHistoriesToLineData(recipeItemPriceHistories);
+
+    // tslint:disable-next-line:no-console
+    console.log(mergeLineData(craftingCostData, reagentPricesData));
+
     switch (currentTabKind) {
       case TabKind.craftingCost:
         return CraftingCostChart({
-          data: convertRecipePriceHistoriesToLineData(recipePriceHistories),
+          data: craftingCostData,
           highlightedDataKey,
           onDataKeyHighlight: v => {
             this.setState({
@@ -173,7 +180,7 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
       case TabKind.reagentPrices:
         return ReagentPricesChart({
           aggregatePriceLimits,
-          data: convertItemPriceHistoriesToLineData(recipeItemPriceHistories),
+          data: reagentPricesData,
           reagentItemIds: Object.keys(recipeItemPriceHistories).map(Number),
           recipeItemIds: selectedRecipe.items.map(v => v.id),
         });

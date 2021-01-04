@@ -126,6 +126,39 @@ export function convertAuctionStatsToLineData(
   });
 }
 
+export function mergeLineData(first: ILineItemOpen[], second: ILineItemOpen[]): ILineItemOpen[] {
+  const unixTimestamps: UnixTimestamp[] = [...first.map(v => v.name), ...second.map(v => v.name)];
+  let timestampDataMap: { [key: number]: ILineItemOpenData } = unixTimestamps.reduce(
+    (result, v) => {
+      return {
+        ...result,
+        [v]: {},
+      };
+    },
+    {},
+  );
+
+  timestampDataMap = [...first, ...second].reduce((result, v) => {
+    return {
+      ...result,
+      [v.name]: {
+        ...result[v.name],
+        ...v.data,
+      },
+    };
+  }, timestampDataMap);
+
+  return Object.keys(timestampDataMap).reduce<ILineItemOpen[]>((result, v) => {
+    return [
+      ...result,
+      {
+        data: timestampDataMap[Number(v)],
+        name: Number(v),
+      },
+    ];
+  }, []);
+}
+
 export function convertRecipePriceHistoriesToLineData(
   recipePriceHistories: IRecipePriceHistories,
 ): ILineItemOpen[] {
