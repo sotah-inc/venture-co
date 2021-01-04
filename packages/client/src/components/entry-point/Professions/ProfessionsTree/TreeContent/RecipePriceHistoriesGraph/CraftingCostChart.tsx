@@ -119,6 +119,9 @@ function CraftingCostLine({
 export function CraftingCostChart(props: Props) {
   const { xAxisTicks, roundedNowDate, roundedTwoWeeksAgoDate } = getXAxisTimeRestrictions();
 
+  // tslint:disable-next-line:no-console
+  console.log(props.data);
+
   return (
     <LineChart data={props.data}>
       <CartesianGrid vertical={false} strokeWidth={0.25} strokeOpacity={0.25} />

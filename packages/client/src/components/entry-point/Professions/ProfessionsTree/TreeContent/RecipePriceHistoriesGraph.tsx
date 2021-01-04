@@ -36,7 +36,7 @@ type State = Readonly<{
 
 export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
   public state: State = {
-    currentTabKind: TabKind.craftingCost,
+    currentTabKind: TabKind.reagentPrices,
 
     craftingCostState: {
       highlightedDataKey: null,
@@ -175,6 +175,7 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
           aggregatePriceLimits,
           data: convertItemPriceHistoriesToLineData(recipeItemPriceHistories),
           reagentItemIds: Object.keys(recipeItemPriceHistories).map(Number),
+          recipeItemIds: selectedRecipe.items.map(v => v.id),
         });
       default:
         return null;
