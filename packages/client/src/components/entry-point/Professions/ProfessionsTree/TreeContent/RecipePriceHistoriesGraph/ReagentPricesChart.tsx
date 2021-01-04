@@ -17,14 +17,15 @@ export interface IOwnProps {
   aggregatePriceLimits: IPriceLimits;
 
   reagentItemIds: ItemId[];
+  recipeItemIds: ItemId[];
   selectedRecipe: IItemsData<IShortRecipe>;
 }
 
 export type Props = Readonly<IOwnProps>;
 
 function RecipeItemPricesLines(props: Props) {
-  return props.selectedRecipe.data.reagents.map((v, i) =>
-    RecipeItemPricesLine({ ...props, dataKey: resolveItemDataKey(v.reagent.id), index: i }),
+  return props.recipeItemIds.map((v, i) =>
+    RecipeItemPricesLine({ ...props, dataKey: resolveItemDataKey(v), index: i }),
   );
 }
 
