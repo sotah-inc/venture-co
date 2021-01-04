@@ -1,7 +1,7 @@
 import React from "react";
 
 import { IPriceLimits, ItemId } from "@sotah-inc/core";
-import { Bar, CartesianGrid, ComposedChart, XAxis, YAxis } from "recharts";
+import { Bar, CartesianGrid, ComposedChart, Line, XAxis, YAxis } from "recharts";
 
 import { ILineItemOpen } from "../../../../../../types/global";
 import {
@@ -10,6 +10,7 @@ import {
   getXAxisTimeRestrictions,
   unixTimestampToText,
 } from "../../../../../../util";
+import { resolveItemDataKey } from "./common";
 
 export interface IOwnProps {
   data: ILineItemOpen[];
@@ -21,13 +22,41 @@ export interface IOwnProps {
 
 export type Props = Readonly<IOwnProps>;
 
-function ReagentPricesBars(props: Props) {
-  return props.reagentItemIds.map((v, i) =>
-    ReagentPricesBar({ ...props, dataKey: `${v}_buyout`, index: i }),
+function RecipeItemPricesLines(props: Props) {
+  return props.recipeItemIds.map((v, i) =>
+    RecipeItemPricesLine({ ...props, dataKey: resolveItemDataKey(v), index: i }),
   );
 }
 
-function ReagentPricesBar({
+function RecipeItemPricesLine({
+  dataKey,
+  index,
+}: Props & {
+  dataKey: string;
+  index: number;
+}) {
+  return (
+    <Line
+      key={index}
+      dataKey={(item: ILineItemOpen) => item.data[dataKey] ?? null}
+      animationDuration={500}
+      animationEasing={"ease-in-out"}
+      fill={getColor(index)}
+    />
+  );
+}
+
+function ReagentItemPricesBars(props: Props) {
+  return props.reagentItemIds.map((v, i) =>
+    ReagentItemPricesBar({
+      ...props,
+      dataKey: `${v}_buyout`,
+      index: i + props.recipeItemIds.length,
+    }),
+  );
+}
+
+function ReagentItemPricesBar({
   dataKey,
   index,
 }: Props & {
@@ -65,7 +94,7 @@ export function ReagentPricesChart(props: Props) {
         domain={[0, props.aggregatePriceLimits.upper / 10 / 10]}
         tick={{ fill: "#fff" }}
       />
-      {ReagentPricesBars(props)}
+      {[...RecipeItemPricesLines(props), ...ReagentItemPricesBars(props)]}
     </ComposedChart>
   );
 }

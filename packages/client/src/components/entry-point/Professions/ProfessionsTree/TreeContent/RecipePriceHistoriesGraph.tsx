@@ -155,9 +155,6 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
     const craftingCostData = convertRecipePriceHistoriesToLineData(recipePriceHistories);
     const reagentPricesData = convertItemPriceHistoriesToLineData(recipeItemPriceHistories);
 
-    // tslint:disable-next-line:no-console
-    console.log(mergeLineData(craftingCostData, reagentPricesData));
-
     switch (currentTabKind) {
       case TabKind.craftingCost:
         return CraftingCostChart({
@@ -180,7 +177,7 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
       case TabKind.reagentPrices:
         return ReagentPricesChart({
           aggregatePriceLimits,
-          data: reagentPricesData,
+          data: mergeLineData(craftingCostData, reagentPricesData),
           reagentItemIds: Object.keys(recipeItemPriceHistories).map(Number),
           recipeItemIds: selectedRecipe.items.map(v => v.id),
         });
