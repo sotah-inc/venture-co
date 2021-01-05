@@ -33,6 +33,10 @@ type State = Readonly<{
     recipeItemsSelected: Set<number>;
     totalReagentCostSelected: boolean;
   };
+
+  reagentPricesState: {
+    highlightedDataKey: string | null;
+  };
 }>;
 
 export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
@@ -43,6 +47,10 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
       highlightedDataKey: null,
       recipeItemsSelected: new Set<ItemId>(),
       totalReagentCostSelected: false,
+    },
+
+    reagentPricesState: {
+      highlightedDataKey: null,
     },
   };
 
