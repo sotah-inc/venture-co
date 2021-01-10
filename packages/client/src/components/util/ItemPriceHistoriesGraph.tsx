@@ -23,6 +23,7 @@ import {
   unixTimestampToText,
   zeroGraphValue,
 } from "../../util";
+import { resolveItemDataKey } from "../entry-point/Professions/ProfessionsTree/TreeContent/RecipePriceHistoriesGraph/common";
 import { ItemLink } from "./ItemLink";
 
 export interface IOwnProps {
@@ -399,7 +400,7 @@ export class ItemPriceHistoriesGraph extends React.Component<Props, State> {
         return `${itemId}_volume`;
       case TabKind.prices:
       default:
-        return `${itemId}_buyout`;
+        return resolveItemDataKey(itemId);
     }
   }
 

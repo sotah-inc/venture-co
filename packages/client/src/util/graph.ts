@@ -219,7 +219,7 @@ export function convertItemPriceHistoriesToLineData(
       if (typeof itemPriceHistory === "undefined") {
         return {
           ...result,
-          [`${itemId}_buyout`]: null,
+          [`${itemId}_buyout_per`]: null,
           [`${itemId}_volume`]: null,
         };
       }
@@ -228,7 +228,7 @@ export function convertItemPriceHistoriesToLineData(
       if (typeof prices === "undefined" || prices.min_buyout_per === 0) {
         return {
           ...result,
-          [`${itemId}_buyout`]: null,
+          [`${itemId}_buyout_per`]: null,
           [`${itemId}_volume`]: null,
         };
       }
@@ -250,7 +250,7 @@ export function convertItemPriceHistoriesToLineData(
 
       return {
         ...result,
-        [`${itemId}_buyout`]: buyoutValue,
+        [`${itemId}_buyout_per`]: buyoutValue,
         [`${itemId}_volume`]: volumeValue,
       };
     }, {});

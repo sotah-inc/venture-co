@@ -72,7 +72,7 @@ function ReagentItemPricesBars(props: Props) {
   return props.reagentItemIds.map((v, i) =>
     ReagentItemPricesBar({
       ...props,
-      dataKey: `${v}_buyout`,
+      dataKey: resolveItemDataKey(v),
       index: i,
     }),
   );
@@ -101,7 +101,7 @@ function ReagentItemPricesBar({
         }
 
         const foundReagent = selectedRecipe.data.reagents.find(
-          v => `${v.reagent.id}_buyout` === dataKey,
+          v => resolveItemDataKey(v.reagent.id) === dataKey,
         );
         if (typeof foundReagent === "undefined") {
           return null;
