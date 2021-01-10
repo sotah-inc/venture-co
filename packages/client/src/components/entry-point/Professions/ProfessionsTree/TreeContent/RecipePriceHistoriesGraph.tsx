@@ -164,8 +164,8 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
               })
             }
             itemIds={[
-              ...Object.keys(recipePriceHistories.data.itemData.history).map(Number),
               ...recipePriceHistories.data.recipeData.recipeItemIds[selectedRecipe.data.id],
+              ...Object.keys(recipePriceHistories.data.itemData.history).map(Number),
             ]}
             items={selectedRecipe.items}
           />
