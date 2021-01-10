@@ -74,6 +74,9 @@ function ReagentItemPricesBar({
   dataKey: string;
   index: number;
 }) {
+  // tslint:disable-next-line:no-console
+  console.log(dataKey, index);
+
   return (
     <Bar
       stackId={1}

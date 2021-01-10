@@ -48,7 +48,7 @@ export class ReagentPricesLegend extends React.Component<Props> {
       <div className="pure-u-1-3" key={index}>
         <div style={index < 2 ? { marginRight: "10px" } : {}}>
           {itemIdIndexTuples.map(([itemId, originalIndex], keyIndex) =>
-            this.renderLegendColumnTag(itemId, originalIndex + 1, keyIndex),
+            this.renderLegendColumnTag(itemId, originalIndex, keyIndex),
           )}
         </div>
       </div>
