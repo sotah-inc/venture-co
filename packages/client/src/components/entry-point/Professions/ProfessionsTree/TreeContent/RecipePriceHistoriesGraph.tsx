@@ -16,6 +16,7 @@ import { TabKind } from "./RecipePriceHistoriesGraph/common";
 import { CraftingCostChart } from "./RecipePriceHistoriesGraph/CraftingCostChart";
 import { CraftingCostLegend } from "./RecipePriceHistoriesGraph/CraftingCostLegend";
 import { ReagentPricesChart } from "./RecipePriceHistoriesGraph/ReagentPricesChart";
+import { ReagentPricesLegend } from "./RecipePriceHistoriesGraph/ReagentPricesLegend";
 
 // props
 export interface IStateProps {
@@ -153,6 +154,22 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
           />
         );
       case TabKind.reagentPrices:
+        return (
+          <ReagentPricesLegend
+            highlightedDataKey={highlightedDataKey}
+            onDataKeyHighlight={v =>
+              this.setState({
+                ...this.state,
+                craftingCostState: { ...this.state.craftingCostState, highlightedDataKey: v },
+              })
+            }
+            itemIds={[
+              ...Object.keys(recipePriceHistories.data.itemData.history).map(Number),
+              ...recipePriceHistories.data.recipeData.recipeItemIds[selectedRecipe.data.id],
+            ]}
+            items={selectedRecipe.items}
+          />
+        );
       default:
         return null;
     }
