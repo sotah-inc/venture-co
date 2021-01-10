@@ -164,8 +164,8 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
               })
             }
             itemIds={[
-              ...recipePriceHistories.data.recipeData.recipeItemIds[selectedRecipe.data.id],
               ...Object.keys(recipePriceHistories.data.itemData.history).map(Number),
+              ...recipePriceHistories.data.recipeData.recipeItemIds[selectedRecipe.data.id],
             ]}
             items={selectedRecipe.items}
           />
@@ -220,6 +220,7 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
         return ReagentPricesChart({
           aggregatePriceLimits,
           data: mergeLineData(craftingCostData, reagentPricesData),
+          highlightedDataKey,
           reagentItemIds: Object.keys(recipeItemPriceHistories).map(Number),
           recipeItemIds: recipeItemIds[selectedRecipe.data.id],
           selectedRecipe,

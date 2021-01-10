@@ -15,10 +15,10 @@ import { resolveItemDataKey } from "./common";
 export interface IOwnProps {
   data: ILineItemOpen[];
   aggregatePriceLimits: IPriceLimits;
-
   reagentItemIds: ItemId[];
   recipeItemIds: ItemId[];
   selectedRecipe: IItemsData<IShortRecipe>;
+  highlightedDataKey: string | null;
 }
 
 export type Props = Readonly<IOwnProps>;
@@ -36,10 +36,25 @@ function RecipeItemPricesLines(props: Props) {
 function RecipeItemPricesLine({
   dataKey,
   index,
+  highlightedDataKey,
 }: Props & {
   dataKey: string;
   index: number;
 }) {
+  const { stroke, strokeWidth } = (() => {
+    if (highlightedDataKey === null || highlightedDataKey === dataKey) {
+      return {
+        stroke: getColor(index),
+        strokeWidth: highlightedDataKey === dataKey ? 4 : 2,
+      };
+    }
+
+    return {
+      stroke: "#5C7080",
+      strokeWidth: 1,
+    };
+  })();
+
   return (
     <Line
       key={index}
@@ -47,8 +62,8 @@ function RecipeItemPricesLine({
       animationDuration={500}
       animationEasing={"ease-in-out"}
       type={"monotone"}
-      stroke={getColor(index)}
-      strokeWidth={4}
+      stroke={stroke}
+      strokeWidth={strokeWidth}
     />
   );
 }
@@ -67,10 +82,14 @@ function ReagentItemPricesBar({
   dataKey,
   index,
   selectedRecipe,
+  highlightedDataKey,
 }: Props & {
   dataKey: string;
   index: number;
 }) {
+  const fill =
+    highlightedDataKey === null || highlightedDataKey === dataKey ? getColor(index) : "#5C7080";
+
   return (
     <Bar
       stackId={1}
@@ -92,7 +111,7 @@ function ReagentItemPricesBar({
       }}
       animationDuration={500}
       animationEasing={"ease-in-out"}
-      fill={getColor(index)}
+      fill={fill}
     />
   );
 }
