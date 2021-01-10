@@ -72,7 +72,7 @@ export class ReagentPricesLegend extends React.Component<Props> {
         onMouseEnter={() => onDataKeyHighlight(resolveItemDataKey(itemId))}
         onMouseLeave={() => onDataKeyHighlight(null)}
       >
-        {this.renderLegendItem(itemId)} ({colorIndex})
+        {this.renderLegendItem(itemId)}
       </Tag>
     );
   }
