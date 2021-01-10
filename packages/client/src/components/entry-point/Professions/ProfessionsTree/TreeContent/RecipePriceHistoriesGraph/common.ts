@@ -1,4 +1,4 @@
-import { IShortItem, ItemId } from "@sotah-inc/core";
+import { ItemId } from "@sotah-inc/core";
 
 export enum TabKind {
   craftingCost = "craftingCost",
@@ -9,17 +9,4 @@ export const TotalReagentCostDataKey = "total_reagent_cost";
 
 export function resolveItemDataKey(id: ItemId): string {
   return `${id}_buyout_per`;
-}
-
-export interface ICraftingCostLegendOptions {
-  recipeItems: IShortItem[];
-  highlightedDataKey: string | null;
-  recipeItemsSelected: Set<ItemId>;
-  totalReagentCostSelected: boolean;
-  craftedRecipeItemIds: ItemId[];
-
-  onDataKeyHighlight: (dataKey: string | null) => void;
-  onTotalReagentCostSelect: () => void;
-  onRecipeItemSelect: (id: ItemId) => void;
-  onReset: () => void;
 }

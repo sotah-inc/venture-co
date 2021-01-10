@@ -2,31 +2,31 @@ import React from "react";
 
 import { Icon, Intent, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
-import { ItemId } from "@sotah-inc/core";
+import { IShortItem, ItemId } from "@sotah-inc/core";
 
 import { getColor, getItemIconUrl, qualityToColorClass } from "../../../../../../util";
 import { ItemLink } from "../../../../../util/ItemLink";
-import {
-  ICraftingCostLegendOptions,
-  resolveItemDataKey,
-  TabKind,
-  TotalReagentCostDataKey,
-} from "./common";
+import { resolveItemDataKey, TotalReagentCostDataKey } from "./common";
 
 // props
 export interface IOwnProps {
-  currentTabKind: TabKind;
+  recipeItems: IShortItem[];
+  highlightedDataKey: string | null;
+  recipeItemsSelected: Set<ItemId>;
+  totalReagentCostSelected: boolean;
+  craftedRecipeItemIds: ItemId[];
 
-  craftingCostOptions: ICraftingCostLegendOptions;
+  onDataKeyHighlight: (dataKey: string | null) => void;
+  onTotalReagentCostSelect: () => void;
+  onRecipeItemSelect: (id: ItemId) => void;
+  onReset: () => void;
 }
 
 export type Props = Readonly<IOwnProps>;
 
 export class CraftingCostLegend extends React.Component<Props> {
   public render() {
-    const {
-      craftingCostOptions: { craftedRecipeItemIds },
-    } = this.props;
+    const { craftedRecipeItemIds } = this.props;
 
     const groupedItemIds = craftedRecipeItemIds.reduce<Array<Array<[ItemId, number]>>>(
       (result, v, i) => {
@@ -73,13 +73,11 @@ export class CraftingCostLegend extends React.Component<Props> {
 
   private renderLegendReagentTotalCostTag(colorIndex: number) {
     const {
-      craftingCostOptions: {
-        highlightedDataKey,
-        recipeItemsSelected,
-        totalReagentCostSelected,
-        onDataKeyHighlight,
-        onTotalReagentCostSelect,
-      },
+      highlightedDataKey,
+      recipeItemsSelected,
+      totalReagentCostSelected,
+      onDataKeyHighlight,
+      onTotalReagentCostSelect,
     } = this.props;
 
     const intent =
@@ -105,13 +103,11 @@ export class CraftingCostLegend extends React.Component<Props> {
 
   private renderLegendColumnTag(itemId: ItemId, colorIndex: number, keyIndex: number) {
     const {
-      craftingCostOptions: {
-        highlightedDataKey,
-        recipeItemsSelected,
-        totalReagentCostSelected,
-        onDataKeyHighlight,
-        onRecipeItemSelect,
-      },
+      highlightedDataKey,
+      recipeItemsSelected,
+      totalReagentCostSelected,
+      onDataKeyHighlight,
+      onRecipeItemSelect,
     } = this.props;
 
     const hasSelections = recipeItemsSelected.size > 0 || totalReagentCostSelected;
@@ -139,9 +135,7 @@ export class CraftingCostLegend extends React.Component<Props> {
   }
 
   private renderLegendItemIcon(itemId: ItemId) {
-    const {
-      craftingCostOptions: { recipeItems },
-    } = this.props;
+    const { recipeItems } = this.props;
 
     const foundItem = recipeItems.find(v => v.id === itemId);
     if (typeof foundItem === "undefined") {
@@ -157,9 +151,7 @@ export class CraftingCostLegend extends React.Component<Props> {
   }
 
   private renderLegendItem(itemId: ItemId) {
-    const {
-      craftingCostOptions: { recipeItems, onRecipeItemSelect },
-    } = this.props;
+    const { recipeItems, onRecipeItemSelect } = this.props;
 
     const foundItem = recipeItems.find(v => v.id === itemId);
     if (typeof foundItem === "undefined") {
@@ -180,9 +172,7 @@ export class CraftingCostLegend extends React.Component<Props> {
   }
 
   private renderSelectAllTag() {
-    const {
-      craftingCostOptions: { totalReagentCostSelected, recipeItemsSelected, onReset },
-    } = this.props;
+    const { totalReagentCostSelected, recipeItemsSelected, onReset } = this.props;
 
     const canSelectAll = totalReagentCostSelected || recipeItemsSelected.size > 0;
 

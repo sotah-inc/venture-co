@@ -14,7 +14,7 @@ import {
 } from "../../../../../util";
 import { TabKind } from "./RecipePriceHistoriesGraph/common";
 import { CraftingCostChart } from "./RecipePriceHistoriesGraph/CraftingCostChart";
-import { Legend } from "./RecipePriceHistoriesGraph/Legend";
+import { CraftingCostLegend } from "./RecipePriceHistoriesGraph/CraftingCostLegend";
 import { ReagentPricesChart } from "./RecipePriceHistoriesGraph/ReagentPricesChart";
 
 // props
@@ -76,10 +76,6 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
 
   private renderContent() {
     const { recipePriceHistories, selectedRecipe } = this.props;
-    const {
-      currentTabKind,
-      craftingCostState: { highlightedDataKey, recipeItemsSelected, totalReagentCostSelected },
-    } = this.state;
 
     if (selectedRecipe === null || typeof selectedRecipe === "undefined") {
       return null;
@@ -94,25 +90,45 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
         <ResponsiveContainer width="100%" height={250}>
           {this.renderChart()}
         </ResponsiveContainer>
-        <Legend
-          currentTabKind={currentTabKind}
-          craftingCostOptions={{
-            craftedRecipeItemIds:
-              recipePriceHistories.data.recipeData.recipeItemIds[selectedRecipe.data.id],
-            highlightedDataKey,
-            onDataKeyHighlight: v =>
+        {this.renderLegend()}
+        {this.renderGraphFooter()}
+      </>
+    );
+  }
+
+  private renderLegend() {
+    const { recipePriceHistories, selectedRecipe } = this.props;
+    const {
+      currentTabKind,
+      craftingCostState: { highlightedDataKey, recipeItemsSelected, totalReagentCostSelected },
+    } = this.state;
+
+    if (selectedRecipe === null || typeof selectedRecipe === "undefined") {
+      return null;
+    }
+
+    switch (currentTabKind) {
+      case TabKind.craftingCost:
+        return (
+          <CraftingCostLegend
+            craftedRecipeItemIds={
+              recipePriceHistories.data.recipeData.recipeItemIds[selectedRecipe.data.id]
+            }
+            highlightedDataKey={highlightedDataKey}
+            onDataKeyHighlight={v =>
               this.setState({
                 ...this.state,
                 craftingCostState: { ...this.state.craftingCostState, highlightedDataKey: v },
-              }),
-            onRecipeItemSelect: v => {
+              })
+            }
+            onRecipeItemSelect={v => {
               recipeItemsSelected.add(v);
               this.setState({
                 ...this.state,
                 craftingCostState: { ...this.state.craftingCostState, recipeItemsSelected },
               });
-            },
-            onReset: () => {
+            }}
+            onReset={() => {
               this.setState({
                 ...this.state,
                 craftingCostState: {
@@ -121,8 +137,8 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
                   totalReagentCostSelected: false,
                 },
               });
-            },
-            onTotalReagentCostSelect: () => {
+            }}
+            onTotalReagentCostSelect={() => {
               this.setState({
                 ...this.state,
                 craftingCostState: {
@@ -130,15 +146,16 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
                   totalReagentCostSelected: true,
                 },
               });
-            },
-            recipeItems: selectedRecipe.items,
-            recipeItemsSelected,
-            totalReagentCostSelected,
-          }}
-        />
-        {this.renderGraphFooter()}
-      </>
-    );
+            }}
+            recipeItems={selectedRecipe.items}
+            recipeItemsSelected={recipeItemsSelected}
+            totalReagentCostSelected={totalReagentCostSelected}
+          />
+        );
+      case TabKind.reagentPrices:
+      default:
+        return null;
+    }
   }
 
   private renderChart() {
