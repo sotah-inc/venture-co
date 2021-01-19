@@ -121,14 +121,13 @@ export type GetProfessionPricelistsResponse =
 export interface IGetRegionTokenHistoryResponseData {
   history: IRegionTokenHistory;
 }
+export type GetRegionTokenHistoryResponse = IGetRegionTokenHistoryResponseData | null;
 
 export type GetShortTokenHistoryResponse = IGetShortTokenHistoryResponseData | null;
 
 export interface IGetShortTokenHistoryResponseData {
   history: IShortTokenHistory;
 }
-
-export type GetTokenHistoryResponse = IGetRegionTokenHistoryResponseData | null;
 
 export interface IQueryAuctionStatsItem {
   total_auctions: number;
