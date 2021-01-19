@@ -1193,10 +1193,10 @@ export class DataController {
     };
   }
 
-  public async getTokenHistory(
+  public async getRegionTokenHistory(
     regionName: RegionName,
   ): Promise<IRequestResult<GetTokenHistoryResponse>> {
-    const msg = await this.messenger.getTokenHistory({ region_name: regionName });
+    const msg = await this.messenger.getRegionTokenHistory({ region_name: regionName });
     if (msg.code !== code.ok) {
       if (msg.code === code.notFound) {
         return {

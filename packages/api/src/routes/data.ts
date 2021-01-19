@@ -46,7 +46,7 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
     wrap(async (req: Request, res: Response) => {
       const regionName = req.params["regionName"];
 
-      handleResult(res, await controller.getTokenHistory(regionName));
+      handleResult(res, await controller.getRegionTokenHistory(regionName));
     }),
   );
   router.get(
