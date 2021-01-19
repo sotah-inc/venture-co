@@ -12,7 +12,8 @@ import {
   GetProfessionPricelistResponse,
   GetProfessionPricelistsResponse,
   GetRecipePriceHistoriesResponse,
-  GetTokenHistoryResponse,
+  GetRegionTokenHistoryResponse,
+  GetShortTokenHistoryResponse,
   GetUnmetDemandResponse,
   IErrorResponse,
   IGetItemResponseData,
@@ -1195,8 +1196,38 @@ export class DataController {
 
   public async getRegionTokenHistory(
     regionName: RegionName,
-  ): Promise<IRequestResult<GetTokenHistoryResponse>> {
+  ): Promise<IRequestResult<GetRegionTokenHistoryResponse>> {
     const msg = await this.messenger.getRegionTokenHistory({ region_name: regionName });
+    if (msg.code !== code.ok) {
+      if (msg.code === code.notFound) {
+        return {
+          data: null,
+          status: HTTPStatus.NOT_FOUND,
+        };
+      }
+
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    const regionTokenHistoryResult = await msg.decode();
+    if (!regionTokenHistoryResult) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    return {
+      data: { history: regionTokenHistoryResult },
+      status: HTTPStatus.OK,
+    };
+  }
+
+  public async getTokenHistory(): Promise<IRequestResult<GetShortTokenHistoryResponse>> {
+    const msg = await this.messenger.getTokenHistory();
     if (msg.code !== code.ok) {
       if (msg.code === code.notFound) {
         return {
@@ -1220,7 +1251,7 @@ export class DataController {
     }
 
     return {
-      data: { history: tokenHistoryResult },
+      data: { history: tokenHistoryResult.history },
       status: HTTPStatus.OK,
     };
   }
