@@ -12,11 +12,11 @@ import {
   IRegionComposite,
   IRegionConnectedRealmTuple,
   IRegionRealmTuple,
+  IRegionTokenHistory,
   IRegionTuple,
   IShortItem,
   IShortPet,
   ItemId,
-  ITokenHistory,
   Locale,
   ProfessionId,
   RecipeId,
@@ -64,6 +64,7 @@ import {
   IGetRecipePricesHistoryRequest,
   IGetRecipePricesHistoryResponse,
 } from "./contracts/recipe-prices";
+import { IShortTokenHistoryResponse } from "./contracts/tokens";
 import { Message, ParseKind } from "./message";
 import { MessageError } from "./message-error";
 
@@ -77,6 +78,7 @@ export enum subjects {
   petsQuery = "petsQuery",
 
   regionTokenHistory = "regionTokenHistory",
+  tokenHistory = "tokenHistory",
 
   status = "status",
   connectedRealms = "connectedRealms",
@@ -269,9 +271,15 @@ export class Messenger {
   }
 
   // via token-histories
-  public getTokenHistory(tuple: IRegionTuple): Promise<Message<ITokenHistory>> {
+  public getRegionTokenHistory(tuple: IRegionTuple): Promise<Message<IRegionTokenHistory>> {
     return this.request(subjects.regionTokenHistory, {
       body: JSON.stringify(tuple),
+    });
+  }
+
+  public getTokenHistory(): Promise<Message<IShortTokenHistoryResponse>> {
+    return this.request(subjects.tokenHistory, {
+      parseKind: ParseKind.GzipJsonEncoded,
     });
   }
 
