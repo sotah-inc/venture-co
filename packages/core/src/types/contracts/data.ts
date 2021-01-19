@@ -6,8 +6,9 @@ import {
   IErrorResponse,
   IItemPrices,
   IRegionComposite,
+  IRegionTokenHistory,
   IShortPet,
-  ITokenHistory,
+  IShortTokenHistory,
   IValidationErrorResponse,
   Locale,
   PetId,
@@ -117,11 +118,17 @@ export type GetProfessionPricelistsResponse =
   | IValidationErrorResponse
   | null;
 
-export interface IGetTokenHistoryResponseData {
-  history: ITokenHistory;
+export interface IGetRegionTokenHistoryResponseData {
+  history: IRegionTokenHistory;
 }
 
-export type GetTokenHistoryResponse = IGetTokenHistoryResponseData | null;
+export type GetShortTokenHistoryResponse = IGetShortTokenHistoryResponseData | null;
+
+export interface IGetShortTokenHistoryResponseData {
+  history: IShortTokenHistory;
+}
+
+export type GetTokenHistoryResponse = IGetRegionTokenHistoryResponseData | null;
 
 export interface IQueryAuctionStatsItem {
   total_auctions: number;
