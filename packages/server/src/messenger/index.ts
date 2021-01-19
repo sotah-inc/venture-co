@@ -76,7 +76,7 @@ export enum subjects {
   pets = "pets",
   petsQuery = "petsQuery",
 
-  tokenHistory = "tokenHistory",
+  regionTokenHistory = "regionTokenHistory",
 
   status = "status",
   connectedRealms = "connectedRealms",
@@ -270,7 +270,7 @@ export class Messenger {
 
   // via token-histories
   public getTokenHistory(tuple: IRegionTuple): Promise<Message<ITokenHistory>> {
-    return this.request(subjects.tokenHistory, {
+    return this.request(subjects.regionTokenHistory, {
       body: JSON.stringify(tuple),
     });
   }
