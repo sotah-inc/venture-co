@@ -213,6 +213,7 @@ export class TokenHistoryGraph extends React.Component<Props, State> {
         connectNulls={true}
         stroke={stroke}
         strokeWidth={strokeWidth}
+        dot={false}
       />
     );
   }
