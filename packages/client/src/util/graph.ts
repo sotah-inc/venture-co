@@ -49,7 +49,7 @@ export function convertTokenHistoriesToLineData(
 
     const data = Object.keys(item).reduce<ILineItemOpenData>((resultData, regionName) => {
       const foundPrice = item[regionName];
-      if (typeof foundPrice === "undefined") {
+      if (typeof foundPrice === "undefined" || foundPrice === 0) {
         return {
           [`${regionName}_token_price`]: null,
         };
