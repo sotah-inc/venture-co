@@ -5,13 +5,13 @@ import {
   IRecipePriceHistories,
   IRecipePriceHistory,
   IRecipePrices,
+  IShortTokenHistory,
   ItemId,
   UnixTimestamp,
 } from "@sotah-inc/core";
 import moment from "moment";
 
 import { ILineItemOpen, ILineItemOpenData } from "../types/global";
-import { IRegionTokenHistories } from "../types/posts";
 
 export function getXAxisTimeRestrictions() {
   const twoWeeksAgoDate = moment().subtract(14, "days");
@@ -37,79 +37,37 @@ export function getXAxisTimeRestrictions() {
 
 export const zeroGraphValue = 0.0001;
 
-interface IRegionTokenHistoryIntermediate {
-  [unixtimestamp: number]: {
-    [regionName: string]: number | null;
-  };
-}
-
-export function convertRegionTokenHistoriesToLineData(
-  regionTokenHistories: IRegionTokenHistories,
+export function convertTokenHistoriesToLineData(
+  tokenHistories: IShortTokenHistory,
 ): ILineItemOpen[] {
-  // grouping data by unix timestamp, for easier consumption
-  const dataIntermediate = Object.keys(regionTokenHistories).reduce<
-    IRegionTokenHistoryIntermediate
-  >((dataIntermediate1, regionName) => {
-    const tokenHistory = regionTokenHistories[regionName];
-    if (typeof tokenHistory === "undefined") {
-      return dataIntermediate1;
+  return Object.keys(tokenHistories).reduce<ILineItemOpen[]>((result, unixTimestampString) => {
+    const unixTimestamp = Number(unixTimestampString);
+    const item = tokenHistories[unixTimestamp];
+    if (typeof item === "undefined") {
+      return result;
     }
 
-    return Object.keys(tokenHistory).reduce<IRegionTokenHistoryIntermediate>(
-      (dataIntermediate2, unixTimestamp) => {
-        const parsedUnixTimestamp = Number(unixTimestamp);
-        const foundTokenHistory = tokenHistory[parsedUnixTimestamp];
-        if (typeof foundTokenHistory === "undefined") {
-          return dataIntermediate2;
-        }
-
-        if (typeof dataIntermediate2[parsedUnixTimestamp] === "undefined") {
-          dataIntermediate2[parsedUnixTimestamp] = {
-            [regionName]: foundTokenHistory,
-          };
-        } else {
-          dataIntermediate2[parsedUnixTimestamp][regionName] = foundTokenHistory;
-        }
-
-        return dataIntermediate2;
-      },
-      dataIntermediate1,
-    );
-  }, {});
-
-  // filling in missing data
-  const filledDataIntermediate = Object.keys(dataIntermediate).reduce<
-    IRegionTokenHistoryIntermediate
-  >((dataIntermediate1, unixTimestamp) => {
-    const foundIntermediate = dataIntermediate1[Number(unixTimestamp)];
-    for (const regionName of Object.keys(regionTokenHistories)) {
-      if (!Object.keys(foundIntermediate).some(v => v === regionName)) {
-        foundIntermediate[regionName] = null;
+    const data = Object.keys(item).reduce<ILineItemOpenData>((resultData, regionName) => {
+      const foundPrice = item[regionName];
+      if (typeof foundPrice === "undefined") {
+        return {
+          [`${regionName}_token_price`]: null,
+        };
       }
-    }
 
-    return {
-      ...dataIntermediate1,
-      [Number(unixTimestamp)]: foundIntermediate,
-    };
-  }, dataIntermediate);
-
-  // converting each grouping to line-item data
-  return Object.keys(filledDataIntermediate).map<ILineItemOpen>(unixTimestamp => {
-    const data = Object.keys(dataIntermediate[Number(unixTimestamp)]).reduce<{
-      [dataKey: string]: number | null;
-    }>((data1, regionName) => {
       return {
-        ...data1,
-        [`${regionName}_token_price`]: dataIntermediate[Number(unixTimestamp)][regionName],
+        ...resultData,
+        [`${regionName}_token_price`]: foundPrice,
       };
     }, {});
 
-    return {
+    const resultItem: ILineItemOpen = {
       data,
-      name: Number(unixTimestamp) / 1000,
+      name: unixTimestamp / 1000,
     };
-  });
+
+    return [...result, resultItem];
+  }, []);
 }
 
 export function convertAuctionStatsToLineData(

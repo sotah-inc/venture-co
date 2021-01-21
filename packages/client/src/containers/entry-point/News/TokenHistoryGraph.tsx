@@ -7,9 +7,10 @@ import {
 import { IStoreState } from "../../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
-  const { regionTokenHistories } = state.Posts;
+  const { regions } = state.Main;
+  const { tokenHistories } = state.Posts;
 
-  return { regionTokenHistories };
+  return { regions, tokenHistories };
 };
 
 export const TokenHistoryGraphContainer = connect<IStateProps>(mapStateToProps)(TokenHistoryGraph);

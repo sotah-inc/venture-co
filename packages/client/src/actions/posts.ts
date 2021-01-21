@@ -2,6 +2,7 @@ import {
   ICreatePostRequest,
   IGetPostResponseData,
   IPostJson,
+  IShortTokenHistory,
   UpdatePostRequest,
 } from "@sotah-inc/core";
 import { Dispatch } from "redux";
@@ -104,7 +105,7 @@ export interface IRegionTokenHistoryResults {
 export interface ILoadPostsEntrypoint {
   loadId: string;
   posts: IGetPostsResult;
-  regionTokenHistories: IRegionTokenHistoryResults;
+  tokenHistories: IShortTokenHistory;
   auctionStats: IQueryAuctionStatsResult;
 }
 

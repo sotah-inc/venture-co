@@ -2,15 +2,14 @@ import React from "react";
 
 import { Icon, Intent, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
-import { RegionName } from "@sotah-inc/core";
+import { IShortTokenHistory, RegionName } from "@sotah-inc/core";
 import moment from "moment";
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
-import { IFetchData, ILineItemOpen } from "../../../types/global";
+import { IFetchData, ILineItemOpen, IRegions } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
-import { IRegionTokenHistories } from "../../../types/posts";
 import {
-  convertRegionTokenHistoriesToLineData,
+  convertTokenHistoriesToLineData,
   currencyToText,
   getColor,
   unixTimestampToText,
@@ -18,7 +17,8 @@ import {
 } from "../../../util";
 
 export interface IStateProps {
-  regionTokenHistories: IFetchData<IRegionTokenHistories>;
+  tokenHistories: IFetchData<IShortTokenHistory>;
+  regions: IRegions;
 }
 
 type Props = Readonly<IStateProps>;
@@ -106,9 +106,9 @@ export class TokenHistoryGraph extends React.Component<Props, State> {
   }
 
   public render() {
-    const { regionTokenHistories } = this.props;
+    const { tokenHistories } = this.props;
 
-    switch (regionTokenHistories.level) {
+    switch (tokenHistories.level) {
       case FetchLevel.success:
         break;
       case FetchLevel.failure:
@@ -118,7 +118,7 @@ export class TokenHistoryGraph extends React.Component<Props, State> {
         return <p>Fetching regional token-histories...</p>;
     }
 
-    const data = convertRegionTokenHistoriesToLineData(regionTokenHistories.data).filter(
+    const data = convertTokenHistoriesToLineData(tokenHistories.data).filter(
       v => v.name > moment(roundedEarliestDateLimit).add(1, "day").unix(),
     );
 
@@ -216,26 +216,27 @@ export class TokenHistoryGraph extends React.Component<Props, State> {
   }
 
   private renderLines() {
-    const { regionTokenHistories } = this.props;
+    const { regions } = this.props;
 
-    return Object.keys(regionTokenHistories.data).map((v, i) => this.renderLine(i, v));
+    return Object.keys(regions).map((v, i) => this.renderLine(i, v));
   }
 
   private renderLegend() {
-    const { regionTokenHistories } = this.props;
+    const { regions } = this.props;
 
-    const groupedRegionNames = Object.keys(regionTokenHistories.data).reduce<
-      Array<Array<[RegionName, number]>>
-    >((result, v, i) => {
-      const column = i % 2;
-      if (Object.keys(result).indexOf(column.toString()) === -1) {
-        result[column] = [];
-      }
+    const groupedRegionNames = Object.keys(regions).reduce<Array<Array<[RegionName, number]>>>(
+      (result, v, i) => {
+        const column = i % 2;
+        if (Object.keys(result).indexOf(column.toString()) === -1) {
+          result[column] = [];
+        }
 
-      result[column].push([v, i]);
+        result[column].push([v, i]);
 
-      return result;
-    }, []);
+        return result;
+      },
+      [],
+    );
 
     return (
       <div className="pure-g">

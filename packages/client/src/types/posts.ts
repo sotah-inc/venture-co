@@ -22,7 +22,6 @@ export interface IPostsState {
   getPostLevel: FetchLevel;
   isDeletePostDialogOpen: boolean;
   deletePostLevel: FetchLevel;
-  regionTokenHistories: IFetchData<IRegionTokenHistories>;
   tokenHistories: IFetchData<IShortTokenHistory>;
   auctionStats: IFetchData<IQueryAuctionStatsResponseData>;
 }
@@ -41,11 +40,6 @@ export const defaultPostsState: IPostsState = {
   isDeletePostDialogOpen: false,
   posts: {
     data: [],
-    errors: {},
-    level: FetchLevel.initial,
-  },
-  regionTokenHistories: {
-    data: {},
     errors: {},
     level: FetchLevel.initial,
   },

@@ -1,6 +1,7 @@
 import {
   IPostJson,
   IQueryAuctionStatsResponseData,
+  IShortTokenHistory,
   IValidationErrorResponse,
 } from "@sotah-inc/core";
 
@@ -15,7 +16,7 @@ import {
 } from "../../actions/posts";
 import { IFetchData } from "../../types/global";
 import { FetchLevel } from "../../types/main";
-import { IPostsState, IRegionTokenHistories } from "../../types/posts";
+import { IPostsState } from "../../types/posts";
 import { IKindHandlers, Runner } from "./index";
 
 export const handlers: IKindHandlers<IPostsState, PostsActions> = {
@@ -32,37 +33,12 @@ export const handlers: IKindHandlers<IPostsState, PostsActions> = {
           return { data: action.payload.posts.posts, errors: {}, level: FetchLevel.success };
         })();
 
-        const regionTokenHistories: IFetchData<IRegionTokenHistories> = (() => {
-          const error = Object.keys(action.payload.regionTokenHistories).reduce<string | null>(
-            (foundError, v) => {
-              if (foundError !== null) {
-                return foundError;
-              }
-
-              const result = action.payload.regionTokenHistories[v];
-
-              if (result.history === null) {
-                return `History for ${v} was null`;
-              }
-
-              return result.error;
-            },
-            null,
-          );
-          if (error != null) {
-            return { ...state.regionTokenHistories, level: FetchLevel.failure };
+        const tokenHistories = ((): IFetchData<IShortTokenHistory> => {
+          if (typeof action.payload.tokenHistories === "undefined") {
+            return { ...state.tokenHistories, level: FetchLevel.failure };
           }
 
-          const data = Object.keys(action.payload.regionTokenHistories).reduce<
-            IRegionTokenHistories
-          >((result, v) => {
-            return {
-              ...result,
-              [v]: action.payload.regionTokenHistories[v].history!,
-            };
-          }, {});
-
-          return { data, errors: {}, level: FetchLevel.success };
+          return { data: action.payload.tokenHistories, level: FetchLevel.success, errors: {} };
         })();
 
         const auctionStats = ((): IFetchData<IQueryAuctionStatsResponseData> => {
@@ -77,7 +53,7 @@ export const handlers: IKindHandlers<IPostsState, PostsActions> = {
           };
         })();
 
-        return { ...state, loadId, posts, regionTokenHistories, auctionStats };
+        return { ...state, loadId, posts, tokenHistories, auctionStats };
       },
     },
   },
