@@ -34,11 +34,18 @@ export const handlers: IKindHandlers<IPostsState, PostsActions> = {
         })();
 
         const tokenHistories = ((): IFetchData<IShortTokenHistory> => {
-          if (typeof action.payload.tokenHistories === "undefined") {
+          if (
+            typeof action.payload.tokenHistories === "undefined" ||
+            action.payload.tokenHistories.history === null
+          ) {
             return { ...state.tokenHistories, level: FetchLevel.failure };
           }
 
-          return { data: action.payload.tokenHistories, level: FetchLevel.success, errors: {} };
+          return {
+            data: action.payload.tokenHistories.history,
+            errors: {},
+            level: FetchLevel.success,
+          };
         })();
 
         const auctionStats = ((): IFetchData<IQueryAuctionStatsResponseData> => {

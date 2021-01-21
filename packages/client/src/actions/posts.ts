@@ -2,7 +2,6 @@ import {
   ICreatePostRequest,
   IGetPostResponseData,
   IPostJson,
-  IShortTokenHistory,
   UpdatePostRequest,
 } from "@sotah-inc/core";
 import { Dispatch } from "redux";
@@ -18,7 +17,7 @@ import {
   IUpdatePostResult,
   updatePost,
 } from "../api/posts";
-import { IGetTokenHistoryResult } from "../api/token-history";
+import { IGetShortTokenHistoryResult } from "../api/token-history";
 import { ActionsUnion, createAction } from "./helpers";
 
 export const REQUEST_CREATE_POST = "REQUEST_CREATE_POST";
@@ -98,14 +97,10 @@ export const CHANGE_IS_DELETE_POST_DIALOG_OPEN = "CHANGE_IS_DELETE_POST_DIALOG_O
 export const ChangeIsDeletePostDialogOpen = (payload: IDeletePostOptions) =>
   createAction(CHANGE_IS_DELETE_POST_DIALOG_OPEN, payload);
 
-export interface IRegionTokenHistoryResults {
-  [regionName: string]: IGetTokenHistoryResult;
-}
-
 export interface ILoadPostsEntrypoint {
   loadId: string;
   posts: IGetPostsResult;
-  tokenHistories: IShortTokenHistory;
+  tokenHistories: IGetShortTokenHistoryResult;
   auctionStats: IQueryAuctionStatsResult;
 }
 
