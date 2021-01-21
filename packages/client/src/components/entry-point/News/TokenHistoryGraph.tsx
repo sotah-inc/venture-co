@@ -126,7 +126,7 @@ export class TokenHistoryGraph extends React.Component<Props, State> {
 
     return (
       <>
-        <ResponsiveContainer width="100%" height={250}>
+        <ResponsiveContainer width="100%" height={175}>
           <LineChart data={data}>
             <CartesianGrid vertical={false} strokeWidth={0.25} strokeOpacity={0.25} />
             {TokenHistoryGraph.renderXAxis()}
