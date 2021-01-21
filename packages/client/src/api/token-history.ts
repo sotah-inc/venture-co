@@ -9,7 +9,9 @@ export interface IGetTokenHistoryResult {
   error: string | null;
 }
 
-export const getTokenHistory = async (regionName: RegionName): Promise<IGetTokenHistoryResult> => {
+export const getRegionTokenHistory = async (
+  regionName: RegionName,
+): Promise<IGetTokenHistoryResult> => {
   const { body, status } = await gather<null, GetRegionTokenHistoryResponse>({
     headers: new Headers({ "content-type": "application/json" }),
     method: "GET",
