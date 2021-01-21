@@ -80,7 +80,9 @@ export class TokenHistoryGraph extends React.Component<Props, State> {
               return 10;
             }
 
-            return Math.pow(10, Math.ceil(Math.log10(dataMax)));
+            const result = Math.pow(10, Math.floor(Math.log10(dataMax)));
+
+            return dataMax - (dataMax % result) + result;
           },
         ]}
         tick={{ fill: "#fff" }}
