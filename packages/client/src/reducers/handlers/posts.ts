@@ -33,13 +33,13 @@ export const handlers: IKindHandlers<IPostsState, PostsActions> = {
         })();
 
         const regionTokenHistories: IFetchData<IRegionTokenHistories> = (() => {
-          const error = Object.keys(action.payload.tokenHistories).reduce<string | null>(
+          const error = Object.keys(action.payload.regionTokenHistories).reduce<string | null>(
             (foundError, v) => {
               if (foundError !== null) {
                 return foundError;
               }
 
-              const result = action.payload.tokenHistories[v];
+              const result = action.payload.regionTokenHistories[v];
 
               if (result.history === null) {
                 return `History for ${v} was null`;
@@ -53,15 +53,14 @@ export const handlers: IKindHandlers<IPostsState, PostsActions> = {
             return { ...state.regionTokenHistories, level: FetchLevel.failure };
           }
 
-          const data = Object.keys(action.payload.tokenHistories).reduce<IRegionTokenHistories>(
-            (result, v) => {
-              return {
-                ...result,
-                [v]: action.payload.tokenHistories[v].history!,
-              };
-            },
-            {},
-          );
+          const data = Object.keys(action.payload.regionTokenHistories).reduce<
+            IRegionTokenHistories
+          >((result, v) => {
+            return {
+              ...result,
+              [v]: action.payload.regionTokenHistories[v].history!,
+            };
+          }, {});
 
           return { data, errors: {}, level: FetchLevel.success };
         })();

@@ -104,7 +104,7 @@ export interface IRegionTokenHistoryResults {
 export interface ILoadPostsEntrypoint {
   loadId: string;
   posts: IGetPostsResult;
-  tokenHistories: IRegionTokenHistoryResults;
+  regionTokenHistories: IRegionTokenHistoryResults;
   auctionStats: IQueryAuctionStatsResult;
 }
 
