@@ -1,10 +1,10 @@
-import { IPostJson, IQueryAuctionStatsResponseData, ITokenHistory } from "@sotah-inc/core";
+import { IPostJson, IQueryAuctionStatsResponseData, IRegionTokenHistory } from "@sotah-inc/core";
 
 import { IErrors, IFetchData } from "./global";
 import { FetchLevel } from "./main";
 
 export interface IRegionTokenHistories {
-  [regionName: string]: ITokenHistory | undefined;
+  [regionName: string]: IRegionTokenHistory | undefined;
 }
 
 export interface IPostsState {

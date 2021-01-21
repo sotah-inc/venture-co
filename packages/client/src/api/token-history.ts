@@ -1,16 +1,16 @@
-import { GetTokenHistoryResponse, ITokenHistory, RegionName } from "@sotah-inc/core";
+import { GetRegionTokenHistoryResponse, IRegionTokenHistory, RegionName } from "@sotah-inc/core";
 import * as HTTPStatus from "http-status";
 
 import { getApiEndpoint } from "./config";
 import { gather } from "./gather";
 
 export interface IGetTokenHistoryResult {
-  history: ITokenHistory | null;
+  history: IRegionTokenHistory | null;
   error: string | null;
 }
 
 export const getTokenHistory = async (regionName: RegionName): Promise<IGetTokenHistoryResult> => {
-  const { body, status } = await gather<null, GetTokenHistoryResponse>({
+  const { body, status } = await gather<null, GetRegionTokenHistoryResponse>({
     headers: new Headers({ "content-type": "application/json" }),
     method: "GET",
     url: `${getApiEndpoint()}/token-history/${regionName}`,
