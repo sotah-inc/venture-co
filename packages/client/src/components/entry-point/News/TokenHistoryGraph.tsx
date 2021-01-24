@@ -152,8 +152,18 @@ export class TokenHistoryGraph extends React.Component<Props, State> {
   }
 
   private renderLegendColumnTag(regionName: RegionName, originalIndex: number, i: number) {
+    const { highlightedRegionName } = this.state;
+
     const { intent, rightIcon, interactive } = (() => {
-      const rightIconElement = <Icon icon={IconNames.CHART} color={getColor(originalIndex)} />;
+      const color = ((): string => {
+        if (highlightedRegionName === null || highlightedRegionName === regionName) {
+          return getColor(originalIndex);
+        }
+
+        return "#5C7080";
+      })();
+
+      const rightIconElement = <Icon icon={IconNames.CHART} color={color} />;
 
       return { intent: Intent.NONE, rightIcon: rightIconElement, interactive: false };
     })();
