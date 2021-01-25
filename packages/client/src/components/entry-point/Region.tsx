@@ -26,11 +26,11 @@ export interface IOwnProps {
 
 export interface IRouteProps {
   routeParams: IRouteParams;
-  browseToRealmData: (region: IRegionComposite, realm: IClientRealm) => void;
+  browseToRealmAuctions: (region: IRegionComposite, realm: IClientRealm) => void;
 }
 
 export interface IRouteParams {
-  region_name: string;
+  region_name?: string;
 }
 
 export type Props = Readonly<IStateProps & IDispatchProps & IOwnProps & IRouteProps>;
@@ -89,7 +89,7 @@ export class Region extends React.Component<Props> {
   }
 
   private renderMatchedWithRealms() {
-    const { currentRealm, currentRegion, browseToRealmData } = this.props;
+    const { currentRealm, currentRegion, browseToRealmAuctions } = this.props;
 
     if (currentRegion === null || currentRealm === null) {
       return (
@@ -100,7 +100,7 @@ export class Region extends React.Component<Props> {
       );
     }
 
-    browseToRealmData(currentRegion, currentRealm);
+    browseToRealmAuctions(currentRegion, currentRealm);
 
     return <p>Redirecting to realm data!</p>;
   }
@@ -110,6 +110,15 @@ export class Region extends React.Component<Props> {
       regions,
       routeParams: { region_name },
     } = this.props;
+
+    if (region_name === undefined) {
+      return (
+        <NonIdealState
+          title={"Region is required!"}
+          icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={1} />}
+        />
+      );
+    }
 
     if (!(region_name in regions)) {
       return (

@@ -4,18 +4,20 @@ import React from "react";
 
 import { IOwnProps } from "../../components/entry-point/Region";
 import { RegionContainer } from "../../containers/entry-point/Region";
-import { extractString } from "../../util";
+import { extractSlug } from "../../util/extract-slug";
 
 type Props = Readonly<WithRouterProps & IOwnProps>;
 
 function RouteContainer({ router, regionEntrypointData }: Props) {
+  const [nextRegionName] = extractSlug("slug", router.query);
+
   return (
     <RegionContainer
-      routeParams={{ region_name: extractString("region_name", router.query) }}
-      browseToRealmData={(region, realm) =>
+      routeParams={{ region_name: nextRegionName }}
+      browseToRealmAuctions={(region, realm) =>
         router.replace(
-          "/data/[region_name]/[realm_slug]",
-          `/data/${region.config_region.name}/${realm.realm.slug}`,
+          "/auctions/[region_name]/[realm_slug]",
+          `/auctions/${region.config_region.name}/${realm.realm.slug}`,
         )
       }
       regionEntrypointData={regionEntrypointData}

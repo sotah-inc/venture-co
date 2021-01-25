@@ -1,24 +1,27 @@
+import React from "react";
+
 import { WithRouterProps } from "next/dist/client/with-router";
 import { withRouter } from "next/router";
-import React from "react";
 
 import { IOwnProps } from "../../components/entry-point/AuctionList";
 import { AuctionsListContainer } from "../../containers/entry-point/AuctionList";
-import { extractString } from "../../util";
+import { extractSlug } from "../../util/extract-slug";
 
 type Props = Readonly<WithRouterProps & IOwnProps>;
 
 function RouteContainer({ router, realmEntrypointData, auctionListEntrypointData, loadId }: Props) {
+  const [nextRegionName, nextRealmSlug] = extractSlug("slug", router.query);
+
   return (
     <AuctionsListContainer
       routeParams={{
-        realm_slug: extractString("realm_slug", router.query),
-        region_name: extractString("region_name", router.query),
+        realm_slug: nextRealmSlug,
+        region_name: nextRegionName,
       }}
       browseToRealmAuctions={(region, realm) =>
         router.replace(
-          "/data/[region_name]/[realm_slug]/auctions",
-          `/data/${region.config_region.name}/${realm.realm.slug}/auctions`,
+          "/auctions/[region_name]/[realm_slug]",
+          `/auctions/${region.config_region.name}/${realm.realm.slug}`,
         )
       }
       realmEntrypointData={realmEntrypointData}

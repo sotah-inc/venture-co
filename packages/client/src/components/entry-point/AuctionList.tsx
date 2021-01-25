@@ -64,8 +64,8 @@ export interface IRouteProps {
 }
 
 export interface IRouteParams {
-  region_name: string;
-  realm_slug: string;
+  region_name?: string;
+  realm_slug?: string;
 }
 
 export interface IOwnProps {
@@ -195,6 +195,15 @@ export class AuctionList extends React.Component<Props> {
       regions,
       routeParams: { region_name },
     } = this.props;
+
+    if (region_name === undefined) {
+      return (
+        <NonIdealState
+          title={"Region is required!"}
+          icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={1} />}
+        />
+      );
+    }
 
     if (!(region_name in regions)) {
       return (
