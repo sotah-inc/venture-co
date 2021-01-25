@@ -129,7 +129,7 @@ export class AuctionStatsGraph extends React.Component<Props> {
 
     return (
       <>
-        <ResponsiveContainer width="100%" height={250}>
+        <ResponsiveContainer width="100%" height={175}>
           <LineChart data={data}>
             <CartesianGrid vertical={false} strokeWidth={0.25} strokeOpacity={0.25} />
             {AuctionStatsGraph.renderXAxis()}
