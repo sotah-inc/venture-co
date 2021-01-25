@@ -11,5 +11,5 @@ export const extractSlug = (key: string, params: IExtractStringMap): Array<strin
     return [];
   }
 
-  return params[key] as string[];
+  return params[key] as Array<string | undefined>;
 };
