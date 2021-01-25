@@ -68,14 +68,19 @@ export class AuctionStatsGraph extends React.Component<Props> {
               return zeroGraphValue;
             }
 
-            return result;
+            return dataMin - (dataMin % result);
           },
           dataMax => {
             if (dataMax <= 1) {
               return 10;
             }
 
-            return Math.pow(10, Math.ceil(Math.log10(dataMax)));
+            const result = Math.pow(10, Math.floor(Math.log10(dataMax)));
+            if (result === 0) {
+              return zeroGraphValue;
+            }
+
+            return dataMax - (dataMax % result) + result;
           },
         ]}
         tick={{ fill: "#fff" }}
@@ -138,6 +143,7 @@ export class AuctionStatsGraph extends React.Component<Props> {
               connectNulls={true}
               stroke={getColor(0)}
               strokeWidth={2}
+              dot={false}
             />
           </LineChart>
         </ResponsiveContainer>
