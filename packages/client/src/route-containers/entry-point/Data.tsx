@@ -11,7 +11,7 @@ function RouteContainer({ router }: Props) {
   return (
     <DataContainer
       redirectToRegion={region =>
-        router.replace("/data/[region_name]", `/data/${region.config_region.name}`)
+        router.replace("/auctions/[region_name]", `/auctions/${region.config_region.name}`)
       }
     />
   );
