@@ -5,7 +5,6 @@ import {
   ButtonGroup,
   Classes,
   Icon,
-  IconName,
   Navbar,
   NavbarDivider,
   NavbarGroup,
@@ -220,7 +219,7 @@ export class Topbar extends React.Component<Props> {
   private renderDataSubBar() {
     return (
       <>
-        {this.renderRegionRealmButton("/auctions", "dollar", "Auctions")}
+        {this.renderAuctionsButton()}
         <NavbarDivider />
         {this.renderProfessionsButton()}
         <NavbarDivider />
@@ -295,23 +294,23 @@ export class Topbar extends React.Component<Props> {
     );
   }
 
-  private renderRegionRealmButton(destination: string, icon: IconName, text: string) {
+  private renderAuctionsButton() {
     const { currentRegion, currentRealm } = this.props;
 
     if (currentRegion === null || currentRealm === null) {
       return (
         <LinkButtonRouteContainer
           destination={""}
-          buttonProps={{ icon, text, minimal: true, disabled: true }}
+          buttonProps={{ icon: "dollar", text: "Auctions", minimal: true, disabled: true }}
         />
       );
     }
 
     return (
       <LinkButtonRouteContainer
-        destination={`/data/[region_name]/[realm_slug]${destination}`}
-        asDestination={`/data/${currentRegion.config_region.name}/${currentRealm.realm.slug}${destination}`}
-        buttonProps={{ icon, text, minimal: true }}
+        destination={"/auctions/[region_name]/[realm_slug]"}
+        asDestination={`/auctions/${currentRegion.config_region.name}/${currentRealm.realm.slug}`}
+        buttonProps={{ icon: "dollar", text: "Auctions", minimal: true }}
       />
     );
   }
