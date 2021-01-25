@@ -7,9 +7,9 @@ export const extractSlug = (key: string, params: IExtractStringMap): Array<strin
     return [];
   }
 
-  if (typeof params[key] === "string") {
-    return params[key] as string[];
+  if (!Array.isArray(params[key])) {
+    return [];
   }
 
-  return [];
+  return params[key] as string[];
 };

@@ -21,5 +21,5 @@ export function Data({ currentRegion, redirectToRegion }: Props) {
 
   redirectToRegion(currentRegion);
 
-  return <p>Redirecting to data for {currentRegion.config_region.name}!</p>;
+  return <p>Redirecting to auctions for {currentRegion.config_region.name}!</p>;
 }
