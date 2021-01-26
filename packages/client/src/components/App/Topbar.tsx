@@ -72,10 +72,10 @@ export class Topbar extends React.Component<Props> {
           destination="/data"
           buttonProps={{ icon: "chart", text: "Data" }}
           resolveActive={(locationPathname: string, comparisonDestination: string): boolean => {
-            // tslint:disable-next-line:no-console
-            console.log("/data resolveActive()", { locationPathname, comparisonDestination });
-
-            return prefixActiveCheck(locationPathname, comparisonDestination);
+            return (
+              prefixActiveCheck(locationPathname, comparisonDestination) ||
+              locationPathname.startsWith("/auctions")
+            );
           }}
         />
       );
@@ -154,7 +154,7 @@ export class Topbar extends React.Component<Props> {
       return SubBarKind.Content;
     }
 
-    if (locationPathname.startsWith("/data")) {
+    if (locationPathname.startsWith("/data") || locationPathname.startsWith("/auctions")) {
       return SubBarKind.Data;
     }
 
