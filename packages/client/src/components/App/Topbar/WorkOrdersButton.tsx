@@ -3,6 +3,7 @@ import React from "react";
 import { Button, ButtonGroup } from "@blueprintjs/core";
 
 import { LinkButtonRouteContainer } from "../../../route-containers/util/LinkButton";
+import { prefixActiveCheck } from "../../util/LinkButton";
 
 export interface IDispatchProps {
   changeIsWorkOrderDialogOpen: (isDialogOpen: boolean) => void;
@@ -25,7 +26,7 @@ export class WorkOrdersButton extends React.Component<Props> {
         <LinkButtonRouteContainer
           destination="/marketplace/work-orders"
           buttonProps={{ icon: "flow-review", text: "Work Orders", minimal: true }}
-          prefix={true}
+          resolveActive={prefixActiveCheck}
         />
         <Button
           active={locationPathname.startsWith("/marketplace/work-orders")}

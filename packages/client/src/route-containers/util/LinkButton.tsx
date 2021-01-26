@@ -7,7 +7,7 @@ import { IOwnProps, LinkButton } from "../../components/util/LinkButton";
 
 type Props = Readonly<IOwnProps & WithRouterProps>;
 
-function RouteContainer({ buttonProps, destination, router, prefix, asDestination }: Props) {
+function RouteContainer({ buttonProps, destination, router, asDestination, resolveActive }: Props) {
   return (
     <LinkButton
       locationPathname={router.asPath}
@@ -18,7 +18,7 @@ function RouteContainer({ buttonProps, destination, router, prefix, asDestinatio
       }}
       destination={destination}
       buttonProps={buttonProps}
-      prefix={prefix}
+      resolveActive={resolveActive}
       asDestination={asDestination}
     />
   );

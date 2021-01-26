@@ -4,6 +4,7 @@ import { ButtonGroup } from "@blueprintjs/core";
 import { IUserJson, UserLevel } from "@sotah-inc/core";
 
 import { LinkButtonRouteContainer } from "../../../route-containers/util/LinkButton";
+import { prefixActiveCheck } from "../../util/LinkButton";
 
 export interface IStateProps {
   user: IUserJson | null;
@@ -21,7 +22,7 @@ export class NewsButton extends React.Component<Props> {
       <LinkButtonRouteContainer
         destination="/content/news"
         buttonProps={{ icon: "globe-network", text: "News", minimal: true }}
-        prefix={true}
+        resolveActive={prefixActiveCheck}
       />
     );
   }

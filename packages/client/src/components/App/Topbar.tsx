@@ -20,6 +20,7 @@ import { WorkOrdersButtonRouteContainer } from "../../route-containers/App/Topba
 import { LinkButtonRouteContainer } from "../../route-containers/util/LinkButton";
 import { IClientRealm } from "../../types/global";
 import { toExpansionProfessionPricelists, toRealmProfessions } from "../../util";
+import { prefixActiveCheck } from "../util/LinkButton";
 
 export interface IStateProps {
   user: IUserJson | null;
@@ -52,7 +53,7 @@ export class Topbar extends React.Component<Props> {
         <LinkButtonRouteContainer
           destination="/content"
           buttonProps={{ icon: "manually-entered-data", text: "Content" }}
-          prefix={true}
+          resolveActive={prefixActiveCheck}
         />
       );
       if (this.getSubBarKind() === SubBarKind.Content) {
@@ -70,7 +71,7 @@ export class Topbar extends React.Component<Props> {
         <LinkButtonRouteContainer
           destination="/data"
           buttonProps={{ icon: "chart", text: "Data" }}
-          prefix={true}
+          resolveActive={prefixActiveCheck}
         />
       );
       if (this.getSubBarKind() === SubBarKind.Data) {
@@ -88,7 +89,7 @@ export class Topbar extends React.Component<Props> {
         <LinkButtonRouteContainer
           destination="/marketplace"
           buttonProps={{ icon: "exchange", text: "Marketplace" }}
-          prefix={true}
+          resolveActive={prefixActiveCheck}
         />
       );
       if (this.getSubBarKind() === SubBarKind.Marketplace) {
@@ -266,7 +267,7 @@ export class Topbar extends React.Component<Props> {
           minimal: true,
           text: "Profession Pricelists",
         }}
-        prefix={true}
+        resolveActive={prefixActiveCheck}
       />
     );
   }
@@ -289,7 +290,7 @@ export class Topbar extends React.Component<Props> {
           minimal: true,
           text: "Professions",
         }}
-        prefix={true}
+        resolveActive={prefixActiveCheck}
       />
     );
   }
@@ -330,7 +331,7 @@ export class Topbar extends React.Component<Props> {
       <LinkButtonRouteContainer
         destination="/profile"
         buttonProps={{ icon: "user", text: "Profile" }}
-        prefix={true}
+        resolveActive={prefixActiveCheck}
       />
     );
   }

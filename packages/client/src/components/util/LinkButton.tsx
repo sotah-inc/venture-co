@@ -11,31 +11,47 @@ export interface IRouteProps {
   historyPush: (destination: string, asDest?: string) => void;
 }
 
+export function defaultActiveCheck(
+  locationPathname: string,
+  comparisonDestination: string,
+): boolean {
+  return locationPathname === comparisonDestination;
+}
+
+export function prefixActiveCheck(
+  locationPathname: string,
+  comparisonDestination: string,
+): boolean {
+  return locationPathname.startsWith(comparisonDestination);
+}
+
+type ActiveFunc = (locationPathname: string, comparisonDestination: string) => boolean;
+
 export interface IOwnProps {
   destination: string;
   asDestination?: string;
   buttonProps: ILinkButtonButtonProps;
-  prefix?: boolean;
+  resolveActive?: ActiveFunc;
 }
 
 type Props = Readonly<IOwnProps & IRouteProps>;
 
 export function LinkButton(props: Props) {
-  const { destination, locationPathname, historyPush, buttonProps, prefix, asDestination } = props;
+  const {
+    destination,
+    locationPathname,
+    historyPush,
+    buttonProps,
+    asDestination,
+    resolveActive,
+  } = props;
 
   const comparisonDestination = typeof asDestination === "undefined" ? destination : asDestination;
-
-  const active: boolean = (() => {
-    if (typeof prefix === "undefined") {
-      return locationPathname === comparisonDestination;
-    }
-
-    return locationPathname.startsWith(comparisonDestination);
-  })();
+  const activeCheck = resolveActive ?? defaultActiveCheck;
 
   return (
     <Button
-      active={active}
+      active={activeCheck(locationPathname, comparisonDestination)}
       onClick={() => historyPush(destination, asDestination)}
       {...buttonProps}
     />
