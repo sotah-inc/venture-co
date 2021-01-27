@@ -1,3 +1,4 @@
+import { IRegionComposite } from "@sotah-inc/core";
 import { connect } from "react-redux";
 
 import {
@@ -38,7 +39,10 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
     fetchUserPreferencesLevel,
     options,
     realms,
-    regions,
+    regions: Object.values(regions).reduce<IRegionComposite[]>(
+      (result, v) => (v === undefined ? result : [...result, v]),
+      [],
+    ),
     totalResults,
     userPreferences,
   };

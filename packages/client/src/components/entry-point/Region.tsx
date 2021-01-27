@@ -4,14 +4,14 @@ import { Classes, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
 import { IRegionComposite } from "@sotah-inc/core";
 
 import { ILoadRegionEntrypoint } from "../../actions/main";
-import { IClientRealm, IRegions } from "../../types/global";
+import { IClientRealm } from "../../types/global";
 import { AuthLevel, FetchLevel } from "../../types/main";
 
 export interface IStateProps {
   currentRegion: IRegionComposite | null;
   currentRealm: IClientRealm | null;
   authLevel: AuthLevel;
-  regions: IRegions;
+  regions: IRegionComposite[];
   fetchRealmLevel: FetchLevel;
 }
 
@@ -120,7 +120,7 @@ export class Region extends React.Component<Props> {
       );
     }
 
-    if (!(region_name in regions)) {
+    if (!regions.map(v => v.config_region.name).includes(region_name)) {
       return (
         <NonIdealState
           title={`Region ${region_name} not found!`}

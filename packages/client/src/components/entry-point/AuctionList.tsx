@@ -30,7 +30,7 @@ import { RealmToggleContainer } from "../../containers/util/RealmToggle";
 import { RegionToggleContainer } from "../../containers/util/RegionToggle";
 import { AuctionTableRouteContainer } from "../../route-containers/entry-point/AuctionList/AuctionTable";
 import { AuctionsOptions, IAuctionResultData } from "../../types/auction";
-import { IClientRealm, IFetchData, IRegions } from "../../types/global";
+import { IClientRealm, IFetchData } from "../../types/global";
 import { AuthLevel, FetchLevel } from "../../types/main";
 import { hasNewItems, hasNewPets, setTitle } from "../../util";
 import { LastModified, Pagination } from "../util";
@@ -48,7 +48,7 @@ export interface IStateProps {
   currentRegion: IRegionComposite | null;
   currentRealm: IClientRealm | null;
   authLevel: AuthLevel;
-  regions: IRegions;
+  regions: IRegionComposite[];
 }
 
 export interface IDispatchProps {
@@ -205,7 +205,7 @@ export class AuctionList extends React.Component<Props> {
       );
     }
 
-    if (!(region_name in regions)) {
+    if (!regions.map(v => v.config_region.name).includes(region_name)) {
       return (
         <NonIdealState
           title={`Region ${region_name} not found!`}
