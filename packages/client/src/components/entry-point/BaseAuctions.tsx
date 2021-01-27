@@ -14,7 +14,7 @@ export type IOwnProps = IRouteProps;
 
 export type Props = Readonly<IStateProps & IOwnProps>;
 
-export function BaseAuction({ currentRegion, redirectToRegion }: Props) {
+export function BaseAuctions({ currentRegion, redirectToRegion }: Props) {
   if (currentRegion === null) {
     return null;
   }

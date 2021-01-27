@@ -3,13 +3,13 @@ import React from "react";
 import { WithRouterProps } from "next/dist/client/with-router";
 import { withRouter } from "next/router";
 
-import { BaseAuctionContainer } from "../../containers/entry-point/BaseAuction";
+import { BaseAuctionsContainer } from "../../containers/entry-point/BaseAuctions";
 
 type Props = Readonly<WithRouterProps>;
 
 function RouteContainer({ router }: Props) {
   return (
-    <BaseAuctionContainer
+    <BaseAuctionsContainer
       redirectToRegion={region =>
         router.replace("/auctions/[region_name]", `/auctions/${region.config_region.name}`)
       }
@@ -17,4 +17,4 @@ function RouteContainer({ router }: Props) {
   );
 }
 
-export const BaseAuctionRouteContainer = withRouter(RouteContainer);
+export const BaseAuctionsRouteContainer = withRouter(RouteContainer);
