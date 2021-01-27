@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 
-import { Data, IOwnProps, IStateProps } from "../../components/entry-point/Data";
+import { BaseAuction, IOwnProps, IStateProps } from "../../components/entry-point/BaseAuction";
 import { IStoreState } from "../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
@@ -8,6 +8,6 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
   return { currentRegion };
 };
 
-export const DataContainer = connect<IStateProps, {}, IOwnProps, IStoreState>(mapStateToProps)(
-  Data,
-);
+export const BaseAuctionContainer = connect<IStateProps, {}, IOwnProps, IStoreState>(
+  mapStateToProps,
+)(BaseAuction);
