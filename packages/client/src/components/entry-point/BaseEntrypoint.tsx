@@ -10,16 +10,22 @@ export interface IStateProps {
   currentRegion: IRegionComposite | null;
 }
 
-export type IOwnProps = IRouteProps;
+export interface IOwnProps {
+  label: string;
+}
 
-export type Props = Readonly<IStateProps & IOwnProps>;
+export type Props = Readonly<IStateProps & IOwnProps & IRouteProps>;
 
-export function BaseAuctions({ currentRegion, redirectToRegion }: Props) {
+export function BaseEntrypoint({ currentRegion, redirectToRegion, label }: Props) {
   if (currentRegion === null) {
     return null;
   }
 
   redirectToRegion(currentRegion);
 
-  return <p>Redirecting to auctions for {currentRegion.config_region.name}!</p>;
+  return (
+    <p>
+      Redirecting to {label} for {currentRegion.config_region.name}!
+    </p>
+  );
 }
