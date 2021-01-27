@@ -3,7 +3,7 @@ import React from "react";
 import { WithRouterProps } from "next/dist/client/with-router";
 import { withRouter } from "next/router";
 
-import { IOwnProps } from "../../components/entry-point/Region";
+import { IOwnProps } from "../../components/entry-point/RegionAuctions";
 import { RegionAuctionsContainer } from "../../containers/entry-point/RegionAuctions";
 import { extractSlug } from "../../util/extract-slug";
 
