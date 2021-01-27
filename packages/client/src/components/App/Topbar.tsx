@@ -71,12 +71,7 @@ export class Topbar extends React.Component<Props> {
         <LinkButtonRouteContainer
           destination="/data"
           buttonProps={{ icon: "chart", text: "Data" }}
-          resolveActive={(locationPathname: string, comparisonDestination: string): boolean => {
-            return (
-              prefixActiveCheck(locationPathname, comparisonDestination) ||
-              locationPathname.startsWith("/auctions")
-            );
-          }}
+          resolveActive={(): boolean => this.getSubBarKind() === SubBarKind.Data}
         />
       );
       if (this.getSubBarKind() === SubBarKind.Data) {
