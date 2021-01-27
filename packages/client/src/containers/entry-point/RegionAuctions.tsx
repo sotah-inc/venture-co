@@ -7,8 +7,8 @@ import {
   IOwnProps,
   IRouteProps,
   IStateProps,
-  Region,
-} from "../../components/entry-point/Region";
+  RegionAuctions,
+} from "../../components/entry-point/RegionAuctions";
 import { IStoreState } from "../../types";
 
 const mapStateToProps = (state: IStoreState): IStateProps => {
@@ -30,7 +30,7 @@ const mapDispatchToProps: IDispatchProps = {
   onRegionChange: RegionChange,
 };
 
-export const RegionContainer = connect<
+export const RegionAuctionsContainer = connect<
   IStateProps,
   IDispatchProps,
   IOwnProps & IRouteProps,
@@ -38,4 +38,4 @@ export const RegionContainer = connect<
 >(
   mapStateToProps,
   mapDispatchToProps,
-)(Region);
+)(RegionAuctions);
