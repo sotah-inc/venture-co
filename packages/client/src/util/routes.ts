@@ -109,13 +109,8 @@ export const toRealmCategoryRecipe = (
 };
 
 export const toRealmProfessionPricelists = (region: IRegionComposite, realm: IClientRealm) => {
-  const asDest = [
-    "data",
-    region.config_region.name,
-    realm.realm.slug,
-    "profession-pricelists",
-  ].join("/");
-  const url = ["data", "[region_name]", "[realm_slug]", "profession-pricelists"].join("/");
+  const asDest = ["profession-pricelists", region.config_region.name, realm.realm.slug].join("/");
+  const url = ["profession-pricelists", "[region_name]", "[realm_slug]"].join("/");
 
   return { url, asDest };
 };
@@ -141,20 +136,18 @@ export const toProfessionPricelist = (
   pricelist: IPricelistJson,
 ) => {
   const asDest = [
-    "data",
+    "profession-pricelists",
     region.config_region.name,
     realm.realm.slug,
     expansion.name,
-    "profession-pricelists",
     profession.name,
     pricelist.slug,
   ].join("/");
   const url = [
-    "data",
+    "profession-pricelists",
     "[region_name]",
     "[realm_slug]",
     "[expansion_name]",
-    "profession-pricelists",
     "[profession_name]",
     "[pricelist_slug]",
   ].join("/");
@@ -177,11 +170,10 @@ export const toProfessionPricelistsProfession = (
     profession.name,
   ].join("/");
   const url = [
-    "data",
+    "profession-pricelists",
     "[region_name]",
     "[realm_slug]",
     "[expansion_name]",
-    "profession-pricelists",
     "[profession_name]",
   ].join("/");
 
@@ -194,19 +186,14 @@ export const toExpansionProfessionPricelists = (
   expansion: IExpansion,
 ) => {
   const asDest = [
-    "data",
+    "profession-pricelists",
     region.config_region.name,
     realm.realm.slug,
     expansion.name,
-    "profession-pricelists",
   ].join("/");
-  const url = [
-    "data",
-    "[region_name]",
-    "[realm_slug]",
-    "[expansion_name]",
-    "profession-pricelists",
-  ].join("/");
+  const url = ["profession-pricelists", "[region_name]", "[realm_slug]", "[expansion_name]"].join(
+    "/",
+  );
 
   return { url, asDest };
 };

@@ -14,27 +14,21 @@ import {
   ILoadPricelistsEntrypoint,
   ILoadPricelistsEntrypointFront,
 } from "../../actions/price-lists";
-// tslint:disable-next-line:max-line-length
 import { CreateEntryDialogContainer } from "../../containers/entry-point/PriceLists/CreateEntryDialog";
 import { ActionBarRouteContainer } from "../../route-containers/entry-point/PriceLists/ActionBar";
-// tslint:disable-next-line:max-line-length
 import { CreateListDialogRouteContainer } from "../../route-containers/entry-point/PriceLists/CreateListDialog";
-// tslint:disable-next-line:max-line-length
 import { DeleteListDialogRouteContainer } from "../../route-containers/entry-point/PriceLists/DeleteListDialog";
-// tslint:disable-next-line:max-line-length
 import { EditListDialogRouteContainer } from "../../route-containers/entry-point/PriceLists/EditListDialog";
-// tslint:disable-next-line:max-line-length
 import { PricelistTreeRouteContainer } from "../../route-containers/entry-point/PriceLists/PricelistTree";
-import { IClientRealm, IRegions } from "../../types/global";
+import { IClientRealm } from "../../types/global";
 import { AuthLevel, FetchLevel } from "../../types/main";
 import { setTitle } from "../../util";
 
 export interface IStateProps {
   authLevel: AuthLevel;
-
   currentRealm: IClientRealm | null;
   currentRegion: IRegionComposite | null;
-  regions: IRegions;
+  regions: IRegionComposite[];
   fetchRealmLevel: FetchLevel;
   realms: IClientRealm[];
   selectedProfession: IProfession | null;
@@ -65,11 +59,11 @@ export interface IRouteProps {
 }
 
 export interface IRouteParams {
-  region_name: string;
-  realm_slug: string;
-  profession_name: string;
-  expansion_name: string;
-  pricelist_slug: string;
+  region_name?: string;
+  realm_slug?: string;
+  profession_name?: string;
+  expansion_name?: string;
+  pricelist_slug?: string;
 }
 
 export interface IOwnProps {
@@ -140,16 +134,8 @@ export class PriceLists extends React.Component<Props> {
       professions,
     } = this.props;
 
-    if (profession_name.length > 0) {
-      const hasProfession = professions.reduce<boolean>((previousValue, currentValue) => {
-        if (previousValue) {
-          return previousValue;
-        }
-
-        return currentValue.name === profession_name;
-      }, false);
-
-      if (!hasProfession) {
+    if (profession_name !== undefined && profession_name.length > 0) {
+      if (!professions.some(v => v.name === profession_name)) {
         return (
           <NonIdealState
             title="Profession not found"
@@ -189,19 +175,9 @@ export class PriceLists extends React.Component<Props> {
       pricelists,
     } = this.props;
 
-    if (profession_name.length === 0) {
-      const foundList = pricelists.reduce<IPricelistJson | null>((prevValue, curValue) => {
-        if (prevValue !== null) {
-          return prevValue;
-        }
-
-        if (curValue.slug === pricelist_slug) {
-          return curValue;
-        }
-
-        return null;
-      }, null);
-      if (foundList === null) {
+    if (profession_name === undefined || profession_name.length === 0) {
+      const foundList = pricelists.find(v => v.slug === pricelist_slug);
+      if (foundList === undefined) {
         return;
       }
 
@@ -242,7 +218,7 @@ export class PriceLists extends React.Component<Props> {
         return;
     }
 
-    if (expansion_name.length === 0) {
+    if (expansion_name === undefined || expansion_name.length === 0) {
       this.setTitle();
 
       return;
@@ -280,7 +256,7 @@ export class PriceLists extends React.Component<Props> {
       return;
     }
 
-    if (pricelist_slug.length === 0) {
+    if (pricelist_slug === undefined || pricelist_slug.length === 0) {
       const preselectedList: IPricelistJson | null = (() => {
         const sorted = professionPricelists.sort((a, b) => {
           if (a.pricelist.name === b.pricelist.name) {
@@ -308,18 +284,8 @@ export class PriceLists extends React.Component<Props> {
       return;
     }
 
-    const foundList = professionPricelists.reduce<IPricelistJson | null>((prevValue, curValue) => {
-      if (prevValue !== null) {
-        return prevValue;
-      }
-
-      if (curValue.pricelist.slug === pricelist_slug) {
-        return curValue.pricelist;
-      }
-
-      return null;
-    }, null);
-    if (foundList === null) {
+    const foundList = professionPricelists.find(v => v.pricelist.slug === pricelist_slug);
+    if (foundList === undefined) {
       return;
     }
 

@@ -1,3 +1,4 @@
+import { IRegionComposite } from "@sotah-inc/core";
 import { connect } from "react-redux";
 
 import { ChangeIsLoginDialogOpen, LoadRealmEntrypoint } from "../../actions/main";
@@ -46,7 +47,10 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
     professionPricelists,
     professions,
     realms,
-    regions,
+    regions: Object.values(regions).reduce<IRegionComposite[]>(
+      (result, v) => (v === undefined ? result : [...result, v]),
+      [],
+    ),
     selectedExpansion,
     selectedList,
     selectedProfession,
