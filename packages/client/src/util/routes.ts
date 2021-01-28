@@ -11,8 +11,8 @@ import {
 import { IClientRealm } from "../types/global";
 
 export const toRealmProfessions = (region: IRegionComposite, realm: IClientRealm) => {
-  const asDest = ["data", region.config_region.name, realm.realm.slug, "professions"].join("/");
-  const url = ["data", "[region_name]", "[realm_slug]", "professions"].join("/");
+  const asDest = ["professions", region.config_region.name, realm.realm.slug].join("/");
+  const url = ["professions", "[region_name]", "[realm_slug]"].join("/");
 
   return { url, asDest };
 };
@@ -22,14 +22,10 @@ export const toRealmProfession = (
   realm: IClientRealm,
   profession: IShortProfession,
 ) => {
-  const asDest = [
-    "data",
-    region.config_region.name,
-    realm.realm.slug,
-    "professions",
-    profession.id,
-  ].join("/");
-  const url = ["data", "[region_name]", "[realm_slug]", "professions", "[profession_id]"].join("/");
+  const asDest = ["professions", region.config_region.name, realm.realm.slug, profession.id].join(
+    "/",
+  );
+  const url = ["professions", "[region_name]", "[realm_slug]", "[profession_id]"].join("/");
 
   return { url, asDest };
 };
@@ -41,18 +37,16 @@ export const toRealmSkillTier = (
   skillTier: IShortProfession["skilltiers"][0],
 ) => {
   const asDest = [
-    "data",
+    "professions",
     region.config_region.name,
     realm.realm.slug,
-    "professions",
     profession.id,
     skillTier.id,
   ].join("/");
   const url = [
-    "data",
+    "professions",
     "[region_name]",
     "[realm_slug]",
-    "professions",
     "[profession_id]",
     "[skilltier_id]",
   ].join("/");
@@ -68,19 +62,17 @@ export const toRealmRecipe = (
   recipe: IShortRecipe,
 ) => {
   const asDest = [
-    "data",
+    "professions",
     region.config_region.name,
     realm.realm.slug,
-    "professions",
     profession.id,
     skillTier.id,
     recipe.id,
   ].join("/");
   const url = [
-    "data",
+    "professions",
     "[region_name]",
     "[realm_slug]",
-    "professions",
     "[profession_id]",
     "[skilltier_id]",
     "[recipe_id]",
@@ -97,19 +89,17 @@ export const toRealmCategoryRecipe = (
   recipe: IShortSkillTierCategoryRecipe,
 ) => {
   const asDest = [
-    "data",
+    "professions",
     region.config_region.name,
     realm.realm.slug,
-    "professions",
     profession.id,
     skillTier.id,
     recipe.id,
   ].join("/");
   const url = [
-    "data",
+    "professions",
     "[region_name]",
     "[realm_slug]",
-    "professions",
     "[profession_id]",
     "[skilltier_id]",
     "[recipe_id]",
