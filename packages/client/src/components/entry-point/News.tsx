@@ -93,10 +93,10 @@ export class News extends React.Component<Props> {
               </div>
               <div className="pure-u-1-4 homepage-card-container">
                 {this.renderCard(
-                  "/data/professions/[region_name]",
+                  "/professions/[region_name]",
                   "chart",
                   "Discover Professions",
-                  `/data/professions/${currentRegion.config_region.name}`,
+                  `/professions/${currentRegion.config_region.name}`,
                 )}
               </div>
               {this.renderUserCallout()}
