@@ -149,7 +149,8 @@ export class Topbar extends React.Component<Props> {
       return SubBarKind.Content;
     }
 
-    if (locationPathname.startsWith("/data") || locationPathname.startsWith("/auctions")) {
+    const dataPrefixes = ["/data", "/auctions", "/professions"];
+    if (dataPrefixes.some(v => locationPathname.startsWith(v))) {
       return SubBarKind.Data;
     }
 
