@@ -25,7 +25,7 @@ type ResolveFunc = (...args: unknown[]) => ResolveResult;
 
 function resolveWrapper(handler: ResolveFunc, router: NextRouter) {
   return async (...args: unknown[]): Promise<void> => {
-    const { as, url } = handler(args);
+    const { as, url } = handler(...args);
 
     await router.replace(url, as);
   };
