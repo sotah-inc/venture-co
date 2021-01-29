@@ -49,11 +49,22 @@ export interface IDispatchProps {
 
 export interface IRouteProps {
   routeParams: IRouteParams;
+  redirectToExpansion: (
+    region: IRegionComposite,
+    realm: IClientRealm,
+    expansion: IExpansion,
+  ) => void;
+  redirectToProfession: (
+    region: IRegionComposite,
+    realm: IClientRealm,
+    expansion: IExpansion,
+    profession: IProfession,
+  ) => void;
   redirectToPricelist: (
     region: IRegionComposite,
     realm: IClientRealm,
-    profession: IProfession,
     expansion: IExpansion,
+    profession: IProfession,
     pricelist: IPricelistJson,
   ) => void;
 }
@@ -94,9 +105,8 @@ export class PriceLists extends React.Component<Props> {
 
   public componentDidUpdate(prevProps: Props) {
     const {
-      routeParams: { region_name, realm_slug },
+      routeParams: { region_name },
       currentRegion,
-      currentRealm,
       loadRealmEntrypoint,
       realmEntrypointData,
       expansions,
@@ -120,11 +130,7 @@ export class PriceLists extends React.Component<Props> {
       return;
     }
 
-    if (currentRealm === null || currentRealm.realm.slug !== realm_slug) {
-      return;
-    }
-
-    this.handleWithRealm();
+    this.handleWithRegion(currentRegion);
   }
 
   public render() {
@@ -167,56 +173,26 @@ export class PriceLists extends React.Component<Props> {
     );
   }
 
-  private handleWithRealm() {
+  private handleWithRegion(region: IRegionComposite) {
     const {
-      routeParams: { profession_name, pricelist_slug },
-      selectedProfession,
-      selectedList,
-      pricelists,
+      currentRealm,
+      routeParams: { realm_slug },
     } = this.props;
 
-    if (profession_name === undefined || profession_name.length === 0) {
-      const foundList = pricelists.find(v => v.slug === pricelist_slug);
-      if (foundList === undefined) {
-        return;
-      }
-
-      if (selectedList === null || foundList.id !== selectedList.id) {
-        return;
-      }
-
-      this.setTitle();
-
+    if (currentRealm === null || currentRealm.realm.slug !== realm_slug) {
       return;
     }
 
-    if (selectedProfession === null || selectedProfession.name !== profession_name) {
-      return;
-    }
-
-    this.handleWithProfession();
+    this.handleWithRealm(region, currentRealm);
   }
 
-  private handleWithProfession() {
+  private handleWithRealm(region: IRegionComposite, realm: IClientRealm) {
     const {
       routeParams: { expansion_name },
-      currentRegion,
-      currentRealm,
-      selectedProfession,
       selectedExpansion,
-      getProfessionPricelistsLevel,
+      redirectToExpansion,
+      expansions,
     } = this.props;
-
-    if (currentRegion === null || currentRealm === null || selectedProfession === null) {
-      return;
-    }
-
-    switch (getProfessionPricelistsLevel) {
-      case FetchLevel.success:
-        break;
-      default:
-        return;
-    }
 
     if (expansion_name === undefined || expansion_name.length === 0) {
       this.setTitle();
@@ -225,71 +201,84 @@ export class PriceLists extends React.Component<Props> {
     }
 
     if (selectedExpansion === null || selectedExpansion.name !== expansion_name) {
+      if (expansions.length === 0) {
+        return;
+      }
+
+      const nextExpansion = expansions.find(v => v.primary);
+      if (nextExpansion === undefined) {
+        return;
+      }
+
+      redirectToExpansion(region, realm, nextExpansion);
+
       return;
     }
 
-    this.handleWithExpansion();
+    this.handleWithExpansion(region, realm, selectedExpansion);
   }
 
-  private handleWithExpansion() {
+  private handleWithExpansion(
+    region: IRegionComposite,
+    realm: IClientRealm,
+    expansion: IExpansion,
+  ) {
+    const {
+      routeParams: { profession_name },
+      selectedProfession,
+      professions,
+      redirectToProfession,
+    } = this.props;
+
+    if (profession_name === undefined || profession_name.length === 0) {
+      this.setTitle();
+
+      return;
+    }
+
+    if (selectedProfession === null || selectedProfession.name !== profession_name) {
+      if (professions.length === 0) {
+        return;
+      }
+
+      const nextProfession = professions.sort((a, b) => a.name.localeCompare(b.name))[0];
+
+      redirectToProfession(region, realm, expansion, nextProfession);
+
+      return;
+    }
+
+    this.handleWithProfession(region, realm, expansion, selectedProfession);
+  }
+
+  private handleWithProfession(
+    region: IRegionComposite,
+    realm: IClientRealm,
+    expansion: IExpansion,
+    profession: IProfession,
+  ) {
     const {
       routeParams: { pricelist_slug },
-      currentRegion,
-      currentRealm,
-      selectedProfession,
-      selectedExpansion,
       selectedList,
       professionPricelists,
       redirectToPricelist,
     } = this.props;
 
-    if (
-      currentRegion === null ||
-      currentRealm === null ||
-      selectedProfession === null ||
-      selectedExpansion === null
-    ) {
-      return;
-    }
-
-    if (professionPricelists.length === 0) {
-      return;
-    }
-
     if (pricelist_slug === undefined || pricelist_slug.length === 0) {
-      const preselectedList: IPricelistJson | null = (() => {
-        const sorted = professionPricelists.sort((a, b) => {
-          if (a.pricelist.name === b.pricelist.name) {
-            return 0;
-          }
-
-          return a.pricelist.name > b.pricelist.name ? 1 : -1;
-        });
-
-        return sorted[0].pricelist;
-      })();
-
-      if (preselectedList === null) {
+      if (professionPricelists.length === 0) {
         return;
       }
 
-      redirectToPricelist(
-        currentRegion,
-        currentRealm,
-        selectedProfession,
-        selectedExpansion,
-        preselectedList,
-      );
+      const nextPricelist = professionPricelists.sort((a, b) =>
+        a.pricelist.name.localeCompare(b.pricelist.name),
+      )[0].pricelist;
+
+      redirectToPricelist(region, realm, expansion, profession, nextPricelist);
 
       return;
     }
 
-    const foundList = professionPricelists.find(v => v.pricelist.slug === pricelist_slug);
-    if (foundList === undefined) {
-      return;
-    }
-
-    if (selectedList === null || foundList.id !== selectedList.id) {
+    if (selectedList === null || selectedList.slug !== pricelist_slug) {
       return;
     }
 
@@ -313,58 +302,35 @@ export class PriceLists extends React.Component<Props> {
       return;
     }
 
-    if (selectedProfession === null) {
-      if (selectedList === null) {
-        setTitle(
-          `Professions - ${currentRegion.config_region.name.toUpperCase()} ${
-            currentRealm.realm.name.en_US
-          }`,
-        );
-
-        return;
-      }
-
-      const userPricelistTitle = [
-        selectedList.name,
-        "Professions",
-        currentRegion.config_region.name.toUpperCase(),
-        currentRealm.realm.name.en_US,
-      ].join(" - ");
-      setTitle(userPricelistTitle);
-
-      return;
-    }
+    const prefixes = [
+      "Profession Pricelists",
+      `${currentRegion.config_region.name.toUpperCase()} ${currentRealm.realm.name.en_US}`,
+    ];
 
     if (selectedExpansion === null) {
-      setTitle(`
-                ${
-                  selectedProfession.label
-                } - Professions - ${currentRegion.config_region.name.toUpperCase()} ${
-        currentRealm.realm.name.en_US
-      }`);
+      setTitle(prefixes.join(" - "));
 
       return;
     }
+
+    prefixes.unshift(selectedExpansion.label);
+
+    if (selectedProfession === null) {
+      setTitle(prefixes.join(" - "));
+
+      return;
+    }
+
+    prefixes.unshift(selectedProfession.label);
 
     if (selectedList === null) {
-      setTitle(`
-                ${selectedExpansion.label} - ${
-        selectedProfession.label
-      } - Professions - ${currentRegion.config_region.name.toUpperCase()} ${
-        currentRealm.realm.name.en_US
-      }`);
+      setTitle(prefixes.join(" - "));
 
       return;
     }
 
-    const title = [
-      selectedList.name,
-      selectedExpansion.label,
-      selectedProfession.label,
-      "Professions",
-      currentRegion.config_region.name.toUpperCase(),
-      currentRealm.realm.name.en_US,
-    ].join(" - ");
-    setTitle(title);
+    prefixes.unshift(selectedList.name);
+
+    setTitle(prefixes.join(" - "));
   }
 }
