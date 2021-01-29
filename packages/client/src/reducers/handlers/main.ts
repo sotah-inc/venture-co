@@ -37,29 +37,10 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
         }
 
         const regions = FormatRegionList(action.payload.boot.regions);
-        const currentRegion: IRegionComposite = (() => {
-          const foundRegion: IRegionComposite | null = action.payload.boot.regions.reduce(
-            (result: IRegionComposite | null, v) => {
-              if (result !== null) {
-                return result;
-              }
-
-              if (v.config_region.name === action.payload.regionName) {
-                return v;
-              }
-
-              return null;
-            },
-            null,
-          );
-
-          if (foundRegion === null) {
-            return action.payload.boot.regions[0];
-          }
-
-          return foundRegion;
-        })();
-
+        const currentRegion =
+          action.payload.boot.regions.find(
+            v => v.config_region.name === action.payload.regionName,
+          ) ?? action.payload.boot.regions[0];
         const realms: IClientRealm[] = (() => {
           if (action.payload.realms === null) {
             return [];

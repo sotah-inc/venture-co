@@ -19,7 +19,11 @@ import { NewsButtonRouteContainer } from "../../route-containers/App/Topbar/News
 import { WorkOrdersButtonRouteContainer } from "../../route-containers/App/Topbar/WorkOrderButtons";
 import { LinkButtonRouteContainer } from "../../route-containers/util/LinkButton";
 import { IClientRealm } from "../../types/global";
-import { toExpansionProfessionPricelists, toRealmProfessions } from "../../util";
+import {
+  toExpansionProfessionPricelists,
+  toRealmProfessionPricelists,
+  toRealmProfessions,
+} from "../../util";
 import { prefixActiveCheck } from "../util/LinkButton";
 
 export interface IStateProps {
@@ -237,25 +241,13 @@ export class Topbar extends React.Component<Props> {
       return null;
     }
 
-    if (selectedExpansion === null) {
-      return (
-        <LinkButtonRouteContainer
-          destination={""}
-          buttonProps={{
-            disabled: true,
-            icon: "polygon-filter",
-            minimal: true,
-            text: "Profession Pricelists",
-          }}
-        />
-      );
-    }
+    const { asDest, url } = (() => {
+      if (selectedExpansion === null) {
+        return toRealmProfessionPricelists(currentRegion, currentRealm);
+      }
 
-    const { asDest, url } = toExpansionProfessionPricelists(
-      currentRegion,
-      currentRealm,
-      selectedExpansion,
-    );
+      return toExpansionProfessionPricelists(currentRegion, currentRealm, selectedExpansion);
+    })();
 
     return (
       <LinkButtonRouteContainer
