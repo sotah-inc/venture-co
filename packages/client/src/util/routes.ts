@@ -162,11 +162,10 @@ export const toProfessionPricelistsProfession = (
   profession: IProfession,
 ) => {
   const asDest = [
-    "data",
+    "profession-pricelists",
     region.config_region.name,
     realm.realm.slug,
     expansion.name,
-    "profession-pricelists",
     profession.name,
   ].join("/");
   const url = [
