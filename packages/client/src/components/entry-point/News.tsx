@@ -71,7 +71,7 @@ export class News extends React.Component<Props> {
         <DeletePostDialogRouteContainer />
         <div className="pure-g">
           <div className="pure-u-3-4">
-            <div style={{ marginRight: "5px" }}>
+            <div style={{ marginRight: "15px" }}>
               <H1>
                 <Icon icon="globe" iconSize={35} /> Secrets of the Auction House
               </H1>
@@ -106,13 +106,11 @@ export class News extends React.Component<Props> {
             </div>
           </div>
           <div className="pure-u-1-4">
-            <div style={{ marginLeft: "5px" }}>
-              <H4>Token Price History</H4>
-              <TokenHistoryGraphContainer />
-              <hr />
-              <H4>AH Valuation History</H4>
-              <AuctionStatsGraphContainer />
-            </div>
+            <H4>Token Price History</H4>
+            <TokenHistoryGraphContainer />
+            <hr />
+            <H4>AH Valuation History</H4>
+            <AuctionStatsGraphContainer />
           </div>
         </div>
       </>
