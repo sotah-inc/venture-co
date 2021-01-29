@@ -126,7 +126,10 @@ export class PriceLists extends React.Component<Props> {
       return;
     }
 
-    if (currentRegion === null || currentRegion.config_region.name !== region_name) {
+    if (
+      currentRegion === null ||
+      (region_name !== undefined && currentRegion.config_region.name !== region_name)
+    ) {
       return;
     }
 
