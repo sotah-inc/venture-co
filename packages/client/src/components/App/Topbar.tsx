@@ -231,15 +231,13 @@ export class Topbar extends React.Component<Props> {
   }
 
   private renderProfessionPricelistsButton() {
-    const { currentRegion, currentRealm, selectedExpansion, expansions } = this.props;
+    const { currentRegion, currentRealm, selectedExpansion } = this.props;
 
     if (currentRegion === null || currentRealm === null) {
       return null;
     }
 
-    const foundExpansion = selectedExpansion ?? expansions.find(v => v.primary) ?? null;
-
-    if (foundExpansion === null) {
+    if (selectedExpansion === null) {
       return (
         <LinkButtonRouteContainer
           destination={""}
@@ -256,7 +254,7 @@ export class Topbar extends React.Component<Props> {
     const { asDest, url } = toExpansionProfessionPricelists(
       currentRegion,
       currentRealm,
-      foundExpansion,
+      selectedExpansion,
     );
 
     return (
