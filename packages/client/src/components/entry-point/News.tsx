@@ -71,37 +71,39 @@ export class News extends React.Component<Props> {
         <DeletePostDialogRouteContainer />
         <div className="pure-g">
           <div className="pure-u-3-4">
-            <H1>
-              <Icon icon="globe" iconSize={35} /> Secrets of the Auction House
-            </H1>
-            <H4>
-              SotAH is a full-featured technical analysis application for the World of Warcraft
-              Auction House.
-            </H4>
-            <p>It is optimized for users comparing markets and discovering competitors.</p>
-            <div className="welcome pure-g">
-              <div className="pure-u-1-4 homepage-card-container">
-                {this.renderCard("/content/getting-started", "star", "Getting Started")}
+            <div style={{ marginRight: "5px" }}>
+              <H1>
+                <Icon icon="globe" iconSize={35} /> Secrets of the Auction House
+              </H1>
+              <H4>
+                SotAH is a full-featured technical analysis application for the World of Warcraft
+                Auction House.
+              </H4>
+              <p>It is optimized for users comparing markets and discovering competitors.</p>
+              <div className="welcome pure-g">
+                <div className="pure-u-1-4 homepage-card-container">
+                  {this.renderCard("/content/getting-started", "star", "Getting Started")}
+                </div>
+                <div className="pure-u-1-4 homepage-card-container">
+                  {this.renderCard(
+                    "/auctions/[region_name]",
+                    "dollar",
+                    "Browse Auctions",
+                    `/auctions/${currentRegion.config_region.name}`,
+                  )}
+                </div>
+                <div className="pure-u-1-4 homepage-card-container">
+                  {this.renderCard(
+                    "/professions/[region_name]",
+                    "chart",
+                    "Discover Professions",
+                    `/professions/${currentRegion.config_region.name}`,
+                  )}
+                </div>
+                {this.renderUserCallout()}
               </div>
-              <div className="pure-u-1-4 homepage-card-container">
-                {this.renderCard(
-                  "/auctions/[region_name]",
-                  "dollar",
-                  "Browse Auctions",
-                  `/auctions/${currentRegion.config_region.name}`,
-                )}
-              </div>
-              <div className="pure-u-1-4 homepage-card-container">
-                {this.renderCard(
-                  "/professions/[region_name]",
-                  "chart",
-                  "Discover Professions",
-                  `/professions/${currentRegion.config_region.name}`,
-                )}
-              </div>
-              {this.renderUserCallout()}
+              <PostListRouteContainer />
             </div>
-            <PostListRouteContainer />
           </div>
           <div className="pure-u-1-4">
             <div style={{ marginLeft: "5px" }}>
