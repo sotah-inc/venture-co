@@ -179,7 +179,10 @@ export class PriceLists extends React.Component<Props> {
       routeParams: { realm_slug },
     } = this.props;
 
-    if (currentRealm === null || currentRealm.realm.slug !== realm_slug) {
+    if (
+      currentRealm === null ||
+      (realm_slug !== undefined && currentRealm.realm.slug !== realm_slug)
+    ) {
       return;
     }
 
@@ -194,13 +197,10 @@ export class PriceLists extends React.Component<Props> {
       expansions,
     } = this.props;
 
-    if (expansion_name === undefined || expansion_name.length === 0) {
-      this.setTitle();
-
-      return;
-    }
-
-    if (selectedExpansion === null || selectedExpansion.name !== expansion_name) {
+    if (
+      selectedExpansion === null ||
+      (expansion_name !== undefined && selectedExpansion.name !== expansion_name)
+    ) {
       if (expansions.length === 0) {
         return;
       }
@@ -230,13 +230,10 @@ export class PriceLists extends React.Component<Props> {
       redirectToProfession,
     } = this.props;
 
-    if (profession_name === undefined || profession_name.length === 0) {
-      this.setTitle();
-
-      return;
-    }
-
-    if (selectedProfession === null || selectedProfession.name !== profession_name) {
+    if (
+      selectedProfession === null ||
+      (profession_name !== undefined && selectedProfession.name !== profession_name)
+    ) {
       if (professions.length === 0) {
         return;
       }
@@ -264,7 +261,10 @@ export class PriceLists extends React.Component<Props> {
       redirectToPricelist,
     } = this.props;
 
-    if (pricelist_slug === undefined || pricelist_slug.length === 0) {
+    if (
+      selectedList === null ||
+      (pricelist_slug !== undefined && selectedList.slug !== pricelist_slug)
+    ) {
       if (professionPricelists.length === 0) {
         return;
       }
@@ -275,10 +275,6 @@ export class PriceLists extends React.Component<Props> {
 
       redirectToPricelist(region, realm, expansion, profession, nextPricelist);
 
-      return;
-    }
-
-    if (selectedList === null || selectedList.slug !== pricelist_slug) {
       return;
     }
 
