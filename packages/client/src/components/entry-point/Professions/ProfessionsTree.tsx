@@ -64,26 +64,12 @@ interface INodeClickMap {
 
 export class ProfessionsTree extends React.Component<Props> {
   public render() {
-    const {
-      selectedProfession,
-      selectedProfessionId,
-      selectedRecipe,
-      selectedRecipeId,
-    } = this.props;
+    const { selectedProfession, selectedProfessionId } = this.props;
 
     if (selectedProfession === null) {
       return (
         <NonIdealState
           title={`Profession #${selectedProfessionId} not found`}
-          icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={1} />}
-        />
-      );
-    }
-
-    if (selectedRecipe === null) {
-      return (
-        <NonIdealState
-          title={`Recipe #${selectedRecipeId} not found`}
           icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={1} />}
         />
       );
@@ -130,7 +116,7 @@ export class ProfessionsTree extends React.Component<Props> {
   private getSkillTierNodes(): ITreeNode[] {
     const { selectedProfession } = this.props;
 
-    if (typeof selectedProfession === "undefined" || selectedProfession === null) {
+    if (selectedProfession === undefined || selectedProfession === null) {
       return [];
     }
 
@@ -186,7 +172,7 @@ export class ProfessionsTree extends React.Component<Props> {
     if (
       currentRegion === null ||
       currentRealm === null ||
-      typeof selectedProfession === "undefined" ||
+      selectedProfession === undefined ||
       selectedProfession === null
     ) {
       return;
@@ -272,9 +258,7 @@ export class ProfessionsTree extends React.Component<Props> {
       icon: this.renderRecipeNodeIcon(v.recipe.icon_url),
       id: `recipe-${v.id}`,
       isSelected:
-        typeof selectedRecipe !== "undefined" &&
-        selectedRecipe !== null &&
-        selectedRecipe.data.id === v.id,
+        selectedRecipe !== undefined && selectedRecipe !== null && selectedRecipe.data.id === v.id,
       label: <RecipePopover recipe={v} />,
     };
 
@@ -302,7 +286,7 @@ export class ProfessionsTree extends React.Component<Props> {
     if (
       currentRegion === null ||
       currentRealm === null ||
-      typeof selectedProfession === "undefined" ||
+      selectedProfession === undefined ||
       selectedProfession === null ||
       selectedSkillTier.data === null ||
       selectedRecipe === null
@@ -310,7 +294,7 @@ export class ProfessionsTree extends React.Component<Props> {
       return;
     }
 
-    if (typeof selectedRecipe !== "undefined" && selectedRecipe.data.id.toString() === id) {
+    if (selectedRecipe !== undefined && selectedRecipe.data.id.toString() === id) {
       return;
     }
 

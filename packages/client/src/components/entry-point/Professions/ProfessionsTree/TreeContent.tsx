@@ -1,21 +1,32 @@
 import React from "react";
 
-import { H2, H4 } from "@blueprintjs/core";
-import { IShortRecipe } from "@sotah-inc/core";
+import { Classes, H2, H4, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
+import { IShortRecipe, RecipeId } from "@sotah-inc/core";
 import { ReagentPricesTableContainer } from "../../../../containers/entry-point/Professions/ProfessionsTree/TreeContent/ReagentPricesTable";
-
 import { RecipePriceHistoriesGraphContainer } from "../../../../containers/entry-point/Professions/ProfessionsTree/TreeContent/RecipePriceHistoriesGraph";
 import { IItemsData } from "../../../../types/global";
 
 // props
 export interface IStateProps {
   selectedRecipe: IItemsData<IShortRecipe> | null | undefined;
+  selectedRecipeId: RecipeId;
 }
 
 export type Props = Readonly<IStateProps>;
 
 export class TreeContent extends React.Component<Props> {
   public render() {
+    const { selectedRecipe, selectedRecipeId } = this.props;
+
+    if (selectedRecipe === null) {
+      return (
+        <NonIdealState
+          title={`Recipe #${selectedRecipeId} not found`}
+          icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={1} />}
+        />
+      );
+    }
+
     return (
       <>
         {this.renderTitle()}
