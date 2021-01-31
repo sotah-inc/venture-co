@@ -9,6 +9,7 @@ import {
   getColor,
   getXAxisTimeRestrictions,
   unixTimestampToText,
+  zeroGraphValue,
 } from "../../../../../../util";
 import { resolveItemDataKey, TotalReagentCostDataKey } from "./common";
 
@@ -133,8 +134,30 @@ export function CraftingCostChart(props: Props) {
       <YAxis
         tickFormatter={v => currencyToText(v * 10 * 10)}
         domain={[
-          props.overallPriceLimits.lower / 10 / 10,
-          props.overallPriceLimits.upper / 10 / 10,
+          dataMin => {
+            if (dataMin <= 1) {
+              return zeroGraphValue;
+            }
+
+            const result = Math.pow(10, Math.floor(Math.log10(dataMin)));
+            if (result === 0) {
+              return zeroGraphValue;
+            }
+
+            return dataMin - (dataMin % result);
+          },
+          dataMax => {
+            if (dataMax <= 1) {
+              return 10;
+            }
+
+            const result = Math.pow(10, Math.floor(Math.log10(dataMax)));
+            if (result === 0) {
+              return zeroGraphValue;
+            }
+
+            return dataMax - (dataMax % result) + result;
+          },
         ]}
         tick={{ fill: "#fff" }}
         scale="log"
