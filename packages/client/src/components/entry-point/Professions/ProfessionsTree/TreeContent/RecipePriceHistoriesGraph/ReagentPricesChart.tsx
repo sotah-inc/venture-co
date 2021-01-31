@@ -9,6 +9,7 @@ import {
   getColor,
   getXAxisTimeRestrictions,
   unixTimestampToText,
+  zeroGraphValue,
 } from "../../../../../../util";
 import { resolveItemDataKey } from "./common";
 
@@ -132,7 +133,21 @@ export function ReagentPricesChart(props: Props) {
       />
       <YAxis
         tickFormatter={v => currencyToText(v * 10 * 10)}
-        domain={[0, props.aggregatePriceLimits.upper / 10 / 10]}
+        domain={[
+          0,
+          dataMax => {
+            if (dataMax <= 1) {
+              return 10;
+            }
+
+            const result = Math.pow(10, Math.floor(Math.log10(dataMax)));
+            if (result === 0) {
+              return zeroGraphValue;
+            }
+
+            return dataMax - (dataMax % result) + result;
+          },
+        ]}
         tick={{ fill: "#fff" }}
       />
       {[...ReagentItemPricesBars(props), ...RecipeItemPricesLines(props)]}
