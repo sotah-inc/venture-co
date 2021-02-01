@@ -6,6 +6,7 @@ import { withRouter } from "next/router";
 
 import { IOwnProps } from "../../components/entry-point/BaseEntrypoint";
 import { BaseEntrypointContainer } from "../../containers/entry-point/BaseEntrypoint";
+import { resolveWrapper } from "../../util";
 
 type Props = Readonly<
   WithRouterProps &
@@ -16,13 +17,7 @@ type Props = Readonly<
 
 function RouteContainer({ router, label, resolvePath }: Props) {
   return (
-    <BaseEntrypointContainer
-      redirectToRegion={region => {
-        const { as, url } = resolvePath(region);
-        return router.replace(url, as);
-      }}
-      label={label}
-    />
+    <BaseEntrypointContainer redirectToRegion={resolveWrapper(resolvePath, router)} label={label} />
   );
 }
 

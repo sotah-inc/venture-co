@@ -2,11 +2,12 @@ import React from "react";
 
 import { IRegionComposite } from "@sotah-inc/core";
 import { WithRouterProps } from "next/dist/client/with-router";
-import { NextRouter, withRouter } from "next/router";
+import { withRouter } from "next/router";
 
 import { IOwnProps } from "../../components/entry-point/RegionEntrypoint";
 import { RegionEntrypointContainer } from "../../containers/entry-point/RegionEntrypoint";
 import { IClientRealm } from "../../types/global";
+import { ResolveResult, resolveWrapper } from "../../util";
 import { extractSlug } from "../../util/extract-slug";
 
 type Props = Readonly<
@@ -15,21 +16,6 @@ type Props = Readonly<
       resolvePath: (region: IRegionComposite, realm: IClientRealm) => ResolveResult;
     }
 >;
-
-interface ResolveResult {
-  url: string;
-  as: string;
-}
-
-type ResolveFunc = (...args: unknown[]) => ResolveResult;
-
-function resolveWrapper(handler: ResolveFunc, router: NextRouter) {
-  return async (...args: unknown[]): Promise<void> => {
-    const { as, url } = handler(...args);
-
-    await router.replace(url, as);
-  };
-}
 
 function RouteContainer({ router, regionEntrypointData, label, resolvePath }: Props) {
   const [nextRegionName] = extractSlug("slug", router.query);

@@ -9,6 +9,7 @@ import {
   IShortSkillTierCategoryRecipe,
 } from "@sotah-inc/core";
 import { IClientRealm } from "../types/global";
+import { NextRouter } from "next/router";
 
 export const toRealmProfessions = (region: IRegionComposite, realm: IClientRealm) => {
   const asDest = ["professions", region.config_region.name, realm.realm.slug].join("/");
@@ -205,3 +206,18 @@ export const toWorkOrders = (region: IRegionComposite, realm: IClientRealm) => {
 
   return { url, asDest };
 };
+
+export interface ResolveResult {
+  url: string;
+  as: string;
+}
+
+type ResolveFunc = (...args: unknown[]) => ResolveResult;
+
+export function resolveWrapper(handler: ResolveFunc, router: NextRouter) {
+  return async (...args: unknown[]): Promise<void> => {
+    const { as, url } = handler(...args);
+
+    await router.replace(url, as);
+  };
+}
