@@ -8,8 +8,9 @@ import {
   IShortSkillTier,
   IShortSkillTierCategoryRecipe,
 } from "@sotah-inc/core";
-import { IClientRealm } from "../types/global";
 import { NextRouter } from "next/router";
+import getSlug from "speakingurl";
+import { IClientRealm } from "../types/global";
 
 export const toRealmProfessions = (region: IRegionComposite, realm: IClientRealm) => {
   const asDest = ["professions", region.config_region.name, realm.realm.slug].join("/");
@@ -23,9 +24,12 @@ export const toRealmProfession = (
   realm: IClientRealm,
   profession: IShortProfession,
 ) => {
-  const asDest = ["professions", region.config_region.name, realm.realm.slug, profession.id].join(
-    "/",
-  );
+  const asDest = [
+    "professions",
+    region.config_region.name,
+    realm.realm.slug,
+    `${profession.id}-${getSlug(profession.name)}`,
+  ].join("/");
   const url = ["professions", "[region_name]", "[realm_slug]", "[profession_id]"].join("/");
 
   return { url, asDest };
@@ -41,7 +45,7 @@ export const toRealmSkillTier = (
     "professions",
     region.config_region.name,
     realm.realm.slug,
-    profession.id,
+    `${profession.id}-${getSlug(profession.name)}`,
     skillTier.id,
   ].join("/");
   const url = [
@@ -66,7 +70,7 @@ export const toRealmRecipe = (
     "professions",
     region.config_region.name,
     realm.realm.slug,
-    profession.id,
+    `${profession.id}-${getSlug(profession.name)}`,
     skillTier.id,
     recipe.id,
   ].join("/");
@@ -93,7 +97,7 @@ export const toRealmCategoryRecipe = (
     "professions",
     region.config_region.name,
     realm.realm.slug,
-    profession.id,
+    `${profession.id}-${getSlug(profession.name)}`,
     skillTier.id,
     recipe.id,
   ].join("/");
