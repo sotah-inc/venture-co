@@ -46,7 +46,7 @@ export const toRealmSkillTier = (
     region.config_region.name,
     realm.realm.slug,
     `${profession.id}-${getSlug(profession.name)}`,
-    skillTier.id,
+    `${skillTier.id}-${getSlug(skillTier.name)}`,
   ].join("/");
   const url = [
     "professions",
@@ -71,7 +71,7 @@ export const toRealmRecipe = (
     region.config_region.name,
     realm.realm.slug,
     `${profession.id}-${getSlug(profession.name)}`,
-    skillTier.id,
+    `${skillTier.id}-${getSlug(skillTier.name)}`,
     recipe.id,
   ].join("/");
   const url = [
@@ -98,7 +98,7 @@ export const toRealmCategoryRecipe = (
     region.config_region.name,
     realm.realm.slug,
     `${profession.id}-${getSlug(profession.name)}`,
-    skillTier.id,
+    `${skillTier.id}-${getSlug(skillTier.name)}`,
     recipe.id,
   ].join("/");
   const url = [
