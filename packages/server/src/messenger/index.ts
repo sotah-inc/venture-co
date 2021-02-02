@@ -511,6 +511,7 @@ export class Messenger {
               const blankPrices: IPricesFlagged = {
                 average_buyout_per: 0,
                 is_blank: true,
+                market_price_buyout_per: 0,
                 max_buyout_per: 0,
                 median_buyout_per: 0,
                 min_buyout_per: 0,
@@ -539,6 +540,7 @@ export class Messenger {
               const blankPrices: IPricesFlagged = {
                 average_buyout_per: 0,
                 is_blank: true,
+                market_price_buyout_per: 0,
                 max_buyout_per: 0,
                 median_buyout_per: 0,
                 min_buyout_per: 0,
