@@ -4,6 +4,7 @@ export interface IPrices {
   average_buyout_per: number;
   median_buyout_per: number;
   volume: number;
+  market_price_buyout_per: number;
 }
 
 export interface IPricesFlagged extends IPrices {
