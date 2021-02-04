@@ -18,6 +18,7 @@ import {
   IErrorResponse,
   IGetItemResponseData,
   IItemPriceLimits,
+  IItemsMarketPrice,
   IPriceLimits,
   IQueryGeneralResponseData,
   IQueryResponseData,
@@ -481,6 +482,42 @@ export class DataController {
       };
     }
 
+    const itemsMarketPriceMessage = await this.messenger.itemsMarketPrice({
+      item_ids: resolveAuctionsResponse.data!.items.items.map(v => v.id),
+      tuple: { region_name: regionName, realm_slug: realmSlug },
+    });
+    if (itemsMarketPriceMessage.code !== code.ok) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    const itemsMarketPriceResult = await itemsMarketPriceMessage.decode();
+    if (itemsMarketPriceResult === null) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    const itemsMarketPrice = Object.keys(itemsMarketPriceResult.items_market_price).reduce<
+      IItemsMarketPrice[]
+    >((result, itemIdString) => {
+      const foundPrice = itemsMarketPriceResult.items_market_price[Number(itemIdString)];
+      if (foundPrice === undefined) {
+        return result;
+      }
+
+      return [
+        ...result,
+        {
+          id: Number(itemIdString),
+          market_price: foundPrice,
+        },
+      ];
+    }, []);
+
     // tslint:disable-next-line:no-console
     console.log("serving un-cached request");
 
@@ -488,6 +525,7 @@ export class DataController {
       data: {
         ...resolveAuctionsResponse.data.auctions,
         items: [...resolveAuctionsResponse.data.items.items, ...pricelistItemsResult.items],
+        items_market_price: itemsMarketPrice,
         pets: [...resolveAuctionsResponse.data.pets.pets],
         professionPricelists: professionPricelists.map(v => v.toJson()),
       },
