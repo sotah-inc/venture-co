@@ -66,6 +66,11 @@ export interface IGetAuctionsRequest {
   petFilters?: PetId[];
 }
 
+export interface IItemsMarketPrice {
+  id: ItemId;
+  market_price: number;
+}
+
 export interface IGetAuctionsResponseData {
   auctions: IAuction[];
   total: number;
@@ -73,6 +78,7 @@ export interface IGetAuctionsResponseData {
   items: IShortItem[];
   pets: IShortPet[];
   professionPricelists: IProfessionPricelistJson[];
+  items_market_price: IItemsMarketPrice[];
 }
 
 export type GetAuctionsResponse =
