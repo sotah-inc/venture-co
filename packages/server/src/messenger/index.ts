@@ -55,6 +55,10 @@ import {
   ValidateRegionRealmResponse,
 } from "./contracts";
 import {
+  IItemsMarketPriceRequest,
+  IItemsMarketPriceResponse,
+} from "./contracts/items-market-price";
+import {
   IProfessionsResponse,
   IRecipeResponse,
   ISkillTierResponse,
@@ -94,6 +98,7 @@ export enum subjects {
   auctions = "auctions",
   queryAuctionStats = "queryAuctionStats",
   priceList = "priceList",
+  itemsMarketPrice = "itemsMarketPrice",
 
   itemPricesHistory = "itemPricesHistory",
   recipePricesHistory = "recipePricesHistory",
@@ -432,7 +437,14 @@ export class Messenger {
   ): Promise<Message<IQueryAuctionStatsResponse>> {
     return this.request(subjects.queryAuctionStats, {
       body: JSON.stringify(tuple),
-      timeout: 15 * 1000,
+    });
+  }
+
+  public itemsMarketPrice(
+    req: IItemsMarketPriceRequest,
+  ): Promise<Message<IItemsMarketPriceResponse>> {
+    return this.request(subjects.queryAuctionStats, {
+      body: JSON.stringify(req),
     });
   }
 
