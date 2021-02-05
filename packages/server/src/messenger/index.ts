@@ -443,7 +443,7 @@ export class Messenger {
   public itemsMarketPrice(
     req: IItemsMarketPriceRequest,
   ): Promise<Message<IItemsMarketPriceResponse>> {
-    return this.request(subjects.queryAuctionStats, {
+    return this.request(subjects.itemsMarketPrice, {
       body: JSON.stringify(req),
     });
   }
