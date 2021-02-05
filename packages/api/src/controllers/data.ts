@@ -484,7 +484,10 @@ export class DataController {
 
     const itemsMarketPriceMessage = await this.messenger.itemsMarketPrice({
       item_ids: resolveAuctionsResponse.data!.items.items.map(v => v.id),
-      tuple: { region_name: regionName, realm_slug: realmSlug },
+      tuple: {
+        connected_realm_id: resolveResult.connected_realm.connected_realm.id,
+        region_name: regionName,
+      },
     });
     if (itemsMarketPriceMessage.code !== code.ok) {
       return {
