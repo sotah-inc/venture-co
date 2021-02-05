@@ -48,6 +48,7 @@ export const auction = (state: State | undefined, action: AuctionActions): State
           data: {
             auctions,
             items: action.payload.items,
+            items_market_price: action.payload.items_market_price,
             pets: action.payload.pets,
           },
           level: FetchLevel.success,

@@ -1,5 +1,6 @@
 import {
   IAuction,
+  IItemsMarketPrice,
   IProfessionPricelistJson,
   IQueryGeneralItem,
   IQueryGeneralItemItem,
@@ -25,6 +26,7 @@ export interface IAuctionResultData {
   auctions: IAuction[];
   items: IShortItem[];
   pets: IShortPet[];
+  items_market_price: IItemsMarketPrice[];
 }
 
 export interface AuctionsOptions {
@@ -47,6 +49,7 @@ export const defaultAuctionState: IAuctionState = {
     data: {
       auctions: [],
       items: [],
+      items_market_price: [],
       pets: [],
     },
     errors: {},

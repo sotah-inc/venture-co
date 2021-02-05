@@ -1,3 +1,5 @@
+import React from "react";
+
 import { Button, ButtonGroup, Classes, HTMLTable } from "@blueprintjs/core";
 import {
   IAuction,
@@ -14,7 +16,6 @@ import {
   SortKind,
   SortPerPage,
 } from "@sotah-inc/core";
-import React from "react";
 
 import { SortToggleContainer } from "../../../containers/entry-point/AuctionList/SortToggle";
 import { ItemPopoverContainer } from "../../../containers/util/ItemPopover";
@@ -102,18 +103,31 @@ export class AuctionTable extends React.Component<Props> {
         <tr>
           {renderedCell}
           <td className="quantity-container">{auction.quantity}</td>
-          <td className="currency-container">
-            <Currency amount={auction.buyout} hideCopper={true} />
-          </td>
           <td className="buyout-container">
             <Currency amount={auction.buyoutPer} hideCopper={true} />
           </td>
+          {this.renderMarketPricePercentage(auction)}
           <td className="auclist-container">{auction.aucList.length}</td>
           <td>{auction.timeLeft}</td>
         </tr>
         {this.renderSecondaryRow(auction)}
       </React.Fragment>
     );
+  }
+
+  public renderMarketPricePercentage(auction: IAuction) {
+    const {
+      auctionsResultData: { items_market_price },
+    } = this.props;
+
+    const found = items_market_price.find(v => v.id === auction.itemId);
+    if (found === undefined) {
+      return <td>&nbsp;</td>;
+    }
+
+    const percentage = auction.buyoutPer / found.market_price;
+
+    return <td>{percentage.toFixed(0)}%</td>;
   }
 
   public renderTargetCell(auction: IAuction) {
@@ -197,11 +211,9 @@ export class AuctionTable extends React.Component<Props> {
               <SortToggleContainer label="Quantity" sortKind={SortKind.quantity} />
             </th>
             <th>
-              <SortToggleContainer label="Buyout" sortKind={SortKind.buyout} />
-            </th>
-            <th>
               <SortToggleContainer label="BuyoutPer" sortKind={SortKind.buyoutPer} />
             </th>
+            <th>Market Percentage</th>
             <th>
               <SortToggleContainer label="Auctions" sortKind={SortKind.auctions} />
             </th>
