@@ -93,7 +93,6 @@ export class AuctionTable extends React.Component<Props> {
           <td>---</td>
           <td>---</td>
           <td>---</td>
-          <td>---</td>
         </tr>
       );
     }
@@ -105,8 +104,8 @@ export class AuctionTable extends React.Component<Props> {
           <td className="quantity-container">{auction.quantity}</td>
           <td className="buyout-container">
             <Currency amount={auction.buyoutPer} hideCopper={true} />
+            {this.renderMarketPricePercentage(auction)}
           </td>
-          {this.renderMarketPricePercentage(auction)}
           <td className="auclist-container">{auction.aucList.length}</td>
           <td>{auction.timeLeft}</td>
         </tr>
@@ -122,12 +121,13 @@ export class AuctionTable extends React.Component<Props> {
 
     const found = items_market_price.find(v => v.id === auction.itemId);
     if (found === undefined) {
-      return <td>&nbsp;</td>;
+      return null;
     }
 
-    const percentage = auction.buyoutPer / found.market_price;
+    const percentage = (auction.buyoutPer / found.market_price) * 100;
+    const colorClass = percentage > 1.1 ? "uncommon-text" : "epic-text";
 
-    return <td>{percentage.toFixed(0)}%</td>;
+    return <span className={colorClass}> ({percentage.toFixed(0)}%)</span>;
   }
 
   public renderTargetCell(auction: IAuction) {
@@ -213,7 +213,6 @@ export class AuctionTable extends React.Component<Props> {
             <th>
               <SortToggleContainer label="BuyoutPer" sortKind={SortKind.buyoutPer} />
             </th>
-            <th>Market Percentage</th>
             <th>
               <SortToggleContainer label="Auctions" sortKind={SortKind.auctions} />
             </th>
