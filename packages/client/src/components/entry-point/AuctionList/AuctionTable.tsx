@@ -102,8 +102,8 @@ export class AuctionTable extends React.Component<Props> {
         <tr>
           {renderedCell}
           <td className="quantity-container">{auction.quantity}</td>
-          <td className="buyout-container">
-            <Currency amount={auction.buyoutPer} hideCopper={true} />
+          <td className="currency-container">
+            <Currency amount={auction.buyout} hideCopper={true} />
             {this.renderMarketPricePercentage(auction)}
           </td>
           <td className="auclist-container">{auction.aucList.length}</td>
@@ -221,7 +221,7 @@ export class AuctionTable extends React.Component<Props> {
               <SortToggleContainer label="Quantity" sortKind={SortKind.quantity} />
             </th>
             <th>
-              <SortToggleContainer label="BuyoutPer" sortKind={SortKind.buyoutPer} />
+              <SortToggleContainer label="Buyout" sortKind={SortKind.buyout} />
             </th>
             <th>
               <SortToggleContainer label="Auctions" sortKind={SortKind.auctions} />
