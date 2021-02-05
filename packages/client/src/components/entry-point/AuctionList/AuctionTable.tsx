@@ -125,9 +125,19 @@ export class AuctionTable extends React.Component<Props> {
     }
 
     const percentage = (auction.buyoutPer / found.market_price) * 100;
-    const colorClass = percentage > 1.1 ? "uncommon-text" : "epic-text";
+    const colorClass = ((): string => {
+      if (percentage < 80) {
+        return "uncommon-text";
+      }
 
-    return <span className={colorClass}> ({percentage.toFixed(0)}%)</span>;
+      if (percentage > 120) {
+        return "epic-text";
+      }
+
+      return "poor-text";
+    })();
+
+    return <span className={colorClass}> ({Number(percentage.toFixed(0)).toLocaleString()}%)</span>;
   }
 
   public renderTargetCell(auction: IAuction) {
