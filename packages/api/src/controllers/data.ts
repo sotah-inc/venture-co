@@ -17,13 +17,9 @@ import {
   GetUnmetDemandResponse,
   IErrorResponse,
   IGetItemResponseData,
-  IItemPriceLimits,
   IItemsMarketPrice,
-  IPriceLimits,
   IQueryGeneralResponseData,
   IQueryResponseData,
-  IRecipePriceHistory,
-  IRecipePrices,
   IRegionComposite,
   IRegionConnectedRealmTuple,
   IShortItem,
@@ -826,9 +822,7 @@ export class DataController {
     return {
       data: {
         history: itemPricesHistoryMessage.data.history,
-        itemPriceLimits: itemPricesHistoryMessage.data.itemPriceLimits,
         items,
-        overallPriceLimits: itemPricesHistoryMessage.data.overallPriceLimits,
       },
       status: HTTPStatus.OK,
     };
@@ -929,35 +923,6 @@ export class DataController {
     }
     const foundHistory = historyMessageResult.history;
 
-    const overallPriceLimits = Object.values(foundHistory).reduce<IPriceLimits>(
-      (foundOverallPriceLimits, recipeHistories: IRecipePriceHistory) => {
-        return Object.values(recipeHistories).reduce<IPriceLimits>(
-          (recipeHistoriesPriceLimits, recipePrices: IRecipePrices) => {
-            return {
-              lower: Math.min(
-                ...[
-                  recipePrices.alliance_crafted_item_prices.prices.min_buyout_per,
-                  recipePrices.horde_crafted_item_prices.prices.min_buyout_per,
-                  recipePrices.crafted_item_prices.prices.min_buyout_per,
-                  recipePrices.total_reagent_prices.min_buyout_per,
-                  recipeHistoriesPriceLimits.lower,
-                ].filter(v => v !== 0),
-              ),
-              upper: Math.max(
-                recipePrices.alliance_crafted_item_prices.prices.min_buyout_per,
-                recipePrices.horde_crafted_item_prices.prices.min_buyout_per,
-                recipePrices.crafted_item_prices.prices.min_buyout_per,
-                recipePrices.total_reagent_prices.min_buyout_per,
-                recipeHistoriesPriceLimits.upper,
-              ),
-            };
-          },
-          foundOverallPriceLimits,
-        );
-      },
-      { lower: 0, upper: 0 },
-    );
-
     const itemPricesHistoryMessage = await this.messenger.resolveItemPricesHistory({
       item_ids: recipeResult.recipe.reagents.map(v => v.reagent.id),
       lower_bounds: lowerBounds,
@@ -980,50 +945,13 @@ export class DataController {
       };
     }
 
-    const transformedItemPriceLimits = recipeResult.recipe.reagents.reduce<IItemPriceLimits>(
-      (result, reagent) => {
-        const foundItemPriceLimits = itemPricesHistoryMessage.data!.itemPriceLimits[
-          reagent.reagent.id
-        ];
-        if (typeof foundItemPriceLimits === "undefined") {
-          return result;
-        }
-
-        return {
-          ...result,
-          [reagent.reagent.id]: {
-            lower: foundItemPriceLimits.lower * reagent.quantity,
-            upper: foundItemPriceLimits.upper * reagent.quantity,
-          },
-        };
-      },
-      {},
-    );
-
-    const aggregatePriceLimits = recipeResult.recipe.reagents.reduce<IPriceLimits>(
-      (result, reagent) => {
-        const foundItemPriceLimits = transformedItemPriceLimits[reagent.reagent.id];
-        if (typeof foundItemPriceLimits === "undefined") {
-          return result;
-        }
-
-        return {
-          lower: Math.min(result.lower, foundItemPriceLimits.lower) || foundItemPriceLimits.lower,
-          upper: result.upper + foundItemPriceLimits.upper,
-        };
-      },
-      { lower: 0, upper: 0 },
-    );
-
     return {
       data: {
         itemData: {
-          aggregatePriceLimits,
           history: itemPricesHistoryMessage.data.history,
         },
         recipeData: {
           history: foundHistory,
-          overallPriceLimits,
           recipeItemIds: {
             [recipeId]: [
               recipeResult.recipe.alliance_crafted_item.id,
