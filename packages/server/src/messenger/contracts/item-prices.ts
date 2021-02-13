@@ -1,8 +1,6 @@
 import {
   IItemPriceHistories,
-  IItemPriceLimits,
   IPriceHistories,
-  IPriceLimits,
   IPrices,
   IPricesFlagged,
   IRegionConnectedRealmTuple,
@@ -29,6 +27,4 @@ export interface IGetItemPriceHistoriesResponse {
 
 export type ResolveItemPriceHistoriesResponse = IResolveResponse<{
   history: IItemPriceHistories<IPricesFlagged>;
-  itemPriceLimits: IItemPriceLimits;
-  overallPriceLimits: IPriceLimits;
 }>;

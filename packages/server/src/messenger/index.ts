@@ -1,12 +1,8 @@
 import {
-  IBollingerBands,
   IConnectedRealmComposite,
   IConnectedRealmModificationDates,
   IItemPriceHistories,
-  IItemPriceLimits,
   IPriceHistories,
-  IPriceLimits,
-  IPrices,
   IPricesFlagged,
   IQueryItem,
   IRegionComposite,
@@ -584,91 +580,10 @@ export class Messenger {
       {},
     );
 
-    const itemPriceLimits = req.item_ids.reduce<IItemPriceLimits>(
-      (previousItemPriceLimits, itemId) => {
-        const out: IPriceLimits = {
-          lower: 0,
-          upper: 0,
-        };
-
-        const itemPriceHistory = historyResult[itemId];
-        if (typeof itemPriceHistory === "undefined") {
-          return {
-            ...previousItemPriceLimits,
-            [itemId]: out,
-          };
-        }
-
-        const itemPrices = Object.keys(itemPriceHistory).reduce<IPrices[]>(
-          (itemPricesResult, itemIdString) => {
-            const foundItemPrices = itemPriceHistory[Number(itemIdString)];
-            if (typeof foundItemPrices === "undefined") {
-              return itemPricesResult;
-            }
-
-            return [...itemPricesResult, foundItemPrices];
-          },
-          [],
-        );
-        if (itemPrices.length > 0) {
-          const bands: IBollingerBands = boll(
-            itemPrices.map(v => v.min_buyout_per),
-            Math.min(itemPrices.length, 4),
-          );
-          const minBandMid = bands.mid.reduce((previousValue, v) => {
-            if (v === 0) {
-              return previousValue;
-            }
-
-            if (previousValue === 0) {
-              return v;
-            }
-
-            return Math.min(v, previousValue);
-          }, 0);
-          const maxBandUpper = bands.upper
-            .filter(v => !!v)
-            .reduce((previousValue, v) => Math.max(previousValue, v), 0);
-          out.lower = minBandMid;
-          out.upper = maxBandUpper;
-        }
-
-        return {
-          ...previousItemPriceLimits,
-          [itemId]: out,
-        };
-      },
-      {},
-    );
-
-    const overallPriceLimits: IPriceLimits = { lower: 0, upper: 0 };
-    overallPriceLimits.lower = req.item_ids.reduce((overallLower, itemId) => {
-      const priceLimits = itemPriceLimits[itemId];
-      if (typeof priceLimits === "undefined" || priceLimits.lower === 0) {
-        return overallLower;
-      }
-
-      if (overallLower === 0) {
-        return priceLimits.lower;
-      }
-
-      return Math.min(overallLower, priceLimits.lower);
-    }, 0);
-    overallPriceLimits.upper = req.item_ids.reduce((overallUpper, itemId) => {
-      const priceLimits = itemPriceLimits[itemId];
-      if (typeof priceLimits === "undefined") {
-        return overallUpper;
-      }
-
-      return Math.max(priceLimits.upper, overallUpper);
-    }, 0);
-
     return {
       code: code.ok,
       data: {
         history: historyResult,
-        itemPriceLimits,
-        overallPriceLimits,
       },
       error: null,
     };
