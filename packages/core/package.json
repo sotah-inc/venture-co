@@ -1,6 +1,6 @@
 {
   "name": "@sotah-inc/core",
-  "version": "2.0.146",
+  "version": "2.0.147",
   "description": "SotAH Core SDK",
   "main": "build/dist/index.js",
   "typings": "build/dist/index.d.ts",
@@ -21,13 +21,16 @@
   "license": "ISC",
   "devDependencies": {
     "chokidar-cli": "^2.1.0",
-    "google-artifactregistry-auth": "^2.0.4",
+    "google-artifactregistry-auth": "^2.1.0",
     "npm-run-all": "^4.1.5",
     "rimraf": "^3.0.2",
     "tslint": "^6.1.2",
-    "typescript": "^3.9.2"
+    "typescript": "^4.1.5"
   },
   "dependencies": {
-    "@types/node": "^14.14.6"
+    "@types/node": "^14.14.27"
+  },
+  "publishConfig": {
+    "registry": "https://us-central1-npm.pkg.dev/sotah-prod/sotah-inc/"
   }
 }
