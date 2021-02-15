@@ -2,10 +2,7 @@
   "name": "root",
   "private": true,
   "devDependencies": {
-    "@blueprintjs/tslint-config": "^3.0.1",
-    "chokidar-cli": "^2.1.0",
-    "prettier": "^2.0.5",
     "tslint": "^6.1.3",
-    "typescript": "^3.9.7"
+    "typescript": "^4.1.5"
   }
 }
