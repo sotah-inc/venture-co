@@ -31,7 +31,7 @@ export class Preference {
     return {
       current_realm: this.currentRealm,
       current_region: this.currentRegion,
-      id: this.id!,
+      id: this.id ?? 0,
     };
   }
 }

@@ -41,7 +41,7 @@ export class PricelistRepository extends AbstractRepository<Pricelist> {
       return false;
     }
 
-    await Promise.all(pricelist.entries!.map(v => this.manager.remove(v)));
+    await Promise.all((pricelist.entries ?? []).map(v => this.manager.remove(v)));
     await this.manager.remove(pricelist);
 
     return true;

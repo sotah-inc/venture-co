@@ -1,6 +1,6 @@
+import { ExpansionName, ProfessionName } from "@sotah-inc/core";
 import { AbstractRepository, EntityRepository } from "typeorm";
 
-import { ExpansionName, ProfessionName } from "@sotah-inc/core";
 import { ProfessionPricelist } from "./profession-pricelist";
 
 @EntityRepository(ProfessionPricelist)
@@ -40,9 +40,6 @@ export class ProfessionPricelistRepository extends AbstractRepository<Profession
       .andWhere("profession_pricelist.expansion = :expansion")
       .andWhere("pricelist.slug = :slug")
       .setParameters({ profession, expansion, slug });
-
-    // tslint:disable-next-line:no-console
-    console.log(queryBuilder.getSql());
 
     const professionPricelist = await queryBuilder.getOne();
 

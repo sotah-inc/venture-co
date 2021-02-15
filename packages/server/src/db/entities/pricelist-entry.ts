@@ -28,7 +28,7 @@ export class PricelistEntry {
 
   public toJson(): IPricelistEntryJson {
     return {
-      id: this.id!,
+      id: this.id ?? 0,
       item_id: this.itemId,
       quantity_modifier: this.quantityModifier,
     };

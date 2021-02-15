@@ -3,7 +3,7 @@ import passport from "passport";
 import { ExtractJwt, Strategy, StrategyOptions } from "passport-jwt";
 import { Connection } from "typeorm";
 
-import { User } from "./db/entities";
+import { User } from "./db";
 import { Messenger } from "./messenger";
 import { code } from "./messenger/contracts";
 
@@ -16,13 +16,13 @@ export interface IJwtOptions {
 export const getJwtOptions = async (messenger: Messenger): Promise<IJwtOptions> => {
   const msg = await messenger.getSessionSecret();
   if (msg.code !== code.ok) {
-    throw new Error(msg.error!.message);
+    throw new Error(msg.error?.message);
   }
 
   return {
     audience: "sotah-client",
     issuer: "sotah-api",
-    secret: (await msg.decode())!.session_secret,
+    secret: (await msg.decode())?.session_secret ?? "",
   };
 };
 
@@ -62,6 +62,6 @@ export const appendSessions = async (
   return app;
 };
 
-export const auth = (req: Request, res: Response, next: NextFunction) => {
+export const auth = (req: Request, res: Response, next: NextFunction): unknown => {
   return passport.authenticate("jwt", { session: false })(req, res, next);
 };

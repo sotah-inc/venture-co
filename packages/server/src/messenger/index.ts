@@ -18,8 +18,6 @@ import {
   RecipeId,
   SkillTierId,
 } from "@sotah-inc/core";
-// @ts-ignore
-import boll from "bollinger-bands";
 import * as nats from "nats";
 
 import {

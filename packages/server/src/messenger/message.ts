@@ -10,8 +10,11 @@ export enum ParseKind {
 
 export class Message<T> {
   public readonly error: Error | null;
+
   private readonly rawData: string;
+
   public readonly code: code;
+
   private readonly parseKind: ParseKind;
 
   constructor(msg: IMessage, parseKind: ParseKind) {
@@ -31,13 +34,13 @@ export class Message<T> {
     }
 
     switch (this.parseKind) {
-      case ParseKind.JsonEncoded:
-        return JSON.parse(this.rawData);
-      case ParseKind.GzipJsonEncoded:
-        return JSON.parse((await gunzip(Buffer.from(this.rawData, "base64"))).toString());
-      case ParseKind.None:
-      default:
-        return this.rawData;
+    case ParseKind.JsonEncoded:
+      return JSON.parse(this.rawData);
+    case ParseKind.GzipJsonEncoded:
+      return JSON.parse((await gunzip(Buffer.from(this.rawData, "base64"))).toString());
+    case ParseKind.None:
+    default:
+      return this.rawData;
     }
   }
 

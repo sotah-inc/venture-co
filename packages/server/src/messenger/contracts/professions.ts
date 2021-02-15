@@ -1,4 +1,5 @@
 import { IShortProfession, IShortRecipe, IShortSkillTier } from "@sotah-inc/core";
+
 import { IGetItemsResponse, IResolveResponse } from "./index";
 
 export interface IProfessionsResponse {

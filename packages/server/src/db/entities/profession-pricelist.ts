@@ -32,9 +32,9 @@ export class ProfessionPricelist {
   public toJson(): IProfessionPricelistJson {
     return {
       expansion: this.expansion,
-      id: this.id!,
+      id: this.id ?? 0,
       name: this.name,
-      pricelist: this.pricelist!.toJson(),
+      pricelist: this.pricelist?.toJson() ?? { name: "", id: 0, pricelist_entries: [], slug: null },
     };
   }
 }

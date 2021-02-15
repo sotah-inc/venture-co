@@ -63,15 +63,15 @@ export class WorkOrder {
   public toJson(): IWorkOrderJson {
     return {
       connected_realm_id: this.connectedRealmId,
-      created_at: this.createdAt!.getTime() / 1000,
+      created_at: (this.createdAt?.getTime() ?? 0) / 1000,
       game_version: this.gameVersion,
-      id: this.id!,
+      id: this?.id ?? 0,
       item_id: this.itemId,
       price: this.price,
       quantity: this.quantity,
       region_name: this.regionName,
-      updated_at: this.updatedAt!.getTime() / 1000,
-      user_id: this.user!.id!,
+      updated_at: (this.updatedAt?.getTime() ?? 0) / 1000,
+      user_id: this.user?.id ?? 0,
     };
   }
 }

@@ -66,7 +66,7 @@ export class User {
   public toJson(): IUserJson {
     return {
       email: this.email,
-      id: this.id!,
+      id: this.id ?? 0,
       level: this.level,
     };
   }

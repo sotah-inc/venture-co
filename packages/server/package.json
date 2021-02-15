@@ -8,8 +8,8 @@
     "clean": "rimraf ./build",
     "debug": "run-p build:ts:watch lint:watch build:styles:watch",
     "start": "node .",
-    "lint": "tslint ./src/**/*.ts{,x}",
-    "lint:watch": "chokidar --silent ./src/**/*.ts{,x} -c \"npm run -s lint\"",
+    "lint": "eslint \"./src/**/*.ts\"",
+    "lint:watch": "chokidar --silent ./src/**/*.ts{,x} -c \"npm run lint\"",
     "build": "run-s clean build:ts",
     "build:ts": "tsc",
     "build:watch": "run-p build:ts:watch lint:watch",
@@ -20,14 +20,11 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@blueprintjs/tslint-config": "^3.0.3",
     "@types/node": "^14.14.6",
     "chokidar-cli": "^2.1.0",
     "google-artifactregistry-auth": "^2.0.4",
     "npm-run-all": "^4.1.5",
-    "prettier": "^2.1.2",
     "rimraf": "^3.0.2",
-    "tslint": "^6.1.3",
     "typescript": "4.0.5"
   },
   "dependencies": {

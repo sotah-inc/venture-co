@@ -62,7 +62,7 @@ export class Pricelist {
     })();
 
     return {
-      id: this.id!,
+      id: this.id ?? 0,
       name: this.name,
       pricelist_entries: entries,
       slug: this.slug,

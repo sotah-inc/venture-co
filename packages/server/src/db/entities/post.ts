@@ -49,7 +49,7 @@ export class Post {
   }
 
   @BeforeInsert()
-  public setCreatedAt() {
+  public setCreatedAt(): void {
     this.createdAt = new Date();
   }
 
@@ -57,7 +57,7 @@ export class Post {
     return {
       body: this.body,
       createdAt: this.createdAt.getTime() / 1000,
-      id: this.id!,
+      id: this.id ?? 0,
       slug: this.slug,
       summary: this.summary,
       title: this.title,
