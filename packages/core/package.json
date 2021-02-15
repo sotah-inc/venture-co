@@ -1,6 +1,6 @@
 {
   "name": "@sotah-inc/core",
-  "version": "2.0.147",
+  "version": "2.0.148",
   "description": "SotAH Core SDK",
   "main": "build/dist/index.js",
   "typings": "build/dist/index.d.ts",
@@ -8,8 +8,8 @@
     "clean": "rimraf ./build",
     "debug": "run-p build:watch lint:watch",
     "start": "node .",
-    "lint": "tslint ./src/**/*.ts{,x}",
-    "lint:watch": "chokidar --silent ./src/**/*.ts{,x} -c \"npm run -s lint\"",
+    "lint": "eslint \"./src/**/*.ts\"",
+    "lint:watch": "chokidar --silent ./src/**/*.ts{,x} -c \"npm run lint\"",
     "build": "run-s clean build:ts",
     "build:watch": "run-p build:ts:watch lint:watch",
     "build:ts": "tsc",
@@ -17,14 +17,18 @@
     "prepublishOnly": "run-s lint build",
     "ar-login": "artifactregistry-auth ./.npmrc"
   },
-  "author": "Adrian Parker <adrian@sotah.info>",
+  "author": "Adrian Parker <ihsw.aparker.kilabuk@gmail.com>",
   "license": "ISC",
   "devDependencies": {
+    "@blueprintjs/eslint-config": "^0.7.1",
+    "@blueprintjs/eslint-plugin": "^0.3.2",
+    "@typescript-eslint/eslint-plugin": "^4.15.0",
+    "@typescript-eslint/parser": "^4.15.0",
     "chokidar-cli": "^2.1.0",
+    "eslint": "^7.20.0",
     "google-artifactregistry-auth": "^2.1.0",
     "npm-run-all": "^4.1.5",
     "rimraf": "^3.0.2",
-    "tslint": "^6.1.2",
     "typescript": "^4.1.5"
   },
   "dependencies": {
