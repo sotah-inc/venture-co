@@ -26,7 +26,7 @@ export interface IGetPricelistsResponseData {
   items: IShortItem[];
 }
 
-export type GetPricelistsResponse = IGetPricelistsResponseData | IValidationErrorResponse;
+export type GetPricelistsResponse = IGetPricelistsResponseData | IValidationErrorResponse | null;
 
 export interface IGetUserPricelistResponseData {
   pricelist: IPricelistJson;
