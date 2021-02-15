@@ -1,6 +1,6 @@
 {
   "name": "@sotah-inc/core",
-  "version": "2.0.148",
+  "version": "2.0.149",
   "description": "SotAH Core SDK",
   "main": "build/dist/index.js",
   "typings": "build/dist/index.d.ts",
@@ -27,7 +27,7 @@
     "typescript": "^4.1.5"
   },
   "dependencies": {
-    "@types/node": "^14.14.27"
+    "@types/node": "^14.14.28"
   },
   "publishConfig": {
     "registry": "https://us-central1-npm.pkg.dev/sotah-prod/sotah-inc/"
