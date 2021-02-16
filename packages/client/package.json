@@ -23,7 +23,7 @@
     "type": "git",
     "url": "git+https://github.com/sotah-inc/venture-co.git"
   },
-  "author": "Adrian Parker <adrian@sotah.info>",
+  "author": "Adrian Parker <ihsw.aparker.kilabuk@gmail.com>",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/sotah-inc/venture-co/issues"
@@ -33,7 +33,7 @@
     "@blueprintjs/core": "^3.35.0",
     "@blueprintjs/icons": "^3.22.0",
     "@blueprintjs/select": "^3.14.3",
-    "@sotah-inc/core": "^2.0.144",
+    "@sotah-inc/core": "^2.0.146",
     "@types/http-status": "^1.1.2",
     "@types/isomorphic-fetch": "0.0.35",
     "@types/lodash": "^4.14.165",
