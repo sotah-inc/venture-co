@@ -75,8 +75,6 @@ export const defaultPriceListsState: IPriceListsState = {
     data: {
       data: {
         history: {},
-        itemPriceLimits: {},
-        overallPriceLimits: { lower: 0, upper: 0 },
       },
       items: [],
     },

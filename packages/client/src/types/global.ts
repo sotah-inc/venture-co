@@ -4,9 +4,7 @@ import {
   IConnectedRealmModificationDates,
   IItemClass,
   IItemPriceHistories,
-  IItemPriceLimits,
   IItemSubClass,
-  IPriceLimits,
   IPricesFlagged,
   IRealm,
   IRegionComposite,
@@ -79,6 +77,4 @@ export interface IClientRealm {
 
 export interface IItemPriceHistoriesState {
   history: IItemPriceHistories<IPricesFlagged>;
-  itemPriceLimits: IItemPriceLimits;
-  overallPriceLimits: IPriceLimits;
 }

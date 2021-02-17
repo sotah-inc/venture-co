@@ -57,8 +57,6 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
             data: {
               data: {
                 history: action.payload.itemPriceHistories.history,
-                itemPriceLimits: action.payload.itemPriceHistories.itemPriceLimits,
-                overallPriceLimits: action.payload.itemPriceHistories.overallPriceLimits,
               },
               items: action.payload.itemPriceHistories.items,
             },
@@ -95,16 +93,21 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
             return { ...defaultPriceListsState.professionPricelists, level: FetchLevel.failure };
           }
 
-          // tslint:disable-next-line:max-line-length
-          const sortedProfessionPricelists = action.payload.professionPricelists.data.profession_pricelists.sort(
-            (a, b) => {
-              if (a.pricelist.name === b.pricelist.name) {
-                return 0;
-              }
+          // prettier-ignore
+          const sortedProfessionPricelists = action
+            .payload
+            .professionPricelists
+            .data
+            .profession_pricelists
+            .sort(
+              (a, b) => {
+                if (a.pricelist.name === b.pricelist.name) {
+                  return 0;
+                }
 
-              return a.pricelist.name > b.pricelist.name ? 1 : -1;
-            },
-          );
+                return a.pricelist.name > b.pricelist.name ? 1 : -1;
+              },
+            );
 
           return {
             data: {
@@ -162,7 +165,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
       receive: (
         state: IPriceListsState,
         action: ReturnType<typeof ReceiveGetItemPriceHistories>,
-      ) => {
+      ): IPriceListsState => {
         if (action.payload === null) {
           return {
             ...state,
@@ -176,8 +179,6 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
             data: {
               data: {
                 history: action.payload.history,
-                itemPriceLimits: action.payload.itemPriceLimits,
-                overallPriceLimits: action.payload.overallPriceLimits,
               },
               items: action.payload.items,
             },
@@ -186,7 +187,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           },
         };
       },
-      request: (state: IPriceListsState) => {
+      request: (state: IPriceListsState): IPriceListsState => {
         return {
           ...state,
           itemPriceHistories: { ...state.itemPriceHistories, level: FetchLevel.fetching },
@@ -196,20 +197,23 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
   },
   pricelist: {
     create: {
-      receive: (state: IPriceListsState, action: ReturnType<typeof ReceiveCreatePricelist>) => {
-        if (action.payload.errors !== null) {
+      receive: (
+        state: IPriceListsState,
+        action: ReturnType<typeof ReceiveCreatePricelist>,
+      ): IPriceListsState => {
+        if (action.payload.data === null || action.payload.errors !== null) {
           return {
             ...state,
             createPricelist: {
-              errors: action.payload.errors,
+              errors: action.payload.errors ?? {},
               level: FetchLevel.failure,
             },
           };
         }
 
         const selectedList: IPricelistJson = {
-          ...action.payload.data!.pricelist,
-          pricelist_entries: action.payload.data!.entries,
+          ...action.payload.data.pricelist,
+          pricelist_entries: action.payload.data.entries,
         };
 
         return {
@@ -229,7 +233,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           selectedList,
         };
       },
-      request: (state: IPriceListsState) => {
+      request: (state: IPriceListsState): IPriceListsState => {
         return {
           ...state,
           createPricelist: {
@@ -240,7 +244,10 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
       },
     },
     delete: {
-      receive: (state: IPriceListsState, action: ReturnType<typeof ReceiveDeletePricelist>) => {
+      receive: (
+        state: IPriceListsState,
+        action: ReturnType<typeof ReceiveDeletePricelist>,
+      ): IPriceListsState => {
         if (action.payload === null) {
           return {
             ...state,
@@ -315,17 +322,23 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
       },
     },
     update: {
-      receive: (state: IPriceListsState, action: ReturnType<typeof ReceiveUpdatePricelist>) => {
-        if (action.payload.result.errors !== null) {
+      receive: (
+        state: IPriceListsState,
+        action: ReturnType<typeof ReceiveUpdatePricelist>,
+      ): IPriceListsState => {
+        if (action.payload.result.data === null || action.payload.result.errors !== null) {
           return {
             ...state,
-            updatePricelist: { errors: action.payload.result.errors, level: FetchLevel.failure },
+            updatePricelist: {
+              errors: action.payload.result.errors ?? {},
+              level: FetchLevel.failure,
+            },
           };
         }
 
         const selectedList: IPricelistJson = {
-          ...action.payload.result.data!.pricelist,
-          pricelist_entries: action.payload.result.data!.entries,
+          ...action.payload.result.data.pricelist,
+          pricelist_entries: action.payload.result.data.entries,
         };
 
         let replacedIndex = getPricelistIndex(state.pricelists.data.data, selectedList.id);
@@ -385,13 +398,13 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           },
           professionPricelists: {
             ...state.professionPricelists,
-            data: { ...state.professionPricelists.data, professionPricelists },
+            data: { ...state.professionPricelists.data, data: professionPricelists },
           },
           selectedList,
           updatePricelist: { errors: {}, level: FetchLevel.success },
         };
       },
-      request: (state: IPriceListsState) => {
+      request: (state: IPriceListsState): IPriceListsState => {
         return {
           ...state,
           updatePricelist: { ...state.updatePricelist, level: FetchLevel.fetching },
@@ -401,7 +414,10 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
   },
   pricelists: {
     get: {
-      receive: (state: IPriceListsState, action: ReturnType<typeof ReceiveGetPricelists>) => {
+      receive: (
+        state: IPriceListsState,
+        action: ReturnType<typeof ReceiveGetPricelists>,
+      ): IPriceListsState => {
         if (action.payload === null) {
           return {
             ...state,
@@ -426,7 +442,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           },
         };
       },
-      request: (state: IPriceListsState) => {
+      request: (state: IPriceListsState): IPriceListsState => {
         return { ...state, pricelists: { ...state.pricelists, level: FetchLevel.fetching } };
       },
     },
@@ -436,23 +452,23 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
       receive: (
         state: IPriceListsState,
         action: ReturnType<typeof ReceiveCreateProfessionPricelist>,
-      ) => {
-        if (action.payload.errors !== null) {
+      ): IPriceListsState => {
+        if (action.payload.data === null || action.payload.errors !== null) {
           return {
             ...state,
             createPricelist: {
-              errors: action.payload.errors,
+              errors: action.payload.errors ?? {},
               level: FetchLevel.failure,
             },
           };
         }
 
         const selectedList: IPricelistJson = {
-          ...action.payload.data!.pricelist,
-          pricelist_entries: action.payload.data!.entries,
+          ...action.payload.data.pricelist,
+          pricelist_entries: action.payload.data.entries,
         };
         const professionPricelist: IProfessionPricelistJson = {
-          ...action.payload.data!.profession_pricelist,
+          ...action.payload.data.profession_pricelist,
           pricelist: selectedList,
         };
         const professionPricelists: IProfessionPricelistJson[] = (() => {
@@ -468,12 +484,12 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           isAddListDialogOpen: false,
           professionPricelists: {
             ...state.professionPricelists,
-            data: { ...state.professionPricelists.data, professionPricelists },
+            data: { ...state.professionPricelists.data, data: professionPricelists },
           },
           selectedList,
         };
       },
-      request: (state: IPriceListsState) => {
+      request: (state: IPriceListsState): IPriceListsState => {
         return {
           ...state,
           createPricelist: {
@@ -487,7 +503,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
       receive: (
         state: IPriceListsState,
         action: ReturnType<typeof ReceiveDeleteProfessionPricelist>,
-      ) => {
+      ): IPriceListsState => {
         if (action.payload.errors !== null) {
           return {
             ...state,
@@ -515,8 +531,8 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
 
           const isLastDeleted = deletedIndex === nextResult.length;
           return isLastDeleted
-            ? nextResult[deletedIndex - 1].pricelist!
-            : nextResult[deletedIndex].pricelist!;
+            ? nextResult[deletedIndex - 1].pricelist
+            : nextResult[deletedIndex].pricelist;
         })();
 
         return {
@@ -530,7 +546,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           selectedList,
         };
       },
-      request: (state: IPriceListsState) => {
+      request: (state: IPriceListsState): IPriceListsState => {
         return {
           ...state,
           deletePricelist: { ...state.deletePricelist, level: FetchLevel.fetching },
@@ -544,8 +560,8 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
       receive: (
         state: IPriceListsState,
         action: ReturnType<typeof ReceiveGetProfessionPricelists>,
-      ) => {
-        if (action.payload.errors !== null) {
+      ): IPriceListsState => {
+        if (action.payload.data === null || action.payload.errors !== null) {
           return {
             ...state,
             professionPricelists: { ...state.professionPricelists, level: FetchLevel.failure },
@@ -557,15 +573,15 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           professionPricelists: {
             data: {
               ...state.professionPricelists.data,
-              data: action.payload.data!.profession_pricelists,
-              items: action.payload.data!.items!,
+              data: action.payload.data.profession_pricelists,
+              items: action.payload.data.items,
             },
             errors: {},
             level: FetchLevel.success,
           },
         };
       },
-      request: (state: IPriceListsState) => {
+      request: (state: IPriceListsState): IPriceListsState => {
         return {
           ...state,
           professionPricelists: { ...state.professionPricelists, level: FetchLevel.fetching },

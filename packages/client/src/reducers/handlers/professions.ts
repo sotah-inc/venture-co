@@ -20,7 +20,11 @@ import { IKindHandlers, Runner } from "./index";
 export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
   category: {
     skilltier: {
-      deselect: (state, _action: ReturnType<typeof DeselectSkillTierCategory>) => {
+      deselect: (
+        state: IProfessionsState,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        _action: ReturnType<typeof DeselectSkillTierCategory>,
+      ) => {
         return {
           ...state,
           selectedRecipe: undefined,
@@ -30,7 +34,7 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
           },
         };
       },
-      select: (state, action: ReturnType<typeof SelectSkillTierCategory>) => {
+      select: (state: IProfessionsState, action: ReturnType<typeof SelectSkillTierCategory>): IProfessionsState => {
         return {
           ...state,
           selectedRecipe: undefined,
@@ -190,14 +194,10 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
           return {
             data: {
               itemData: {
-                aggregatePriceLimits:
-                  action.payload.recipePriceHistories.itemData.aggregatePriceLimits,
                 history: action.payload.recipePriceHistories.itemData.history,
               },
               recipeData: {
                 histories: action.payload.recipePriceHistories.recipeData.history,
-                overallPriceLimits:
-                  action.payload.recipePriceHistories.recipeData.overallPriceLimits,
                 recipeItemIds: action.payload.recipePriceHistories.recipeData.recipeItemIds,
               },
             },
