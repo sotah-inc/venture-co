@@ -61,9 +61,9 @@ export class TokenHistoryGraph extends React.Component<Props, State> {
   private static renderYAxis() {
     return (
       <YAxis
-        tickFormatter={currencyToText}
+        tickFormatter={v => currencyToText(v)}
         domain={[
-          dataMin => {
+          (dataMin: number) => {
             if (dataMin <= 1) {
               return zeroGraphValue;
             }
@@ -75,7 +75,7 @@ export class TokenHistoryGraph extends React.Component<Props, State> {
 
             return result;
           },
-          dataMax => {
+          (dataMax: number) => {
             if (dataMax <= 1) {
               return 10;
             }
@@ -111,13 +111,13 @@ export class TokenHistoryGraph extends React.Component<Props, State> {
     const { tokenHistories } = this.props;
 
     switch (tokenHistories.level) {
-      case FetchLevel.success:
-        break;
-      case FetchLevel.failure:
-        return <p>Failed to fetch token-histories!</p>;
-      case FetchLevel.fetching:
-      default:
-        return <p>Fetching regional token-histories...</p>;
+    case FetchLevel.success:
+      break;
+    case FetchLevel.failure:
+      return <p>Failed to fetch token-histories!</p>;
+    case FetchLevel.fetching:
+    default:
+      return <p>Fetching regional token-histories...</p>;
     }
 
     const data = convertTokenHistoriesToLineData(tokenHistories.data).filter(

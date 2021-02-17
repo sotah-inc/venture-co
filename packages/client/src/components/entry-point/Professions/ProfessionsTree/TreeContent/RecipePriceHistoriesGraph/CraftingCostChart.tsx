@@ -1,6 +1,6 @@
 import React from "react";
 
-import { IPriceLimits, ItemId } from "@sotah-inc/core";
+import {  ItemId } from "@sotah-inc/core";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
 import { ILineItemOpen } from "../../../../../../types/global";
@@ -16,7 +16,6 @@ import { resolveItemDataKey, TotalReagentCostDataKey } from "./common";
 
 export interface IOwnProps {
   data: ILineItemOpen[];
-  overallPriceLimits: IPriceLimits;
   recipeItemIds: ItemId[];
   totalReagentCostSelected: boolean;
   highlightedDataKey: string | null;
@@ -118,7 +117,7 @@ function CraftingCostLine({
   );
 }
 
-export function CraftingCostChart(props: Props) {
+export function CraftingCostChart(props: Props): JSX.Element {
   const { xAxisTicks, roundedNowDate, roundedTwoWeeksAgoDate } = getXAxisTimeRestrictions();
 
   return (

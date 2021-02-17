@@ -1,6 +1,6 @@
 import React from "react";
 
-import { IPriceLimits, IShortRecipe, ItemId } from "@sotah-inc/core";
+import { IShortRecipe, ItemId } from "@sotah-inc/core";
 import { Bar, CartesianGrid, ComposedChart, Line, XAxis, YAxis } from "recharts";
 
 import { IItemsData, ILineItemOpen } from "../../../../../../types/global";
@@ -15,7 +15,6 @@ import { resolveItemDataKey } from "./common";
 
 export interface IOwnProps {
   data: ILineItemOpen[];
-  aggregatePriceLimits: IPriceLimits;
   reagentItemIds: ItemId[];
   recipeItemIds: ItemId[];
   selectedRecipe: IItemsData<IShortRecipe>;
@@ -117,7 +116,7 @@ function ReagentItemPricesBar({
   );
 }
 
-export function ReagentPricesChart(props: Props) {
+export function ReagentPricesChart(props: Props): JSX.Element {
   const { xAxisTicks, roundedNowDate, roundedTwoWeeksAgoDate } = getXAxisTimeRestrictions();
 
   return (
@@ -135,7 +134,7 @@ export function ReagentPricesChart(props: Props) {
         tickFormatter={v => currencyToText(v * 10 * 10)}
         domain={[
           0,
-          dataMax => {
+          (dataMax: number) => {
             if (dataMax <= 1) {
               return 10;
             }

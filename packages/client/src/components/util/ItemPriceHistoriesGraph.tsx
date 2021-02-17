@@ -4,12 +4,9 @@ import { Icon, Intent, Tab, Tabs, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import {
   IItemPriceHistories,
-  IItemPriceLimits,
-  IPriceLimits,
   IPricesFlagged,
   IShortItem,
   ItemId,
-  normalizeLimits,
 } from "@sotah-inc/core";
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
@@ -18,19 +15,18 @@ import {
   convertItemPriceHistoriesToLineData,
   currencyToText,
   getColor,
-  getXAxisTimeRestrictions,
+  getXAxisTimeRestrictions, maxDataDomain, minDataDomain,
   qualityToColorClass,
   unixTimestampToText,
-  zeroGraphValue,
 } from "../../util";
-import { resolveItemDataKey } from "../entry-point/Professions/ProfessionsTree/TreeContent/RecipePriceHistoriesGraph/common";
+import {
+  resolveItemDataKey,
+} from "../entry-point/Professions/ProfessionsTree/TreeContent/RecipePriceHistoriesGraph/common";
 import { ItemLink } from "./ItemLink";
 
 export interface IOwnProps {
   items: IShortItem[];
   itemPriceHistories: IItemPriceHistories<IPricesFlagged>;
-  overallPriceLimits: IPriceLimits;
-  itemPriceLimits: IItemPriceLimits;
   loadId: string;
 }
 
@@ -48,19 +44,11 @@ type State = Readonly<{
 }>;
 
 export class ItemPriceHistoriesGraph extends React.Component<Props, State> {
-  public state: State = {
+  public readonly state: State = {
     currentTabKind: TabKind.prices,
     highlightedItemId: null,
     selectedItems: new Set<ItemId>(),
   };
-
-  public componentDidMount() {
-    this.setState({
-      currentTabKind: TabKind.prices,
-      highlightedItemId: null,
-      selectedItems: new Set<ItemId>(),
-    });
-  }
 
   public componentDidUpdate(prevProps: Props): void {
     const { loadId } = this.props;
@@ -74,7 +62,7 @@ export class ItemPriceHistoriesGraph extends React.Component<Props, State> {
     }
   }
 
-  public render() {
+  public render(): JSX.Element {
     const { currentTabKind } = this.state;
 
     return (
@@ -95,82 +83,46 @@ export class ItemPriceHistoriesGraph extends React.Component<Props, State> {
   }
 
   private renderYAxis() {
-    const { overallPriceLimits, itemPriceLimits } = this.props;
-    const { currentTabKind, selectedItems, highlightedItemId } = this.state;
+    const { currentTabKind } = this.state;
 
     switch (currentTabKind) {
-      case TabKind.volume:
-        return (
-          <YAxis
-            tickFormatter={v => {
-              return Number(v).toLocaleString();
-            }}
-            domain={[
-              dataMin => {
-                return Math.pow(10, Math.floor(Math.log10(dataMin)));
-              },
-              dataMax => {
-                if (dataMax <= 1) {
-                  return 10;
-                }
+    case TabKind.volume:
+      return (
+        <YAxis
+          tickFormatter={v => {
+            return Number(v).toLocaleString();
+          }}
+          domain={[
+            (dataMin: number) => {
+              return Math.pow(10, Math.floor(Math.log10(dataMin)));
+            },
+            (dataMax: number) => {
+              if (dataMax <= 1) {
+                return 10;
+              }
 
-                return Math.pow(10, Math.ceil(Math.log10(dataMax)));
-              },
-            ]}
-            tick={{ fill: "#fff" }}
-            scale="log"
-            allowDataOverflow={true}
-            mirror={true}
-          />
-        );
-      case TabKind.prices:
-      default:
-        const preferredLimits: IPriceLimits = (() => {
-          if (selectedItems.size === 0) {
-            return overallPriceLimits;
-          }
-
-          const activeItemIds =
-            highlightedItemId === null
-              ? Array.from(selectedItems)
-              : [...Array.from(selectedItems), highlightedItemId];
-
-          return activeItemIds
-            .map<IPriceLimits>(v => {
-              return itemPriceLimits[Number(v)] ?? { lower: -1, upper: -1 };
-            })
-            .reduce<IPriceLimits>(
-              (result, v) => {
-                if (v.lower > 0 && (result.lower === 0 || v.lower < result.lower)) {
-                  result.lower = v.lower;
-                }
-
-                if (v.upper > result.upper) {
-                  result.upper = v.upper;
-                }
-
-                return result;
-              },
-              { lower: 0, upper: 0 },
-            );
-        })();
-
-        const normalizedLimits = normalizeLimits(preferredLimits);
-        const resolvedLimits: IPriceLimits = {
-          ...normalizedLimits,
-          lower: normalizedLimits.lower === 0 ? zeroGraphValue : normalizedLimits.lower,
-        };
-
-        return (
-          <YAxis
-            tickFormatter={v => currencyToText(v * 10 * 10)}
-            domain={[resolvedLimits.lower / 10 / 10, resolvedLimits.upper / 10 / 10]}
-            tick={{ fill: "#fff" }}
-            scale="log"
-            allowDataOverflow={true}
-            mirror={true}
-          />
-        );
+              return Math.pow(10, Math.ceil(Math.log10(dataMax)));
+            },
+          ]}
+          tick={{ fill: "#fff" }}
+          scale="log"
+          allowDataOverflow={true}
+          mirror={true}
+        />
+      );
+    case TabKind.prices:
+    default: {
+      return (
+        <YAxis
+          tickFormatter={v => currencyToText(v * 10 * 10)}
+          domain={[minDataDomain, maxDataDomain]}
+          tick={{ fill: "#fff" }}
+          scale="log"
+          allowDataOverflow={true}
+          mirror={true}
+        />
+      );
+    }
     }
   }
 
@@ -396,11 +348,11 @@ export class ItemPriceHistoriesGraph extends React.Component<Props, State> {
     const { currentTabKind } = this.state;
 
     switch (currentTabKind) {
-      case TabKind.volume:
-        return `${itemId}_volume`;
-      case TabKind.prices:
-      default:
-        return resolveItemDataKey(itemId);
+    case TabKind.volume:
+      return `${itemId}_volume`;
+    case TabKind.prices:
+    default:
+      return resolveItemDataKey(itemId);
     }
   }
 

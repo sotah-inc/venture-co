@@ -44,10 +44,10 @@ export class PricelistTable extends React.Component<Props> {
 
     if (itemPriceHistories.level !== prevProps.itemPriceHistories.level) {
       switch (itemPriceHistories.level) {
-        case FetchLevel.prompted:
-          break;
-        default:
-          return;
+      case FetchLevel.prompted:
+        break;
+      default:
+        return;
       }
 
       getItemPriceHistories({
@@ -59,7 +59,7 @@ export class PricelistTable extends React.Component<Props> {
     }
   }
 
-  public render() {
+  public render(): JSX.Element {
     const { list, loadId, itemPriceHistories } = this.props;
 
     return (
@@ -73,9 +73,7 @@ export class PricelistTable extends React.Component<Props> {
           <ItemPriceHistoriesGraph
             items={itemPriceHistories.data.items}
             itemPriceHistories={itemPriceHistories.data.data.history}
-            overallPriceLimits={itemPriceHistories.data.data.overallPriceLimits}
             loadId={loadId}
-            itemPriceLimits={itemPriceHistories.data.data.itemPriceLimits}
           />
         }
         {<CurrentPricesTableContainer />}

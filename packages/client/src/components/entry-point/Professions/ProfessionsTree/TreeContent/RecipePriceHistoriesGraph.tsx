@@ -55,7 +55,7 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
     },
   };
 
-  public render() {
+  public render(): JSX.Element {
     const { currentTabKind } = this.state;
 
     return (
@@ -109,78 +109,78 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
     }
 
     switch (currentTabKind) {
-      case TabKind.craftingCost:
-        return (
-          <CraftingCostLegend
-            craftedRecipeItemIds={
-              recipePriceHistories.data.recipeData.recipeItemIds[selectedRecipe.data.id]
-            }
-            highlightedDataKey={highlightedDataKey}
-            onDataKeyHighlight={v =>
-              this.setState({
-                ...this.state,
-                craftingCostState: { ...this.state.craftingCostState, highlightedDataKey: v },
-              })
-            }
-            onRecipeItemSelect={v => {
-              recipeItemsSelected.add(v);
-              this.setState({
-                ...this.state,
-                craftingCostState: { ...this.state.craftingCostState, recipeItemsSelected },
-              });
-            }}
-            onReset={() => {
-              this.setState({
-                ...this.state,
-                craftingCostState: {
-                  ...this.state.craftingCostState,
-                  recipeItemsSelected: new Set<ItemId>(),
-                  totalReagentCostSelected: false,
-                },
-              });
-            }}
-            onTotalReagentCostSelect={() => {
-              this.setState({
-                ...this.state,
-                craftingCostState: {
-                  ...this.state.craftingCostState,
-                  totalReagentCostSelected: true,
-                },
-              });
-            }}
-            recipeItems={selectedRecipe.items}
-            recipeItemsSelected={recipeItemsSelected}
-            totalReagentCostSelected={totalReagentCostSelected}
-          />
-        );
-      case TabKind.reagentPrices:
-        return (
-          <ReagentPricesLegend
-            highlightedDataKey={highlightedDataKey}
-            onDataKeyHighlight={v =>
-              this.setState({
-                ...this.state,
-                craftingCostState: { ...this.state.craftingCostState, highlightedDataKey: v },
-              })
-            }
-            itemIds={[
-              ...Object.keys(recipePriceHistories.data.itemData.history).map(Number),
-              ...recipePriceHistories.data.recipeData.recipeItemIds[selectedRecipe.data.id],
-            ]}
-            items={selectedRecipe.items}
-          />
-        );
-      default:
-        return null;
+    case TabKind.craftingCost:
+      return (
+        <CraftingCostLegend
+          craftedRecipeItemIds={
+            recipePriceHistories.data.recipeData.recipeItemIds[selectedRecipe.data.id]
+          }
+          highlightedDataKey={highlightedDataKey}
+          onDataKeyHighlight={v =>
+            this.setState({
+              ...this.state,
+              craftingCostState: { ...this.state.craftingCostState, highlightedDataKey: v },
+            })
+          }
+          onRecipeItemSelect={v => {
+            recipeItemsSelected.add(v);
+            this.setState({
+              ...this.state,
+              craftingCostState: { ...this.state.craftingCostState, recipeItemsSelected },
+            });
+          }}
+          onReset={() => {
+            this.setState({
+              ...this.state,
+              craftingCostState: {
+                ...this.state.craftingCostState,
+                recipeItemsSelected: new Set<ItemId>(),
+                totalReagentCostSelected: false,
+              },
+            });
+          }}
+          onTotalReagentCostSelect={() => {
+            this.setState({
+              ...this.state,
+              craftingCostState: {
+                ...this.state.craftingCostState,
+                totalReagentCostSelected: true,
+              },
+            });
+          }}
+          recipeItems={selectedRecipe.items}
+          recipeItemsSelected={recipeItemsSelected}
+          totalReagentCostSelected={totalReagentCostSelected}
+        />
+      );
+    case TabKind.reagentPrices:
+      return (
+        <ReagentPricesLegend
+          highlightedDataKey={highlightedDataKey}
+          onDataKeyHighlight={v =>
+            this.setState({
+              ...this.state,
+              craftingCostState: { ...this.state.craftingCostState, highlightedDataKey: v },
+            })
+          }
+          itemIds={[
+            ...Object.keys(recipePriceHistories.data.itemData.history).map(Number),
+            ...recipePriceHistories.data.recipeData.recipeItemIds[selectedRecipe.data.id],
+          ]}
+          items={selectedRecipe.items}
+        />
+      );
+    default:
+      return null;
     }
   }
 
-  private renderChart() {
+  private renderChart(): JSX.Element {
     const {
       recipePriceHistories: {
         data: {
-          recipeData: { overallPriceLimits, histories: recipePriceHistories, recipeItemIds },
-          itemData: { aggregatePriceLimits, history: recipeItemPriceHistories },
+          recipeData: {  histories: recipePriceHistories, recipeItemIds },
+          itemData: {  history: recipeItemPriceHistories },
         },
       },
       selectedRecipe,
@@ -191,42 +191,40 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
     } = this.state;
 
     if (selectedRecipe === null || typeof selectedRecipe === "undefined") {
-      return null;
+      return <React.Fragment />;
     }
 
     const craftingCostData = convertRecipePriceHistoriesToLineData(recipePriceHistories);
     const reagentPricesData = convertItemPriceHistoriesToLineData(recipeItemPriceHistories);
 
     switch (currentTabKind) {
-      case TabKind.craftingCost:
-        return CraftingCostChart({
-          data: craftingCostData,
-          highlightedDataKey,
-          onDataKeyHighlight: v => {
-            this.setState({
-              ...this.state,
-              craftingCostState: {
-                ...this.state.craftingCostState,
-                highlightedDataKey: v,
-              },
-            });
-          },
-          overallPriceLimits,
-          recipeItemIds: selectedRecipe.items.map(v => v.id),
-          recipeItemsSelected,
-          totalReagentCostSelected,
-        });
-      case TabKind.reagentPrices:
-        return ReagentPricesChart({
-          aggregatePriceLimits,
-          data: mergeLineData(craftingCostData, reagentPricesData),
-          highlightedDataKey,
-          reagentItemIds: Object.keys(recipeItemPriceHistories).map(Number),
-          recipeItemIds: recipeItemIds[selectedRecipe.data.id],
-          selectedRecipe,
-        });
-      default:
-        return null;
+    case TabKind.craftingCost:
+      return CraftingCostChart({
+        data: craftingCostData,
+        highlightedDataKey,
+        onDataKeyHighlight: v => {
+          this.setState({
+            ...this.state,
+            craftingCostState: {
+              ...this.state.craftingCostState,
+              highlightedDataKey: v,
+            },
+          });
+        },
+        recipeItemIds: selectedRecipe.items.map(v => v.id),
+        recipeItemsSelected,
+        totalReagentCostSelected,
+      });
+    case TabKind.reagentPrices:
+      return ReagentPricesChart({
+        data: mergeLineData(craftingCostData, reagentPricesData),
+        highlightedDataKey,
+        reagentItemIds: Object.keys(recipeItemPriceHistories).map(Number),
+        recipeItemIds: recipeItemIds[selectedRecipe.data.id],
+        selectedRecipe,
+      });
+    default:
+      return <React.Fragment />;
     }
   }
 
@@ -234,15 +232,15 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
     const { currentTabKind } = this.state;
 
     switch (currentTabKind) {
-      case TabKind.craftingCost:
-        return (
-          <Callout intent={Intent.PRIMARY} style={{ marginBottom: "10px" }}>
+    case TabKind.craftingCost:
+      return (
+        <Callout intent={Intent.PRIMARY} style={{ marginBottom: "10px" }}>
             Crating cost price graph is of average prices.
-          </Callout>
-        );
-      case TabKind.reagentPrices:
-      default:
-        return null;
+        </Callout>
+      );
+    case TabKind.reagentPrices:
+    default:
+      return null;
     }
   }
 }

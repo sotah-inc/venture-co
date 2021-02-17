@@ -56,9 +56,9 @@ export class AuctionStatsGraph extends React.Component<Props> {
   private static renderYAxis() {
     return (
       <YAxis
-        tickFormatter={currencyToText}
+        tickFormatter={v => currencyToText(v)}
         domain={[
-          dataMin => {
+          (dataMin: number) => {
             if (dataMin <= 1) {
               return zeroGraphValue;
             }
@@ -70,7 +70,7 @@ export class AuctionStatsGraph extends React.Component<Props> {
 
             return dataMin - (dataMin % result);
           },
-          dataMax => {
+          (dataMax: number) => {
             if (dataMax <= 1) {
               return 10;
             }
@@ -110,17 +110,17 @@ export class AuctionStatsGraph extends React.Component<Props> {
     );
   }
 
-  public render() {
+  public render(): JSX.Element {
     const { auctionStats } = this.props;
 
     switch (auctionStats.level) {
-      case FetchLevel.success:
-        break;
-      case FetchLevel.failure:
-        return <p>Failed to fetch auction-stats!</p>;
-      case FetchLevel.fetching:
-      default:
-        return <p>Fetching auction-stats...</p>;
+    case FetchLevel.success:
+      break;
+    case FetchLevel.failure:
+      return <p>Failed to fetch auction-stats!</p>;
+    case FetchLevel.fetching:
+    default:
+      return <p>Fetching auction-stats...</p>;
     }
 
     const data = convertAuctionStatsToLineData(auctionStats.data).filter(
@@ -136,7 +136,7 @@ export class AuctionStatsGraph extends React.Component<Props> {
             {AuctionStatsGraph.renderYAxis()}
             <Line
               name="Total Buyout"
-              dataKey={(item: ILineItemOpen) => item.data["total_buyout"] ?? null}
+              dataKey={(item: ILineItemOpen) => item.data.total_buyout ?? null}
               animationDuration={500}
               animationEasing={"ease-in-out"}
               type={"basis"}
