@@ -25,7 +25,7 @@ export interface IRequestResult<T> {
   };
 }
 
-export function handleResult<T>(res: Response, { data, headers, status }: IRequestResult<T>) {
+export function handleResult<T>(res: Response, { data, headers, status }: IRequestResult<T>): void {
   res.status(status);
   if (headers) {
     res.set(headers);
@@ -38,13 +38,17 @@ type ControllerDescriptor<T, A> = (
   res: Response,
 ) => Promise<IRequestResult<A | IValidationErrorResponse>>;
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 export function Validator<T extends object, A>(schema: ObjectSchema<T>) {
   return function validatorCallable(
-    _target: any,
+    _target: unknown,
     _propertyKey: string,
     descriptor: TypedPropertyDescriptor<ControllerDescriptor<T, A>>,
-  ) {
-    const originalMethod = descriptor.value!;
+  ): TypedPropertyDescriptor<ControllerDescriptor<T, A>> {
+    const originalMethod = descriptor.value;
+    if (originalMethod === undefined) {
+      return descriptor;
+    }
 
     descriptor.value = async function (
       req,
@@ -74,11 +78,14 @@ export function Validator<T extends object, A>(schema: ObjectSchema<T>) {
 
 export function Authenticator<T, A>(requiredLevel: UserLevel) {
   return function authenticatorCallable(
-    _target: any,
+    _target: unknown,
     _propertyKey: string,
     descriptor: TypedPropertyDescriptor<ControllerDescriptor<T, A>>,
-  ) {
-    const originalMethod = descriptor.value!;
+  ): TypedPropertyDescriptor<ControllerDescriptor<T, A>> {
+    const originalMethod = descriptor.value;
+    if (originalMethod === undefined) {
+      return descriptor;
+    }
 
     descriptor.value = async function (
       req,

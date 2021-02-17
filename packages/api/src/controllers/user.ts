@@ -20,6 +20,7 @@ import { IRequestResult } from "./index";
 
 export class UserController {
   private readonly messenger: Messenger;
+
   private readonly dbConn: Connection;
 
   constructor(messenger: Messenger, dbConn: Connection) {

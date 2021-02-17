@@ -1,12 +1,11 @@
+import { connectDatabase, Pricelist } from "@sotah-inc/server";
 import * as process from "process";
 import "reflect-metadata";
-
-import { connectDatabase, Pricelist } from "@sotah-inc/server";
 import getSlug from "speakingurl";
 import { v4 as uuidv4 } from "uuid";
 
 (async () => {
-  const dbHost = process.env["DB_HOST"] || "";
+  const dbHost = process.env.DB_HOST ?? "";
   const dbConn = await connectDatabase({
     connectionName: `app-${uuidv4()}`,
     dbHostname: dbHost,

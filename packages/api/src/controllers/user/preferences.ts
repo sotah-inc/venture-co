@@ -24,12 +24,13 @@ export class PreferencesController {
   @Authenticator<null, GetPreferencesResponse>(UserLevel.Unverified)
   public async getPreferences(
     req: IRequest<null>,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _res: Response,
   ): Promise<IRequestResult<GetPreferencesResponse>> {
     const user = req.user as User;
     const preference = await this.dbConn
       .getCustomRepository(PreferenceRepository)
-      .getFromUserId(user.id!);
+      .getFromUserId(user.id ?? -1);
 
     if (preference === null) {
       return {
@@ -48,13 +49,14 @@ export class PreferencesController {
   @Validator<ICreatePreferencesRequest, CreatePreferencesResponse>(PreferenceRules)
   public async createPreferences(
     req: IRequest<ICreatePreferencesRequest>,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _res: Response,
   ): Promise<IRequestResult<CreatePreferencesResponse>> {
     const user = req.user as User;
     const hasPreference: boolean = await (async () => {
       const foundPreference = await this.dbConn
         .getCustomRepository(PreferenceRepository)
-        .getFromUserId(user.id!);
+        .getFromUserId(user.id ?? -1);
       return foundPreference !== null;
     })();
     if (hasPreference) {
@@ -80,12 +82,13 @@ export class PreferencesController {
   @Validator<UpdatePreferencesRequest, UpdatePreferencesResponse>(PreferenceRules)
   public async updatePreferences(
     req: IRequest<UpdatePreferencesRequest>,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _res: Response,
   ): Promise<IRequestResult<UpdatePreferencesResponse>> {
     const user = req.user as User;
     const preference = await this.dbConn
       .getCustomRepository(PreferenceRepository)
-      .getFromUserId(user.id!);
+      .getFromUserId(user.id ?? -1);
 
     if (preference === null) {
       return {

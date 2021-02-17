@@ -12,8 +12,8 @@ export const getRouter = (messenger: Messenger): Router => {
   router.get(
     "/:regionName/:connectedRealmId",
     wrap(async (req: Request, res: Response) => {
-      const regionName = req.params["regionName"];
-      const connectedRealmId = Number(req.params["connectedRealmId"]);
+      const regionName = req.params.regionName;
+      const connectedRealmId = Number(req.params.connectedRealmId);
 
       handleResult(res, await controller.queryAuctionStats(regionName, connectedRealmId));
     }),
@@ -21,7 +21,7 @@ export const getRouter = (messenger: Messenger): Router => {
   router.get(
     "/:regionName",
     wrap(async (req: Request, res: Response) => {
-      const regionName = req.params["regionName"];
+      const regionName = req.params.regionName;
 
       handleResult(res, await controller.queryAuctionStats(regionName));
     }),

@@ -31,6 +31,7 @@ export class PostCrudController {
   @Validator<ICreatePostRequest, CreatePostResponse>(PostRequestBodyRules)
   public async createPost(
     req: IRequest<ICreatePostRequest>,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _res: Response,
   ): Promise<IRequestResult<CreatePostResponse>> {
     const result = await validate(
@@ -62,11 +63,12 @@ export class PostCrudController {
   @Validator<UpdatePostRequest, UpdatePostResponse>(PostRequestBodyRules)
   public async updatePost(
     req: IRequest<UpdatePostRequest>,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _res: Response,
   ): Promise<IRequestResult<UpdatePostResponse>> {
     const post = await this.dbConn
       .getCustomRepository(PostRepository)
-      .getWithUser(Number(req.params["post_id"]));
+      .getWithUser(Number(req.params.post_id));
     if (post === null) {
       const validationResponse: IValidationErrorResponse = {
         notFound: "Not Found",
@@ -79,7 +81,7 @@ export class PostCrudController {
     }
 
     const user = req.user as User;
-    if (post.user!.id !== user.id) {
+    if (!post.user || post.user.id !== user.id) {
       const validationResponse: IValidationErrorResponse = {
         unauthorized: "Unauthorized",
       };
@@ -116,12 +118,13 @@ export class PostCrudController {
   @Authenticator<null, DeletePostResponse>(UserLevel.Admin)
   public async deletePost(
     req: IRequest<null>,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _res: Response,
   ): Promise<IRequestResult<DeletePostResponse>> {
     const user = req.user as User;
     const post = await this.dbConn
       .getCustomRepository(PostRepository)
-      .getWithUser(Number(req.params["post_id"]));
+      .getWithUser(Number(req.params.post_id));
     if (post === null) {
       const validationResponse: IValidationErrorResponse = {
         notFound: "Not Found",
@@ -133,7 +136,7 @@ export class PostCrudController {
       };
     }
 
-    if (post.user!.id !== user.id) {
+    if (!post.user || post.user.id !== user.id) {
       const validationResponse: IValidationErrorResponse = {
         unauthorized: "Unauthorized",
       };

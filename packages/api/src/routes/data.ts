@@ -24,7 +24,7 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
   router.get(
     "/posts/:post_slug",
     wrap(async (req: Request, res: Response) => {
-      const postSlug = req.params["post_slug"];
+      const postSlug = req.params.post_slug;
 
       handleResult(res, await controller.getPost(postSlug));
     }),
@@ -36,7 +36,7 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
   router.get(
     "/connected-realms/:regionName",
     wrap(async (req: Request, res: Response) => {
-      const regionName = req.params["regionName"];
+      const regionName = req.params.regionName;
 
       handleResult(res, await controller.getConnectedRealms(regionName));
     }),
@@ -50,7 +50,7 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
   router.get(
     "/token-history/:regionName",
     wrap(async (req: Request, res: Response) => {
-      const regionName = req.params["regionName"];
+      const regionName = req.params.regionName;
 
       handleResult(res, await controller.getRegionTokenHistory(regionName));
     }),
@@ -58,8 +58,8 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
   router.get(
     "/auctions/:regionName/:realmSlug",
     wrap(async (req: Request, res: Response) => {
-      const regionName = req.params["regionName"];
-      const realmSlug = req.params["realmSlug"];
+      const regionName = req.params.regionName;
+      const realmSlug = req.params.realmSlug;
 
       handleResult(
         res,
@@ -81,9 +81,9 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
   router.get(
     "/item/:itemId",
     wrap(async (req: Request, res: Response) => {
-      const itemId = Number(req.params["itemId"]);
+      const itemId = Number(req.params.itemId);
 
-      handleResult(res, await controller.getItem(itemId, String(req.query["locale"])));
+      handleResult(res, await controller.getItem(itemId, String(req.query.locale)));
     }),
   );
   router.get(
@@ -101,21 +101,21 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
   router.post(
     "/price-list/:regionName/:realmSlug",
     wrap(async (req: Request, res: Response) => {
-      const regionName = req.params["regionName"];
-      const realmSlug = req.params["realmSlug"];
+      const regionName = req.params.regionName;
+      const realmSlug = req.params.realmSlug;
       const itemIds = (req.body as IGetPricelistRequest).item_ids;
 
       handleResult(
         res,
-        await controller.getPricelist(regionName, realmSlug, itemIds, String(req.query["locale"])),
+        await controller.getPricelist(regionName, realmSlug, itemIds, String(req.query.locale)),
       );
     }),
   );
   router.post(
     "/item-price-histories/:regionName/:realmSlug",
     wrap(async (req: Request, res: Response) => {
-      const regionName = req.params["regionName"];
-      const realmSlug = req.params["realmSlug"];
+      const regionName = req.params.regionName;
+      const realmSlug = req.params.realmSlug;
       const itemIds = (req.body as IGetItemPriceHistoriesRequest).item_ids;
 
       handleResult(
@@ -124,7 +124,7 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
           regionName,
           realmSlug,
           itemIds,
-          String(req.query["locale"]),
+          String(req.query.locale),
         ),
       );
     }),
@@ -132,9 +132,9 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
   router.get(
     "/recipe-price-histories/:regionName/:realmSlug/:recipeId",
     wrap(async (req: Request, res: Response) => {
-      const regionName = req.params["regionName"];
-      const realmSlug = req.params["realmSlug"];
-      const recipeId = req.params["recipeId"];
+      const regionName = req.params.regionName;
+      const realmSlug = req.params.realmSlug;
+      const recipeId = req.params.recipeId;
 
       handleResult(
         res,
@@ -142,7 +142,7 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
           regionName,
           realmSlug,
           Number(recipeId),
-          String(req.query["locale"]),
+          String(req.query.locale),
         ),
       );
     }),
@@ -150,8 +150,8 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
   router.post(
     "/unmet-demand/:regionName/:realmSlug",
     wrap(async (req: Request, res: Response) => {
-      const regionName = req.params["regionName"];
-      const realmSlug = req.params["realmSlug"];
+      const regionName = req.params.regionName;
+      const realmSlug = req.params.realmSlug;
       const expansionName = (req.body as IGetUnmetDemandRequest).expansion;
 
       handleResult(
@@ -160,7 +160,7 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
           regionName,
           realmSlug,
           expansionName,
-          String(req.query["locale"]),
+          String(req.query.locale),
         ),
       );
     }),
@@ -168,15 +168,15 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
   router.get(
     "/profession-pricelists/:profession/:expansion",
     wrap(async (req: Request, res: Response) => {
-      const professionName = req.params["profession"];
-      const expansionName = req.params["expansion"];
+      const professionName = req.params.profession;
+      const expansionName = req.params.expansion;
 
       handleResult(
         res,
         await controller.getProfessionPricelists(
           professionName,
           expansionName,
-          String(req.query["locale"]),
+          String(req.query.locale),
         ),
       );
     }),
@@ -184,9 +184,9 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
   router.get(
     "/profession-pricelists/:profession/:expansion/:pricelist_slug",
     wrap(async (req: Request, res: Response) => {
-      const professionName = req.params["profession"];
-      const expansionName = req.params["expansion"];
-      const pricelistSlug = req.params["pricelist_slug"];
+      const professionName = req.params.profession;
+      const expansionName = req.params.expansion;
+      const pricelistSlug = req.params.pricelist_slug;
 
       handleResult(
         res,
@@ -197,20 +197,20 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
   router.get(
     "/professions",
     wrap(async (req: Request, res: Response) => {
-      handleResult(res, await controller.getProfessions(String(req.query["locale"])));
+      handleResult(res, await controller.getProfessions(String(req.query.locale)));
     }),
   );
   router.get(
     "/skill-tier/:profession/:skillTier",
     wrap(async (req: Request, res: Response) => {
-      const professionId = req.params["profession"];
-      const skillTierId = req.params["skillTier"];
+      const professionId = req.params.profession;
+      const skillTierId = req.params.skillTier;
       handleResult(
         res,
         await controller.getSkillTier(
           Number(professionId),
           Number(skillTierId),
-          String(req.query["locale"]),
+          String(req.query.locale),
         ),
       );
     }),
@@ -218,8 +218,8 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
   router.get(
     "/recipe/:recipe",
     wrap(async (req: Request, res: Response) => {
-      const recipeId = req.params["recipe"];
-      handleResult(res, await controller.getRecipe(Number(recipeId), String(req.query["locale"])));
+      const recipeId = req.params.recipe;
+      handleResult(res, await controller.getRecipe(Number(recipeId), String(req.query.locale)));
     }),
   );
 

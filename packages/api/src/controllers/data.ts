@@ -62,6 +62,7 @@ import { IRequestResult } from "./index";
 
 export class DataController {
   private messenger: Messenger;
+
   private dbConn: Connection;
 
   constructor(messenger: Messenger, dbConn: Connection) {
@@ -174,14 +175,14 @@ export class DataController {
       region_name: regionName,
     });
     switch (realmsMessage.code) {
-      case code.notFound:
-        return { status: HTTPStatus.NOT_FOUND, data: null };
-      default:
-        if (realmsMessage.code !== code.ok) {
-          return { status: HTTPStatus.INTERNAL_SERVER_ERROR, data: null };
-        }
+    case code.notFound:
+      return { status: HTTPStatus.NOT_FOUND, data: null };
+    default:
+      if (realmsMessage.code !== code.ok) {
+        return { status: HTTPStatus.INTERNAL_SERVER_ERROR, data: null };
+      }
 
-        break;
+      break;
     }
 
     const realmsResult = await realmsMessage.decode();
@@ -286,6 +287,7 @@ export class DataController {
     return { data: itemResponse, status: HTTPStatus.OK };
   }
 
+  // eslint-disable-next-line complexity
   public async getAuctions(
     regionName: RegionName,
     realmSlug: RealmSlug,
@@ -298,26 +300,28 @@ export class DataController {
       region_name: regionName,
     });
     switch (resolveMessage.code) {
-      case code.ok:
-        break;
-      case code.notFound:
-        const notFoundValidationErrors: IValidationErrorResponse = {
-          error: "could not resolve connected-realm",
-        };
+    case code.ok:
+      break;
+    case code.notFound: {
+      const notFoundValidationErrors: IValidationErrorResponse = {
+        error: "could not resolve connected-realm",
+      };
 
-        return {
-          data: notFoundValidationErrors,
-          status: HTTPStatus.NOT_FOUND,
-        };
-      default:
-        const defaultValidationErrors: IValidationErrorResponse = {
-          error: "could not resolve connected-realm",
-        };
+      return {
+        data: notFoundValidationErrors,
+        status: HTTPStatus.NOT_FOUND,
+      };
+    }
+    default: {
+      const defaultValidationErrors: IValidationErrorResponse = {
+        error: "could not resolve connected-realm",
+      };
 
-        return {
-          data: defaultValidationErrors,
-          status: HTTPStatus.INTERNAL_SERVER_ERROR,
-        };
+      return {
+        data: defaultValidationErrors,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
     }
 
     const resolveResult = await resolveMessage.decode();
@@ -334,20 +338,20 @@ export class DataController {
       region_name: regionName,
     });
     switch (realmModificationDatesMessage.code) {
-      case code.ok:
-        break;
-      case code.notFound:
-        return {
-          data: {
-            error: `${realmModificationDatesMessage.error!.message} (realm-modification-dates)`,
-          },
-          status: HTTPStatus.NOT_FOUND,
-        };
-      default:
-        return {
-          data: { error: realmModificationDatesMessage.error!.message },
-          status: HTTPStatus.INTERNAL_SERVER_ERROR,
-        };
+    case code.ok:
+      break;
+    case code.notFound:
+      return {
+        data: {
+          error: `${realmModificationDatesMessage.error?.message} (realm-modification-dates)`,
+        },
+        status: HTTPStatus.NOT_FOUND,
+      };
+    default:
+      return {
+        data: { error: realmModificationDatesMessage.error?.message },
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
     }
 
     const realmModificationDatesResult = await realmModificationDatesMessage.decode();
@@ -365,7 +369,7 @@ export class DataController {
     if (ifModifiedSince) {
       const ifModifiedSinceDate = moment(new Date(ifModifiedSince)).utc();
       if (lastModifiedDate.isSameOrBefore(ifModifiedSinceDate)) {
-        // tslint:disable-next-line:no-console
+        // eslint-disable-next-line no-console
         console.log("serving cached request");
 
         return {
@@ -415,23 +419,23 @@ export class DataController {
       locale,
     );
     switch (resolveAuctionsResponse.code) {
-      case code.ok:
-        break;
-      case code.notFound:
-        return {
-          data: { error: `${resolveAuctionsResponse.error ?? ""} (auctions)` },
-          status: HTTPStatus.NOT_FOUND,
-        };
-      case code.userError:
-        return {
-          data: { error: resolveAuctionsResponse.error ?? "" },
-          status: HTTPStatus.BAD_REQUEST,
-        };
-      default:
-        return {
-          data: { error: resolveAuctionsResponse.error ?? "" },
-          status: HTTPStatus.INTERNAL_SERVER_ERROR,
-        };
+    case code.ok:
+      break;
+    case code.notFound:
+      return {
+        data: { error: `${resolveAuctionsResponse.error ?? ""} (auctions)` },
+        status: HTTPStatus.NOT_FOUND,
+      };
+    case code.userError:
+      return {
+        data: { error: resolveAuctionsResponse.error ?? "" },
+        status: HTTPStatus.BAD_REQUEST,
+      };
+    default:
+      return {
+        data: { error: resolveAuctionsResponse.error ?? "" },
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
     }
 
     if (resolveAuctionsResponse.data === null) {
@@ -442,25 +446,23 @@ export class DataController {
     }
 
     const professionPricelists = await (async () => {
-      if (resolveAuctionsResponse.data!.items.items.length === 0) {
+      if (!resolveAuctionsResponse.data || resolveAuctionsResponse.data.items.items.length === 0) {
         return [];
       }
+
+      const itemIdsClause = resolveAuctionsResponse.data.items.items.map(v => v.id).join(", ");
 
       return this.dbConn
         .getRepository(ProfessionPricelist)
         .createQueryBuilder("professionpricelist")
         .leftJoinAndSelect("professionpricelist.pricelist", "pricelist")
         .leftJoinAndSelect("pricelist.entries", "entry")
-        .where(
-          `entry.itemId IN (${resolveAuctionsResponse
-            .data!.items.items.map(v => v.id)
-            .join(", ")})`,
-        )
+        .where(`entry.itemId IN (${itemIdsClause})`)
         .getMany();
     })();
 
     const pricelistItemIds: ItemId[] = [
-      ...professionPricelists.map(v => v.pricelist!.entries!.map(y => y.itemId)[0]),
+      ...professionPricelists.map(v => (v.pricelist?.entries ?? []).map(y => y.itemId)[0]),
     ];
     const pricelistItemsMsg = await this.messenger.getItems({ itemIds: pricelistItemIds, locale });
     if (pricelistItemsMsg.code !== code.ok) {
@@ -479,7 +481,7 @@ export class DataController {
     }
 
     const itemsMarketPriceMessage = await this.messenger.itemsMarketPrice({
-      item_ids: resolveAuctionsResponse.data!.items.items.map(v => v.id),
+      item_ids: resolveAuctionsResponse.data.items.items.map(v => v.id),
       tuple: {
         connected_realm_id: resolveResult.connected_realm.connected_realm.id,
         region_name: regionName,
@@ -517,7 +519,7 @@ export class DataController {
       ];
     }, []);
 
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.log("serving un-cached request");
 
     return {
@@ -658,26 +660,28 @@ export class DataController {
       region_name: regionName,
     });
     switch (resolveMessage.code) {
-      case code.ok:
-        break;
-      case code.notFound:
-        const notFoundValidationErrors: IValidationErrorResponse = {
-          error: "could not resolve connected-realm",
-        };
+    case code.ok:
+      break;
+    case code.notFound: {
+      const notFoundValidationErrors: IValidationErrorResponse = {
+        error: "could not resolve connected-realm",
+      };
 
-        return {
-          data: notFoundValidationErrors,
-          status: HTTPStatus.NOT_FOUND,
-        };
-      default:
-        const defaultValidationErrors: IValidationErrorResponse = {
-          error: "could not resolve connected-realm",
-        };
+      return {
+        data: notFoundValidationErrors,
+        status: HTTPStatus.NOT_FOUND,
+      };
+    }
+    default: {
+      const defaultValidationErrors: IValidationErrorResponse = {
+        error: "could not resolve connected-realm",
+      };
 
-        return {
-          data: defaultValidationErrors,
-          status: HTTPStatus.INTERNAL_SERVER_ERROR,
-        };
+      return {
+        data: defaultValidationErrors,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
     }
 
     const resolveResult = await resolveMessage.decode();
@@ -755,26 +759,28 @@ export class DataController {
       region_name: regionName,
     });
     switch (resolveMessage.code) {
-      case code.ok:
-        break;
-      case code.notFound:
-        const notFoundValidationErrors: IValidationErrorResponse = {
-          error: "could not resolve connected-realm",
-        };
+    case code.ok:
+      break;
+    case code.notFound: {
+      const notFoundValidationErrors: IValidationErrorResponse = {
+        error: "could not resolve connected-realm",
+      };
 
-        return {
-          data: notFoundValidationErrors,
-          status: HTTPStatus.NOT_FOUND,
-        };
-      default:
-        const defaultValidationErrors: IValidationErrorResponse = {
-          error: "could not resolve connected-realm",
-        };
+      return {
+        data: notFoundValidationErrors,
+        status: HTTPStatus.NOT_FOUND,
+      };
+    }
+    default: {
+      const defaultValidationErrors: IValidationErrorResponse = {
+        error: "could not resolve connected-realm",
+      };
 
-        return {
-          data: defaultValidationErrors,
-          status: HTTPStatus.INTERNAL_SERVER_ERROR,
-        };
+      return {
+        data: defaultValidationErrors,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
     }
 
     const resolveResult = await resolveMessage.decode();
@@ -851,26 +857,28 @@ export class DataController {
       region_name: regionName,
     });
     switch (resolveMessage.code) {
-      case code.ok:
-        break;
-      case code.notFound:
-        const notFoundValidationErrors: IValidationErrorResponse = {
-          error: "could not resolve connected-realm",
-        };
+    case code.ok:
+      break;
+    case code.notFound: {
+      const notFoundValidationErrors: IValidationErrorResponse = {
+        error: "could not resolve connected-realm",
+      };
 
-        return {
-          data: notFoundValidationErrors,
-          status: HTTPStatus.NOT_FOUND,
-        };
-      default:
-        const defaultValidationErrors: IValidationErrorResponse = {
-          error: "could not resolve connected-realm",
-        };
+      return {
+        data: notFoundValidationErrors,
+        status: HTTPStatus.NOT_FOUND,
+      };
+    }
+    default: {
+      const defaultValidationErrors: IValidationErrorResponse = {
+        error: "could not resolve connected-realm",
+      };
 
-        return {
-          data: defaultValidationErrors,
-          status: HTTPStatus.INTERNAL_SERVER_ERROR,
-        };
+      return {
+        data: defaultValidationErrors,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
     }
 
     const resolveResult = await resolveMessage.decode();
@@ -988,26 +996,28 @@ export class DataController {
       region_name: regionName,
     });
     switch (resolveMessage.code) {
-      case code.ok:
-        break;
-      case code.notFound:
-        const notFoundValidationErrors: IValidationErrorResponse = {
-          error: "could not resolve connected-realm",
-        };
+    case code.ok:
+      break;
+    case code.notFound: {
+      const notFoundValidationErrors: IValidationErrorResponse = {
+        error: "could not resolve connected-realm",
+      };
 
-        return {
-          data: notFoundValidationErrors,
-          status: HTTPStatus.NOT_FOUND,
-        };
-      default:
-        const defaultValidationErrors: IValidationErrorResponse = {
-          error: "could not resolve connected-realm",
-        };
+      return {
+        data: notFoundValidationErrors,
+        status: HTTPStatus.NOT_FOUND,
+      };
+    }
+    default: {
+      const defaultValidationErrors: IValidationErrorResponse = {
+        error: "could not resolve connected-realm",
+      };
 
-        return {
-          data: defaultValidationErrors,
-          status: HTTPStatus.INTERNAL_SERVER_ERROR,
-        };
+      return {
+        data: defaultValidationErrors,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
     }
 
     const resolveResult = await resolveMessage.decode();
@@ -1026,7 +1036,7 @@ export class DataController {
     // gathering included item-ids
     const itemIds = professionPricelists.reduce(
       (previousValue: ItemId[], v: ProfessionPricelist) => {
-        const pricelistItemIds = v.pricelist!.entries!.map(entry => entry.itemId);
+        const pricelistItemIds = (v.pricelist?.entries ?? []).map(entry => entry.itemId);
         for (const itemId of pricelistItemIds) {
           if (previousValue.indexOf(itemId) === -1) {
             previousValue.push(itemId);
@@ -1042,7 +1052,7 @@ export class DataController {
     const itemsMsg = await this.messenger.getItems({ itemIds, locale: locale as Locale });
     if (itemsMsg.code !== code.ok) {
       return {
-        data: { error: itemsMsg.error!.message },
+        data: { error: itemsMsg.error?.message },
         status: HTTPStatus.INTERNAL_SERVER_ERROR,
       };
     }
@@ -1064,7 +1074,7 @@ export class DataController {
     });
     if (pricelistMessage.code !== code.ok) {
       return {
-        data: { error: pricelistMessage.error!.message },
+        data: { error: pricelistMessage.error?.message },
         status: HTTPStatus.INTERNAL_SERVER_ERROR,
       };
     }
@@ -1086,8 +1096,7 @@ export class DataController {
 
     // filtering in unmet profession-pricelists
     const unmetProfessionPricelists = professionPricelists.filter(v => {
-      const unmetPricelistItemIds = v
-        .pricelist!.entries!.map(entry => entry.itemId)
+      const unmetPricelistItemIds = (v.pricelist?.entries ?? []).map(entry => entry.itemId)
         .filter(itemId => unmetItemIds.indexOf(itemId) > -1);
 
       return unmetPricelistItemIds.length > 0;
@@ -1127,13 +1136,14 @@ export class DataController {
     // gathering related items
     const itemIds: ItemId[] = professionPricelists.reduce(
       (pricelistItemIds: ItemId[], professionPricelist) => {
-        return professionPricelist.pricelist!.entries!.reduce((entryItemIds: ItemId[], entry) => {
-          if (entryItemIds.indexOf(entry.itemId) === -1) {
-            entryItemIds.push(entry.itemId);
-          }
+        return (professionPricelist.pricelist?.entries ?? [])
+          .reduce((entryItemIds: ItemId[], entry) => {
+            if (entryItemIds.indexOf(entry.itemId) === -1) {
+              entryItemIds.push(entry.itemId);
+            }
 
-          return entryItemIds;
-        }, pricelistItemIds);
+            return entryItemIds;
+          }, pricelistItemIds);
       },
       [],
     );

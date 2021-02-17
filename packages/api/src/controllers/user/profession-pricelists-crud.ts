@@ -34,6 +34,7 @@ export class ProfessionPricelistsCrudController {
   )
   public async createProfessionPricelist(
     req: IRequest<ICreateProfessionPricelistRequest>,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _res: Response,
   ): Promise<IRequestResult<CreateProfessionPricelistResponse>> {
     const pricelist = new Pricelist();
@@ -72,11 +73,12 @@ export class ProfessionPricelistsCrudController {
   @Authenticator<null, DeleteProfessionPricelistResponse>(UserLevel.Admin)
   public async deleteProfessionPricelist(
     req: IRequest<null>,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _res: Response,
   ): Promise<IRequestResult<DeleteProfessionPricelistResponse>> {
     const professionPricelist = await this.dbConn
       .getCustomRepository(ProfessionPricelistRepository)
-      .getFromPricelistId(Number(req.params["pricelist_id"]));
+      .getFromPricelistId(Number(req.params.pricelist_id));
     if (professionPricelist === null) {
       return {
         data: null,

@@ -16,9 +16,9 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
       handleResult(
         res,
         await controller.queryWorkOrders(
-          req.params["gameVersion"],
-          req.params["regionName"],
-          req.params["realmSlug"],
+          req.params.gameVersion,
+          req.params.regionName,
+          req.params.realmSlug,
           req.query,
         ),
       ),
@@ -30,11 +30,11 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
       handleResult(
         res,
         await controller.prefillWorkOrderItem(
-          req.params["gameVersion"],
-          req.params["regionName"],
-          req.params["realmSlug"],
-          Number(req.query["itemId"]),
-          String(req.query["locale"]),
+          req.params.gameVersion,
+          req.params.regionName,
+          req.params.realmSlug,
+          Number(req.query.itemId),
+          String(req.query.locale),
         ),
       ),
     ),

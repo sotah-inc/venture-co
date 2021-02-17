@@ -12,6 +12,7 @@ import {
   UpdatePricelistResponse,
 } from "@sotah-inc/core";
 import { Messenger, Pricelist, PricelistEntry, PricelistRepository, User } from "@sotah-inc/server";
+import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
 
@@ -24,6 +25,7 @@ import { IRequestResult } from "../index";
 
 export class PricelistCrudController {
   private dbConn: Connection;
+
   private messenger: Messenger;
 
   constructor(dbConn: Connection, messenger: Messenger) {
@@ -56,8 +58,8 @@ export class PricelistCrudController {
       result.data.entries.map(v => {
         const entry = new PricelistEntry();
         entry.pricelist = pricelist;
-        entry.itemId = v!.item_id;
-        entry.quantityModifier = v!.quantity_modifier;
+        entry.itemId = v.item_id;
+        entry.quantityModifier = v.quantity_modifier;
 
         return this.dbConn.manager.save(entry);
       }),
@@ -86,7 +88,7 @@ export class PricelistCrudController {
     // gathering pricelists associated with this user
     let pricelists = await this.dbConn
       .getCustomRepository(PricelistRepository)
-      .getAllUserPricelists(user.id!);
+      .getAllUserPricelists(user.id ?? -1);
 
     // filtering out profession-pricelists
     pricelists = pricelists.filter(
@@ -95,7 +97,7 @@ export class PricelistCrudController {
 
     // gathering related items
     const itemIds: ItemId[] = pricelists.reduce((pricelistsItemIds: ItemId[], pricelist) => {
-      return pricelist.entries!.reduce((entriesItemIds: ItemId[], entry) => {
+      return (pricelist.entries ?? []).reduce((entriesItemIds: ItemId[], entry) => {
         if (entriesItemIds.indexOf(entry.itemId) === -1) {
           entriesItemIds.push(entry.itemId);
         }
@@ -103,13 +105,24 @@ export class PricelistCrudController {
         return entriesItemIds;
       }, pricelistsItemIds);
     }, []);
-    const items = (await (
-      await this.messenger.getItems({ itemIds, locale: locale as Locale })
-    ).decode())!.items;
+    const itemsMessage = await this.messenger.getItems({ itemIds, locale: locale as Locale });
+    if (itemsMessage.code !== code.ok) {
+      return {
+        data: null,
+        status: HTTPStatus.BAD_REQUEST,
+      };
+    }
+    const itemsResult = await itemsMessage.decode();
+    if (itemsResult === null) {
+      return {
+        data: null,
+        status: HTTPStatus.BAD_REQUEST,
+      };
+    }
 
     // dumping out a response
     return {
-      data: { pricelists: pricelists.map(v => v.toJson()), items },
+      data: { pricelists: pricelists.map(v => v.toJson()), items: itemsResult.items },
       status: HTTPStatus.OK,
     };
   }
@@ -120,7 +133,7 @@ export class PricelistCrudController {
   ): Promise<IRequestResult<GetUserPricelistResponse>> {
     const pricelist = await this.dbConn
       .getCustomRepository(PricelistRepository)
-      .getBelongingToUserById(id, user.id!);
+      .getBelongingToUserById(id, user.id ?? -1);
     if (pricelist === null) {
       return {
         data: null,
@@ -140,7 +153,7 @@ export class PricelistCrudController {
   ): Promise<IRequestResult<GetUserPricelistResponse>> {
     const pricelist = await this.dbConn
       .getCustomRepository(PricelistRepository)
-      .getFromPricelistSlug(user.id!, professionName);
+      .getFromPricelistSlug(user.id ?? -1, professionName);
     if (pricelist === null) {
       return {
         data: null,
@@ -162,7 +175,7 @@ export class PricelistCrudController {
     // resolving the pricelist
     const pricelist = await this.dbConn
       .getCustomRepository(PricelistRepository)
-      .getBelongingToUserById(id, user.id!);
+      .getBelongingToUserById(id, user.id ?? -1);
     if (pricelist === null) {
       return {
         data: null,
@@ -185,7 +198,7 @@ export class PricelistCrudController {
     await this.dbConn.manager.save(pricelist);
 
     // misc
-    const entries = pricelist.entries!;
+    const entries = pricelist.entries ?? [];
 
     // creating new entries
     const newRequestEntries = result.data.entries.filter(v => v.id === -1);
@@ -244,7 +257,7 @@ export class PricelistCrudController {
     // resolving the pricelist
     const removed = await this.dbConn
       .getCustomRepository(PricelistRepository)
-      .removeByUserId(id, user.id!);
+      .removeByUserId(id, user.id ?? -1);
     if (!removed) {
       return {
         data: null,

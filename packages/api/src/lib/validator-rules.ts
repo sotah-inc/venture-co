@@ -39,7 +39,7 @@ export const PricelistRules = yup
     slug: yup
       .string()
       .min(4)
-      .matches(/^[a-z|0-9|_|\-]+$/)
+      .matches(/^[a-z0-9_-]+$/)
       .required(),
   })
   .required()
@@ -80,7 +80,7 @@ export const PostRequestBodyRules = yup
     slug: yup
       .string()
       .min(4, "post slug must be 4 characters")
-      .matches(/^[a-z|0-9|_|\-]+$/, "post slug must be a-z, 0-9, or underscore")
+      .matches(/^[a-z0-9_-]+$/, "post slug must be a-z, 0-9, or underscore")
       .required("post slug is required"),
     summary: yup.string().required("summary is required"),
     title: yup.string().required("post title is required"),
@@ -88,6 +88,7 @@ export const PostRequestBodyRules = yup
   .required()
   .noUnknown();
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const FullPostRequestBodyRules = (repo: PostRepository, exceptSlug?: string) =>
   yup
     .object<ICreatePostRequest>({
@@ -95,7 +96,7 @@ export const FullPostRequestBodyRules = (repo: PostRepository, exceptSlug?: stri
       slug: yup
         .string()
         .min(4, "post slug must be 4 characters")
-        .matches(/^[a-z|0-9|_|\-]+$/, "post slug must be a-z, 0-9, or underscore")
+        .matches(/^[a-z0-9_-]+$/, "post slug must be a-z, 0-9, or underscore")
         .required("post slug is required")
         .test("is-unique", "post must be unique", v => {
           if (!v) {
@@ -110,6 +111,7 @@ export const FullPostRequestBodyRules = (repo: PostRepository, exceptSlug?: stri
     .required()
     .noUnknown();
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const UpdateProfileRequestBodyRules = (repo: UserRepository, exceptEmail?: string) =>
   yup
     .object<IUpdateProfileRequest>()

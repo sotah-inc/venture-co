@@ -24,7 +24,7 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
     wrap(async (req: Request, res: Response) =>
       handleResult(
         res,
-        await controller.getPricelists(req.user as User, String(req.query["locale"])),
+        await controller.getPricelists(req.user as User, String(req.query.locale)),
       ),
     ),
   );
@@ -33,7 +33,7 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
     "/:id([0-9]+)",
     auth,
     wrap(async (req: Request, res: Response) =>
-      handleResult(res, await controller.getPricelist(Number(req.params["id"]), req.user as User)),
+      handleResult(res, await controller.getPricelist(Number(req.params.id), req.user as User)),
     ),
   );
 
@@ -43,7 +43,7 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
     wrap(async (req: Request, res: Response) =>
       handleResult(
         res,
-        await controller.getPricelistFromSlug(req.user as User, req.params["pricelist_slug"]),
+        await controller.getPricelistFromSlug(req.user as User, req.params.pricelist_slug),
       ),
     ),
   );
@@ -54,7 +54,7 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
     wrap(async (req: Request, res: Response) =>
       handleResult(
         res,
-        await controller.updatePricelist(Number(req.params["id"]), req.user as User, req.body),
+        await controller.updatePricelist(Number(req.params.id), req.user as User, req.body),
       ),
     ),
   );
@@ -65,7 +65,7 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
     wrap(async (req: Request, res: Response) =>
       handleResult(
         res,
-        await controller.deletePricelist(Number(req.params["id"]), req.user as User),
+        await controller.deletePricelist(Number(req.params.id), req.user as User),
       ),
     ),
   );
