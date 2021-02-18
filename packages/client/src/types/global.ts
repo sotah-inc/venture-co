@@ -78,3 +78,8 @@ export interface IClientRealm {
 export interface IItemPriceHistoriesState {
   history: IItemPriceHistories<IPricesFlagged>;
 }
+
+export interface IRouteConfig {
+  url: string;
+  asDest: string;
+}

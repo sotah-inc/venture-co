@@ -27,7 +27,8 @@ import {
   IUnmetDemandState,
 } from "../../types/price-lists";
 import { getPricelistIndex, getProfessionPricelistIndex } from "../helper";
-import { IKindHandlers, Runner } from "./index";
+
+import { IKindHandlers } from "./index";
 
 export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
   entrypoint: {
@@ -591,10 +592,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
   },
 };
 
-export const run: Runner<IPriceListsState, PriceListsActions> = (
-  state: IPriceListsState,
-  action: PriceListsActions,
-): IPriceListsState => {
+export function run(state: IPriceListsState, action: PriceListsActions): IPriceListsState {
   const [kind, verb, task] = action.type
     .split("_")
     .reverse()
@@ -605,4 +603,4 @@ export const run: Runner<IPriceListsState, PriceListsActions> = (
   }
 
   return taskHandler(state, action);
-};
+}

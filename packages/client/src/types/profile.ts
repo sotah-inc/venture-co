@@ -1,5 +1,4 @@
 import { IErrors } from "./global";
-
 import { FetchLevel } from "./main";
 
 export interface IProfileState {

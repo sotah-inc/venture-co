@@ -3,15 +3,15 @@ import { defaultOvenState, IOvenState } from "../types/oven";
 
 type State = Readonly<IOvenState>;
 
-export const oven = (state: State | undefined, action: OvenActions): State => {
+export function oven(state: State | undefined, action: OvenActions): State {
   if (typeof state === "undefined") {
     return defaultOvenState;
   }
 
   switch (action.type) {
-    case INSERT_TOAST:
-      return { ...state, index: state.index + 1, toast: action.payload };
+  case INSERT_TOAST:
+    return { ...state, index: state.index + 1, toast: action.payload };
   }
 
-  return state!;
-};
+  return state;
+}

@@ -19,7 +19,7 @@ import {
 
 import { SortToggleContainer } from "../../../containers/entry-point/AuctionList/SortToggle";
 import { ItemPopoverContainer } from "../../../containers/util/ItemPopover";
-import { AuctionsOptions, IAuctionResultData } from "../../../types/auction";
+import { IAuctionsOptions, IAuctionResultData } from "../../../types/auction";
 import { IClientRealm } from "../../../types/global";
 import { getItemFromPricelist, petQualityToColorClass, qualityToColorClass } from "../../../util";
 import { Currency, ProfessionIcon } from "../../util";
@@ -29,7 +29,7 @@ import { PetPopover } from "../../util/PetPopover";
 export interface IStateProps {
   auctionsResultData: IAuctionResultData;
   relatedProfessionPricelists: IProfessionPricelistJson[];
-  options: AuctionsOptions;
+  options: IAuctionsOptions;
   expansions: IExpansion[];
   professions: IProfession[];
   currentRealm: IClientRealm | null;

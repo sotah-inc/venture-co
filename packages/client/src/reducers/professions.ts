@@ -4,13 +4,13 @@ import { runners } from "./handlers";
 
 type State = Readonly<IProfessionsState>;
 
-export const professions = (state: State | undefined, action: ProfessionsActions): State => {
+export function professions(state: State | undefined, action: ProfessionsActions): State {
   if (typeof state === "undefined") {
     return defaultProfessionsState;
   }
 
   switch (action.type) {
-    default:
-      return runners.profession(state, action);
+  default:
+    return runners.profession(state, action);
   }
-};
+}

@@ -1,9 +1,9 @@
 import { IQueryItem, IShortItem } from "@sotah-inc/core";
 
-export const getSelectedResultIndex = (
+export function getSelectedResultIndex(
   result: IQueryItem<IShortItem>,
   selectedItems: Array<IQueryItem<IShortItem>>,
-): number => {
+): number {
   if (selectedItems.length === 0) {
     return -1;
   }
@@ -19,4 +19,4 @@ export const getSelectedResultIndex = (
   }
 
   return -1;
-};
+}

@@ -10,11 +10,11 @@ import {
 import { getApiEndpoint } from "../api/config";
 import { IItemClasses, IItemClassWithSub, ISubItemClasses } from "../types/global";
 
-interface ItemQualityColorClassMap {
+interface IItemQualityColorClassMap {
   [key: string]: string | undefined;
 }
 
-const itemQualityColorClassMap: ItemQualityColorClassMap = {
+const itemQualityColorClassMap: IItemQualityColorClassMap = {
   [ItemQuality.Poor]: "poor-text",
   [ItemQuality.Common]: "common-text",
   [ItemQuality.Uncommon]: "uncommon-text",
@@ -23,11 +23,11 @@ const itemQualityColorClassMap: ItemQualityColorClassMap = {
   [ItemQuality.Legendary]: "legendary-text",
 };
 
-export const qualityToColorClass = (quality: ItemQuality): string => {
+export function qualityToColorClass(quality: ItemQuality): string {
   return itemQualityColorClassMap[quality] ?? "common-text";
-};
+}
 
-export const getItemIconUrl = (item: IShortItem): string | null => {
+export function getItemIconUrl(item: IShortItem): string | null {
   if (item.sotah_meta.item_icon_meta.icon_object_name !== "") {
     return `https://item-icons.sotah.info/${item.sotah_meta.item_icon_meta.icon_object_name}`;
   }
@@ -41,36 +41,36 @@ export const getItemIconUrl = (item: IShortItem): string | null => {
   }
 
   return `${getApiEndpoint()}/item-icons/${item.sotah_meta.item_icon_meta.icon}.jpg`;
-};
+}
 
-export const getItemTextValue = (item: IShortItemBase): string => {
+export function getItemTextValue(item: IShortItemBase): string {
   const foundName = item.name;
   if (typeof foundName !== "undefined" && foundName.length > 0) {
     return foundName;
   }
 
   return item.id.toString();
-};
+}
 
-export const inventoryTypeToString = (iType: InventoryType): string => {
+export function inventoryTypeToString(iType: InventoryType): string {
   if (!Object.values(InventoryType).some(v => v === iType)) {
     return "n/a";
   }
 
   switch (iType) {
-    case InventoryType.Wrist:
-      return "Wrist";
-    case InventoryType.Robe:
-      return "Chest";
-    case InventoryType.OffHand:
-      return "Held in Off-hand";
-    default:
-      return iType;
+  case InventoryType.Wrist:
+    return "Wrist";
+  case InventoryType.Robe:
+    return "Chest";
+  case InventoryType.OffHand:
+    return "Held in Off-hand";
+  default:
+    return iType;
   }
-};
+}
 
-export const FormatItemClassList = (itemClassList: IItemClass[]): IItemClasses =>
-  itemClassList.reduce((previousItemClasses: IItemClasses, itemClass) => {
+export function FormatItemClassList(itemClassList: IItemClass[]): IItemClasses {
+  return itemClassList.reduce((previousItemClasses: IItemClasses, itemClass) => {
     const subClassesMap: ISubItemClasses = itemClass.item_subclasses.reduce(
       (previousSubClasses: ISubItemClasses, subItemClass) => {
         const nextSubClasses: ISubItemClasses = {
@@ -92,11 +92,12 @@ export const FormatItemClassList = (itemClassList: IItemClass[]): IItemClasses =
 
     return nextItemClasses;
   }, {});
+}
 
-export const getItemFromPricelist = (
+export function getItemFromPricelist(
   items: IShortItem[],
   pricelist: IPricelistJson,
-): IShortItem | null => {
+): IShortItem | null {
   if (pricelist.pricelist_entries.length === 0) {
     return null;
   }
@@ -107,4 +108,4 @@ export const getItemFromPricelist = (
   }
 
   return foundItem;
-};
+}

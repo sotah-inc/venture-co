@@ -8,7 +8,8 @@ import {
 } from "../../actions/work-order";
 import { FetchLevel } from "../../types/main";
 import { IWorkOrderState } from "../../types/work-order";
-import { IKindHandlers, Runner } from "./index";
+
+import { IKindHandlers } from "./index";
 
 export const handlers: IKindHandlers<IWorkOrderState, WorkOrderActions> = {
   create: {
@@ -38,14 +39,17 @@ export const handlers: IKindHandlers<IWorkOrderState, WorkOrderActions> = {
   },
   entrypoint: {
     workorder: {
-      load: (state: IWorkOrderState, action: ReturnType<typeof LoadWorkOrderEntrypoint>) => {
-        if (action.payload.workOrders.errors !== null) {
+      load: (
+        state: IWorkOrderState,
+        action: ReturnType<typeof LoadWorkOrderEntrypoint>,
+      ): IWorkOrderState => {
+        if (action.payload.workOrders.data === null || action.payload.workOrders.errors !== null) {
           return {
             ...state,
             loadId: action.payload.loadId,
             orders: {
               data: { items: [], totalResults: 0, orders: [] },
-              errors: action.payload.workOrders.errors,
+              errors: action.payload.workOrders.errors ?? {},
               level: FetchLevel.failure,
             },
           };
@@ -55,7 +59,7 @@ export const handlers: IKindHandlers<IWorkOrderState, WorkOrderActions> = {
           ...state,
           loadId: action.payload.loadId,
           orders: {
-            data: action.payload.workOrders.data!,
+            data: action.payload.workOrders.data,
             errors: {},
             level: FetchLevel.success,
           },
@@ -85,13 +89,16 @@ export const handlers: IKindHandlers<IWorkOrderState, WorkOrderActions> = {
   },
   prefill: {
     workorderitem: {
-      receive: (state: IWorkOrderState, action: ReturnType<typeof ReceiveWorkOrderItemPrefill>) => {
-        if (action.payload.errors !== null) {
+      receive: (
+        state: IWorkOrderState,
+        action: ReturnType<typeof ReceiveWorkOrderItemPrefill>,
+      ): IWorkOrderState => {
+        if (action.payload.data === null || action.payload.errors !== null) {
           return {
             ...state,
             prefillWorkOrderItem: {
               ...state.prefillWorkOrderItem,
-              errors: action.payload.errors,
+              errors: action.payload.errors ?? {},
               level: FetchLevel.failure,
             },
           };
@@ -100,13 +107,13 @@ export const handlers: IKindHandlers<IWorkOrderState, WorkOrderActions> = {
         return {
           ...state,
           prefillWorkOrderItem: {
-            data: action.payload.data!,
+            data: action.payload.data,
             errors: {},
             level: FetchLevel.success,
           },
         };
       },
-      request: (state: IWorkOrderState) => {
+      request: (state: IWorkOrderState): IWorkOrderState => {
         return {
           ...state,
           prefillWorkOrderItem: {
@@ -116,7 +123,7 @@ export const handlers: IKindHandlers<IWorkOrderState, WorkOrderActions> = {
           },
         };
       },
-      reset: (state: IWorkOrderState) => {
+      reset: (state: IWorkOrderState): IWorkOrderState => {
         return {
           ...state,
           prefillWorkOrderItem: {
@@ -130,14 +137,17 @@ export const handlers: IKindHandlers<IWorkOrderState, WorkOrderActions> = {
   },
   query: {
     workorder: {
-      receive: (state, action: ReturnType<typeof ReceiveWorkOrderQuery>): IWorkOrderState => {
-        if (action.payload.errors !== null) {
+      receive: (
+        state: IWorkOrderState,
+        action: ReturnType<typeof ReceiveWorkOrderQuery>,
+      ): IWorkOrderState => {
+        if (action.payload.data === null || action.payload.errors !== null) {
           return {
             ...state,
             orders: {
               ...state.orders,
               data: { items: [], orders: [], totalResults: 0 },
-              errors: action.payload.errors,
+              errors: action.payload.errors ?? {},
               level: FetchLevel.failure,
             },
           };
@@ -145,7 +155,7 @@ export const handlers: IKindHandlers<IWorkOrderState, WorkOrderActions> = {
 
         return {
           ...state,
-          orders: { ...state.orders, level: FetchLevel.success, data: action.payload.data! },
+          orders: { ...state.orders, level: FetchLevel.success, data: action.payload.data },
         };
       },
       request: (state: IWorkOrderState): IWorkOrderState => {
@@ -155,10 +165,7 @@ export const handlers: IKindHandlers<IWorkOrderState, WorkOrderActions> = {
   },
 };
 
-export const run: Runner<IWorkOrderState, WorkOrderActions> = (
-  state: IWorkOrderState,
-  action: WorkOrderActions,
-): IWorkOrderState => {
+export function run(state: IWorkOrderState, action: WorkOrderActions): IWorkOrderState {
   const [kind, verb, task] = action.type
     .split("_")
     .reverse()
@@ -169,4 +176,4 @@ export const run: Runner<IWorkOrderState, WorkOrderActions> = (
   }
 
   return taskHandler(state, action);
-};
+}

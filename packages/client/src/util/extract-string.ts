@@ -2,7 +2,7 @@ interface IExtractStringMap {
   [key: string]: string | string[] | undefined;
 }
 
-export const extractString = (key: string, params: IExtractStringMap): string => {
+export function extractString(key: string, params: IExtractStringMap): string {
   if (!Object.keys(params).some(v => v === key)) {
     return "";
   }
@@ -12,4 +12,4 @@ export const extractString = (key: string, params: IExtractStringMap): string =>
   }
 
   return "";
-};
+}

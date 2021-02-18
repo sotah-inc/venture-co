@@ -2,12 +2,15 @@ import { ProfileActions, ReceiveUpdateProfile, RequestUpdateProfile } from "../.
 import { FetchLevel } from "../../types/main";
 import { IProfileState } from "../../types/profile";
 
-import { IKindHandlers, Runner } from "./index";
+import { IKindHandlers } from "./index";
 
 export const handlers: IKindHandlers<IProfileState, ProfileActions> = {
   profile: {
     update: {
-      receive: (state: IProfileState, action: ReturnType<typeof ReceiveUpdateProfile>) => {
+      receive: (
+        state: IProfileState,
+        action: ReturnType<typeof ReceiveUpdateProfile>,
+      ): IProfileState => {
         if (typeof action.payload.errors !== "undefined") {
           return {
             ...state,
@@ -30,7 +33,11 @@ export const handlers: IKindHandlers<IProfileState, ProfileActions> = {
           updateProfileLevel: FetchLevel.success,
         };
       },
-      request: (state: IProfileState, _: ReturnType<typeof RequestUpdateProfile>) => {
+      request: (
+        state: IProfileState,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        _action: ReturnType<typeof RequestUpdateProfile>,
+      ): IProfileState => {
         return {
           ...state,
           updateProfileErrors: {},
@@ -41,10 +48,7 @@ export const handlers: IKindHandlers<IProfileState, ProfileActions> = {
   },
 };
 
-export const run: Runner<IProfileState, ProfileActions> = (
-  state: IProfileState,
-  action: ProfileActions,
-): IProfileState => {
+export function run(state: IProfileState, action: ProfileActions): IProfileState {
   const [kind, verb, task] = action.type
     .split("_")
     .reverse()
@@ -55,4 +59,4 @@ export const run: Runner<IProfileState, ProfileActions> = (
   }
 
   return taskHandler(state, action);
-};
+}

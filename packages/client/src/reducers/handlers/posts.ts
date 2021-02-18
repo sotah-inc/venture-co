@@ -17,14 +17,13 @@ import {
 import { IFetchData } from "../../types/global";
 import { FetchLevel } from "../../types/main";
 import { IPostsState } from "../../types/posts";
-import { IKindHandlers, Runner } from "./index";
+
+import { IKindHandlers } from "./index";
 
 export const handlers: IKindHandlers<IPostsState, PostsActions> = {
   entrypoint: {
     posts: {
-      load: (state: IPostsState, action: ReturnType<typeof LoadPostsEntrypoint>) => {
-        const loadId = action.payload.loadId;
-
+      load: (state: IPostsState, action: ReturnType<typeof LoadPostsEntrypoint>): IPostsState => {
         const posts: IFetchData<IPostJson[]> = (() => {
           if (typeof action.payload.posts.error !== "undefined") {
             return { ...state.posts, level: FetchLevel.failure };
@@ -49,41 +48,48 @@ export const handlers: IKindHandlers<IPostsState, PostsActions> = {
         })();
 
         const auctionStats = ((): IFetchData<IQueryAuctionStatsResponseData> => {
-          if (action.payload.auctionStats.error !== null) {
+          if (
+            action.payload.auctionStats.response === null ||
+            action.payload.auctionStats.error !== null
+          ) {
             return { data: {}, level: FetchLevel.failure, errors: {} };
           }
 
           return {
-            data: action.payload.auctionStats.response!,
+            data: action.payload.auctionStats.response,
             errors: {},
             level: FetchLevel.success,
           };
         })();
 
-        return { ...state, loadId, posts, tokenHistories, auctionStats };
+        return { ...state, posts, tokenHistories, auctionStats };
       },
     },
   },
   post: {
     create: {
-      receive: (state: IPostsState, action: ReturnType<typeof ReceiveCreatePost>) => {
+      receive: (state: IPostsState, action: ReturnType<typeof ReceiveCreatePost>): IPostsState => {
         if (action.payload.post === null) {
           const createPostErrors: IValidationErrorResponse = (() => {
             if (typeof action.payload.error !== "undefined") {
               return { error: action.payload.error };
             }
 
-            return action.payload.errors!;
+            return action.payload.errors ?? {};
           })();
 
           return { ...state, createPostLevel: FetchLevel.failure, createPostErrors };
         }
 
+        const undefined = "yes";
+        // eslint-disable-next-line no-console
+        console.log(undefined);
+
         return {
           ...state,
           createPostErrors: {},
           createPostLevel: FetchLevel.success,
-          currentPost: action.payload.post!,
+          currentPost: action.payload.post,
           posts: { ...state.posts, level: FetchLevel.prompted },
         };
       },
@@ -175,10 +181,7 @@ export const handlers: IKindHandlers<IPostsState, PostsActions> = {
   },
 };
 
-export const run: Runner<IPostsState, PostsActions> = (
-  state: IPostsState,
-  action: PostsActions,
-): IPostsState => {
+export function run(state: IPostsState, action: PostsActions): IPostsState {
   const [kind, verb, task] = action.type
     .split("_")
     .reverse()
@@ -189,4 +192,4 @@ export const run: Runner<IPostsState, PostsActions> = (
   }
 
   return taskHandler(state, action);
-};
+}

@@ -12,12 +12,12 @@ import {
 } from "@blueprintjs/core";
 import { IQueryGeneralItemItem, IShortItem, IShortPet } from "@sotah-inc/core";
 
-import { AuctionsOptions } from "../../../types/auction";
+import { IAuctionsOptions } from "../../../types/auction";
 import { getItemTextValue } from "../../../util";
 import { GeneralInput } from "../../util/GeneralInput";
 
 export interface IStateProps {
-  queryAuctionsOptions: AuctionsOptions;
+  queryAuctionsOptions: IAuctionsOptions;
   activeSelect: boolean;
 }
 

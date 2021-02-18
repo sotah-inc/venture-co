@@ -1,10 +1,10 @@
 import { IShortPet, PetQuality } from "@sotah-inc/core";
 
-interface PetQualityColorClassMap {
+interface IPetQualityColorClassMap {
   [key: number]: string | undefined;
 }
 
-const petQualityColorClassMap: PetQualityColorClassMap = {
+const petQualityColorClassMap: IPetQualityColorClassMap = {
   [PetQuality.Uncommon]: "uncommon-text",
   [PetQuality.Rare]: "rare-text",
   [PetQuality.Epic]: "epic-text",
@@ -14,6 +14,6 @@ export function petQualityToColorClass(quality: PetQuality): string {
   return petQualityColorClassMap[quality] ?? "uncommon-text";
 }
 
-export const getPetIconUrl = (pet: IShortPet): string => {
+export function getPetIconUrl(pet: IShortPet): string {
   return pet.icon_url;
-};
+}

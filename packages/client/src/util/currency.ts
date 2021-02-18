@@ -2,11 +2,11 @@ import { zeroGraphValue } from "./graph";
 
 export type CurrencyToTextFormatter = (v: Array<string | null>) => string;
 
-export const currencyToText = (
+export function currencyToText(
   amount: number,
   hideCopper?: boolean,
   formatter?: CurrencyToTextFormatter,
-): string => {
+): string {
   if (amount === 0 || amount === zeroGraphValue) {
     return "0g";
   }
@@ -43,4 +43,4 @@ export const currencyToText = (
   }
 
   return formatter(outputParams);
-};
+}

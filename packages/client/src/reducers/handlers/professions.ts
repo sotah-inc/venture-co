@@ -15,7 +15,8 @@ import {
   ISelectedSkillTier,
   ISelectedSkillTierCategory,
 } from "../../types/professions";
-import { IKindHandlers, Runner } from "./index";
+
+import { IKindHandlers } from "./index";
 
 export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
   category: {
@@ -24,7 +25,7 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
         state: IProfessionsState,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         _action: ReturnType<typeof DeselectSkillTierCategory>,
-      ) => {
+      ): IProfessionsState => {
         return {
           ...state,
           selectedRecipe: undefined,
@@ -34,7 +35,10 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
           },
         };
       },
-      select: (state: IProfessionsState, action: ReturnType<typeof SelectSkillTierCategory>): IProfessionsState => {
+      select: (
+        state: IProfessionsState,
+        action: ReturnType<typeof SelectSkillTierCategory>,
+      ): IProfessionsState => {
         return {
           ...state,
           selectedRecipe: undefined,
@@ -238,7 +242,7 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
           selectedSkillTierCategory,
         };
       },
-      request: (state): IProfessionsState => {
+      request: (state: IProfessionsState): IProfessionsState => {
         return {
           ...state,
           professions: {
@@ -251,7 +255,7 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
   },
   flag: {
     skilltier: {
-      deselect: state => {
+      deselect: (state: IProfessionsState): IProfessionsState => {
         return {
           ...state,
           selectedSkillTier: {
@@ -260,7 +264,7 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
           },
         };
       },
-      select: state => {
+      select: (state: IProfessionsState): IProfessionsState => {
         return {
           ...state,
           selectedSkillTier: {
@@ -273,10 +277,7 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
   },
 };
 
-export const run: Runner<IProfessionsState, ProfessionsActions> = (
-  state: IProfessionsState,
-  action: ProfessionsActions,
-): IProfessionsState => {
+export function run(state: IProfessionsState, action: ProfessionsActions): IProfessionsState {
   const [kind, verb, task] = action.type
     .split("_")
     .reverse()
@@ -287,4 +288,4 @@ export const run: Runner<IProfessionsState, ProfessionsActions> = (
   }
 
   return taskHandler(state, action);
-};
+}

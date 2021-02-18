@@ -98,7 +98,6 @@ export const ChangeIsDeletePostDialogOpen = (payload: IDeletePostOptions) =>
   createAction(CHANGE_IS_DELETE_POST_DIALOG_OPEN, payload);
 
 export interface ILoadPostsEntrypoint {
-  loadId: string;
   posts: IGetPostsResult;
   tokenHistories: IGetShortTokenHistoryResult;
   auctionStats: IQueryAuctionStatsResult;

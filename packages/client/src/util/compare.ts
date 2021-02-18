@@ -2,21 +2,21 @@ import { IRegionComposite, IShortItem, IShortPet } from "@sotah-inc/core";
 
 import { IClientRealm } from "../types/global";
 
-export const didRegionChange = (
+export function didRegionChange(
   prevRegion: IRegionComposite | null,
   currentRegion: IRegionComposite,
-): boolean => {
+): boolean {
   if (prevRegion === null) {
     return true;
   }
 
   return prevRegion.config_region.name !== currentRegion.config_region.name;
-};
+}
 
-export const didRealmChange = (
+export function didRealmChange(
   prevRealm: IClientRealm | null,
   currentRealm: IClientRealm,
-): boolean => {
+): boolean {
   if (prevRealm === null) {
     return true;
   }
@@ -26,7 +26,7 @@ export const didRealmChange = (
     prevRealm.connectedRealmId !== currentRealm.connectedRealmId ||
     prevRealm.realm.id !== prevRealm.realm.id
   );
-};
+}
 
 export function hasNewItems(firstList: IShortItem[], secondList: IShortItem[]): boolean {
   return diff(new Set(firstList.map(v => v.id)), new Set(secondList.map(v => v.id))).size > 0;

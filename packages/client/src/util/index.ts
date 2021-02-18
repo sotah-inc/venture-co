@@ -24,18 +24,19 @@ const hostname: string = (() => {
 export const title: string =
   hostname === "localhost" ? "SotAH (DEV)" : "Secrets of the Auction House";
 
-export const setTitle = (prefix: string) => {
+export function setTitle(prefix: string): void {
   if (typeof document === "undefined") {
     return;
   }
 
   document.title = `${prefix} - ${title}`;
-};
+}
 
-export const unixTimestampToText = (unixTimestamp: number): string =>
-  moment(new Date(unixTimestamp * 1000)).format("MMM D");
+export function unixTimestampToText(unixTimestamp: number): string {
+  return moment(new Date(unixTimestamp * 1000)).format("MMM D");
+}
 
-export const getColor = (index: number): string => {
+export function getColor(index: number): string {
   const choices = [
     "#AD99FF",
     "#669EFF",
@@ -51,7 +52,14 @@ export const getColor = (index: number): string => {
   ];
 
   return choices[index % choices.length];
-};
+}
 
-export const FormatRegionList = (regionList: IRegionComposite[]): IRegions =>
-  regionList.reduce((result, region) => ({ ...result, [region.config_region.name]: region }), {});
+export function FormatRegionList(regionList: IRegionComposite[]): IRegions {
+  return regionList
+    .reduce(
+      (result, region) => {
+        return { ...result, [region.config_region.name]: region };
+      },
+      {},
+    );
+}

@@ -29,14 +29,14 @@ import { QueryAuctionsFilterContainer } from "../../containers/entry-point/Aucti
 import { RealmToggleContainer } from "../../containers/util/RealmToggle";
 import { RegionToggleContainer } from "../../containers/util/RegionToggle";
 import { AuctionTableRouteContainer } from "../../route-containers/entry-point/AuctionList/AuctionTable";
-import { AuctionsOptions, IAuctionResultData } from "../../types/auction";
+import { IAuctionsOptions, IAuctionResultData } from "../../types/auction";
 import { IClientRealm, IFetchData } from "../../types/global";
 import { AuthLevel, FetchLevel } from "../../types/main";
 import { hasNewItems, hasNewPets, setTitle } from "../../util";
 import { LastModified, Pagination } from "../util";
 
 export interface IStateProps {
-  options: AuctionsOptions;
+  options: IAuctionsOptions;
   auctionsResult: IFetchData<IAuctionResultData>;
   totalResults: number;
   fetchUserPreferencesLevel: FetchLevel;
@@ -226,32 +226,32 @@ export class AuctionList extends React.Component<Props> {
     const { fetchRealmLevel } = this.props;
 
     switch (fetchRealmLevel) {
-      case FetchLevel.prompted:
-      case FetchLevel.fetching:
-      case FetchLevel.refetching:
-        return (
-          <NonIdealState
-            title="Loading realms"
-            icon={<Spinner className={Classes.LARGE} intent={Intent.PRIMARY} />}
-          />
-        );
-      case FetchLevel.failure:
-        return (
-          <NonIdealState
-            title="Failed to load realms"
-            icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={1} />}
-          />
-        );
-      case FetchLevel.success:
-        return this.renderMatchedRegionWithRealms();
-      case FetchLevel.initial:
-      default:
-        return (
-          <NonIdealState
-            title="Loading realms"
-            icon={<Spinner className={Classes.LARGE} intent={Intent.NONE} value={0} />}
-          />
-        );
+    case FetchLevel.prompted:
+    case FetchLevel.fetching:
+    case FetchLevel.refetching:
+      return (
+        <NonIdealState
+          title="Loading realms"
+          icon={<Spinner className={Classes.LARGE} intent={Intent.PRIMARY} />}
+        />
+      );
+    case FetchLevel.failure:
+      return (
+        <NonIdealState
+          title="Failed to load realms"
+          icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={1} />}
+        />
+      );
+    case FetchLevel.success:
+      return this.renderMatchedRegionWithRealms();
+    case FetchLevel.initial:
+    default:
+      return (
+        <NonIdealState
+          title="Loading realms"
+          icon={<Spinner className={Classes.LARGE} intent={Intent.NONE} value={0} />}
+        />
+      );
     }
   }
 
@@ -319,33 +319,33 @@ export class AuctionList extends React.Component<Props> {
     }
 
     switch (auctionsResult.level) {
-      case FetchLevel.initial:
-        return (
-          <NonIdealState
-            title="Loading auctions"
-            icon={<Spinner className={Classes.LARGE} intent={Intent.NONE} value={0} />}
-          />
-        );
-      case FetchLevel.fetching:
-        return (
-          <NonIdealState
-            title="Loading auctions"
-            icon={<Spinner className={Classes.LARGE} intent={Intent.PRIMARY} />}
-          />
-        );
-      case FetchLevel.failure:
-        return (
-          <NonIdealState
-            title="Fetch auctions failure"
-            description="Auctions could not be fetched"
-            icon="error"
-          />
-        );
-      case FetchLevel.refetching:
-      case FetchLevel.success:
-        return this.renderAuctions();
-      default:
-        return <>You should never see this!</>;
+    case FetchLevel.initial:
+      return (
+        <NonIdealState
+          title="Loading auctions"
+          icon={<Spinner className={Classes.LARGE} intent={Intent.NONE} value={0} />}
+        />
+      );
+    case FetchLevel.fetching:
+      return (
+        <NonIdealState
+          title="Loading auctions"
+          icon={<Spinner className={Classes.LARGE} intent={Intent.PRIMARY} />}
+        />
+      );
+    case FetchLevel.failure:
+      return (
+        <NonIdealState
+          title="Fetch auctions failure"
+          description="Auctions could not be fetched"
+          icon="error"
+        />
+      );
+    case FetchLevel.refetching:
+    case FetchLevel.success:
+      return this.renderAuctions();
+    default:
+      return <>You should never see this!</>;
     }
   }
 

@@ -10,13 +10,13 @@ import {
   SortKind,
   SortPerPage,
 } from "@sotah-inc/core";
-import { IFetchData } from "./global";
 
+import { IFetchData } from "./global";
 import { FetchLevel } from "./main";
 
 export interface IAuctionState {
   auctionsResult: IFetchData<IAuctionResultData>;
-  options: AuctionsOptions;
+  options: IAuctionsOptions;
   totalResults: number;
   activeSelect: boolean;
   relatedProfessionPricelists: IProfessionPricelistJson[];
@@ -29,7 +29,7 @@ export interface IAuctionResultData {
   items_market_price: IItemsMarketPrice[];
 }
 
-export interface AuctionsOptions {
+export interface IAuctionsOptions {
   currentPage: number;
   auctionsPerPage: SortPerPage;
   sortDirection: SortDirection;

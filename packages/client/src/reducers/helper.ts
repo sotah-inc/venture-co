@@ -1,6 +1,6 @@
 import { IPricelistJson, IProfessionPricelistJson } from "@sotah-inc/core";
 
-export const getPricelistIndex = (pricelists: IPricelistJson[], id: number): number => {
+export function getPricelistIndex(pricelists: IPricelistJson[], id: number): number {
   for (let i = 0; i < pricelists.length; i++) {
     const pricelist = pricelists[i];
     if (pricelist.id === id) {
@@ -9,12 +9,12 @@ export const getPricelistIndex = (pricelists: IPricelistJson[], id: number): num
   }
 
   return -1;
-};
+}
 
-export const getProfessionPricelistIndex = (
+export function getProfessionPricelistIndex(
   professionPricelists: IProfessionPricelistJson[],
   id: number,
-): number => {
+): number {
   for (let i = 0; i < professionPricelists.length; i++) {
     const professionPricelist = professionPricelists[i];
     if (professionPricelist.pricelist.id === id) {
@@ -23,4 +23,4 @@ export const getProfessionPricelistIndex = (
   }
 
   return -1;
-};
+}

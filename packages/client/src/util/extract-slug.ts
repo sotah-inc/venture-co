@@ -2,7 +2,7 @@ interface IExtractStringMap {
   [key: string]: string | string[] | undefined;
 }
 
-export const extractSlug = (key: string, params: IExtractStringMap): Array<string | undefined> => {
+export function extractSlug(key: string, params: IExtractStringMap): Array<string | undefined> {
   if (!Object.keys(params).some(v => v === key)) {
     return [];
   }
@@ -12,4 +12,4 @@ export const extractSlug = (key: string, params: IExtractStringMap): Array<strin
   }
 
   return params[key] as Array<string | undefined>;
-};
+}

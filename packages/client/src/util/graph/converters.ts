@@ -115,7 +115,7 @@ export function convertRecipePriceHistoriesToLineData(
         data[`${recipePrices.horde_crafted_item_prices.id}_buyout_per`] =
           recipePrices.horde_crafted_item_prices.prices.min_buyout_per / 10 / 10;
       }
-      data["total_reagent_cost"] = recipePrices.total_reagent_prices.min_buyout_per / 10 / 10;
+      data.total_reagent_cost = recipePrices.total_reagent_prices.min_buyout_per / 10 / 10;
 
       result2.push({
         data,

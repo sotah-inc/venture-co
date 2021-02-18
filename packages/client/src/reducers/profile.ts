@@ -4,10 +4,10 @@ import { runners } from "./handlers";
 
 type State = Readonly<IProfileState>;
 
-export const profile = (state: State | undefined, action: ProfileActions): State => {
+export function profile(state: State | undefined, action: ProfileActions): State {
   if (typeof state === "undefined") {
     return defaultProfileState;
   }
 
   return runners.profile(state, action);
-};
+}

@@ -3,7 +3,13 @@ import moment from "moment";
 export * from "./graph/converters";
 export * from "./graph/data-domain";
 
-export function getXAxisTimeRestrictions() {
+export interface IAxisTimeRestrictions {
+  roundedTwoWeeksAgoDate: moment.Moment;
+  roundedNowDate: moment.Moment;
+  xAxisTicks: number[];
+}
+
+export function getXAxisTimeRestrictions(): IAxisTimeRestrictions {
   const twoWeeksAgoDate = moment().subtract(14, "days");
   const roundedTwoWeeksAgoDate = moment()
     .subtract(16, "days")

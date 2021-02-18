@@ -20,7 +20,11 @@ export interface ITaskHandlers<T, A> {
 
 export type Runner<T, A> = (x: T, y: A) => T;
 
-export const runners = {
+interface IRunners {
+  [key: string]: Runner<unknown, unknown>;
+}
+
+export const runners: IRunners = {
   auction: auctionRunner,
   main: mainRunner,
   post: postsRunner,
@@ -30,7 +34,11 @@ export const runners = {
   workOrder: workOrderRunner,
 };
 
-export const handlers = {
+interface IHandlers {
+  [key: string]: IKindHandlers<unknown, unknown>;
+}
+
+export const handlers: IHandlers = {
   auction: auctionHandlers,
   main: mainHandlers,
   post: postsHandlers,
