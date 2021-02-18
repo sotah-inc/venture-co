@@ -1,3 +1,4 @@
+/* eslint-disable func-style,@typescript-eslint/explicit-module-boundary-types */
 import {
   ExpansionName,
   ICreatePricelistRequest,
@@ -180,9 +181,9 @@ export const RequestGetPricelist = () => createAction(REQUEST_GET_PRICELIST);
 export const RECEIVE_GET_PRICELIST = "RECEIVE_GET_PRICELIST";
 export const ReceiveGetPricelist = (payload: IGetPricelistResponseData | null) =>
   createAction(RECEIVE_GET_PRICELIST, payload);
-type FetchGetPricelist = ReturnType<typeof RequestGetPricelist | typeof ReceiveGetPricelist>;
+type FetchGetPricelistType = ReturnType<typeof RequestGetPricelist | typeof ReceiveGetPricelist>;
 export const FetchGetPricelist = (opts: IGetPriceListOptions) => {
-  return async (dispatch: Dispatch<FetchGetPricelist>) => {
+  return async (dispatch: Dispatch<FetchGetPricelistType>) => {
     dispatch(RequestGetPricelist());
     dispatch(ReceiveGetPricelist(await getPriceList(opts)));
   };
@@ -193,11 +194,11 @@ export const RequestGetItemPriceHistories = () => createAction(REQUEST_GET_ITEMP
 export const RECEIVE_GET_ITEMPRICEHISTORIES = "RECEIVE_GET_ITEMPRICEHISTORIES";
 export const ReceiveGetItemPriceHistories = (payload: IGetItemPriceHistoriesResponseData | null) =>
   createAction(RECEIVE_GET_ITEMPRICEHISTORIES, payload);
-type FetchGetItemPriceHistories = ReturnType<
+type FetchGetItemPriceHistoriesType = ReturnType<
   typeof RequestGetItemPriceHistories | typeof ReceiveGetItemPriceHistories
 >;
 export const FetchGetItemPriceHistories = (opts: IGetItemPriceHistoriesOptions) => {
-  return async (dispatch: Dispatch<FetchGetItemPriceHistories>) => {
+  return async (dispatch: Dispatch<FetchGetItemPriceHistoriesType>) => {
     dispatch(RequestGetItemPriceHistories());
     dispatch(ReceiveGetItemPriceHistories(await getItemPriceHistories(opts)));
   };
@@ -254,4 +255,5 @@ export const PriceListsActions = {
   RequestUpdatePricelist,
 };
 
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export type PriceListsActions = ActionsUnion<typeof PriceListsActions>;

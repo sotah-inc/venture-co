@@ -1,3 +1,4 @@
+/* eslint-disable func-style,@typescript-eslint/explicit-module-boundary-types */
 import { SortPerPage } from "@sotah-inc/core";
 import { Dispatch } from "redux";
 
@@ -36,7 +37,7 @@ export const RECEIVE_WORKORDER_QUERY = "RECEIVE_WORKORDER_QUERY";
 export const ReceiveWorkOrderQuery = (payload: IQueryWorkOrdersResult) =>
   createAction(RECEIVE_WORKORDER_QUERY, payload);
 export const FetchWorkOrderQuery = (opts: QueryWorkOrdersOptions) => {
-  return async (dispatch: Dispatch) => {
+  return async (dispatch: Dispatch): Promise<void> => {
     dispatch(RequestWorkOrderQuery());
     dispatch(ReceiveWorkOrderQuery(await queryWorkOrders(opts)));
   };
@@ -48,7 +49,7 @@ export const RECEIVE_WORKORDER_CREATE = "RECEIVE_WORKORDER_CREATE";
 export const ReceiveWorkOrderCreate = (payload: ICreateWorkOrderResult) =>
   createAction(RECEIVE_WORKORDER_CREATE, payload);
 export const FetchCreateWorkOrder = (token: string, opts: ICreateWorkOrderOptions) => {
-  return async (dispatch: Dispatch) => {
+  return async (dispatch: Dispatch): Promise<void> => {
     dispatch(RequestWorkOrderCreate());
     dispatch(ReceiveWorkOrderCreate(await createWorkOrder(token, opts)));
   };
@@ -87,4 +88,5 @@ export const WorkOrderActions = {
   SetWorkOrderPerPage,
 };
 
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export type WorkOrderActions = ActionsUnion<typeof WorkOrderActions>;

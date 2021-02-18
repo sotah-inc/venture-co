@@ -1,7 +1,7 @@
 import { IAuction, IQueryGeneralItemItem } from "@sotah-inc/core";
 
-import { AuctionActions } from "../../actions";
 import {
+  AuctionActions,
   LoadAuctionListEntrypoint,
   SelectItemQueryAuctions,
   SelectPetQueryAuctions,

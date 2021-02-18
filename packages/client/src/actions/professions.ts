@@ -1,3 +1,4 @@
+/* eslint-disable func-style,@typescript-eslint/explicit-module-boundary-types */
 import {
   IGetPricelistResponseData,
   IGetRecipePriceHistoriesResponseData,
@@ -44,4 +45,5 @@ export const ProfessionsActions = {
   SelectSkillTierFlag,
 };
 
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export type ProfessionsActions = ActionsUnion<typeof ProfessionsActions>;

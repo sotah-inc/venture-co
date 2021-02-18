@@ -1,3 +1,4 @@
+/* eslint-disable func-style,@typescript-eslint/explicit-module-boundary-types */
 import {
   IConnectedRealmComposite,
   ICreatePreferencesRequest,
@@ -207,4 +208,5 @@ export const MainActions = {
   UserRegister,
 };
 
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export type MainActions = ActionsUnion<typeof MainActions>;

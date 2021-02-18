@@ -1,3 +1,4 @@
+/* eslint-disable func-style,@typescript-eslint/explicit-module-boundary-types */
 import { IUpdateProfileRequest } from "@sotah-inc/core";
 import { Dispatch } from "redux";
 
@@ -22,4 +23,5 @@ export const ProfileActions = {
   RequestUpdateProfile,
 };
 
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export type ProfileActions = ActionsUnion<typeof ProfileActions>;
