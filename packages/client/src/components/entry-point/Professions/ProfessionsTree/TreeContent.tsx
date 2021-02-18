@@ -2,6 +2,7 @@ import React from "react";
 
 import { Classes, H2, H4, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
 import { IShortRecipe, RecipeId } from "@sotah-inc/core";
+
 import { ReagentPricesTableContainer } from "../../../../containers/entry-point/Professions/ProfessionsTree/TreeContent/ReagentPricesTable";
 import { RecipePriceHistoriesGraphContainer } from "../../../../containers/entry-point/Professions/ProfessionsTree/TreeContent/RecipePriceHistoriesGraph";
 import { IItemsData } from "../../../../types/global";
@@ -15,7 +16,7 @@ export interface IStateProps {
 export type Props = Readonly<IStateProps>;
 
 export class TreeContent extends React.Component<Props> {
-  public render() {
+  public render(): React.ReactNode {
     const { selectedRecipe, selectedRecipeId } = this.props;
 
     if (selectedRecipe === null) {

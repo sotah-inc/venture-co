@@ -24,56 +24,53 @@ interface IRegisterUserResult {
   errors: IValidationErrorResponse | null;
 }
 
-export const registerUser = async (
-  email: string,
-  password: string,
-): Promise<IRegisterUserResult> => {
+export async function registerUser(email: string, password: string): Promise<IRegisterUserResult> {
   const { body, status } = await gather<ICreateUserRequest, CreateUserResponse>({
     body: { email, password },
     method: "POST",
     url: `${getApiEndpoint()}/users`,
   });
   switch (status) {
-    case HTTPStatus.CREATED:
-      return { errors: null, data: body as ICreateUserResponseData };
-    case HTTPStatus.BAD_REQUEST:
-      return { errors: body as IValidationErrorResponse, data: null };
-    case HTTPStatus.INTERNAL_SERVER_ERROR:
-      return { errors: { email: "There was a server error." }, data: null };
-    default:
-      return { errors: { email: "There was an unknown error." }, data: null };
+  case HTTPStatus.CREATED:
+    return { errors: null, data: body as ICreateUserResponseData };
+  case HTTPStatus.BAD_REQUEST:
+    return { errors: body as IValidationErrorResponse, data: null };
+  case HTTPStatus.INTERNAL_SERVER_ERROR:
+    return { errors: { email: "There was a server error." }, data: null };
+  default:
+    return { errors: { email: "There was an unknown error." }, data: null };
   }
-};
+}
 
 interface ILoginResult {
   data: ILoginResponseData | null;
   errors: IValidationErrorResponse | null;
 }
 
-export const loginUser = async (email: string, password: string): Promise<ILoginResult> => {
+export async function loginUser(email: string, password: string): Promise<ILoginResult> {
   const { body, status } = await gather<ILoginRequest, LoginResponse>({
     body: { email, password },
     method: "POST",
     url: `${getApiEndpoint()}/login`,
   });
   switch (status) {
-    case HTTPStatus.OK:
-      return { errors: null, data: body as ILoginResponseData };
-    case HTTPStatus.BAD_REQUEST:
-      return { errors: body as IValidationErrorResponse, data: null };
-    case HTTPStatus.INTERNAL_SERVER_ERROR:
-      return { errors: { email: "There was a server error." }, data: null };
-    default:
-      return { errors: { email: "There was an unknown error." }, data: null };
+  case HTTPStatus.OK:
+    return { errors: null, data: body as ILoginResponseData };
+  case HTTPStatus.BAD_REQUEST:
+    return { errors: body as IValidationErrorResponse, data: null };
+  case HTTPStatus.INTERNAL_SERVER_ERROR:
+    return { errors: { email: "There was a server error." }, data: null };
+  default:
+    return { errors: { email: "There was an unknown error." }, data: null };
   }
-};
+}
 
 export interface IReloadUserResponse {
   user: IUserJson | null;
   error: string | null;
 }
 
-export const reloadUser = async (token: string): Promise<IReloadUserResponse> => {
+export async function reloadUser(token: string): Promise<IReloadUserResponse> {
   const res = await fetch(`${getApiEndpoint()}/user`, {
     headers: new Headers({
       Authorization: `Bearer ${token}`,
@@ -86,14 +83,14 @@ export const reloadUser = async (token: string): Promise<IReloadUserResponse> =>
   }
 
   return { user: await res.json(), error: null };
-};
+}
 
 export interface IGetPreferencesResult {
   preference: IPreferenceJson | null;
   error: string | null;
 }
 
-export const getPreferences = async (token: string): Promise<IGetPreferencesResult> => {
+export async function getPreferences(token: string): Promise<IGetPreferencesResult> {
   const { body, status } = await gather<null, IGetPreferencesResponseData>({
     headers: new Headers({
       Authorization: `Bearer ${token}`,
@@ -102,26 +99,30 @@ export const getPreferences = async (token: string): Promise<IGetPreferencesResu
     url: `${getApiEndpoint()}/user/preferences`,
   });
   switch (status) {
-    case HTTPStatus.UNAUTHORIZED:
-      return { error: "Unauthorized", preference: null };
-    case HTTPStatus.NOT_FOUND:
-      return { error: null, preference: null };
-    default:
-      break;
+  case HTTPStatus.UNAUTHORIZED:
+    return { error: "Unauthorized", preference: null };
+  case HTTPStatus.NOT_FOUND:
+    return { error: null, preference: null };
+  default:
+    break;
   }
 
-  return { preference: body!.preference, error: null };
-};
+  if (body === null) {
+    return { error: "Empty body", preference: null };
+  }
+
+  return { preference: body.preference, error: null };
+}
 
 export interface ICreatePreferencesResult {
   preference: IPreferenceJson | null;
   error: string | null;
 }
 
-export const createPreferences = async (
+export async function createPreferences(
   token: string,
   request: ICreatePreferencesRequest,
-): Promise<ICreatePreferencesResult> => {
+): Promise<ICreatePreferencesResult> {
   const { body, status } = await gather<ICreatePreferencesRequest, CreatePreferencesResponse>({
     body: request,
     headers: new Headers({
@@ -136,17 +137,17 @@ export const createPreferences = async (
   }
 
   return { preference: (body as IGetPreferencesResponseData).preference, error: null };
-};
+}
 
 export interface IUpdatePreferencesResult {
   data: IPreferenceJson | null;
   error: string | null;
 }
 
-export const updatePreferences = async (
+export async function updatePreferences(
   token: string,
   request: UpdatePreferencesRequest,
-): Promise<IUpdatePreferencesResult> => {
+): Promise<IUpdatePreferencesResult> {
   const { body, status } = await gather<UpdatePreferencesRequest, UpdatePreferencesResponse>({
     body: request,
     headers: new Headers({
@@ -161,4 +162,4 @@ export const updatePreferences = async (
   }
 
   return { data: (body as IGetPreferencesResponseData).preference, error: null };
-};
+}

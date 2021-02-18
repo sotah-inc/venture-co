@@ -44,37 +44,37 @@ export class ItemStandalone extends React.Component<Props, IState> {
     await this.handleItemId(itemId);
   }
 
-  public render() {
+  public render(): React.ReactNode {
     const {
       item: { level, errors, data: item },
     } = this.state;
 
     switch (level) {
-      case FetchLevel.success:
-        if (item === null) {
-          return <em>Item fetch succeeded but item was null.</em>;
-        }
+    case FetchLevel.success:
+      if (item === null) {
+        return <em>Item fetch succeeded but item was null.</em>;
+      }
 
-        return (
-          <span className="item-standalone">
-            <ItemPopoverContainer
-              interactive={false}
-              onItemClick={() => {
-                return;
-              }}
-              position={Position.BOTTOM}
-              item={item}
-              itemTextFormatter={v => (
-                <span className={qualityToColorClass(item.quality.type)}>{v}</span>
-              )}
-            />
-          </span>
-        );
-      case FetchLevel.failure:
-        return <em>Failed to fetch item: {errors.error}</em>;
-      case FetchLevel.initial:
-      default:
-        return <em>Loading item...</em>;
+      return (
+        <span className="item-standalone">
+          <ItemPopoverContainer
+            interactive={false}
+            onItemClick={() => {
+              return;
+            }}
+            position={Position.BOTTOM}
+            item={item}
+            itemTextFormatter={v => (
+              <span className={qualityToColorClass(item.quality.type)}>{v}</span>
+            )}
+          />
+        </span>
+      );
+    case FetchLevel.failure:
+      return <em>Failed to fetch item: {errors.error}</em>;
+    case FetchLevel.initial:
+    default:
+      return <em>Loading item...</em>;
     }
   }
 

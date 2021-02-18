@@ -38,22 +38,22 @@ export class CurrentPricesTable extends React.Component<Props> {
 
     if (level !== prevProps.priceTable.level) {
       switch (level) {
-        case FetchLevel.prompted:
-          getPricelist({
-            itemIds: selectedList.pricelist_entries.map(v => v.item_id),
-            locale: Locale.EnUS,
-            realmSlug: currentRealm.realm.slug,
-            regionName: currentRegion.config_region.name,
-          });
+      case FetchLevel.prompted:
+        getPricelist({
+          itemIds: selectedList.pricelist_entries.map(v => v.item_id),
+          locale: Locale.EnUS,
+          realmSlug: currentRealm.realm.slug,
+          regionName: currentRegion.config_region.name,
+        });
 
-          return;
-        default:
-          return;
+        return;
+      default:
+        return;
       }
     }
   }
 
-  public render() {
+  public render(): React.ReactNode {
     return (
       <>
         <H4>Current Prices</H4>
@@ -66,17 +66,17 @@ export class CurrentPricesTable extends React.Component<Props> {
     const { fetchRealmLevel } = this.props;
 
     switch (fetchRealmLevel) {
-      case FetchLevel.prompted:
-      case FetchLevel.fetching:
-      case FetchLevel.refetching:
-        return <Spinner intent={Intent.PRIMARY} />;
-      case FetchLevel.failure:
-        return <Spinner intent={Intent.DANGER} value={1} />;
-      case FetchLevel.success:
-        return this.renderContentWithRealms();
-      case FetchLevel.initial:
-      default:
-        return <Spinner intent={Intent.NONE} value={0} />;
+    case FetchLevel.prompted:
+    case FetchLevel.fetching:
+    case FetchLevel.refetching:
+      return <Spinner intent={Intent.PRIMARY} />;
+    case FetchLevel.failure:
+      return <Spinner intent={Intent.DANGER} value={1} />;
+    case FetchLevel.success:
+      return this.renderContentWithRealms();
+    case FetchLevel.initial:
+    default:
+      return <Spinner intent={Intent.NONE} value={0} />;
     }
   }
 
@@ -86,15 +86,15 @@ export class CurrentPricesTable extends React.Component<Props> {
     } = this.props;
 
     switch (getPricelistLevel) {
-      case FetchLevel.fetching:
-        return <Spinner intent={Intent.PRIMARY} />;
-      case FetchLevel.failure:
-        return <Spinner intent={Intent.DANGER} value={1} />;
-      case FetchLevel.success:
-        return this.renderTable();
-      case FetchLevel.initial:
-      default:
-        return <Spinner intent={Intent.NONE} value={1} />;
+    case FetchLevel.fetching:
+      return <Spinner intent={Intent.PRIMARY} />;
+    case FetchLevel.failure:
+      return <Spinner intent={Intent.DANGER} value={1} />;
+    case FetchLevel.success:
+      return this.renderTable();
+    case FetchLevel.initial:
+    default:
+      return <Spinner intent={Intent.NONE} value={1} />;
     }
   }
 

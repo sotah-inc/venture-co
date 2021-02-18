@@ -45,7 +45,7 @@ export class ManageAccount extends React.Component<Props> {
     setTitle("Profile");
   }
 
-  public render() {
+  public render(): React.ReactNode {
     const {
       user,
       updateProfile,

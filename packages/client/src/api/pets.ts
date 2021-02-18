@@ -4,9 +4,9 @@ import * as HTTPStatus from "http-status";
 import { getApiEndpoint } from "./config";
 import { gatherWithQuery } from "./gather";
 
-export const getPets = async (
+export async function getPets(
   req: IQueryRequest,
-): Promise<IQueryResponseData<IShortPet> | null> => {
+): Promise<IQueryResponseData<IShortPet> | null> {
   const { body, status } = await gatherWithQuery<IQueryRequest, QueryResponse<IShortPet>>({
     method: "GET",
     query: req,
@@ -17,4 +17,4 @@ export const getPets = async (
   }
 
   return body as IQueryResponseData<IShortPet>;
-};
+}

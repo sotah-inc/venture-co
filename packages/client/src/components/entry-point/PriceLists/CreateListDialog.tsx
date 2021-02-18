@@ -80,32 +80,32 @@ export class CreateListDialog extends React.Component<Props, State> {
 
     if (prevProps.createPricelist.level !== createPricelist.level) {
       switch (createPricelist.level) {
-        case FetchLevel.success:
-          InsertToast({
-            icon: "info-sign",
-            intent: Intent.SUCCESS,
-            message: "Your pricelist has been created.",
-          });
-          this.setState({ listDialogResetTrigger: listDialogResetTrigger + 1 });
+      case FetchLevel.success:
+        InsertToast({
+          icon: "info-sign",
+          intent: Intent.SUCCESS,
+          message: "Your pricelist has been created.",
+        });
+        this.setState({ listDialogResetTrigger: listDialogResetTrigger + 1 });
 
-          const professionData = (() => {
-            if (selectedProfession === null || selectedExpansion === null) {
-              return;
-            }
+        const professionData = (() => {
+          if (selectedProfession === null || selectedExpansion === null) {
+            return;
+          }
 
-            return { profession: selectedProfession, expansion: selectedExpansion };
-          })();
+          return { profession: selectedProfession, expansion: selectedExpansion };
+        })();
 
-          browseOnCreate(currentRegion, currentRealm, selectedList, professionData);
+        browseOnCreate(currentRegion, currentRealm, selectedList, professionData);
 
-          break;
-        default:
-          break;
+        break;
+      default:
+        break;
       }
     }
   }
 
-  public render() {
+  public render(): React.ReactNode {
     const {
       isAddListDialogOpen,
       ChangeIsAddListDialogOpen,

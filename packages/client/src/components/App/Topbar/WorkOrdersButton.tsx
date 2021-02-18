@@ -18,7 +18,7 @@ export type IOwnProps = IRouteProps;
 export type Props = Readonly<IDispatchProps & IOwnProps>;
 
 export class WorkOrdersButton extends React.Component<Props> {
-  public render() {
+  public render(): React.ReactNode {
     const { changeIsWorkOrderDialogOpen, locationPathname } = this.props;
 
     return (

@@ -12,6 +12,7 @@ type Props = Readonly<IStateProps>;
 export class Oven extends React.Component<Props> {
   // @ts-ignore
   private toaster: Toaster;
+
   private refHandlers = {
     toaster: (ref: Toaster) => {
       this.toaster = ref;
@@ -29,7 +30,7 @@ export class Oven extends React.Component<Props> {
     this.toaster.show(toast);
   }
 
-  public render() {
+  public render(): React.ReactNode {
     return <Toaster position={Position.BOTTOM} ref={this.refHandlers.toaster} />;
   }
 }

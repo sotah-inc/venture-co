@@ -34,10 +34,10 @@ export interface ICreatePricelistResult {
   data: ICreatePricelistResponseData | null;
 }
 
-export const createPricelist = async (
+export async function createPricelist(
   token: string,
   request: ICreatePricelistRequest,
-): Promise<ICreatePricelistResult> => {
+): Promise<ICreatePricelistResult> {
   const { body, status } = await gather<ICreatePricelistRequest, CreatePricelistResponse>({
     body: request,
     headers: new Headers({
@@ -48,26 +48,26 @@ export const createPricelist = async (
     url: `${getApiEndpoint()}/user/pricelists`,
   });
   switch (status) {
-    case HTTPStatus.CREATED:
-      return { errors: null, data: body as ICreatePricelistResponseData };
-    case HTTPStatus.UNAUTHORIZED:
-      return { errors: { error: "Unauthorized" }, data: null };
-    case HTTPStatus.BAD_REQUEST:
-    default:
-      return { errors: body as IValidationErrorResponse, data: null };
+  case HTTPStatus.CREATED:
+    return { errors: null, data: body as ICreatePricelistResponseData };
+  case HTTPStatus.UNAUTHORIZED:
+    return { errors: { error: "Unauthorized" }, data: null };
+  case HTTPStatus.BAD_REQUEST:
+  default:
+    return { errors: body as IValidationErrorResponse, data: null };
   }
-};
+}
 
 export interface IUpdatePricelistResult {
   errors: IValidationErrorResponse | null;
   data: ICreatePricelistResponseData | null;
 }
 
-export const updatePricelist = async (
+export async function updatePricelist(
   token: string,
   id: number,
   request: UpdatePricelistRequest,
-): Promise<IUpdatePricelistResult> => {
+): Promise<IUpdatePricelistResult> {
   const { body, status } = await gather<UpdatePricelistRequest, UpdatePricelistResponse>({
     body: request,
     headers: new Headers({
@@ -78,20 +78,20 @@ export const updatePricelist = async (
     url: `${getApiEndpoint()}/user/pricelists/${id}`,
   });
   switch (status) {
-    case HTTPStatus.OK:
-      return { errors: null, data: body as ICreatePricelistResponseData };
-    case HTTPStatus.UNAUTHORIZED:
-      return { errors: { error: "Unauthorized" }, data: null };
-    case HTTPStatus.BAD_REQUEST:
-    default:
-      return { errors: body as IValidationErrorResponse, data: null };
+  case HTTPStatus.OK:
+    return { errors: null, data: body as ICreatePricelistResponseData };
+  case HTTPStatus.UNAUTHORIZED:
+    return { errors: { error: "Unauthorized" }, data: null };
+  case HTTPStatus.BAD_REQUEST:
+  default:
+    return { errors: body as IValidationErrorResponse, data: null };
   }
-};
+}
 
-export const getPricelists = async (
+export async function getPricelists(
   token: string,
   req: { locale: Locale },
-): Promise<IGetPricelistsResponseData | null> => {
+): Promise<IGetPricelistsResponseData | null> {
   const { body, status } = await gatherWithQuery<{ locale: Locale }, GetPricelistsResponse>({
     headers: new Headers({
       Authorization: `Bearer ${token}`,
@@ -106,9 +106,9 @@ export const getPricelists = async (
   }
 
   return body as IGetPricelistsResponseData;
-};
+}
 
-export const deletePricelist = async (token: string, id: number): Promise<number | null> => {
+export async function deletePricelist(token: string, id: number): Promise<number | null> {
   const { status } = await gather<null, null>({
     headers: new Headers({
       Authorization: `Bearer ${token}`,
@@ -118,21 +118,21 @@ export const deletePricelist = async (token: string, id: number): Promise<number
     url: `${getApiEndpoint()}/user/pricelists/${id}`,
   });
   switch (status) {
-    case HTTPStatus.OK:
-      return id;
-    default:
-      return null;
+  case HTTPStatus.OK:
+    return id;
+  default:
+    return null;
   }
-};
+}
 export interface ICreateProfessionPricelistResult {
   errors: IValidationErrorResponse | null;
   data: ICreateProfessionPricelistResponseData | null;
 }
 
-export const createProfessionPricelist = async (
+export async function createProfessionPricelist(
   token: string,
   request: ICreateProfessionPricelistRequest,
-): Promise<ICreateProfessionPricelistResult> => {
+): Promise<ICreateProfessionPricelistResult> {
   const { body, status } = await gather<
     ICreateProfessionPricelistRequest,
     CreateProfessionPricelistResponse
@@ -146,50 +146,50 @@ export const createProfessionPricelist = async (
     url: `${getApiEndpoint()}/user/profession-pricelists`,
   });
   switch (status) {
-    case HTTPStatus.CREATED:
-      return { errors: null, data: body as ICreateProfessionPricelistResponseData };
-    case HTTPStatus.UNAUTHORIZED:
-      return { errors: { error: "Unauthorized" }, data: null };
-    case HTTPStatus.BAD_REQUEST:
-    default:
-      return { errors: body as IValidationErrorResponse, data: null };
+  case HTTPStatus.CREATED:
+    return { errors: null, data: body as ICreateProfessionPricelistResponseData };
+  case HTTPStatus.UNAUTHORIZED:
+    return { errors: { error: "Unauthorized" }, data: null };
+  case HTTPStatus.BAD_REQUEST:
+  default:
+    return { errors: body as IValidationErrorResponse, data: null };
   }
-};
+}
 
 export interface IDeleteProfessionPricelistResult {
   id: number;
   errors: IValidationErrorResponse | null;
 }
 
-export const deleteProfessionPricelist = async (
+export async function deleteProfessionPricelist(
   token: string,
   id: number,
-): Promise<IDeleteProfessionPricelistResult> => {
+): Promise<IDeleteProfessionPricelistResult> {
   const { body, status } = await gather<null, IValidationErrorResponse | null>({
     headers: new Headers({ Authorization: `Bearer ${token}`, "content-type": "application/json" }),
     method: "DELETE",
     url: `${getApiEndpoint()}/user/profession-pricelists/${id}`,
   });
   switch (status) {
-    case HTTPStatus.OK:
-      return { id, errors: null };
-    case HTTPStatus.INTERNAL_SERVER_ERROR:
-      return { id, errors: body };
-    default:
-      return { id, errors: { error: `Unexpected status code: ${status}` } };
+  case HTTPStatus.OK:
+    return { id, errors: null };
+  case HTTPStatus.INTERNAL_SERVER_ERROR:
+    return { id, errors: body };
+  default:
+    return { id, errors: { error: `Unexpected status code: ${status}` } };
   }
-};
+}
 
 export interface IGetProfessionPricelistsResult {
   data: IGetProfessionPricelistsResponseData | null;
   errors: IValidationErrorResponse | null;
 }
 
-export const getProfessionPricelists = async (
+export async function getProfessionPricelists(
   profession: ProfessionName,
   expansion: ExpansionName,
   locale: Locale,
-): Promise<IGetProfessionPricelistsResult> => {
+): Promise<IGetProfessionPricelistsResult> {
   const { body, status } = await gatherWithQuery<
     { locale: Locale },
     GetProfessionPricelistsResponse
@@ -199,24 +199,24 @@ export const getProfessionPricelists = async (
     url: `${getApiEndpoint()}/profession-pricelists/${profession}/${expansion}`,
   });
   switch (status) {
-    case HTTPStatus.OK:
-      return { errors: null, data: body as IGetProfessionPricelistsResponseData };
-    default:
-      return { data: null, errors: { failure: "Failed to fetch profession-pricelists" } };
+  case HTTPStatus.OK:
+    return { errors: null, data: body as IGetProfessionPricelistsResponseData };
+  default:
+    return { data: null, errors: { failure: "Failed to fetch profession-pricelists" } };
   }
-};
+}
 
 export interface IGetProfessionPricelistResult {
   errors: IValidationErrorResponse | null;
   data: IProfessionPricelistJson | null;
 }
 
-export const getProfessionPricelist = async (
+export async function getProfessionPricelist(
   profession: ProfessionName,
   expansion: ExpansionName,
   slug: string,
   locale: Locale,
-): Promise<IGetProfessionPricelistResult> => {
+): Promise<IGetProfessionPricelistResult> {
   const { body, status } = await gatherWithQuery<
     { locale: Locale },
     IProfessionPricelistJson | IValidationErrorResponse | null
@@ -226,22 +226,19 @@ export const getProfessionPricelist = async (
     url: `${getApiEndpoint()}/profession-pricelists/${profession}/${expansion}/${slug}`,
   });
   switch (status) {
-    case HTTPStatus.OK:
-      return { errors: null, data: body as IProfessionPricelistJson };
-    default:
-      return { data: null, errors: { failure: "Failed to fetch profession-pricelists" } };
+  case HTTPStatus.OK:
+    return { errors: null, data: body as IProfessionPricelistJson };
+  default:
+    return { data: null, errors: { failure: "Failed to fetch profession-pricelists" } };
   }
-};
+}
 
 export interface IGetPricelistResult {
   errors: IValidationErrorResponse | null;
   data: IPricelistJson | null;
 }
 
-export const getUserPricelist = async (
-  token: string,
-  slug: string,
-): Promise<IGetPricelistResult> => {
+export async function getUserPricelist(token: string, slug: string): Promise<IGetPricelistResult> {
   const { body, status } = await gather<null, IPricelistJson | IValidationErrorResponse | null>({
     headers: new Headers({
       Authorization: `Bearer ${token}`,
@@ -251,12 +248,12 @@ export const getUserPricelist = async (
     url: `${getApiEndpoint()}/user/pricelists/${slug}`,
   });
   switch (status) {
-    case HTTPStatus.OK:
-      return { errors: null, data: body as IPricelistJson };
-    default:
-      return { data: null, errors: { failure: "Failed to fetch profession-pricelists" } };
+  case HTTPStatus.OK:
+    return { errors: null, data: body as IPricelistJson };
+  default:
+    return { data: null, errors: { failure: "Failed to fetch profession-pricelists" } };
   }
-};
+}
 
 export interface IGetUnmetDemandOptions {
   region: RegionName;
@@ -270,9 +267,7 @@ export interface IGetUnmetDemandResult {
   errors: IErrorResponse | IValidationErrorResponse | null;
 }
 
-export const getUnmetDemand = async (
-  opts: IGetUnmetDemandOptions,
-): Promise<IGetUnmetDemandResult> => {
+export async function getUnmetDemand(opts: IGetUnmetDemandOptions): Promise<IGetUnmetDemandResult> {
   const { body, status } = await gatherWithQuery<
     { locale: Locale },
     GetUnmetDemandResponse,
@@ -285,11 +280,11 @@ export const getUnmetDemand = async (
     url: `${getApiEndpoint()}/unmet-demand/${opts.region}/${opts.realm}`,
   });
   switch (status) {
-    case HTTPStatus.OK:
-      return { errors: null, data: body as IGetUnmetDemandResponseData };
-    case HTTPStatus.NOT_FOUND:
-      return { data: null, errors: body as IValidationErrorResponse };
-    default:
-      return { data: null, errors: body as IErrorResponse };
+  case HTTPStatus.OK:
+    return { errors: null, data: body as IGetUnmetDemandResponseData };
+  case HTTPStatus.NOT_FOUND:
+    return { data: null, errors: body as IValidationErrorResponse };
+  default:
+    return { data: null, errors: body as IErrorResponse };
   }
-};
+}

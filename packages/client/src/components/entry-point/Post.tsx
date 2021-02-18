@@ -76,7 +76,7 @@ export class Post extends React.Component<Props> {
     setTitle(`${currentPost.title} - News`);
   }
 
-  public render() {
+  public render(): React.ReactNode {
     return (
       <>
         <DeletePostDialogRouteContainer />
@@ -149,30 +149,30 @@ export class Post extends React.Component<Props> {
     }
 
     switch (getPostLevel) {
-      case FetchLevel.success:
-        break;
-      case FetchLevel.failure:
-        return (
-          <NonIdealState
-            title="Failed to fetch news post"
-            icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={1} />}
-          />
-        );
-      case FetchLevel.fetching:
-        return (
-          <NonIdealState
-            title="Loading news post"
-            icon={<Spinner className={Classes.LARGE} intent={Intent.PRIMARY} />}
-          />
-        );
-      case FetchLevel.initial:
-      default:
-        return (
-          <NonIdealState
-            title="Loading news post"
-            icon={<Spinner className={Classes.LARGE} intent={Intent.NONE} value={0} />}
-          />
-        );
+    case FetchLevel.success:
+      break;
+    case FetchLevel.failure:
+      return (
+        <NonIdealState
+          title="Failed to fetch news post"
+          icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={1} />}
+        />
+      );
+    case FetchLevel.fetching:
+      return (
+        <NonIdealState
+          title="Loading news post"
+          icon={<Spinner className={Classes.LARGE} intent={Intent.PRIMARY} />}
+        />
+      );
+    case FetchLevel.initial:
+    default:
+      return (
+        <NonIdealState
+          title="Loading news post"
+          icon={<Spinner className={Classes.LARGE} intent={Intent.NONE} value={0} />}
+        />
+      );
     }
 
     if (currentPost === null) {

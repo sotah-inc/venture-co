@@ -19,7 +19,7 @@ export type IOwnProps = IRouteProps;
 export type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
 
 export class Prompts extends React.Component<Props> {
-  public render() {
+  public render(): React.ReactNode {
     const { user } = this.props;
 
     if (user === null) {

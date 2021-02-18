@@ -20,7 +20,7 @@ export interface IOwnProps {
 export type Props = Readonly<IOwnProps>;
 
 export class ReagentPricesLegend extends React.Component<Props> {
-  public render() {
+  public render(): React.ReactNode {
     const { itemIds } = this.props;
 
     const groupedItemIds = itemIds.reduce<Array<Array<[ItemId, number]>>>((result, v, i) => {

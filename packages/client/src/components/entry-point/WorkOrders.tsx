@@ -93,7 +93,7 @@ export class WorkOrders extends React.Component<Props> {
     this.refreshWorkOrdersTrigger(prevProps);
   }
 
-  public render() {
+  public render(): React.ReactNode {
     return (
       <>
         <CreateWorkOrderDialogContainer />

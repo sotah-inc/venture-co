@@ -6,8 +6,9 @@ import { IRegionComposite } from "@sotah-inc/core";
 import { ILoadPostsEntrypoint } from "../../actions/posts";
 import { AuctionStatsGraphContainer } from "../../containers/entry-point/News/AuctionStatsGraph";
 import { TokenHistoryGraphContainer } from "../../containers/entry-point/News/TokenHistoryGraph";
-// tslint:disable-next-line:max-line-length
-import { DeletePostDialogRouteContainer } from "../../route-containers/entry-point/News/DeletePostDialog";
+import {
+  DeletePostDialogRouteContainer,
+} from "../../route-containers/entry-point/News/DeletePostDialog";
 import { PostListRouteContainer } from "../../route-containers/entry-point/News/PostList";
 import { AuthLevel } from "../../types/main";
 import { setTitle } from "../../util";
@@ -34,7 +35,7 @@ export interface IRouteProps {
 type Props = Readonly<IStateProps & IDispatchProps & IOwnProps & IRouteProps>;
 
 export class News extends React.Component<Props> {
-  public componentDidMount() {
+  public componentDidMount(): void {
     const { entrypointData, loadEntrypointData } = this.props;
 
     setTitle("News");
@@ -42,19 +43,7 @@ export class News extends React.Component<Props> {
     loadEntrypointData(entrypointData);
   }
 
-  public componentDidUpdate(prevProps: Props) {
-    const { entrypointData, loadEntrypointData } = this.props;
-
-    if (entrypointData.loadId !== prevProps.entrypointData.loadId) {
-      setTitle("News");
-
-      loadEntrypointData(entrypointData);
-
-      return;
-    }
-  }
-
-  public render() {
+  public render(): React.ReactNode {
     const { currentRegion } = this.props;
 
     if (currentRegion === null) {
@@ -129,7 +118,7 @@ export class News extends React.Component<Props> {
     if (authLevel === AuthLevel.authenticated) {
       return (
         <div className="pure-u-1-4 homepage-card-container">
-          {this.renderCard(`/content/feed`, "feed", "Check Your Feed")}
+          {this.renderCard("/content/feed", "feed", "Check Your Feed")}
         </div>
       );
     }

@@ -11,7 +11,7 @@ export type IOwnProps = IRouteProps;
 export type Props = Readonly<IOwnProps>;
 
 export class Viewport extends React.Component<Props> {
-  public render() {
+  public render(): React.ReactNode {
     // props
     const { renderContent } = this.props;
 

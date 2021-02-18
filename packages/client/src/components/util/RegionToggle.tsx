@@ -49,11 +49,11 @@ export class RegionToggle extends React.Component<Props> {
     );
   }
 
-  public render() {
+  public render(): React.ReactNode {
     const { currentRegion } = this.props;
 
     if (currentRegion === null) {
-      return null;
+      return <React.Fragment />;
     }
 
     return (

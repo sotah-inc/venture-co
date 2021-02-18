@@ -15,7 +15,7 @@ export class Content extends React.Component<Props> {
     redirectToNews();
   }
 
-  public render() {
+  public render(): React.ReactNode {
     return (
       <NonIdealState
         title="Redirecting to News!"

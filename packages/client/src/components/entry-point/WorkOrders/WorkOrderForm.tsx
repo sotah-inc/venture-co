@@ -95,46 +95,46 @@ export class WorkOrderForm extends React.Component<Props> {
 
     if (prevProps.mutateOrderLevel !== mutateOrderLevel) {
       switch (mutateOrderLevel) {
-        case FetchLevel.success:
-          setSubmitting(false);
-          handleReset();
-          onComplete();
+      case FetchLevel.success:
+        setSubmitting(false);
+        handleReset();
+        onComplete();
 
-          break;
-        case FetchLevel.failure:
-          setSubmitting(false);
+        break;
+      case FetchLevel.failure:
+        setSubmitting(false);
 
-          if ("error" in mutateOrderErrors && typeof mutateOrderErrors.error === "string") {
-            onFatalError(mutateOrderErrors.error);
-          }
+        if ("error" in mutateOrderErrors && typeof mutateOrderErrors.error === "string") {
+          onFatalError(mutateOrderErrors.error);
+        }
 
-          break;
-        default:
-          break;
+        break;
+      default:
+        break;
       }
     }
 
     if (prevProps.prefillWorkOrderItem.level !== prefillWorkOrderItem.level) {
       switch (prefillWorkOrderItem.level) {
-        case FetchLevel.success:
-          const priceSliderData = translatePriceToSliderData(prefillWorkOrderItem);
-          if (priceSliderData !== null) {
-            setFieldValue("price", priceSliderData.min + priceSliderData.step);
-          }
+      case FetchLevel.success:
+        const priceSliderData = translatePriceToSliderData(prefillWorkOrderItem);
+        if (priceSliderData !== null) {
+          setFieldValue("price", priceSliderData.min + priceSliderData.step);
+        }
 
-          const quantitySliderData = translateQuantityToSliderData(values.item);
-          if (quantitySliderData !== null) {
-            setFieldValue("quantity", quantitySliderData.min);
-          }
+        const quantitySliderData = translateQuantityToSliderData(values.item);
+        if (quantitySliderData !== null) {
+          setFieldValue("quantity", quantitySliderData.min);
+        }
 
-          break;
-        default:
-          break;
+        break;
+      default:
+        break;
       }
     }
   }
 
-  public render() {
+  public render(): React.ReactNode {
     const {
       values,
       isSubmitting,
@@ -274,27 +274,27 @@ export class WorkOrderForm extends React.Component<Props> {
     }
 
     switch (prefillWorkOrderItem.level) {
-      case FetchLevel.success:
-        break;
-      case FetchLevel.failure:
-        return (
-          <p>
-            <strong>Failed to prefill work-item data!</strong>
-          </p>
-        );
-      case FetchLevel.initial:
-        return (
-          <p>
-            <em>Please select an item!</em>
-          </p>
-        );
-      case FetchLevel.fetching:
-      default:
-        return (
-          <p>
-            <em>Loading...</em>
-          </p>
-        );
+    case FetchLevel.success:
+      break;
+    case FetchLevel.failure:
+      return (
+        <p>
+          <strong>Failed to prefill work-item data!</strong>
+        </p>
+      );
+    case FetchLevel.initial:
+      return (
+        <p>
+          <em>Please select an item!</em>
+        </p>
+      );
+    case FetchLevel.fetching:
+    default:
+      return (
+        <p>
+          <em>Loading...</em>
+        </p>
+      );
     }
 
     const sliderData = translateQuantityToSliderData(values.item);
@@ -353,27 +353,27 @@ export class WorkOrderForm extends React.Component<Props> {
     }
 
     switch (prefillWorkOrderItem.level) {
-      case FetchLevel.success:
-        break;
-      case FetchLevel.failure:
-        return (
-          <p>
-            <strong>Failed to prefill work-item data!</strong>
-          </p>
-        );
-      case FetchLevel.initial:
-        return (
-          <p>
-            <em>Please select an item!</em>
-          </p>
-        );
-      case FetchLevel.fetching:
-      default:
-        return (
-          <p>
-            <em>Loading...</em>
-          </p>
-        );
+    case FetchLevel.success:
+      break;
+    case FetchLevel.failure:
+      return (
+        <p>
+          <strong>Failed to prefill work-item data!</strong>
+        </p>
+      );
+    case FetchLevel.initial:
+      return (
+        <p>
+          <em>Please select an item!</em>
+        </p>
+      );
+    case FetchLevel.fetching:
+    default:
+      return (
+        <p>
+          <em>Loading...</em>
+        </p>
+      );
     }
 
     const sliderValues = translatePriceToSliderData(prefillWorkOrderItem);

@@ -120,7 +120,7 @@ export class AuctionList extends React.Component<Props> {
     this.refreshAuctionsTrigger(prevProps);
   }
 
-  public render() {
+  public render(): React.ReactNode {
     const {
       currentRegion,
       routeParams: { region_name },

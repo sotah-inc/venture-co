@@ -31,10 +31,10 @@ export async function getProfessions(locale: Locale): Promise<IGetProfessionsRes
   });
 
   switch (status) {
-    case HTTPStatus.OK:
-      break;
-    default:
-      return { response: null, error: "Failure" };
+  case HTTPStatus.OK:
+    break;
+  default:
+    return { response: null, error: "Failure" };
   }
 
   return { response: body as IProfessionsResponseData, error: null };
@@ -60,10 +60,10 @@ export async function getSkillTier(
   });
 
   switch (status) {
-    case HTTPStatus.OK:
-      break;
-    default:
-      return { response: null, error: "Failure" };
+  case HTTPStatus.OK:
+    break;
+  default:
+    return { response: null, error: "Failure" };
   }
 
   return { response: body as ISkillTierResponseData, error: null };
@@ -85,10 +85,10 @@ export async function getRecipe(recipeId: RecipeId, locale: Locale): Promise<IGe
   });
 
   switch (status) {
-    case HTTPStatus.OK:
-      break;
-    default:
-      return { response: null, error: "Failure" };
+  case HTTPStatus.OK:
+    break;
+  default:
+    return { response: null, error: "Failure" };
   }
 
   return { response: body as IRecipeResponseData, error: null };

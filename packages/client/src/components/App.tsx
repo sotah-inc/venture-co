@@ -67,46 +67,46 @@ export class App extends React.Component<Props> {
     const { fetchPingLevel, insertToast } = this.props;
 
     switch (fetchPingLevel) {
-      case FetchLevel.failure:
-        if (prevProps.fetchPingLevel === FetchLevel.fetching) {
-          insertToast({
-            icon: "warning-sign",
-            intent: Intent.DANGER,
-            message: "Could not connect to Sotah API.",
-          });
-        }
+    case FetchLevel.failure:
+      if (prevProps.fetchPingLevel === FetchLevel.fetching) {
+        insertToast({
+          icon: "warning-sign",
+          intent: Intent.DANGER,
+          message: "Could not connect to Sotah API.",
+        });
+      }
 
-        return;
-      case FetchLevel.success:
-        if (prevProps.fetchPingLevel === FetchLevel.fetching) {
-          insertToast({
-            icon: "info-sign",
-            intent: Intent.SUCCESS,
-            message: "Connected to Sotah API.",
-          });
-        }
+      return;
+    case FetchLevel.success:
+      if (prevProps.fetchPingLevel === FetchLevel.fetching) {
+        insertToast({
+          icon: "info-sign",
+          intent: Intent.SUCCESS,
+          message: "Connected to Sotah API.",
+        });
+      }
 
-        this.handleConnected(prevProps);
+      this.handleConnected(prevProps);
 
-        return;
-      default:
-        return;
+      return;
+    default:
+      return;
     }
   }
 
-  public render() {
+  public render(): React.ReactNode {
     const { fetchPingLevel } = this.props;
     switch (fetchPingLevel) {
-      case FetchLevel.initial:
-        return <>Welcome!</>;
-      case FetchLevel.fetching:
-        return <>Connecting...</>;
-      case FetchLevel.failure:
-        return <>Could not connect!</>;
-      case FetchLevel.success:
-        return this.renderConnected();
-      default:
-        return <>You should never see this!</>;
+    case FetchLevel.initial:
+      return <>Welcome!</>;
+    case FetchLevel.fetching:
+      return <>Connecting...</>;
+    case FetchLevel.failure:
+      return <>Could not connect!</>;
+    case FetchLevel.success:
+      return this.renderConnected();
+    default:
+      return <>You should never see this!</>;
     }
   }
 
@@ -122,18 +122,18 @@ export class App extends React.Component<Props> {
     const { authLevel } = this.props;
 
     switch (authLevel) {
-      case AuthLevel.authenticated:
-        return this.renderAuth();
-      case AuthLevel.unauthenticated:
-        return this.renderUnauth();
-      case AuthLevel.initial:
-      default:
-        return App.renderContent(
-          <NonIdealState
-            title="Loading"
-            icon={<Spinner className={Classes.LARGE} intent={Intent.NONE} />}
-          />,
-        );
+    case AuthLevel.authenticated:
+      return this.renderAuth();
+    case AuthLevel.unauthenticated:
+      return this.renderUnauth();
+    case AuthLevel.initial:
+    default:
+      return App.renderContent(
+        <NonIdealState
+          title="Loading"
+          icon={<Spinner className={Classes.LARGE} intent={Intent.NONE} />}
+        />,
+      );
     }
   }
 
@@ -141,30 +141,30 @@ export class App extends React.Component<Props> {
     const { fetchBootLevel } = this.props;
 
     switch (fetchBootLevel) {
-      case FetchLevel.success:
-        return this.renderBootAuth();
-      case FetchLevel.fetching:
-        return App.renderContent(
-          <NonIdealState
-            title="Loading"
-            icon={<Spinner className={Classes.LARGE} intent={Intent.PRIMARY} />}
-          />,
-        );
-      case FetchLevel.failure:
-        return App.renderContent(
-          <NonIdealState
-            title="Failed to load"
-            icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={1} />}
-          />,
-        );
-      case FetchLevel.initial:
-      default:
-        return App.renderContent(
-          <NonIdealState
-            title="Loading"
-            icon={<Spinner className={Classes.LARGE} intent={Intent.NONE} value={0} />}
-          />,
-        );
+    case FetchLevel.success:
+      return this.renderBootAuth();
+    case FetchLevel.fetching:
+      return App.renderContent(
+        <NonIdealState
+          title="Loading"
+          icon={<Spinner className={Classes.LARGE} intent={Intent.PRIMARY} />}
+        />,
+      );
+    case FetchLevel.failure:
+      return App.renderContent(
+        <NonIdealState
+          title="Failed to load"
+          icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={1} />}
+        />,
+      );
+    case FetchLevel.initial:
+    default:
+      return App.renderContent(
+        <NonIdealState
+          title="Loading"
+          icon={<Spinner className={Classes.LARGE} intent={Intent.NONE} value={0} />}
+        />,
+      );
     }
   }
 
@@ -172,32 +172,32 @@ export class App extends React.Component<Props> {
     const { fetchUserPreferencesLevel } = this.props;
 
     switch (fetchUserPreferencesLevel) {
-      case FetchLevel.fetching:
-      case FetchLevel.refetching:
-      case FetchLevel.prompted:
-        return App.renderContent(
-          <NonIdealState
-            title="Loading"
-            icon={<Spinner className={Classes.LARGE} intent={Intent.PRIMARY} />}
-          />,
-        );
-      case FetchLevel.success:
-        return this.renderBootAuthWithPreferences();
-      case FetchLevel.failure:
-        return App.renderContent(
-          <NonIdealState
-            title="Failed to load user preferences."
-            icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={1} />}
-          />,
-        );
-      case FetchLevel.initial:
-      default:
-        return App.renderContent(
-          <NonIdealState
-            title="Loading"
-            icon={<Spinner className={Classes.LARGE} intent={Intent.NONE} value={0} />}
-          />,
-        );
+    case FetchLevel.fetching:
+    case FetchLevel.refetching:
+    case FetchLevel.prompted:
+      return App.renderContent(
+        <NonIdealState
+          title="Loading"
+          icon={<Spinner className={Classes.LARGE} intent={Intent.PRIMARY} />}
+        />,
+      );
+    case FetchLevel.success:
+      return this.renderBootAuthWithPreferences();
+    case FetchLevel.failure:
+      return App.renderContent(
+        <NonIdealState
+          title="Failed to load user preferences."
+          icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={1} />}
+        />,
+      );
+    case FetchLevel.initial:
+    default:
+      return App.renderContent(
+        <NonIdealState
+          title="Loading"
+          icon={<Spinner className={Classes.LARGE} intent={Intent.NONE} value={0} />}
+        />,
+      );
     }
   }
 
@@ -213,36 +213,36 @@ export class App extends React.Component<Props> {
     const { authLevel, preloadedToken, changeAuthLevel, reloadUser, insertToast } = this.props;
 
     switch (authLevel) {
-      case AuthLevel.unauthenticated:
-        this.handleUnauth(prevProps);
+    case AuthLevel.unauthenticated:
+      this.handleUnauth(prevProps);
 
-        return;
-      case AuthLevel.authenticated:
-        const hasBeenAuthorized =
+      return;
+    case AuthLevel.authenticated:
+      const hasBeenAuthorized =
           [AuthLevel.unauthenticated, AuthLevel.initial].indexOf(prevProps.authLevel) > -1;
-        if (hasBeenAuthorized) {
-          insertToast({
-            icon: "user",
-            intent: Intent.SUCCESS,
-            message: "You are logged in.",
-          });
-        }
+      if (hasBeenAuthorized) {
+        insertToast({
+          icon: "user",
+          intent: Intent.SUCCESS,
+          message: "You are logged in.",
+        });
+      }
 
-        this.handleAuth(prevProps);
+      this.handleAuth(prevProps);
 
-        return;
-      case AuthLevel.initial:
-        if (preloadedToken.length === 0) {
-          changeAuthLevel(AuthLevel.unauthenticated);
-
-          return;
-        }
-
-        reloadUser(preloadedToken);
+      return;
+    case AuthLevel.initial:
+      if (preloadedToken.length === 0) {
+        changeAuthLevel(AuthLevel.unauthenticated);
 
         return;
-      default:
-        return;
+      }
+
+      reloadUser(preloadedToken);
+
+      return;
+    default:
+      return;
     }
   }
 
@@ -256,37 +256,37 @@ export class App extends React.Component<Props> {
     } = this.props;
 
     switch (fetchBootLevel) {
-      case FetchLevel.failure:
-        if (prevProps.fetchBootLevel === FetchLevel.fetching) {
+    case FetchLevel.failure:
+      if (prevProps.fetchBootLevel === FetchLevel.fetching) {
+        insertToast({
+          icon: "info-sign",
+          intent: Intent.DANGER,
+          message: "Failed to load regions.",
+        });
+      }
+
+      return;
+    case FetchLevel.success:
+      if (prevProps.fetchBootLevel === FetchLevel.fetching) {
+        if (preloadedToken.length > 0) {
           insertToast({
+            action: {
+              icon: "log-in",
+              intent: Intent.PRIMARY,
+              onClick: () => changeIsLoginDialogOpen(!isLoginDialogOpen),
+              text: "Login",
+            },
             icon: "info-sign",
-            intent: Intent.DANGER,
-            message: "Failed to load regions.",
+            intent: Intent.WARNING,
+            message: "Your session has expired.",
+            timeout: 10 * 1000,
           });
         }
+      }
 
-        return;
-      case FetchLevel.success:
-        if (prevProps.fetchBootLevel === FetchLevel.fetching) {
-          if (preloadedToken.length > 0) {
-            insertToast({
-              action: {
-                icon: "log-in",
-                intent: Intent.PRIMARY,
-                onClick: () => changeIsLoginDialogOpen(!isLoginDialogOpen),
-                text: "Login",
-              },
-              icon: "info-sign",
-              intent: Intent.WARNING,
-              message: "Your session has expired.",
-              timeout: 10 * 1000,
-            });
-          }
-        }
-
-        return;
-      default:
-        return;
+      return;
+    default:
+      return;
     }
   }
 
@@ -294,26 +294,26 @@ export class App extends React.Component<Props> {
     const { fetchUserPreferencesLevel, loadUserPreferences, profile, insertToast } = this.props;
 
     switch (fetchUserPreferencesLevel) {
-      case FetchLevel.initial:
-        loadUserPreferences(profile!.token);
+    case FetchLevel.initial:
+      loadUserPreferences(profile!.token);
 
-        return;
-      case FetchLevel.failure:
-        if (prevProps.fetchUserPreferencesLevel === FetchLevel.fetching) {
-          insertToast({
-            icon: "warning-sign",
-            intent: Intent.DANGER,
-            message: "Failed to load user preferences.",
-          });
-        }
+      return;
+    case FetchLevel.failure:
+      if (prevProps.fetchUserPreferencesLevel === FetchLevel.fetching) {
+        insertToast({
+          icon: "warning-sign",
+          intent: Intent.DANGER,
+          message: "Failed to load user preferences.",
+        });
+      }
 
-        return;
-      case FetchLevel.success:
-        this.handleAuthWithPreferences(prevProps);
+      return;
+    case FetchLevel.success:
+      this.handleAuthWithPreferences(prevProps);
 
-        return;
-      default:
-        return;
+      return;
+    default:
+      return;
     }
   }
 
@@ -321,19 +321,19 @@ export class App extends React.Component<Props> {
     const { fetchBootLevel, insertToast } = this.props;
 
     switch (fetchBootLevel) {
-      case FetchLevel.failure:
-        if (prevProps.fetchBootLevel === FetchLevel.fetching) {
-          insertToast({
-            icon: "info-sign",
-            intent: Intent.DANGER,
-            message: "Failed to load regions.",
-          });
-        }
+    case FetchLevel.failure:
+      if (prevProps.fetchBootLevel === FetchLevel.fetching) {
+        insertToast({
+          icon: "info-sign",
+          intent: Intent.DANGER,
+          message: "Failed to load regions.",
+        });
+      }
 
-        return;
-      case FetchLevel.success:
-      default:
-        return;
+      return;
+    case FetchLevel.success:
+    default:
+      return;
     }
   }
 }

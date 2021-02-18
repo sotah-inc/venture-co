@@ -68,7 +68,7 @@ export type IOwnProps = IRouteProps;
 export type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
 
 export class ActionBar extends React.Component<Props> {
-  public render() {
+  public render(): React.ReactNode {
     return (
       <Navbar className="pricelist-actionbar">
         <NavbarGroup align={Alignment.LEFT}>{this.renderButtons()}</NavbarGroup>

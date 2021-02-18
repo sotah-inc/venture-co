@@ -32,7 +32,7 @@ export class CreateEntryDialog extends React.Component<Props, IState> {
     entryFormError: "",
   };
 
-  public render() {
+  public render(): React.ReactNode {
     const {
       isAddEntryDialogOpen,
       updatePricelistLevel,

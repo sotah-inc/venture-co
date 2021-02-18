@@ -63,7 +63,7 @@ export class PostList extends React.Component<Props> {
     );
   }
 
-  public render() {
+  public render(): React.ReactNode {
     return (
       <>
         <div style={{ display: "flex" }}>
@@ -79,10 +79,10 @@ export class PostList extends React.Component<Props> {
     const { getPostsLevel } = this.props;
 
     switch (getPostsLevel) {
-      case FetchLevel.success:
-        return this.renderPosts();
-      default:
-        return this.renderSkeleton();
+    case FetchLevel.success:
+      return this.renderPosts();
+    default:
+      return this.renderSkeleton();
     }
   }
 
@@ -162,27 +162,27 @@ export class PostList extends React.Component<Props> {
     const { getPostsLevel } = this.props;
 
     switch (getPostsLevel) {
-      case FetchLevel.success:
-        return null;
-      case FetchLevel.failure:
-        return (
-          <div style={{ marginLeft: "10px", paddingTop: "7px" }}>
-            <Spinner size={20} intent={Intent.DANGER} value={1} />
-          </div>
-        );
-      case FetchLevel.fetching:
-        return (
-          <div style={{ marginLeft: "10px", paddingTop: "7px" }}>
-            <Spinner size={20} intent={Intent.PRIMARY} />
-          </div>
-        );
-      case FetchLevel.initial:
-      default:
-        return (
-          <div style={{ marginLeft: "10px", paddingTop: "7px" }}>
-            <Spinner size={20} intent={Intent.NONE} value={0} />
-          </div>
-        );
+    case FetchLevel.success:
+      return null;
+    case FetchLevel.failure:
+      return (
+        <div style={{ marginLeft: "10px", paddingTop: "7px" }}>
+          <Spinner size={20} intent={Intent.DANGER} value={1} />
+        </div>
+      );
+    case FetchLevel.fetching:
+      return (
+        <div style={{ marginLeft: "10px", paddingTop: "7px" }}>
+          <Spinner size={20} intent={Intent.PRIMARY} />
+        </div>
+      );
+    case FetchLevel.initial:
+    default:
+      return (
+        <div style={{ marginLeft: "10px", paddingTop: "7px" }}>
+          <Spinner size={20} intent={Intent.NONE} value={0} />
+        </div>
+      );
     }
   }
 

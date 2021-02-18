@@ -48,7 +48,8 @@ export class CreateEntryForm extends React.Component<Props> {
       </H5>
     );
   }
-  public render() {
+
+  public render(): React.ReactNode {
     const {
       values,
       setFieldValue,

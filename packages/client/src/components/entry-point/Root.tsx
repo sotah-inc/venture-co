@@ -15,7 +15,7 @@ export class Root extends React.Component<Props> {
     redirectToContent();
   }
 
-  public render() {
+  public render(): React.ReactNode {
     return (
       <NonIdealState
         title="Redirecting to content!"

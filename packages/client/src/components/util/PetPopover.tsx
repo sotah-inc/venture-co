@@ -25,7 +25,7 @@ export class PetPopover extends React.Component<Props> {
     },
   };
 
-  public render() {
+  public render(): React.ReactNode {
     const { pet, position, interactive, onPetClick, quality, level } = this.props;
 
     return (

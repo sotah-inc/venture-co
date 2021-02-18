@@ -2,6 +2,7 @@ import React from "react";
 
 import { Classes, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
 import { IPricelistJson, IRegionComposite } from "@sotah-inc/core";
+
 // tslint:disable-next-line:max-line-length
 import { PricelistPanelContainer } from "../../../../containers/entry-point/PriceLists/PricelistTree/PricelistPanel";
 // tslint:disable-next-line:max-line-length
@@ -18,7 +19,7 @@ export interface IStateProps {
 export type Props = Readonly<IStateProps>;
 
 export class TreeContent extends React.Component<Props> {
-  public render() {
+  public render(): React.ReactNode {
     const { selectedList, currentRealm, currentRegion } = this.props;
 
     if (currentRealm === null || currentRegion === null) {

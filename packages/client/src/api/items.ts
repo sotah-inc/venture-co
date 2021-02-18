@@ -13,9 +13,7 @@ import * as HTTPStatus from "http-status";
 import { getApiEndpoint } from "./config";
 import { gather, gatherWithQuery } from "./gather";
 
-export const getItems = async (
-  req: IQueryRequest,
-): Promise<IQueryResponseData<IShortItem> | null> => {
+export async function getItems(req: IQueryRequest): Promise<IQueryResponseData<IShortItem> | null> {
   const { body, status } = await gatherWithQuery<IQueryRequest, QueryResponse<IShortItem>>({
     method: "GET",
     query: req,
@@ -26,14 +24,14 @@ export const getItems = async (
   }
 
   return body as IQueryResponseData<IShortItem>;
-};
+}
 
 export interface IGetItemResult {
   item: IShortItem | null;
   error: string | null;
 }
 
-export const getItem = async (itemId: ItemId): Promise<IGetItemResult> => {
+export async function getItem(itemId: ItemId): Promise<IGetItemResult> {
   const { body, status } = await gather<null, GetItemResponse>({
     method: "GET",
     url: `${getApiEndpoint()}/item/${itemId}`,
@@ -49,4 +47,4 @@ export const getItem = async (itemId: ItemId): Promise<IGetItemResult> => {
     error: null,
     item: (body as IGetItemResponseData).item,
   };
-};
+}

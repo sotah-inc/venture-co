@@ -25,7 +25,7 @@ export interface IFormValues {
 export type Props = Readonly<IOwnProps & FormikProps<IFormValues>>;
 
 export class BulkEntryForm extends React.Component<Props> {
-  public render() {
+  public render(): React.ReactNode {
     const {
       values,
       isSubmitting,

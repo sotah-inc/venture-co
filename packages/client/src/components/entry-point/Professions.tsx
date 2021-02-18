@@ -177,7 +177,7 @@ export class Professions extends React.Component<Props> {
     }
   }
 
-  public render() {
+  public render(): React.ReactNode {
     const { currentRegion, currentRealm } = this.props;
 
     if (currentRegion === null || currentRealm === null) {

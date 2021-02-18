@@ -40,7 +40,7 @@ export class CountToggle extends React.Component<Props> {
     );
   }
 
-  public render() {
+  public render(): React.ReactNode {
     const { perPage } = this.props;
 
     return (

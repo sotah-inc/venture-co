@@ -23,7 +23,7 @@ export interface IGatherResult<T> {
   status: number;
 }
 
-export const gather = async <T, A>(opts: IGatherOptions<T>): Promise<IGatherResult<A>> => {
+export async function gather<T, A>(opts: IGatherOptions<T>): Promise<IGatherResult<A>> {
   const body = typeof opts.body === "undefined" ? null : JSON.stringify(opts.body);
   const method = typeof opts.method === "undefined" ? "GET" : opts.method;
   const headers: Headers = (() => {
@@ -44,18 +44,18 @@ export const gather = async <T, A>(opts: IGatherOptions<T>): Promise<IGatherResu
   });
 
   return handleResponse(response);
-};
+}
 
-export const gatherWithQuery = async <Q, A, B = {}>(
+export async function gatherWithQuery<Q, A, B = unknown>(
   opts: IGatherQueryOptions<Q, B>,
-): Promise<IGatherResult<A>> => {
+): Promise<IGatherResult<A>> {
   const body = typeof opts.body === "undefined" ? null : JSON.stringify(opts.body);
   const query =
     typeof opts.query === "undefined"
       ? null
       : queryString.stringify((opts.query as unknown) as StringifiableRecord, {
-          arrayFormat: "index",
-        });
+        arrayFormat: "index",
+      });
   const method = typeof opts.method === "undefined" ? "GET" : opts.method;
   const headers: Headers = (() => {
     if (typeof opts.headers === "undefined") {
@@ -84,9 +84,9 @@ export const gatherWithQuery = async <Q, A, B = {}>(
   });
 
   return handleResponse(response);
-};
+}
 
-const handleResponse = async <A>(response: Response): Promise<IGatherResult<A>> => {
+async function handleResponse<A>(response: Response): Promise<IGatherResult<A>> {
   const responseBody: A | null = await (async () => {
     const responseText = await response.text();
     if (responseText.length === 0) {
@@ -110,4 +110,4 @@ const handleResponse = async <A>(response: Response): Promise<IGatherResult<A>> 
     response,
     status: response.status,
   };
-};
+}

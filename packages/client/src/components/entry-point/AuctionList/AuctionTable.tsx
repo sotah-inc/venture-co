@@ -188,7 +188,7 @@ export class AuctionTable extends React.Component<Props> {
     );
   }
 
-  public render() {
+  public render(): React.ReactNode {
     const { auctionsResultData, totalResults, options } = this.props;
 
     const classNames = [

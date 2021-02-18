@@ -15,7 +15,7 @@ export class Profile extends React.Component<Props> {
     setTitle("Redirecting to Manage Account");
   }
 
-  public render() {
+  public render(): React.ReactNode {
     // props
     const { browseToManageAccount } = this.props;
 

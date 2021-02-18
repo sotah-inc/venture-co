@@ -102,7 +102,7 @@ export class ListDialog extends React.Component<Props, State> {
     }
   }
 
-  public render() {
+  public render(): React.ReactNode {
     const { isOpen, onClose, title } = this.props;
 
     return (
@@ -128,29 +128,29 @@ export class ListDialog extends React.Component<Props, State> {
     const { listDialogStep, entries } = this.state;
 
     switch (listDialogStep) {
-      case ListDialogStep.list:
-        return <PanelHeader title="List" />;
-      case ListDialogStep.entry:
-        return (
-          <PanelHeader
-            title="Entry"
-            prev={{ onClick: () => this.onNavClick(ListDialogStep.list), title: "List" }}
-            next={{
-              disabled: entries.length === 0,
-              onClick: () => this.onNavClick(ListDialogStep.finish),
-              title: "Finish",
-            }}
-          />
-        );
-      case ListDialogStep.finish:
-        return (
-          <PanelHeader
-            title="Finish"
-            prev={{ onClick: () => this.onNavClick(ListDialogStep.entry), title: "Entry" }}
-          />
-        );
-      default:
-        return;
+    case ListDialogStep.list:
+      return <PanelHeader title="List" />;
+    case ListDialogStep.entry:
+      return (
+        <PanelHeader
+          title="Entry"
+          prev={{ onClick: () => this.onNavClick(ListDialogStep.list), title: "List" }}
+          next={{
+            disabled: entries.length === 0,
+            onClick: () => this.onNavClick(ListDialogStep.finish),
+            title: "Finish",
+          }}
+        />
+      );
+    case ListDialogStep.finish:
+      return (
+        <PanelHeader
+          title="Finish"
+          prev={{ onClick: () => this.onNavClick(ListDialogStep.entry), title: "Entry" }}
+        />
+      );
+    default:
+      return;
     }
   }
 
@@ -267,33 +267,33 @@ export class ListDialog extends React.Component<Props, State> {
     const itemIdBlacklist: ItemId[] = entries.map(v => v.item_id);
 
     switch (entryMode) {
-      case EntryMode.Set:
-        return (
-          <CreateEntryFormFormContainer
-            onComplete={(v, item) => this.onCreateEntryFormComplete(v, item)}
-            onItemSelect={v => this.onCreateEntryFormItemSelect(v)}
-            externalItemError={entryFormError}
-            itemIdBlacklist={itemIdBlacklist}
-            leftChildren={this.renderSetToggle()}
-          >
-            {this.renderNav()}
-          </CreateEntryFormFormContainer>
-        );
-      case EntryMode.Pick:
-        return (
-          <BulkEntryFormFormContainer
-            onComplete={() => this.onBulkEntryFormComplete()}
-            onItemSelect={v => this.onBulkEntryFormItemSelect(v)}
-            externalItemError={entryFormError}
-            itemIdBlacklist={itemIdBlacklist}
-            leftChildren={this.renderPickToggle()}
-            entriesTable={this.renderEntries()}
-          >
-            {this.renderNav()}
-          </BulkEntryFormFormContainer>
-        );
-      default:
-        return null;
+    case EntryMode.Set:
+      return (
+        <CreateEntryFormFormContainer
+          onComplete={(v, item) => this.onCreateEntryFormComplete(v, item)}
+          onItemSelect={v => this.onCreateEntryFormItemSelect(v)}
+          externalItemError={entryFormError}
+          itemIdBlacklist={itemIdBlacklist}
+          leftChildren={this.renderSetToggle()}
+        >
+          {this.renderNav()}
+        </CreateEntryFormFormContainer>
+      );
+    case EntryMode.Pick:
+      return (
+        <BulkEntryFormFormContainer
+          onComplete={() => this.onBulkEntryFormComplete()}
+          onItemSelect={v => this.onBulkEntryFormItemSelect(v)}
+          externalItemError={entryFormError}
+          itemIdBlacklist={itemIdBlacklist}
+          leftChildren={this.renderPickToggle()}
+          entriesTable={this.renderEntries()}
+        >
+          {this.renderNav()}
+        </BulkEntryFormFormContainer>
+      );
+    default:
+      return null;
     }
   }
 

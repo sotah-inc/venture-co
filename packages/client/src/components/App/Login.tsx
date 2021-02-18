@@ -89,7 +89,7 @@ export class Login extends React.Component<Props> {
     return () => props.changeIsLoginDialogOpen(!props.isLoginDialogOpen);
   }
 
-  public render() {
+  public render(): React.ReactNode {
     const { isLoginDialogOpen } = this.props;
 
     return (

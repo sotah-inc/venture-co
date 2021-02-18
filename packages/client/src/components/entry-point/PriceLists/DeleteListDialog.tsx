@@ -62,39 +62,39 @@ export class DeleteListDialog extends React.Component<Props> {
 
     if (prevProps.deletePricelistLevel !== deletePricelistLevel) {
       switch (deletePricelistLevel) {
-        case FetchLevel.success:
-          insertToast({
-            icon: "info-sign",
-            intent: Intent.SUCCESS,
-            message: "Your pricelist has been deleted.",
-          });
+      case FetchLevel.success:
+        insertToast({
+          icon: "info-sign",
+          intent: Intent.SUCCESS,
+          message: "Your pricelist has been deleted.",
+        });
 
-          const professionData = (() => {
-            if (selectedProfession === null || selectedExpansion === null) {
-              return;
-            }
+        const professionData = (() => {
+          if (selectedProfession === null || selectedExpansion === null) {
+            return;
+          }
 
-            return { profession: selectedProfession, expansion: selectedExpansion };
-          })();
+          return { profession: selectedProfession, expansion: selectedExpansion };
+        })();
 
-          browseOnDeletion(currentRegion, currentRealm, selectedList, professionData);
+        browseOnDeletion(currentRegion, currentRealm, selectedList, professionData);
 
-          return;
-        case FetchLevel.failure:
-          insertToast({
-            icon: "warning-sign",
-            intent: Intent.DANGER,
-            message: `Failed to delete pricelist: ${Object.values(deletePricelistErrors)[0]}`,
-          });
+        return;
+      case FetchLevel.failure:
+        insertToast({
+          icon: "warning-sign",
+          intent: Intent.DANGER,
+          message: `Failed to delete pricelist: ${Object.values(deletePricelistErrors)[0]}`,
+        });
 
-          return;
-        default:
-          return;
+        return;
+      default:
+        return;
       }
     }
   }
 
-  public render() {
+  public render(): React.ReactNode {
     const {
       isDeleteListDialogOpen,
       selectedList,

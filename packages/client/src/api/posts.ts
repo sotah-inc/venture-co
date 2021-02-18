@@ -22,10 +22,10 @@ export interface ICreatePostResult {
   errors?: IErrors;
 }
 
-export const createPost = async (
+export async function createPost(
   token: string,
   request: ICreatePostRequest,
-): Promise<ICreatePostResult> => {
+): Promise<ICreatePostResult> {
   const { body, status } = await gather<ICreatePostRequest, CreatePostResponse>({
     body: request,
     headers: new Headers({
@@ -39,18 +39,18 @@ export const createPost = async (
     return { error: "Unauthorized", post: null };
   }
   switch (status) {
-    case HTTPStatus.CREATED:
-      break;
-    case HTTPStatus.UNAUTHORIZED:
-      return { error: "Unauthorized", post: null };
-    case HTTPStatus.BAD_REQUEST:
-      return { errors: body as IValidationErrorResponse, post: null };
-    default:
-      return { error: "Failure", post: null };
+  case HTTPStatus.CREATED:
+    break;
+  case HTTPStatus.UNAUTHORIZED:
+    return { error: "Unauthorized", post: null };
+  case HTTPStatus.BAD_REQUEST:
+    return { errors: body as IValidationErrorResponse, post: null };
+  default:
+    return { error: "Failure", post: null };
   }
 
   return { post: (body as ICreatePostResponseData).post };
-};
+}
 
 export interface IUpdatePostResult {
   post: IPostJson | null;
@@ -58,11 +58,11 @@ export interface IUpdatePostResult {
   errors?: IErrors;
 }
 
-export const updatePost = async (
+export async function updatePost(
   token: string,
   id: number,
   request: UpdatePostRequest,
-): Promise<IUpdatePostResult> => {
+): Promise<IUpdatePostResult> {
   const { body, status } = await gather<UpdatePostRequest, UpdatePostResponse>({
     body: request,
     headers: new Headers({
@@ -76,20 +76,20 @@ export const updatePost = async (
     return { error: "Unauthorized", post: null };
   }
   switch (status) {
-    case HTTPStatus.OK:
-      break;
-    case HTTPStatus.UNAUTHORIZED:
-      return { error: "Unauthorized", post: null };
-    case HTTPStatus.BAD_REQUEST:
-      return { errors: body as IValidationErrorResponse, post: null };
-    default:
-      return { error: "Failure", post: null };
+  case HTTPStatus.OK:
+    break;
+  case HTTPStatus.UNAUTHORIZED:
+    return { error: "Unauthorized", post: null };
+  case HTTPStatus.BAD_REQUEST:
+    return { errors: body as IValidationErrorResponse, post: null };
+  default:
+    return { error: "Failure", post: null };
   }
 
   return { post: (body as ICreatePostResponseData).post };
-};
+}
 
-export const getPost = async (slug: string): Promise<IGetPostResponseData | null> => {
+export async function getPost(slug: string): Promise<IGetPostResponseData | null> {
   const { body, status } = await gather<null, GetPostResponse>({
     headers: new Headers({
       "content-type": "application/json",
@@ -97,16 +97,16 @@ export const getPost = async (slug: string): Promise<IGetPostResponseData | null
     url: `${getApiEndpoint()}/posts/${slug}`,
   });
   switch (status) {
-    case HTTPStatus.OK:
-      break;
-    default:
-      return null;
+  case HTTPStatus.OK:
+    break;
+  default:
+    return null;
   }
 
   return { post: (body as IGetPostResponseData).post };
-};
+}
 
-export const deletePost = async (token: string, id: number): Promise<number | null> => {
+export async function deletePost(token: string, id: number): Promise<number | null> {
   const { status } = await gather<null, null>({
     headers: new Headers({
       Authorization: `Bearer ${token}`,
@@ -116,19 +116,19 @@ export const deletePost = async (token: string, id: number): Promise<number | nu
     url: `${getApiEndpoint()}/user/posts/${id}`,
   });
   switch (status) {
-    case HTTPStatus.OK:
-      return id;
-    default:
-      return null;
+  case HTTPStatus.OK:
+    return id;
+  default:
+    return null;
   }
-};
+}
 
 export interface IGetPostsResult {
   posts: IPostJson[];
   error?: string;
 }
 
-export const getPosts = async (): Promise<IGetPostsResult> => {
+export async function getPosts(): Promise<IGetPostsResult> {
   const { body, status } = await gather<null, GetPostsResponse>({
     headers: new Headers({ "content-type": "application/json" }),
     method: "GET",
@@ -136,11 +136,15 @@ export const getPosts = async (): Promise<IGetPostsResult> => {
   });
 
   switch (status) {
-    case HTTPStatus.OK:
-      break;
-    default:
-      return { posts: [], error: "Failure" };
+  case HTTPStatus.OK:
+    break;
+  default:
+    return { posts: [], error: "Failure" };
   }
 
-  return { posts: body!.posts };
-};
+  if (body === null) {
+    return { posts: [], error: "Empty body" };
+  }
+
+  return { posts: body.posts };
+}

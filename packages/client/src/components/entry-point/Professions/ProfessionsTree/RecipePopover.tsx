@@ -70,7 +70,7 @@ export class RecipePopover extends React.Component<Props> {
       : recipe.recipe.name;
   }
 
-  public render() {
+  public render(): React.ReactNode {
     return (
       <Popover
         content={this.renderPopoverContent()}

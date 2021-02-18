@@ -65,22 +65,22 @@ export class SortToggle extends React.Component<Props> {
     );
   }
 
-  public render() {
+  public render(): React.ReactNode {
     const { sortKind, currentSortDirection, currentSortKind } = this.props;
 
     let icon: IconName | null = null;
     if (currentSortKind === sortKind) {
       switch (currentSortDirection) {
-        case SortDirection.up:
-          icon = IconNames.SORT_ASC;
+      case SortDirection.up:
+        icon = IconNames.SORT_ASC;
 
-          break;
-        case SortDirection.down:
-          icon = IconNames.SORT_DESC;
+        break;
+      case SortDirection.down:
+        icon = IconNames.SORT_DESC;
 
-          break;
-        default:
-          break;
+        break;
+      default:
+        break;
       }
     }
 

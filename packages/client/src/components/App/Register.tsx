@@ -86,7 +86,7 @@ export class Register extends React.Component<Props> {
     );
   }
 
-  public render() {
+  public render(): React.ReactNode {
     const { isRegisterDialogOpen, changeIsRegisterDialogOpen } = this.props;
 
     return (

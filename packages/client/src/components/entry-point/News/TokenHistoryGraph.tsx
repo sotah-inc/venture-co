@@ -107,7 +107,7 @@ export class TokenHistoryGraph extends React.Component<Props, State> {
     });
   }
 
-  public render() {
+  public render(): React.ReactNode {
     const { tokenHistories } = this.props;
 
     switch (tokenHistories.level) {

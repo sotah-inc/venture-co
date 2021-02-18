@@ -73,7 +73,7 @@ export class ExpansionToggle extends React.Component<Props> {
     );
   };
 
-  public render() {
+  public render(): React.ReactNode {
     const { expansions, onExpansionChange } = this.props;
 
     return (

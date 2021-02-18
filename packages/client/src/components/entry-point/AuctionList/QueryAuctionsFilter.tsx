@@ -30,7 +30,7 @@ export interface IDispatchProps {
 type Props = Readonly<IStateProps & IDispatchProps>;
 
 export class QueryAuctionsFilter extends React.Component<Props> {
-  public render() {
+  public render(): React.ReactNode {
     const {
       activeSelect,
       queryAuctionsOptions: { selected: selectedItems, initialQueryResults },

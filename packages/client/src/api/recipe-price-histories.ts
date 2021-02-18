@@ -18,9 +18,9 @@ export interface IGetRecipePriceHistoriesOptions {
   locale: Locale;
 }
 
-export const getRecipePriceHistories = async (
+export async function getRecipePriceHistories(
   opts: IGetRecipePriceHistoriesOptions,
-): Promise<IGetRecipePriceHistoriesResponseData | null> => {
+): Promise<IGetRecipePriceHistoriesResponseData | null> {
   const { regionName, realmSlug, recipeId } = opts;
   const { body, status } = await gatherWithQuery<
     { locale: Locale },
@@ -38,4 +38,4 @@ export const getRecipePriceHistories = async (
   }
 
   return body as IGetRecipePriceHistoriesResponseData;
-};
+}

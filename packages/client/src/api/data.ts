@@ -19,16 +19,16 @@ import * as HTTPStatus from "http-status";
 import { getApiEndpoint } from "./config";
 import { gather, gatherWithQuery } from "./gather";
 
-export const getPing = async (): Promise<boolean> => {
+export async function getPing(): Promise<boolean> {
   try {
     await fetch(`${getApiEndpoint()}/ping`);
     return true;
   } catch (err) {
     return false;
   }
-};
+}
 
-export const getBoot = async (): Promise<IGetBootResponseData | null> => {
+export async function getBoot(): Promise<IGetBootResponseData | null> {
   const { body, status } = await gather<null, GetBootResponse>({
     url: `${getApiEndpoint()}/boot`,
   });
@@ -37,24 +37,24 @@ export const getBoot = async (): Promise<IGetBootResponseData | null> => {
   }
 
   return body;
-};
+}
 
-export const getConnectedRealms = async (
+export async function getConnectedRealms(
   regionName: RegionName,
-): Promise<IConnectedRealmComposite[] | null> => {
+): Promise<IConnectedRealmComposite[] | null> {
   const { body, status } = await gather<null, GetConnectedRealmsResponse>({
     url: `${getApiEndpoint()}/connected-realms/${regionName}`,
   });
-  if (status !== HTTPStatus.OK) {
+  if (status !== HTTPStatus.OK || body === null) {
     return null;
   }
 
-  return body!.connectedRealms;
-};
+  return body.connectedRealms;
+}
 
-export const queryGeneral = async (
+export async function queryGeneral(
   req: QueryGeneralRequest,
-): Promise<IQueryGeneralResponseData | null> => {
+): Promise<IQueryGeneralResponseData | null> {
   const { body, status } = await gatherWithQuery<QueryGeneralRequest, QueryGeneralResponse>({
     method: "GET",
     query: req,
@@ -65,7 +65,7 @@ export const queryGeneral = async (
   }
 
   return body as IQueryGeneralResponseData;
-};
+}
 
 export interface IGetPriceListOptions {
   regionName: RegionName;
@@ -74,9 +74,9 @@ export interface IGetPriceListOptions {
   locale: Locale;
 }
 
-export const getPriceList = async (
+export async function getPriceList(
   opts: IGetPriceListOptions,
-): Promise<IGetPricelistResponseData | null> => {
+): Promise<IGetPricelistResponseData | null> {
   const { regionName, realmSlug, itemIds } = opts;
   const { body, status } = await gatherWithQuery<
     { locale: Locale },
@@ -93,4 +93,4 @@ export const getPriceList = async (
   }
 
   return body as IGetPricelistResponseData;
-};
+}

@@ -16,7 +16,7 @@ export interface IStateProps {
 export type Props = Readonly<IStateProps>;
 
 export class ReagentPricesTable extends React.Component<Props> {
-  public render() {
+  public render(): React.ReactNode {
     const { selectedRecipe, priceTable } = this.props;
 
     if (typeof selectedRecipe === "undefined" || selectedRecipe === null) {

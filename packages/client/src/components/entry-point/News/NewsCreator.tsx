@@ -45,7 +45,7 @@ export class NewsCreator extends React.Component<Props> {
     setTitle("News Creator");
   }
 
-  public render() {
+  public render(): React.ReactNode {
     const {
       profile,
       createPost,

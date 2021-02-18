@@ -16,17 +16,17 @@ export interface IStateProps {
 type Props = Readonly<IStateProps>;
 
 export class WorkOrdersList extends React.Component<Props> {
-  public render() {
+  public render(): React.ReactNode {
     const { orders } = this.props;
 
     switch (orders.level) {
-      case FetchLevel.success:
-        break;
-      case FetchLevel.failure:
-        return <p>Failed to render work-orders!</p>;
-      case FetchLevel.initial:
-      default:
-        return <p>Loading...</p>;
+    case FetchLevel.success:
+      break;
+    case FetchLevel.failure:
+      return <p>Failed to render work-orders!</p>;
+    case FetchLevel.initial:
+    default:
+      return <p>Loading...</p>;
     }
 
     const classNames = [

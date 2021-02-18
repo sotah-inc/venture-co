@@ -19,9 +19,9 @@ export interface IGetAuctionsOptions {
   request: IGetAuctionsRequest;
 }
 
-export const getAuctions = async (
+export async function getAuctions(
   opts: IGetAuctionsOptions,
-): Promise<IGetAuctionsResponseData | null> => {
+): Promise<IGetAuctionsResponseData | null> {
   const { regionName, realmSlug, request } = opts;
   const { body, status } = await gatherWithQuery<IGetAuctionsRequest, GetAuctionsResponse>({
     method: "GET",
@@ -33,7 +33,7 @@ export const getAuctions = async (
   }
 
   return body as IGetAuctionsResponseData;
-};
+}
 
 export interface IQueryAuctionStatsOptions {
   regionName?: RegionName;
@@ -45,10 +45,10 @@ export interface IQueryAuctionStatsResult {
   error: string | null;
 }
 
-export const queryAuctionStats = async ({
+export async function queryAuctionStats({
   regionName,
   connectedRealmId,
-}: IQueryAuctionStatsOptions): Promise<IQueryAuctionStatsResult> => {
+}: IQueryAuctionStatsOptions): Promise<IQueryAuctionStatsResult> {
   const url = [getApiEndpoint(), "query-auction-stats", regionName, connectedRealmId?.toString()];
 
   const { body, status } = await gather<null, QueryAuctionStatsResponse>({
@@ -58,11 +58,11 @@ export const queryAuctionStats = async ({
   });
 
   switch (status) {
-    case HTTPStatus.OK:
-      break;
-    default:
-      return { response: null, error: "Failure" };
+  case HTTPStatus.OK:
+    break;
+  default:
+    return { response: null, error: "Failure" };
   }
 
   return { response: body, error: null };
-};
+}

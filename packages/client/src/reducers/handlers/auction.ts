@@ -11,14 +11,21 @@ import {
 } from "../../actions/auction";
 import { defaultAuctionState, IAuctionState } from "../../types/auction";
 import { FetchLevel } from "../../types/main";
-import { IKindHandlers, Runner } from "./index";
+
+import { IKindHandlers } from "./index";
 
 export const handlers: IKindHandlers<IAuctionState, AuctionActions> = {
   entrypoint: {
     auctionlist: {
-      load: (state: IAuctionState, action: ReturnType<typeof LoadAuctionListEntrypoint>) => {
+      load: (
+        state: IAuctionState,
+        action: ReturnType<typeof LoadAuctionListEntrypoint>,
+      ): IAuctionState => {
         if (action.payload.auctions === null) {
-          return { ...state, fetchAuctionsLevel: FetchLevel.failure };
+          return {
+            ...state,
+            auctionsResult: { ...state.auctionsResult, level: FetchLevel.failure },
+          };
         }
 
         const auctions: IAuction[] = (() => {
@@ -162,10 +169,7 @@ export const handlers: IKindHandlers<IAuctionState, AuctionActions> = {
   },
 };
 
-export const run: Runner<IAuctionState, AuctionActions> = (
-  state: IAuctionState,
-  action: AuctionActions,
-): IAuctionState => {
+export function run(state: IAuctionState, action: AuctionActions): IAuctionState {
   const [kind, verb, task] = action.type
     .split("_")
     .reverse()
@@ -176,4 +180,4 @@ export const run: Runner<IAuctionState, AuctionActions> = (
   }
 
   return taskHandler(state, action);
-};
+}

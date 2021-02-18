@@ -29,7 +29,7 @@ export interface IFormValues {
 export type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
 
 export class PricelistPanel extends React.Component<Props> {
-  public render() {
+  public render(): React.ReactNode {
     const { list, currentRegion, currentRealm, changeIsAddEntryDialogOpen } = this.props;
 
     if (list.pricelist_entries!.length === 0) {

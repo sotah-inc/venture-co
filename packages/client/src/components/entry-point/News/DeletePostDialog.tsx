@@ -35,23 +35,23 @@ export class DeletePostDialog extends React.Component<Props> {
 
     if (prevProps.deletePostLevel !== deletePostLevel) {
       switch (deletePostLevel) {
-        case FetchLevel.success:
-          insertToast({
-            icon: "info-sign",
-            intent: Intent.SUCCESS,
-            message: "Your post has been deleted.",
-          });
+      case FetchLevel.success:
+        insertToast({
+          icon: "info-sign",
+          intent: Intent.SUCCESS,
+          message: "Your post has been deleted.",
+        });
 
-          browseToNews();
+        browseToNews();
 
-          return;
-        default:
-          return;
+        return;
+      default:
+        return;
       }
     }
   }
 
-  public render() {
+  public render(): React.ReactNode {
     const {
       isDeletePostDialogOpen,
       changeIsDeletePostDialogOpen,

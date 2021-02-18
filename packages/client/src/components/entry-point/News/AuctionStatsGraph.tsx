@@ -110,7 +110,7 @@ export class AuctionStatsGraph extends React.Component<Props> {
     );
   }
 
-  public render(): JSX.Element {
+  public render(): React.ReactNode {
     const { auctionStats } = this.props;
 
     switch (auctionStats.level) {

@@ -26,7 +26,7 @@ export class ItemLink extends React.Component<Props> {
     showIcon: true,
   };
 
-  public render() {
+  public render(): React.ReactNode {
     const { item, showIcon } = this.props;
 
     const itemIconUrl = getItemIconUrl(item);
@@ -50,7 +50,7 @@ export class ItemLink extends React.Component<Props> {
     onItemClick();
   }
 
-  private itemTextFormatter(itemText: string) {
+  private itemTextFormatter(itemText: string): React.ReactNode | string {
     const { itemTextFormatter } = this.props;
     if (typeof itemTextFormatter === "undefined") {
       return itemText;
@@ -59,7 +59,7 @@ export class ItemLink extends React.Component<Props> {
     return itemTextFormatter(itemText);
   }
 
-  private renderLink(item: IShortItem) {
+  private renderLink(item: IShortItem): React.ReactNode {
     const { interactive } = this.props;
 
     const itemText = this.itemTextFormatter(getItemTextValue(item));

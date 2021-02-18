@@ -51,7 +51,7 @@ enum SubBarKind {
 }
 
 export class Topbar extends React.Component<Props> {
-  public render() {
+  public render(): React.ReactNode {
     const contentLink = (() => {
       const out = (
         <LinkButtonRouteContainer
@@ -171,30 +171,30 @@ export class Topbar extends React.Component<Props> {
 
   private renderSubBarItems() {
     switch (this.getSubBarKind()) {
-      case SubBarKind.Content:
-        return (
-          <>
-            <NewsButtonRouteContainer />
-            <NavbarDivider />
-            <LinkButtonRouteContainer
-              destination="/content/getting-started"
-              buttonProps={{ icon: "star", text: "Getting started", minimal: true }}
-            />
-            <NavbarDivider />
-            <LinkButtonRouteContainer
-              destination="/content/feed"
-              buttonProps={{ icon: "feed", text: "Feed", minimal: true }}
-            />
-          </>
-        );
-      case SubBarKind.Data:
-        return this.renderDataSubBar();
-      case SubBarKind.Profile:
-        return this.renderProfileSubBar();
-      case SubBarKind.Marketplace:
-        return <WorkOrdersButtonRouteContainer />;
-      default:
-        return null;
+    case SubBarKind.Content:
+      return (
+        <>
+          <NewsButtonRouteContainer />
+          <NavbarDivider />
+          <LinkButtonRouteContainer
+            destination="/content/getting-started"
+            buttonProps={{ icon: "star", text: "Getting started", minimal: true }}
+          />
+          <NavbarDivider />
+          <LinkButtonRouteContainer
+            destination="/content/feed"
+            buttonProps={{ icon: "feed", text: "Feed", minimal: true }}
+          />
+        </>
+      );
+    case SubBarKind.Data:
+      return this.renderDataSubBar();
+    case SubBarKind.Profile:
+      return this.renderProfileSubBar();
+    case SubBarKind.Marketplace:
+      return <WorkOrdersButtonRouteContainer />;
+    default:
+      return null;
     }
   }
 

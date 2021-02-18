@@ -29,7 +29,7 @@ export interface IDispatchProps {
 export type Props = Readonly<IStateProps & IDispatchProps>;
 
 export class CreateWorkOrderDialog extends React.Component<Props> {
-  public render() {
+  public render(): React.ReactNode {
     const {
       isWorkOrderDialogOpen,
       createWorkOrder,

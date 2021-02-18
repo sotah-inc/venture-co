@@ -69,35 +69,35 @@ export class EditListDialog extends React.Component<Props, State> {
 
     if (prevProps.updatePricelistLevel !== updatePricelistLevel) {
       switch (updatePricelistLevel) {
-        case FetchLevel.success:
-          insertToast({
-            icon: "info-sign",
-            intent: Intent.SUCCESS,
-            message: `"${selectedList.name}" has been saved.`,
-          });
-          this.setState({ listDialogResetTrigger: listDialogResetTrigger + 1 });
+      case FetchLevel.success:
+        insertToast({
+          icon: "info-sign",
+          intent: Intent.SUCCESS,
+          message: `"${selectedList.name}" has been saved.`,
+        });
+        this.setState({ listDialogResetTrigger: listDialogResetTrigger + 1 });
 
-          const professionData = (() => {
-            if (selectedProfession === null || selectedExpansion === null) {
-              return;
-            }
-
-            return { profession: selectedProfession, expansion: selectedExpansion };
-          })();
-
-          const shouldBrowse = prevProps.selectedList!.slug! !== selectedList.slug!;
-          if (shouldBrowse) {
-            browseOnUpdate(currentRegion, currentRealm, selectedList, professionData);
+        const professionData = (() => {
+          if (selectedProfession === null || selectedExpansion === null) {
+            return;
           }
 
-          break;
-        default:
-          break;
+          return { profession: selectedProfession, expansion: selectedExpansion };
+        })();
+
+        const shouldBrowse = prevProps.selectedList!.slug! !== selectedList.slug!;
+        if (shouldBrowse) {
+          browseOnUpdate(currentRegion, currentRealm, selectedList, professionData);
+        }
+
+        break;
+      default:
+        break;
       }
     }
   }
 
-  public render() {
+  public render(): React.ReactNode {
     const {
       isEditListDialogOpen,
       updatePricelistErrors,

@@ -59,7 +59,7 @@ export class PricelistTable extends React.Component<Props> {
     }
   }
 
-  public render(): JSX.Element {
+  public render(): React.ReactNode {
     const { list, loadId, itemPriceHistories } = this.props;
 
     return (

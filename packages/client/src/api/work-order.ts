@@ -55,14 +55,14 @@ export async function queryWorkOrders(
     url: baseUrl,
   });
   switch (status) {
-    case HTTPStatus.OK:
-      return { errors: null, data: body as IQueryWorkOrdersResponseData };
-    case HTTPStatus.BAD_REQUEST:
-      return { errors: body as IValidationErrorResponse, data: null };
-    case HTTPStatus.INTERNAL_SERVER_ERROR:
-      return { errors: { error: "There was a server error." }, data: null };
-    default:
-      return { errors: { error: "There was an unknown error." }, data: null };
+  case HTTPStatus.OK:
+    return { errors: null, data: body as IQueryWorkOrdersResponseData };
+  case HTTPStatus.BAD_REQUEST:
+    return { errors: body as IValidationErrorResponse, data: null };
+  case HTTPStatus.INTERNAL_SERVER_ERROR:
+    return { errors: { error: "There was a server error." }, data: null };
+  default:
+    return { errors: { error: "There was an unknown error." }, data: null };
   }
 }
 
@@ -97,14 +97,14 @@ export async function createWorkOrder(
     url: baseUrl,
   });
   switch (status) {
-    case HTTPStatus.CREATED:
-      return { errors: null, data: body as ICreateWorkOrderResponseData };
-    case HTTPStatus.BAD_REQUEST:
-      return { errors: body as IValidationErrorResponse, data: null };
-    case HTTPStatus.INTERNAL_SERVER_ERROR:
-      return { errors: { error: "There was a server error." }, data: null };
-    default:
-      return { errors: { error: "There was an unknown error." }, data: null };
+  case HTTPStatus.CREATED:
+    return { errors: null, data: body as ICreateWorkOrderResponseData };
+  case HTTPStatus.BAD_REQUEST:
+    return { errors: body as IValidationErrorResponse, data: null };
+  case HTTPStatus.INTERNAL_SERVER_ERROR:
+    return { errors: { error: "There was a server error." }, data: null };
+  default:
+    return { errors: { error: "There was an unknown error." }, data: null };
   }
 }
 
@@ -137,13 +137,13 @@ export async function prefillWorkOrderItem(
     url: `${baseUrl}?${queryString.stringify({ itemId: opts.itemId })}`,
   });
   switch (status) {
-    case HTTPStatus.OK:
-      return { errors: null, data: body as IPrefillWorkOrderItemResponseData };
-    case HTTPStatus.BAD_REQUEST:
-      return { errors: body as IValidationErrorResponse, data: null };
-    case HTTPStatus.INTERNAL_SERVER_ERROR:
-      return { errors: { error: "There was a server error." }, data: null };
-    default:
-      return { errors: { error: "There was an unknown error." }, data: null };
+  case HTTPStatus.OK:
+    return { errors: null, data: body as IPrefillWorkOrderItemResponseData };
+  case HTTPStatus.BAD_REQUEST:
+    return { errors: body as IValidationErrorResponse, data: null };
+  case HTTPStatus.INTERNAL_SERVER_ERROR:
+    return { errors: { error: "There was a server error." }, data: null };
+  default:
+    return { errors: { error: "There was an unknown error." }, data: null };
   }
 }

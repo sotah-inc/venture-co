@@ -73,7 +73,7 @@ export class ProfessionsProfessionToggle extends React.Component<Props> {
     );
   };
 
-  public render() {
+  public render(): React.ReactNode {
     const { professions, onProfessionChange } = this.props;
 
     return (

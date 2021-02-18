@@ -25,7 +25,7 @@ export interface IOwnProps {
 export type Props = Readonly<IOwnProps>;
 
 export class CraftingCostLegend extends React.Component<Props> {
-  public render() {
+  public render(): React.ReactNode {
     const { craftedRecipeItemIds } = this.props;
 
     const groupedItemIds = craftedRecipeItemIds.reduce<Array<Array<[ItemId, number]>>>(

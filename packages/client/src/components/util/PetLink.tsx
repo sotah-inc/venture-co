@@ -19,7 +19,7 @@ export class PetLink extends React.Component<Props> {
     },
   };
 
-  public render() {
+  public render(): React.ReactNode {
     const { pet } = this.props;
 
     return <div className="pet">{this.renderDisplay(pet)}</div>;

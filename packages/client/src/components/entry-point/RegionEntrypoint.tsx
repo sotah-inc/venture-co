@@ -43,7 +43,7 @@ export class RegionEntrypoint extends React.Component<Props> {
     loadRegionEntrypoint(regionEntrypointData);
   }
 
-  public render() {
+  public render(): React.ReactNode {
     const {
       currentRegion,
       routeParams: { region_name },
@@ -60,32 +60,32 @@ export class RegionEntrypoint extends React.Component<Props> {
     const { fetchRealmLevel } = this.props;
 
     switch (fetchRealmLevel) {
-      case FetchLevel.prompted:
-      case FetchLevel.fetching:
-      case FetchLevel.refetching:
-        return (
-          <NonIdealState
-            title="Loading realms"
-            icon={<Spinner className={Classes.LARGE} intent={Intent.PRIMARY} />}
-          />
-        );
-      case FetchLevel.failure:
-        return (
-          <NonIdealState
-            title="Failed to load realms"
-            icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={1} />}
-          />
-        );
-      case FetchLevel.success:
-        return this.renderMatchedWithRealms();
-      case FetchLevel.initial:
-      default:
-        return (
-          <NonIdealState
-            title="Loading realms"
-            icon={<Spinner className={Classes.LARGE} intent={Intent.NONE} value={0} />}
-          />
-        );
+    case FetchLevel.prompted:
+    case FetchLevel.fetching:
+    case FetchLevel.refetching:
+      return (
+        <NonIdealState
+          title="Loading realms"
+          icon={<Spinner className={Classes.LARGE} intent={Intent.PRIMARY} />}
+        />
+      );
+    case FetchLevel.failure:
+      return (
+        <NonIdealState
+          title="Failed to load realms"
+          icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={1} />}
+        />
+      );
+    case FetchLevel.success:
+      return this.renderMatchedWithRealms();
+    case FetchLevel.initial:
+    default:
+      return (
+        <NonIdealState
+          title="Loading realms"
+          icon={<Spinner className={Classes.LARGE} intent={Intent.NONE} value={0} />}
+        />
+      );
     }
   }
 

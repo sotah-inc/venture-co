@@ -55,7 +55,7 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
     },
   };
 
-  public render(): JSX.Element {
+  public render(): React.ReactNode {
     const { currentTabKind } = this.state;
 
     return (

@@ -7,7 +7,6 @@ import {
 import * as HTTPStatus from "http-status";
 
 import { IErrors } from "../types/global";
-
 import { getApiEndpoint } from "./config";
 import { gather } from "./gather";
 
@@ -17,10 +16,10 @@ export interface IUpdateProfileResult {
   errors?: IErrors;
 }
 
-export const updateProfile = async (
+export async function updateProfile(
   token: string,
   request: IUpdateProfileRequest,
-): Promise<IUpdateProfileResult> => {
+): Promise<IUpdateProfileResult> {
   const { body, status } = await gather<IUpdateProfileRequest, UpdateProfileResponse>({
     body: request,
     headers: new Headers({
@@ -34,15 +33,15 @@ export const updateProfile = async (
     return { error: "Unauthorized", email: null };
   }
   switch (status) {
-    case HTTPStatus.OK:
-      break;
-    case HTTPStatus.UNAUTHORIZED:
-      return { error: "Unauthorized", email: null };
-    case HTTPStatus.BAD_REQUEST:
-      return { errors: body as IValidationErrorResponse, email: null };
-    default:
-      return { error: "Failure", email: null };
+  case HTTPStatus.OK:
+    break;
+  case HTTPStatus.UNAUTHORIZED:
+    return { error: "Unauthorized", email: null };
+  case HTTPStatus.BAD_REQUEST:
+    return { errors: body as IValidationErrorResponse, email: null };
+  default:
+    return { error: "Failure", email: null };
   }
 
   return { email: (body as IUpdateProfileResponseData).email };
-};
+}

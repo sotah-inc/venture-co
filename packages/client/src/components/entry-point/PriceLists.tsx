@@ -136,7 +136,7 @@ export class PriceLists extends React.Component<Props> {
     this.handleWithRegion(currentRegion);
   }
 
-  public render() {
+  public render(): React.ReactNode {
     const {
       authLevel,
       routeParams: { profession_name },

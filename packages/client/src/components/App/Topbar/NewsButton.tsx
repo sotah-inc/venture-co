@@ -27,7 +27,7 @@ export class NewsButton extends React.Component<Props> {
     );
   }
 
-  public render() {
+  public render(): React.ReactNode {
     const { user, locationPathname } = this.props;
 
     if (user === null || user.level < UserLevel.Admin) {

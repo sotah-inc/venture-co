@@ -1,3 +1,5 @@
+import React from "react";
+
 import { Classes, Intent, ITreeNode, Spinner, Tree } from "@blueprintjs/core";
 import {
   IExpansion,
@@ -6,7 +8,6 @@ import {
   IProfessionPricelistJson,
   IRegionComposite,
 } from "@sotah-inc/core";
-import React from "react";
 
 // tslint:disable-next-line:max-line-length
 import { TreeContentContainer } from "../../../containers/entry-point/PriceLists/PricelistTree/TreeContent";
@@ -71,14 +72,14 @@ export class PricelistTree extends React.Component<Props, IState> {
     },
   };
 
-  public render() {
+  public render(): React.ReactNode {
     const { currentRealm, currentRegion, selectedProfession } = this.props;
     const { topOpenMap } = this.state;
 
     const nodes: ITreeNode[] = [];
     if (currentRegion !== null && currentRealm !== null) {
       nodes.push({
-        id: `top-summary`,
+        id: "top-summary",
         isSelected: this.isSummarySelected(),
         label: `${currentRegion.config_region.name.toUpperCase()}-${
           currentRealm.realm.name.en_US
@@ -125,6 +126,7 @@ export class PricelistTree extends React.Component<Props, IState> {
       </div>
     );
   }
+
   private isSummarySelected() {
     const { selectedList, selectedProfession } = this.props;
 
@@ -138,33 +140,33 @@ export class PricelistTree extends React.Component<Props, IState> {
     const { professionPricelists } = this.props;
 
     switch (professionPricelists.level) {
-      case FetchLevel.success:
-        break;
-      case FetchLevel.initial:
-        return [
-          {
-            icon: <Spinner size={20} value={0} intent={Intent.NONE} />,
-            id: "loading-0",
-            label: <span style={{ marginLeft: "5px" }}>Loading</span>,
-          },
-        ];
-      case FetchLevel.failure:
-        return [
-          {
-            icon: <Spinner size={20} intent={Intent.DANGER} value={1} />,
-            id: "loading-0",
-            label: <span style={{ marginLeft: "5px" }}>Failed to load profession pricelists!</span>,
-          },
-        ];
-      default:
-      case FetchLevel.fetching:
-        return [
-          {
-            icon: <Spinner size={20} intent={Intent.PRIMARY} />,
-            id: "loading-0",
-            label: <span style={{ marginLeft: "5px" }}>Loading</span>,
-          },
-        ];
+    case FetchLevel.success:
+      break;
+    case FetchLevel.initial:
+      return [
+        {
+          icon: <Spinner size={20} value={0} intent={Intent.NONE} />,
+          id: "loading-0",
+          label: <span style={{ marginLeft: "5px" }}>Loading</span>,
+        },
+      ];
+    case FetchLevel.failure:
+      return [
+        {
+          icon: <Spinner size={20} intent={Intent.DANGER} value={1} />,
+          id: "loading-0",
+          label: <span style={{ marginLeft: "5px" }}>Failed to load profession pricelists!</span>,
+        },
+      ];
+    default:
+    case FetchLevel.fetching:
+      return [
+        {
+          icon: <Spinner size={20} intent={Intent.PRIMARY} />,
+          id: "loading-0",
+          label: <span style={{ marginLeft: "5px" }}>Loading</span>,
+        },
+      ];
     }
 
     if (professionPricelists.data.data.length === 0) {

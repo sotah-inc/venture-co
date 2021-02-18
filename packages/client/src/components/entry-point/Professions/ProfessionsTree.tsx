@@ -63,7 +63,7 @@ interface INodeClickMap {
 }
 
 export class ProfessionsTree extends React.Component<Props> {
-  public render() {
+  public render(): React.ReactNode {
     const { selectedProfession, selectedProfessionId } = this.props;
 
     if (selectedProfession === null) {

@@ -123,36 +123,36 @@ export class RealmToggle extends React.Component<Props> {
     );
   };
 
-  public render() {
+  public render(): React.ReactNode {
     const { realms, onRealmChange, currentRealm, fetchRealmLevel } = this.props;
 
     switch (fetchRealmLevel) {
-      case FetchLevel.success:
-        let highlightedRealm = realms[0];
-        if (currentRealm !== null) {
-          highlightedRealm = currentRealm;
-        }
+    case FetchLevel.success:
+      let highlightedRealm = realms[0];
+      if (currentRealm !== null) {
+        highlightedRealm = currentRealm;
+      }
 
-        return (
-          <RealmToggleSelect
-            items={realms}
-            itemRenderer={this.itemRenderer}
-            itemListRenderer={this.itemListRenderer}
-            itemPredicate={this.itemPredicate}
-            onItemSelect={onRealmChange}
-            resetOnSelect={true}
-            resetOnClose={true}
-          >
-            <Button text={highlightedRealm.realm.name.en_US} rightIcon="double-caret-vertical" />
-          </RealmToggleSelect>
-        );
-      case FetchLevel.failure:
-        return <Spinner className={Classes.SMALL} intent={Intent.DANGER} value={1} />;
-      case FetchLevel.initial:
-        return <Spinner className={Classes.SMALL} intent={Intent.NONE} value={1} />;
-      case FetchLevel.fetching:
-      default:
-        return <Spinner className={Classes.SMALL} intent={Intent.PRIMARY} />;
+      return (
+        <RealmToggleSelect
+          items={realms}
+          itemRenderer={this.itemRenderer}
+          itemListRenderer={this.itemListRenderer}
+          itemPredicate={this.itemPredicate}
+          onItemSelect={onRealmChange}
+          resetOnSelect={true}
+          resetOnClose={true}
+        >
+          <Button text={highlightedRealm.realm.name.en_US} rightIcon="double-caret-vertical" />
+        </RealmToggleSelect>
+      );
+    case FetchLevel.failure:
+      return <Spinner className={Classes.SMALL} intent={Intent.DANGER} value={1} />;
+    case FetchLevel.initial:
+      return <Spinner className={Classes.SMALL} intent={Intent.NONE} value={1} />;
+    case FetchLevel.fetching:
+    default:
+      return <Spinner className={Classes.SMALL} intent={Intent.PRIMARY} />;
     }
   }
 }

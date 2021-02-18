@@ -28,7 +28,7 @@ export class PricesTable extends React.Component<Props> {
     title: "Current Prices",
   };
 
-  public render() {
+  public render(): React.ReactNode {
     const { title } = this.props;
 
     return (
@@ -60,15 +60,15 @@ export class PricesTable extends React.Component<Props> {
     } = this.props;
 
     switch (getPricelistLevel) {
-      case FetchLevel.fetching:
-        return <Spinner intent={Intent.PRIMARY} />;
-      case FetchLevel.failure:
-        return <Spinner intent={Intent.DANGER} value={1} />;
-      case FetchLevel.success:
-        return this.renderTable();
-      case FetchLevel.initial:
-      default:
-        return <Spinner intent={Intent.NONE} value={1} />;
+    case FetchLevel.fetching:
+      return <Spinner intent={Intent.PRIMARY} />;
+    case FetchLevel.failure:
+      return <Spinner intent={Intent.DANGER} value={1} />;
+    case FetchLevel.success:
+      return this.renderTable();
+    case FetchLevel.initial:
+    default:
+      return <Spinner intent={Intent.NONE} value={1} />;
     }
   }
 

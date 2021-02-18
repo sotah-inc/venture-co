@@ -75,7 +75,7 @@ export class UnmetDemand extends React.Component<Props, IState> {
     page: 0,
   };
 
-  public render() {
+  public render(): React.ReactNode {
     const { selectedExpansion } = this.props;
 
     if (selectedExpansion === null) {
@@ -160,15 +160,15 @@ export class UnmetDemand extends React.Component<Props, IState> {
     const { getUnmetDemandLevel } = this.props;
 
     switch (getUnmetDemandLevel) {
-      case FetchLevel.success:
-        return this.renderUnmetDemandSuccess();
-      default:
-        return (
-          <NonIdealState
-            title="Loading"
-            icon={<Spinner className={Classes.LARGE} intent={Intent.NONE} value={0} />}
-          />
-        );
+    case FetchLevel.success:
+      return this.renderUnmetDemandSuccess();
+    default:
+      return (
+        <NonIdealState
+          title="Loading"
+          icon={<Spinner className={Classes.LARGE} intent={Intent.NONE} value={0} />}
+        />
+      );
     }
   }
 

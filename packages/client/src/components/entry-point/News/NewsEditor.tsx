@@ -56,7 +56,7 @@ export class NewsEditor extends React.Component<Props> {
     this.handle(prevProps);
   }
 
-  public render() {
+  public render(): React.ReactNode {
     const {
       routeParams: { post_slug },
       profile,
@@ -78,43 +78,43 @@ export class NewsEditor extends React.Component<Props> {
     }
 
     switch (getPostLevel) {
-      case FetchLevel.success:
-        if (
-          currentPost !== null &&
+    case FetchLevel.success:
+      if (
+        currentPost !== null &&
           typeof post_slug !== "undefined" &&
           currentPost.slug === post_slug
-        ) {
-          break;
-        }
+      ) {
+        break;
+      }
 
-        return (
-          <NonIdealState
-            title="Switching to new post."
-            icon={<Spinner className={Classes.LARGE} intent={Intent.PRIMARY} />}
-          />
-        );
-      case FetchLevel.fetching:
-        return (
-          <NonIdealState
-            title="Loading post."
-            icon={<Spinner className={Classes.LARGE} intent={Intent.PRIMARY} />}
-          />
-        );
-      case FetchLevel.failure:
-        return (
-          <NonIdealState
-            title="Failed to load post."
-            icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={1} />}
-          />
-        );
-      default:
-      case FetchLevel.initial:
-        return (
-          <NonIdealState
-            title="Loading post."
-            icon={<Spinner className={Classes.LARGE} intent={Intent.NONE} value={0} />}
-          />
-        );
+      return (
+        <NonIdealState
+          title="Switching to new post."
+          icon={<Spinner className={Classes.LARGE} intent={Intent.PRIMARY} />}
+        />
+      );
+    case FetchLevel.fetching:
+      return (
+        <NonIdealState
+          title="Loading post."
+          icon={<Spinner className={Classes.LARGE} intent={Intent.PRIMARY} />}
+        />
+      );
+    case FetchLevel.failure:
+      return (
+        <NonIdealState
+          title="Failed to load post."
+          icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={1} />}
+        />
+      );
+    default:
+    case FetchLevel.initial:
+      return (
+        <NonIdealState
+          title="Loading post."
+          icon={<Spinner className={Classes.LARGE} intent={Intent.NONE} value={0} />}
+        />
+      );
     }
 
     return (
@@ -210,66 +210,66 @@ export class NewsEditor extends React.Component<Props> {
 
     if (typeof prevProps !== "undefined" && prevProps.updatePostLevel !== updatePostLevel) {
       switch (updatePostLevel) {
-        case FetchLevel.success:
-          if (prevProps.updatePostLevel !== FetchLevel.fetching) {
-            return;
-          }
-
-          if (currentPost === null) {
-            return;
-          }
-
-          insertToast({
-            icon: "info-sign",
-            intent: "success",
-            message: "Your post has successfully been updated!",
-          });
-
-          browseToPost(currentPost);
-
-          return;
-        default:
-          return;
-      }
-    }
-
-    switch (getPostLevel) {
-      case FetchLevel.initial:
-        getPost(post_slug);
-
-        return;
-      case FetchLevel.failure:
-        if (typeof prevProps !== "undefined" && prevProps.getPostLevel !== getPostLevel) {
-          insertToast({
-            icon: "warning-sign",
-            intent: "danger",
-            message: "Could not fetch post.",
-          });
-
-          return;
-        }
-
-        if (currentPost === null || currentPost.slug !== post_slug) {
-          getPost(post_slug);
-
-          return;
-        }
-
-        return;
       case FetchLevel.success:
+        if (prevProps.updatePostLevel !== FetchLevel.fetching) {
+          return;
+        }
+
         if (currentPost === null) {
           return;
         }
 
-        if (currentPost.slug !== post_slug) {
-          getPost(post_slug);
+        insertToast({
+          icon: "info-sign",
+          intent: "success",
+          message: "Your post has successfully been updated!",
+        });
 
-          return;
-        }
+        browseToPost(currentPost);
 
-        break;
+        return;
       default:
         return;
+      }
+    }
+
+    switch (getPostLevel) {
+    case FetchLevel.initial:
+      getPost(post_slug);
+
+      return;
+    case FetchLevel.failure:
+      if (typeof prevProps !== "undefined" && prevProps.getPostLevel !== getPostLevel) {
+        insertToast({
+          icon: "warning-sign",
+          intent: "danger",
+          message: "Could not fetch post.",
+        });
+
+        return;
+      }
+
+      if (currentPost === null || currentPost.slug !== post_slug) {
+        getPost(post_slug);
+
+        return;
+      }
+
+      return;
+    case FetchLevel.success:
+      if (currentPost === null) {
+        return;
+      }
+
+      if (currentPost.slug !== post_slug) {
+        getPost(post_slug);
+
+        return;
+      }
+
+      break;
+    default:
+      return;
     }
 
     setTitle(`Editing ${currentPost.title} - News`);

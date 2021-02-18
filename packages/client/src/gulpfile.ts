@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import gulp from "gulp";
 import concat from "gulp-concat";
 import postcss from "gulp-postcss";
@@ -11,14 +12,14 @@ const stylesGlobs = [
   "./styles/*.scss",
 ];
 
-const sassTask = () => {
+function sassTask(): NodeJS.ReadWriteStream {
   return gulp
     .src(stylesGlobs)
     .pipe(sass())
     .pipe(concat("venture-co.min.css"))
     .pipe(postcss())
     .pipe(gulp.dest("./build/styles"));
-};
+}
 
 gulp.task("sass", sassTask);
 gulp.task("sass:watch", () => gulp.watch(stylesGlobs, sassTask));

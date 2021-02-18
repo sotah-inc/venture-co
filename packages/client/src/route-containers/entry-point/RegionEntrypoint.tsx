@@ -7,13 +7,13 @@ import { withRouter } from "next/router";
 import { IOwnProps } from "../../components/entry-point/RegionEntrypoint";
 import { RegionEntrypointContainer } from "../../containers/entry-point/RegionEntrypoint";
 import { IClientRealm } from "../../types/global";
-import { ResolveResult, resolveWrapper } from "../../util";
+import { IResolveResult, resolveWrapper } from "../../util";
 import { extractSlug } from "../../util/extract-slug";
 
 type Props = Readonly<
   WithRouterProps &
     IOwnProps & {
-      resolvePath: (region: IRegionComposite, realm: IClientRealm) => ResolveResult;
+      resolvePath: (region: IRegionComposite, realm: IClientRealm) => IResolveResult;
     }
 >;
 

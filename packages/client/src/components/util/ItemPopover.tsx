@@ -32,7 +32,7 @@ export class ItemPopover extends React.Component<Props> {
     },
   };
 
-  public render() {
+  public render(): React.ReactNode {
     const { item, itemClasses, position, interactive, itemTextFormatter, onItemClick } = this.props;
 
     return (

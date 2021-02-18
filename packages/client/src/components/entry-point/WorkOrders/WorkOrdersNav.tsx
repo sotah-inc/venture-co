@@ -28,7 +28,7 @@ export interface IRouteProps {
 type Props = Readonly<IDispatchProps & IStateProps & IRouteProps>;
 
 export class WorkOrdersNav extends React.Component<Props> {
-  public render() {
+  public render(): React.ReactNode {
     const { perPage, setPerPage, setPage, currentPage } = this.props;
 
     return (
