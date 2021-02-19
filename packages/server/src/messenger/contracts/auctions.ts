@@ -7,9 +7,10 @@ import {
   SortKind,
 } from "@sotah-inc/core";
 
-import { IResolveResponse } from "./index";
 import { IGetItemsResponse } from "./items";
 import { IGetPetsResponse } from "./pets";
+
+import { IResolveResponse } from "./index";
 
 export interface IGetAuctionsRequest {
   tuple: IRegionConnectedRealmTuple;

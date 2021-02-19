@@ -31,7 +31,7 @@ export class WorkOrderRepository extends AbstractRepository<WorkOrder> {
     orderBy,
     orderDirection,
     gameVersion,
-  }: IFindByOptions): Promise<{ orders: WorkOrder[], count: number }> {
+  }: IFindByOptions): Promise<{ orders: WorkOrder[]; count: number }> {
     const mainOptions: FindManyOptions<WorkOrder> = {
       where: { regionName, connectedRealmId, gameVersion },
     };

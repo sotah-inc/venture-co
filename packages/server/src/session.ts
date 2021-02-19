@@ -13,7 +13,7 @@ export interface IJwtOptions {
   secret: string;
 }
 
-export const getJwtOptions = async (messenger: Messenger): Promise<IJwtOptions> => {
+export async function getJwtOptions(messenger: Messenger): Promise<IJwtOptions> {
   const msg = await messenger.getSessionSecret();
   if (msg.code !== code.ok) {
     throw new Error(msg.error?.message);
@@ -24,17 +24,17 @@ export const getJwtOptions = async (messenger: Messenger): Promise<IJwtOptions> 
     issuer: "sotah-api",
     secret: (await msg.decode())?.session_secret ?? "",
   };
-};
+}
 
 export interface IJwtPayload {
   data: string;
 }
 
-export const appendSessions = async (
+export async function appendSessions(
   app: Express,
   messenger: Messenger,
   conn: Connection,
-): Promise<Express> => {
+): Promise<Express> {
   const jwtOptions = await getJwtOptions(messenger);
 
   const opts: StrategyOptions = {
@@ -60,8 +60,8 @@ export const appendSessions = async (
   app.use(passport.initialize());
 
   return app;
-};
+}
 
-export const auth = (req: Request, res: Response, next: NextFunction): unknown => {
+export function auth(req: Request, res: Response, next: NextFunction): unknown {
   return passport.authenticate("jwt", { session: false })(req, res, next);
-};
+}

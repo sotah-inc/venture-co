@@ -2,7 +2,7 @@ import * as zlib from "zlib";
 
 export * from "./config";
 
-export const gunzip = (data: Buffer): Promise<Buffer> => {
+export function gunzip(data: Buffer): Promise<Buffer> {
   return new Promise<Buffer>((resolve, reject) => {
     zlib.gunzip(data, (err, result) => {
       if (err) {
@@ -14,4 +14,4 @@ export const gunzip = (data: Buffer): Promise<Buffer> => {
       resolve(result);
     });
   });
-};
+}

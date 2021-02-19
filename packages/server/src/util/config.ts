@@ -6,18 +6,15 @@ const isGceEnv = getEnvVar("IS_GCE_ENV") === "1";
 // optionally loading firestore
 const firestoreDb: Firestore | null = isGceEnv ? new Firestore() : null;
 
-const getConnectionField = async (
+async function getConnectionField(
   documentFieldName: string,
   defaultValue?: string,
-): Promise<string> => {
+): Promise<string> {
   if (firestoreDb === null) {
     return defaultValue || "";
   }
 
-  const doc = await firestoreDb
-    .collection("connection_info")
-    .doc("current")
-    .get();
+  const doc = await firestoreDb.collection("connection_info").doc("current").get();
   const data = doc.data();
   if (typeof data === "undefined") {
     return defaultValue || "";
@@ -27,12 +24,12 @@ const getConnectionField = async (
   }
 
   return data[documentFieldName];
-};
+}
 
-export const getConfig = async (documentFieldName: string, envVarName: string): Promise<string> => {
+export async function getConfig(documentFieldName: string, envVarName: string): Promise<string> {
   if (firestoreDb === null) {
     return getEnvVar(envVarName);
   }
 
   return getConnectionField(documentFieldName, getEnvVar(envVarName));
-};
+}

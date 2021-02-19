@@ -21,16 +21,14 @@ export interface IDatabaseSettings {
   port: number;
 }
 
-type ConnectDatabaseFn = (opts: IDatabaseSettings) => Promise<Connection>;
-
-export const connectDatabase: ConnectDatabaseFn = async ({
+export async function connectDatabase({
   dbName,
   dbHostname,
   connectionName,
   password,
   port,
   username,
-}) => {
+}: IDatabaseSettings): Promise<Connection> {
   return createConnection({
     database: dbName,
     entities: [Preference, Pricelist, PricelistEntry, ProfessionPricelist, User, Post, WorkOrder],
@@ -43,4 +41,4 @@ export const connectDatabase: ConnectDatabaseFn = async ({
     type: "postgres",
     username,
   });
-};
+}
