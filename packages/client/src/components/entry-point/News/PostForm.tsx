@@ -204,22 +204,22 @@ export function PostForm(props: Props) {
 
   useEffect(() => {
     switch (mutatePostLevel) {
-      case FetchLevel.success:
-        setSubmitting(false);
-        handleReset();
-        onComplete();
+    case FetchLevel.success:
+      setSubmitting(false);
+      handleReset();
+      onComplete();
 
-        return;
-      case FetchLevel.failure:
-        setSubmitting(false);
+      return;
+    case FetchLevel.failure:
+      setSubmitting(false);
 
-        if ("error" in mutatePostErrors && typeof mutatePostErrors.error !== "undefined") {
-          onFatalError(mutatePostErrors.error);
-        }
+      if ("error" in mutatePostErrors && typeof mutatePostErrors.error !== "undefined") {
+        onFatalError(mutatePostErrors.error);
+      }
 
-        return;
-      default:
-        return;
+      return;
+    default:
+      return;
     }
   }, [mutatePostLevel]);
 

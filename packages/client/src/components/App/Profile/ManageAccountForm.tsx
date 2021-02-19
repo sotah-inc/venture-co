@@ -81,21 +81,21 @@ export function ManageAccountForm(props: Props) {
 
   useEffect(() => {
     switch (updateProfileLevel) {
-      case FetchLevel.success:
-        setSubmitting(false);
-        handleReset();
-        onComplete();
+    case FetchLevel.success:
+      setSubmitting(false);
+      handleReset();
+      onComplete();
 
-        return;
-      case FetchLevel.failure:
-        setSubmitting(false);
-        if ("error" in updateProfileErrors && typeof updateProfileErrors.error !== "undefined") {
-          onFatalError(updateProfileErrors.error);
-        }
+      return;
+    case FetchLevel.failure:
+      setSubmitting(false);
+      if ("error" in updateProfileErrors && typeof updateProfileErrors.error !== "undefined") {
+        onFatalError(updateProfileErrors.error);
+      }
 
-        return;
-      default:
-        return;
+      return;
+    default:
+      return;
     }
   }, [updateProfileLevel]);
 

@@ -44,15 +44,15 @@ if (token !== null) {
 
 const localStorageMiddleware: Middleware = () => next => action => {
   switch (action.type) {
-    case USER_LOGIN:
-    case USER_REGISTER:
-      if (typeof localStorage !== "undefined") {
-        localStorage.setItem("token", action.payload.token);
-      }
+  case USER_LOGIN:
+  case USER_REGISTER:
+    if (typeof localStorage !== "undefined") {
+      localStorage.setItem("token", action.payload.token);
+    }
 
-      break;
-    default:
-      break;
+    break;
+  default:
+    break;
   }
 
   return next(action);

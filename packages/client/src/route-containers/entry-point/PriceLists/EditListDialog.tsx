@@ -1,6 +1,7 @@
+import React from "react";
+
 import { WithRouterProps } from "next/dist/client/with-router";
 import { withRouter } from "next/router";
-import React from "react";
 
 import { EditListDialogContainer } from "../../../containers/entry-point/PriceLists/EditListDialog";
 import { toProfessionPricelist, toUserPricelist } from "../../../util";

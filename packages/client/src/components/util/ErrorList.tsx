@@ -1,5 +1,6 @@
-import { FormGroup, Intent } from "@blueprintjs/core";
 import React from "react";
+
+import { FormGroup, Intent } from "@blueprintjs/core";
 
 import { IErrors } from "../../types/global";
 
