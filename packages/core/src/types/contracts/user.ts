@@ -1,4 +1,5 @@
 import { IUserJson } from "../entities";
+
 import { IValidationErrorResponse } from "./index";
 
 export interface ICreateUserRequest {

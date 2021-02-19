@@ -1,3 +1,5 @@
+import { ISotahItemMeta } from "./sotah-item-meta";
+
 import {
   IKeyHrefReference,
   ILinksBase,
@@ -8,7 +10,6 @@ import {
   LocaleMapping,
   PriceValue,
 } from "./index";
-import { ISotahItemMeta } from "./sotah-item-meta";
 
 export type ItemId = number;
 

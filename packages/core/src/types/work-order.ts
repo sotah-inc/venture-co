@@ -1,6 +1,7 @@
-import { ConnectedRealmId, GameVersion } from "./index";
 import { ItemId } from "./item";
 import { RegionName } from "./region";
+
+import { ConnectedRealmId, GameVersion } from "./index";
 
 export interface IWorkOrderJson {
   id: number;
