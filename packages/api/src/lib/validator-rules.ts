@@ -89,8 +89,8 @@ export const PostRequestBodyRules = yup
   .noUnknown();
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const FullPostRequestBodyRules = (repo: PostRepository, exceptSlug?: string) =>
-  yup
+export function FullPostRequestBodyRules(repo: PostRepository, exceptSlug?: string) {
+  return yup
     .object<ICreatePostRequest>({
       body: yup.string().required("body is required"),
       slug: yup
@@ -110,10 +110,11 @@ export const FullPostRequestBodyRules = (repo: PostRepository, exceptSlug?: stri
     })
     .required()
     .noUnknown();
+}
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const UpdateProfileRequestBodyRules = (repo: UserRepository, exceptEmail?: string) =>
-  yup
+export function UpdateProfileRequestBodyRules(repo: UserRepository, exceptEmail?: string) {
+  return yup
     .object<IUpdateProfileRequest>()
     .shape({
       email: yup
@@ -129,7 +130,7 @@ export const UpdateProfileRequestBodyRules = (repo: UserRepository, exceptEmail?
         }),
     })
     .noUnknown();
-
+}
 export const AuctionsQueryParamsRules = yup
   .object<IGetAuctionsRequest>({
     count: yup.number().integer("count must be an integer").required("count is required"),

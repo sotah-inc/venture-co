@@ -5,7 +5,7 @@ import { Request, Response, Router } from "express";
 import { handleResult } from "../../controllers";
 import { QueryAuctionStatsController } from "../../controllers/data/query-auction-stats";
 
-export const getRouter = (messenger: Messenger): Router => {
+export function getRouter(messenger: Messenger): Router {
   const router = Router();
   const controller = new QueryAuctionStatsController(messenger);
 
@@ -34,4 +34,4 @@ export const getRouter = (messenger: Messenger): Router => {
   );
 
   return router;
-};
+}

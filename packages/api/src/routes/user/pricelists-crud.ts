@@ -6,7 +6,7 @@ import { Connection } from "typeorm";
 import { handleResult } from "../../controllers";
 import { PricelistCrudController } from "../../controllers/user/pricelist-crud";
 
-export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
+export function getRouter(dbConn: Connection, messenger: Messenger): Router {
   const router = Router();
   const controller = new PricelistCrudController(dbConn, messenger);
 
@@ -71,4 +71,4 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
   );
 
   return router;
-};
+}

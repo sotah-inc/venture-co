@@ -6,7 +6,7 @@ import { Connection } from "typeorm";
 import { handleResult } from "../../controllers";
 import { PostCrudController } from "../../controllers/user/post-crud";
 
-export const getRouter = (dbConn: Connection): Router => {
+export function getRouter(dbConn: Connection): Router {
   const router = Router();
   const controller = new PostCrudController(dbConn);
 
@@ -35,4 +35,4 @@ export const getRouter = (dbConn: Connection): Router => {
   );
 
   return router;
-};
+}

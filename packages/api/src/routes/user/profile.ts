@@ -6,7 +6,7 @@ import { Connection } from "typeorm";
 import { handleResult } from "../../controllers";
 import { ProfileController } from "../../controllers/user/profile";
 
-export const getRouter = (dbConn: Connection): Router => {
+export function getRouter(dbConn: Connection): Router {
   const router = Router();
   const controller = new ProfileController(dbConn);
 
@@ -19,4 +19,4 @@ export const getRouter = (dbConn: Connection): Router => {
   );
 
   return router;
-};
+}

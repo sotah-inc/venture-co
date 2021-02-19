@@ -12,7 +12,7 @@ import { getRouter as getPricelistsCrudRouter } from "./user/pricelists-crud";
 import { getRouter as getProfessionPricelistsCrudRouter } from "./user/profession-pricelists-crud";
 import { getRouter as getProfileRouter } from "./user/profile";
 
-export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
+export function getRouter(dbConn: Connection, messenger: Messenger): Router {
   const router = Router();
   const controller = new UserController(messenger, dbConn);
 
@@ -38,4 +38,4 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
   );
 
   return router;
-};
+}

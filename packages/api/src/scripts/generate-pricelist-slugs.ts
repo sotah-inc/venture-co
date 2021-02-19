@@ -1,5 +1,6 @@
-import { connectDatabase, Pricelist } from "@sotah-inc/server";
 import * as process from "process";
+
+import { connectDatabase, Pricelist } from "@sotah-inc/server";
 import "reflect-metadata";
 import getSlug from "speakingurl";
 import { v4 as uuidv4 } from "uuid";

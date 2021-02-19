@@ -8,7 +8,7 @@ interface ILoggerOptions {
 
 const defaultLoggerOptions: ILoggerOptions = { level: "warn", isGceEnv: false };
 
-export const getLogger = (opts?: ILoggerOptions): Logger => {
+export function getLogger(opts?: ILoggerOptions): Logger {
   const settings: ILoggerOptions = (() => {
     if (typeof opts === "undefined") {
       return { ...defaultLoggerOptions };
@@ -34,4 +34,4 @@ export const getLogger = (opts?: ILoggerOptions): Logger => {
     level: settings.level,
     transports: loggerTransports,
   });
-};
+}

@@ -2,7 +2,7 @@ import { auth, User } from "@sotah-inc/server";
 import { wrap } from "async-middleware";
 import { Request, Response, Router } from "express";
 
-export const getRouter = (): Router => {
+export function getRouter(): Router {
   const router = Router();
 
   router.get(
@@ -14,4 +14,4 @@ export const getRouter = (): Router => {
   );
 
   return router;
-};
+}

@@ -26,6 +26,7 @@ import {
   validate,
   yupValidationErrorToResponse,
 } from "../lib/validator-rules";
+
 import { Authenticator, IRequest, IRequestResult, Validator } from "./index";
 
 export class WorkOrderController {

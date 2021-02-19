@@ -17,7 +17,7 @@ export interface IOptions {
   isGceEnv: boolean;
 }
 
-export const getApp = async (opts: IOptions): Promise<express.Express | null> => {
+export async function getApp(opts: IOptions): Promise<express.Express | null> {
   const { logger, natsHost, natsPort, dbHost, dbPassword } = opts;
 
   logger.info("starting app");
@@ -116,4 +116,4 @@ export const getApp = async (opts: IOptions): Promise<express.Express | null> =>
   });
 
   return app;
-};
+}

@@ -6,7 +6,7 @@ import { Connection } from "typeorm";
 import { handleResult } from "../controllers";
 import { WorkOrderController } from "../controllers/work-order";
 
-export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
+export function getRouter(dbConn: Connection, messenger: Messenger): Router {
   const router = Router();
   const controller = new WorkOrderController(messenger, dbConn);
 
@@ -48,4 +48,4 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
   );
 
   return router;
-};
+}

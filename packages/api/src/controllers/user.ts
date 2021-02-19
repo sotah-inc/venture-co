@@ -16,6 +16,7 @@ import {
   validate,
   yupValidationErrorToResponse,
 } from "../lib/validator-rules";
+
 import { IRequestResult } from "./index";
 
 export class UserController {

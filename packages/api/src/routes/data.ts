@@ -11,7 +11,7 @@ import { Connection } from "typeorm";
 import { DataController, handleResult } from "../controllers";
 import { getRouter as getQueryAuctionStatsRouter } from "./data/query-auction-stats";
 
-export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
+export function getRouter(dbConn: Connection, messenger: Messenger): Router {
   const router = Router();
   const controller = new DataController(messenger, dbConn);
 
@@ -224,4 +224,4 @@ export const getRouter = (dbConn: Connection, messenger: Messenger): Router => {
   );
 
   return router;
-};
+}
