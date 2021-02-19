@@ -8,7 +8,7 @@
     "clean": "rimraf ./build",
     "debug": "npm run -s build:watch",
     "start": "node .",
-    "lint": "eslint \"./src/**/*.ts\"",
+    "lint": "eslint ./src",
     "lint:watch": "chokidar --silent ./src/**/*.ts{,x} -c \"npm run lint\"",
     "build": "run-s build:ts",
     "build:watch": "run-p build:ts:watch lint:watch",
