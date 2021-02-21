@@ -3,7 +3,10 @@ import React from "react";
 import { WithRouterProps } from "next/dist/client/with-router";
 import { withRouter } from "next/router";
 
-import { UnmetDemandContainer } from "../../../../../../containers/entry-point/PriceLists/PricelistTree/TreeContent/RealmSummaryPanel/UnmetDemand";
+import {
+  UnmetDemandContainer,
+// eslint-disable-next-line max-len
+} from "../../../../../../containers/entry-point/PriceLists/PricelistTree/TreeContent/RealmSummaryPanel/UnmetDemand";
 import { toProfessionPricelist, toProfessionPricelistsProfession } from "../../../../../../util";
 
 type Props = Readonly<WithRouterProps>;

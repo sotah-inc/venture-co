@@ -1,7 +1,14 @@
 import React, { ReactNode } from "react";
 
 import { Provider } from "react-redux";
-import { applyMiddleware, compose, createStore, Middleware, Store } from "redux";
+import {
+  AnyAction,
+  applyMiddleware,
+  compose,
+  createStore,
+  Dispatch,
+  Store,
+} from "redux";
 import thunk from "redux-thunk";
 
 import { ILoadRootEntrypoint, USER_LOGIN, USER_REGISTER } from "./actions/main";
@@ -42,21 +49,23 @@ if (token !== null) {
   defaultState.Main.preloadedToken = token;
 }
 
-const localStorageMiddleware: Middleware = () => next => action => {
-  switch (action.type) {
-  case USER_LOGIN:
-  case USER_REGISTER:
-    if (typeof localStorage !== "undefined") {
-      localStorage.setItem("token", action.payload.token);
+function localStorageMiddleware() {
+  return (next: Dispatch) => (action: AnyAction) => {
+    switch (action.type) {
+    case USER_LOGIN:
+    case USER_REGISTER:
+      if (typeof localStorage !== "undefined") {
+        localStorage.setItem("token", action.payload.token);
+      }
+
+      break;
+    default:
+      break;
     }
 
-    break;
-  default:
-    break;
-  }
-
-  return next(action);
-};
+    return next(action);
+  };
+}
 
 type StoreType = Store<IStoreState>;
 
@@ -68,7 +77,7 @@ interface IProps {
   rootEntrypointData?: ILoadRootEntrypoint;
 }
 
-export const Boot = ({ viewport, predefinedState, rootEntrypointData }: IProps) => {
+export function Boot({ viewport, predefinedState, rootEntrypointData }: IProps): JSX.Element {
   if (store === null) {
     const preloadedState = typeof predefinedState === "undefined" ? defaultState : predefinedState;
     const composeEnhancers = (() => {
@@ -76,6 +85,7 @@ export const Boot = ({ viewport, predefinedState, rootEntrypointData }: IProps) 
         return compose;
       }
 
+      // eslint-disable-next-line no-underscore-dangle
       return (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
     })();
 
@@ -96,4 +106,4 @@ export const Boot = ({ viewport, predefinedState, rootEntrypointData }: IProps) 
       </div>
     </div>
   );
-};
+}

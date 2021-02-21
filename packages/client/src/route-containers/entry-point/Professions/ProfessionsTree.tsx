@@ -3,7 +3,9 @@ import React from "react";
 import { WithRouterProps } from "next/dist/client/with-router";
 import { withRouter } from "next/router";
 
-import { ProfessionsTreeContainer } from "../../../containers/entry-point/Professions/ProfessionsTree";
+import {
+  ProfessionsTreeContainer,
+} from "../../../containers/entry-point/Professions/ProfessionsTree";
 import { toRealmCategoryRecipe, toRealmProfession, toRealmSkillTier } from "../../../util";
 
 type Props = Readonly<WithRouterProps>;
