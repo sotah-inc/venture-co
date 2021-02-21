@@ -23,7 +23,6 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
     skilltier: {
       deselect: (
         state: IProfessionsState,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         _action: ReturnType<typeof DeselectSkillTierCategory>,
       ): IProfessionsState => {
         return {

@@ -264,7 +264,6 @@ export class WorkOrderController {
   @Validator<ICreateWorkOrderRequest, CreateWorkOrderResponse>(CreateWorkOrderRequestRules)
   public async createWorkOrder(
     req: IRequest<ICreateWorkOrderRequest>,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _res: Response,
   ): Promise<IRequestResult<CreateWorkOrderResponse>> {
     const { realmSlug, regionName, gameVersion } = req.params;

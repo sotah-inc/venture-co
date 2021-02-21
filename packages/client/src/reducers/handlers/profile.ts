@@ -35,7 +35,6 @@ export const handlers: IKindHandlers<IProfileState, ProfileActions> = {
       },
       request: (
         state: IProfileState,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         _action: ReturnType<typeof RequestUpdateProfile>,
       ): IProfileState => {
         return {

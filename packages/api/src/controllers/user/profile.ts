@@ -22,7 +22,6 @@ export class ProfileController {
   @Authenticator<IUpdateProfileRequest, UpdateProfileResponse>(UserLevel.Regular)
   public async updateProfile(
     req: IRequest<IUpdateProfileRequest>,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _res: Response,
   ): Promise<IRequestResult<UpdateProfileResponse>> {
     const user = req.user as User;

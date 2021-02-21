@@ -7,7 +7,6 @@ import { PromptsContainer } from "../../containers/App/Prompts";
 
 type Props = Readonly<WithRouterProps>;
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function RouteContainer(_props: Props) {
   return <PromptsContainer />;
 }

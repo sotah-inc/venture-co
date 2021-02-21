@@ -31,7 +31,6 @@ export class PostCrudController {
   @Validator<ICreatePostRequest, CreatePostResponse>(PostRequestBodyRules)
   public async createPost(
     req: IRequest<ICreatePostRequest>,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _res: Response,
   ): Promise<IRequestResult<CreatePostResponse>> {
     const result = await validate(
@@ -63,7 +62,6 @@ export class PostCrudController {
   @Validator<UpdatePostRequest, UpdatePostResponse>(PostRequestBodyRules)
   public async updatePost(
     req: IRequest<UpdatePostRequest>,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _res: Response,
   ): Promise<IRequestResult<UpdatePostResponse>> {
     const post = await this.dbConn
@@ -118,7 +116,6 @@ export class PostCrudController {
   @Authenticator<null, DeletePostResponse>(UserLevel.Admin)
   public async deletePost(
     req: IRequest<null>,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _res: Response,
   ): Promise<IRequestResult<DeletePostResponse>> {
     const user = req.user as User;
