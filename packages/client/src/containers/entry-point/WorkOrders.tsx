@@ -11,12 +11,12 @@ import {
 } from "../../components/entry-point/WorkOrders";
 import { IStoreState } from "../../types";
 
-const mapStateToProps = (state: IStoreState): IStateProps => {
+function mapStateToProps(state: IStoreState): IStateProps {
   const { orders, perPage, currentPage } = state.WorkOrder;
   const { currentRegion, currentRealm } = state.Main;
 
   return { orders, currentRegion, currentRealm, perPage, currentPage };
-};
+}
 
 const mapDispatchToProps: IDispatchProps = {
   loadRealmEntrypoint: LoadRealmEntrypoint,

@@ -5,17 +5,22 @@ import { IDispatchProps, IStateProps } from "../../components/App/Register";
 import { RegisterFormContainer } from "../../form-containers/App/Register";
 import { IStoreState } from "../../types";
 
-const mapStateToProps = (state: IStoreState): IStateProps => {
+function mapStateToProps(state: IStoreState): IStateProps {
   const { isRegisterDialogOpen, isRegistered } = state.Main;
   return { isRegisterDialogOpen, isRegistered };
-};
+}
 
 const mapDispatchToProps: IDispatchProps = {
   changeIsRegisterDialogOpen: ChangeIsRegisterDialogOpen,
   onUserRegister: UserRegister,
 };
 
-export const RegisterContainer = connect<IStateProps, IDispatchProps, {}, IStoreState>(
+export const RegisterContainer = connect<
+  IStateProps,
+  IDispatchProps,
+  Record<string, unknown>,
+  IStoreState
+>(
   mapStateToProps,
   mapDispatchToProps,
 )(RegisterFormContainer);

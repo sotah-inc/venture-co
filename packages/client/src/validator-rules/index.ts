@@ -1,16 +1,12 @@
 import * as Yup from "yup";
 
 export const UserRules = {
-  email: Yup.string()
-    .email("Invalid email address")
-    .required("Email is required!"),
+  email: Yup.string().email("Invalid email address").required("Email is required!"),
   password: Yup.string().required("Password is required!"),
 };
 
 export const PriceListRules = {
-  item: Yup.object()
-    .nullable(true)
-    .required("Item is required"),
+  item: Yup.object().nullable(true).required("Item is required"),
   name: Yup.string().required("Name is required"),
   quantity: Yup.number()
     .integer()
@@ -23,12 +19,8 @@ export const PriceListRules = {
 };
 
 export const WorkOrderRules = {
-  item: Yup.object()
-    .nullable(true)
-    .required("Item is required"),
-  price: Yup.number()
-    .required("Price is required")
-    .moreThan(0, "Price must be greater than zero"),
+  item: Yup.object().nullable(true).required("Item is required"),
+  price: Yup.number().required("Price is required").moreThan(0, "Price must be greater than zero"),
   quantity: Yup.number()
     .required("Quantity is required")
     .integer("Quantity must be an integer")

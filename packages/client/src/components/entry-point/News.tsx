@@ -6,9 +6,7 @@ import { IRegionComposite } from "@sotah-inc/core";
 import { ILoadPostsEntrypoint } from "../../actions/posts";
 import { AuctionStatsGraphContainer } from "../../containers/entry-point/News/AuctionStatsGraph";
 import { TokenHistoryGraphContainer } from "../../containers/entry-point/News/TokenHistoryGraph";
-import {
-  DeletePostDialogRouteContainer,
-} from "../../route-containers/entry-point/News/DeletePostDialog";
+import { DeletePostDialogRouteContainer } from "../../route-containers/entry-point/News/DeletePostDialog";
 import { PostListRouteContainer } from "../../route-containers/entry-point/News/PostList";
 import { AuthLevel } from "../../types/main";
 import { setTitle } from "../../util";

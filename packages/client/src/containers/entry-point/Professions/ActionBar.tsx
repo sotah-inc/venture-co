@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { ActionBar, IStateProps } from "../../../components/entry-point/Professions/ActionBar";
 import { IStoreState } from "../../../types";
 
-const mapStateToProps = (state: IStoreState): IStateProps => {
+function mapStateToProps(state: IStoreState): IStateProps {
   const { currentRegion, currentRealm } = state.Main;
   const { selectedProfession, selectedSkillTier, selectedRecipe } = state.Professions;
 
@@ -14,8 +14,11 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
     selectedRecipe,
     selectedSkillTier,
   };
-};
+}
 
-export const ActionBarContainer = connect<IStateProps, {}, {}, IStoreState>(mapStateToProps)(
-  ActionBar,
-);
+export const ActionBarContainer = connect<
+  IStateProps,
+  Record<string, unknown>,
+  Record<string, unknown>,
+  IStoreState
+>(mapStateToProps)(ActionBar);

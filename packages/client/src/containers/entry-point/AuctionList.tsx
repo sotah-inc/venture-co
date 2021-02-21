@@ -16,7 +16,7 @@ import {
 } from "../../components/entry-point/AuctionList";
 import { IStoreState } from "../../types";
 
-const mapStateToProps = (state: IStoreState): IStateProps => {
+function mapStateToProps(state: IStoreState): IStateProps {
   const {
     fetchUserPreferencesLevel,
     userPreferences,
@@ -46,7 +46,7 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
     totalResults,
     userPreferences,
   };
-};
+}
 
 const mapDispatchToProps: IDispatchProps = {
   loadAuctionListEntrypoint: LoadAuctionListEntrypoint,

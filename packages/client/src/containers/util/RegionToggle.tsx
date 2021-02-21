@@ -4,13 +4,13 @@ import { RegionChange } from "../../actions/main";
 import { IDispatchProps, IStateProps, RegionToggle } from "../../components/util/RegionToggle";
 import { IStoreState } from "../../types";
 
-const mapStateToProps = (state: IStoreState): IStateProps => {
+function mapStateToProps(state: IStoreState): IStateProps {
   const { regions, currentRegion } = state.Main;
   return {
     currentRegion,
     regions,
   };
-};
+}
 
 const mapDispatchToProps: IDispatchProps = {
   onRegionChange: RegionChange,

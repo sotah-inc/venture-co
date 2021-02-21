@@ -7,3 +7,4 @@ app.log
 .npmrc
 etc/*
 !etc/.gitkeep
+.eslintcache

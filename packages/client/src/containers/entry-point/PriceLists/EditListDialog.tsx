@@ -9,7 +9,7 @@ import {
 } from "../../../components/entry-point/PriceLists/EditListDialog";
 import { IStoreState } from "../../../types";
 
-const mapStateToProps = (state: IStoreState): IStateProps => {
+function mapStateToProps(state: IStoreState): IStateProps {
   const { profile, currentRegion, currentRealm } = state.Main;
   const {
     isEditListDialogOpen,
@@ -30,7 +30,7 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
     updatePricelistErrors,
     updatePricelistLevel,
   };
-};
+}
 
 const mapDispatchToProps: IDispatchProps = {
   changeIsEditListDialogOpen: ChangeIsEditListDialogOpen,
@@ -38,7 +38,12 @@ const mapDispatchToProps: IDispatchProps = {
   updatePricelist: FetchUpdatePricelist,
 };
 
-export const EditListDialogContainer = connect<IStateProps, IDispatchProps, {}, IStoreState>(
+export const EditListDialogContainer = connect<
+  IStateProps,
+  IDispatchProps,
+  Record<string, unknown>,
+  IStoreState
+>(
   mapStateToProps,
   mapDispatchToProps,
 )(EditListDialog);

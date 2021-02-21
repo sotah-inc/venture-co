@@ -8,7 +8,7 @@ import {
 } from "../../../components/entry-point/WorkOrders/WorkOrdersNav";
 import { IStoreState } from "../../../types";
 
-const mapStateToProps = (state: IStoreState): IStateProps => {
+function mapStateToProps(state: IStoreState): IStateProps {
   const {
     perPage,
     orders: {
@@ -19,14 +19,19 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
   const { currentRegion } = state.Main;
 
   return { perPage, totalResults, currentPage, currentRegion };
-};
+}
 
 const mapDispatchToProps: IDispatchProps = {
   setPage: SetWorkOrderPage,
   setPerPage: SetWorkOrderPerPage,
 };
 
-export const WorkOrdersNavContainer = connect<IStateProps, IDispatchProps, {}, IStoreState>(
+export const WorkOrdersNavContainer = connect<
+  IStateProps,
+  IDispatchProps,
+  Record<string, unknown>,
+  IStoreState
+>(
   mapStateToProps,
   mapDispatchToProps,
 )(WorkOrdersNav);

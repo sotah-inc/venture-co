@@ -9,11 +9,11 @@ import {
 } from "../../../../components/entry-point/PriceLists/PricelistTree/PricelistPanel";
 import { IStoreState } from "../../../../types";
 
-const mapStateToProps = (state: IStoreState): IStateProps => {
+function mapStateToProps(state: IStoreState): IStateProps {
   const { currentRegion, currentRealm } = state.Main;
   const { isAddEntryDialogOpen } = state.PriceLists;
   return { currentRegion, currentRealm, isAddEntryDialogOpen };
-};
+}
 
 const mapDispatchToProps: IDispatchProps = {
   changeIsAddEntryDialogOpen: ChangeIsAddEntryDialogOpen,

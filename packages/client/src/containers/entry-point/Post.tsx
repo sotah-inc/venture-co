@@ -10,13 +10,13 @@ import {
 } from "../../components/entry-point/Post";
 import { IStoreState } from "../../types";
 
-const mapStateToProps = (state: IStoreState): IStateProps => {
+function mapStateToProps(state: IStoreState): IStateProps {
   const { profile } = state.Main;
   const { currentPost, getPostLevel } = state.Posts;
   const user = profile === null ? null : profile.user;
 
   return { currentPost, getPostLevel, user };
-};
+}
 
 const mapDispatchToProps: IDispatchProps = {
   changeIsDeletePostDialogOpen: ChangeIsDeletePostDialogOpen,

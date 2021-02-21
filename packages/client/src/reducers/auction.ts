@@ -20,9 +20,9 @@ export function auction(state: State | undefined, action: AuctionActions): State
   switch (action.type) {
   case REQUEST_AUCTIONS: {
     const requestAuctionsLevel =
-      state.auctionsResult.level === FetchLevel.initial
-        ? FetchLevel.fetching
-        : FetchLevel.refetching;
+        state.auctionsResult.level === FetchLevel.initial
+          ? FetchLevel.fetching
+          : FetchLevel.refetching;
 
     return {
       ...state,

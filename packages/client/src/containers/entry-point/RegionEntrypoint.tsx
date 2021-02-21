@@ -11,7 +11,7 @@ import {
 } from "../../components/entry-point/RegionEntrypoint";
 import { IStoreState } from "../../types";
 
-const mapStateToProps = (state: IStoreState): IStateProps => {
+function mapStateToProps(state: IStoreState): IStateProps {
   const { currentRegion, currentRealm, authLevel, regions, fetchRealmLevel } = state.Main;
   return {
     authLevel,
@@ -23,7 +23,7 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
       [],
     ),
   };
-};
+}
 
 const mapDispatchToProps: IDispatchProps = {
   loadRegionEntrypoint: LoadRegionEntrypoint,

@@ -7,7 +7,7 @@ import {
 } from "../../../components/entry-point/PriceLists/PricelistTree";
 import { IStoreState } from "../../../types";
 
-const mapStateToProps = (state: IStoreState): IStateProps => {
+function mapStateToProps(state: IStoreState): IStateProps {
   const { currentRealm, professions, currentRegion, expansions } = state.Main;
   const {
     selectedExpansion,
@@ -26,8 +26,11 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
     selectedList,
     selectedProfession,
   };
-};
+}
 
-export const PricelistTreeContainer = connect<IStateProps, {}, IOwnProps, IStoreState>(
-  mapStateToProps,
-)(PricelistTree);
+export const PricelistTreeContainer = connect<
+  IStateProps,
+  Record<string, unknown>,
+  IOwnProps,
+  IStoreState
+>(mapStateToProps)(PricelistTree);

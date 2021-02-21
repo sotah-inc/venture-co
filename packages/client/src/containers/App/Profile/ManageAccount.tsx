@@ -10,7 +10,7 @@ import {
 } from "../../../components/App/Profile/ManageAccount";
 import { IStoreState } from "../../../types";
 
-const mapStateToProps = (state: IStoreState): IStateProps => {
+function mapStateToProps(state: IStoreState): IStateProps {
   const { profile } = state.Main;
   const { updateProfileLevel, updateProfileErrors } = state.Profile;
 
@@ -20,7 +20,7 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
     updateProfileLevel,
     user: profile === null ? null : profile.user,
   };
-};
+}
 
 const mapDispatchToProps: IDispatchProps = {
   insertToast: InsertToast,

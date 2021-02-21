@@ -8,19 +8,24 @@ import {
 } from "../../../components/entry-point/AuctionList/CountToggle";
 import { IStoreState } from "../../../types";
 
-const mapStateToProps = (state: IStoreState): IStateProps => {
+function mapStateToProps(state: IStoreState): IStateProps {
   const {
     options: { auctionsPerPage },
   } = state.Auction;
 
   return { auctionsPerPage };
-};
+}
 
 const mapDispatchToProps: IDispatchProps = {
   onCountChange: SetPerPageQueryAuctions,
 };
 
-export const CountToggleContainer = connect<IStateProps, IDispatchProps, {}, IStoreState>(
+export const CountToggleContainer = connect<
+  IStateProps,
+  IDispatchProps,
+  Record<string, unknown>,
+  IStoreState
+>(
   mapStateToProps,
   mapDispatchToProps,
 )(CountToggle);

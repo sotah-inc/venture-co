@@ -7,7 +7,7 @@ import {
 } from "../../components/util/ProfessionsProfessionToggle";
 import { IStoreState } from "../../types";
 
-const mapStateToProps = (state: IStoreState): IStateProps => {
+function mapStateToProps(state: IStoreState): IStateProps {
   const {
     selectedProfession,
     professions: { data: professions },
@@ -17,8 +17,10 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
     professions,
     selectedProfession,
   };
-};
+}
 
-export const ProfessionsProfessionToggleContainer = connect<IStateProps, {}, IOwnProps>(
-  mapStateToProps,
-)(ProfessionsProfessionToggle);
+export const ProfessionsProfessionToggleContainer = connect<
+  IStateProps,
+  Record<string, unknown>,
+  IOwnProps
+>(mapStateToProps)(ProfessionsProfessionToggle);

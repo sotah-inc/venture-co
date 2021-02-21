@@ -13,7 +13,7 @@ import {
 } from "../../../components/entry-point/PriceLists/CreateListDialog";
 import { IStoreState } from "../../../types";
 
-const mapStateToProps = (state: IStoreState): IStateProps => {
+function mapStateToProps(state: IStoreState): IStateProps {
   const { profile, currentRegion, currentRealm } = state.Main;
   const {
     isAddListDialogOpen,
@@ -33,7 +33,7 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
     selectedList,
     selectedProfession,
   };
-};
+}
 
 const mapDispatchToProps: IDispatchProps = {
   ChangeIsAddListDialogOpen,
@@ -42,7 +42,12 @@ const mapDispatchToProps: IDispatchProps = {
   InsertToast,
 };
 
-export const CreateListDialogContainer = connect<IStateProps, IDispatchProps, {}, IStoreState>(
+export const CreateListDialogContainer = connect<
+  IStateProps,
+  IDispatchProps,
+  Record<string, unknown>,
+  IStoreState
+>(
   mapStateToProps,
   mapDispatchToProps,
 )(CreateListDialog);

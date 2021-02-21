@@ -1,6 +1,6 @@
 import React from "react";
 
-import {  ItemId } from "@sotah-inc/core";
+import { ItemId } from "@sotah-inc/core";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
 import { ILineItemOpen } from "../../../../../../types/global";

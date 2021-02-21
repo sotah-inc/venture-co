@@ -7,11 +7,14 @@ import {
 } from "../../components/entry-point/BaseEntrypoint";
 import { IStoreState } from "../../types";
 
-const mapStateToProps = (state: IStoreState): IStateProps => {
+function mapStateToProps(state: IStoreState): IStateProps {
   const { currentRegion } = state.Main;
   return { currentRegion };
-};
+}
 
-export const BaseEntrypointContainer = connect<IStateProps, {}, IOwnProps, IStoreState>(
-  mapStateToProps,
-)(BaseEntrypoint);
+export const BaseEntrypointContainer = connect<
+  IStateProps,
+  Record<string, unknown>,
+  IOwnProps,
+  IStoreState
+>(mapStateToProps)(BaseEntrypoint);

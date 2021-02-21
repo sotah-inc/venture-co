@@ -14,7 +14,7 @@ import {
 } from "../../../components/entry-point/PriceLists/ActionBar";
 import { IStoreState } from "../../../types";
 
-const mapStateToProps = (state: IStoreState): IStateProps => {
+function mapStateToProps(state: IStoreState): IStateProps {
   const { currentRegion, currentRealm, authLevel, profile } = state.Main;
   const {
     isAddListDialogOpen,
@@ -35,7 +35,7 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
     selectedList,
     selectedProfession,
   };
-};
+}
 
 const mapDispatchToProps: IDispatchProps = {
   changeIsAddEntryDialogOpen: ChangeIsAddEntryDialogOpen,

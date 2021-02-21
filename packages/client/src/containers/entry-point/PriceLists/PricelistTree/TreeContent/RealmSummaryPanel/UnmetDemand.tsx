@@ -7,7 +7,7 @@ import {
 } from "../../../../../../components/entry-point/PriceLists/PricelistTree/TreeContent/RealmSummaryPanel/UnmetDemand";
 import { IStoreState } from "../../../../../../types";
 
-const mapStateToProps = (state: IStoreState): IStateProps => {
+function mapStateToProps(state: IStoreState): IStateProps {
   const { professions, currentRegion, currentRealm } = state.Main;
   const {
     selectedExpansion,
@@ -30,8 +30,11 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
     unmetDemandItemIds: unmetItemIds,
     unmetDemandProfessionPricelists,
   };
-};
+}
 
-export const UnmetDemandContainer = connect<IStateProps, {}, IRouteProps, IStoreState>(
-  mapStateToProps,
-)(UnmetDemand);
+export const UnmetDemandContainer = connect<
+  IStateProps,
+  Record<string, unknown>,
+  IRouteProps,
+  IStoreState
+>(mapStateToProps)(UnmetDemand);

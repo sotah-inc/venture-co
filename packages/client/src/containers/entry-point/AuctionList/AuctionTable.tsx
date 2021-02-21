@@ -8,7 +8,7 @@ import {
 } from "../../../components/entry-point/AuctionList/AuctionTable";
 import { IStoreState } from "../../../types";
 
-const mapStateToProps = (state: IStoreState): IStateProps => {
+function mapStateToProps(state: IStoreState): IStateProps {
   const { professions, expansions, currentRealm, currentRegion } = state.Main;
   const {
     relatedProfessionPricelists,
@@ -27,14 +27,19 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
     relatedProfessionPricelists,
     totalResults,
   };
-};
+}
 
 const mapDispatchToProps: IDispatchProps = {
   selectItemQueryAuctions: SelectItemQueryAuctions,
   selectPetQueryAuctions: SelectPetQueryAuctions,
 };
 
-export const AuctionTableContainer = connect<IStateProps, IDispatchProps, {}, IStoreState>(
+export const AuctionTableContainer = connect<
+  IStateProps,
+  IDispatchProps,
+  Record<string, unknown>,
+  IStoreState
+>(
   mapStateToProps,
   mapDispatchToProps,
 )(AuctionTable);

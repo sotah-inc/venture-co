@@ -179,8 +179,8 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
     const {
       recipePriceHistories: {
         data: {
-          recipeData: {  histories: recipePriceHistories, recipeItemIds },
-          itemData: {  history: recipeItemPriceHistories },
+          recipeData: { histories: recipePriceHistories, recipeItemIds },
+          itemData: { history: recipeItemPriceHistories },
         },
       },
       selectedRecipe,

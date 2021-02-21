@@ -11,7 +11,7 @@ import { InsertToast } from "../actions/oven";
 import { App, IDispatchProps, IOwnProps, IStateProps } from "../components/App";
 import { IStoreState } from "../types";
 
-const mapStateToProps = (state: IStoreState): IStateProps => {
+function mapStateToProps(state: IStoreState): IStateProps {
   const {
     fetchBootLevel,
     fetchPingLevel,
@@ -38,7 +38,7 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
     profile,
     userPreferences,
   };
-};
+}
 
 const mapDispatchToProps: IDispatchProps = {
   changeAuthLevel: ChangeAuthLevel,

@@ -11,9 +11,7 @@ import {
   RecipeId,
 } from "@sotah-inc/core";
 
-import {
-  TreeContentContainer,
-} from "../../../containers/entry-point/Professions/ProfessionsTree/TreeContent";
+import { TreeContentContainer } from "../../../containers/entry-point/Professions/ProfessionsTree/TreeContent";
 import { IClientRealm, IItemsData } from "../../../types/global";
 import { ISelectedSkillTier, ISelectedSkillTierCategory } from "../../../types/professions";
 import { RecipePopover } from "./ProfessionsTree/RecipePopover";

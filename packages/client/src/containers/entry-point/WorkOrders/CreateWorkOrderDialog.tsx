@@ -14,7 +14,7 @@ import {
 } from "../../../components/entry-point/WorkOrders/CreateWorkOrderDialog";
 import { IStoreState } from "../../../types";
 
-const mapStateToProps = (state: IStoreState): IStateProps => {
+function mapStateToProps(state: IStoreState): IStateProps {
   const {
     mutateOrderErrors,
     mutateOrderLevel,
@@ -32,7 +32,7 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
     prefillWorkOrderItem,
     profile,
   };
-};
+}
 
 const mapDispatchToProps: IDispatchProps = {
   callPrefillWorkOrderItem: FetchWorkOrderItemPrefill,
@@ -42,7 +42,12 @@ const mapDispatchToProps: IDispatchProps = {
   resetWorkOrderItemPrefill: ResetWorkOrderItemPrefill,
 };
 
-export const CreateWorkOrderDialogContainer = connect<IStateProps, IDispatchProps, {}, IStoreState>(
+export const CreateWorkOrderDialogContainer = connect<
+  IStateProps,
+  IDispatchProps,
+  Record<string, unknown>,
+  IStoreState
+>(
   mapStateToProps,
   mapDispatchToProps,
 )(CreateWorkOrderDialog);

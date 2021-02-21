@@ -13,7 +13,7 @@ import {
 } from "../../../components/entry-point/Professions/ProfessionsTree";
 import { IStoreState } from "../../../types";
 
-const mapStateToProps = (state: IStoreState): IStateProps => {
+function mapStateToProps(state: IStoreState): IStateProps {
   const { currentRealm, currentRegion } = state.Main;
   const {
     selectedProfession,
@@ -34,7 +34,7 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
     selectedSkillTier,
     selectedSkillTierCategory,
   };
-};
+}
 
 const mapDispatchToProps: IDispatchProps = {
   deselectSkillTierCategory: DeselectSkillTierCategory,
@@ -43,7 +43,12 @@ const mapDispatchToProps: IDispatchProps = {
   selectSkillTierFlag: SelectSkillTierFlag,
 };
 
-export const ProfessionsTreeContainer = connect<IStateProps, IDispatchProps, {}, IStoreState>(
+export const ProfessionsTreeContainer = connect<
+  IStateProps,
+  IDispatchProps,
+  Record<string, unknown>,
+  IStoreState
+>(
   mapStateToProps,
   mapDispatchToProps,
 )(ProfessionsTree);

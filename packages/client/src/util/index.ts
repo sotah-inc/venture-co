@@ -55,11 +55,7 @@ export function getColor(index: number): string {
 }
 
 export function FormatRegionList(regionList: IRegionComposite[]): IRegions {
-  return regionList
-    .reduce(
-      (result, region) => {
-        return { ...result, [region.config_region.name]: region };
-      },
-      {},
-    );
+  return regionList.reduce((result, region) => {
+    return { ...result, [region.config_region.name]: region };
+  }, {});
 }

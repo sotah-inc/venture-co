@@ -10,12 +10,12 @@ import {
 } from "../../../components/entry-point/News/NewsEditor";
 import { IStoreState } from "../../../types";
 
-const mapStateToProps = (state: IStoreState): IStateProps => {
+function mapStateToProps(state: IStoreState): IStateProps {
   const { profile } = state.Main;
   const { currentPost, updatePostErrors, updatePostLevel, getPostLevel } = state.Posts;
 
   return { currentPost, getPostLevel, profile, updatePostErrors, updatePostLevel };
-};
+}
 
 const mapDispatchToProps: IDispatchProps = {
   getPost: FetchGetPost,

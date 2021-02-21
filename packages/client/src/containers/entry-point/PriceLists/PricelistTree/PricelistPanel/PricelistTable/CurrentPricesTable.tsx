@@ -9,18 +9,23 @@ import {
 } from "../../../../../../components/entry-point/PriceLists/PricelistTree/PricelistPanel/PricelistTable/CurrentPricesTable";
 import { IStoreState } from "../../../../../../types";
 
-const mapStateToProps = (state: IStoreState): IStateProps => {
+function mapStateToProps(state: IStoreState): IStateProps {
   const { fetchRealmLevel, currentRealm, currentRegion } = state.Main;
   const { priceTable, selectedList } = state.PriceLists;
 
   return { fetchRealmLevel, priceTable, currentRealm, currentRegion, selectedList };
-};
+}
 
 const mapDispatchToProps: IDispatchProps = {
   getPricelist: FetchGetPricelist,
 };
 
-export const CurrentPricesTableContainer = connect<IStateProps, IDispatchProps, {}, IStoreState>(
+export const CurrentPricesTableContainer = connect<
+  IStateProps,
+  IDispatchProps,
+  Record<string, unknown>,
+  IStoreState
+>(
   mapStateToProps,
   mapDispatchToProps,
 )(CurrentPricesTable);

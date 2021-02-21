@@ -12,7 +12,7 @@ import {
 } from "../../components/entry-point/PriceLists";
 import { IStoreState } from "../../types";
 
-const mapStateToProps = (state: IStoreState): IStateProps => {
+function mapStateToProps(state: IStoreState): IStateProps {
   const {
     currentRegion,
     currentRealm,
@@ -55,7 +55,7 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
     selectedList,
     selectedProfession,
   };
-};
+}
 
 const mapDispatchToProps: IDispatchProps = {
   changeIsLoginDialogOpen: ChangeIsLoginDialogOpen,

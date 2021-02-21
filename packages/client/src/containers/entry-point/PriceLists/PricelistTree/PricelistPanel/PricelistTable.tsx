@@ -9,17 +9,22 @@ import {
 } from "../../../../../components/entry-point/PriceLists/PricelistTree/PricelistPanel/PricelistTable";
 import { IStoreState } from "../../../../../types";
 
-const mapStateToProps = (state: IStoreState): IStateProps => {
+function mapStateToProps(state: IStoreState): IStateProps {
   const { loadId, itemPriceHistories, selectedList } = state.PriceLists;
 
   return { loadId, itemPriceHistories, selectedList };
-};
+}
 
 export const mapDispatchToProps: IDispatchProps = {
   getItemPriceHistories: FetchGetItemPriceHistories,
 };
 
-export const PricelistTableContainer = connect<IStateProps, IDispatchProps, {}, IStoreState>(
+export const PricelistTableContainer = connect<
+  IStateProps,
+  IDispatchProps,
+  Record<string, unknown>,
+  IStoreState
+>(
   mapStateToProps,
   mapDispatchToProps,
 )(PricelistTable);

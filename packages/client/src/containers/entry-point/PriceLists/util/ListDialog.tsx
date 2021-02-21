@@ -6,10 +6,13 @@ import {
 } from "../../../../components/entry-point/PriceLists/util/ListDialog";
 import { IStoreState } from "../../../../types";
 
-const mapStateToProps = (state: IStoreState): IStateProps => {
+function mapStateToProps(state: IStoreState): IStateProps {
   return { items: [...state.PriceLists.priceTable.data.items] };
-};
+}
 
-export const ListDialogContainer = connect<IStateProps, {}, {}, IStoreState>(mapStateToProps)(
-  ListDialog,
-);
+export const ListDialogContainer = connect<
+  IStateProps,
+  Record<string, unknown>,
+  Record<string, unknown>,
+  IStoreState
+>(mapStateToProps)(ListDialog);

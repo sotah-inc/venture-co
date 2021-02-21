@@ -9,13 +9,13 @@ import {
 } from "../../../components/entry-point/AuctionList/SortToggle";
 import { IStoreState } from "../../../types";
 
-const mapStateToProps = (state: IStoreState): IStateProps => {
+function mapStateToProps(state: IStoreState): IStateProps {
   const {
     options: { sortDirection, sortKind },
   } = state.Auction;
 
   return { currentSortDirection: sortDirection, currentSortKind: sortKind };
-};
+}
 
 const mapDispatchToProps: IDispatchProps = {
   onChange: SetSortQueryAuctions,

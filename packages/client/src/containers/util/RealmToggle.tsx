@@ -4,7 +4,7 @@ import { FetchUserPreferencesCreate, FetchUserPreferencesUpdate } from "../../ac
 import { IDispatchProps, IStateProps, RealmToggle } from "../../components/util/RealmToggle";
 import { IStoreState } from "../../types";
 
-const mapStateToProps = (state: IStoreState): IStateProps => {
+function mapStateToProps(state: IStoreState): IStateProps {
   const {
     realms,
     currentRealm,
@@ -23,7 +23,7 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
     realms,
     userPreferences,
   };
-};
+}
 
 const mapDispatchToProps: IDispatchProps = {
   createUserPreferences: FetchUserPreferencesCreate,

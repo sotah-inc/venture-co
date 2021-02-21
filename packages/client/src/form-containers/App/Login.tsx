@@ -8,15 +8,15 @@ import { UserRules } from "../../validator-rules";
 const config: WithFormikConfig<IDispatchProps & IStateProps, IFormValues> = {
   handleSubmit: async (values, { setSubmitting, setErrors, props }) => {
     const { data, errors } = await loginUser(values.email, values.password);
-    if (errors !== null) {
-      setErrors(errors);
+    if (errors !== null || data === null) {
+      setErrors(errors ?? {});
       setSubmitting(false);
 
       return;
     }
 
     setSubmitting(false);
-    props.onUserLogin(data!);
+    props.onUserLogin(data);
   },
   mapPropsToValues: (_: IDispatchProps & IStateProps) => {
     return {

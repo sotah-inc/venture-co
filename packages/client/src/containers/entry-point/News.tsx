@@ -11,11 +11,11 @@ import {
 } from "../../components/entry-point/News";
 import { IStoreState } from "../../types";
 
-const mapStateToProps = (state: IStoreState): IStateProps => {
+function mapStateToProps(state: IStoreState): IStateProps {
   const { currentRegion, authLevel } = state.Main;
 
   return { currentRegion, authLevel };
-};
+}
 
 const mapDispatchToProps: IDispatchProps = {
   changeIsRegisterDialogOpen: ChangeIsRegisterDialogOpen,

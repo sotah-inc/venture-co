@@ -9,7 +9,7 @@ import {
 } from "../../../components/entry-point/News/DeletePostDialog";
 import { IStoreState } from "../../../types";
 
-const mapStateToProps = (state: IStoreState): IStateProps => {
+function mapStateToProps(state: IStoreState): IStateProps {
   const { profile } = state.Main;
   const { deletePostLevel, isDeletePostDialogOpen, currentPost } = state.Posts;
 
@@ -19,7 +19,7 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
     isDeletePostDialogOpen,
     profile,
   };
-};
+}
 
 const mapDispatchToProps: IDispatchProps = {
   changeIsDeletePostDialogOpen: ChangeIsDeletePostDialogOpen,
@@ -27,7 +27,12 @@ const mapDispatchToProps: IDispatchProps = {
   insertToast: InsertToast,
 };
 
-export const DeletePostDialogContainer = connect<IStateProps, IDispatchProps, {}, IStoreState>(
+export const DeletePostDialogContainer = connect<
+  IStateProps,
+  IDispatchProps,
+  Record<string, unknown>,
+  IStoreState
+>(
   mapStateToProps,
   mapDispatchToProps,
 )(DeletePostDialog);

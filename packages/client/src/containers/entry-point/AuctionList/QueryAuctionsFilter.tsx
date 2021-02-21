@@ -12,14 +12,14 @@ import {
 } from "../../../components/entry-point/AuctionList/QueryAuctionsFilter";
 import { IStoreState } from "../../../types";
 
-const mapStateToProps = (state: IStoreState): IStateProps => {
+function mapStateToProps(state: IStoreState): IStateProps {
   const { activeSelect, options } = state.Auction;
 
   return {
     activeSelect,
     queryAuctionsOptions: options,
   };
-};
+}
 
 const mapDispatchToProps: IDispatchProps = {
   activeSelectChange: ActiveSelectChange,
@@ -27,7 +27,12 @@ const mapDispatchToProps: IDispatchProps = {
   selectPetQueryAuctions: SelectPetQueryAuctions,
 };
 
-export const QueryAuctionsFilterContainer = connect<IStateProps, IDispatchProps, {}, IStoreState>(
+export const QueryAuctionsFilterContainer = connect<
+  IStateProps,
+  IDispatchProps,
+  Record<string, unknown>,
+  IStoreState
+>(
   mapStateToProps,
   mapDispatchToProps,
 )(QueryAuctionsFilter);

@@ -13,7 +13,7 @@ import {
 } from "../../../components/entry-point/PriceLists/DeleteListDialog";
 import { IStoreState } from "../../../types";
 
-const mapStateToProps = (state: IStoreState): IStateProps => {
+function mapStateToProps(state: IStoreState): IStateProps {
   const { profile, currentRegion, currentRealm } = state.Main;
   const {
     selectedList,
@@ -34,7 +34,7 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
     selectedList,
     selectedProfession,
   };
-};
+}
 
 const mapDispatchToProps: IDispatchProps = {
   changeIsDeleteListDialogOpen: ChangeIsDeleteListDialogOpen,
@@ -43,7 +43,12 @@ const mapDispatchToProps: IDispatchProps = {
   insertToast: InsertToast,
 };
 
-export const DeleteListDialogContainer = connect<IStateProps, IDispatchProps, {}, IStoreState>(
+export const DeleteListDialogContainer = connect<
+  IStateProps,
+  IDispatchProps,
+  Record<string, unknown>,
+  IStoreState
+>(
   mapStateToProps,
   mapDispatchToProps,
 )(DeleteListDialog);

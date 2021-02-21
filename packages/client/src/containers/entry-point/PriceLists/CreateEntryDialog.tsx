@@ -8,7 +8,7 @@ import {
 } from "../../../components/entry-point/PriceLists/CreateEntryDialog";
 import { IStoreState } from "../../../types";
 
-const mapStateToProps = (state: IStoreState): IStateProps => {
+function mapStateToProps(state: IStoreState): IStateProps {
   const { profile } = state.Main;
   const {
     isAddEntryDialogOpen,
@@ -22,14 +22,19 @@ const mapStateToProps = (state: IStoreState): IStateProps => {
     selectedList,
     updatePricelistLevel,
   };
-};
+}
 
 const mapDispatchToProps: IDispatchProps = {
   changeIsAddEntryDialogOpen: ChangeIsAddEntryDialogOpen,
   updatePricelist: FetchUpdatePricelist,
 };
 
-export const CreateEntryDialogContainer = connect<IStateProps, IDispatchProps, {}, IStoreState>(
+export const CreateEntryDialogContainer = connect<
+  IStateProps,
+  IDispatchProps,
+  Record<string, unknown>,
+  IStoreState
+>(
   mapStateToProps,
   mapDispatchToProps,
 )(CreateEntryDialog);

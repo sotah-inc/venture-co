@@ -2,12 +2,7 @@ import React from "react";
 
 import { Icon, Intent, Tab, Tabs, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
-import {
-  IItemPriceHistories,
-  IPricesFlagged,
-  IShortItem,
-  ItemId,
-} from "@sotah-inc/core";
+import { IItemPriceHistories, IPricesFlagged, IShortItem, ItemId } from "@sotah-inc/core";
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
 import { ILineItemOpen } from "../../types/global";
@@ -15,13 +10,13 @@ import {
   convertItemPriceHistoriesToLineData,
   currencyToText,
   getColor,
-  getXAxisTimeRestrictions, maxDataDomain, minDataDomain,
+  getXAxisTimeRestrictions,
+  maxDataDomain,
+  minDataDomain,
   qualityToColorClass,
   unixTimestampToText,
 } from "../../util";
-import {
-  resolveItemDataKey,
-} from "../entry-point/Professions/ProfessionsTree/TreeContent/RecipePriceHistoriesGraph/common";
+import { resolveItemDataKey } from "../entry-point/Professions/ProfessionsTree/TreeContent/RecipePriceHistoriesGraph/common";
 import { ItemLink } from "./ItemLink";
 
 export interface IOwnProps {
