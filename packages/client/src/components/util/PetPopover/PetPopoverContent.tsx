@@ -12,7 +12,7 @@ export interface IOwnProps {
 
 type Props = Readonly<IOwnProps>;
 
-export function PetPopoverContent({ pet, quality, level }: Props) {
+export function PetPopoverContent({ pet, quality, level }: Props): JSX.Element {
   const petTextClass = petQualityToColorClass(quality);
 
   return (

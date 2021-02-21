@@ -37,7 +37,7 @@ export function inputValueRenderer(pet: IShortPet | null): string {
   return pet.name;
 }
 
-export function renderPetAsItemRendererText(pet: IShortPet) {
+export function renderPetAsItemRendererText(pet: IShortPet): JSX.Element {
   const petIconUrl = getPetIconUrl(pet);
 
   return (
@@ -118,7 +118,7 @@ export function itemRenderer(
   itemRendererProps: IItemRendererProps,
   idBlacklist?: ItemId[],
   idActiveList?: ItemId[],
-) {
+): JSX.Element | null {
   const { handleClick, modifiers, index } = itemRendererProps;
 
   const disabled: boolean = (() => {
@@ -149,7 +149,7 @@ export function itemRenderer(
   );
 }
 
-export function PetInput(props: Props) {
+export function PetInput(props: Props): JSX.Element {
   const { autoFocus, onSelect, closeOnSelect, idActiveList, idBlacklist, initialResults } = props;
 
   const [results, setResults] = useState<Array<IQueryItem<IShortPet>>>(initialResults ?? []);

@@ -1,6 +1,7 @@
 import React from "react";
 
-import { Popover, PopoverInteractionKind, Position } from "@blueprintjs/core";
+import { PopoverInteractionKind } from "@blueprintjs/core";
+import { Placement, Popover2 } from "@blueprintjs/popover2";
 import { IShortPet, PetQuality } from "@sotah-inc/core";
 
 import { PetLink } from "./PetLink";
@@ -12,7 +13,7 @@ export interface IOwnProps {
   level: number;
 
   onPetClick?: () => void;
-  position?: Position;
+  placement?: Placement;
   interactive?: boolean;
 }
 
@@ -26,17 +27,16 @@ export class PetPopover extends React.Component<Props> {
   };
 
   public render(): React.ReactNode {
-    const { pet, position, interactive, onPetClick, quality, level } = this.props;
+    const { pet, placement, interactive, onPetClick, quality, level } = this.props;
 
     return (
-      <Popover
+      <Popover2
         content={<PetPopoverContent level={level} pet={pet} quality={quality} />}
-        target={
-          <PetLink pet={pet} interactive={interactive} onPetClick={onPetClick} level={level} />
-        }
         interactionKind={PopoverInteractionKind.HOVER}
-        position={position ?? Position.RIGHT}
-      />
+        placement={placement ?? "right"}
+      >
+        <PetLink pet={pet} interactive={interactive} onPetClick={onPetClick} level={level} />
+      </Popover2>
     );
   }
 }

@@ -49,7 +49,7 @@ export interface IOwnProps {
 type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
 
 export class RealmToggle extends React.Component<Props> {
-  public componentDidUpdate(prevProps: Props) {
+  public componentDidUpdate(prevProps: Props): void {
     const {
       currentRealm,
       authLevel,
@@ -60,21 +60,28 @@ export class RealmToggle extends React.Component<Props> {
       currentRegion,
     } = this.props;
 
-    if (authLevel === AuthLevel.authenticated && currentRealm !== null && currentRegion !== null) {
-      const persistUserPreferences: persistUserPreferencesFunc = (() => {
-        if (userPreferences !== null) {
-          return updateUserPreferences;
-        }
+    if (
+      authLevel !== AuthLevel.authenticated ||
+      currentRealm === null ||
+      currentRegion === null ||
+      profile === null
+    ) {
+      return;
+    }
 
-        return createUserPreferences;
-      })();
-
-      if (didRealmChange(prevProps.currentRealm, currentRealm)) {
-        persistUserPreferences(profile!.token, {
-          current_realm: currentRealm.realm.slug,
-          current_region: currentRegion.config_region.name,
-        });
+    const persistUserPreferences: persistUserPreferencesFunc = (() => {
+      if (userPreferences !== null) {
+        return updateUserPreferences;
       }
+
+      return createUserPreferences;
+    })();
+
+    if (didRealmChange(prevProps.currentRealm, currentRealm)) {
+      persistUserPreferences(profile.token, {
+        current_realm: currentRealm.realm.slug,
+        current_region: currentRegion.config_region.name,
+      });
     }
   }
 
@@ -127,7 +134,7 @@ export class RealmToggle extends React.Component<Props> {
     const { realms, onRealmChange, currentRealm, fetchRealmLevel } = this.props;
 
     switch (fetchRealmLevel) {
-    case FetchLevel.success:
+    case FetchLevel.success: {
       let highlightedRealm = realms[0];
       if (currentRealm !== null) {
         highlightedRealm = currentRealm;
@@ -146,6 +153,7 @@ export class RealmToggle extends React.Component<Props> {
           <Button text={highlightedRealm.realm.name.en_US} rightIcon="double-caret-vertical" />
         </RealmToggleSelect>
       );
+    }
     case FetchLevel.failure:
       return <Spinner className={Classes.SMALL} intent={Intent.DANGER} value={1} />;
     case FetchLevel.initial:

@@ -6,10 +6,10 @@ interface IProps {
   profession: IProfession;
 }
 
-export const ProfessionIcon: React.SFC<IProps> = ({ profession }: IProps) => {
+export const ProfessionIcon = ({ profession }: IProps): JSX.Element | null => {
   if (profession.icon_url.length === 0) {
     return null;
   }
 
-  return <img src={profession.icon_url} className="item-icon" />;
+  return <img alt="" src={profession.icon_url} className="item-icon" />;
 };
