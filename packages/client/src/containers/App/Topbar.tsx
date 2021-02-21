@@ -12,6 +12,9 @@ function mapStateToProps(state: IStoreState): IStateProps {
   return { user, currentRealm, currentRegion, expansions, selectedExpansion };
 }
 
-export const TopbarContainer = connect<IStateProps, Record<string, unknown>, IOwnProps, IStoreState>(
-  mapStateToProps,
-)(Topbar);
+export const TopbarContainer = connect<
+  IStateProps,
+  Record<string, unknown>,
+  IOwnProps,
+  IStoreState
+>(mapStateToProps)(Topbar);

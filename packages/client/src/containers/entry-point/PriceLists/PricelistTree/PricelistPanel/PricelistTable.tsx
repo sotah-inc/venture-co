@@ -5,7 +5,7 @@ import {
   IDispatchProps,
   IStateProps,
   PricelistTable,
-  // tslint:disable-next-line:max-line-length
+// eslint-disable-next-line max-len
 } from "../../../../../components/entry-point/PriceLists/PricelistTree/PricelistPanel/PricelistTable";
 import { IStoreState } from "../../../../../types";
 

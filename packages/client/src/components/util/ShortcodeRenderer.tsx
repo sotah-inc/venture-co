@@ -8,10 +8,10 @@ interface IRenderers {
 }
 
 const renderers: IRenderers = {
-  Currency: (attributes: IAttributes) => {
+  Currency (attributes: IAttributes)  {
     return <Currency amount={Number(attributes.amount)} />;
   },
-  Item: attrs => {
+  Item (attrs) {
     return <ItemStandalone itemId={attrs.itemId} />;
   },
 };
@@ -25,7 +25,7 @@ interface IProps {
   attributes: IAttributes;
 }
 
-export const ShortcodeRenderer: React.SFC<IProps> = ({ identifier, attributes }: IProps) => {
+export const ShortcodeRenderer = ({ identifier, attributes }: IProps): JSX.Element | null => {
   if (!(identifier in renderers)) {
     return null;
   }

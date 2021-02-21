@@ -23,7 +23,7 @@ export interface IDispatchProps {
 type Props = Readonly<IStateProps & IDispatchProps>;
 
 export class CurrentPricesTable extends React.Component<Props> {
-  public componentDidUpdate(prevProps: Props) {
+  public componentDidUpdate(prevProps: Props): void {
     const {
       priceTable: { level },
       selectedList,

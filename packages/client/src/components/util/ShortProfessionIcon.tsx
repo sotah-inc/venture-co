@@ -6,6 +6,6 @@ interface IProps {
   profession: IShortProfession;
 }
 
-export const ShortProfessionIcon: React.SFC<IProps> = ({ profession }: IProps) => {
-  return <img src={profession.icon_url} className="profession-icon" />;
+export const ShortProfessionIcon = ({ profession }: IProps): React.ReactNode => {
+  return <img alt="" src={profession.icon_url} className="profession-icon" />;
 };

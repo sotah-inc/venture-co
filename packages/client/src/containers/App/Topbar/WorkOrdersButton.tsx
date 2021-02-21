@@ -11,7 +11,11 @@ const mapDispatchToProps: IDispatchProps = {
   changeIsWorkOrderDialogOpen: ChangeIsWorkOrderDialogOpen,
 };
 
-export const WorkOrdersButtonContainer = connect<Record<string, unknown>, IDispatchProps, IOwnProps>(
+export const WorkOrdersButtonContainer = connect<
+  Record<string, unknown>,
+  IDispatchProps,
+  IOwnProps
+>(
   null,
   mapDispatchToProps,
 )(WorkOrdersButton);

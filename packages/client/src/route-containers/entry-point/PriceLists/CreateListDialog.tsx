@@ -3,7 +3,9 @@ import React from "react";
 import { WithRouterProps } from "next/dist/client/with-router";
 import { withRouter } from "next/router";
 
-import { CreateListDialogContainer } from "../../../containers/entry-point/PriceLists/CreateListDialog";
+import {
+  CreateListDialogContainer,
+} from "../../../containers/entry-point/PriceLists/CreateListDialog";
 import { toProfessionPricelist, toUserPricelist } from "../../../util";
 
 type Props = Readonly<WithRouterProps>;

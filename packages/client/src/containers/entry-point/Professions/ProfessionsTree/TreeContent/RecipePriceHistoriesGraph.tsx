@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import {
   IStateProps,
   RecipePriceHistoriesGraph,
+// eslint-disable-next-line max-len
 } from "../../../../../components/entry-point/Professions/ProfessionsTree/TreeContent/RecipePriceHistoriesGraph";
 import { IStoreState } from "../../../../../types";
 
