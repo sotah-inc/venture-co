@@ -9,7 +9,7 @@ interface IProps {
   onClick: () => void;
 }
 
-export const CardCallout: React.SFC<IProps> = (props: IProps) => {
+export const CardCallout = (props: IProps): JSX.Element => {
   const { onClick, icon, label } = props;
 
   return (

@@ -12,6 +12,6 @@ const renderError = (value: string | undefined, index: number) => {
   return <FormGroup key={index} helperText={value} intent={Intent.DANGER} />;
 };
 
-export const ErrorList: React.SFC<Props> = ({ errors }: Props) => {
+export const ErrorList = ({ errors }: Props): JSX.Element => {
   return <>{Object.keys(errors).map((v, i) => renderError(errors[v], i))}</>;
 };

@@ -77,7 +77,10 @@ const itemListRenderer: ItemListRenderer<IQueryGeneralItem> = (
   );
 };
 
-export function itemRenderer(result: IQueryGeneralItem, itemRendererProps: IItemRendererProps) {
+export function itemRenderer(
+  result: IQueryGeneralItem,
+  itemRendererProps: IItemRendererProps,
+): JSX.Element | null {
   if (result.item.item !== null) {
     return itemItemRenderer(result.item.item, itemRendererProps);
   }
@@ -89,7 +92,7 @@ export function itemRenderer(result: IQueryGeneralItem, itemRendererProps: IItem
   return null;
 }
 
-export function GeneralInput(props: Props) {
+export function GeneralInput(props: Props): JSX.Element {
   const { autoFocus, onSelect, closeOnSelect, initialResults } = props;
 
   const [results, setResults] = useState<IQueryGeneralItem[]>(initialResults ?? []);

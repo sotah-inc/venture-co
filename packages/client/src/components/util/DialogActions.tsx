@@ -6,7 +6,11 @@ import { DialogFooter } from "./DialogFooter";
 
 interface IProps {
   leftChildren?: React.ReactNode;
+
+  children: React.ReactNode;
 }
+
+type Props = Readonly<IProps>;
 
 const renderLeftChildren = (children?: React.ReactNode) => {
   if (!children) {
@@ -16,7 +20,7 @@ const renderLeftChildren = (children?: React.ReactNode) => {
   return <div className={`${Classes.DIALOG_FOOTER_ACTIONS} ${Classes.ALIGN_LEFT}`}>{children}</div>;
 };
 
-export const DialogActions: React.SFC<IProps> = props => (
+export const DialogActions = (props: Props): JSX.Element => (
   <DialogFooter>
     {renderLeftChildren(props.leftChildren)}
     <div className={`${Classes.DIALOG_FOOTER_ACTIONS} ${Classes.ALIGN_RIGHT}`}>

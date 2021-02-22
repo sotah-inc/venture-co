@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Callout, Intent, Position } from "@blueprintjs/core";
+import { Callout, Intent } from "@blueprintjs/core";
 import { IItemPrices, IShortRecipe, ItemId, resolveCraftedItemIds } from "@sotah-inc/core";
 
 import { IFetchData, IItemsData } from "../../../../../types/global";
@@ -98,7 +98,7 @@ export class ReagentPricesTable extends React.Component<Props> {
         return `Item #${id}`;
       }
 
-      return <ItemPopover item={foundItem} interactive={false} position={Position.LEFT} />;
+      return <ItemPopover item={foundItem} interactive={false} placement={"left"} />;
     })();
 
     const itemCost: number | null = priceTable.data.data[id]?.min_buyout_per ?? null;

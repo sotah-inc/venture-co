@@ -6,7 +6,7 @@ interface IProps {
   targetDate: Date;
 }
 
-export const LastModified = ({ targetDate }: IProps): React.ReactNode => {
+export const LastModified = ({ targetDate }: IProps): JSX.Element => {
   return (
     <p style={{ textAlign: "right" }}>
       <em>

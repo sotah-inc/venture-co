@@ -22,9 +22,7 @@ interface IPropsOptions {
 
 type Props = Readonly<IGeneratorOptions & IPropsOptions>;
 
-type FormFieldType = React.SFC<Props>;
-
-export const FormField: FormFieldType = (props: Props) => {
+export const FormField = (props: Props): JSX.Element => {
   const {
     setFieldValue,
     fieldName,
@@ -69,6 +67,8 @@ type GeneratorFunc = (propsOpts: IPropsOptions) => React.ReactNode;
 
 export const Generator: GeneratorInterface = (opts: IGeneratorOptions) => {
   const { setFieldValue } = opts;
+
+  // eslint-disable-next-line react/display-name
   return (propsOpts: IPropsOptions) => {
     const {
       fieldName,

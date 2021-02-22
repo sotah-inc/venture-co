@@ -9,7 +9,7 @@ interface IProps {
   onPageChange: (page: number) => void;
 }
 
-export function Pagination(props: IProps): React.ReactNode {
+export function Pagination(props: IProps): JSX.Element {
   const { currentPage, pageCount, onPageChange } = props;
   let { pagesShown } = props;
   if (pageCount < pagesShown) {

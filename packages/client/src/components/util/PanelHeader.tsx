@@ -44,7 +44,7 @@ const actionButton = (action?: IAction, next?: boolean) => {
   );
 };
 
-export function PanelHeader(props: IProps): React.ReactNode {
+export function PanelHeader(props: IProps): JSX.Element {
   return (
     <>
       {actionButton(props.prev)}

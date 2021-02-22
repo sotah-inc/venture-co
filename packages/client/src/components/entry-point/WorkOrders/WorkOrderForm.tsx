@@ -7,7 +7,6 @@ import {
   H5,
   HTMLTable,
   Intent,
-  Position,
   Slider,
 } from "@blueprintjs/core";
 import {
@@ -216,7 +215,7 @@ export class WorkOrderForm extends React.Component<Props> {
         <ItemPopoverContainer
           interactive={false}
           item={item}
-          position={Position.BOTTOM}
+          placement={"bottom"}
           itemTextFormatter={v => (
             <span className={qualityToColorClass(item.quality.type)}>
               {v} x{quantity}

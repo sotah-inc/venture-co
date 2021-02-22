@@ -1,6 +1,5 @@
 import React from "react";
 
-import { Position } from "@blueprintjs/core";
 import { IShortItem } from "@sotah-inc/core";
 
 import { getItem } from "../../api/items";
@@ -62,7 +61,7 @@ export class ItemStandalone extends React.Component<Props, IState> {
             onItemClick={() => {
               return;
             }}
-            position={Position.BOTTOM}
+            placement={"bottom"}
             item={item}
             itemTextFormatter={v => (
               <span className={qualityToColorClass(item.quality.type)}>{v}</span>
