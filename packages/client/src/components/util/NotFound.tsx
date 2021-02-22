@@ -1,3 +1,3 @@
 import React from "react";
 
-export const NotFound: React.SFC = () => <>No route found!</>;
+export const NotFound = (): React.ReactNode => <>No route found!</>;

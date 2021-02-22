@@ -16,7 +16,9 @@ import {
   qualityToColorClass,
   unixTimestampToText,
 } from "../../util";
-import { resolveItemDataKey } from "../entry-point/Professions/ProfessionsTree/TreeContent/RecipePriceHistoriesGraph/common";
+import {
+  resolveItemDataKey,
+} from "../entry-point/Professions/ProfessionsTree/TreeContent/RecipePriceHistoriesGraph/common";
 import { ItemLink } from "./ItemLink";
 
 export interface IOwnProps {

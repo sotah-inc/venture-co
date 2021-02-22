@@ -1,6 +1,6 @@
 import React from "react";
 
-import { IToastProps, Position, Toaster } from "@blueprintjs/core";
+import { IToastProps, Position, IToaster, Toaster } from "@blueprintjs/core";
 
 export interface IStateProps {
   toast: IToastProps;
@@ -10,8 +10,7 @@ export interface IStateProps {
 type Props = Readonly<IStateProps>;
 
 export class Oven extends React.Component<Props> {
-  // @ts-ignore
-  private toaster: Toaster;
+  private toaster: IToaster | undefined;
 
   private refHandlers = {
     toaster: (ref: Toaster) => {
@@ -19,7 +18,7 @@ export class Oven extends React.Component<Props> {
     },
   };
 
-  public componentDidUpdate(prevProps: Props) {
+  public componentDidUpdate(prevProps: Props): void {
     // props
     const { index, toast } = this.props;
 
@@ -27,7 +26,7 @@ export class Oven extends React.Component<Props> {
       return;
     }
 
-    this.toaster.show(toast);
+    this.toaster?.show(toast);
   }
 
   public render(): React.ReactNode {

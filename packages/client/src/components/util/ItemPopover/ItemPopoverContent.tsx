@@ -12,7 +12,7 @@ export function ItemPopoverContent({
 }: {
   item: IShortItem;
   itemClasses: IItemClasses;
-}) {
+}): JSX.Element {
   const itemTextClass = qualityToColorClass(item.quality.type);
   const itemIconUrl = getItemIconUrl(item);
 

@@ -10,7 +10,7 @@ export interface IOwnProps {
 
 type Props = Readonly<IOwnProps>;
 
-export function ItemIcon({ item }: Props) {
+export function ItemIcon({ item }: Props): JSX.Element | null {
   const itemIconUrl = getItemIconUrl(item);
   if (itemIconUrl === null) {
     return null;

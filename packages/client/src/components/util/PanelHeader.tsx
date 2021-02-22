@@ -44,7 +44,7 @@ const actionButton = (action?: IAction, next?: boolean) => {
   );
 };
 
-export const PanelHeader: React.SFC<IProps> = (props: IProps) => {
+export function PanelHeader(props: IProps): React.ReactNode {
   return (
     <>
       {actionButton(props.prev)}
@@ -52,4 +52,4 @@ export const PanelHeader: React.SFC<IProps> = (props: IProps) => {
       {actionButton(props.next, true)}
     </>
   );
-};
+}

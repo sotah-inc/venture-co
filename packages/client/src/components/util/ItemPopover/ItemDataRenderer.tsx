@@ -19,7 +19,7 @@ import {
   renderPlayableClasses,
 } from "./ItemDataRenderer/util";
 
-function renderArmor(item: IShortItemBase) {
+function renderArmor(item: IShortItemBase): JSX.Element {
   return (
     <>
       <li className="item-level">Item level {item.level}</li>
@@ -43,20 +43,23 @@ function renderArmor(item: IShortItemBase) {
   );
 }
 
-function renderBasicCraftingReagent(item: IShortItemBase) {
+function renderBasicCraftingReagent(item: IShortItemBase): JSX.Element {
   return (
     <>
       <li className="item-level">Item level {item.level}</li>
       {item.crafting_reagent && <li className="crafting-reagent">{item.crafting_reagent}</li>}
       {renderItemSpells(item)}
       {item.level_requirement && <li>{item.level_requirement}</li>}
-      {item.description && <li className="description">"{item.description}"</li>}
+      {item.description && <li className="description">&quo;{item.description}&quo;</li>}
       {item.sell_price.value > 0 && <ItemCurrency item={item} />}
     </>
   );
 }
 
-function renderProfessionRecipe(item: IShortItem | IShortItemBase, itemClasses: IItemClasses) {
+function renderProfessionRecipe(
+  item: IShortItem | IShortItemBase,
+  itemClasses: IItemClasses,
+): JSX.Element {
   return (
     <>
       <li className="item-level">Item level {item.level}</li>
@@ -86,7 +89,7 @@ export interface IItemDataRenderer {
 }
 
 export const defaultItemDataRenderer: IItemDataRenderer = {
-  render: item => {
+  render (item) {
     return (
       <>
         <li className="item-level">Item level {item.level}</li>
@@ -99,7 +102,7 @@ export const defaultItemDataRenderer: IItemDataRenderer = {
 export const itemDataRenderers: IItemDataRenderer[] = [
   {
     itemClass: ItemClass.Container,
-    render: item => {
+    render (item: IShortItem | IShortItemBase): JSX.Element {
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
@@ -112,12 +115,12 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   },
   {
     itemClass: ItemClass.Consumable,
-    render: item => {
+    render (item: IShortItem | IShortItemBase): JSX.Element {
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
           {renderItemSpells(item)}
-          {item.description && <li className="description">"{item.description}"</li>}
+          {item.description && <li className="description">&quot;{item.description}&quot;</li>}
           <li>{item.level_requirement}</li>
           {item.reputation_requirement && <li>{item.reputation_requirement}</li>}
           <ItemCurrency item={item} />
@@ -132,7 +135,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   {
     itemClass: ItemClass.Armor,
     itemSubClass: ItemSubClass.Misc,
-    render: item => {
+    render (item: IShortItem | IShortItemBase): JSX.Element {
       if (
         [
           InventoryType.Neck,
@@ -155,7 +158,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   },
   {
     itemClass: ItemClass.Misc,
-    render: item => {
+    render (item: IShortItem | IShortItemBase): JSX.Element {
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
@@ -167,14 +170,14 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   {
     itemClass: ItemClass.Misc,
     itemSubClass: ItemSubClass.MiscOther,
-    render: item => {
+    render (item: IShortItem | IShortItemBase): JSX.Element {
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
           {item.name_description && <li className="name-description">{item.name_description}</li>}
           {renderItemSpells(item)}
           {item.level_requirement && <li>{item.level_requirement}</li>}
-          {item.description && <li className="description">"{item.description}"</li>}
+          {item.description && <li className="description">&quot;{item.description}&quot;</li>}
           <ItemCurrency item={item} />
         </>
       );
@@ -183,7 +186,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   {
     itemClass: ItemClass.Misc,
     itemSubClass: ItemSubClass.MiscMount,
-    render: item => {
+    render (item: IShortItem | IShortItemBase): JSX.Element {
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
@@ -199,11 +202,11 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   {
     itemClass: ItemClass.Misc,
     itemSubClass: ItemSubClass.Junk,
-    render: item => {
+    render (item: IShortItem | IShortItemBase): JSX.Element {
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
-          {item.description && <li className="description">"{item.description}"</li>}
+          {item.description && <li className="description">&quot;{item.description}&quot;</li>}
           {item.sell_price && <ItemCurrency item={item} />}
         </>
       );
@@ -211,7 +214,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   },
   {
     itemClass: ItemClass.Tradeskill,
-    render: item => {
+    render (item: IShortItem | IShortItemBase): JSX.Element {
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
@@ -224,12 +227,12 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   {
     itemClass: ItemClass.Tradeskill,
     itemSubClass: ItemSubClass.Herb,
-    render: item => {
+    render (item: IShortItem | IShortItemBase): JSX.Element {
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
           <li className="crafting-reagent">{item.crafting_reagent}</li>
-          {item.description && <li className="description">"{item.description}"</li>}
+          {item.description && <li className="description">&quot;{item.description}&quot;</li>}
           {renderItemSpells(item)}
           <ItemCurrency item={item} />
         </>
@@ -239,12 +242,12 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   {
     itemClass: ItemClass.Tradeskill,
     itemSubClass: ItemSubClass.Elemental,
-    render: item => {
+    render (item: IShortItem | IShortItemBase): JSX.Element {
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
           <li className="crafting-reagent">{item.crafting_reagent}</li>
-          {item.description && <li className="description">"{item.description}"</li>}
+          {item.description && <li className="description">&quot;{item.description}&quot;</li>}
           <ItemCurrency item={item} />
         </>
       );
@@ -278,7 +281,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   {
     itemClass: ItemClass.Tradeskill,
     itemSubClass: ItemSubClass.TradeskillEnchanting,
-    render: item => {
+    render (item: IShortItem | IShortItemBase): JSX.Element {
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
@@ -291,12 +294,12 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   {
     itemClass: ItemClass.Tradeskill,
     itemSubClass: ItemSubClass.MetalAndStone,
-    render: item => {
+    render (item: IShortItem | IShortItemBase): JSX.Element {
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
           <li className="crafting-reagent">{item.crafting_reagent}</li>
-          {item.description && <li className="description">"{item.description}"</li>}
+          {item.description && <li className="description">&quot;{item.description}&quot;</li>}
           {item.skill_requirement && <li>{item.skill_requirement}</li>}
           <ItemCurrency item={item} />
         </>
@@ -306,7 +309,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   {
     itemClass: ItemClass.Tradeskill,
     itemSubClass: ItemSubClass.TradeskillInscription,
-    render: item => {
+    render (item: IShortItem | IShortItemBase): JSX.Element {
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
@@ -318,7 +321,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   },
   {
     itemClass: ItemClass.ItemEnhancement,
-    render: item => {
+    render (item: IShortItem | IShortItemBase): JSX.Element {
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
@@ -330,7 +333,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   },
   {
     itemClass: ItemClass.Weapon,
-    render: item => {
+    render (item: IShortItem | IShortItemBase): JSX.Element {
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
@@ -345,7 +348,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
           {renderItemSpells(item)}
           <li>{item.level_requirement}</li>
           <li>{item.skill_requirement}</li>
-          {item.description && <li className="description">"{item.description}"</li>}
+          {item.description && <li className="description">&quot;{item.description}&quot;</li>}
           <ItemCurrency item={item} />
         </>
       );
@@ -353,7 +356,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   },
   {
     itemClass: ItemClass.BattlePets,
-    render: item => {
+    render (item: IShortItem | IShortItemBase): JSX.Element {
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
@@ -364,13 +367,13 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   },
   {
     itemClass: ItemClass.Recipe,
-    render: item => {
+    render (item: IShortItem | IShortItemBase): JSX.Element {
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
           {item.unique_equipped && <li>{item.unique_equipped}</li>}
           <li>{item.level_requirement}</li>
-          <li className="description">"{item.description}"</li>
+          <li className="description">&quot;{item.description}&quot;</li>
         </>
       );
     },
@@ -393,7 +396,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   {
     itemClass: ItemClass.Recipe,
     itemSubClass: ItemSubClass.Enchanting,
-    render: item => {
+    render (item: IShortItem | IShortItemBase): JSX.Element {
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
@@ -412,13 +415,13 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   {
     itemClass: ItemClass.Recipe,
     itemSubClass: ItemSubClass.Book,
-    render: item => {
+    render (item: IShortItem | IShortItemBase): JSX.Element {
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
           {renderItemSpells(item)}
           <li>{item.skill_requirement}</li>
-          {item.description && <li className="description">"{item.description}"</li>}
+          {item.description && <li className="description">&quot;{item.description}&quot;</li>}
           <ItemCurrency item={item} />
         </>
       );
@@ -431,7 +434,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   },
   {
     itemClass: ItemClass.Gem,
-    render: item => {
+    render (item: IShortItem | IShortItemBase): JSX.Element {
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
@@ -439,7 +442,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
           <li>{item.gem_effect}</li>
           {item.level_requirement && <li>{item.level_requirement}</li>}
           {item.gem_min_item_level && <li>{item.gem_min_item_level}</li>}
-          {item.description && <li className="description">"{item.description}"</li>}
+          {item.description && <li className="description">&quot;{item.description}&quot;</li>}
           <ItemCurrency item={item} />
         </>
       );
@@ -447,14 +450,14 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   },
   {
     itemClass: ItemClass.Quest,
-    render: item => {
+    render (item: IShortItem | IShortItemBase): JSX.Element {
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
           {item.item_starts_quest && <li>{item.item_starts_quest}</li>}
           {item.level_requirement && <li>{item.level_requirement}</li>}
           {renderPlayableClasses(item)}
-          {item.description && <li className="description">"{item.description}"</li>}
+          {item.description && <li className="description">&quot;{item.description}&quot;</li>}
           {item.sell_price.value > 0 && <ItemCurrency item={item} />}
         </>
       );
@@ -462,7 +465,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   },
   {
     itemClass: ItemClass.Glyph,
-    render: item => {
+    render (item: IShortItem | IShortItemBase): JSX.Element {
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
@@ -488,7 +491,7 @@ export function ItemDataRenderer({
 }: {
   item: IShortItem | IShortItemBase;
   itemClasses: IItemClasses;
-}) {
+}): JSX.Element {
   const itemDataRenderer: IItemDataRenderer =
     itemDataRenderers.find(
       v => v.itemClass === item.item_class_id && v.itemSubClass === item.item_subclass_id,

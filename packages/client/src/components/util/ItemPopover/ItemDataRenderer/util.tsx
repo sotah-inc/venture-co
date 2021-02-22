@@ -4,7 +4,7 @@ import { IShortItemBase, IShortItemStat, PlayableClass } from "@sotah-inc/core";
 
 import { Currency } from "../../Currency";
 
-export function renderItemSet(item: IShortItemBase) {
+export function renderItemSet(item: IShortItemBase): JSX.Element | null {
   if (item.set.display_string.length === 0) {
     return null;
   }
@@ -33,7 +33,7 @@ export function renderItemSet(item: IShortItemBase) {
   );
 }
 
-export function renderItemSpells(item: IShortItemBase) {
+export function renderItemSpells(item: IShortItemBase): JSX.Element[] {
   return item.spells.map((v, spellsIndex) => {
     const output = (() => {
       if (v.includes("\r\n")) {
@@ -58,7 +58,7 @@ export function renderItemSpells(item: IShortItemBase) {
   });
 }
 
-export function ItemCurrency({ item }: { item: IShortItemBase }) {
+export function ItemCurrency({ item }: { item: IShortItemBase }): JSX.Element | null {
   if (item.sell_price.value === 0) {
     return null;
   }
@@ -71,13 +71,13 @@ export function ItemCurrency({ item }: { item: IShortItemBase }) {
   );
 }
 
-interface ResolvedStats {
+interface IResolvedStats {
   value: string;
   is_equippable_bonus: boolean;
 }
 
-export function resolveStatsStrings(stats: IShortItemStat[]): ResolvedStats[] {
-  return stats.reduce<ResolvedStats[]>((result, v, i, initialInput) => {
+export function resolveStatsStrings(stats: IShortItemStat[]): IResolvedStats[] {
+  return stats.reduce<IResolvedStats[]>((result, v, i, initialInput) => {
     if (v.is_negated && i > 0) {
       const priorStat = initialInput[i - 1];
 
@@ -102,7 +102,7 @@ export function resolveStatsStrings(stats: IShortItemStat[]): ResolvedStats[] {
   }, []);
 }
 
-export function renderItemStats(item: IShortItemBase) {
+export function renderItemStats(item: IShortItemBase): JSX.Element[] {
   return resolveStatsStrings(item.stats).map((v, statsIndex) => (
     <li key={statsIndex} className={v.is_equippable_bonus ? "random-stats" : ""}>
       {v.value}
@@ -110,7 +110,7 @@ export function renderItemStats(item: IShortItemBase) {
   ));
 }
 
-export function renderItemSockets(item: IShortItemBase) {
+export function renderItemSockets(item: IShortItemBase): JSX.Element | null {
   if (item.sockets.length === 0) {
     return null;
   }
@@ -129,11 +129,11 @@ export function renderItemSockets(item: IShortItemBase) {
   );
 }
 
-export interface PlayableClassClassNameMap {
+export interface IPlayableClassClassNameMap {
   [key: number]: string | undefined;
 }
 
-export const playableClassClassNameMap: PlayableClassClassNameMap = {
+export const playableClassClassNameMap: IPlayableClassClassNameMap = {
   [PlayableClass.Warrior]: "warrior",
   [PlayableClass.Paladin]: "paladin",
   [PlayableClass.Hunter]: "hunter",
@@ -152,7 +152,7 @@ export function resolvePlayableClassClassName(playableClass: PlayableClass): str
   return playableClassClassNameMap[playableClass] ?? "";
 }
 
-export function renderPlayableClasses(item: IShortItemBase) {
+export function renderPlayableClasses(item: IShortItemBase): JSX.Element | null {
   if (item.playable_classes.length === 0) {
     return null;
   }

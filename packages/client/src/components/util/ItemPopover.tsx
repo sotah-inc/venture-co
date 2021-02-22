@@ -1,6 +1,7 @@
 import React from "react";
 
-import { Popover, PopoverInteractionKind, Position } from "@blueprintjs/core";
+import { PopoverInteractionKind } from "@blueprintjs/core";
+import { Placement, Popover2 } from "@blueprintjs/popover2";
 import { IShortItem } from "@sotah-inc/core";
 
 import { IItemClasses } from "../../types/global";
@@ -18,7 +19,7 @@ export interface IOwnProps {
 
   onItemClick?: () => void;
   itemTextFormatter?: (itemText: string) => ItemTextFormatterResult;
-  position?: Position;
+  placement?: Placement;
   interactive?: boolean;
 }
 
@@ -33,22 +34,28 @@ export class ItemPopover extends React.Component<Props> {
   };
 
   public render(): React.ReactNode {
-    const { item, itemClasses, position, interactive, itemTextFormatter, onItemClick } = this.props;
+    const {
+      item,
+      itemClasses,
+      placement,
+      interactive,
+      itemTextFormatter,
+      onItemClick,
+    } = this.props;
 
     return (
-      <Popover
+      <Popover2
         content={<ItemPopoverContent item={item} itemClasses={itemClasses} />}
-        target={
-          <ItemLink
-            item={item}
-            interactive={interactive}
-            itemTextFormatter={itemTextFormatter}
-            onItemClick={onItemClick}
-          />
-        }
         interactionKind={PopoverInteractionKind.HOVER}
-        position={position ?? Position.RIGHT}
-      />
+        placement={placement ?? "right"}
+      >
+        <ItemLink
+          item={item}
+          interactive={interactive}
+          itemTextFormatter={itemTextFormatter}
+          onItemClick={onItemClick}
+        />
+      </Popover2>
     );
   }
 }

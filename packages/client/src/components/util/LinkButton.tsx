@@ -36,7 +36,7 @@ export interface IOwnProps {
 
 type Props = Readonly<IOwnProps & IRouteProps>;
 
-export function LinkButton(props: Props) {
+export function LinkButton(props: Props): React.ReactNode {
   const {
     destination,
     locationPathname,

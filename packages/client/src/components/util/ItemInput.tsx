@@ -37,7 +37,7 @@ export function inputValueRenderer(item: IShortItem | null): string {
   return getItemTextValue(item);
 }
 
-export function renderItemAsItemRendererText(item: IShortItem) {
+export function renderItemAsItemRendererText(item: IShortItem): JSX.Element | string {
   const itemText = getItemTextValue(item);
   const itemIconUrl = getItemIconUrl(item);
 
@@ -124,7 +124,7 @@ export function itemRenderer(
   itemRendererProps: IItemRendererProps,
   idBlacklist?: ItemId[],
   idActiveList?: ItemId[],
-) {
+): JSX.Element | null {
   const { handleClick, modifiers, index } = itemRendererProps;
 
   const disabled: boolean = (() => {
@@ -155,7 +155,7 @@ export function itemRenderer(
   );
 }
 
-export function ItemInput(props: Props) {
+export function ItemInput(props: Props): JSX.Element {
   const { autoFocus, onSelect, closeOnSelect, idBlacklist, idActiveList, initialResults } = props;
 
   const [results, setResults] = useState<Array<IQueryItem<IShortItem>>>(initialResults ?? []);

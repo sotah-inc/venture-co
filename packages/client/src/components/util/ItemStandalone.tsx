@@ -28,13 +28,13 @@ export class ItemStandalone extends React.Component<Props, IState> {
     },
   };
 
-  public async componentDidMount() {
+  public async componentDidMount(): Promise<void> {
     const { itemId } = this.props;
 
     await this.handleItemId(itemId);
   }
 
-  public async componentDidUpdate(prevProps: Props) {
+  public async componentDidUpdate(prevProps: Props): Promise<void> {
     const { itemId } = this.props;
 
     if (prevProps.itemId === itemId) {

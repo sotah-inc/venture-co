@@ -6,7 +6,7 @@ interface IProps {
   targetDate: Date;
 }
 
-export const LastModified: React.SFC<IProps> = ({ targetDate }: IProps) => {
+export const LastModified = ({ targetDate }: IProps): React.ReactNode => {
   return (
     <p style={{ textAlign: "right" }}>
       <em>
