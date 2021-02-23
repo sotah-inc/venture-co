@@ -1,7 +1,7 @@
-src
-tsconfig.json
-tslint.json
-.postcssrc.json
-styles
-.eslintrc.json
-.eslintcache
+/src
+/tsconfig.json
+/tslint.json
+/.postcssrc.json
+/styles
+/.eslintrc.json
+/.eslintcache
