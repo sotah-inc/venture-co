@@ -3,8 +3,9 @@ import React from "react";
 import { Button, Classes, NonIdealState } from "@blueprintjs/core";
 import { IItem, IPricelistJson, IRegionComposite } from "@sotah-inc/core";
 
-// tslint:disable-next-line:max-line-length
-import { PricelistTableContainer } from "../../../../containers/entry-point/PriceLists/PricelistTree/PricelistPanel/PricelistTable";
+import {
+  PricelistTableContainer,
+} from "../../../../containers/entry-point/PriceLists/PricelistTree/PricelistPanel/PricelistTable";
 import { IClientRealm } from "../../../../types/global";
 
 export interface IStateProps {
@@ -32,7 +33,11 @@ export class PricelistPanel extends React.Component<Props> {
   public render(): React.ReactNode {
     const { list, currentRegion, currentRealm, changeIsAddEntryDialogOpen } = this.props;
 
-    if (list.pricelist_entries!.length === 0) {
+    if (currentRegion === null || currentRealm === null) {
+      return null;
+    }
+
+    if (list.pricelist_entries.length === 0) {
       return (
         <NonIdealState
           title="No entries"
@@ -50,6 +55,6 @@ export class PricelistPanel extends React.Component<Props> {
       );
     }
 
-    return <PricelistTableContainer list={list} region={currentRegion!} realm={currentRealm!} />;
+    return <PricelistTableContainer list={list} region={currentRegion} realm={currentRealm} />;
   }
 }

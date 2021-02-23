@@ -69,7 +69,7 @@ export class EditListDialog extends React.Component<Props, State> {
 
     if (prevProps.updatePricelistLevel !== updatePricelistLevel) {
       switch (updatePricelistLevel) {
-      case FetchLevel.success:
+      case FetchLevel.success: {
         insertToast({
           icon: "info-sign",
           intent: Intent.SUCCESS,
@@ -85,12 +85,14 @@ export class EditListDialog extends React.Component<Props, State> {
           return { profession: selectedProfession, expansion: selectedExpansion };
         })();
 
-        const shouldBrowse = prevProps.selectedList!.slug! !== selectedList.slug!;
+        const shouldBrowse =
+            prevProps.selectedList && prevProps.selectedList.slug !== selectedList.slug;
         if (shouldBrowse) {
           browseOnUpdate(currentRegion, currentRealm, selectedList, professionData);
         }
 
         break;
+      }
       default:
         break;
       }
@@ -118,8 +120,8 @@ export class EditListDialog extends React.Component<Props, State> {
         mutationErrors={updatePricelistErrors}
         mutatePricelistLevel={updatePricelistLevel}
         resetTrigger={listDialogResetTrigger}
-        defaultName={selectedList!.name}
-        defaultSlug={selectedList!.slug === null ? "" : selectedList.slug!}
+        defaultName={selectedList.name}
+        defaultSlug={selectedList.slug === null ? "" : selectedList.slug}
         defaultEntries={selectedList.pricelist_entries}
         onComplete={(v: IOnCompleteOptions) => this.onListDialogComplete(v)}
       />
@@ -137,11 +139,15 @@ export class EditListDialog extends React.Component<Props, State> {
   private onListDialogComplete({ name, entries, slug }: IOnCompleteOptions) {
     const { updatePricelist, profile, selectedList } = this.props;
 
+    if (selectedList === null || profile === null) {
+      return;
+    }
+
     updatePricelist({
-      id: selectedList!.id,
+      id: selectedList.id,
       meta: { isEditListDialogOpen: false },
       request: { entries, pricelist: { name, slug } },
-      token: profile!.token,
+      token: profile.token,
     });
   }
 }

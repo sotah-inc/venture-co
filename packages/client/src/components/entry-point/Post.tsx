@@ -62,7 +62,7 @@ export class Post extends React.Component<Props> {
     loadPost(postPayload);
   }
 
-  public componentDidUpdate() {
+  public componentDidUpdate(): void {
     // props
     const { getPostLevel, currentPost } = this.props;
 

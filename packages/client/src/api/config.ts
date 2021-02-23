@@ -1,4 +1,3 @@
-// tslint:disable-next-line:no-submodule-imports
 import getConfig from "next/config";
 
 interface IConfig {

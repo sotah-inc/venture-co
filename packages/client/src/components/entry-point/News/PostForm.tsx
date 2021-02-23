@@ -186,7 +186,7 @@ const renderForm = (props: Props, manualSlug: boolean, setManualSlug: (v: boolea
 };
 
 // Gnoll Report 1: WoW Recession Edition
-export function PostForm(props: Props) {
+export function PostForm(props: Props): JSX.Element {
   const {
     handleSubmit,
     handleReset,

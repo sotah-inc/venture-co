@@ -74,7 +74,7 @@ export class DeletePostDialog extends React.Component<Props> {
       >
         <DialogBody>
           <Callout intent={Intent.DANGER} icon="info-sign">
-            Are you sure you want to delete "{currentPost.title}"
+            Are you sure you want to delete &quot;{currentPost.title}&quot;
           </Callout>
         </DialogBody>
         <DialogActions>

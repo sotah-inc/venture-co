@@ -15,7 +15,6 @@ export function createAction<T extends string, P>(
   return payload === undefined ? { type } : { type, payload };
 }
 
-// tslint:disable-next-line:no-any
 type FunctionType = (...args: any[]) => any;
 interface IActionCreatorsMapObject {
   [actionCreator: string]: FunctionType;

@@ -217,9 +217,9 @@ export class App extends React.Component<Props> {
       this.handleUnauth(prevProps);
 
       return;
-    case AuthLevel.authenticated:
+    case AuthLevel.authenticated: {
       const hasBeenAuthorized =
-          [AuthLevel.unauthenticated, AuthLevel.initial].indexOf(prevProps.authLevel) > -1;
+        [AuthLevel.unauthenticated, AuthLevel.initial].indexOf(prevProps.authLevel) > -1;
       if (hasBeenAuthorized) {
         insertToast({
           icon: "user",
@@ -231,6 +231,7 @@ export class App extends React.Component<Props> {
       this.handleAuth(prevProps);
 
       return;
+    }
     case AuthLevel.initial:
       if (preloadedToken.length === 0) {
         changeAuthLevel(AuthLevel.unauthenticated);
@@ -293,9 +294,13 @@ export class App extends React.Component<Props> {
   private handleAuth(prevProps: Props) {
     const { fetchUserPreferencesLevel, loadUserPreferences, profile, insertToast } = this.props;
 
+    if (profile === null) {
+      return;
+    }
+
     switch (fetchUserPreferencesLevel) {
     case FetchLevel.initial:
-      loadUserPreferences(profile!.token);
+      loadUserPreferences(profile.token);
 
       return;
     case FetchLevel.failure:

@@ -1,6 +1,7 @@
 import React from "react";
 
-import { Button, Classes, H6, Menu, MenuItem, Popover, Position } from "@blueprintjs/core";
+import { Button, Classes, H6, Menu, MenuItem } from "@blueprintjs/core";
+import { Popover2 } from "@blueprintjs/popover2";
 import { SortPerPage } from "@sotah-inc/core";
 
 export interface IStateProps {
@@ -14,7 +15,7 @@ export interface IDispatchProps {
 type Props = Readonly<IStateProps & IDispatchProps>;
 
 export class CountToggle extends React.Component<Props> {
-  public renderMenuItem(count: number, index: number) {
+  public renderMenuItem(count: number, index: number): JSX.Element {
     const { auctionsPerPage, onCountChange } = this.props;
 
     let className = "";
@@ -32,7 +33,7 @@ export class CountToggle extends React.Component<Props> {
     );
   }
 
-  public renderMenu() {
+  public renderMenu(): JSX.Element {
     const counts: number[] = Object.values(SortPerPage)
       .filter(v => !isNaN(Number(v)))
       .map(Number);
@@ -51,11 +52,12 @@ export class CountToggle extends React.Component<Props> {
     const { auctionsPerPage } = this.props;
 
     return (
-      <Popover
+      <Popover2
         content={this.renderMenu()}
-        target={<Button icon="double-caret-vertical">{auctionsPerPage} results</Button>}
-        position={Position.BOTTOM_LEFT}
-      />
+        placement={"bottom-start"}
+      >
+        <Button icon="double-caret-vertical">{auctionsPerPage} results</Button>
+      </Popover2>
     );
   }
 }

@@ -64,13 +64,13 @@ export type IOwnProps = IRouteProps;
 type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
 
 export class AuctionTable extends React.Component<Props> {
-  public renderItemPopover(item: IShortItem) {
+  public renderItemPopover(item: IShortItem): JSX.Element {
     const { selectItemQueryAuctions } = this.props;
 
     return <ItemPopoverContainer item={item} onItemClick={() => selectItemQueryAuctions(item)} />;
   }
 
-  public renderPetPopover(pet: IShortPet, quality: PetQuality, level: number) {
+  public renderPetPopover(pet: IShortPet, quality: PetQuality, level: number): JSX.Element {
     const { selectPetQueryAuctions } = this.props;
 
     return (
@@ -83,7 +83,7 @@ export class AuctionTable extends React.Component<Props> {
     );
   }
 
-  public renderAuction(auction: IAuction | null, index: number) {
+  public renderAuction(auction: IAuction | null, index: number): JSX.Element {
     const renderedCell = auction ? this.renderTargetCell(auction) : null;
     if (auction === null || renderedCell === null) {
       return (
@@ -114,7 +114,7 @@ export class AuctionTable extends React.Component<Props> {
     );
   }
 
-  public renderMarketPricePercentage(auction: IAuction) {
+  public renderMarketPricePercentage(auction: IAuction): JSX.Element | null {
     const {
       auctionsResultData: { items_market_price },
     } = this.props;
@@ -140,7 +140,7 @@ export class AuctionTable extends React.Component<Props> {
     return <span className={colorClass}> ({Number(percentage.toFixed(0)).toLocaleString()}%)</span>;
   }
 
-  public renderTargetCell(auction: IAuction) {
+  public renderTargetCell(auction: IAuction): JSX.Element | null {
     const { auctionsResultData } = this.props;
 
     const foundPet = auctionsResultData.pets.find(v => v.id === auction.pet_species_id);
@@ -161,7 +161,7 @@ export class AuctionTable extends React.Component<Props> {
     return null;
   }
 
-  public renderItemCell(itemId: number, item: IShortItem | undefined) {
+  public renderItemCell(itemId: number, item: IShortItem | undefined): JSX.Element {
     if (typeof item === "undefined") {
       return <td className={qualityToColorClass(ItemQuality.Common)}>{itemId}</td>;
     }
@@ -176,7 +176,7 @@ export class AuctionTable extends React.Component<Props> {
     pet: IShortPet | undefined,
     quality: PetQuality,
     level: number,
-  ) {
+  ): JSX.Element {
     if (typeof pet === "undefined") {
       return <td className={petQualityToColorClass(quality)}>{petId}</td>;
     }

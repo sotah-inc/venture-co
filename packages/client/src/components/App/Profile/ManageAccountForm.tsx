@@ -66,7 +66,7 @@ const renderForm = (props: Props) => {
   );
 };
 
-export function ManageAccountForm(props: Props) {
+export function ManageAccountForm(props: Props): JSX.Element {
   const {
     handleSubmit,
     handleReset,

@@ -187,7 +187,7 @@ export class PostList extends React.Component<Props> {
   }
 
   private renderSkeleton() {
-    const numbers: number[] = Array.apply(null, Array(2)).map((_: unknown, i: number) => i);
+    const numbers: number[] = Array.from({ length: 2 }, (_, i) => i);
 
     return numbers.map((_, i) => PostList.renderSkeletonItem(i));
   }

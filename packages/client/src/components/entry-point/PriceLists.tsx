@@ -14,12 +14,22 @@ import {
   ILoadPricelistsEntrypoint,
   ILoadPricelistsEntrypointFront,
 } from "../../actions/price-lists";
-import { CreateEntryDialogContainer } from "../../containers/entry-point/PriceLists/CreateEntryDialog";
+import {
+  CreateEntryDialogContainer,
+} from "../../containers/entry-point/PriceLists/CreateEntryDialog";
 import { ActionBarRouteContainer } from "../../route-containers/entry-point/PriceLists/ActionBar";
-import { CreateListDialogRouteContainer } from "../../route-containers/entry-point/PriceLists/CreateListDialog";
-import { DeleteListDialogRouteContainer } from "../../route-containers/entry-point/PriceLists/DeleteListDialog";
-import { EditListDialogRouteContainer } from "../../route-containers/entry-point/PriceLists/EditListDialog";
-import { PricelistTreeRouteContainer } from "../../route-containers/entry-point/PriceLists/PricelistTree";
+import {
+  CreateListDialogRouteContainer,
+} from "../../route-containers/entry-point/PriceLists/CreateListDialog";
+import {
+  DeleteListDialogRouteContainer,
+} from "../../route-containers/entry-point/PriceLists/DeleteListDialog";
+import {
+  EditListDialogRouteContainer,
+} from "../../route-containers/entry-point/PriceLists/EditListDialog";
+import {
+  PricelistTreeRouteContainer,
+} from "../../route-containers/entry-point/PriceLists/PricelistTree";
 import { IClientRealm } from "../../types/global";
 import { AuthLevel, FetchLevel } from "../../types/main";
 import { setTitle } from "../../util";

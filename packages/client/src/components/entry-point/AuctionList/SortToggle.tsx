@@ -25,7 +25,7 @@ export interface IOwnProps {
 type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
 
 export class SortToggle extends React.Component<Props> {
-  public onToggle(sortKind: SortKind) {
+  public onToggle(sortKind: SortKind): void {
     const { currentSortDirection, currentSortKind, onChange } = this.props;
 
     let sortDirection = SortDirection.up;
@@ -42,7 +42,7 @@ export class SortToggle extends React.Component<Props> {
     return;
   }
 
-  public renderButton(icon: IconName | null) {
+  public renderButton(icon: IconName | null): JSX.Element {
     const { label, sortKind } = this.props;
 
     if (icon === null) {

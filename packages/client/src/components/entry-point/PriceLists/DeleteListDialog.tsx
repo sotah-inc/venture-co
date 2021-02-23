@@ -62,7 +62,7 @@ export class DeleteListDialog extends React.Component<Props> {
 
     if (prevProps.deletePricelistLevel !== deletePricelistLevel) {
       switch (deletePricelistLevel) {
-      case FetchLevel.success:
+      case FetchLevel.success: {
         insertToast({
           icon: "info-sign",
           intent: Intent.SUCCESS,
@@ -80,6 +80,7 @@ export class DeleteListDialog extends React.Component<Props> {
         browseOnDeletion(currentRegion, currentRealm, selectedList, professionData);
 
         return;
+      }
       case FetchLevel.failure:
         insertToast({
           icon: "warning-sign",
@@ -115,7 +116,7 @@ export class DeleteListDialog extends React.Component<Props> {
       >
         <DialogBody>
           <Callout intent={Intent.DANGER} icon="info-sign">
-            Are you sure you want to delete "{selectedList.name}"
+            Are you sure you want to delete &quot;{selectedList.name}&quot;
           </Callout>
         </DialogBody>
         <DialogActions>

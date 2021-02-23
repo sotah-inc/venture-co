@@ -25,10 +25,14 @@ import { ILoadAuctionListEntrypoint } from "../../actions/auction";
 import { ILoadRealmEntrypoint } from "../../actions/main";
 import { IGetAuctionsOptions } from "../../api/auctions";
 import { CountToggleContainer } from "../../containers/entry-point/AuctionList/CountToggle";
-import { QueryAuctionsFilterContainer } from "../../containers/entry-point/AuctionList/QueryAuctionsFilter";
+import {
+  QueryAuctionsFilterContainer,
+} from "../../containers/entry-point/AuctionList/QueryAuctionsFilter";
 import { RealmToggleContainer } from "../../containers/util/RealmToggle";
 import { RegionToggleContainer } from "../../containers/util/RegionToggle";
-import { AuctionTableRouteContainer } from "../../route-containers/entry-point/AuctionList/AuctionTable";
+import {
+  AuctionTableRouteContainer,
+} from "../../route-containers/entry-point/AuctionList/AuctionTable";
 import { IAuctionsOptions, IAuctionResultData } from "../../types/auction";
 import { IClientRealm, IFetchData } from "../../types/global";
 import { AuthLevel, FetchLevel } from "../../types/main";

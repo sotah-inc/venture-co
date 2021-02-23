@@ -1,4 +1,3 @@
-// tslint:disable-next-line:no-import-side-effect
 import "isomorphic-fetch";
 import queryString, { StringifiableRecord } from "query-string";
 

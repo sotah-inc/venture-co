@@ -25,7 +25,7 @@ export interface IFormValues {
 export type Props = Readonly<IStateProps & IDispatchProps & FormikProps<IFormValues>>;
 
 export class Login extends React.Component<Props> {
-  public componentDidUpdate() {
+  public componentDidUpdate(): void {
     const { isLoggedIn } = this.props;
 
     if (isLoggedIn) {
@@ -33,7 +33,7 @@ export class Login extends React.Component<Props> {
     }
   }
 
-  public renderForm() {
+  public renderForm(): JSX.Element {
     const {
       values,
       setFieldValue,
@@ -86,7 +86,7 @@ export class Login extends React.Component<Props> {
   }
 
   public toggleDialog(props: Props) {
-    return () => props.changeIsLoginDialogOpen(!props.isLoginDialogOpen);
+    return (): void => props.changeIsLoginDialogOpen(!props.isLoginDialogOpen);
   }
 
   public render(): React.ReactNode {

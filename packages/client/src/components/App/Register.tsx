@@ -25,7 +25,7 @@ export interface IFormValues {
 export type Props = Readonly<IStateProps & IDispatchProps & FormikProps<IFormValues>>;
 
 export class Register extends React.Component<Props> {
-  public componentDidUpdate() {
+  public componentDidUpdate(): void {
     const { isRegistered, changeIsRegisterDialogOpen } = this.props;
 
     if (isRegistered) {
@@ -33,7 +33,7 @@ export class Register extends React.Component<Props> {
     }
   }
 
-  public renderForm() {
+  public renderForm(): JSX.Element {
     const {
       values,
       setFieldValue,

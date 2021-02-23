@@ -80,7 +80,7 @@ export class CreateListDialog extends React.Component<Props, State> {
 
     if (prevProps.createPricelist.level !== createPricelist.level) {
       switch (createPricelist.level) {
-      case FetchLevel.success:
+      case FetchLevel.success: {
         InsertToast({
           icon: "info-sign",
           intent: Intent.SUCCESS,
@@ -99,6 +99,7 @@ export class CreateListDialog extends React.Component<Props, State> {
         browseOnCreate(currentRegion, currentRealm, selectedList, professionData);
 
         break;
+      }
       default:
         break;
       }
@@ -141,15 +142,19 @@ export class CreateListDialog extends React.Component<Props, State> {
       selectedExpansion,
     } = this.props;
 
+    if (profile === null || selectedExpansion === null) {
+      return;
+    }
+
     if (selectedProfession === null) {
-      FetchCreatePricelist(profile!.token, {
+      FetchCreatePricelist(profile.token, {
         entries,
         pricelist: { name, slug },
       });
     } else {
-      FetchCreateProfessionPricelist(profile!.token, {
+      FetchCreateProfessionPricelist(profile.token, {
         entries,
-        expansion_name: selectedExpansion!.name,
+        expansion_name: selectedExpansion.name,
         pricelist: { name, slug },
         profession_name: selectedProfession.name,
       });

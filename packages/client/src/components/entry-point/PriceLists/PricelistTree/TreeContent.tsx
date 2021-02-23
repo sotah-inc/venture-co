@@ -3,10 +3,12 @@ import React from "react";
 import { Classes, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
 import { IPricelistJson, IRegionComposite } from "@sotah-inc/core";
 
-// tslint:disable-next-line:max-line-length
-import { PricelistPanelContainer } from "../../../../containers/entry-point/PriceLists/PricelistTree/PricelistPanel";
-// tslint:disable-next-line:max-line-length
-import { RealmSummaryPanelContainer } from "../../../../containers/entry-point/PriceLists/PricelistTree/TreeContent/RealmSummaryPanel";
+import {
+  PricelistPanelContainer,
+} from "../../../../containers/entry-point/PriceLists/PricelistTree/PricelistPanel";
+import {
+  RealmSummaryPanelContainer,
+} from "../../../../containers/entry-point/PriceLists/PricelistTree/TreeContent/RealmSummaryPanel";
 import { IClientRealm } from "../../../../types/global";
 import { LastModified } from "../../../util";
 

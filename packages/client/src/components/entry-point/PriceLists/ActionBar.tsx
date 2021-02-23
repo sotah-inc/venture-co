@@ -8,10 +8,9 @@ import {
   Intent,
   Navbar,
   NavbarGroup,
-  Position,
   Spinner,
-  Tooltip,
 } from "@blueprintjs/core";
+import { Tooltip2 } from "@blueprintjs/popover2";
 import {
   IExpansion,
   IPricelistJson,
@@ -21,7 +20,9 @@ import {
 } from "@sotah-inc/core";
 
 import { ExpansionToggleContainer } from "../../../containers/util/ExpansionToggle";
-import { PricelistProfessionToggleContainer } from "../../../containers/util/PricelistProfessionToggle";
+import {
+  PricelistProfessionToggleContainer,
+} from "../../../containers/util/PricelistProfessionToggle";
 import { RealmToggleContainer } from "../../../containers/util/RealmToggle";
 import { RegionToggleContainer } from "../../../containers/util/RegionToggle";
 import { IClientRealm, IProfile } from "../../../types/global";
@@ -214,12 +215,12 @@ export class ActionBar extends React.Component<Props> {
 
     if (selectedProfession !== null && profile.user.level !== UserLevel.Admin) {
       return (
-        <Tooltip
+        <Tooltip2
           content="You are not authorized to manage profession pricelists!"
-          position={Position.RIGHT}
+          placement={"right"}
         >
           <Button icon="plus" text={createListText} disabled={true} />
-        </Tooltip>
+        </Tooltip2>
       );
     }
 

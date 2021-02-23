@@ -4,7 +4,10 @@ import { H2, H4 } from "@blueprintjs/core";
 import { IPricelistJson, IRegionComposite, Locale } from "@sotah-inc/core";
 
 import { IGetItemPriceHistoriesOptions } from "../../../../../api/item-price-histories";
-import { CurrentPricesTableContainer } from "../../../../../containers/entry-point/PriceLists/PricelistTree/PricelistPanel/PricelistTable/CurrentPricesTable";
+import {
+  CurrentPricesTableContainer,
+// eslint-disable-next-line max-len
+} from "../../../../../containers/entry-point/PriceLists/PricelistTree/PricelistPanel/PricelistTable/CurrentPricesTable";
 import {
   IClientRealm,
   IFetchData,
@@ -35,7 +38,7 @@ export interface IOwnProps {
 type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
 
 export class PricelistTable extends React.Component<Props> {
-  public componentDidUpdate(prevProps: Readonly<Props>) {
+  public componentDidUpdate(prevProps: Readonly<Props>): void {
     const { itemPriceHistories, getItemPriceHistories, region, realm, selectedList } = this.props;
 
     if (selectedList === null) {

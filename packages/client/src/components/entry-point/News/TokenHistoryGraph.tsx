@@ -101,12 +101,6 @@ export class TokenHistoryGraph extends React.Component<Props, State> {
     highlightedRegionName: null,
   };
 
-  public componentDidMount(): void {
-    this.setState({
-      highlightedRegionName: null,
-    });
-  }
-
   public render(): React.ReactNode {
     const { tokenHistories } = this.props;
 
@@ -189,7 +183,7 @@ export class TokenHistoryGraph extends React.Component<Props, State> {
     );
   }
 
-  private renderLegendItem(regionName: RegionName) {
+  private renderLegendItem(regionName: RegionName): JSX.Element {
     return <span>{regionName.toUpperCase()}</span>;
   }
 

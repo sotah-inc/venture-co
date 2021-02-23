@@ -9,8 +9,9 @@ import {
   IRegionComposite,
 } from "@sotah-inc/core";
 
-// tslint:disable-next-line:max-line-length
-import { TreeContentContainer } from "../../../containers/entry-point/PriceLists/PricelistTree/TreeContent";
+import {
+  TreeContentContainer,
+} from "../../../containers/entry-point/PriceLists/PricelistTree/TreeContent";
 import { IClientRealm, IFetchData, IItemsData } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
 import { getItemFromPricelist } from "../../../util";

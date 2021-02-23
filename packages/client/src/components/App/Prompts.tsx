@@ -11,7 +11,7 @@ export interface IDispatchProps {
   hello: () => void;
 }
 
-// tslint:disable-next-line:no-empty-interface
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface IRouteProps {}
 
 export type IOwnProps = IRouteProps;
@@ -43,7 +43,7 @@ export class Prompts extends React.Component<Props> {
               icon={"envelope"}
               intent={Intent.PRIMARY}
               onClick={() => {
-                // tslint:disable-next-line:no-console
+                // eslint-disable-next-line no-console
                 console.log("wew lad");
               }}
               text="Verify with Email"

@@ -9,8 +9,8 @@ import {
   NavbarDivider,
   NavbarGroup,
   NavbarHeading,
-  Tooltip,
 } from "@blueprintjs/core";
+import { Tooltip2 } from "@blueprintjs/popover2";
 import { IExpansion, IRegionComposite, IUserJson } from "@sotah-inc/core";
 
 import { LoginContainer } from "../../containers/App/Login";
@@ -65,9 +65,9 @@ export class Topbar extends React.Component<Props> {
       }
 
       return (
-        <Tooltip content="News, your personal feed" inheritDarkTheme={true}>
+        <Tooltip2 content="News, your personal feed" inheritDarkTheme={true}>
           {out}
-        </Tooltip>
+        </Tooltip2>
       );
     })();
     const dataLink = (() => {
@@ -83,9 +83,9 @@ export class Topbar extends React.Component<Props> {
       }
 
       return (
-        <Tooltip content="Auctions, professions" inheritDarkTheme={true}>
+        <Tooltip2 content="Auctions, professions" inheritDarkTheme={true}>
           {out}
-        </Tooltip>
+        </Tooltip2>
       );
     })();
     const marketplaceLink = (() => {
@@ -101,9 +101,9 @@ export class Topbar extends React.Component<Props> {
       }
 
       return (
-        <Tooltip content="Work orders, cross-realm exchange" inheritDarkTheme={true}>
+        <Tooltip2 content="Work orders, cross-realm exchange" inheritDarkTheme={true}>
           {out}
-        </Tooltip>
+        </Tooltip2>
       );
     })();
 

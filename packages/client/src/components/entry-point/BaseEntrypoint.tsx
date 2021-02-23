@@ -16,7 +16,11 @@ export interface IOwnProps {
 
 export type Props = Readonly<IStateProps & IOwnProps & IRouteProps>;
 
-export function BaseEntrypoint({ currentRegion, redirectToRegion, label }: Props) {
+export function BaseEntrypoint({
+  currentRegion,
+  redirectToRegion,
+  label,
+}: Props): JSX.Element | null {
   if (currentRegion === null) {
     return null;
   }

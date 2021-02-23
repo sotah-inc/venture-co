@@ -12,8 +12,9 @@ import {
 } from "@blueprintjs/core";
 import { IUpdateProfileRequest, IUserJson } from "@sotah-inc/core";
 
-// tslint:disable-next-line:max-line-length
-import { ManageAccountFormFormContainer } from "../../../form-containers/App/Profile/ManageAccountForm";
+import {
+  ManageAccountFormFormContainer,
+} from "../../../form-containers/App/Profile/ManageAccountForm";
 import { IErrors } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
 import { setTitle } from "../../../util";
@@ -85,7 +86,13 @@ export class ManageAccount extends React.Component<Props> {
               message: `Could not save profile: ${err}`,
             });
           }}
-          onSubmit={(v: IFormValues) => updateProfile(token!, { email: v.email })}
+          onSubmit={(v: IFormValues) => {
+            if (token === null) {
+              return;
+            }
+
+            updateProfile(token, { email: v.email });
+          }}
           updateProfileErrors={updateProfileErrors}
           updateProfileLevel={updateProfileLevel}
         />
