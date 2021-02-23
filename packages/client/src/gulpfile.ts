@@ -9,6 +9,7 @@ const stylesGlobs = [
   "./node_modules/purecss/build/pure-min.css",
   "./node_modules/@blueprintjs/core/lib/css/blueprint.css",
   "./node_modules/@blueprintjs/select/lib/css/blueprint-select.css",
+  "./node_modules/@blueprintjs/popover2/lib/css/blueprint-popover2.css",
   "./styles/*.scss",
 ];
 
