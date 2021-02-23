@@ -1,4 +1,4 @@
-import { ExpansionName, IProfessionPricelistJson, ProfessionName } from "@sotah-inc/core";
+import { ExpansionName, IProfessionPricelistJson } from "@sotah-inc/core";
 import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 import { Pricelist } from "./pricelist";
@@ -18,14 +18,14 @@ export class ProfessionPricelist {
   @JoinColumn({ name: "pricelist_id" })
   public pricelist: Pricelist | undefined;
 
-  @Column("varchar", { length: 255 })
-  public name: ProfessionName;
+  @Column("number")
+  public professionId: number;
 
   @Column("varchar", { length: 255 })
   public expansion: ExpansionName;
 
   constructor() {
-    this.name = "";
+    this.professionId = -1;
     this.expansion = "";
   }
 
@@ -33,7 +33,7 @@ export class ProfessionPricelist {
     return {
       expansion: this.expansion,
       id: this.id ?? 0,
-      name: this.name,
+      professionId: this.professionId,
       pricelist: this.pricelist?.toJson() ?? { name: "", id: 0, pricelist_entries: [], slug: null },
     };
   }

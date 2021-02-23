@@ -4,7 +4,6 @@ import {
   IConnectedRealmModificationDates,
   IExpansion,
   IItemClass,
-  IProfession,
 } from "@sotah-inc/core";
 
 export * from "./auctions";
@@ -30,7 +29,6 @@ export interface IGetBootResponse {
   regions: IConfigRegion[];
   item_classes: IItemClass[];
   expansions: IExpansion[];
-  professions: IProfession[];
 }
 
 export interface IRealmModificationDatesResponse {

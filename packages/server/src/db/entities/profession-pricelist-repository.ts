@@ -1,4 +1,4 @@
-import { ExpansionName, ProfessionName } from "@sotah-inc/core";
+import { ExpansionName, ProfessionId } from "@sotah-inc/core";
 import { AbstractRepository, EntityRepository } from "typeorm";
 
 import { ProfessionPricelist } from "./profession-pricelist";
@@ -27,7 +27,7 @@ export class ProfessionPricelistRepository extends AbstractRepository<Profession
   }
 
   public async getFromPricelistSlug(
-    profession: ProfessionName,
+    professionId: ProfessionId,
     expansion: ExpansionName,
     slug: string,
   ): Promise<ProfessionPricelist | null> {
@@ -36,10 +36,10 @@ export class ProfessionPricelistRepository extends AbstractRepository<Profession
       .innerJoinAndSelect("profession_pricelist.pricelist", "pricelist")
       .innerJoinAndSelect("pricelist.user", "user")
       .innerJoinAndSelect("pricelist.entries", "entry")
-      .where("profession_pricelist.name = :profession")
+      .where("profession_pricelist.professionId = :professionId")
       .andWhere("profession_pricelist.expansion = :expansion")
       .andWhere("pricelist.slug = :slug")
-      .setParameters({ profession, expansion, slug });
+      .setParameters({ professionId, expansion, slug });
 
     const professionPricelist = await queryBuilder.getOne();
 
