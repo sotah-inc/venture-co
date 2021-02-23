@@ -1,6 +1,6 @@
 import { IPricelistEntryJson, IPricelistJson, IProfessionPricelistJson } from "../../entities";
 import { ExpansionName } from "../../expansion";
-import { ProfessionName } from "../../profession";
+import { ProfessionId } from "../../short-profession";
 import { IValidationErrorResponse } from "../index";
 
 export interface ICreateProfessionPricelistRequest {
@@ -13,7 +13,7 @@ export interface ICreateProfessionPricelistRequest {
     item_id: number;
     quantity_modifier: number;
   }>;
-  profession_name: ProfessionName;
+  profession_id: ProfessionId;
   expansion_name: ExpansionName;
 }
 

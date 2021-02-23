@@ -17,7 +17,6 @@ import {
 } from "../index";
 import { ItemId } from "../item";
 import { IItemClass } from "../item-class";
-import { IProfession } from "../profession";
 import { IShortItem } from "../short-item";
 
 export * from "./data/index";
@@ -26,7 +25,6 @@ export interface IGetBootResponseData {
   regions: IRegionComposite[];
   item_classes: IItemClass[];
   expansions: IExpansion[];
-  professions: IProfession[];
 }
 
 export type GetBootResponse = IGetBootResponseData | null;

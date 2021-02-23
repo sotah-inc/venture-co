@@ -1,6 +1,6 @@
 import { ExpansionName } from "./expansion";
 import { ItemId } from "./item";
-import { ProfessionName } from "./profession";
+import { ProfessionId } from "./short-profession";
 
 export interface IPreferenceJson {
   id: number;
@@ -23,7 +23,7 @@ export interface IPricelistJson {
 
 export interface IProfessionPricelistJson {
   id: number;
-  name: ProfessionName;
+  professionId: ProfessionId;
   expansion: ExpansionName;
   pricelist: IPricelistJson;
 }

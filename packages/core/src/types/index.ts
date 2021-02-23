@@ -8,7 +8,6 @@ export * from "./item";
 export * from "./item-class";
 export * from "./item-prices";
 export * from "./prices";
-export * from "./profession";
 export * from "./region";
 export * from "./token";
 export * from "./work-order";
