@@ -6,7 +6,6 @@ import {
   RegionName,
 } from "@sotah-inc/core";
 import { AbstractRepository, EntityRepository } from "typeorm";
-// tslint:disable-next-line:no-submodule-imports
 import { FindManyOptions } from "typeorm/find-options/FindManyOptions";
 
 import { WorkOrder } from "./work-order";
