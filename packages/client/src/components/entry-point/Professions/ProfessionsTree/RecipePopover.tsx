@@ -78,7 +78,7 @@ export class RecipePopover extends React.Component<Props> {
         interactionKind={PopoverInteractionKind.HOVER}
         placement={"right"}
       >
-        this.renderLabel()
+        {this.renderLabel()}
       </Popover2>
     );
   }
