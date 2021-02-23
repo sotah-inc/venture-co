@@ -1,6 +1,6 @@
 {
   "name": "@sotah-inc/client",
-  "version": "2.0.423",
+  "version": "2.0.424",
   "description": "SotAH Web Client SDK",
   "main": "./build/dist/index.js",
   "typings": "build/dist/index.d.ts",
@@ -45,7 +45,6 @@
     "@types/recharts": "^1.8.19",
     "@types/speakingurl": "^13.0.2",
     "@types/undertaker": "^1.2.6",
-    "@types/webpack": "^4.41.26",
     "@types/yup": "^0.29.9",
     "formik": "^2.2.6",
     "http-status": "^1.5.0",
