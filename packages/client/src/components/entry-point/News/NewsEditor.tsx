@@ -48,11 +48,11 @@ export type IOwnProps = IRouteProps;
 type Props = Readonly<IDispatchProps & IStateProps & IOwnProps>;
 
 export class NewsEditor extends React.Component<Props> {
-  public componentDidMount() {
+  public componentDidMount(): void {
     this.handle();
   }
 
-  public componentDidUpdate(prevProps: Props) {
+  public componentDidUpdate(prevProps: Props): void {
     this.handle(prevProps);
   }
 

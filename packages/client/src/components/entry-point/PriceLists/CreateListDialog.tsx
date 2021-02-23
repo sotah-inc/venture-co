@@ -61,7 +61,7 @@ export class CreateListDialog extends React.Component<Props, State> {
     listDialogResetTrigger: 0,
   };
 
-  public componentDidUpdate(prevProps: Props) {
+  public componentDidUpdate(prevProps: Props): void {
     const {
       createPricelist,
       selectedList,

@@ -1,6 +1,7 @@
 import React from "react";
 
-import { Classes, HTMLTable, Position, Tooltip } from "@blueprintjs/core";
+import { Classes, HTMLTable } from "@blueprintjs/core";
+import { Tooltip2 } from "@blueprintjs/popover2";
 import { IQueryWorkOrdersResponseData, ItemId, IWorkOrderJson } from "@sotah-inc/core";
 import moment from "moment-timezone";
 
@@ -74,13 +75,13 @@ export class WorkOrdersList extends React.Component<Props> {
       .tz(moment.tz.guess());
 
     return (
-      <Tooltip
-        position={Position.LEFT}
+      <Tooltip2
+        placement={"left"}
         inheritDarkTheme={true}
         content={foundDate.format("MMMM Do YYYY, h:mm:ss a Z")}
       >
         {foundDate.fromNow()}
-      </Tooltip>
+      </Tooltip2>
     );
   }
 

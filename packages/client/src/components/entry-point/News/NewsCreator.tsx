@@ -41,7 +41,7 @@ export type IOwnProps = IRouteProps;
 type Props = Readonly<IDispatchProps & IStateProps & IOwnProps>;
 
 export class NewsCreator extends React.Component<Props> {
-  public componentDidMount() {
+  public componentDidMount(): void {
     setTitle("News Creator");
   }
 

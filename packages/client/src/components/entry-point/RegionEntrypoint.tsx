@@ -37,7 +37,7 @@ export interface IRouteParams {
 export type Props = Readonly<IStateProps & IDispatchProps & IOwnProps & IRouteProps>;
 
 export class RegionEntrypoint extends React.Component<Props> {
-  public componentDidMount() {
+  public componentDidMount(): void {
     const { loadRegionEntrypoint, regionEntrypointData } = this.props;
 
     loadRegionEntrypoint(regionEntrypointData);

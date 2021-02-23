@@ -4,7 +4,9 @@ import { Dialog, IToastProps } from "@blueprintjs/core";
 import { GameVersion, IPrefillWorkOrderItemResponseData, IRegionComposite } from "@sotah-inc/core";
 
 import { ICreateWorkOrderOptions, IPrefillWorkOrderItemOptions } from "../../../api/work-order";
-import { WorkOrderFormFormContainer } from "../../../form-containers/entry-point/WorkOrders/WorkOrderForm";
+import {
+  WorkOrderFormFormContainer,
+} from "../../../form-containers/entry-point/WorkOrders/WorkOrderForm";
 import { IClientRealm, IErrors, IFetchData, IProfile } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
 

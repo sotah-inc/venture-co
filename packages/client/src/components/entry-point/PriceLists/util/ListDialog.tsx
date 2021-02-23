@@ -1,15 +1,19 @@
 import React from "react";
 
-import { Button, Classes, Dialog, HTMLTable, Intent, Tooltip } from "@blueprintjs/core";
+import { Button, Classes, Dialog, HTMLTable, Intent } from "@blueprintjs/core";
+import { Tooltip2 } from "@blueprintjs/popover2";
 import { IPricelistEntryJson, IShortItem, ItemId } from "@sotah-inc/core";
 
 import { ItemPopoverContainer } from "../../../../containers/util/ItemPopover";
-// tslint:disable-next-line:max-line-length
-import { BulkEntryFormFormContainer } from "../../../../form-containers/entry-point/PriceLists/util/BulkEntryForm";
-// tslint:disable-next-line:max-line-length
-import { CreateEntryFormFormContainer } from "../../../../form-containers/entry-point/PriceLists/util/CreateEntryForm";
-// tslint:disable-next-line:max-line-length
-import { ListFormFormContainer } from "../../../../form-containers/entry-point/PriceLists/util/ListForm";
+import {
+  BulkEntryFormFormContainer,
+} from "../../../../form-containers/entry-point/PriceLists/util/BulkEntryForm";
+import {
+  CreateEntryFormFormContainer,
+} from "../../../../form-containers/entry-point/PriceLists/util/CreateEntryForm";
+import {
+  ListFormFormContainer,
+} from "../../../../form-containers/entry-point/PriceLists/util/ListForm";
 import { IErrors } from "../../../../types/global";
 import { FetchLevel } from "../../../../types/main";
 import { ListDialogStep } from "../../../../types/price-lists";
@@ -62,24 +66,32 @@ type State = Readonly<{
   entryMode: EntryMode;
 }>;
 
+const defaultState: State = {
+  entries: [],
+  entriesItems: [],
+  entryFormError: "",
+  entryMode: EntryMode.Pick,
+  listDialogStep: ListDialogStep.list,
+  listName: "",
+  listSlug: "",
+};
+
 export class ListDialog extends React.Component<Props, State> {
   public state: State = {
-    entries: [],
-    entriesItems: [],
-    entryFormError: "",
-    entryMode: EntryMode.Pick,
-    listDialogStep: ListDialogStep.list,
-    listName: "",
-    listSlug: "",
+    ...defaultState,
   };
 
-  public componentDidMount() {
-    const { defaultName, defaultEntries } = this.props;
+  public constructor(props: Props) {
+    super(props);
 
-    this.setState({ listName: defaultName ?? "", entries: defaultEntries ?? [] });
+    this.state = {
+      ...defaultState,
+      entries: props.defaultEntries ?? defaultState.entries,
+      listName: props.defaultName ?? defaultState.listName,
+    };
   }
 
-  public componentDidUpdate(prevProps: Props) {
+  public componentDidUpdate(prevProps: Props): void {
     const { resetTrigger, defaultName, defaultSlug, defaultEntries } = this.props;
 
     if (prevProps.resetTrigger !== resetTrigger) {
@@ -239,21 +251,21 @@ export class ListDialog extends React.Component<Props, State> {
 
   private renderSetToggle() {
     return (
-      <Tooltip content="Switch to Pick Mode for faster entry">
+      <Tooltip2 content="Switch to Pick Mode for faster entry">
         <Button icon="changes" onClick={() => this.setState({ entryMode: EntryMode.Pick })}>
           Pick Mode
         </Button>
-      </Tooltip>
+      </Tooltip2>
     );
   }
 
   private renderPickToggle() {
     return (
-      <Tooltip content="Switch to Set Mode for manually setting quantity">
+      <Tooltip2 content="Switch to Set Mode for manually setting quantity">
         <Button icon="build" onClick={() => this.setState({ entryMode: EntryMode.Set })}>
           Set Mode
         </Button>
-      </Tooltip>
+      </Tooltip2>
     );
   }
 

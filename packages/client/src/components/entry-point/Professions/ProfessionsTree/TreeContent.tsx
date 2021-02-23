@@ -3,8 +3,14 @@ import React from "react";
 import { Classes, H2, H4, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
 import { IShortRecipe, RecipeId } from "@sotah-inc/core";
 
-import { ReagentPricesTableContainer } from "../../../../containers/entry-point/Professions/ProfessionsTree/TreeContent/ReagentPricesTable";
-import { RecipePriceHistoriesGraphContainer } from "../../../../containers/entry-point/Professions/ProfessionsTree/TreeContent/RecipePriceHistoriesGraph";
+import {
+  ReagentPricesTableContainer,
+// eslint-disable-next-line max-len
+} from "../../../../containers/entry-point/Professions/ProfessionsTree/TreeContent/ReagentPricesTable";
+import {
+  RecipePriceHistoriesGraphContainer,
+// eslint-disable-next-line max-len
+} from "../../../../containers/entry-point/Professions/ProfessionsTree/TreeContent/RecipePriceHistoriesGraph";
 import { IItemsData } from "../../../../types/global";
 
 // props

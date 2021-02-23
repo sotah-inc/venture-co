@@ -43,7 +43,7 @@ export type IOwnProps = IRouteProps;
 export type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
 
 export class DeleteListDialog extends React.Component<Props> {
-  public componentDidUpdate(prevProps: Props) {
+  public componentDidUpdate(prevProps: Props): void {
     const {
       deletePricelistErrors,
       deletePricelistLevel,

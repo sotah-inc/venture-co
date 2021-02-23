@@ -9,7 +9,7 @@ export interface IRouteProps {
 export type Props = Readonly<IRouteProps>;
 
 export class Content extends React.Component<Props> {
-  public componentDidMount() {
+  public componentDidMount(): void {
     const { redirectToNews } = this.props;
 
     redirectToNews();

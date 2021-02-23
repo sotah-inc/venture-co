@@ -55,7 +55,7 @@ export interface IRouteProps {
 export type Props = Readonly<IDispatchProps & IStateProps & IOwnProps & IRouteProps>;
 
 export class Post extends React.Component<Props> {
-  public componentDidMount() {
+  public componentDidMount(): void {
     // props
     const { loadPost, postPayload } = this.props;
 

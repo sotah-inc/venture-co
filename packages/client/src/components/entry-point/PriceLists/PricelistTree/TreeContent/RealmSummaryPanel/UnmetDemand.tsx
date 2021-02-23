@@ -86,15 +86,17 @@ export class UnmetDemand extends React.Component<Props, IState> {
       <>
         <H5>
           Unmet Demand for{" "}
-          <span style={{ color: selectedExpansion.label_color }}>{selectedExpansion.label}</span>{" "}
-          Professions
+          <span style={{ color: selectedExpansion.label_color }}>
+            {selectedExpansion.label}
+          </span>
+          {" "}Professions
         </H5>
         {this.renderUnmetDemandContent()}
       </>
     );
   }
 
-  public onProfessionClick(profession: IProfession) {
+  public onProfessionClick(profession: IProfession): void {
     const { browseToProfession, currentRegion, currentRealm, selectedExpansion } = this.props;
 
     if (currentRegion === null || currentRealm === null || selectedExpansion === null) {
@@ -104,7 +106,7 @@ export class UnmetDemand extends React.Component<Props, IState> {
     browseToProfession(currentRegion, currentRealm, selectedExpansion, profession);
   }
 
-  public onPricelistClick(pricelist: IPricelistJson, professionName: ProfessionName) {
+  public onPricelistClick(pricelist: IPricelistJson, professionName: ProfessionName): void {
     const {
       browseToProfessionPricelist,
       professions,
@@ -189,7 +191,7 @@ export class UnmetDemand extends React.Component<Props, IState> {
     let collapsedResult: ICollapsedResultItem[] = unmetDemandProfessionPricelists.reduce(
       (outer: ICollapsedResultItem[], professionPricelist) => [
         ...outer,
-        ...professionPricelist.pricelist!.pricelist_entries!.reduce(
+        ...professionPricelist.pricelist.pricelist_entries.reduce(
           (inner: ICollapsedResultItem[], entry) => [...inner, { professionPricelist, entry }],
           [],
         ),
@@ -202,8 +204,8 @@ export class UnmetDemand extends React.Component<Props, IState> {
         return a.professionPricelist.name > b.professionPricelist.name ? 1 : -1;
       }
 
-      if (a.professionPricelist.pricelist!.name !== b.professionPricelist.pricelist!.name) {
-        return a.professionPricelist.pricelist!.name > b.professionPricelist.pricelist!.name
+      if (a.professionPricelist.pricelist.name !== b.professionPricelist.pricelist.name) {
+        return a.professionPricelist.pricelist.name > b.professionPricelist.pricelist.name
           ? 1
           : -1;
       }
@@ -312,7 +314,7 @@ export class UnmetDemand extends React.Component<Props, IState> {
           <td className={qualityToColorClass(ItemQuality.Common)}>{item_id}</td>
           <td>{this.renderProfession(profession)}</td>
           <td>
-            {this.renderPricelistCell(professionPricelist.pricelist!, professionPricelist.name)}
+            {this.renderPricelistCell(professionPricelist.pricelist, professionPricelist.name)}
           </td>
         </tr>
       );
@@ -325,7 +327,7 @@ export class UnmetDemand extends React.Component<Props, IState> {
         </td>
         <td>{this.renderProfession(profession)}</td>
         <td>
-          {this.renderPricelistCell(professionPricelist.pricelist!, professionPricelist.name)}
+          {this.renderPricelistCell(professionPricelist.pricelist, professionPricelist.name)}
         </td>
       </tr>
     );

@@ -41,7 +41,7 @@ export type IOwnProps = IRouteProps;
 type Props = Readonly<IRouteProps & IOwnProps & IStateProps & IDispatchProps>;
 
 export class ManageAccount extends React.Component<Props> {
-  public componentDidMount() {
+  public componentDidMount(): void {
     setTitle("Profile");
   }
 

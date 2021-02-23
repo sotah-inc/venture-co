@@ -12,9 +12,13 @@ import {
 import { ILoadRealmEntrypoint } from "../../actions/main";
 import { ILoadWorkOrderEntrypoint } from "../../actions/work-order";
 import { QueryWorkOrdersOptions } from "../../api/work-order";
-import { CreateWorkOrderDialogContainer } from "../../containers/entry-point/WorkOrders/CreateWorkOrderDialog";
+import {
+  CreateWorkOrderDialogContainer,
+} from "../../containers/entry-point/WorkOrders/CreateWorkOrderDialog";
 import { WorkOrdersListContainer } from "../../containers/entry-point/WorkOrders/WorkOrdersList";
-import { WorkOrdersNavRouteContainer } from "../../route-containers/entry-point/WorkOrders/WorkOrdersNav";
+import {
+  WorkOrdersNavRouteContainer,
+} from "../../route-containers/entry-point/WorkOrders/WorkOrdersNav";
 import { IClientRealm, IFetchData } from "../../types/global";
 import { FetchLevel } from "../../types/main";
 import { setTitle } from "../../util";
@@ -51,7 +55,7 @@ export interface IRouteProps {
 export type Props = Readonly<IDispatchProps & IStateProps & IOwnProps & IRouteProps>;
 
 export class WorkOrders extends React.Component<Props> {
-  public componentDidMount() {
+  public componentDidMount(): void {
     const {
       workOrderEntrypointData,
       loadWorkOrderEntrypoint,
@@ -63,7 +67,7 @@ export class WorkOrders extends React.Component<Props> {
     loadRealmEntrypoint(realmEntrypointData);
   }
 
-  public componentDidUpdate(prevProps: Props) {
+  public componentDidUpdate(prevProps: Props): void {
     const {
       workOrderEntrypointData,
       loadWorkOrderEntrypoint,

@@ -1,6 +1,7 @@
 import React from "react";
 
-import { Popover, PopoverInteractionKind, Position } from "@blueprintjs/core";
+import { PopoverInteractionKind } from "@blueprintjs/core";
+import { Popover2 } from "@blueprintjs/popover2";
 import { IShortRecipeReagent, IShortSkillTierCategoryRecipe } from "@sotah-inc/core";
 
 export interface IOwnProps {
@@ -18,7 +19,7 @@ export class RecipePopover extends React.Component<Props> {
     },
   };
 
-  private renderReagent(reagent: IShortRecipeReagent, reagentIndex: number) {
+  private renderReagent(reagent: IShortRecipeReagent, reagentIndex: number): JSX.Element {
     return (
       <li key={reagentIndex}>
         {reagent.quantity}x {reagent.reagent.name}
@@ -72,12 +73,13 @@ export class RecipePopover extends React.Component<Props> {
 
   public render(): React.ReactNode {
     return (
-      <Popover
+      <Popover2
         content={this.renderPopoverContent()}
-        target={this.renderLabel()}
         interactionKind={PopoverInteractionKind.HOVER}
-        position={Position.RIGHT}
-      />
+        placement={"right"}
+      >
+        this.renderLabel()
+      </Popover2>
     );
   }
 }

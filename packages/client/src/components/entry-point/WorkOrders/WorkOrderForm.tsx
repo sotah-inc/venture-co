@@ -115,7 +115,7 @@ export class WorkOrderForm extends React.Component<Props> {
 
     if (prevProps.prefillWorkOrderItem.level !== prefillWorkOrderItem.level) {
       switch (prefillWorkOrderItem.level) {
-      case FetchLevel.success:
+      case FetchLevel.success: {
         const priceSliderData = translatePriceToSliderData(prefillWorkOrderItem);
         if (priceSliderData !== null) {
           setFieldValue("price", priceSliderData.min + priceSliderData.step);
@@ -127,6 +127,7 @@ export class WorkOrderForm extends React.Component<Props> {
         }
 
         break;
+      }
       default:
         break;
       }

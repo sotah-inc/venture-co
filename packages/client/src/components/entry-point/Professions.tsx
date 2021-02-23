@@ -11,7 +11,9 @@ import {
 import { ILoadRealmEntrypoint } from "../../actions/main";
 import { ILoadProfessionsEndpoint } from "../../actions/professions";
 import { ActionBarRouteContainer } from "../../route-containers/entry-point/Professions/ActionBar";
-import { ProfessionsTreeRouteContainer } from "../../route-containers/entry-point/Professions/ProfessionsTree";
+import {
+  ProfessionsTreeRouteContainer,
+} from "../../route-containers/entry-point/Professions/ProfessionsTree";
 import { IClientRealm, IFetchData, IItemsData } from "../../types/global";
 import { ISelectedSkillTier, ISelectedSkillTierCategory } from "../../types/professions";
 import { setTitle } from "../../util";
@@ -60,7 +62,7 @@ export interface IRouteProps {
 type Props = Readonly<IStateProps & IDispatchProps & IOwnProps & IRouteProps>;
 
 export class Professions extends React.Component<Props> {
-  public componentDidMount() {
+  public componentDidMount(): void {
     const {
       entrypointData,
       loadEntrypointData,
@@ -74,7 +76,7 @@ export class Professions extends React.Component<Props> {
     loadRealmEntrypoint(realmEntrypointData);
   }
 
-  public componentDidUpdate(prevProps: Props) {
+  public componentDidUpdate(prevProps: Props): void {
     const {
       entrypointData,
       loadEntrypointData,

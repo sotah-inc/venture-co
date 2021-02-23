@@ -30,7 +30,7 @@ export type IOwnProps = IRouteProps;
 export type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
 
 export class DeletePostDialog extends React.Component<Props> {
-  public componentDidUpdate(prevProps: Props) {
+  public componentDidUpdate(prevProps: Props): void {
     const { browseToNews, deletePostLevel, insertToast } = this.props;
 
     if (prevProps.deletePostLevel !== deletePostLevel) {

@@ -85,7 +85,7 @@ export interface IOwnProps {
 type Props = Readonly<IStateProps & IDispatchProps & IOwnProps & IRouteProps>;
 
 export class PriceLists extends React.Component<Props> {
-  public componentDidMount() {
+  public componentDidMount(): void {
     const {
       loadPricelistsEntrypoint,
       loadRealmEntrypoint,
@@ -103,7 +103,7 @@ export class PriceLists extends React.Component<Props> {
     });
   }
 
-  public componentDidUpdate(prevProps: Props) {
+  public componentDidUpdate(prevProps: Props): void {
     const {
       routeParams: { region_name },
       currentRegion,

@@ -101,7 +101,7 @@ export class TokenHistoryGraph extends React.Component<Props, State> {
     highlightedRegionName: null,
   };
 
-  public componentDidMount() {
+  public componentDidMount(): void {
     this.setState({
       highlightedRegionName: null,
     });

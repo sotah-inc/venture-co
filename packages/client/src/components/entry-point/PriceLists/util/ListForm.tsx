@@ -23,7 +23,7 @@ export interface IFormValues {
 
 export type Props = Readonly<IOwnProps & FormikProps<IFormValues>>;
 
-export function ListForm(props: Props) {
+export function ListForm(props: Props): JSX.Element {
   const {
     values,
     setFieldValue,

@@ -11,7 +11,7 @@ export type IOwnProps = IRouteProps;
 export type Props = Readonly<IOwnProps>;
 
 export class Profile extends React.Component<Props> {
-  public componentDidMount() {
+  public componentDidMount(): void {
     setTitle("Redirecting to Manage Account");
   }
 

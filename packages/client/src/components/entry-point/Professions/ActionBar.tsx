@@ -3,7 +3,9 @@ import React from "react";
 import { Alignment, ButtonGroup, Navbar, NavbarGroup } from "@blueprintjs/core";
 import { IRegionComposite, IShortProfession, IShortRecipe, IShortSkillTier } from "@sotah-inc/core";
 
-import { ProfessionsProfessionToggleContainer } from "../../../containers/util/ProfessionsProfessionToggle";
+import {
+  ProfessionsProfessionToggleContainer,
+} from "../../../containers/util/ProfessionsProfessionToggle";
 import { RealmToggleContainer } from "../../../containers/util/RealmToggle";
 import { RegionToggleContainer } from "../../../containers/util/RegionToggle";
 import { IClientRealm, IItemsData } from "../../../types/global";

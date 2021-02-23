@@ -53,7 +53,7 @@ export class App extends React.Component<Props> {
     );
   }
 
-  public componentDidMount() {
+  public componentDidMount(): void {
     const { loadRootEntrypoint, rootEntrypointData } = this.props;
 
     if (typeof rootEntrypointData === "undefined") {
@@ -63,7 +63,7 @@ export class App extends React.Component<Props> {
     loadRootEntrypoint(rootEntrypointData);
   }
 
-  public componentDidUpdate(prevProps: Props) {
+  public componentDidUpdate(prevProps: Props): void {
     const { fetchPingLevel, insertToast } = this.props;
 
     switch (fetchPingLevel) {

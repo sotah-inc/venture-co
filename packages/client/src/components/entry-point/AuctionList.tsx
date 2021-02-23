@@ -77,7 +77,7 @@ export interface IOwnProps {
 type Props = Readonly<IStateProps & IDispatchProps & IOwnProps & IRouteProps>;
 
 export class AuctionList extends React.Component<Props> {
-  public componentDidMount() {
+  public componentDidMount(): void {
     const {
       auctionListEntrypointData,
       loadAuctionListEntrypoint,
@@ -89,7 +89,7 @@ export class AuctionList extends React.Component<Props> {
     loadAuctionListEntrypoint(auctionListEntrypointData);
   }
 
-  public componentDidUpdate(prevProps: Props) {
+  public componentDidUpdate(prevProps: Props): void {
     const {
       auctionListEntrypointData,
       loadAuctionListEntrypoint,
