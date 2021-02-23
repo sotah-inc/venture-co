@@ -1,8 +1,8 @@
 /* eslint-disable import/no-extraneous-dependencies */
+import { sass, SassError } from "@mr-hope/gulp-sass";
 import gulp from "gulp";
 import concat from "gulp-concat";
 import postcss from "gulp-postcss";
-import sass from "gulp-sass";
 
 const stylesGlobs = [
   "./node_modules/normalize.css/normalize.css",
@@ -15,7 +15,7 @@ const stylesGlobs = [
 function sassTask(): NodeJS.ReadWriteStream {
   return gulp
     .src(stylesGlobs)
-    .pipe(sass())
+    .pipe(sass().on("error", v => sass.logError(v as SassError)))
     .pipe(concat("venture-co.min.css"))
     .pipe(postcss())
     .pipe(gulp.dest("./build/styles"));
