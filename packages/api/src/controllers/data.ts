@@ -158,10 +158,26 @@ export class DataController {
       };
     }
 
+    const professionsMessage = await this.messenger.getProfessions(Locale.EnUS);
+    if (professionsMessage.code !== code.ok) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+    const professionsResult = await professionsMessage.decode();
+    if (professionsResult === null) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
     return {
       data: {
         ...bootResult,
         regions: regionComposites,
+        professions: professionsResult.professions,
       },
       status: HTTPStatus.OK,
     };
@@ -1096,7 +1112,8 @@ export class DataController {
 
     // filtering in unmet profession-pricelists
     const unmetProfessionPricelists = professionPricelists.filter(v => {
-      const unmetPricelistItemIds = (v.pricelist?.entries ?? []).map(entry => entry.itemId)
+      const unmetPricelistItemIds = (v.pricelist?.entries ?? [])
+        .map(entry => entry.itemId)
         .filter(itemId => unmetItemIds.indexOf(itemId) > -1);
 
       return unmetPricelistItemIds.length > 0;
@@ -1136,14 +1153,16 @@ export class DataController {
     // gathering related items
     const itemIds: ItemId[] = professionPricelists.reduce(
       (pricelistItemIds: ItemId[], professionPricelist) => {
-        return (professionPricelist.pricelist?.entries ?? [])
-          .reduce((entryItemIds: ItemId[], entry) => {
+        return (professionPricelist.pricelist?.entries ?? []).reduce(
+          (entryItemIds: ItemId[], entry) => {
             if (entryItemIds.indexOf(entry.itemId) === -1) {
               entryItemIds.push(entry.itemId);
             }
 
             return entryItemIds;
-          }, pricelistItemIds);
+          },
+          pricelistItemIds,
+        );
       },
       [],
     );
