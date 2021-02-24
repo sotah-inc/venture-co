@@ -58,7 +58,7 @@ export const ProfessionPricelistRequestBodyRules = yup
     entries: yup.array(PriceListEntryRules).required(),
     expansion_name: yup.string().required(),
     pricelist: PricelistRules.required(),
-    profession_name: yup.string().required(),
+    profession_id: yup.number().required(),
   })
   .required()
   .noUnknown();

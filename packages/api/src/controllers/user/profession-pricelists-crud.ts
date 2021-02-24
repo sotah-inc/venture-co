@@ -55,7 +55,7 @@ export class ProfessionPricelistsCrudController {
 
     const professionPricelist = new ProfessionPricelist();
     professionPricelist.pricelist = pricelist;
-    professionPricelist.name = req.body.profession_name;
+    professionPricelist.professionId = req.body.profession_id;
     professionPricelist.expansion = req.body.expansion_name;
     await this.dbConn.manager.save(professionPricelist);
 

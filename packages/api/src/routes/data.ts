@@ -166,15 +166,15 @@ export function getRouter(dbConn: Connection, messenger: Messenger): Router {
     }),
   );
   router.get(
-    "/profession-pricelists/:profession/:expansion",
+    "/profession-pricelists/:professionId/:expansion",
     wrap(async (req: Request, res: Response) => {
-      const professionName = req.params.profession;
+      const professionId = req.params.professionId;
       const expansionName = req.params.expansion;
 
       handleResult(
         res,
         await controller.getProfessionPricelists(
-          professionName,
+          Number(professionId),
           expansionName,
           String(req.query.locale),
         ),
@@ -182,15 +182,15 @@ export function getRouter(dbConn: Connection, messenger: Messenger): Router {
     }),
   );
   router.get(
-    "/profession-pricelists/:profession/:expansion/:pricelist_slug",
+    "/profession-pricelists/:professionId/:expansion/:pricelist_slug",
     wrap(async (req: Request, res: Response) => {
-      const professionName = req.params.profession;
+      const professionId = req.params.professionId;
       const expansionName = req.params.expansion;
       const pricelistSlug = req.params.pricelist_slug;
 
       handleResult(
         res,
-        await controller.getProfessionPricelist(professionName, expansionName, pricelistSlug),
+        await controller.getProfessionPricelist(Number(professionId), expansionName, pricelistSlug),
       );
     }),
   );

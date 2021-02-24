@@ -28,7 +28,6 @@ import {
   IValidationErrorResponse,
   Locale,
   ProfessionId,
-  ProfessionName,
   ProfessionsResponse,
   QueryAuctionStatsResponse,
   QueryGeneralResponse,
@@ -1114,7 +1113,7 @@ export class DataController {
   }
 
   public async getProfessionPricelists(
-    professionName: ProfessionName,
+    professionId: ProfessionId,
     expansionName: ExpansionName,
     locale: string,
   ): Promise<IRequestResult<GetProfessionPricelistsResponse>> {
@@ -1131,7 +1130,7 @@ export class DataController {
 
     // gathering profession-pricelists
     const professionPricelists = await this.dbConn.getRepository(ProfessionPricelist).find({
-      where: { name: professionName, expansion: expansionName },
+      where: { professionId, expansion: expansionName },
     });
 
     // gathering related items
@@ -1285,13 +1284,13 @@ export class DataController {
   }
 
   public async getProfessionPricelist(
-    professionName: ProfessionName,
+    professionId: ProfessionId,
     expansionName: ExpansionName,
     pricelistSlug: string,
   ): Promise<IRequestResult<GetProfessionPricelistResponse>> {
     const professionPricelist = await this.dbConn
       .getCustomRepository(ProfessionPricelistRepository)
-      .getFromPricelistSlug(professionName, expansionName, pricelistSlug);
+      .getFromPricelistSlug(professionId, expansionName, pricelistSlug);
     if (professionPricelist === null) {
       return {
         data: null,

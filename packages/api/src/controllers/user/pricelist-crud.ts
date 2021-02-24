@@ -7,7 +7,6 @@ import {
   ItemId,
   IValidationErrorResponse,
   Locale,
-  ProfessionName,
   UpdatePricelistRequest,
   UpdatePricelistResponse,
 } from "@sotah-inc/core";
@@ -149,11 +148,11 @@ export class PricelistCrudController {
 
   public async getPricelistFromSlug(
     user: User,
-    professionName: ProfessionName,
+    slug: string,
   ): Promise<IRequestResult<GetUserPricelistResponse>> {
     const pricelist = await this.dbConn
       .getCustomRepository(PricelistRepository)
-      .getFromPricelistSlug(user.id ?? -1, professionName);
+      .getFromPricelistSlug(user.id ?? -1, slug);
     if (pricelist === null) {
       return {
         data: null,
