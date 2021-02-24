@@ -18,7 +18,7 @@ export class ProfessionPricelist {
   @JoinColumn({ name: "pricelist_id" })
   public pricelist: Pricelist | undefined;
 
-  @Column("number")
+  @Column("int", { name: "profession_id" })
   public professionId: number;
 
   @Column("varchar", { length: 255 })
