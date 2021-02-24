@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Button, Callout, Dialog, Intent, IToastProps } from "@blueprintjs/core";
-import { IExpansion, IPricelistJson, IProfession, IRegionComposite } from "@sotah-inc/core";
+import { IExpansion, IPricelistJson, IShortProfession, IRegionComposite } from "@sotah-inc/core";
 
 import { IClientRealm, IErrors, IProfile } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
@@ -13,7 +13,7 @@ export interface IStateProps {
   isDeleteListDialogOpen: boolean;
   deletePricelistErrors: IErrors;
   deletePricelistLevel: FetchLevel;
-  selectedProfession: IProfession | null;
+  selectedProfession: IShortProfession | null;
   selectedExpansion: IExpansion | null;
   currentRealm: IClientRealm | null;
   currentRegion: IRegionComposite | null;
@@ -32,7 +32,7 @@ export interface IRouteProps {
     realm: IClientRealm,
     pricelist: IPricelistJson | null,
     professionData?: {
-      profession: IProfession;
+      profession: IShortProfession;
       expansion: IExpansion;
     },
   ) => void;

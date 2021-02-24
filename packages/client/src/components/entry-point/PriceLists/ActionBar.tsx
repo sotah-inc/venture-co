@@ -14,7 +14,7 @@ import { Tooltip2 } from "@blueprintjs/popover2";
 import {
   IExpansion,
   IPricelistJson,
-  IProfession,
+  IShortProfession,
   IRegionComposite,
   UserLevel,
 } from "@sotah-inc/core";
@@ -34,7 +34,7 @@ export interface IStateProps {
   isAddListDialogOpen: boolean;
   isAddEntryDialogOpen: boolean;
   selectedList: IPricelistJson | null;
-  selectedProfession: IProfession | null;
+  selectedProfession: IShortProfession | null;
   authLevel: AuthLevel;
   profile: IProfile | null;
   selectedExpansion: IExpansion | null;
@@ -53,13 +53,13 @@ export interface IRouteProps {
     region: IRegionComposite,
     realm: IClientRealm,
     expansion: IExpansion,
-    profession: IProfession,
+    profession: IShortProfession,
   ) => void;
   browseToProfessionPricelist: (
     region: IRegionComposite,
     realm: IClientRealm,
     expansion: IExpansion,
-    profession: IProfession,
+    profession: IShortProfession,
     list: IPricelistJson,
   ) => void;
 }
@@ -89,7 +89,7 @@ export class ActionBar extends React.Component<Props> {
     );
   }
 
-  private onProfessionChange(profession: IProfession) {
+  private onProfessionChange(profession: IShortProfession) {
     const { browseToProfession, currentRegion, currentRealm, selectedExpansion } = this.props;
 
     if (currentRegion === null || currentRealm === null || selectedExpansion === null) {
@@ -206,7 +206,7 @@ export class ActionBar extends React.Component<Props> {
 
     let createListText = "List";
     if (selectedProfession !== null) {
-      createListText = `${selectedProfession.label} List`;
+      createListText = `${selectedProfession.name} List`;
     }
 
     if (authLevel === AuthLevel.unauthenticated || profile === null) {

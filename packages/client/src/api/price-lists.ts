@@ -17,8 +17,7 @@ import {
   IPricelistJson,
   IProfessionPricelistJson,
   IValidationErrorResponse,
-  Locale,
-  ProfessionName,
+  Locale, ProfessionId,
   RealmSlug,
   RegionName,
   UpdatePricelistRequest,
@@ -186,7 +185,7 @@ export interface IGetProfessionPricelistsResult {
 }
 
 export async function getProfessionPricelists(
-  profession: ProfessionName,
+  professionId: ProfessionId,
   expansion: ExpansionName,
   locale: Locale,
 ): Promise<IGetProfessionPricelistsResult> {
@@ -196,7 +195,7 @@ export async function getProfessionPricelists(
   >({
     method: "GET",
     query: { locale },
-    url: `${getApiEndpoint()}/profession-pricelists/${profession}/${expansion}`,
+    url: `${getApiEndpoint()}/profession-pricelists/${professionId}/${expansion}`,
   });
   switch (status) {
   case HTTPStatus.OK:
@@ -212,7 +211,7 @@ export interface IGetProfessionPricelistResult {
 }
 
 export async function getProfessionPricelist(
-  profession: ProfessionName,
+  professionId: ProfessionId,
   expansion: ExpansionName,
   slug: string,
   locale: Locale,
@@ -223,7 +222,7 @@ export async function getProfessionPricelist(
   >({
     method: "GET",
     query: { locale },
-    url: `${getApiEndpoint()}/profession-pricelists/${profession}/${expansion}/${slug}`,
+    url: `${getApiEndpoint()}/profession-pricelists/${professionId}/${expansion}/${slug}`,
   });
   switch (status) {
   case HTTPStatus.OK:

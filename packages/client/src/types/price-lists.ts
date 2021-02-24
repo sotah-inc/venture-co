@@ -2,8 +2,8 @@ import {
   IExpansion,
   IItemPrices,
   IPricelistJson,
-  IProfession,
   IProfessionPricelistJson,
+  IShortProfession,
   ItemId,
   UpdatePricelistRequest,
 } from "@sotah-inc/core";
@@ -29,7 +29,7 @@ export interface IPriceListsState {
   deletePricelist: IFetchInfo;
   selectedProfession: {
     isPredefined: boolean;
-    value: IProfession | null;
+    value: IShortProfession | null;
   };
   selectedExpansion: IExpansion | null;
   pricelists: IFetchData<IItemsData<IPricelistJson[]>>;

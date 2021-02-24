@@ -1,4 +1,4 @@
-import { IExpansion, IPreferenceJson, IProfession, IRegionComposite } from "@sotah-inc/core";
+import { IExpansion, IPreferenceJson, IRegionComposite, IShortProfession } from "@sotah-inc/core";
 
 import { IClientRealm, IItemClasses, IProfile, IRegions } from "./global";
 
@@ -18,7 +18,7 @@ export interface IMainState {
   authLevel: AuthLevel;
   isLoginDialogOpen: boolean;
   expansions: IExpansion[];
-  professions: IProfession[];
+  professions: IShortProfession[];
   itemClasses: IItemClasses;
   fetchBootLevel: FetchLevel;
   isRegisterDialogOpen: boolean;

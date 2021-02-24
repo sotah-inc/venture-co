@@ -4,7 +4,7 @@ import { Classes, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
 import {
   IExpansion,
   IPricelistJson,
-  IProfession,
+  IShortProfession,
   IProfessionPricelistJson,
   IRegionComposite,
 } from "@sotah-inc/core";
@@ -41,9 +41,9 @@ export interface IStateProps {
   regions: IRegionComposite[];
   fetchRealmLevel: FetchLevel;
   realms: IClientRealm[];
-  selectedProfession: IProfession | null;
+  selectedProfession: IShortProfession | null;
   selectedExpansion: IExpansion | null;
-  professions: IProfession[];
+  professions: IShortProfession[];
   expansions: IExpansion[];
   getProfessionPricelistsLevel: FetchLevel;
   selectedList: IPricelistJson | null;
@@ -68,13 +68,13 @@ export interface IRouteProps {
     region: IRegionComposite,
     realm: IClientRealm,
     expansion: IExpansion,
-    profession: IProfession,
+    profession: IShortProfession,
   ) => void;
   redirectToPricelist: (
     region: IRegionComposite,
     realm: IClientRealm,
     expansion: IExpansion,
-    profession: IProfession,
+    profession: IShortProfession,
     pricelist: IPricelistJson,
   ) => void;
 }
@@ -265,7 +265,7 @@ export class PriceLists extends React.Component<Props> {
     region: IRegionComposite,
     realm: IClientRealm,
     expansion: IExpansion,
-    profession: IProfession,
+    profession: IShortProfession,
   ) {
     const {
       routeParams: { pricelist_slug },
@@ -330,7 +330,7 @@ export class PriceLists extends React.Component<Props> {
       return;
     }
 
-    prefixes.unshift(selectedProfession.label);
+    prefixes.unshift(selectedProfession.name);
 
     if (selectedList === null) {
       setTitle(prefixes.join(" - "));

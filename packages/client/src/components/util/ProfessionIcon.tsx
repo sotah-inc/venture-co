@@ -1,9 +1,9 @@
 import React from "react";
 
-import { IProfession } from "@sotah-inc/core";
+import { IShortProfession } from "@sotah-inc/core";
 
 interface IProps {
-  profession: IProfession;
+  profession: IShortProfession;
 }
 
 export const ProfessionIcon = ({ profession }: IProps): JSX.Element | null => {

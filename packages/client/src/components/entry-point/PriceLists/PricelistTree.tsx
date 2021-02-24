@@ -4,9 +4,8 @@ import { Classes, Intent, ITreeNode, Spinner, Tree } from "@blueprintjs/core";
 import {
   IExpansion,
   IPricelistJson,
-  IProfession,
   IProfessionPricelistJson,
-  IRegionComposite,
+  IRegionComposite, IShortProfession,
 } from "@sotah-inc/core";
 
 import {
@@ -23,12 +22,12 @@ export interface IStateProps {
   currentRealm: IClientRealm | null;
   selectedProfession: {
     isPredefined: boolean;
-    value: IProfession | null;
+    value: IShortProfession | null;
   };
   selectedExpansion: IExpansion | null;
   selectedList: IPricelistJson | null;
 
-  professions: IProfession[];
+  professions: IShortProfession[];
   expansions: IExpansion[];
 
   professionPricelists: IFetchData<IItemsData<IProfessionPricelistJson[]>>;
@@ -40,7 +39,7 @@ export interface IRouteProps {
     region: IRegionComposite,
     realm: IClientRealm,
     expansion: IExpansion,
-    profession: IProfession,
+    profession: IShortProfession,
     pricelist: IPricelistJson,
   ) => void;
 }
@@ -103,7 +102,7 @@ export class PricelistTree extends React.Component<Props, IState> {
       label:
         selectedProfession.value === null
           ? "Profession Pricelists"
-          : `${selectedProfession.value.label} Pricelists`,
+          : `${selectedProfession.value.name} Pricelists`,
     });
 
     return (

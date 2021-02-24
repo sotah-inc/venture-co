@@ -1,7 +1,6 @@
 import {
   IExpansion,
   IPricelistJson,
-  IProfession,
   IRegionComposite,
   IShortProfession,
   IShortRecipe,
@@ -141,7 +140,7 @@ export function toProfessionPricelist(
   region: IRegionComposite,
   realm: IClientRealm,
   expansion: IExpansion,
-  profession: IProfession,
+  profession: IShortProfession,
   pricelist: IPricelistJson,
 ): IRouteConfig {
   const asDest = [
@@ -149,7 +148,7 @@ export function toProfessionPricelist(
     region.config_region.name,
     realm.realm.slug,
     expansion.name,
-    profession.name,
+    `${profession.id}-${getSlug(profession.name)}`,
     pricelist.slug,
   ].join("/");
   const url = [
@@ -168,14 +167,14 @@ export function toProfessionPricelistsProfession(
   region: IRegionComposite,
   realm: IClientRealm,
   expansion: IExpansion,
-  profession: IProfession,
+  profession: IShortProfession,
 ): IRouteConfig {
   const asDest = [
     "profession-pricelists",
     region.config_region.name,
     realm.realm.slug,
     expansion.name,
-    profession.name,
+    `${profession.id}-${getSlug(profession.name)}`,
   ].join("/");
   const url = [
     "profession-pricelists",

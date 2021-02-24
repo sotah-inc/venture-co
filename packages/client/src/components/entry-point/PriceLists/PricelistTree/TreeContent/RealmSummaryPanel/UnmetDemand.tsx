@@ -16,13 +16,13 @@ import {
   IExpansion,
   IPricelistEntryJson,
   IPricelistJson,
-  IProfession,
   IProfessionPricelistJson,
   IRegionComposite,
   IShortItem,
+  IShortProfession,
   ItemId,
   ItemQuality,
-  ProfessionName,
+  ProfessionId,
 } from "@sotah-inc/core";
 
 import { ItemPopoverContainer } from "../../../../../../containers/util/ItemPopover";
@@ -35,7 +35,7 @@ import { ItemIcon } from "../../../../../util/ItemIcon";
 export interface IStateProps {
   unmetDemandItemIds: ItemId[];
   unmetDemandProfessionPricelists: IProfessionPricelistJson[];
-  professions: IProfession[];
+  professions: IShortProfession[];
   getUnmetDemandLevel: FetchLevel;
   items: IShortItem[];
   selectedExpansion: IExpansion | null;
@@ -48,13 +48,13 @@ export interface IRouteProps {
     region: IRegionComposite,
     realm: IClientRealm,
     expansion: IExpansion,
-    profession: IProfession,
+    profession: IShortProfession,
   ) => void;
   browseToProfessionPricelist: (
     region: IRegionComposite,
     realm: IClientRealm,
     expansion: IExpansion,
-    profession: IProfession,
+    profession: IShortProfession,
     pricelist: IPricelistJson,
   ) => void;
 }
@@ -82,21 +82,19 @@ export class UnmetDemand extends React.Component<Props, IState> {
       return null;
     }
 
+    const expansionLabel = (
+      <span style={{ color: selectedExpansion.label_color }}>{selectedExpansion.label}</span>
+    );
+
     return (
       <>
-        <H5>
-          Unmet Demand for{" "}
-          <span style={{ color: selectedExpansion.label_color }}>
-            {selectedExpansion.label}
-          </span>
-          {" "}Professions
-        </H5>
+        <H5>Unmet Demand for {expansionLabel} Professions</H5>
         {this.renderUnmetDemandContent()}
       </>
     );
   }
 
-  public onProfessionClick(profession: IProfession): void {
+  public onProfessionClick(profession: IShortProfession): void {
     const { browseToProfession, currentRegion, currentRealm, selectedExpansion } = this.props;
 
     if (currentRegion === null || currentRealm === null || selectedExpansion === null) {
@@ -106,7 +104,7 @@ export class UnmetDemand extends React.Component<Props, IState> {
     browseToProfession(currentRegion, currentRealm, selectedExpansion, profession);
   }
 
-  public onPricelistClick(pricelist: IPricelistJson, professionName: ProfessionName): void {
+  public onPricelistClick(pricelist: IPricelistJson, professionId: ProfessionId): void {
     const {
       browseToProfessionPricelist,
       professions,
@@ -119,12 +117,12 @@ export class UnmetDemand extends React.Component<Props, IState> {
       return;
     }
 
-    const profession = professions.reduce<IProfession | null>((currentValue, v) => {
+    const profession = professions.reduce<IShortProfession | null>((currentValue, v) => {
       if (currentValue !== null) {
         return currentValue;
       }
 
-      if (v.name === professionName) {
+      if (v.id === professionId) {
         return v;
       }
 
@@ -144,7 +142,7 @@ export class UnmetDemand extends React.Component<Props, IState> {
     );
   }
 
-  private renderProfession(profession: IProfession | null) {
+  private renderProfession(profession: IShortProfession | null) {
     if (profession === null) {
       return null;
     }
@@ -153,7 +151,7 @@ export class UnmetDemand extends React.Component<Props, IState> {
       <>
         <ProfessionIcon profession={profession} />
         &nbsp;
-        <a onClick={() => this.onProfessionClick(profession)}>{profession.label}</a>
+        <a onClick={() => this.onProfessionClick(profession)}>{profession.name}</a>
       </>
     );
   }
@@ -200,14 +198,12 @@ export class UnmetDemand extends React.Component<Props, IState> {
     );
     collapsedResult = collapsedResult.filter(v => unmetDemandItemIds.indexOf(v.entry.item_id) > -1);
     collapsedResult = collapsedResult.sort((a, b) => {
-      if (a.professionPricelist.name !== b.professionPricelist.name) {
-        return a.professionPricelist.name > b.professionPricelist.name ? 1 : -1;
+      if (a.professionPricelist.professionId !== b.professionPricelist.professionId) {
+        return a.professionPricelist.professionId > b.professionPricelist.professionId ? 1 : -1;
       }
 
       if (a.professionPricelist.pricelist.name !== b.professionPricelist.pricelist.name) {
-        return a.professionPricelist.pricelist.name > b.professionPricelist.pricelist.name
-          ? 1
-          : -1;
+        return a.professionPricelist.pricelist.name > b.professionPricelist.pricelist.name ? 1 : -1;
       }
 
       const aItemValue: string =
@@ -295,13 +291,13 @@ export class UnmetDemand extends React.Component<Props, IState> {
     const { items, professions } = this.props;
 
     const { professionPricelist, entry } = resultItem;
-    const profession: IProfession | null = professions.reduce(
-      (currentValue: IProfession | null, v) => {
+    const profession: IShortProfession | null = professions.reduce(
+      (currentValue: IShortProfession | null, v) => {
         if (currentValue !== null) {
           return currentValue;
         }
 
-        return v.name === professionPricelist.name ? v : null;
+        return v.id === professionPricelist.professionId ? v : null;
       },
       null,
     );
@@ -314,7 +310,10 @@ export class UnmetDemand extends React.Component<Props, IState> {
           <td className={qualityToColorClass(ItemQuality.Common)}>{item_id}</td>
           <td>{this.renderProfession(profession)}</td>
           <td>
-            {this.renderPricelistCell(professionPricelist.pricelist, professionPricelist.name)}
+            {this.renderPricelistCell(
+              professionPricelist.pricelist,
+              professionPricelist.professionId,
+            )}
           </td>
         </tr>
       );
@@ -327,18 +326,21 @@ export class UnmetDemand extends React.Component<Props, IState> {
         </td>
         <td>{this.renderProfession(profession)}</td>
         <td>
-          {this.renderPricelistCell(professionPricelist.pricelist, professionPricelist.name)}
+          {this.renderPricelistCell(
+            professionPricelist.pricelist,
+            professionPricelist.professionId,
+          )}
         </td>
       </tr>
     );
   }
 
-  private renderPricelistCell(pricelist: IPricelistJson, profession: ProfessionName) {
+  private renderPricelistCell(pricelist: IPricelistJson, professionId: ProfessionId) {
     return (
       <>
         {this.renderPricelistIcon(pricelist)}
         &nbsp;
-        <a onClick={() => this.onPricelistClick(pricelist, profession)}>{pricelist.name}</a>
+        <a onClick={() => this.onPricelistClick(pricelist, professionId)}>{pricelist.name}</a>
       </>
     );
   }

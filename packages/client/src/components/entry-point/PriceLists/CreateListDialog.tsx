@@ -6,7 +6,7 @@ import {
   ICreateProfessionPricelistRequest,
   IExpansion,
   IPricelistJson,
-  IProfession,
+  IShortProfession,
   IRegionComposite,
 } from "@sotah-inc/core";
 
@@ -19,7 +19,7 @@ export interface IStateProps {
   isAddListDialogOpen: boolean;
   createPricelist: IFetchInfo;
   profile: IProfile | null;
-  selectedProfession: IProfession | null;
+  selectedProfession: IShortProfession | null;
   selectedExpansion: IExpansion | null;
   currentRegion: IRegionComposite | null;
   currentRealm: IClientRealm | null;
@@ -42,7 +42,7 @@ export interface IRouteProps {
     realm: IClientRealm,
     pricelist: IPricelistJson,
     professionData?: {
-      profession: IProfession;
+      profession: IShortProfession;
       expansion: IExpansion;
     },
   ) => void;
@@ -117,7 +117,7 @@ export class CreateListDialog extends React.Component<Props, State> {
 
     let dialogTitle = "New Price List";
     if (selectedProfession !== null) {
-      dialogTitle = `New ${selectedProfession.label} Price List`;
+      dialogTitle = `New ${selectedProfession.name} Price List`;
     }
 
     return (
@@ -156,7 +156,7 @@ export class CreateListDialog extends React.Component<Props, State> {
         entries,
         expansion_name: selectedExpansion.name,
         pricelist: { name, slug },
-        profession_name: selectedProfession.name,
+        profession_id: selectedProfession.id,
       });
     }
   }

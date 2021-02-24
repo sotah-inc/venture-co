@@ -5,11 +5,11 @@ import {
   IAuction,
   IExpansion,
   IPricelistJson,
-  IProfession,
   IProfessionPricelistJson,
   IRegionComposite,
   IShortItem,
   IShortPet,
+  IShortProfession,
   ItemQuality,
   PetId,
   PetQuality,
@@ -19,7 +19,7 @@ import {
 
 import { SortToggleContainer } from "../../../containers/entry-point/AuctionList/SortToggle";
 import { ItemPopoverContainer } from "../../../containers/util/ItemPopover";
-import { IAuctionsOptions, IAuctionResultData } from "../../../types/auction";
+import { IAuctionResultData, IAuctionsOptions } from "../../../types/auction";
 import { IClientRealm } from "../../../types/global";
 import { getItemFromPricelist, petQualityToColorClass, qualityToColorClass } from "../../../util";
 import { Currency, ProfessionIcon } from "../../util";
@@ -31,7 +31,7 @@ export interface IStateProps {
   relatedProfessionPricelists: IProfessionPricelistJson[];
   options: IAuctionsOptions;
   expansions: IExpansion[];
-  professions: IProfession[];
+  professions: IShortProfession[];
   currentRealm: IClientRealm | null;
   currentRegion: IRegionComposite | null;
   totalResults: number;
@@ -48,13 +48,13 @@ export interface IRouteProps {
     region: IRegionComposite,
     realm: IClientRealm,
     expansion: IExpansion,
-    profession: IProfession,
+    profession: IShortProfession,
   ) => void;
   browseToProfessionPricelist: (
     region: IRegionComposite,
     realm: IClientRealm,
     expansion: IExpansion,
-    profession: IProfession,
+    profession: IShortProfession,
     pricelist: IPricelistJson,
   ) => void;
 }
@@ -305,12 +305,12 @@ export class AuctionTable extends React.Component<Props> {
       return null;
     }
 
-    const profession = professions.reduce<IProfession | null>((prev, v) => {
+    const profession = professions.reduce<IShortProfession | null>((prev, v) => {
       if (prev !== null) {
         return prev;
       }
 
-      if (v.name === professionPricelist.name) {
+      if (v.id === professionPricelist.professionId) {
         return v;
       }
 
@@ -340,7 +340,7 @@ export class AuctionTable extends React.Component<Props> {
               small={true}
               onClick={() => browseToProfession(currentRegion, currentRealm, expansion, profession)}
             >
-              <ProfessionIcon profession={profession} /> {profession.label}
+              <ProfessionIcon profession={profession} /> {profession.name}
             </Button>
             <Button
               icon={this.renderPricelistIcon(professionPricelist.pricelist)}

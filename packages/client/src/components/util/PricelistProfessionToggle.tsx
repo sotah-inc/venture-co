@@ -9,33 +9,36 @@ import {
   ItemRenderer,
   Select,
 } from "@blueprintjs/select";
-import { IProfession } from "@sotah-inc/core";
+import { IShortProfession } from "@sotah-inc/core";
 
 import { ProfessionIcon } from "./ProfessionIcon";
 
-const ProfessionToggleSelect = Select.ofType<IProfession>();
+const ProfessionToggleSelect = Select.ofType<IShortProfession>();
 
 export interface IStateProps {
-  professions: IProfession[];
-  selectedProfession: IProfession | null;
+  professions: IShortProfession[];
+  selectedProfession: IShortProfession | null;
 }
 
 export interface IOwnProps {
-  onProfessionChange: (profession: IProfession) => void;
+  onProfessionChange: (profession: IShortProfession) => void;
 }
 
 type Props = Readonly<IStateProps & IOwnProps>;
 
 export class PricelistProfessionToggle extends React.Component<Props> {
-  public itemPredicate: ItemPredicate<IProfession> = (query: string, item: IProfession) => {
+  public itemPredicate: ItemPredicate<IShortProfession> = (
+    query: string,
+    item: IShortProfession,
+  ) => {
     query = query.toLowerCase();
     return (
-      item.label.toLowerCase().indexOf(query) >= 0 || item.name.toLowerCase().indexOf(query) >= 0
+      item.name.toLowerCase().indexOf(query) >= 0 || item.name.toLowerCase().indexOf(query) >= 0
     );
   };
 
-  public itemRenderer: ItemRenderer<IProfession> = (
-    item: IProfession,
+  public itemRenderer: ItemRenderer<IShortProfession> = (
+    item: IShortProfession,
     { handleClick, modifiers, index }: IItemRendererProps,
   ) => {
     if (!modifiers.matchesPredicate) {
@@ -54,14 +57,14 @@ export class PricelistProfessionToggle extends React.Component<Props> {
         intent={intent}
         className={modifiers.active ? Classes.ACTIVE : ""}
         onClick={handleClick}
-        text={item.label}
+        text={item.name}
         icon={<ProfessionIcon profession={item} />}
       />
     );
   };
 
-  public itemListRenderer: ItemListRenderer<IProfession> = (
-    params: IItemListRendererProps<IProfession>,
+  public itemListRenderer: ItemListRenderer<IShortProfession> = (
+    params: IItemListRendererProps<IShortProfession>,
   ) => {
     const { items, itemsParentRef, renderItem } = params;
     const renderedItems = items.map(renderItem).filter(renderedItem => renderedItem !== null);
@@ -109,7 +112,7 @@ export class PricelistProfessionToggle extends React.Component<Props> {
     return (
       <Button
         className="profession-toggle-button"
-        text={selectedProfession.label}
+        text={selectedProfession.name}
         rightIcon="double-caret-vertical"
         icon={<ProfessionIcon profession={selectedProfession} />}
       />

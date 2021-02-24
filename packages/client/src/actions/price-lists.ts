@@ -7,10 +7,9 @@ import {
   IGetItemPriceHistoriesResponseData,
   IGetPricelistResponseData,
   IGetPricelistsResponseData,
-  IPricelistJson,
-  IProfession,
+  IPricelistJson, IShortProfession,
   Locale,
-  ProfessionName,
+  ProfessionId,
 } from "@sotah-inc/core";
 import { Dispatch } from "redux";
 
@@ -164,14 +163,16 @@ type FetchProfessionPricelistsType = ReturnType<
   typeof RequestGetProfessionPricelists | typeof ReceiveGetProfessionPricelists
 >;
 export const FetchGetProfessionPricelists = (
-  profession: ProfessionName,
+  professionId: ProfessionId,
   expansion: ExpansionName,
   locale: Locale,
 ) => {
   return async (dispatch: Dispatch<FetchProfessionPricelistsType>) => {
     dispatch(RequestGetProfessionPricelists());
     dispatch(
-      ReceiveGetProfessionPricelists(await getProfessionPricelists(profession, expansion, locale)),
+      ReceiveGetProfessionPricelists(
+        await getProfessionPricelists(professionId, expansion, locale),
+      ),
     );
   };
 };
@@ -205,9 +206,9 @@ export const FetchGetItemPriceHistories = (opts: IGetItemPriceHistoriesOptions) 
 };
 
 export interface ILoadPricelistsEntrypointFront {
-  professionNameData?: {
+  professionIdData?: {
     isPredefined: boolean;
-    value: ProfessionName;
+    value: ProfessionId;
   };
   expansionName?: ExpansionName;
   pricelistSlug?: string;
@@ -220,7 +221,7 @@ export interface ILoadPricelistsEntrypointFront {
 }
 
 export interface ILoadPricelistsEntrypoint extends ILoadPricelistsEntrypointFront {
-  professions: IProfession[];
+  professions: IShortProfession[];
   expansions: IExpansion[];
 }
 

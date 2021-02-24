@@ -2,8 +2,8 @@ import {
   IExpansion,
   IItemPrices,
   IPricelistJson,
-  IProfession,
   IProfessionPricelistJson,
+  IShortProfession,
 } from "@sotah-inc/core";
 
 import {
@@ -37,10 +37,9 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
         state: IPriceListsState,
         action: ReturnType<typeof LoadPricelistsEntrypoint>,
       ): IPriceListsState => {
-        const selectedProfession: IProfession | null =
-          action.payload.professions.find(
-            v => v.name === action.payload.professionNameData?.value,
-          ) ?? null;
+        const selectedProfession: IShortProfession | null =
+          action.payload.professions.find(v => v.id === action.payload.professionIdData?.value) ??
+          null;
         const selectedExpansion: IExpansion | null =
           action.payload.expansions.find(v => v.name === action.payload.expansionName) ?? null;
         const selectedList: IPricelistJson | null = action.payload.selectedList ?? null;
@@ -153,7 +152,7 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           selectedExpansion,
           selectedList,
           selectedProfession: {
-            isPredefined: !!action.payload.professionNameData?.isPredefined,
+            isPredefined: !!action.payload.professionIdData?.isPredefined,
             value: selectedProfession,
           },
           unmetDemand,
