@@ -8,6 +8,7 @@ import {
   IRegionComposite,
   IRegionTokenHistory,
   IShortPet,
+  IShortProfession,
   IShortTokenHistory,
   IValidationErrorResponse,
   Locale,
@@ -25,6 +26,7 @@ export interface IGetBootResponseData {
   regions: IRegionComposite[];
   item_classes: IItemClass[];
   expansions: IExpansion[];
+  professions: IShortProfession[];
 }
 
 export type GetBootResponse = IGetBootResponseData | null;
