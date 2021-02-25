@@ -1,5 +1,5 @@
 import { ExpansionName, IProfessionPricelistJson } from "@sotah-inc/core";
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, Index, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 import { Pricelist } from "./pricelist";
 
@@ -19,6 +19,7 @@ export class ProfessionPricelist {
   public pricelist: Pricelist | undefined;
 
   @Column("int", { name: "profession_id" })
+  @Index("idx_profession_id")
   public professionId: number;
 
   @Column("varchar", { length: 255 })
