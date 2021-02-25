@@ -14,22 +14,12 @@ import {
   ILoadPricelistsEntrypoint,
   ILoadPricelistsEntrypointFront,
 } from "../../actions/price-lists";
-import {
-  CreateEntryDialogContainer,
-} from "../../containers/entry-point/PriceLists/CreateEntryDialog";
+import { CreateEntryDialogContainer } from "../../containers/entry-point/PriceLists/CreateEntryDialog";
 import { ActionBarRouteContainer } from "../../route-containers/entry-point/PriceLists/ActionBar";
-import {
-  CreateListDialogRouteContainer,
-} from "../../route-containers/entry-point/PriceLists/CreateListDialog";
-import {
-  DeleteListDialogRouteContainer,
-} from "../../route-containers/entry-point/PriceLists/DeleteListDialog";
-import {
-  EditListDialogRouteContainer,
-} from "../../route-containers/entry-point/PriceLists/EditListDialog";
-import {
-  PricelistTreeRouteContainer,
-} from "../../route-containers/entry-point/PriceLists/PricelistTree";
+import { CreateListDialogRouteContainer } from "../../route-containers/entry-point/PriceLists/CreateListDialog";
+import { DeleteListDialogRouteContainer } from "../../route-containers/entry-point/PriceLists/DeleteListDialog";
+import { EditListDialogRouteContainer } from "../../route-containers/entry-point/PriceLists/EditListDialog";
+import { PricelistTreeRouteContainer } from "../../route-containers/entry-point/PriceLists/PricelistTree";
 import { IClientRealm } from "../../types/global";
 import { AuthLevel, FetchLevel } from "../../types/main";
 import { setTitle } from "../../util";
@@ -138,7 +128,8 @@ export class PriceLists extends React.Component<Props> {
 
     if (
       currentRegion === null ||
-      (region_name !== undefined && currentRegion.config_region.name !== region_name)
+      region_name === undefined ||
+      currentRegion.config_region.name !== region_name
     ) {
       return;
     }
@@ -194,7 +185,8 @@ export class PriceLists extends React.Component<Props> {
 
     if (
       currentRealm === null ||
-      (realm_slug !== undefined && currentRealm.realm.slug !== realm_slug)
+      realm_slug === undefined ||
+      currentRealm.realm.slug !== realm_slug
     ) {
       return;
     }
@@ -210,21 +202,22 @@ export class PriceLists extends React.Component<Props> {
       expansions,
     } = this.props;
 
-    if (
-      selectedExpansion === null ||
-      (expansion_name !== undefined && selectedExpansion.name !== expansion_name)
-    ) {
-      if (expansions.length === 0) {
+    if (selectedExpansion === null) {
+      if (expansion_name === undefined) {
+        const nextExpansion = expansions.find(v => v.primary);
+        if (nextExpansion === undefined) {
+          return;
+        }
+
+        redirectToExpansion(region, realm, nextExpansion);
+
         return;
       }
 
-      const nextExpansion = expansions.find(v => v.primary);
-      if (nextExpansion === undefined) {
-        return;
-      }
+      return;
+    }
 
-      redirectToExpansion(region, realm, nextExpansion);
-
+    if (expansion_name === undefined || selectedExpansion.name !== expansion_name) {
       return;
     }
 
@@ -243,18 +236,23 @@ export class PriceLists extends React.Component<Props> {
       redirectToProfession,
     } = this.props;
 
-    if (
-      selectedProfession === null ||
-      (profession_id !== undefined && selectedProfession.id !== Number(profession_id))
-    ) {
-      if (professions.length === 0) {
+    if (selectedProfession === null) {
+      if (profession_id === undefined) {
+        if (professions.length === 0) {
+          return;
+        }
+
+        const nextProfession = professions.sort((a, b) => a.name.localeCompare(b.name))[0];
+
+        redirectToProfession(region, realm, expansion, nextProfession);
+
         return;
       }
 
-      const nextProfession = professions.sort((a, b) => a.name.localeCompare(b.name))[0];
+      return;
+    }
 
-      redirectToProfession(region, realm, expansion, nextProfession);
-
+    if (profession_id === undefined || selectedProfession.id !== Number(profession_id)) {
       return;
     }
 
@@ -274,20 +272,25 @@ export class PriceLists extends React.Component<Props> {
       redirectToPricelist,
     } = this.props;
 
-    if (
-      selectedList === null ||
-      (pricelist_slug !== undefined && selectedList.slug !== pricelist_slug)
-    ) {
-      if (professionPricelists.length === 0) {
+    if (selectedList === null) {
+      if (pricelist_slug === undefined) {
+        if (professionPricelists.length === 0) {
+          return;
+        }
+
+        const nextPricelist = professionPricelists.sort((a, b) =>
+          a.pricelist.name.localeCompare(b.pricelist.name),
+        )[0].pricelist;
+
+        redirectToPricelist(region, realm, expansion, profession, nextPricelist);
+
         return;
       }
 
-      const nextPricelist = professionPricelists.sort((a, b) =>
-        a.pricelist.name.localeCompare(b.pricelist.name),
-      )[0].pricelist;
+      return;
+    }
 
-      redirectToPricelist(region, realm, expansion, profession, nextPricelist);
-
+    if (pricelist_slug === undefined || selectedList.slug !== pricelist_slug) {
       return;
     }
 
