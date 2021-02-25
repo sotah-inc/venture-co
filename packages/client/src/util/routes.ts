@@ -156,7 +156,7 @@ export function toProfessionPricelist(
     "[region_name]",
     "[realm_slug]",
     "[expansion_name]",
-    "[profession_name]",
+    "[profession_id]",
     "[pricelist_slug]",
   ].join("/");
 
@@ -181,7 +181,7 @@ export function toProfessionPricelistsProfession(
     "[region_name]",
     "[realm_slug]",
     "[expansion_name]",
-    "[profession_name]",
+    "[profession_id]",
   ].join("/");
 
   return { url, asDest };

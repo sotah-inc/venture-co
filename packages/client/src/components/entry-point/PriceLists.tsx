@@ -82,7 +82,7 @@ export interface IRouteProps {
 export interface IRouteParams {
   region_name?: string;
   realm_slug?: string;
-  profession_name?: string;
+  profession_id?: string;
   expansion_name?: string;
   pricelist_slug?: string;
 }
@@ -149,16 +149,16 @@ export class PriceLists extends React.Component<Props> {
   public render(): React.ReactNode {
     const {
       authLevel,
-      routeParams: { profession_name },
+      routeParams: { profession_id },
       professions,
     } = this.props;
 
-    if (profession_name !== undefined && profession_name.length > 0) {
-      if (!professions.some(v => v.name === profession_name)) {
+    if (profession_id !== undefined && profession_id.length > 0) {
+      if (!professions.some(v => v.id === Number(profession_id))) {
         return (
           <NonIdealState
             title="Profession not found"
-            description={`Profession ${profession_name} could not be found`}
+            description={`Profession ${profession_id} could not be found`}
             icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={1} />}
           />
         );
@@ -237,7 +237,7 @@ export class PriceLists extends React.Component<Props> {
     expansion: IExpansion,
   ) {
     const {
-      routeParams: { profession_name },
+      routeParams: { profession_id },
       selectedProfession,
       professions,
       redirectToProfession,
@@ -245,7 +245,7 @@ export class PriceLists extends React.Component<Props> {
 
     if (
       selectedProfession === null ||
-      (profession_name !== undefined && selectedProfession.name !== profession_name)
+      (profession_id !== undefined && selectedProfession.id !== Number(profession_id))
     ) {
       if (professions.length === 0) {
         return;

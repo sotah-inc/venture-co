@@ -47,7 +47,7 @@ export class PricelistProfessionToggle extends React.Component<Props> {
 
     const { selectedProfession } = this.props;
     const intent =
-      selectedProfession !== null && item.name === selectedProfession.name
+      selectedProfession !== null && item.id === selectedProfession.id
         ? Intent.PRIMARY
         : Intent.NONE;
 
