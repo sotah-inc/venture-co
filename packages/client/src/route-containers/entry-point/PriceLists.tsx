@@ -15,7 +15,7 @@ import { extractSlug } from "../../util/extract-slug";
 type Props = Readonly<WithRouterProps & IOwnProps>;
 
 function RouteContainer({ router, realmEntrypointData, pricelistsEntrypointData }: Props) {
-  const [nextRegionName, nextRealmSlug, expansionName, professionId, pricelistSlug] = extractSlug(
+  const [nextRegionName, nextRealmSlug, expansionName, professionSlug, pricelistSlug] = extractSlug(
     "slug",
     router.query,
   );
@@ -25,7 +25,7 @@ function RouteContainer({ router, realmEntrypointData, pricelistsEntrypointData 
       routeParams={{
         expansion_name: expansionName,
         pricelist_slug: pricelistSlug,
-        profession_id: professionId,
+        profession_slug: professionSlug,
         realm_slug: nextRealmSlug,
         region_name: nextRegionName,
       }}

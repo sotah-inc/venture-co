@@ -14,12 +14,22 @@ import {
   ILoadPricelistsEntrypoint,
   ILoadPricelistsEntrypointFront,
 } from "../../actions/price-lists";
-import { CreateEntryDialogContainer } from "../../containers/entry-point/PriceLists/CreateEntryDialog";
+import {
+  CreateEntryDialogContainer,
+} from "../../containers/entry-point/PriceLists/CreateEntryDialog";
 import { ActionBarRouteContainer } from "../../route-containers/entry-point/PriceLists/ActionBar";
-import { CreateListDialogRouteContainer } from "../../route-containers/entry-point/PriceLists/CreateListDialog";
-import { DeleteListDialogRouteContainer } from "../../route-containers/entry-point/PriceLists/DeleteListDialog";
-import { EditListDialogRouteContainer } from "../../route-containers/entry-point/PriceLists/EditListDialog";
-import { PricelistTreeRouteContainer } from "../../route-containers/entry-point/PriceLists/PricelistTree";
+import {
+  CreateListDialogRouteContainer,
+} from "../../route-containers/entry-point/PriceLists/CreateListDialog";
+import {
+  DeleteListDialogRouteContainer,
+} from "../../route-containers/entry-point/PriceLists/DeleteListDialog";
+import {
+  EditListDialogRouteContainer,
+} from "../../route-containers/entry-point/PriceLists/EditListDialog";
+import {
+  PricelistTreeRouteContainer,
+} from "../../route-containers/entry-point/PriceLists/PricelistTree";
 import { IClientRealm } from "../../types/global";
 import { AuthLevel, FetchLevel } from "../../types/main";
 import { setTitle } from "../../util";
@@ -72,7 +82,7 @@ export interface IRouteProps {
 export interface IRouteParams {
   region_name?: string;
   realm_slug?: string;
-  profession_id?: string;
+  profession_slug?: string;
   expansion_name?: string;
   pricelist_slug?: string;
 }
@@ -140,16 +150,18 @@ export class PriceLists extends React.Component<Props> {
   public render(): React.ReactNode {
     const {
       authLevel,
-      routeParams: { profession_id },
+      routeParams: { profession_slug },
       professions,
     } = this.props;
 
-    if (profession_id !== undefined && profession_id.length > 0) {
-      if (!professions.some(v => v.id === Number(profession_id))) {
+    if (profession_slug !== undefined && profession_slug.length > 0) {
+      const professionId = Number(profession_slug.split("-")[0]);
+
+      if (!professions.some(v => v.id === professionId)) {
         return (
           <NonIdealState
             title="Profession not found"
-            description={`Profession ${profession_id} could not be found`}
+            description={`Profession ${profession_slug} could not be found`}
             icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={1} />}
           />
         );
@@ -230,14 +242,14 @@ export class PriceLists extends React.Component<Props> {
     expansion: IExpansion,
   ) {
     const {
-      routeParams: { profession_id },
+      routeParams: { profession_slug },
       selectedProfession,
       professions,
       redirectToProfession,
     } = this.props;
 
     if (selectedProfession === null) {
-      if (profession_id === undefined) {
+      if (profession_slug === undefined) {
         if (professions.length === 0) {
           return;
         }
@@ -252,7 +264,12 @@ export class PriceLists extends React.Component<Props> {
       return;
     }
 
-    if (profession_id === undefined || selectedProfession.id !== Number(profession_id)) {
+    if (profession_slug === undefined) {
+      return;
+    }
+
+    const professionId = Number(profession_slug.split("-")[0]);
+    if (selectedProfession.id !== professionId) {
       return;
     }
 
