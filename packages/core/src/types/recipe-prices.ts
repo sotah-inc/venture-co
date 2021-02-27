@@ -3,6 +3,7 @@ export interface IRecipeItemItemPrices {
   max_buyout_per: number;
   average_buyout_per: number;
   median_buyout_per: number;
+  market_buyout_per: number;
 }
 
 export interface IRecipeItemPrices {
