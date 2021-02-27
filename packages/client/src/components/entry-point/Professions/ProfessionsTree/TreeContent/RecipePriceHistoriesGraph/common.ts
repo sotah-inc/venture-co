@@ -8,5 +8,5 @@ export enum TabKind {
 export const TotalReagentCostDataKey = "total_reagent_cost";
 
 export function resolveItemDataKey(id: ItemId): string {
-  return `${id}_buyout_per`;
+  return `${id}_market_per`;
 }

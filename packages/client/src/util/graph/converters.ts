@@ -104,18 +104,18 @@ export function convertRecipePriceHistoriesToLineData(
 
       const data: { [key: string]: number | null } = {};
       if (recipePrices.crafted_item_prices.id > 0) {
-        data[`${recipePrices.crafted_item_prices.id}_buyout_per`] =
-          recipePrices.crafted_item_prices.prices.min_buyout_per / 10 / 10;
+        data[`${recipePrices.crafted_item_prices.id}_market_per`] =
+          recipePrices.crafted_item_prices.prices.market_buyout_per / 10 / 10;
       }
       if (recipePrices.alliance_crafted_item_prices.id > 0) {
-        data[`${recipePrices.alliance_crafted_item_prices.id}_buyout_per`] =
-          recipePrices.alliance_crafted_item_prices.prices.min_buyout_per / 10 / 10;
+        data[`${recipePrices.alliance_crafted_item_prices.id}_market_per`] =
+          recipePrices.alliance_crafted_item_prices.prices.market_buyout_per / 10 / 10;
       }
       if (recipePrices.horde_crafted_item_prices.id > 0) {
-        data[`${recipePrices.horde_crafted_item_prices.id}_buyout_per`] =
-          recipePrices.horde_crafted_item_prices.prices.min_buyout_per / 10 / 10;
+        data[`${recipePrices.horde_crafted_item_prices.id}_market_per`] =
+          recipePrices.horde_crafted_item_prices.prices.market_buyout_per / 10 / 10;
       }
-      data.total_reagent_cost = recipePrices.total_reagent_prices.min_buyout_per / 10 / 10;
+      data.total_reagent_cost = recipePrices.total_reagent_prices.market_buyout_per / 10 / 10;
 
       result2.push({
         data,
@@ -153,26 +153,26 @@ export function convertItemPriceHistoriesToLineData(
       if (typeof itemPriceHistory === "undefined") {
         return {
           ...result,
-          [`${itemId}_buyout_per`]: null,
+          [`${itemId}_market_price_buyout_per`]: null,
           [`${itemId}_volume`]: null,
         };
       }
 
       const prices = itemPriceHistory[unixTimestamp];
-      if (typeof prices === "undefined" || prices.min_buyout_per === 0) {
+      if (typeof prices === "undefined" || prices.market_price_buyout_per === 0) {
         return {
           ...result,
-          [`${itemId}_buyout_per`]: null,
+          [`${itemId}_market_price_buyout_per`]: null,
           [`${itemId}_volume`]: null,
         };
       }
 
       const buyoutValue: number = (() => {
-        if (prices.min_buyout_per === 0) {
+        if (prices.market_price_buyout_per === 0) {
           return zeroGraphValue;
         }
 
-        return prices.min_buyout_per / 10 / 10;
+        return prices.market_price_buyout_per / 10 / 10;
       })();
       const volumeValue: number = (() => {
         if (prices.volume === 0) {
@@ -184,7 +184,7 @@ export function convertItemPriceHistoriesToLineData(
 
       return {
         ...result,
-        [`${itemId}_buyout_per`]: buyoutValue,
+        [`${itemId}_market_price_buyout_per`]: buyoutValue,
         [`${itemId}_volume`]: volumeValue,
       };
     }, {});

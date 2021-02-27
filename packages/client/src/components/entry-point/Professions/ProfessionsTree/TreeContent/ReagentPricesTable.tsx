@@ -56,7 +56,7 @@ export class ReagentPricesTable extends React.Component<Props> {
         return foundTotal;
       }
 
-      return foundTotal + foundPrice.min_buyout_per * v.quantity;
+      return foundTotal + foundPrice.market_price_buyout_per * v.quantity;
     }, 0);
   }
 
@@ -101,7 +101,7 @@ export class ReagentPricesTable extends React.Component<Props> {
       return <ItemPopover item={foundItem} interactive={false} placement={"left"} />;
     })();
 
-    const itemCost: number | null = priceTable.data.data[id]?.min_buyout_per ?? null;
+    const itemCost: number | null = priceTable.data.data[id]?.market_price_buyout_per ?? null;
     if (itemCost === null) {
       return (
         <tr key={itemProfitIndex}>
