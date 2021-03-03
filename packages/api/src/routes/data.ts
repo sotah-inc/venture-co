@@ -9,11 +9,13 @@ import { Request, Response, Router } from "express";
 import { Connection } from "typeorm";
 
 import { DataController, handleResult } from "../controllers";
+import { ProfessionsController } from "../controllers/data/professions";
 import { getRouter as getQueryAuctionStatsRouter } from "./data/query-auction-stats";
 
 export function getRouter(dbConn: Connection, messenger: Messenger): Router {
   const router = Router();
   const controller = new DataController(messenger, dbConn);
+  const professionsController = new ProfessionsController(messenger);
 
   router.use("/query-auction-stats", getQueryAuctionStatsRouter(messenger));
 
@@ -138,7 +140,7 @@ export function getRouter(dbConn: Connection, messenger: Messenger): Router {
 
       handleResult(
         res,
-        await controller.getRecipePriceHistories(
+        await professionsController.getRecipePriceHistories(
           regionName,
           realmSlug,
           Number(recipeId),
@@ -197,7 +199,7 @@ export function getRouter(dbConn: Connection, messenger: Messenger): Router {
   router.get(
     "/professions",
     wrap(async (req: Request, res: Response) => {
-      handleResult(res, await controller.getProfessions(String(req.query.locale)));
+      handleResult(res, await professionsController.getProfessions(String(req.query.locale)));
     }),
   );
   router.get(
@@ -207,7 +209,7 @@ export function getRouter(dbConn: Connection, messenger: Messenger): Router {
       const skillTierId = req.params.skillTier;
       handleResult(
         res,
-        await controller.getSkillTier(
+        await professionsController.getSkillTier(
           Number(professionId),
           Number(skillTierId),
           String(req.query.locale),
@@ -219,7 +221,16 @@ export function getRouter(dbConn: Connection, messenger: Messenger): Router {
     "/recipe/:recipe",
     wrap(async (req: Request, res: Response) => {
       const recipeId = req.params.recipe;
-      handleResult(res, await controller.getRecipe(Number(recipeId), String(req.query.locale)));
+      handleResult(
+        res,
+        await professionsController.getRecipe(Number(recipeId), String(req.query.locale)),
+      );
+    }),
+  );
+  router.get(
+    "/recipes",
+    wrap(async (req: Request, res: Response) => {
+      handleResult(res, await professionsController.queryRecipes(req.query));
     }),
   );
 
