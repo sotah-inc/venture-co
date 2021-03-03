@@ -12,6 +12,7 @@ import {
   IRegionTuple,
   IShortItem,
   IShortPet,
+  IShortRecipe,
   ItemId,
   Locale,
   ProfessionId,
@@ -54,7 +55,9 @@ import {
 } from "./contracts/items-market-price";
 import {
   IProfessionsResponse,
+  IQueryRecipesResponse,
   IRecipeResponse,
+  IRecipesResponse,
   ISkillTierResponse,
   ResolveRecipeResponse,
 } from "./contracts/professions";
@@ -100,6 +103,8 @@ export enum subjects {
   professions = "professions",
   skillTier = "skillTier",
   recipe = "recipe",
+  recipes = "recipes",
+  recipesQuery = "recipesQuery",
 }
 
 export interface IMessage {
@@ -623,6 +628,16 @@ export class Messenger {
     });
   }
 
+  public async getRecipes(
+    recipeIds: RecipeId[],
+    locale: Locale,
+  ): Promise<Message<IRecipesResponse>> {
+    return this.request(subjects.recipes, {
+      body: JSON.stringify({ recipe_ids: recipeIds, locale }),
+      parseKind: ParseKind.GzipJsonEncoded,
+    });
+  }
+
   public async resolveRecipe(recipeId: RecipeId, locale: Locale): Promise<ResolveRecipeResponse> {
     const recipeMsg = await this.getRecipe(recipeId, locale);
     if (recipeMsg.code !== code.ok) {
@@ -684,6 +699,47 @@ export class Messenger {
       data: { recipe: recipeResult, items: itemsResult },
       error: null,
     };
+  }
+
+  public queryRecipes(request: IQueryItemsRequest): Promise<Message<IQueryRecipesResponse>> {
+    return this.request(subjects.itemsQuery, { body: JSON.stringify(request) });
+  }
+
+  public async resolveQueryRecipes(
+    request: IQueryItemsRequest,
+  ): Promise<Array<IQueryItem<IShortRecipe>> | null> {
+    // resolving items-query message
+    const itemsQueryMessage = await this.queryRecipes(request);
+    if (itemsQueryMessage.code !== code.ok) {
+      return null;
+    }
+
+    const itemsQueryResult = await itemsQueryMessage.decode();
+    if (itemsQueryResult === null) {
+      return null;
+    }
+
+    // resolving recipes from recipe-ids in items-query response data
+    const getRecipesMessage = await this.getRecipes(
+      itemsQueryResult.items.map(v => v.recipe_id),
+      request.locale,
+    );
+    if (getRecipesMessage.code !== code.ok) {
+      return null;
+    }
+
+    const getRecipesResult = await getRecipesMessage.decode();
+    if (getRecipesResult === null) {
+      return null;
+    }
+
+    return itemsQueryResult.items.map(v => {
+      return {
+        item: getRecipesResult.recipes.find(foundRecipe => foundRecipe.id === v.recipe_id) ?? null,
+        rank: v.rank,
+        target: v.target,
+      };
+    });
   }
 
   // etc
