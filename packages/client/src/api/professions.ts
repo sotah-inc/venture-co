@@ -1,10 +1,14 @@
 import {
   IProfessionsResponseData,
+  IQueryRequest,
+  IQueryResponseData,
   IRecipeResponseData,
+  IShortRecipe,
   ISkillTierResponseData,
   Locale,
   ProfessionId,
   ProfessionsResponse,
+  QueryResponse,
   RecipeId,
   RecipeResponse,
   SkillTierId,
@@ -92,4 +96,19 @@ export async function getRecipe(recipeId: RecipeId, locale: Locale): Promise<IGe
   }
 
   return { response: body as IRecipeResponseData, error: null };
+}
+
+export async function queryRecipes(
+  req: IQueryRequest,
+): Promise<IQueryResponseData<IShortRecipe> | null> {
+  const { body, status } = await gatherWithQuery<IQueryRequest, QueryResponse<IShortRecipe>>({
+    method: "GET",
+    query: req,
+    url: `${getApiEndpoint()}/recipes`,
+  });
+  if (status !== HTTPStatus.OK) {
+    return null;
+  }
+
+  return body as IQueryResponseData<IShortRecipe>;
 }

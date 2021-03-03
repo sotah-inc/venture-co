@@ -3,13 +3,12 @@ import React from "react";
 import { Alignment, ButtonGroup, Navbar, NavbarGroup } from "@blueprintjs/core";
 import { IRegionComposite, IShortProfession, IShortRecipe, IShortSkillTier } from "@sotah-inc/core";
 
-import {
-  ProfessionsProfessionToggleContainer,
-} from "../../../containers/util/ProfessionsProfessionToggle";
+import { ProfessionsProfessionToggleContainer } from "../../../containers/util/ProfessionsProfessionToggle";
 import { RealmToggleContainer } from "../../../containers/util/RealmToggle";
 import { RegionToggleContainer } from "../../../containers/util/RegionToggle";
 import { IClientRealm, IItemsData } from "../../../types/global";
 import { ISelectedSkillTier } from "../../../types/professions";
+import { RecipeInput } from "../../util/RecipeInput";
 
 export interface IStateProps {
   currentRegion: IRegionComposite | null;
@@ -48,14 +47,18 @@ export class ActionBar extends React.Component<Props> {
     return (
       <Navbar className="professions-actionbar">
         <NavbarGroup align={Alignment.LEFT}>
+          <RecipeInput
+            onSelect={recipe => {
+              // eslint-disable-next-line no-console
+              console.log(recipe);
+            }}
+          />
+        </NavbarGroup>
+        <NavbarGroup align={Alignment.RIGHT}>
           <ButtonGroup>
             <ProfessionsProfessionToggleContainer
               onProfessionChange={(v: IShortProfession) => this.onProfessionChange(v)}
             />
-          </ButtonGroup>
-        </NavbarGroup>
-        <NavbarGroup align={Alignment.RIGHT}>
-          <ButtonGroup>
             <RealmToggleContainer onRealmChange={(v: IClientRealm) => this.onRealmChange(v)} />
             <RegionToggleContainer />
           </ButtonGroup>
