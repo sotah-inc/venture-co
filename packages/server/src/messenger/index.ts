@@ -702,7 +702,7 @@ export class Messenger {
   }
 
   public queryRecipes(request: IQueryItemsRequest): Promise<Message<IQueryRecipesResponse>> {
-    return this.request(subjects.itemsQuery, { body: JSON.stringify(request) });
+    return this.request(subjects.recipesQuery, { body: JSON.stringify(request) });
   }
 
   public async resolveQueryRecipes(
