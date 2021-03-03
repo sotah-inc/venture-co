@@ -3,7 +3,9 @@ import React from "react";
 import { Alignment, ButtonGroup, Navbar, NavbarGroup } from "@blueprintjs/core";
 import { IRegionComposite, IShortProfession, IShortRecipe, IShortSkillTier } from "@sotah-inc/core";
 
-import { ProfessionsProfessionToggleContainer } from "../../../containers/util/ProfessionsProfessionToggle";
+import {
+  ProfessionsProfessionToggleContainer,
+} from "../../../containers/util/ProfessionsProfessionToggle";
 import { RealmToggleContainer } from "../../../containers/util/RealmToggle";
 import { RegionToggleContainer } from "../../../containers/util/RegionToggle";
 import { IClientRealm, IItemsData } from "../../../types/global";
@@ -47,12 +49,7 @@ export class ActionBar extends React.Component<Props> {
     return (
       <Navbar className="professions-actionbar">
         <NavbarGroup align={Alignment.LEFT}>
-          <RecipeInput
-            onSelect={recipe => {
-              // eslint-disable-next-line no-console
-              console.log(recipe);
-            }}
-          />
+          <RecipeInput onSelect={recipe => this.onRecipeChange(recipe)} />
         </NavbarGroup>
         <NavbarGroup align={Alignment.RIGHT}>
           <ButtonGroup>
@@ -130,5 +127,27 @@ export class ActionBar extends React.Component<Props> {
     }
 
     browseToProfession(currentRegion, currentRealm, profession);
+  }
+
+  private onRecipeChange(recipe: IShortRecipe) {
+    const {
+      browseToRecipe,
+      currentRegion,
+      currentRealm,
+      selectedProfession,
+      selectedSkillTier,
+    } = this.props;
+
+    if (
+      currentRegion === null ||
+      currentRealm === null ||
+      selectedProfession === null ||
+      selectedProfession === undefined ||
+      selectedSkillTier.data === null
+    ) {
+      return;
+    }
+
+    browseToRecipe(currentRegion, currentRealm, selectedProfession, selectedSkillTier.data, recipe);
   }
 }
