@@ -53,7 +53,7 @@ function renderItemRendererTextContent(recipe: IShortRecipe | null) {
 }
 
 function renderItemRendererText(recipe: IShortRecipe | null) {
-  return <span className="item-input-menu-item">{renderItemRendererTextContent(recipe)}</span>;
+  return <span className="recipe-input-menu-item">{renderItemRendererTextContent(recipe)}</span>;
 }
 
 const itemPredicate: ItemPredicate<IQueryItem<IShortRecipe>> = (
@@ -82,7 +82,7 @@ const itemListRenderer: ItemListRenderer<IQueryItem<IShortRecipe>> = (
   }
 
   return (
-    <Menu ulRef={itemsParentRef} className="item-input-menu">
+    <Menu ulRef={itemsParentRef} className="recipe-input-menu">
       <li>
         <H6>Queried Results</H6>
       </li>
