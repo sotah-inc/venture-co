@@ -39,4 +39,5 @@ export type ResolveQueryRecipesResponse = IResolveResponse<{
   queryResponse: IQueryRecipesResponse;
   recipes: IShortRecipe[];
   professions: IShortProfession[];
+  skillTiers: IShortSkillTier[];
 }>

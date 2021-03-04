@@ -3,7 +3,8 @@ import {
   IConnectedRealmModificationDates,
   IItemPriceHistories,
   IPriceHistories,
-  IPricesFlagged, IProfessionSkillTierTuple,
+  IPricesFlagged,
+  IProfessionSkillTierTuple,
   IQueryItem,
   IRegionComposite,
   IRegionConnectedRealmTuple,
@@ -796,12 +797,61 @@ export class Messenger {
       };
     }
 
+    const professionSkillTiers = getRecipesResult.recipes.reduce<{
+      [professionId: number]: Set<SkillTierId> | undefined;
+    }>((groupResult, recipe) => {
+      const skillTiers: Set<SkillTierId> =
+        groupResult[recipe.profession_id] ?? new Set<SkillTierId>();
+      skillTiers.add(recipe.skilltier_id);
+
+      return {
+        ...groupResult,
+        [recipe.profession_id]: skillTiers,
+      };
+    }, {});
+    const professionSkillTierTuples = Object.keys(professionSkillTiers).reduce<
+      IProfessionSkillTierTuple[]
+    >((tuples, professionIdString) => {
+      const skillTiers = professionSkillTiers[Number(professionIdString)];
+      const skillTiersTuples = Array.from(
+        skillTiers ?? new Set<SkillTierId>(),
+      ).map<IProfessionSkillTierTuple>(skillTierId => {
+        return {
+          profession_id: Number(professionIdString),
+          skilltier_id: skillTierId,
+        };
+      });
+
+      return [...tuples, ...skillTiersTuples];
+    }, []);
+    const getSkillTiersMessage = await this.getSkillTiers(
+      professionSkillTierTuples,
+      request.locale,
+    );
+    if (getSkillTiersMessage.code !== code.ok) {
+      return {
+        data: null,
+        code: getSkillTiersMessage.code,
+        error: null,
+      };
+    }
+
+    const getSkillTiersResult = await getSkillTiersMessage.decode();
+    if (getSkillTiersResult === null) {
+      return {
+        data: null,
+        code: code.msgJsonParseError,
+        error: null,
+      };
+    }
+
     return {
       code: code.ok,
       data: {
         queryResponse: itemsQueryResult,
         recipes: getRecipesResult.recipes,
         professions: getProfessionsFromIdsResult.professions,
+        skillTiers: getSkillTiersResult.skilltiers,
       },
       error: null,
     };
