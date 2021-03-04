@@ -1,3 +1,4 @@
+import { ProfessionId } from "./short-profession";
 import { IShortRecipe, RecipeId } from "./short-recipe";
 
 export type SkillTierId = number;
@@ -18,4 +19,9 @@ export interface IShortSkillTier {
   minimum_skill_level: number;
   maximum_skill_level: number;
   categories: IShortSkillTierCategory[];
+}
+
+export interface IProfessionSkillTierTuple {
+  profession_id: ProfessionId;
+  skilltier_id: SkillTierId;
 }
