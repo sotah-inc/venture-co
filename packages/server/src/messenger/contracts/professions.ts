@@ -10,6 +10,10 @@ export interface ISkillTierResponse {
   skilltier: IShortSkillTier;
 }
 
+export interface ISkillTiersResponse {
+  skilltiers: IShortSkillTier[];
+}
+
 export interface IRecipeResponse {
   recipe: IShortRecipe;
 }
@@ -30,3 +34,9 @@ export interface IQueryRecipesResponse {
     rank: number;
   }>;
 }
+
+export type ResolveQueryRecipesResponse = IResolveResponse<{
+  queryResponse: IQueryRecipesResponse;
+  recipes: IShortRecipe[];
+  professions: IShortProfession[];
+}>

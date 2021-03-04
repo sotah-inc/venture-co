@@ -3,7 +3,7 @@ import {
   IConnectedRealmModificationDates,
   IItemPriceHistories,
   IPriceHistories,
-  IPricesFlagged,
+  IPricesFlagged, IProfessionSkillTierTuple,
   IQueryItem,
   IRegionComposite,
   IRegionConnectedRealmTuple,
@@ -12,7 +12,6 @@ import {
   IRegionTuple,
   IShortItem,
   IShortPet,
-  IShortRecipe,
   ItemId,
   Locale,
   ProfessionId,
@@ -59,6 +58,8 @@ import {
   IRecipeResponse,
   IRecipesResponse,
   ISkillTierResponse,
+  ISkillTiersResponse,
+  ResolveQueryRecipesResponse,
   ResolveRecipeResponse,
 } from "./contracts/professions";
 import {
@@ -101,7 +102,9 @@ export enum subjects {
   recipePricesHistory = "recipePricesHistory",
 
   professions = "professions",
+  professionsFromIds = "professionsFromIds",
   skillTier = "skillTier",
+  skillTiers = "skillTiers",
   recipe = "recipe",
   recipes = "recipes",
   recipesQuery = "recipesQuery",
@@ -610,6 +613,16 @@ export class Messenger {
     });
   }
 
+  public async getProfessionsFromIds(
+    ids: ProfessionId[],
+    locale: Locale,
+  ): Promise<Message<IProfessionsResponse>> {
+    return this.request(subjects.professionsFromIds, {
+      body: JSON.stringify({ locale, profession_ids: ids }),
+      parseKind: ParseKind.GzipJsonEncoded,
+    });
+  }
+
   public async getSkillTier(
     professionId: ProfessionId,
     skillTierId: SkillTierId,
@@ -617,6 +630,16 @@ export class Messenger {
   ): Promise<Message<ISkillTierResponse>> {
     return this.request(subjects.skillTier, {
       body: JSON.stringify({ profession_id: professionId, skilltier_id: skillTierId, locale }),
+      parseKind: ParseKind.GzipJsonEncoded,
+    });
+  }
+
+  public async getSkillTiers(
+    tuples: IProfessionSkillTierTuple[],
+    locale: Locale,
+  ): Promise<Message<ISkillTiersResponse>> {
+    return this.request(subjects.skillTiers, {
+      body: JSON.stringify({ tuples, locale }),
       parseKind: ParseKind.GzipJsonEncoded,
     });
   }
@@ -707,16 +730,24 @@ export class Messenger {
 
   public async resolveQueryRecipes(
     request: IQueryItemsRequest,
-  ): Promise<Array<IQueryItem<IShortRecipe>> | null> {
+  ): Promise<ResolveQueryRecipesResponse> {
     // resolving items-query message
     const itemsQueryMessage = await this.queryRecipes(request);
     if (itemsQueryMessage.code !== code.ok) {
-      return null;
+      return {
+        data: null,
+        code: itemsQueryMessage.code,
+        error: null,
+      };
     }
 
     const itemsQueryResult = await itemsQueryMessage.decode();
     if (itemsQueryResult === null) {
-      return null;
+      return {
+        data: null,
+        code: code.msgJsonParseError,
+        error: null,
+      };
     }
 
     // resolving recipes from recipe-ids in items-query response data
@@ -725,21 +756,55 @@ export class Messenger {
       request.locale,
     );
     if (getRecipesMessage.code !== code.ok) {
-      return null;
+      return {
+        data: null,
+        code: getRecipesMessage.code,
+        error: null,
+      };
     }
 
     const getRecipesResult = await getRecipesMessage.decode();
     if (getRecipesResult === null) {
-      return null;
+      return {
+        data: null,
+        code: code.msgJsonParseError,
+        error: null,
+      };
     }
 
-    return itemsQueryResult.items.map(v => {
+    const professionIds = Array.from<ProfessionId>(
+      new Set<ProfessionId>(getRecipesResult.recipes.map(v => v.profession_id)),
+    );
+    const getProfessionsFromIdsMessage = await this.getProfessionsFromIds(
+      professionIds,
+      request.locale,
+    );
+    if (getProfessionsFromIdsMessage.code !== code.ok) {
       return {
-        item: getRecipesResult.recipes.find(foundRecipe => foundRecipe.id === v.recipe_id) ?? null,
-        rank: v.rank,
-        target: v.target,
+        data: null,
+        code: getProfessionsFromIdsMessage.code,
+        error: null,
       };
-    });
+    }
+
+    const getProfessionsFromIdsResult = await getProfessionsFromIdsMessage.decode();
+    if (getProfessionsFromIdsResult === null) {
+      return {
+        data: null,
+        code: code.msgJsonParseError,
+        error: null,
+      };
+    }
+
+    return {
+      code: code.ok,
+      data: {
+        queryResponse: itemsQueryResult,
+        recipes: getRecipesResult.recipes,
+        professions: getProfessionsFromIdsResult.professions,
+      },
+      error: null,
+    };
   }
 
   // etc
