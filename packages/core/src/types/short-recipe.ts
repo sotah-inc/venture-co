@@ -1,4 +1,6 @@
 import { ItemId } from "./item";
+import { ProfessionId } from "./short-profession";
+import { SkillTierId } from "./short-skilltier";
 
 export type RecipeId = number;
 
@@ -14,6 +16,8 @@ export interface IShortRecipeReagent {
 
 export interface IShortRecipe {
   id: RecipeId;
+  profession_id: ProfessionId;
+  skilltier_id: SkillTierId;
   name: string;
   description: string;
   crafted_item: IShortRecipeItem;
