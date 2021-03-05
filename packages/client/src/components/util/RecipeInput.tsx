@@ -193,6 +193,7 @@ export function RecipeInput(props: Props): JSX.Element {
         type: "search",
       }}
       itemPredicate={itemPredicate}
+      noResults={<em>No results found.</em>}
     />
   );
 }

@@ -1,6 +1,6 @@
 {
   "name": "@sotah-inc/client",
-  "version": "2.0.439",
+  "version": "2.0.440",
   "description": "SotAH Web Client SDK",
   "main": "./build/dist/index.js",
   "typings": "build/dist/index.d.ts",
