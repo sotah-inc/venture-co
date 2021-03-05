@@ -1,8 +1,8 @@
 import { IShortItem } from "../../short-item";
 import { IShortProfession } from "../../short-profession";
-import { IShortRecipe } from "../../short-recipe";
+import { IShortRecipe, RecipeId } from "../../short-recipe";
 import { IShortSkillTier } from "../../short-skilltier";
-import { IValidationErrorResponse } from "../index";
+import { IErrorResponse, IValidationErrorResponse } from "../index";
 
 export interface IProfessionsResponseData {
   professions: IShortProfession[];
@@ -22,3 +22,22 @@ export interface IRecipeResponseData {
 }
 
 export type RecipeResponse = IRecipeResponseData | IValidationErrorResponse | null;
+
+export interface IQueryRecipeResponseData {
+  queryResponse: {
+    items: Array<{
+      recipe_id: RecipeId;
+      target: string;
+      rank: number;
+    }>;
+  };
+  recipes: IShortRecipe[];
+  professions: IShortProfession[];
+  skillTiers: IShortSkillTier[];
+}
+
+export type QueryRecipeResponse =
+  | IQueryRecipeResponseData
+  | IErrorResponse
+  | IValidationErrorResponse
+  | null;
