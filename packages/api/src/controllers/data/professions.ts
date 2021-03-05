@@ -1,12 +1,10 @@
 import {
   GetRecipePriceHistoriesResponse,
-  IQueryResponseData,
-  IShortRecipe,
   IValidationErrorResponse,
   Locale,
   ProfessionId,
   ProfessionsResponse,
-  QueryResponse,
+  QueryRecipesResponse,
   RealmSlug,
   RecipeId,
   RecipeResponse,
@@ -276,7 +274,7 @@ export class ProfessionsController {
     };
   }
 
-  public async queryRecipes(query: ParsedQs): Promise<IRequestResult<QueryResponse<IShortRecipe>>> {
+  public async queryRecipes(query: ParsedQs): Promise<IRequestResult<QueryRecipesResponse>> {
     // parsing request params
     const validateParamsResult = await validate(QueryParamRules, query);
     if (validateParamsResult.error || !validateParamsResult.data) {
@@ -291,20 +289,15 @@ export class ProfessionsController {
       locale: validateParamsResult.data.locale as Locale,
       query: validateParamsResult.data.query ?? "",
     });
-    if (results === null) {
+    if (results.code !== code.ok || results.data === null) {
       return {
         data: null,
         status: HTTPStatus.INTERNAL_SERVER_ERROR,
       };
     }
 
-    // formatting a response
-    const data: IQueryResponseData<IShortRecipe> = {
-      items: results,
-    };
-
     return {
-      data,
+      data: results.data,
       status: HTTPStatus.OK,
     };
   }
