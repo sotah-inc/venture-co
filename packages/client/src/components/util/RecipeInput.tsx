@@ -1,13 +1,7 @@
 import React, { useState } from "react";
 
-import { Classes, H6, Menu, MenuItem } from "@blueprintjs/core";
-import {
-  IItemListRendererProps,
-  IItemRendererProps,
-  ItemListRenderer,
-  ItemPredicate,
-  Suggest,
-} from "@blueprintjs/select";
+import { Classes, MenuItem } from "@blueprintjs/core";
+import { IItemRendererProps, ItemPredicate, Suggest } from "@blueprintjs/select";
 import { IItemModifiers } from "@blueprintjs/select/src/common/itemRenderer";
 import {
   IQueryRecipesResponseData,
@@ -73,34 +67,6 @@ function renderItemRendererText(recipe: IShortRecipe | null) {
 
 const itemPredicate: ItemPredicate<RecipeInputItem> = (_: string, result: RecipeInputItem) => {
   return result.rank > -1;
-};
-
-const itemListRenderer: ItemListRenderer<RecipeInputItem> = (
-  params: IItemListRendererProps<RecipeInputItem>,
-) => {
-  const { items, itemsParentRef, renderItem } = params;
-  const renderedItems = items.map(renderItem).filter(renderedItem => renderedItem !== null);
-  if (renderedItems.length === 0) {
-    return (
-      <Menu ulRef={itemsParentRef}>
-        <li>
-          <H6>Queried Results</H6>
-        </li>
-        <li>
-          <em>No results found.</em>
-        </li>
-      </Menu>
-    );
-  }
-
-  return (
-    <Menu ulRef={itemsParentRef} className="recipe-input-menu">
-      <li>
-        <H6>Queried Results</H6>
-      </li>
-      {renderedItems}
-    </Menu>
-  );
 };
 
 export function renderItemLabel(recipe: IShortRecipe | null): string {
@@ -227,7 +193,6 @@ export function RecipeInput(props: Props): JSX.Element {
         type: "search",
       }}
       itemPredicate={itemPredicate}
-      itemListRenderer={itemListRenderer}
     />
   );
 }
