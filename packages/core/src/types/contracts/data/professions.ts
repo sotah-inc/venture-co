@@ -23,7 +23,7 @@ export interface IRecipeResponseData {
 
 export type RecipeResponse = IRecipeResponseData | IValidationErrorResponse | null;
 
-export interface IQueryRecipeResponseData {
+export interface IQueryRecipesResponseData {
   queryResponse: {
     items: Array<{
       recipe_id: RecipeId;
@@ -36,8 +36,8 @@ export interface IQueryRecipeResponseData {
   skillTiers: IShortSkillTier[];
 }
 
-export type QueryRecipeResponse =
-  | IQueryRecipeResponseData
+export type QueryRecipesResponse =
+  | IQueryRecipesResponseData
   | IErrorResponse
   | IValidationErrorResponse
   | null;
