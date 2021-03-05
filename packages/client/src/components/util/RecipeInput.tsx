@@ -9,21 +9,34 @@ import {
   Suggest,
 } from "@blueprintjs/select";
 import { IItemModifiers } from "@blueprintjs/select/src/common/itemRenderer";
-import { IQueryItem, IShortRecipe, Locale, RecipeId } from "@sotah-inc/core";
+import {
+  IQueryRecipesResponseData,
+  IShortProfession,
+  IShortRecipe,
+  IShortSkillTier,
+  Locale,
+  RecipeId,
+} from "@sotah-inc/core";
 import { debounce } from "lodash";
 
 import { queryRecipes } from "../../api/professions";
 
-const RecipeSuggest = Suggest.ofType<IQueryItem<IShortRecipe>>();
+type RecipeInputItem = {
+  recipe_id: RecipeId;
+  target: string;
+  rank: number;
+};
+
+const RecipeSuggest = Suggest.ofType<RecipeInputItem>();
 
 export interface IOwnProps {
   autoFocus?: boolean;
   idBlacklist?: RecipeId[];
   closeOnSelect?: boolean;
   idActiveList?: RecipeId[];
-  initialResults?: Array<IQueryItem<IShortRecipe>>;
+  initialResults?: IQueryRecipesResponseData;
 
-  onSelect(recipe: IShortRecipe): void;
+  onSelect(profession: IShortProfession, skillTier: IShortSkillTier, recipe: IShortRecipe): void;
 }
 
 type Props = Readonly<IOwnProps>;
@@ -56,15 +69,12 @@ function renderItemRendererText(recipe: IShortRecipe | null) {
   return <span className="recipe-input-menu-item">{renderItemRendererTextContent(recipe)}</span>;
 }
 
-const itemPredicate: ItemPredicate<IQueryItem<IShortRecipe>> = (
-  _: string,
-  result: IQueryItem<IShortRecipe>,
-) => {
+const itemPredicate: ItemPredicate<RecipeInputItem> = (_: string, result: RecipeInputItem) => {
   return result.rank > -1;
 };
 
-const itemListRenderer: ItemListRenderer<IQueryItem<IShortRecipe>> = (
-  params: IItemListRendererProps<IQueryItem<IShortRecipe>>,
+const itemListRenderer: ItemListRenderer<RecipeInputItem> = (
+  params: IItemListRendererProps<RecipeInputItem>,
 ) => {
   const { items, itemsParentRef, renderItem } = params;
   const renderedItems = items.map(renderItem).filter(renderedItem => renderedItem !== null);
@@ -106,28 +116,38 @@ export function resolveItemClassNames(
 ): string[] {
   return [
     modifiers.active ? Classes.INTENT_PRIMARY : "",
-    modifiers.active || (recipe && idActiveList?.includes(recipe.id)) ? Classes.ACTIVE : "",
+    modifiers.active || (recipe !== null && idActiveList?.includes(recipe.id))
+      ? Classes.ACTIVE
+      : "",
   ].filter(v => v.length > 0);
 }
 
+interface IItemRendererOptions {
+  results: IQueryRecipesResponseData;
+  itemRendererProps: IItemRendererProps;
+
+  idBlacklist?: RecipeId[];
+  idActiveList?: RecipeId[];
+}
+
 export function itemRenderer(
-  recipe: IShortRecipe | null,
-  itemRendererProps: IItemRendererProps,
-  idBlacklist?: RecipeId[],
-  idActiveList?: RecipeId[],
+  item: RecipeInputItem,
+  opts: IItemRendererOptions,
 ): JSX.Element | null {
-  const { handleClick, modifiers, index } = itemRendererProps;
+  const { handleClick, modifiers, index } = opts.itemRendererProps;
+
+  const foundRecipe = opts.results.recipes.find(recipe => recipe.id === item.recipe_id);
 
   const disabled: boolean = (() => {
-    if (typeof idBlacklist === "undefined") {
+    if (typeof opts.idBlacklist === "undefined") {
       return false;
     }
 
-    if (recipe === null) {
+    if (foundRecipe === undefined) {
       return true;
     }
 
-    return idBlacklist.includes(recipe.id);
+    return opts.idBlacklist.includes(foundRecipe.id);
   })();
 
   if (!modifiers.matchesPredicate) {
@@ -137,10 +157,10 @@ export function itemRenderer(
   return (
     <MenuItem
       key={index}
-      className={resolveItemClassNames(recipe, modifiers, idActiveList).join(" ")}
+      className={resolveItemClassNames(foundRecipe ?? null, modifiers, opts.idActiveList).join(" ")}
       onClick={handleClick}
-      text={renderItemRendererText(recipe)}
-      label={renderItemLabel(recipe)}
+      text={renderItemRendererText(foundRecipe ?? null)}
+      label={renderItemLabel(foundRecipe ?? null)}
       disabled={disabled}
     />
   );
@@ -149,21 +169,45 @@ export function itemRenderer(
 export function RecipeInput(props: Props): JSX.Element {
   const { autoFocus, onSelect, closeOnSelect, idBlacklist, idActiveList, initialResults } = props;
 
-  const [results, setResults] = useState<Array<IQueryItem<IShortRecipe>>>(initialResults ?? []);
+  const [results, setResults] = useState<IQueryRecipesResponseData>(
+    initialResults ?? {
+      professions: [],
+      queryResponse: { items: [] },
+      recipes: [],
+      skillTiers: [],
+    },
+  );
 
   return (
     <RecipeSuggest
-      inputValueRenderer={v => inputValueRenderer(v.item)}
-      itemRenderer={(result, itemRendererProps: IItemRendererProps) => {
-        return itemRenderer(result.item, itemRendererProps, idBlacklist, idActiveList);
-      }}
-      items={results}
+      inputValueRenderer={v =>
+        inputValueRenderer(results.recipes.find(recipe => recipe.id === v.recipe_id) ?? null)
+      }
+      itemRenderer={(item, itemRendererProps: IItemRendererProps) =>
+        itemRenderer(item, { itemRendererProps, idBlacklist, idActiveList, results })
+      }
+      items={results.queryResponse.items}
       onItemSelect={v => {
-        if (v.item === null) {
+        const foundRecipe = results.recipes.find(recipe => recipe.id === v.recipe_id);
+        if (foundRecipe === undefined) {
           return;
         }
 
-        onSelect(v.item);
+        const foundProfession = results.professions.find(
+          profession => profession.id === foundRecipe.profession_id,
+        );
+        if (foundProfession === undefined) {
+          return;
+        }
+
+        const foundSkillTier = results.skillTiers.find(
+          skillTier => skillTier.id === foundRecipe.skilltier_id,
+        );
+        if (foundSkillTier === undefined) {
+          return;
+        }
+
+        onSelect(foundProfession, foundSkillTier, foundRecipe);
       }}
       closeOnSelect={typeof closeOnSelect === "undefined" ? true : closeOnSelect}
       onQueryChange={debounce(async (filterValue: string) => {
@@ -172,7 +216,7 @@ export function RecipeInput(props: Props): JSX.Element {
           return;
         }
 
-        setResults(res.items);
+        setResults(res);
       }, 0.25 * 1000)}
       inputProps={{
         autoFocus,

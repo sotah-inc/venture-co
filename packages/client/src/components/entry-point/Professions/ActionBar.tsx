@@ -49,7 +49,11 @@ export class ActionBar extends React.Component<Props> {
     return (
       <Navbar className="professions-actionbar">
         <NavbarGroup align={Alignment.LEFT}>
-          <RecipeInput onSelect={recipe => this.onRecipeChange(recipe)} />
+          <RecipeInput
+            onSelect={(profession, skillTier, recipe) =>
+              this.onRecipeChange(profession, skillTier, recipe)
+            }
+          />
         </NavbarGroup>
         <NavbarGroup align={Alignment.RIGHT}>
           <ButtonGroup>
@@ -129,25 +133,17 @@ export class ActionBar extends React.Component<Props> {
     browseToProfession(currentRegion, currentRealm, profession);
   }
 
-  private onRecipeChange(recipe: IShortRecipe) {
-    const {
-      browseToRecipe,
-      currentRegion,
-      currentRealm,
-      selectedProfession,
-      selectedSkillTier,
-    } = this.props;
+  private onRecipeChange(
+    profession: IShortProfession,
+    skillTier: IShortSkillTier,
+    recipe: IShortRecipe,
+  ) {
+    const { browseToRecipe, currentRegion, currentRealm } = this.props;
 
-    if (
-      currentRegion === null ||
-      currentRealm === null ||
-      selectedProfession === null ||
-      selectedProfession === undefined ||
-      selectedSkillTier.data === null
-    ) {
+    if (currentRegion === null || currentRealm === null) {
       return;
     }
 
-    browseToRecipe(currentRegion, currentRealm, selectedProfession, selectedSkillTier.data, recipe);
+    browseToRecipe(currentRegion, currentRealm, profession, skillTier, recipe);
   }
 }
