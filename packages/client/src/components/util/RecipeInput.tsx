@@ -106,7 +106,7 @@ export function renderItemLabel(recipe: IShortRecipe | null): string {
     return "";
   }
 
-  return `R#${recipe.id}`;
+  return "";
 }
 
 export function resolveItemClassNames(
