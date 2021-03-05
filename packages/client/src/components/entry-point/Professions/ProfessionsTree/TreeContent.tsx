@@ -5,11 +5,11 @@ import { IShortRecipe, RecipeId } from "@sotah-inc/core";
 
 import {
   ReagentPricesTableContainer,
-// eslint-disable-next-line max-len
+  // eslint-disable-next-line max-len
 } from "../../../../containers/entry-point/Professions/ProfessionsTree/TreeContent/ReagentPricesTable";
 import {
   RecipePriceHistoriesGraphContainer,
-// eslint-disable-next-line max-len
+  // eslint-disable-next-line max-len
 } from "../../../../containers/entry-point/Professions/ProfessionsTree/TreeContent/RecipePriceHistoriesGraph";
 import { IItemsData } from "../../../../types/global";
 
@@ -52,7 +52,12 @@ export class TreeContent extends React.Component<Props> {
     }
 
     if (selectedRecipe.data.icon_url.length === 0) {
-      return <H2>{selectedRecipe.data.name}</H2>;
+      const name =
+        selectedRecipe.data.rank > 0
+          ? `${selectedRecipe.data.name} (Rank ${selectedRecipe.data.rank})`
+          : selectedRecipe.data.name;
+
+      return <H2>{name}</H2>;
     }
 
     return (

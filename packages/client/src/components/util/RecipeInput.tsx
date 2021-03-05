@@ -50,9 +50,11 @@ export function inputValueRenderer(recipe: IShortRecipe | null): string {
 }
 
 export function renderRecipeAsItemRendererText(recipe: IShortRecipe): JSX.Element {
+  const label = recipe.rank > 0 ? `${recipe.name} (Rank ${recipe.rank})` : recipe.name;
+
   return (
     <>
-      <img src={recipe.icon_url} className="recipe-icon" alt="" /> {recipe.name}
+      <img src={recipe.icon_url} className="recipe-icon" alt="" /> {label}
     </>
   );
 }
