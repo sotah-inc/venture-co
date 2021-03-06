@@ -175,7 +175,7 @@ export class Messenger {
           return a.target.localeCompare(b.target);
         }
 
-        return a.rank > b.rank ? -1 : 1;
+        return a.rank < b.rank ? -1 : 1;
       })
       .slice(0, 10);
   }
