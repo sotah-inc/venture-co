@@ -69,12 +69,8 @@ const itemPredicate: ItemPredicate<RecipeInputItem> = (_: string, result: Recipe
   return result.rank > -1;
 };
 
-export function renderItemLabel(recipe: IShortRecipe | null): string {
-  if (recipe === null) {
-    return "";
-  }
-
-  return "";
+export function renderItemLabel(skillTier: IShortSkillTier | null): string {
+  return skillTier?.name ?? "";
 }
 
 export function resolveItemClassNames(
@@ -105,6 +101,9 @@ export function itemRenderer(
   const { handleClick, modifiers, index } = opts.itemRendererProps;
 
   const foundRecipe = opts.results.recipes.find(recipe => recipe.id === item.recipe_id);
+  const foundSkillTier = opts.results.skillTiers.find(
+    skillTier => skillTier.id === foundRecipe?.skilltier_id,
+  );
 
   const disabled: boolean = (() => {
     if (typeof opts.idBlacklist === "undefined") {
@@ -128,7 +127,7 @@ export function itemRenderer(
       className={resolveItemClassNames(foundRecipe ?? null, modifiers, opts.idActiveList).join(" ")}
       onClick={handleClick}
       text={renderItemRendererText(foundRecipe ?? null)}
-      label={renderItemLabel(foundRecipe ?? null)}
+      label={renderItemLabel(foundSkillTier ?? null)}
       disabled={disabled}
     />
   );
