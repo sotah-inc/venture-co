@@ -153,26 +153,26 @@ export function convertItemPriceHistoriesToLineData(
       if (typeof itemPriceHistory === "undefined") {
         return {
           ...result,
-          [`${itemId}_market_price_buyout_per`]: null,
+          [`${itemId}_market_buyout_per`]: null,
           [`${itemId}_volume`]: null,
         };
       }
 
       const prices = itemPriceHistory[unixTimestamp];
-      if (typeof prices === "undefined" || prices.market_price_buyout_per === 0) {
+      if (typeof prices === "undefined" || prices.market_buyout_per === 0) {
         return {
           ...result,
-          [`${itemId}_market_price_buyout_per`]: null,
+          [`${itemId}_market_buyout_per`]: null,
           [`${itemId}_volume`]: null,
         };
       }
 
       const buyoutValue: number = (() => {
-        if (prices.market_price_buyout_per === 0) {
+        if (prices.market_buyout_per === 0) {
           return zeroGraphValue;
         }
 
-        return prices.market_price_buyout_per / 10 / 10;
+        return prices.market_buyout_per / 10 / 10;
       })();
       const volumeValue: number = (() => {
         if (prices.volume === 0) {
@@ -184,7 +184,7 @@ export function convertItemPriceHistoriesToLineData(
 
       return {
         ...result,
-        [`${itemId}_market_price_buyout_per`]: buyoutValue,
+        [`${itemId}_market_buyout_per`]: buyoutValue,
         [`${itemId}_volume`]: volumeValue,
       };
     }, {});

@@ -84,11 +84,11 @@ export class PricesTable extends React.Component<Props> {
     const entries = entryRows.sort((a, b) => {
       const aItem = items.find(v => v.id === a.item_id);
       const aEntry = pricelistMap[a.item_id];
-      const aResult = aEntry ? aEntry.market_price_buyout_per * a.quantity_modifier : 0;
+      const aResult = aEntry ? aEntry.market_buyout_per * a.quantity_modifier : 0;
 
       const bItem = items.find(v => v.id === b.item_id);
       const bEntry = pricelistMap[b.item_id];
-      const bResult = bEntry ? bEntry.market_price_buyout_per * a.quantity_modifier : 0;
+      const bResult = bEntry ? bEntry.market_buyout_per * a.quantity_modifier : 0;
 
       if (
         aResult === bResult &&
@@ -137,7 +137,7 @@ export class PricesTable extends React.Component<Props> {
     const foundEntry = pricelistMap[itemId];
 
     return {
-      buyout: foundEntry ? foundEntry.market_price_buyout_per : 0,
+      buyout: foundEntry ? foundEntry.market_buyout_per : 0,
       volume: foundEntry ? foundEntry.volume : 0,
     };
   }
