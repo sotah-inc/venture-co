@@ -1,6 +1,5 @@
 import React from "react";
 
-import { Callout, Intent } from "@blueprintjs/core";
 import { IItemPrices, IShortRecipe, ItemId, resolveCraftedItemIds } from "@sotah-inc/core";
 
 import { IFetchData, IItemsData } from "../../../../../types/global";
@@ -38,7 +37,6 @@ export class ReagentPricesTable extends React.Component<Props> {
           title="Reagent Prices"
           footerContent={this.renderFooter()}
         />
-        <Callout intent={Intent.PRIMARY}>Price table is of lowest-posted prices.</Callout>
       </>
     );
   }
