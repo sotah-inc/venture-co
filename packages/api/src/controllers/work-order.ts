@@ -255,7 +255,7 @@ export class WorkOrderController {
     const foundPrice = pricesResult.price_list[foundItem.id];
 
     return {
-      data: { currentPrice: foundPrice?.market_price_buyout_per ?? null },
+      data: { currentPrice: foundPrice?.market_buyout_per ?? null },
       status: HTTPStatus.OK,
     };
   }
