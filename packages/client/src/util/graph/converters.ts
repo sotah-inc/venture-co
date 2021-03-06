@@ -153,7 +153,7 @@ export function convertItemPriceHistoriesToLineData(
       if (typeof itemPriceHistory === "undefined") {
         return {
           ...result,
-          [`${itemId}_market_buyout_per`]: null,
+          [`${itemId}_market_per`]: null,
           [`${itemId}_volume`]: null,
         };
       }
@@ -162,7 +162,7 @@ export function convertItemPriceHistoriesToLineData(
       if (typeof prices === "undefined" || prices.market_price_buyout_per === 0) {
         return {
           ...result,
-          [`${itemId}_market_buyout_per`]: null,
+          [`${itemId}_market_per`]: null,
           [`${itemId}_volume`]: null,
         };
       }
@@ -184,7 +184,7 @@ export function convertItemPriceHistoriesToLineData(
 
       return {
         ...result,
-        [`${itemId}_market_buyout_per`]: buyoutValue,
+        [`${itemId}_market_per`]: buyoutValue,
         [`${itemId}_volume`]: volumeValue,
       };
     }, {});
