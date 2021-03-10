@@ -1,7 +1,6 @@
 import { gunzip } from "../util";
 import { code } from "./contracts";
-
-import { IMessage } from "./index";
+import { IMessage } from "./messengers/base";
 
 export enum ParseKind {
   None,

@@ -4,8 +4,8 @@ import { ExtractJwt, Strategy, StrategyOptions } from "passport-jwt";
 import { Connection } from "typeorm";
 
 import { User } from "./db";
-import { Messenger } from "./messenger";
 import { code } from "./messenger/contracts";
+import { GeneralMessenger } from "./messenger/messengers";
 
 export interface IJwtOptions {
   audience: string;
@@ -13,8 +13,8 @@ export interface IJwtOptions {
   secret: string;
 }
 
-export async function getJwtOptions(messenger: Messenger): Promise<IJwtOptions> {
-  const msg = await messenger.getSessionSecret();
+export async function getJwtOptions(generalMessenger: GeneralMessenger): Promise<IJwtOptions> {
+  const msg = await generalMessenger.getSessionSecret();
   if (msg.code !== code.ok) {
     throw new Error(msg.error?.message);
   }
@@ -32,7 +32,7 @@ export interface IJwtPayload {
 
 export async function appendSessions(
   app: Express,
-  messenger: Messenger,
+  messenger: GeneralMessenger,
   conn: Connection,
 ): Promise<Express> {
   const jwtOptions = await getJwtOptions(messenger);

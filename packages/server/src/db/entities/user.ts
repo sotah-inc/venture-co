@@ -2,7 +2,7 @@ import { IUserJson, UserLevel } from "@sotah-inc/core";
 import * as jwt from "jsonwebtoken";
 import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
-import { Messenger } from "../../messenger";
+import { GeneralMessenger } from "../../messenger";
 import { getJwtOptions } from "../../session";
 import { Post } from "./post";
 import { Preference } from "./preference";
@@ -53,8 +53,8 @@ export class User {
     this.level = UserLevel.Unverified;
   }
 
-  public async generateJwtToken(messenger: Messenger): Promise<string> {
-    const jwtOptions = await getJwtOptions(messenger);
+  public async generateJwtToken(generalMessenger: GeneralMessenger): Promise<string> {
+    const jwtOptions = await getJwtOptions(generalMessenger);
 
     return jwt.sign({ data: this.id }, jwtOptions.secret, {
       algorithm: "HS512",
