@@ -1,4 +1,4 @@
-import { auth, Messenger } from "@sotah-inc/server";
+import { auth, IMessengers } from "@sotah-inc/server";
 import { wrap } from "async-middleware";
 import { Request, Response, Router } from "express";
 import { Connection } from "typeorm";
@@ -6,9 +6,9 @@ import { Connection } from "typeorm";
 import { handleResult } from "../controllers";
 import { WorkOrderController } from "../controllers/work-order";
 
-export function getRouter(dbConn: Connection, messenger: Messenger): Router {
+export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
   const router = Router();
-  const controller = new WorkOrderController(messenger, dbConn);
+  const controller = new WorkOrderController(messengers, dbConn);
 
   router.get(
     "/work-orders/:gameVersion/:regionName/:realmSlug",

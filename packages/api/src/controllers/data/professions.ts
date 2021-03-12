@@ -12,7 +12,7 @@ import {
   SkillTierId,
   SkillTierResponse,
 } from "@sotah-inc/core";
-import { Messenger } from "@sotah-inc/server";
+import { IMessengers } from "@sotah-inc/server";
 import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
 import HTTPStatus from "http-status";
 import { ParsedQs } from "qs";
@@ -21,10 +21,10 @@ import { QueryParamRules, validate, yupValidationErrorToResponse } from "../../l
 import { IRequestResult } from "../index";
 
 export class ProfessionsController {
-  private messenger: Messenger;
+  private messengers: IMessengers;
 
-  constructor(messenger: Messenger) {
-    this.messenger = messenger;
+  constructor(messengers: IMessengers) {
+    this.messengers = messengers;
   }
 
   public async getRecipePriceHistories(
@@ -45,7 +45,7 @@ export class ProfessionsController {
     }
 
     // resolving connected-realm
-    const resolveMessage = await this.messenger.resolveConnectedRealm({
+    const resolveMessage = await this.messengers.regions.resolveConnectedRealm({
       realm_slug: realmSlug,
       region_name: regionName,
     });
@@ -82,7 +82,7 @@ export class ProfessionsController {
       };
     }
 
-    const recipeMessage = await this.messenger.getRecipe(recipeId, locale as Locale);
+    const recipeMessage = await this.messengers.professions.getRecipe(recipeId, locale as Locale);
     if (recipeMessage.code !== code.ok) {
       return {
         data: null,
@@ -100,7 +100,7 @@ export class ProfessionsController {
 
     const currentUnixTimestamp = Math.floor(Date.now() / 1000);
     const lowerBounds = currentUnixTimestamp - 60 * 60 * 24 * 14;
-    const historyMessage = await this.messenger.getRecipePricesHistory({
+    const historyMessage = await this.messengers.general.getRecipePricesHistory({
       lower_bounds: lowerBounds,
       recipe_ids: [recipeId],
       tuple: {
@@ -124,7 +124,7 @@ export class ProfessionsController {
     }
     const foundHistory = historyMessageResult.history;
 
-    const itemPricesHistoryMessage = await this.messenger.resolveItemPricesHistory({
+    const itemPricesHistoryMessage = await this.messengers.general.resolveItemPricesHistory({
       item_ids: recipeResult.recipe.reagents.map(v => v.reagent.id),
       lower_bounds: lowerBounds,
       tuple: {
@@ -178,7 +178,7 @@ export class ProfessionsController {
       };
     }
 
-    const professionsMsg = await this.messenger.getProfessions(locale as Locale);
+    const professionsMsg = await this.messengers.professions.getProfessions(locale as Locale);
     if (professionsMsg.code !== code.ok) {
       return {
         data: null,
@@ -216,7 +216,7 @@ export class ProfessionsController {
       };
     }
 
-    const skillTierMsg = await this.messenger.getSkillTier(
+    const skillTierMsg = await this.messengers.professions.getSkillTier(
       professionId,
       skillTierId,
       locale as Locale,
@@ -257,7 +257,10 @@ export class ProfessionsController {
       };
     }
 
-    const resolveRecipeResult = await this.messenger.resolveRecipe(recipeId, locale as Locale);
+    const resolveRecipeResult = await this.messengers.professions.resolveRecipe(
+      recipeId,
+      locale as Locale,
+    );
     if (resolveRecipeResult.code !== code.ok || resolveRecipeResult.data === null) {
       return {
         data: null,
@@ -285,7 +288,7 @@ export class ProfessionsController {
     }
 
     // resolving items-query message
-    const results = await this.messenger.resolveQueryRecipes({
+    const results = await this.messengers.professions.resolveQueryRecipes({
       locale: validateParamsResult.data.locale as Locale,
       query: validateParamsResult.data.query ?? "",
     });

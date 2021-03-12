@@ -1,13 +1,13 @@
-import { Messenger } from "@sotah-inc/server";
+import { IMessengers } from "@sotah-inc/server";
 import { wrap } from "async-middleware";
 import { Request, Response, Router } from "express";
 
 import { handleResult } from "../../controllers";
 import { QueryAuctionStatsController } from "../../controllers/data/query-auction-stats";
 
-export function getRouter(messenger: Messenger): Router {
+export function getRouter(messengers: IMessengers): Router {
   const router = Router();
-  const controller = new QueryAuctionStatsController(messenger);
+  const controller = new QueryAuctionStatsController(messengers);
 
   router.get(
     "/:regionName/:connectedRealmId",

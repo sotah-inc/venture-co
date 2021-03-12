@@ -6,7 +6,7 @@ import {
   LoginResponse,
   UserLevel,
 } from "@sotah-inc/core";
-import { Messenger, User } from "@sotah-inc/server";
+import { IMessengers, User } from "@sotah-inc/server";
 import * as bcrypt from "bcrypt";
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
@@ -20,12 +20,12 @@ import {
 import { IRequestResult } from "./index";
 
 export class UserController {
-  private readonly messenger: Messenger;
+  private readonly messengers: IMessengers;
 
   private readonly dbConn: Connection;
 
-  constructor(messenger: Messenger, dbConn: Connection) {
-    this.messenger = messenger;
+  constructor(messengers: IMessengers, dbConn: Connection) {
+    this.messengers = messengers;
     this.dbConn = dbConn;
   }
 
@@ -58,7 +58,7 @@ export class UserController {
 
     return {
       data: {
-        token: await user.generateJwtToken(this.messenger),
+        token: await user.generateJwtToken(this.messengers.general),
         user: user.toJson(),
       },
       status: HTTPStatus.CREATED,
@@ -93,7 +93,7 @@ export class UserController {
     // issuing a jwt token
     return {
       data: {
-        token: await user.generateJwtToken(this.messenger),
+        token: await user.generateJwtToken(this.messengers.general),
         user: user.toJson(),
       },
       status: HTTPStatus.OK,

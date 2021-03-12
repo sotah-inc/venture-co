@@ -10,7 +10,13 @@ import {
   UpdatePricelistRequest,
   UpdatePricelistResponse,
 } from "@sotah-inc/core";
-import { Messenger, Pricelist, PricelistEntry, PricelistRepository, User } from "@sotah-inc/server";
+import {
+  IMessengers,
+  Pricelist,
+  PricelistEntry,
+  PricelistRepository,
+  User,
+} from "@sotah-inc/server";
 import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
@@ -25,11 +31,11 @@ import { IRequestResult } from "../index";
 export class PricelistCrudController {
   private dbConn: Connection;
 
-  private messenger: Messenger;
+  private messengers: IMessengers;
 
-  constructor(dbConn: Connection, messenger: Messenger) {
+  constructor(dbConn: Connection, messengers: IMessengers) {
     this.dbConn = dbConn;
-    this.messenger = messenger;
+    this.messengers = messengers;
   }
 
   public async createPricelist(
@@ -104,7 +110,10 @@ export class PricelistCrudController {
         return entriesItemIds;
       }, pricelistsItemIds);
     }, []);
-    const itemsMessage = await this.messenger.getItems({ itemIds, locale: locale as Locale });
+    const itemsMessage = await this.messengers.items.getItems({
+      itemIds,
+      locale: locale as Locale,
+    });
     if (itemsMessage.code !== code.ok) {
       return {
         data: null,

@@ -34,7 +34,7 @@ import {
   RegionName,
 } from "@sotah-inc/core";
 import {
-  Messenger,
+  IMessengers,
   Post,
   ProfessionPricelist,
   ProfessionPricelistRepository,
@@ -55,12 +55,12 @@ import {
 import { IRequestResult } from "./index";
 
 export class DataController {
-  private messenger: Messenger;
+  private messengers: IMessengers;
 
   private dbConn: Connection;
 
-  constructor(messenger: Messenger, dbConn: Connection) {
-    this.messenger = messenger;
+  constructor(messengers: IMessengers, dbConn: Connection) {
+    this.messengers = messengers;
     this.dbConn = dbConn;
   }
 
@@ -93,7 +93,7 @@ export class DataController {
   }
 
   public async getBoot(): Promise<IRequestResult<GetBootResponse>> {
-    const bootMessage = await this.messenger.getBoot();
+    const bootMessage = await this.messengers.general.getBoot();
     if (bootMessage.code !== code.ok) {
       return {
         data: null,
@@ -112,7 +112,7 @@ export class DataController {
     const regionCompositeResults = await Promise.all(
       bootResult.regions.map(configRegion => {
         return new Promise<IRegionComposite | null>((resolve, reject) => {
-          this.messenger
+          this.messengers.regions
             .getConnectedRealms({ region_name: configRegion.name })
             .then(v => v.decode())
             .then(v => {
@@ -152,7 +152,7 @@ export class DataController {
       };
     }
 
-    const professionsMessage = await this.messenger.getProfessions(Locale.EnUS);
+    const professionsMessage = await this.messengers.professions.getProfessions(Locale.EnUS);
     if (professionsMessage.code !== code.ok) {
       return {
         data: null,
@@ -181,7 +181,7 @@ export class DataController {
     regionName: RegionName,
     ifModifiedSince?: string,
   ): Promise<IRequestResult<GetConnectedRealmsResponse>> {
-    const realmsMessage = await this.messenger.getConnectedRealms({
+    const realmsMessage = await this.messengers.regions.getConnectedRealms({
       region_name: regionName,
     });
     switch (realmsMessage.code) {
@@ -262,7 +262,10 @@ export class DataController {
       };
     }
 
-    const msg = await this.messenger.getItems({ itemIds: [itemId], locale: locale as Locale });
+    const msg = await this.messengers.items.getItems({
+      itemIds: [itemId],
+      locale: locale as Locale,
+    });
     if (msg.code !== code.ok) {
       const errorResponse: IErrorResponse = { error: "failed to fetch items" };
 
@@ -305,7 +308,7 @@ export class DataController {
     ifModifiedSince?: string,
   ): Promise<IRequestResult<GetAuctionsResponse>> {
     // resolving connected-realm
-    const resolveMessage = await this.messenger.resolveConnectedRealm({
+    const resolveMessage = await this.messengers.regions.resolveConnectedRealm({
       realm_slug: realmSlug,
       region_name: regionName,
     });
@@ -343,10 +346,12 @@ export class DataController {
     }
 
     // gathering last-modified
-    const realmModificationDatesMessage = await this.messenger.queryRealmModificationDates({
-      connected_realm_id: resolveResult.connected_realm.connected_realm.id,
-      region_name: regionName,
-    });
+    const realmModificationDatesMessage = await this.messengers.regions.queryRealmModificationDates(
+      {
+        connected_realm_id: resolveResult.connected_realm.connected_realm.id,
+        region_name: regionName,
+      },
+    );
     switch (realmModificationDatesMessage.code) {
     case code.ok:
       break;
@@ -413,7 +418,7 @@ export class DataController {
     } = validateParamsResult.data;
 
     // gathering auctions
-    const resolveAuctionsResponse = await this.messenger.resolveAuctions(
+    const resolveAuctionsResponse = await this.messengers.auctions.resolveAuctions(
       {
         count,
         item_filters: itemFilters ?? [],
@@ -474,7 +479,10 @@ export class DataController {
     const pricelistItemIds: ItemId[] = [
       ...professionPricelists.map(v => (v.pricelist?.entries ?? []).map(y => y.itemId)[0]),
     ];
-    const pricelistItemsMsg = await this.messenger.getItems({ itemIds: pricelistItemIds, locale });
+    const pricelistItemsMsg = await this.messengers.items.getItems({
+      itemIds: pricelistItemIds,
+      locale,
+    });
     if (pricelistItemsMsg.code !== code.ok) {
       return {
         data: { error: pricelistItemsMsg.error?.message ?? "" },
@@ -490,7 +498,7 @@ export class DataController {
       };
     }
 
-    const itemsMarketPriceMessage = await this.messenger.itemsMarketPrice({
+    const itemsMarketPriceMessage = await this.messengers.auctions.itemsMarketPrice({
       item_ids: resolveAuctionsResponse.data.items.items.map(v => v.id),
       tuple: {
         connected_realm_id: resolveResult.connected_realm.connected_realm.id,
@@ -559,7 +567,7 @@ export class DataController {
     }
 
     // resolving items-query message
-    const results = await this.messenger.resolveQueryItems({
+    const results = await this.messengers.items.resolveQueryItems({
       locale: validateParamsResult.data.locale as Locale,
       query: validateParamsResult.data.query ?? "",
     });
@@ -592,7 +600,7 @@ export class DataController {
     }
 
     // resolving pets-query message
-    const results = await this.messenger.resolveQueryPets({
+    const results = await this.messengers.pets.resolveQueryPets({
       locale: validateParamsResult.data.locale as Locale,
       query: validateParamsResult.data.query ?? "",
     });
@@ -625,7 +633,7 @@ export class DataController {
     }
 
     // resolving pets-query message
-    const results = await this.messenger.queryGeneral({
+    const results = await this.messengers.general.queryGeneral({
       locale: validateParamsResult.data.locale as Locale,
       query: validateParamsResult.data.query ?? "",
     });
@@ -665,7 +673,7 @@ export class DataController {
     }
 
     // resolving connected-realm
-    const resolveMessage = await this.messenger.resolveConnectedRealm({
+    const resolveMessage = await this.messengers.regions.resolveConnectedRealm({
       realm_slug: realmSlug,
       region_name: regionName,
     });
@@ -702,7 +710,7 @@ export class DataController {
       };
     }
 
-    const pricelistMessage = await this.messenger.getPriceList({
+    const pricelistMessage = await this.messengers.auctions.getPriceList({
       item_ids: itemIds,
       tuple: {
         connected_realm_id: resolveResult.connected_realm.connected_realm.id,
@@ -723,7 +731,10 @@ export class DataController {
       };
     }
 
-    const itemsMessage = await this.messenger.getItems({ itemIds, locale: locale as Locale });
+    const itemsMessage = await this.messengers.items.getItems({
+      itemIds,
+      locale: locale as Locale,
+    });
     if (itemsMessage.code !== code.ok) {
       return {
         data: null,
@@ -764,7 +775,7 @@ export class DataController {
     }
 
     // resolving connected-realm
-    const resolveMessage = await this.messenger.resolveConnectedRealm({
+    const resolveMessage = await this.messengers.regions.resolveConnectedRealm({
       realm_slug: realmSlug,
       region_name: regionName,
     });
@@ -803,7 +814,7 @@ export class DataController {
 
     const currentUnixTimestamp = Math.floor(Date.now() / 1000);
     const lowerBounds = currentUnixTimestamp - 60 * 60 * 24 * 14;
-    const itemPricesHistoryMessage = await this.messenger.resolveItemPricesHistory({
+    const itemPricesHistoryMessage = await this.messengers.general.resolveItemPricesHistory({
       item_ids: itemIds,
       lower_bounds: lowerBounds,
       tuple: {
@@ -819,7 +830,10 @@ export class DataController {
       };
     }
 
-    const itemsMessage = await this.messenger.getItems({ itemIds, locale: locale as Locale });
+    const itemsMessage = await this.messengers.items.getItems({
+      itemIds,
+      locale: locale as Locale,
+    });
     if (itemsMessage.code !== code.ok) {
       return {
         data: null,
@@ -862,7 +876,7 @@ export class DataController {
     }
 
     // resolving connected-realm
-    const resolveMessage = await this.messenger.resolveConnectedRealm({
+    const resolveMessage = await this.messengers.regions.resolveConnectedRealm({
       realm_slug: realmSlug,
       region_name: regionName,
     });
@@ -920,7 +934,7 @@ export class DataController {
     );
 
     // gathering items
-    const itemsMsg = await this.messenger.getItems({ itemIds, locale: locale as Locale });
+    const itemsMsg = await this.messengers.items.getItems({ itemIds, locale: locale as Locale });
     if (itemsMsg.code !== code.ok) {
       return {
         data: { error: itemsMsg.error?.message },
@@ -936,7 +950,7 @@ export class DataController {
     }
 
     // gathering pricing data
-    const pricelistMessage = await this.messenger.getPriceList({
+    const pricelistMessage = await this.messengers.auctions.getPriceList({
       item_ids: itemIds,
       tuple: {
         connected_realm_id: resolveResult.connected_realm.connected_realm.id,
@@ -1022,7 +1036,10 @@ export class DataController {
       [],
     );
 
-    const itemsMessage = await this.messenger.getItems({ itemIds, locale: locale as Locale });
+    const itemsMessage = await this.messengers.items.getItems({
+      itemIds,
+      locale: locale as Locale,
+    });
     if (itemsMessage.code !== code.ok) {
       return {
         data: null,
@@ -1050,7 +1067,7 @@ export class DataController {
   public async getRegionTokenHistory(
     regionName: RegionName,
   ): Promise<IRequestResult<GetRegionTokenHistoryResponse>> {
-    const msg = await this.messenger.getRegionTokenHistory({ region_name: regionName });
+    const msg = await this.messengers.general.getRegionTokenHistory({ region_name: regionName });
     if (msg.code !== code.ok) {
       if (msg.code === code.notFound) {
         return {
@@ -1080,7 +1097,7 @@ export class DataController {
   }
 
   public async getTokenHistory(): Promise<IRequestResult<GetShortTokenHistoryResponse>> {
-    const msg = await this.messenger.getTokenHistory();
+    const msg = await this.messengers.general.getTokenHistory();
     if (msg.code !== code.ok) {
       if (msg.code === code.notFound) {
         return {
@@ -1128,7 +1145,7 @@ export class DataController {
       };
     })();
 
-    const msg = await this.messenger.queryAuctionStats(params);
+    const msg = await this.messengers.auctions.queryAuctionStats(params);
     if (msg.code !== code.ok) {
       if (msg.code === code.notFound) {
         return {

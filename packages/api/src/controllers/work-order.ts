@@ -13,7 +13,7 @@ import {
   RegionName,
   UserLevel,
 } from "@sotah-inc/core";
-import { Messenger, User, WorkOrder, WorkOrderRepository } from "@sotah-inc/server";
+import { IMessengers, User, WorkOrder, WorkOrderRepository } from "@sotah-inc/server";
 import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
 import { Response } from "express";
 import HTTPStatus from "http-status";
@@ -30,12 +30,12 @@ import {
 import { Authenticator, IRequest, IRequestResult, Validator } from "./index";
 
 export class WorkOrderController {
-  private messenger: Messenger;
+  private messengers: IMessengers;
 
   private dbConn: Connection;
 
-  constructor(messenger: Messenger, dbConn: Connection) {
-    this.messenger = messenger;
+  constructor(messengers: IMessengers, dbConn: Connection) {
+    this.messengers = messengers;
     this.dbConn = dbConn;
   }
 
@@ -56,7 +56,7 @@ export class WorkOrderController {
       };
     }
 
-    const resolveMessage = await this.messenger.resolveConnectedRealm({
+    const resolveMessage = await this.messengers.regions.resolveConnectedRealm({
       realm_slug: realmSlug,
       region_name: regionName,
     });
@@ -105,7 +105,7 @@ export class WorkOrderController {
         regionName,
       });
 
-    const itemsMsg = await this.messenger.getItems({
+    const itemsMsg = await this.messengers.items.getItems({
       itemIds: orders.map(v => v.itemId),
       locale: result.data.locale,
     });
@@ -164,7 +164,10 @@ export class WorkOrderController {
       };
     }
 
-    const itemsMsg = await this.messenger.getItems({ locale: locale as Locale, itemIds: [itemId] });
+    const itemsMsg = await this.messengers.items.getItems({
+      locale: locale as Locale,
+      itemIds: [itemId],
+    });
     if (itemsMsg.code !== code.ok) {
       const validationErrors: IValidationErrorResponse = { error: "failed to fetch items" };
 
@@ -192,7 +195,7 @@ export class WorkOrderController {
       };
     }
 
-    const resolveMessage = await this.messenger.resolveConnectedRealm({
+    const resolveMessage = await this.messengers.regions.resolveConnectedRealm({
       realm_slug: realmSlug,
       region_name: regionName,
     });
@@ -229,7 +232,7 @@ export class WorkOrderController {
       };
     }
 
-    const pricesMessage = await this.messenger.getPriceList({
+    const pricesMessage = await this.messengers.auctions.getPriceList({
       item_ids: [foundItem.id],
       tuple: {
         connected_realm_id: resolveResult.connected_realm.connected_realm.id,
@@ -279,7 +282,7 @@ export class WorkOrderController {
       };
     }
 
-    const resolveMessage = await this.messenger.resolveConnectedRealm({
+    const resolveMessage = await this.messengers.regions.resolveConnectedRealm({
       realm_slug: realmSlug,
       region_name: regionName,
     });

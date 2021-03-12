@@ -1,4 +1,4 @@
-import { auth, Messenger, User } from "@sotah-inc/server";
+import { auth, IMessengers, User } from "@sotah-inc/server";
 import { wrap } from "async-middleware";
 import { Request, Response, Router } from "express";
 import { Connection } from "typeorm";
@@ -6,9 +6,9 @@ import { Connection } from "typeorm";
 import { handleResult } from "../../controllers";
 import { PricelistCrudController } from "../../controllers/user/pricelist-crud";
 
-export function getRouter(dbConn: Connection, messenger: Messenger): Router {
+export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
   const router = Router();
-  const controller = new PricelistCrudController(dbConn, messenger);
+  const controller = new PricelistCrudController(dbConn, messengers);
 
   router.post(
     "/",

@@ -3,7 +3,7 @@ import {
   IGetPricelistRequest,
   IGetUnmetDemandRequest,
 } from "@sotah-inc/core";
-import { Messenger } from "@sotah-inc/server";
+import { IMessengers } from "@sotah-inc/server";
 import { wrap } from "async-middleware";
 import { Request, Response, Router } from "express";
 import { Connection } from "typeorm";
@@ -12,12 +12,12 @@ import { DataController, handleResult } from "../controllers";
 import { ProfessionsController } from "../controllers/data/professions";
 import { getRouter as getQueryAuctionStatsRouter } from "./data/query-auction-stats";
 
-export function getRouter(dbConn: Connection, messenger: Messenger): Router {
+export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
   const router = Router();
-  const controller = new DataController(messenger, dbConn);
-  const professionsController = new ProfessionsController(messenger);
+  const controller = new DataController(messengers, dbConn);
+  const professionsController = new ProfessionsController(messengers);
 
-  router.use("/query-auction-stats", getQueryAuctionStatsRouter(messenger));
+  router.use("/query-auction-stats", getQueryAuctionStatsRouter(messengers));
 
   router.get(
     "/posts",

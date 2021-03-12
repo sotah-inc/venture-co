@@ -1,4 +1,4 @@
-import { Messenger } from "@sotah-inc/server";
+import { IMessengers } from "@sotah-inc/server";
 import { wrap } from "async-middleware";
 import { Request, Response, Router } from "express";
 import { Connection } from "typeorm";
@@ -12,13 +12,13 @@ import { getRouter as getPricelistsCrudRouter } from "./user/pricelists-crud";
 import { getRouter as getProfessionPricelistsCrudRouter } from "./user/profession-pricelists-crud";
 import { getRouter as getProfileRouter } from "./user/profile";
 
-export function getRouter(dbConn: Connection, messenger: Messenger): Router {
+export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
   const router = Router();
-  const controller = new UserController(messenger, dbConn);
+  const controller = new UserController(messengers, dbConn);
 
   router.use("/user/posts", getPostsRouter(dbConn));
   router.use("/user/preferences", getPreferencesRouter(dbConn));
-  router.use("/user/pricelists", getPricelistsCrudRouter(dbConn, messenger));
+  router.use("/user/pricelists", getPricelistsCrudRouter(dbConn, messengers));
   router.use("/user/profession-pricelists", getProfessionPricelistsCrudRouter(dbConn));
   router.use("/user/profile", getProfileRouter(dbConn));
   router.use("/user", getBaseRouter());

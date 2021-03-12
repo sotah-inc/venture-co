@@ -4,17 +4,17 @@ import {
   QueryAuctionStatsResponse,
   RegionName,
 } from "@sotah-inc/core";
-import { Messenger } from "@sotah-inc/server";
+import { IMessengers } from "@sotah-inc/server";
 import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
 import HTTPStatus from "http-status";
 
 import { IRequestResult } from "../index";
 
 export class QueryAuctionStatsController {
-  private messenger: Messenger;
+  private messengers: IMessengers;
 
-  constructor(messenger: Messenger) {
-    this.messenger = messenger;
+  constructor(messengers: IMessengers) {
+    this.messengers = messengers;
   }
 
   public async queryAuctionStats(
@@ -36,7 +36,7 @@ export class QueryAuctionStatsController {
       };
     })();
 
-    const msg = await this.messenger.queryAuctionStats(params);
+    const msg = await this.messengers.auctions.queryAuctionStats(params);
     if (msg.code !== code.ok) {
       if (msg.code === code.notFound) {
         return {

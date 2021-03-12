@@ -1,4 +1,4 @@
-import { appendSessions, connectDatabase, Messenger } from "@sotah-inc/server";
+import { appendSessions, connectDatabase, getMessengers } from "@sotah-inc/server";
 import compression from "compression";
 import express from "express";
 import * as HttpStatus from "http-status";
@@ -54,8 +54,8 @@ export async function getApp(opts: IOptions): Promise<express.Express | null> {
   if (natsConnection === null) {
     return null;
   }
-  const messenger = new Messenger(natsConnection);
-  await messenger.getBoot();
+  const messengers = getMessengers(natsConnection);
+  await messengers.general.getBoot();
 
   // db init
   logger.info("connecting to db", { dbHost, dbPassword });
@@ -81,7 +81,7 @@ export async function getApp(opts: IOptions): Promise<express.Express | null> {
 
   // session init
   logger.info("appending session middleware");
-  app = await appendSessions(app, messenger, dbConn);
+  app = await appendSessions(app, messengers.general, dbConn);
 
   // request logging
   logger.info("appending cors middleware");
@@ -97,9 +97,9 @@ export async function getApp(opts: IOptions): Promise<express.Express | null> {
   // route init
   logger.info("appending route middlewares");
   app.use("/", defaultRouter);
-  app.use("/", getDataRouter(dbConn, messenger));
-  app.use("/", getUserRouter(dbConn, messenger));
-  app.use("/", getWorkOrderRouter(dbConn, messenger));
+  app.use("/", getDataRouter(dbConn, messengers));
+  app.use("/", getUserRouter(dbConn, messengers));
+  app.use("/", getWorkOrderRouter(dbConn, messengers));
 
   // error handlers
   // if (isGceEnv && errors !== null) {
