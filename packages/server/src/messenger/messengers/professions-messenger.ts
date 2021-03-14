@@ -10,6 +10,7 @@ import * as nats from "nats";
 
 import { code, IQueryItemsRequest } from "../contracts";
 import {
+  IItemsRecipesResponse,
   IProfessionsResponse,
   IQueryRecipesResponse,
   IRecipeResponse,
@@ -31,6 +32,7 @@ enum subjects {
   recipe = "recipe",
   recipes = "recipes",
   recipesQuery = "recipesQuery",
+  itemsRecipe = "itemsRecipe"
 }
 
 export class ProfessionsMessenger extends BaseMessenger {
@@ -292,4 +294,7 @@ export class ProfessionsMessenger extends BaseMessenger {
     };
   }
 
+  public async getItemsRecipes(ids: ItemId[]): Promise<Message<IItemsRecipesResponse>> {
+    return this.request(subjects.itemsRecipe, { body: JSON.stringify(ids) });
+  }
 }
