@@ -1,4 +1,5 @@
 import {
+  GetItemsRecipesResponse,
   GetRecipePriceHistoriesResponse,
   IValidationErrorResponse,
   Locale,
@@ -17,7 +18,6 @@ import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
 import HTTPStatus from "http-status";
 import { ParsedQs } from "qs";
 
-import { GetItemsRecipesResponse } from "../../../../core/src";
 import { ItemsRecipesQuery } from "../../lib/next-validator-rules";
 import { QueryParamRules, validate, yupValidationErrorToResponse } from "../../lib/validator-rules";
 import { IRequestResult } from "../index";
