@@ -341,9 +341,6 @@ export class ProfessionsController {
       };
     }
 
-    // eslint-disable-next-line no-console
-    console.log(await itemRecipeIdsMessage.getData());
-
     const itemRecipeIdsResult = await itemRecipeIdsMessage.decode();
     if (itemRecipeIdsResult === null) {
       return {
