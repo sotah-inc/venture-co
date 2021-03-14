@@ -331,9 +331,9 @@ export class ProfessionsController {
     const locale = result.data.locale as Locale;
 
     // resolving items-recipe-ids
-    const itemRecipeIdsMessage = await this.messengers.professions.getItemsRecipes(
-      result.data.itemIds.map(Number),
-    );
+    const itemRecipeIdsMessage = await this.messengers.professions.getItemsRecipes({
+      item_ids: result.data.itemIds.map(Number),
+    });
     if (itemRecipeIdsMessage.code !== code.ok) {
       return {
         status: HTTPStatus.INTERNAL_SERVER_ERROR,
