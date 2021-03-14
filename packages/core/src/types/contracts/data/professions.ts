@@ -41,3 +41,15 @@ export type QueryRecipesResponse =
   | IErrorResponse
   | IValidationErrorResponse
   | null;
+
+export interface IGetItemsRecipesResponseData {
+  recipes: IShortRecipe[];
+  skillTiers: IShortSkillTier[];
+  professions: IShortProfession[];
+}
+
+export type GetItemsRecipesResponse =
+  | IGetItemsRecipesResponseData
+  | IErrorResponse
+  | IValidationErrorResponse
+  | null;
