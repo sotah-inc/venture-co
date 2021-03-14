@@ -1,4 +1,4 @@
-import z  from "zod";
+import * as z  from "zod";
 
 export const ItemsRecipesQuery = z.object({
   locale: z.string(),
