@@ -33,7 +33,7 @@ enum subjects {
   recipe = "recipe",
   recipes = "recipes",
   recipesQuery = "recipesQuery",
-  itemsRecipe = "itemsRecipe",
+  itemsRecipes = "itemsRecipes",
 }
 
 export class ProfessionsMessenger extends BaseMessenger {
@@ -219,7 +219,7 @@ export class ProfessionsMessenger extends BaseMessenger {
   }
 
   public async getItemsRecipes(ids: ItemId[]): Promise<Message<IItemsRecipesResponse>> {
-    return this.request(subjects.itemsRecipe, { body: JSON.stringify(ids) });
+    return this.request(subjects.itemsRecipes, { body: JSON.stringify(ids) });
   }
 
   public async resolveRecipes(ids: RecipeId[], locale: Locale): Promise<ResolveRecipesResponse> {
