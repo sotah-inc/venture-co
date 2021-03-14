@@ -43,7 +43,7 @@ export type ResolveQueryRecipesResponse = IResolveResponse<{
 }>
 
 export interface IItemsRecipesResponse {
-  [itemId: number]: RecipeId[] | undefined;
+  [itemId: number]: RecipeId[] | null | undefined;
 }
 
 export type ResolveRecipesResponse = IResolveResponse<{
