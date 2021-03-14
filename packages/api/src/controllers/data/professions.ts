@@ -341,6 +341,9 @@ export class ProfessionsController {
       };
     }
 
+    // eslint-disable-next-line no-console
+    console.log(await itemRecipeIdsMessage.getData());
+
     const itemRecipeIdsResult = await itemRecipeIdsMessage.decode();
     if (itemRecipeIdsResult === null) {
       return {
@@ -353,7 +356,7 @@ export class ProfessionsController {
     const recipeIds = Array.from(
       Object.keys(itemRecipeIdsResult).reduce<Set<RecipeId>>((recipeIdsSet, itemId) => {
         const itemRecipeIds = itemRecipeIdsResult[Number(itemId)];
-        if (itemRecipeIds === undefined) {
+        if (itemRecipeIds === undefined || itemRecipeIds === null) {
           return recipeIdsSet;
         }
 
@@ -364,6 +367,18 @@ export class ProfessionsController {
         return recipeIdsSet;
       }, new Set<RecipeId>()),
     );
+    if (recipeIds.length === 0) {
+      return {
+        data: {
+          itemsRecipeIds: itemRecipeIdsResult,
+          skillTiers: [],
+          professions: [],
+          recipes: [],
+        },
+        status: HTTPStatus.OK,
+      };
+    }
+
     const resolveRecipesResult = await this.messengers.professions.resolveRecipes(
       recipeIds,
       locale,
