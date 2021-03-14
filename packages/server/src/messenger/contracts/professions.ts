@@ -45,3 +45,9 @@ export type ResolveQueryRecipesResponse = IResolveResponse<{
 export interface IItemsRecipesResponse {
   [itemId: number]: RecipeId[] | undefined;
 }
+
+export type ResolveRecipesResponse = IResolveResponse<{
+  recipes: IShortRecipe[];
+  skillTiers: IShortSkillTier[];
+  professions: IShortProfession[];
+}>

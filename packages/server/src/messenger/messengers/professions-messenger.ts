@@ -19,6 +19,7 @@ import {
   ISkillTiersResponse,
   ResolveQueryRecipesResponse,
   ResolveRecipeResponse,
+  ResolveRecipesResponse,
 } from "../contracts/professions";
 import { Message, ParseKind } from "../message";
 import { BaseMessenger } from "./base";
@@ -32,7 +33,7 @@ enum subjects {
   recipe = "recipe",
   recipes = "recipes",
   recipesQuery = "recipesQuery",
-  itemsRecipe = "itemsRecipe"
+  itemsRecipe = "itemsRecipe",
 }
 
 export class ProfessionsMessenger extends BaseMessenger {
@@ -188,11 +189,42 @@ export class ProfessionsMessenger extends BaseMessenger {
       };
     }
 
-    // resolving recipes from recipe-ids in items-query response data
-    const getRecipesMessage = await this.getRecipes(
+    const resolveRecipesResult = await this.resolveRecipes(
       itemsQueryResult.items.map(v => v.recipe_id),
       request.locale,
     );
+    if (resolveRecipesResult.code !== code.ok) {
+      return {
+        data: null,
+        code: resolveRecipesResult.code,
+        error: null,
+      };
+    }
+    if (resolveRecipesResult.data === null) {
+      return {
+        data: null,
+        code: code.genericError,
+        error: null,
+      };
+    }
+
+    return {
+      code: code.ok,
+      data: {
+        queryResponse: itemsQueryResult,
+        ...resolveRecipesResult.data,
+      },
+      error: null,
+    };
+  }
+
+  public async getItemsRecipes(ids: ItemId[]): Promise<Message<IItemsRecipesResponse>> {
+    return this.request(subjects.itemsRecipe, { body: JSON.stringify(ids) });
+  }
+
+  public async resolveRecipes(ids: RecipeId[], locale: Locale): Promise<ResolveRecipesResponse> {
+    // resolving recipes from recipe-ids
+    const getRecipesMessage = await this.getRecipes(ids, locale);
     if (getRecipesMessage.code !== code.ok) {
       return {
         data: null,
@@ -213,10 +245,7 @@ export class ProfessionsMessenger extends BaseMessenger {
     const professionIds = Array.from<ProfessionId>(
       new Set<ProfessionId>(getRecipesResult.recipes.map(v => v.profession_id)),
     );
-    const getProfessionsFromIdsMessage = await this.getProfessionsFromIds(
-      professionIds,
-      request.locale,
-    );
+    const getProfessionsFromIdsMessage = await this.getProfessionsFromIds(professionIds, locale);
     if (getProfessionsFromIdsMessage.code !== code.ok) {
       return {
         data: null,
@@ -248,23 +277,20 @@ export class ProfessionsMessenger extends BaseMessenger {
     }, {});
     const professionSkillTierTuples = Object.keys(professionSkillTiers).reduce<
       IProfessionSkillTierTuple[]
-      >((tuples, professionIdString) => {
-        const skillTiers = professionSkillTiers[Number(professionIdString)];
-        const skillTiersTuples = Array.from(
-          skillTiers ?? new Set<SkillTierId>(),
-        ).map<IProfessionSkillTierTuple>(skillTierId => {
-          return {
-            profession_id: Number(professionIdString),
-            skilltier_id: skillTierId,
-          };
-        });
+    >((tuples, professionIdString) => {
+      const skillTiers = professionSkillTiers[Number(professionIdString)];
+      const skillTiersTuples = Array.from(
+        skillTiers ?? new Set<SkillTierId>(),
+      ).map<IProfessionSkillTierTuple>(skillTierId => {
+        return {
+          profession_id: Number(professionIdString),
+          skilltier_id: skillTierId,
+        };
+      });
 
-        return [...tuples, ...skillTiersTuples];
-      }, []);
-    const getSkillTiersMessage = await this.getSkillTiers(
-      professionSkillTierTuples,
-      request.locale,
-    );
+      return [...tuples, ...skillTiersTuples];
+    }, []);
+    const getSkillTiersMessage = await this.getSkillTiers(professionSkillTierTuples, locale);
     if (getSkillTiersMessage.code !== code.ok) {
       return {
         data: null,
@@ -285,16 +311,11 @@ export class ProfessionsMessenger extends BaseMessenger {
     return {
       code: code.ok,
       data: {
-        queryResponse: itemsQueryResult,
         recipes: getRecipesResult.recipes,
         professions: getProfessionsFromIdsResult.professions,
         skillTiers: getSkillTiersResult.skilltiers,
       },
       error: null,
     };
-  }
-
-  public async getItemsRecipes(ids: ItemId[]): Promise<Message<IItemsRecipesResponse>> {
-    return this.request(subjects.itemsRecipe, { body: JSON.stringify(ids) });
   }
 }
