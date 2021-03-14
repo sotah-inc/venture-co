@@ -17,6 +17,8 @@ import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
 import HTTPStatus from "http-status";
 import { ParsedQs } from "qs";
 
+import { GetItemsRecipesResponse } from "../../../../core/src";
+import { ItemsRecipesQuery } from "../../lib/next-validator-rules";
 import { QueryParamRules, validate, yupValidationErrorToResponse } from "../../lib/validator-rules";
 import { IRequestResult } from "../index";
 
@@ -301,6 +303,83 @@ export class ProfessionsController {
 
     return {
       data: results.data,
+      status: HTTPStatus.OK,
+    };
+  }
+
+  public async getItemsRecipes(query: ParsedQs): Promise<IRequestResult<GetItemsRecipesResponse>> {
+    // parsing query
+    const result = ItemsRecipesQuery.safeParse(query);
+    if (!result.success) {
+      return {
+        status: HTTPStatus.BAD_REQUEST,
+        data: null,
+      };
+    }
+
+    // validating locale
+    if (!Object.values(Locale).includes(result.data.locale as Locale)) {
+      const validationErrors: IValidationErrorResponse = {
+        error: "could not validate locale",
+      };
+
+      return {
+        data: validationErrors,
+        status: HTTPStatus.BAD_REQUEST,
+      };
+    }
+    const locale = result.data.locale as Locale;
+
+    // resolving items-recipe-ids
+    const itemRecipeIdsMessage = await this.messengers.professions.getItemsRecipes(
+      result.data.itemIds.map(Number),
+    );
+    if (itemRecipeIdsMessage.code !== code.ok) {
+      return {
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+        data: null,
+      };
+    }
+
+    const itemRecipeIdsResult = await itemRecipeIdsMessage.decode();
+    if (itemRecipeIdsResult === null) {
+      return {
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+        data: null,
+      };
+    }
+
+    // resolving recipes
+    const recipeIds = Array.from(
+      Object.keys(itemRecipeIdsResult).reduce<Set<RecipeId>>((recipeIdsSet, itemId) => {
+        const itemRecipeIds = itemRecipeIdsResult[Number(itemId)];
+        if (itemRecipeIds === undefined) {
+          return recipeIdsSet;
+        }
+
+        for (const id of itemRecipeIds) {
+          recipeIdsSet.add(id);
+        }
+
+        return recipeIdsSet;
+      }, new Set<RecipeId>()),
+    );
+    const resolveRecipesResult = await this.messengers.professions.resolveRecipes(
+      recipeIds,
+      locale,
+    );
+    if (resolveRecipesResult.code !== code.ok || resolveRecipesResult.data === null) {
+      return {
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+        data: null,
+      };
+    }
+
+    return {
+      data: {
+        ...resolveRecipesResult.data,
+        itemsRecipeIds: itemRecipeIdsResult,
+      },
       status: HTTPStatus.OK,
     };
   }

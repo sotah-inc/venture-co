@@ -233,6 +233,12 @@ export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
       handleResult(res, await professionsController.queryRecipes(req.query));
     }),
   );
+  router.get(
+    "/items-recipes",
+    wrap(async (req: Request, res: Response) => {
+      handleResult(res, await professionsController.getItemsRecipes(req.query));
+    }),
+  );
 
   return router;
 }
