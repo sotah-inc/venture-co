@@ -218,8 +218,10 @@ export class ProfessionsMessenger extends BaseMessenger {
     };
   }
 
-  public async getItemsRecipes(ids: ItemId[]): Promise<Message<IItemsRecipesResponse>> {
-    return this.request(subjects.itemsRecipes, { body: JSON.stringify(ids) });
+  public async getItemsRecipes(req: {
+    item_ids: ItemId[];
+  }): Promise<Message<IItemsRecipesResponse>> {
+    return this.request(subjects.itemsRecipes, { body: JSON.stringify(req) });
   }
 
   public async resolveRecipes(ids: RecipeId[], locale: Locale): Promise<ResolveRecipesResponse> {
