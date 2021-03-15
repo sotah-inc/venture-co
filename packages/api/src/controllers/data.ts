@@ -31,6 +31,7 @@ import {
   QueryGeneralResponse,
   QueryResponse,
   RealmSlug,
+  RecipeId,
   RegionName,
 } from "@sotah-inc/core";
 import {
@@ -45,6 +46,7 @@ import moment from "moment";
 import { ParsedQs } from "qs";
 import { Connection } from "typeorm";
 
+import { ResolveRecipesResponse } from "../../../server/src/messenger/contracts/professions";
 import {
   AuctionsQueryParamsRules,
   QueryParamRules,
@@ -460,8 +462,10 @@ export class DataController {
       };
     }
 
+    const itemIds = resolveAuctionsResponse.data.items.items.map(v => v.id);
+
     const professionPricelists = await (async () => {
-      if (!resolveAuctionsResponse.data || resolveAuctionsResponse.data.items.items.length === 0) {
+      if (!resolveAuctionsResponse.data || itemIds.length === 0) {
         return [];
       }
 
@@ -537,6 +541,52 @@ export class DataController {
       ];
     }, []);
 
+    // resolving items-recipe-ids
+    const itemRecipeIdsMessage = await this.messengers.professions.getItemsRecipes({
+      item_ids: itemIds,
+    });
+    if (itemRecipeIdsMessage.code !== code.ok) {
+      return {
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+        data: null,
+      };
+    }
+
+    const itemRecipeIdsResult = await itemRecipeIdsMessage.decode();
+    if (itemRecipeIdsResult === null) {
+      return {
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+        data: null,
+      };
+    }
+
+    // resolving recipes
+    const recipeIds = Array.from(
+      Object.keys(itemRecipeIdsResult).reduce<Set<RecipeId>>((recipeIdsSet, itemId) => {
+        const itemRecipeIds = itemRecipeIdsResult[Number(itemId)];
+        if (itemRecipeIds === undefined || itemRecipeIds === null) {
+          return recipeIdsSet;
+        }
+
+        for (const id of itemRecipeIds) {
+          recipeIdsSet.add(id);
+        }
+
+        return recipeIdsSet;
+      }, new Set<RecipeId>()),
+    );
+
+    let resolveRecipesResult: ResolveRecipesResponse | null = null;
+    if (recipeIds.length > 0) {
+      resolveRecipesResult = await this.messengers.professions.resolveRecipes(recipeIds, locale);
+      if (resolveRecipesResult.code !== code.ok || resolveRecipesResult.data === null) {
+        return {
+          status: HTTPStatus.INTERNAL_SERVER_ERROR,
+          data: null,
+        };
+      }
+    }
+
     // eslint-disable-next-line no-console
     console.log("serving un-cached request");
 
@@ -547,6 +597,13 @@ export class DataController {
         items_market_price: itemsMarketPrice,
         pets: [...resolveAuctionsResponse.data.pets.pets],
         professionPricelists: professionPricelists.map(v => v.toJson()),
+        itemsRecipes: {
+          itemsRecipeIds: itemRecipeIdsResult,
+          professions: [],
+          recipes: [],
+          skillTiers: [],
+          ...resolveRecipesResult?.data,
+        },
       },
       headers: {
         "Cache-Control": ["public", `max-age=${60 * 30}`],
