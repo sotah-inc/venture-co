@@ -1,9 +1,12 @@
 import {
+  GetItemsRecipesResponse,
+  IGetItemsRecipesResponseData,
   IProfessionsResponseData,
   IQueryRecipesResponseData,
   IQueryRequest,
   IRecipeResponseData,
   ISkillTierResponseData,
+  ItemId,
   Locale,
   ProfessionId,
   ProfessionsResponse,
@@ -108,4 +111,23 @@ export async function queryRecipes(req: IQueryRequest): Promise<IQueryRecipesRes
   }
 
   return body as IQueryRecipesResponseData;
+}
+
+export async function getItemsRecipes(
+  locale: Locale,
+  itemIds: ItemId[],
+): Promise<IGetItemsRecipesResponseData | null> {
+  const { body, status } = await gatherWithQuery<
+    { locale: Locale; itemIds: ItemId[] },
+    GetItemsRecipesResponse
+  >({
+    method: "GET",
+    query: { locale, itemIds },
+    url: `${getApiEndpoint()}/items-recipes`,
+  });
+  if (status !== HTTPStatus.OK) {
+    return null;
+  }
+
+  return body as IGetItemsRecipesResponseData;
 }
