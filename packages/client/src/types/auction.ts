@@ -1,5 +1,6 @@
 import {
   IAuction,
+  IGetItemsRecipesResponseData,
   IItemsMarketPrice,
   IProfessionPricelistJson,
   IQueryGeneralItem,
@@ -20,6 +21,7 @@ export interface IAuctionState {
   totalResults: number;
   activeSelect: boolean;
   relatedProfessionPricelists: IProfessionPricelistJson[];
+  itemsRecipes: IFetchData<IGetItemsRecipesResponseData>;
 }
 
 export interface IAuctionResultData {
@@ -54,6 +56,16 @@ export const defaultAuctionState: IAuctionState = {
     },
     errors: {},
     level: FetchLevel.initial,
+  },
+  itemsRecipes: {
+    level: FetchLevel.initial,
+    data: {
+      recipes: [],
+      professions: [],
+      skillTiers: [],
+      itemsRecipeIds: {},
+    },
+    errors: {},
   },
   options: {
     auctionsPerPage: SortPerPage.Ten,
