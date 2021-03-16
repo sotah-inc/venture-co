@@ -41,12 +41,14 @@ import {
   ProfessionPricelistRepository,
 } from "@sotah-inc/server";
 import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
+import {
+  ResolveRecipesResponse,
+} from "@sotah-inc/server/build/dist/messenger/contracts/professions";
 import HTTPStatus from "http-status";
 import moment from "moment";
 import { ParsedQs } from "qs";
 import { Connection } from "typeorm";
 
-import { ResolveRecipesResponse } from "../../../server/src/messenger/contracts/professions";
 import {
   AuctionsQueryParamsRules,
   QueryParamRules,
