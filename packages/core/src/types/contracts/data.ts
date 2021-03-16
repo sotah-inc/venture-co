@@ -4,18 +4,16 @@ import { ExpansionName, IExpansion } from "../expansion";
 import {
   IConnectedRealmComposite,
   IErrorResponse,
+  IGetItemsRecipesResponseData,
   IItemPrices,
   IRegionComposite,
   IRegionTokenHistory,
   IShortPet,
   IShortProfession,
-  IShortRecipe,
-  IShortSkillTier,
   IShortTokenHistory,
   IValidationErrorResponse,
   Locale,
   PetId,
-  RecipeId,
   SortDirection,
   SortKind,
 } from "../index";
@@ -82,12 +80,7 @@ export interface IGetAuctionsResponseData {
   pets: IShortPet[];
   professionPricelists: IProfessionPricelistJson[];
   items_market_price: IItemsMarketPrice[];
-  itemsRecipes: {
-    itemsRecipeIds: { [itemId: number]: RecipeId[] | null | undefined };
-    recipes: IShortRecipe[];
-    skillTiers: IShortSkillTier[];
-    professions: IShortProfession[];
-  };
+  itemsRecipes: IGetItemsRecipesResponseData;
 }
 
 export type GetAuctionsResponse =
