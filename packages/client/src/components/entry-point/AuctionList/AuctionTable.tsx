@@ -4,6 +4,7 @@ import { Button, ButtonGroup, Classes, HTMLTable } from "@blueprintjs/core";
 import {
   IAuction,
   IExpansion,
+  IGetItemsRecipesResponseData,
   IPricelistJson,
   IProfessionPricelistJson,
   IRegionComposite,
@@ -35,6 +36,7 @@ export interface IStateProps {
   currentRealm: IClientRealm | null;
   currentRegion: IRegionComposite | null;
   totalResults: number;
+  itemsRecipes: IGetItemsRecipesResponseData;
 }
 
 export interface IDispatchProps {

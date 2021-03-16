@@ -15,6 +15,7 @@ function mapStateToProps(state: IStoreState): IStateProps {
     auctionsResult: { data: auctionsResultData },
     options,
     totalResults,
+    itemsRecipes,
   } = state.Auction;
 
   return {
@@ -26,6 +27,7 @@ function mapStateToProps(state: IStoreState): IStateProps {
     professions,
     relatedProfessionPricelists,
     totalResults,
+    itemsRecipes,
   };
 }
 
