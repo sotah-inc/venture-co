@@ -1,4 +1,4 @@
-import { IAuction, IGetItemsRecipesResponseData, IQueryGeneralItemItem } from "@sotah-inc/core";
+import { IAuction, IQueryGeneralItemItem } from "@sotah-inc/core";
 
 import {
   AuctionActions,
@@ -10,7 +10,6 @@ import {
   SetSortQueryAuctions,
 } from "../../actions/auction";
 import { defaultAuctionState, IAuctionState } from "../../types/auction";
-import { IFetchData } from "../../types/global";
 import { FetchLevel } from "../../types/main";
 
 import { IKindHandlers } from "./index";
@@ -37,22 +36,6 @@ export const handlers: IKindHandlers<IAuctionState, AuctionActions> = {
           return action.payload.auctions.auctions;
         })();
 
-        const itemsRecipes = ((): IFetchData<IGetItemsRecipesResponseData> => {
-          if (action.payload.itemsRecipes === null) {
-            return {
-              level: FetchLevel.failure,
-              data: defaultAuctionState.itemsRecipes.data,
-              errors: {},
-            };
-          }
-
-          return {
-            level: FetchLevel.success,
-            data: action.payload.itemsRecipes,
-            errors: {},
-          };
-        })();
-
         return {
           ...state,
           auctionsResult: {
@@ -72,7 +55,7 @@ export const handlers: IKindHandlers<IAuctionState, AuctionActions> = {
           },
           relatedProfessionPricelists: action.payload.auctions.professionPricelists,
           totalResults: action.payload.auctions.total,
-          itemsRecipes,
+          itemsRecipes: action.payload.auctions.itemsRecipes,
         };
       },
     },

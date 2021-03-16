@@ -1,7 +1,6 @@
 /* eslint-disable func-style,@typescript-eslint/explicit-module-boundary-types */
 import {
   IGetAuctionsResponseData,
-  IGetItemsRecipesResponseData,
   IQueryGeneralItem,
   IQueryGeneralItemItem,
   IShortItem,
@@ -54,7 +53,6 @@ export interface ILoadAuctionListEntrypoint {
   auctions: IGetAuctionsResponseData | null;
   querySelected: IQueryGeneralItemItem[];
   initialQueryResults: IQueryGeneralItem[];
-  itemsRecipes: IGetItemsRecipesResponseData | null;
 }
 
 export const LOAD_AUCTIONLIST_ENTRYPOINT = "LOAD_AUCTIONLIST_ENTRYPOINT";
