@@ -240,19 +240,15 @@ export class AuctionTable extends React.Component<Props> {
     const { auctionsResultData } = this.props;
 
     const foundItem = auctionsResultData.items.find(v => v.id === auction?.itemId);
-    if (foundItem) {
-      return this.renderRelatedProfessionPricelists(foundItem);
-    }
-
-    return null;
-  }
-
-  private renderRelatedProfessionPricelists(item: IShortItem | undefined) {
-    const { relatedProfessionPricelists } = this.props;
-
-    if (typeof item === "undefined") {
+    if (!foundItem) {
       return null;
     }
+
+    return this.renderRelatedProfessionPricelists(foundItem);
+  }
+
+  private renderRelatedProfessionPricelists(item: IShortItem) {
+    const { relatedProfessionPricelists } = this.props;
 
     const forItem = relatedProfessionPricelists.filter(
       v => v.pricelist.pricelist_entries.filter(y => y.item_id === item.id).length > 0,
