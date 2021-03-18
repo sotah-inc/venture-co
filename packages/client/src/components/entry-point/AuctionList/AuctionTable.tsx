@@ -260,19 +260,6 @@ export class AuctionTable extends React.Component<Props> {
     return forItem.map((v, i) => this.renderProfessionPricelist(i, v));
   }
 
-  private renderPricelistIcon(list: IPricelistJson) {
-    const {
-      auctionsResultData: { items },
-    } = this.props;
-
-    const item = getItemFromPricelist(items, list);
-    if (item === null) {
-      return null;
-    }
-
-    return <ItemIcon item={item} />;
-  }
-
   private renderProfessionPricelist(index: number, professionPricelist: IProfessionPricelistJson) {
     const {
       expansions,
@@ -364,4 +351,18 @@ export class AuctionTable extends React.Component<Props> {
       </tr>
     );
   }
+
+  private renderPricelistIcon(list: IPricelistJson) {
+    const {
+      auctionsResultData: { items },
+    } = this.props;
+
+    const item = getItemFromPricelist(items, list);
+    if (item === null) {
+      return null;
+    }
+
+    return <ItemIcon item={item} />;
+  }
+
 }
