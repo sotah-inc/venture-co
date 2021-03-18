@@ -3,18 +3,24 @@ import React from "react";
 import { WithRouterProps } from "next/dist/client/with-router";
 import { withRouter } from "next/router";
 
-import { AuctionTableContainer } from "../../../containers/entry-point/AuctionList/AuctionTable";
+import {
+  IOwnProps,
+} from "../../../../components/entry-point/AuctionList/AuctionTable/RelatedProfessionPricelists";
+import {
+  RelatedProfessionPricelistsContainer,
+} from "../../../../containers/entry-point/AuctionList/AuctionTable/RelatedProfessionPricelists";
 import {
   toExpansionProfessionPricelists,
   toProfessionPricelist,
   toProfessionPricelistsProfession,
-} from "../../../util";
+} from "../../../../util";
 
-type Props = Readonly<WithRouterProps>;
+type Props = Readonly<WithRouterProps & IOwnProps>;
 
-function RouteContainer({ router }: Props) {
+function RouteContainer({ router, professionPricelists }: Props) {
   return (
-    <AuctionTableContainer
+    <RelatedProfessionPricelistsContainer
+      professionPricelists={professionPricelists}
       browseToExpansion={(region, realm, expansion) => {
         const { url, asDest } = toExpansionProfessionPricelists(region, realm, expansion);
 
@@ -51,4 +57,4 @@ function RouteContainer({ router }: Props) {
   );
 }
 
-export const AuctionTableRouteContainer = withRouter(RouteContainer);
+export const RelatedProfessionPricelistsRouteContainer = withRouter(RouteContainer);

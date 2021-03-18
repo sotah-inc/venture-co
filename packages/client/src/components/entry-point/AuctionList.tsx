@@ -24,15 +24,13 @@ import {
 import { ILoadAuctionListEntrypoint } from "../../actions/auction";
 import { ILoadRealmEntrypoint } from "../../actions/main";
 import { IGetAuctionsOptions } from "../../api/auctions";
+import { AuctionTableContainer } from "../../containers/entry-point/AuctionList/AuctionTable";
 import { CountToggleContainer } from "../../containers/entry-point/AuctionList/CountToggle";
 import {
   QueryAuctionsFilterContainer,
 } from "../../containers/entry-point/AuctionList/QueryAuctionsFilter";
 import { RealmToggleContainer } from "../../containers/util/RealmToggle";
 import { RegionToggleContainer } from "../../containers/util/RegionToggle";
-import {
-  AuctionTableRouteContainer,
-} from "../../route-containers/entry-point/AuctionList/AuctionTable";
 import { IAuctionsOptions, IAuctionResultData } from "../../types/auction";
 import { IClientRealm, IFetchData } from "../../types/global";
 import { AuthLevel, FetchLevel } from "../../types/main";
@@ -519,7 +517,7 @@ export class AuctionList extends React.Component<Props> {
             </ButtonGroup>
           </NavbarGroup>
         </Navbar>
-        <AuctionTableRouteContainer />
+        <AuctionTableContainer />
         <p style={{ textAlign: "center", margin: "10px auto" }}>
           Page {options.currentPage + 1} of {pageCount + 1}
         </p>

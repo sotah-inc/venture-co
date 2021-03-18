@@ -1,11 +1,10 @@
 import React from "react";
 
-import { Button, ButtonGroup, Classes, HTMLTable } from "@blueprintjs/core";
+import { Classes, HTMLTable } from "@blueprintjs/core";
 import {
   IAuction,
   IExpansion,
   IGetItemsRecipesResponseData,
-  IPricelistJson,
   IProfessionPricelistJson,
   IRegionComposite,
   IShortItem,
@@ -20,11 +19,13 @@ import {
 
 import { SortToggleContainer } from "../../../containers/entry-point/AuctionList/SortToggle";
 import { ItemPopoverContainer } from "../../../containers/util/ItemPopover";
+import {
+  RelatedProfessionPricelistsRouteContainer,
+} from "../../../route-containers/entry-point/AuctionList/AuctionTable/RelatedProfessionPricelists";
 import { IAuctionResultData, IAuctionsOptions } from "../../../types/auction";
 import { IClientRealm } from "../../../types/global";
-import { getItemFromPricelist, petQualityToColorClass, qualityToColorClass } from "../../../util";
-import { Currency, ProfessionIcon } from "../../util";
-import { ItemIcon } from "../../util/ItemIcon";
+import { petQualityToColorClass, qualityToColorClass } from "../../../util";
+import { Currency } from "../../util";
 import { PetPopover } from "../../util/PetPopover";
 
 export interface IStateProps {
@@ -44,26 +45,7 @@ export interface IDispatchProps {
   selectPetQueryAuctions: (pet: IShortPet) => void;
 }
 
-export interface IRouteProps {
-  browseToExpansion: (region: IRegionComposite, realm: IClientRealm, expansion: IExpansion) => void;
-  browseToProfession: (
-    region: IRegionComposite,
-    realm: IClientRealm,
-    expansion: IExpansion,
-    profession: IShortProfession,
-  ) => void;
-  browseToProfessionPricelist: (
-    region: IRegionComposite,
-    realm: IClientRealm,
-    expansion: IExpansion,
-    profession: IShortProfession,
-    pricelist: IPricelistJson,
-  ) => void;
-}
-
-export type IOwnProps = IRouteProps;
-
-type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
+type Props = Readonly<IStateProps & IDispatchProps>;
 
 export class AuctionTable extends React.Component<Props> {
   public renderItemPopover(item: IShortItem): JSX.Element {
@@ -257,112 +239,6 @@ export class AuctionTable extends React.Component<Props> {
       return null;
     }
 
-    return forItem.map((v, i) => this.renderProfessionPricelist(i, v));
+    return <RelatedProfessionPricelistsRouteContainer professionPricelists={forItem} />;
   }
-
-  private renderProfessionPricelist(index: number, professionPricelist: IProfessionPricelistJson) {
-    const {
-      expansions,
-      professions,
-      currentRegion,
-      currentRealm,
-      browseToProfessionPricelist,
-      browseToExpansion,
-      browseToProfession,
-    } = this.props;
-
-    if (currentRegion === null || currentRealm === null) {
-      return null;
-    }
-
-    const expansion = expansions.reduce<IExpansion | null>((prev, v) => {
-      if (prev !== null) {
-        return prev;
-      }
-
-      if (v.name === professionPricelist.expansion) {
-        return v;
-      }
-
-      return null;
-    }, null);
-    if (expansion === null) {
-      return null;
-    }
-
-    const profession = professions.reduce<IShortProfession | null>((prev, v) => {
-      if (prev !== null) {
-        return prev;
-      }
-
-      if (v.id === professionPricelist.professionId) {
-        return v;
-      }
-
-      return null;
-    }, null);
-    if (profession === null) {
-      return null;
-    }
-
-    const boxShadow: string = index === 0 ? "none" : "inset 0 1px 0 0 rgba(255, 255, 255, 0.15)";
-
-    return (
-      <tr className="related-profession-pricelists" key={index}>
-        <td colSpan={3} style={{ boxShadow }}>
-          <ButtonGroup>
-            <Button
-              rightIcon="chevron-right"
-              minimal={true}
-              small={true}
-              onClick={() => browseToExpansion(currentRegion, currentRealm, expansion)}
-            >
-              <span style={{ color: expansion.label_color }}>{expansion.label}</span>
-            </Button>
-            <Button
-              rightIcon="chevron-right"
-              minimal={true}
-              small={true}
-              onClick={() => browseToProfession(currentRegion, currentRealm, expansion, profession)}
-            >
-              <ProfessionIcon profession={profession} /> {profession.name}
-            </Button>
-            <Button
-              icon={this.renderPricelistIcon(professionPricelist.pricelist)}
-              minimal={true}
-              small={true}
-              onClick={() =>
-                browseToProfessionPricelist(
-                  currentRegion,
-                  currentRealm,
-                  expansion,
-                  profession,
-                  professionPricelist.pricelist,
-                )
-              }
-            >
-              {professionPricelist.pricelist.name}
-            </Button>
-          </ButtonGroup>
-        </td>
-        <td style={{ boxShadow: "inset 1px 0 0 0 rgba(255, 255, 255, 0.15)" }}>&nbsp;</td>
-        <td style={{ boxShadow: "inset 1px 0 0 0 rgba(255, 255, 255, 0.15)" }}>&nbsp;</td>
-        <td style={{ boxShadow: "inset 1px 0 0 0 rgba(255, 255, 255, 0.15)" }}>&nbsp;</td>
-      </tr>
-    );
-  }
-
-  private renderPricelistIcon(list: IPricelistJson) {
-    const {
-      auctionsResultData: { items },
-    } = this.props;
-
-    const item = getItemFromPricelist(items, list);
-    if (item === null) {
-      return null;
-    }
-
-    return <ItemIcon item={item} />;
-  }
-
 }
