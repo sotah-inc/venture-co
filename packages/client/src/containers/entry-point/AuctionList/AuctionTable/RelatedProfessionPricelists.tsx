@@ -23,7 +23,7 @@ function mapStateToProps(state: IStoreState): IStateProps {
 
 export const RelatedProfessionPricelistsContainer = connect<
   IStateProps,
-  {},
+  Record<string, unknown>,
   Record<string, unknown>,
   IStoreState
 >(mapStateToProps)(RelatedProfessionPricelists);
