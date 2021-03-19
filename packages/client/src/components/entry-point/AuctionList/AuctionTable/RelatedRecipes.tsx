@@ -106,6 +106,11 @@ export class RelatedRecipes extends React.Component<Props> {
             <RecipePopover
               recipe={{ id: foundRecipe.id, recipe: foundRecipe }}
               renderContent={() => {
+                const recipeLabel =
+                  foundRecipe.rank > 0
+                    ? `${foundRecipe.name} (Rank ${foundRecipe.rank})`
+                    : foundRecipe.name;
+
                 return (
                   <Button
                     icon={<img src={foundRecipe.icon_url} className="recipe-icon" alt="" />}
@@ -118,7 +123,7 @@ export class RelatedRecipes extends React.Component<Props> {
                       })
                     }
                   >
-                    {foundRecipe.name}
+                    {recipeLabel}
                   </Button>
                 );
               }}
