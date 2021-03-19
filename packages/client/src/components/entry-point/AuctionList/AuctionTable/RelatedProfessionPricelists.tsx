@@ -157,5 +157,4 @@ export class RelatedProfessionPricelists extends React.Component<Props> {
 
     return <ItemIcon item={item} />;
   }
-
 }
