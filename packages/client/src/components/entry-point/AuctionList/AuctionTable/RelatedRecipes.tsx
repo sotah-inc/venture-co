@@ -12,6 +12,7 @@ import {
 } from "@sotah-inc/core";
 
 import { IClientRealm } from "../../../../types/global";
+import { RecipePopover } from "../../../util/RecipePopover";
 
 export interface IStateProps {
   currentRealm: IClientRealm | null;
@@ -102,19 +103,27 @@ export class RelatedRecipes extends React.Component<Props> {
             >
               {foundSkillTier.name}
             </Button>
-            <Button
-              icon={<img src={foundRecipe.icon_url} className="recipe-icon" alt="" />}
-              minimal={true}
-              small={true}
-              onClick={() =>
-                browseToRecipe(currentRegion, currentRealm, foundProfession, foundSkillTier, {
-                  id: foundRecipe.id,
-                  recipe: foundRecipe,
-                })
-              }
-            >
-              {foundRecipe.name}
-            </Button>
+            <RecipePopover
+              recipe={{ id: foundRecipe.id, recipe: foundRecipe }}
+              renderContent={() => {
+                return (
+                  <Button
+                    icon={<img src={foundRecipe.icon_url} className="recipe-icon" alt="" />}
+                    minimal={true}
+                    small={true}
+                    onClick={() =>
+                      browseToRecipe(currentRegion, currentRealm, foundProfession, foundSkillTier, {
+                        id: foundRecipe.id,
+                        recipe: foundRecipe,
+                      })
+                    }
+                  >
+                    {foundRecipe.name}
+                  </Button>
+                );
+              }}
+              placement={"top"}
+            />
           </ButtonGroup>
         </td>
         <td style={{ boxShadow: "inset 1px 0 0 0 rgba(255, 255, 255, 0.15)" }}>&nbsp;</td>

@@ -16,7 +16,7 @@ import {
 } from "../../../containers/entry-point/Professions/ProfessionsTree/TreeContent";
 import { IClientRealm, IItemsData } from "../../../types/global";
 import { ISelectedSkillTier, ISelectedSkillTierCategory } from "../../../types/professions";
-import { RecipePopover } from "./ProfessionsTree/RecipePopover";
+import { RecipePopover } from "../../util/RecipePopover";
 
 // props
 export interface IStateProps {

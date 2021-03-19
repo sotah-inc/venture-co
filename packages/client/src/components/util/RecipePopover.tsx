@@ -1,13 +1,15 @@
 import React from "react";
 
 import { PopoverInteractionKind } from "@blueprintjs/core";
-import { Popover2 } from "@blueprintjs/popover2";
+import { Popover2, Placement } from "@blueprintjs/popover2";
 import { IShortRecipeReagent, IShortSkillTierCategoryRecipe } from "@sotah-inc/core";
 
 export interface IOwnProps {
   recipe: IShortSkillTierCategoryRecipe;
 
   onClick?: () => void;
+  renderContent?: () => React.ReactNode;
+  placement?: Placement;
 }
 
 type Props = Readonly<IOwnProps>;
@@ -17,6 +19,7 @@ export class RecipePopover extends React.Component<Props> {
     onClick: () => {
       return;
     },
+    placement: "auto",
   };
 
   private renderReagent(reagent: IShortRecipeReagent, reagentIndex: number): JSX.Element {
@@ -41,7 +44,11 @@ export class RecipePopover extends React.Component<Props> {
         <div className="pure-g">
           <div className="pure-u-1-6">
             <p style={{ paddingBottom: "17px", marginBottom: 0 }}>
-              <img src={recipe.recipe.icon_url} className="recipe-icon" alt={this.renderLabel()} />
+              <img
+                src={recipe.recipe.icon_url}
+                className="recipe-icon"
+                alt={this.renderLabel()}
+              />
             </p>
           </div>
           <div className="pure-u-5-6">
@@ -71,14 +78,26 @@ export class RecipePopover extends React.Component<Props> {
       : recipe.recipe.name;
   }
 
+  private renderContent(): React.ReactNode {
+    const { renderContent } = this.props;
+
+    if (!renderContent) {
+      return this.renderLabel();
+    }
+
+    return renderContent();
+  }
+
   public render(): React.ReactNode {
+    const { placement } = this.props;
+
     return (
       <Popover2
         content={this.renderPopoverContent()}
         interactionKind={PopoverInteractionKind.HOVER}
-        placement={"right"}
+        placement={placement}
       >
-        {this.renderLabel()}
+        {this.renderContent()}
       </Popover2>
     );
   }
