@@ -56,6 +56,7 @@ export function auction(state: State | undefined, action: AuctionActions): State
       },
       relatedProfessionPricelists: action.payload.professionPricelists,
       totalResults: action.payload.total,
+      itemsRecipes: action.payload.itemsRecipes,
     };
   }
   case ACTIVESELECT_CHANGE:
