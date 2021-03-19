@@ -84,11 +84,12 @@ export class RelatedRecipes extends React.Component<Props> {
     const boxShadow: string = index === 0 ? "none" : "inset 0 1px 0 0 rgba(255, 255, 255, 0.15)";
 
     return (
-      <tr className="related-profession-pricelists" key={index}>
+      <tr className="related-recipes" key={index}>
         <td colSpan={3} style={{ boxShadow }}>
           <ButtonGroup>
             <Button
               rightIcon="chevron-right"
+              icon={<img src={foundProfession.icon_url} className="skill-tier-icon" alt="" />}
               minimal={true}
               small={true}
               onClick={() =>
