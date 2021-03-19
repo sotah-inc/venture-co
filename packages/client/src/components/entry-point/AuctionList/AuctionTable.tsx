@@ -22,6 +22,9 @@ import { ItemPopoverContainer } from "../../../containers/util/ItemPopover";
 import {
   RelatedProfessionPricelistsRouteContainer,
 } from "../../../route-containers/entry-point/AuctionList/AuctionTable/RelatedProfessionPricelists";
+import {
+  RelatedRecipesRouteContainer,
+} from "../../../route-containers/entry-point/AuctionList/AuctionTable/RelatedRecipes";
 import { IAuctionResultData, IAuctionsOptions } from "../../../types/auction";
 import { IClientRealm } from "../../../types/global";
 import { petQualityToColorClass, qualityToColorClass } from "../../../util";
@@ -226,7 +229,12 @@ export class AuctionTable extends React.Component<Props> {
       return null;
     }
 
-    return this.renderRelatedProfessionPricelists(foundItem);
+    return (
+      <>
+        {this.renderRelatedProfessionPricelists(foundItem)}
+        <RelatedRecipesRouteContainer itemId={foundItem.id} />
+      </>
+    );
   }
 
   private renderRelatedProfessionPricelists(item: IShortItem) {
