@@ -1,6 +1,6 @@
 import {
   GetItemsRecipesResponse,
-  GetRecipePriceHistoriesResponse,
+  GetRecipePriceHistoriesResponse, IShortSkillTier, IShortSkillTierCategory,
   IValidationErrorResponse,
   Locale,
   ProfessionId,
@@ -238,8 +238,26 @@ export class ProfessionsController {
       };
     }
 
+    const skillTier = ((): IShortSkillTier => {
+      return {
+        ...skillTierResult.skilltier,
+        categories: skillTierResult.skilltier.categories.map<IShortSkillTierCategory>(category => {
+          return {
+            ...category,
+            recipes: category.recipes.sort((a, b) => {
+              if (a.recipe.name !== b.recipe.name) {
+                return a.recipe.name.localeCompare(b.recipe.name);
+              }
+
+              return a.recipe.id > b.recipe.id ? 1 : -1;
+            }),
+          };
+        }),
+      };
+    })();
+
     return {
-      data: { skillTier: skillTierResult.skilltier },
+      data: { skillTier },
       status: HTTPStatus.OK,
     };
   }
