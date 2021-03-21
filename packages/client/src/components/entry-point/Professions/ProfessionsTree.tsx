@@ -20,6 +20,7 @@ import { RecipePopover } from "../../util/RecipePopover";
 
 // props
 export interface IStateProps {
+  loadId: string;
   currentRegion: IRegionComposite | null;
   currentRealm: IClientRealm | null;
   selectedProfession: IShortProfession | null | undefined;
@@ -64,7 +65,68 @@ interface INodeClickMap {
   [key: string]: (v: string) => void;
 }
 
-export class ProfessionsTree extends React.Component<Props> {
+interface IRecipeNameCounts {
+  [recipeName: string]: number | undefined;
+}
+
+interface ICategoryRecipeNameCounts {
+  [categoryName: string]: IRecipeNameCounts | undefined;
+}
+
+interface IState {
+  categoryNameCounts: ICategoryRecipeNameCounts;
+}
+
+type State = Readonly<IState>;
+
+export class ProfessionsTree extends React.Component<Props, State> {
+  public state: State = {
+    categoryNameCounts: {},
+  };
+
+  public componentDidMount(): void {
+    this.generateCategoryNameCounts(null);
+  }
+
+  public componentDidUpdate(prevProps: Props): void {
+    this.generateCategoryNameCounts(prevProps);
+  }
+
+  private generateCategoryNameCounts(prevProps: Props | null) {
+    const { loadId, selectedSkillTier } = this.props;
+
+    if (prevProps !== null && prevProps.loadId === loadId) {
+      return;
+    }
+
+    if (selectedSkillTier.data === null) {
+      return;
+    }
+
+    const categoryNameCounts = selectedSkillTier.data.categories.reduce<ICategoryRecipeNameCounts>(
+      (foundCategoryNameCounts, category) => {
+        return {
+          ...foundCategoryNameCounts,
+          [category.name]: category.recipes.reduce<IRecipeNameCounts>(
+            (recipeNameCounts, recipe) => {
+              const foundNameCount = recipeNameCounts[recipe.recipe.name];
+
+              return {
+                ...recipeNameCounts,
+                [recipe.recipe.name]: foundNameCount === undefined ? 1 : foundNameCount + 1,
+              };
+            },
+            {},
+          ),
+        };
+      },
+      {},
+    );
+    this.setState({
+      categoryNameCounts,
+    });
+  }
+
   public render(): React.ReactNode {
     const { selectedProfession, selectedProfessionId } = this.props;
 
@@ -253,7 +315,20 @@ export class ProfessionsTree extends React.Component<Props> {
 
   // recipe nodes
   private getRecipeNode(v: IShortSkillTierCategoryRecipe) {
-    const { selectedRecipe } = this.props;
+    const { selectedRecipe, selectedSkillTierCategory, selectedSkillTier } = this.props;
+    const { categoryNameCounts } = this.state;
+
+    const recipeNameCount = ((): number => {
+      if (selectedSkillTier.data === null) {
+        return 0;
+      }
+
+      const selectedCategoryItem = selectedSkillTier
+        .data
+        .categories[selectedSkillTierCategory.index];
+
+      return categoryNameCounts[selectedCategoryItem.name]?.[v.recipe.name] ?? 0;
+    })();
 
     const result: ITreeNode = {
       className: "recipe-node",
@@ -262,6 +337,7 @@ export class ProfessionsTree extends React.Component<Props> {
       isSelected:
         selectedRecipe !== undefined && selectedRecipe !== null && selectedRecipe.data.id === v.id,
       label: <RecipePopover recipe={v} />,
+      secondaryLabel: recipeNameCount === 0 ? null : `#${v.id.toString()}`,
     };
 
     return result;
