@@ -70,7 +70,16 @@ const itemPredicate: ItemPredicate<RecipeInputItem> = (_: string, result: Recipe
 };
 
 export function renderItemLabel(skillTier: IShortSkillTier | null): string {
-  return skillTier?.name ?? "";
+  const name = skillTier?.name;
+  if (!name) {
+    return "";
+  }
+
+  if (name.length > 25) {
+    return `${name.substr(0, 20)}...`;
+  }
+
+  return name;
 }
 
 export function resolveItemClassNames(
