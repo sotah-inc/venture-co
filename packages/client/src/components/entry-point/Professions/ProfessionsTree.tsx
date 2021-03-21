@@ -337,7 +337,7 @@ export class ProfessionsTree extends React.Component<Props, State> {
       isSelected:
         selectedRecipe !== undefined && selectedRecipe !== null && selectedRecipe.data.id === v.id,
       label: <RecipePopover recipe={v} />,
-      secondaryLabel: recipeNameCount === 0 ? null : `#${v.id.toString()}`,
+      secondaryLabel: recipeNameCount === 1 ? null : `#${v.id.toString()}`,
     };
 
     return result;
