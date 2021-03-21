@@ -318,16 +318,28 @@ export class ProfessionsTree extends React.Component<Props, State> {
     const { selectedRecipe, selectedSkillTierCategory, selectedSkillTier } = this.props;
     const { categoryNameCounts } = this.state;
 
-    const recipeNameCount = ((): number => {
+    const secondaryLabel = ((): string | null => {
       if (selectedSkillTier.data === null) {
-        return 0;
+        return null;
+      }
+
+      if (selectedRecipe === null || selectedRecipe === undefined) {
+        return null;
+      }
+
+      if (selectedRecipe.data.rank > 0) {
+        return null;
       }
 
       const selectedCategoryItem = selectedSkillTier
         .data
         .categories[selectedSkillTierCategory.index];
+      const foundCount = categoryNameCounts[selectedCategoryItem.name]?.[v.recipe.name];
+      if (foundCount === undefined) {
+        return null;
+      }
 
-      return categoryNameCounts[selectedCategoryItem.name]?.[v.recipe.name] ?? 0;
+      return `#${foundCount}`;
     })();
 
     const result: ITreeNode = {
@@ -337,7 +349,7 @@ export class ProfessionsTree extends React.Component<Props, State> {
       isSelected:
         selectedRecipe !== undefined && selectedRecipe !== null && selectedRecipe.data.id === v.id,
       label: <RecipePopover recipe={v} />,
-      secondaryLabel: recipeNameCount === 1 ? null : `#${v.id.toString()}`,
+      secondaryLabel,
     };
 
     return result;
