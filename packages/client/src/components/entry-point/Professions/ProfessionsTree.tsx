@@ -335,11 +335,11 @@ export class ProfessionsTree extends React.Component<Props, State> {
         .data
         .categories[selectedSkillTierCategory.index];
       const foundCount = categoryNameCounts[selectedCategoryItem.name]?.[v.recipe.name];
-      if (foundCount === undefined) {
+      if (foundCount === undefined || foundCount === 1) {
         return null;
       }
 
-      return `#${foundCount}`;
+      return `#${selectedRecipe.data.id}`;
     })();
 
     const result: ITreeNode = {
