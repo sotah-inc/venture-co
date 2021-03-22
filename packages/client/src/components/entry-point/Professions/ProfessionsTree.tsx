@@ -323,11 +323,7 @@ export class ProfessionsTree extends React.Component<Props, State> {
         return null;
       }
 
-      if (selectedRecipe === null || selectedRecipe === undefined) {
-        return null;
-      }
-
-      if (selectedRecipe.data.rank > 0) {
+      if (v.recipe.rank > 0) {
         return null;
       }
 
@@ -339,7 +335,7 @@ export class ProfessionsTree extends React.Component<Props, State> {
         return null;
       }
 
-      return `#${selectedRecipe.data.id}`;
+      return `#${v.recipe.id}`;
     })();
 
     const result: ITreeNode = {
