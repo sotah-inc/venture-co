@@ -249,7 +249,11 @@ export class ProfessionsController {
                 return a.recipe.name.localeCompare(b.recipe.name);
               }
 
-              return a.recipe.id > b.recipe.id ? 1 : -1;
+              if (a.recipe.rank === 0 || b.recipe.rank === 0) {
+                return a.recipe.id > b.recipe.id ? 1 : -1;
+              }
+
+              return a.recipe.rank > b.recipe.rank ? 1 : -1;
             }),
           };
         }),
