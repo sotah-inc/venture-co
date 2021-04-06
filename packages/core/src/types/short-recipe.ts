@@ -23,6 +23,7 @@ export interface IShortRecipe {
   crafted_item: IShortRecipeItem;
   alliance_crafted_item: IShortRecipeItem;
   horde_crafted_item: IShortRecipeItem;
+  supplemental_crafted_item_id: ItemId;
   reagents: IShortRecipeReagent[];
   rank: number;
   crafted_quantity: number;
