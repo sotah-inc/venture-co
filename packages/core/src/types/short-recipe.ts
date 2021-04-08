@@ -42,6 +42,9 @@ export function resolveCraftedItemIds(recipe: IShortRecipe): ItemId[] {
   if (recipe.horde_crafted_item.id > 0) {
     out.push(recipe.horde_crafted_item.id);
   }
+  if (recipe.supplemental_crafted_item_id > 0) {
+    out.push(recipe.supplemental_crafted_item_id);
+  }
 
   return out;
 }
