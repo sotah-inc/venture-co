@@ -160,6 +160,7 @@ export class ProfessionsController {
               recipeResult.recipe.alliance_crafted_item.id,
               recipeResult.recipe.horde_crafted_item.id,
               recipeResult.recipe.crafted_item.id,
+              recipeResult.recipe.supplemental_crafted_item_id,
             ].filter(v => v !== 0),
           },
         },
