@@ -130,6 +130,9 @@ export class ProfessionsMessenger extends BaseMessenger {
       if (recipeResult.recipe.horde_crafted_item.id > 0) {
         out.add(recipeResult.recipe.horde_crafted_item.id);
       }
+      if (recipeResult.recipe.supplemental_crafted_item_id > 0) {
+        out.add(recipeResult.recipe.supplemental_crafted_item_id);
+      }
 
       recipeResult.recipe.reagents.forEach(v => out.add(v.reagent.id));
 
