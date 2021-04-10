@@ -126,12 +126,8 @@ export class ProfessionsController {
     }
     const foundHistory = historyMessageResult.history;
 
-    const itemPricesHistoryItemIds = [
-      ...recipeResult.recipe.reagents.map(v => v.reagent.id),
-      recipeResult.recipe.supplemental_crafted_item_id,
-    ].filter(v => v !== 0);
     const itemPricesHistoryMessage = await this.messengers.general.resolveItemPricesHistory({
-      item_ids: itemPricesHistoryItemIds,
+      item_ids: recipeResult.recipe.reagents.map(v => v.reagent.id),
       lower_bounds: lowerBounds,
       tuple: {
         connected_realm_id: resolveResult.connected_realm.connected_realm.id,
@@ -164,7 +160,6 @@ export class ProfessionsController {
               recipeResult.recipe.alliance_crafted_item.id,
               recipeResult.recipe.horde_crafted_item.id,
               recipeResult.recipe.crafted_item.id,
-              recipeResult.recipe.supplemental_crafted_item_id,
             ].filter(v => v !== 0),
           },
         },
