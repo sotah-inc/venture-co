@@ -48,11 +48,7 @@ export class RelatedRecipes extends React.Component<Props> {
 
     const foundRecipeIds = itemsRecipes.itemsRecipeIds[itemId];
     if (foundRecipeIds === undefined || foundRecipeIds === null) {
-      return (
-        <tr className="related-recipes">
-          <td colSpan={3}>No recipe-ids for item {itemId}</td>
-        </tr>
-      );
+      return null;
     }
 
     return foundRecipeIds.map((recipeId, index) => this.renderRecipe(index, recipeId));
@@ -67,50 +63,26 @@ export class RelatedRecipes extends React.Component<Props> {
       browseToRecipe,
     } = this.props;
 
-    const boxShadow: string = index === 0 ? "none" : "inset 0 1px 0 0 rgba(255, 255, 255, 0.15)";
-
     if (currentRegion === null || currentRealm === null) {
-      return (
-        <tr className="related-recipes" key={index}>
-          <td colSpan={3} style={{ boxShadow }}>
-            No region or realm
-          </td>
-        </tr>
-      );
+      return null;
     }
 
     const foundRecipe = itemsRecipes.recipes.find(v => v.id === recipeId);
     if (!foundRecipe) {
-      return (
-        <tr className="related-recipes" key={index}>
-          <td colSpan={3} style={{ boxShadow }}>
-            No recipe for recipe-id {recipeId}
-          </td>
-        </tr>
-      );
+      return null;
     }
 
     const foundProfession = itemsRecipes.professions.find(v => v.id === foundRecipe.profession_id);
     if (!foundProfession) {
-      return (
-        <tr className="related-recipes" key={index}>
-          <td colSpan={3} style={{ boxShadow }}>
-            No profession for profession-id {foundRecipe.profession_id}
-          </td>
-        </tr>
-      );
+      return null;
     }
 
     const foundSkillTier = itemsRecipes.skillTiers.find(v => v.id === foundRecipe.skilltier_id);
     if (!foundSkillTier) {
-      return (
-        <tr className="related-recipes" key={index}>
-          <td colSpan={3} style={{ boxShadow }}>
-            No skill-tier for skill-tier-id {foundRecipe.skilltier_id}
-          </td>
-        </tr>
-      );
+      return null;
     }
+
+    const boxShadow: string = index === 0 ? "none" : "inset 0 1px 0 0 rgba(255, 255, 255, 0.15)";
 
     return (
       <tr className="related-recipes" key={index}>
