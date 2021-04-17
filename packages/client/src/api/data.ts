@@ -4,6 +4,7 @@ import {
   GetPricelistResponse,
   IConnectedRealmComposite,
   IGetBootResponseData,
+  IGetItemClassesResponseData,
   IGetPricelistRequest,
   IGetPricelistResponseData,
   IQueryGeneralResponseData,
@@ -13,6 +14,7 @@ import {
   QueryGeneralResponse,
   RealmSlug,
   RegionName,
+  GetItemClassesResponse,
 } from "@sotah-inc/core";
 import * as HTTPStatus from "http-status";
 
@@ -31,6 +33,17 @@ export async function getPing(): Promise<boolean> {
 export async function getBoot(): Promise<IGetBootResponseData | null> {
   const { body, status } = await gather<null, GetBootResponse>({
     url: `${getApiEndpoint()}/boot`,
+  });
+  if (status !== HTTPStatus.OK) {
+    return null;
+  }
+
+  return body;
+}
+
+export async function getItemClasses(): Promise<IGetItemClassesResponseData | null> {
+  const { body, status } = await gather<null, GetItemClassesResponse>({
+    url: `${getApiEndpoint()}/item-classes`,
   });
   if (status !== HTTPStatus.OK) {
     return null;
