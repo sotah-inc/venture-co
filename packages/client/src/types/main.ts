@@ -21,6 +21,7 @@ export interface IMainState {
   professions: IShortProfession[];
   itemClasses: IItemClasses;
   fetchBootLevel: FetchLevel;
+  fetchItemClassesLevel: FetchLevel;
   isRegisterDialogOpen: boolean;
 }
 
@@ -45,6 +46,7 @@ export const defaultMainState: IMainState = {
   currentRegion: null,
   expansions: [],
   fetchBootLevel: FetchLevel.initial,
+  fetchItemClassesLevel: FetchLevel.initial,
   fetchPingLevel: FetchLevel.initial,
   fetchRealmLevel: FetchLevel.initial,
   fetchUserPreferencesLevel: FetchLevel.initial,

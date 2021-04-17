@@ -70,6 +70,15 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
           };
         }
 
+        if (action.payload.itemClasses === null) {
+          return {
+            ...state,
+            fetchBootLevel: FetchLevel.success,
+            fetchPingLevel: FetchLevel.success,
+            fetchItemClassesLevel: FetchLevel.failure,
+          };
+        }
+
         if (action.payload.realms === null) {
           return {
             ...state,
@@ -122,7 +131,7 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
           }, null);
         })();
 
-        const itemClasses = FormatItemClassList(action.payload.boot.item_classes);
+        const itemClasses = FormatItemClassList(action.payload.itemClasses.item_classes);
 
         return {
           ...state,
@@ -172,14 +181,12 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
         })();
 
         const regions = FormatRegionList(action.payload.regions);
-        const itemClasses = FormatItemClassList(action.payload.item_classes);
 
         return {
           ...state,
           currentRegion,
           expansions: action.payload.expansions,
           fetchBootLevel: FetchLevel.success,
-          itemClasses,
           professions: action.payload.professions,
           regions,
         };

@@ -3,6 +3,7 @@ import {
   IConnectedRealmComposite,
   ICreatePreferencesRequest,
   IGetBootResponseData,
+  IGetItemClassesResponseData,
   IRegionComposite,
   RealmSlug,
   RegionName,
@@ -119,6 +120,7 @@ export const FetchGetBoot = () => {
 
 export interface ILoadBootPayload {
   boot: IGetBootResponseData | null;
+  itemClasses: IGetItemClassesResponseData | null;
   realms: IConnectedRealmComposite[] | null;
   regionName: RegionName;
   realmSlug?: RealmSlug;
