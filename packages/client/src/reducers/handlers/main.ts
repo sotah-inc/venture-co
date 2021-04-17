@@ -1,13 +1,13 @@
 import { IRegionComposite } from "@sotah-inc/core";
 
 import {
-  LoadGetBoot,
   LoadRealmEntrypoint,
   LoadRegionEntrypoint,
   MainActions,
   RECEIVE_GET_CONNECTEDREALMS,
   ReceiveGetBoot,
   ReceiveGetConnectedRealms,
+  ReceiveGetItemClasses,
   ReceiveGetPing,
   ReceiveGetUserPreferences,
 } from "../../actions/main";
@@ -61,92 +61,6 @@ function receiveGetConnectedRealmsHandler(
 export const handlers: IKindHandlers<IMainState, MainActions> = {
   boot: {
     get: {
-      load: (state: IMainState, action: ReturnType<typeof LoadGetBoot>): IMainState => {
-        if (action.payload.boot === null) {
-          return {
-            ...state,
-            fetchBootLevel: FetchLevel.failure,
-            fetchPingLevel: FetchLevel.success,
-          };
-        }
-
-        if (action.payload.itemClasses === null) {
-          return {
-            ...state,
-            fetchBootLevel: FetchLevel.success,
-            fetchPingLevel: FetchLevel.success,
-            fetchItemClassesLevel: FetchLevel.failure,
-          };
-        }
-
-        if (action.payload.realms === null) {
-          return {
-            ...state,
-            fetchBootLevel: FetchLevel.success,
-            fetchPingLevel: FetchLevel.success,
-            fetchRealmLevel: FetchLevel.failure,
-          };
-        }
-
-        const regions = FormatRegionList(action.payload.boot.regions);
-        const currentRegion =
-          action.payload.boot.regions.find(
-            v => v.config_region.name === action.payload.regionName,
-          ) ?? action.payload.boot.regions[0];
-        const realms: IClientRealm[] = (() => {
-          if (action.payload.realms === null) {
-            return [];
-          }
-
-          return action.payload.realms.reduce<IClientRealm[]>((realmsResult, v) => {
-            return [
-              ...realmsResult,
-              ...v.connected_realm.realms.map<IClientRealm>(connectedRealmRealm => {
-                return {
-                  connectedRealmId: v.connected_realm.id,
-                  population: v.connected_realm.population,
-                  realm: connectedRealmRealm,
-                  realmModificationDates: v.modification_dates,
-                  regionName: currentRegion.config_region.name,
-                };
-              }),
-            ];
-          }, []);
-        })();
-        const currentRealm: IClientRealm | null = (() => {
-          if (typeof action.payload.realmSlug === "undefined") {
-            return realms[0];
-          }
-
-          return realms.reduce((result: IClientRealm | null, v) => {
-            if (result !== null) {
-              return result;
-            }
-
-            if (v.realm.slug === action.payload.realmSlug) {
-              return v;
-            }
-
-            return null;
-          }, null);
-        })();
-
-        const itemClasses = FormatItemClassList(action.payload.itemClasses.item_classes);
-
-        return {
-          ...state,
-          currentRealm,
-          currentRegion,
-          expansions: action.payload.boot.expansions,
-          fetchBootLevel: FetchLevel.success,
-          fetchPingLevel: FetchLevel.success,
-          fetchRealmLevel: FetchLevel.success,
-          itemClasses,
-          professions: action.payload.boot.professions,
-          realms,
-          regions,
-        };
-      },
       receive: (state: IMainState, action: ReturnType<typeof ReceiveGetBoot>): IMainState => {
         if (action.payload === null) {
           return { ...state, fetchBootLevel: FetchLevel.failure };
@@ -274,6 +188,27 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
           }),
           currentRegion,
         };
+      },
+    },
+  },
+  itemclasses: {
+    get: {
+      receive: (
+        state: IMainState,
+        action: ReturnType<typeof ReceiveGetItemClasses>,
+      ): IMainState => {
+        if (action.payload === null) {
+          return { ...state, fetchItemClassesLevel: FetchLevel.failure };
+        }
+
+        return {
+          ...state,
+          fetchItemClassesLevel: FetchLevel.success,
+          itemClasses: FormatItemClassList(action.payload.item_classes),
+        };
+      },
+      request: (state: IMainState): IMainState => {
+        return { ...state, fetchItemClassesLevel: FetchLevel.fetching };
       },
     },
   },

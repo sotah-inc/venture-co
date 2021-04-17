@@ -11,7 +11,7 @@ import {
 } from "@sotah-inc/core";
 import { Dispatch } from "redux";
 
-import { getBoot, getConnectedRealms, getPing } from "../api/data";
+import { getBoot, getConnectedRealms, getItemClasses, getPing } from "../api/data";
 import {
   createPreferences,
   getPreferences,
@@ -118,16 +118,20 @@ export const FetchGetBoot = () => {
   };
 };
 
-export interface ILoadBootPayload {
-  boot: IGetBootResponseData | null;
-  itemClasses: IGetItemClassesResponseData | null;
-  realms: IConnectedRealmComposite[] | null;
-  regionName: RegionName;
-  realmSlug?: RealmSlug;
-}
-
-export const LOAD_GET_BOOT = "LOAD_GET_BOOT";
-export const LoadGetBoot = (payload: ILoadBootPayload) => createAction(LOAD_GET_BOOT, payload);
+export const REQUEST_GET_ITEMCLASSES = "REQUEST_GET_ITEMCLASSES";
+export const RECEIVE_GET_ITEMCLASSES = "RECEIVE_GET_ITEMCLASSES";
+export const RequestGetItemClasses = () => createAction(REQUEST_GET_ITEMCLASSES);
+export const ReceiveGetItemClasses = (payload: IGetItemClassesResponseData | null) =>
+  createAction(RECEIVE_GET_ITEMCLASSES, payload);
+type FetchGetItemClassesType = ReturnType<
+  typeof RequestGetItemClasses | typeof ReceiveGetItemClasses
+>;
+export const FetchGetItemClasses = () => {
+  return async (dispatch: Dispatch<FetchGetItemClassesType>) => {
+    dispatch(RequestGetItemClasses());
+    dispatch(ReceiveGetItemClasses(await getItemClasses()));
+  };
+};
 
 export const REGION_CHANGE = "REGION_CHANGE";
 export const RegionChange = (payload: IRegionComposite) => createAction(REGION_CHANGE, payload);
@@ -160,6 +164,7 @@ export const ChangeIsRegisterDialogOpen = (payload: boolean) =>
 
 export interface ILoadRootEntrypoint {
   boot: IGetBootResponseData | null;
+  itemClasses: IGetItemClassesResponseData | null;
   ping: boolean;
 }
 
@@ -190,19 +195,20 @@ export const MainActions = {
   ChangeAuthLevel,
   ChangeIsLoginDialogOpen,
   ChangeIsRegisterDialogOpen,
-  LoadGetBoot,
   LoadRealmEntrypoint,
   LoadRegionEntrypoint,
   LoadRootEntrypoint,
   RealmChange,
   ReceiveGetBoot,
   ReceiveGetConnectedRealms,
+  ReceiveGetItemClasses,
   ReceiveGetPing,
   ReceiveGetUserPreferences,
   ReceiveUserReload,
   RegionChange,
   RequestGetBoot,
   RequestGetConnectedRealms,
+  RequestGetItemClasses,
   RequestGetPing,
   RequestGetUserPreferences,
   RequestUserReload,
