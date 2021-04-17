@@ -36,6 +36,12 @@ export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
     wrap(async (_req: Request, res: Response) => handleResult(res, await controller.getBoot())),
   );
   router.get(
+    "/item-classes",
+    wrap(async (_req: Request, res: Response) =>
+      handleResult(res, await controller.getItemClasses()),
+    ),
+  );
+  router.get(
     "/connected-realms/:regionName",
     wrap(async (req: Request, res: Response) => {
       const regionName = req.params.regionName;

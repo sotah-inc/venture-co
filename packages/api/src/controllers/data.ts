@@ -3,7 +3,7 @@ import {
   ExpansionName,
   GetAuctionsResponse,
   GetBootResponse,
-  GetConnectedRealmsResponse,
+  GetConnectedRealmsResponse, GetItemClassesResponse,
   GetItemPriceHistoriesResponse,
   GetItemResponse,
   GetPostResponse,
@@ -176,6 +176,31 @@ export class DataController {
         ...bootResult,
         regions: regionComposites,
         professions: professionsResult.professions,
+      },
+      status: HTTPStatus.OK,
+    };
+  }
+
+  public async getItemClasses(): Promise<IRequestResult<GetItemClassesResponse>> {
+    const msg = await this.messengers.items.getItemClasses();
+    if (msg.code !== code.ok) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    const result = await msg.decode();
+    if (result === null) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    return {
+      data: {
+        item_classes: result.item_classes,
       },
       status: HTTPStatus.OK,
     };
