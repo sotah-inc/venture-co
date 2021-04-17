@@ -27,8 +27,11 @@ export interface IGetSessionSecretResponse {
 
 export interface IGetBootResponse {
   regions: IConfigRegion[];
-  item_classes: IItemClass[];
   expansions: IExpansion[];
+}
+
+export interface IGetItemClassesResponse {
+  item_classes: IItemClass[];
 }
 
 export interface IRealmModificationDatesResponse {

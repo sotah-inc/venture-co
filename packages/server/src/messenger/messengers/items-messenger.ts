@@ -1,7 +1,7 @@
 import { IQueryItem, IShortItem } from "@sotah-inc/core";
 
 import {
-  code,
+  code, IGetItemClassesResponse,
   IGetItemsRequest,
   IGetItemsResponse,
   IQueryItemsRequest,
@@ -13,6 +13,7 @@ import { BaseMessenger } from "./base";
 enum subjects {
   items = "items",
   itemsQuery = "itemsQuery",
+  itemClasses = "itemClasses"
 }
 
 export class ItemsMessenger extends BaseMessenger {
@@ -62,5 +63,9 @@ export class ItemsMessenger extends BaseMessenger {
         target: v.target,
       };
     });
+  }
+
+  public getItemClasses(): Promise<Message<IGetItemClassesResponse>> {
+    return this.request(subjects.itemClasses);
   }
 }
