@@ -25,12 +25,17 @@ export * from "./data/index";
 
 export interface IGetBootResponseData {
   regions: IRegionComposite[];
-  item_classes: IItemClass[];
   expansions: IExpansion[];
   professions: IShortProfession[];
 }
 
 export type GetBootResponse = IGetBootResponseData | null;
+
+export interface IGetItemClassesResponseData {
+  item_classes: IItemClass[];
+}
+
+export type GetItemClassesResponse = IGetItemClassesResponseData | null;
 
 export interface IGetPostResponseData {
   post: IPostJson;
