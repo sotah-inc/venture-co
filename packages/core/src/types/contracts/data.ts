@@ -13,7 +13,7 @@ import {
   IShortTokenHistory,
   IValidationErrorResponse,
   Locale,
-  PetId,
+  PetId, RecipeId,
   SortDirection,
   SortKind,
 } from "../index";
@@ -57,6 +57,7 @@ export type GetConnectedRealmsResponse = IGetConnectedRealmsResponseData | null;
 
 export interface IGetItemResponseData {
   item: IShortItem;
+  itemRecipes: RecipeId[] | null | undefined;
 }
 
 export type GetItemResponse = IGetItemResponseData | IErrorResponse | IValidationErrorResponse;
