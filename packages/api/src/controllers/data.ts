@@ -3,7 +3,8 @@ import {
   ExpansionName,
   GetAuctionsResponse,
   GetBootResponse,
-  GetConnectedRealmsResponse, GetItemClassesResponse,
+  GetConnectedRealmsResponse,
+  GetItemClassesResponse,
   GetItemPriceHistoriesResponse,
   GetItemResponse,
   GetPostResponse,
@@ -41,9 +42,7 @@ import {
   ProfessionPricelistRepository,
 } from "@sotah-inc/server";
 import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
-import {
-  ResolveRecipesResponse,
-} from "@sotah-inc/server/build/dist/messenger/contracts/professions";
+import { ResolveRecipesResponse } from "@sotah-inc/server/build/dist/messenger/contracts/professions";
 import HTTPStatus from "http-status";
 import moment from "moment";
 import { ParsedQs } from "qs";
@@ -324,7 +323,32 @@ export class DataController {
       };
     }
 
-    const itemResponse: IGetItemResponseData = { item: foundItem };
+    const itemRecipeIdsMessage = await this.messengers.professions.getItemsRecipes({
+      item_ids: [itemId],
+    });
+    if (itemRecipeIdsMessage.code !== code.ok) {
+      const errorResponse: IErrorResponse = { error: "failed to resolve items-recipes" };
+
+      return {
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+        data: errorResponse,
+      };
+    }
+
+    const itemRecipeIdsResult = await itemRecipeIdsMessage.decode();
+    if (itemRecipeIdsResult === null) {
+      const errorResponse: IErrorResponse = { error: "failed to decode items-recipes" };
+
+      return {
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+        data: errorResponse,
+      };
+    }
+
+    const itemResponse: IGetItemResponseData = {
+      item: foundItem,
+      itemRecipes: itemRecipeIdsResult[itemId],
+    };
 
     return { data: itemResponse, status: HTTPStatus.OK };
   }
