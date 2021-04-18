@@ -345,6 +345,10 @@ export class DataController {
       };
     }
 
+    await this.messengers.professions.itemRecipesIntake({
+      [itemId]: [39244, 39245, 39246],
+    });
+
     const itemResponse: IGetItemResponseData = {
       item: foundItem,
       itemRecipes: itemRecipeIdsResult[itemId],
