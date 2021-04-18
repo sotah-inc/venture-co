@@ -8,8 +8,10 @@ import {
 } from "@sotah-inc/core";
 import * as nats from "nats";
 
+import { gzip } from "../../util";
 import { code, IQueryItemsRequest } from "../contracts";
 import {
+  IItemRecipesIntakeRequest,
   IItemsRecipesResponse,
   IProfessionsResponse,
   IQueryRecipesResponse,
@@ -34,6 +36,7 @@ enum subjects {
   recipes = "recipes",
   recipesQuery = "recipesQuery",
   itemsRecipes = "itemsRecipes",
+  itemRecipesIntake = "itemRecipesIntake",
 }
 
 export class ProfessionsMessenger extends BaseMessenger {
@@ -322,5 +325,15 @@ export class ProfessionsMessenger extends BaseMessenger {
       },
       error: null,
     };
+  }
+
+  public async itemRecipesIntake(req: IItemRecipesIntakeRequest): Promise<Message<null>> {
+    const jsonEncoded = JSON.stringify(req);
+    const gzipEncoded = await gzip(Buffer.from(jsonEncoded));
+    const base64Encoded = gzipEncoded.toString("base64");
+
+    return this.request(subjects.itemRecipesIntake, {
+      body: base64Encoded,
+    });
   }
 }

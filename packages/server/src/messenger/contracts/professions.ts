@@ -51,3 +51,7 @@ export type ResolveRecipesResponse = IResolveResponse<{
   skillTiers: IShortSkillTier[];
   professions: IShortProfession[];
 }>
+
+export interface IItemRecipesIntakeRequest {
+  [itemId: number]: RecipeId[];
+}
