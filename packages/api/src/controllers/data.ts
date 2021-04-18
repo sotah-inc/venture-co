@@ -42,7 +42,9 @@ import {
   ProfessionPricelistRepository,
 } from "@sotah-inc/server";
 import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
-import { ResolveRecipesResponse } from "@sotah-inc/server/build/dist/messenger/contracts/professions";
+import {
+  ResolveRecipesResponse,
+} from "@sotah-inc/server/build/dist/messenger/contracts/professions";
 import HTTPStatus from "http-status";
 import moment from "moment";
 import { ParsedQs } from "qs";
@@ -344,10 +346,6 @@ export class DataController {
         data: errorResponse,
       };
     }
-
-    await this.messengers.professions.itemRecipesIntake({
-      [itemId]: [39244, 39245, 39246],
-    });
 
     const itemResponse: IGetItemResponseData = {
       item: foundItem,
