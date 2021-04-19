@@ -51,6 +51,32 @@ export class RelatedRecipes extends React.Component<Props> {
       return null;
     }
 
+    foundRecipeIds.sort((a, b) => {
+      const foundA = itemsRecipes.recipes.find(v => v.id === a);
+      const foundB = itemsRecipes.recipes.find(v => v.id === b);
+      if (foundA === undefined || foundB === undefined) {
+        if (a === b) {
+          return 0;
+        }
+
+        return a > b ? -1 :1;
+      }
+
+      if (foundA.name !== foundB.name) {
+        return foundA.name.localeCompare(foundB.name);
+      }
+
+      if (foundA.rank === foundB.rank) {
+        if (a === b) {
+          return 0;
+        }
+
+        return a > b ? -1 :1;
+      }
+
+      return foundA.rank > foundB.rank ? -1 : 1;
+    });
+
     return foundRecipeIds.map((recipeId, index) => this.renderRecipe(index, recipeId));
   }
 
