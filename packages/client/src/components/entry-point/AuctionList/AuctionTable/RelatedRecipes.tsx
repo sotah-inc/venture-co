@@ -52,18 +52,10 @@ export class RelatedRecipes extends React.Component<Props> {
     }
 
     foundRecipeIds.sort((a, b) => {
-      function compareById(): number {
-        if (a === b) {
-          return 0;
-        }
-
-        return a > b ? -1 :1;
-      }
-
       const foundA = itemsRecipes.recipes.find(v => v.id === a);
       const foundB = itemsRecipes.recipes.find(v => v.id === b);
       if (foundA === undefined || foundB === undefined) {
-        return compareById();
+        return a > b ? -1 :1;
       }
 
       if (foundA.skilltier_id !== foundB.skilltier_id) {
@@ -81,7 +73,7 @@ export class RelatedRecipes extends React.Component<Props> {
       }
 
       if (foundA.rank === foundB.rank) {
-        compareById();
+        return a > b ? -1 :1;
       }
 
       return foundA.rank > foundB.rank ? 1 : -1;
