@@ -129,7 +129,7 @@ export class RelatedRecipes extends React.Component<Props> {
 
     return (
       <tr className="related-recipes" key={index}>
-        <td colSpan={3} style={{ boxShadow }}>
+        <td colSpan={4} style={{ boxShadow }}>
           <ButtonGroup>
             <Button
               rightIcon="chevron-right"
@@ -169,7 +169,6 @@ export class RelatedRecipes extends React.Component<Props> {
             />
           </ButtonGroup>
         </td>
-        <td style={{ boxShadow: "inset 1px 0 0 0 rgba(255, 255, 255, 0.15)" }}>&nbsp;</td>
         <td style={{ boxShadow: "inset 1px 0 0 0 rgba(255, 255, 255, 0.15)" }}>&nbsp;</td>
         <td style={{ boxShadow: "inset 1px 0 0 0 rgba(255, 255, 255, 0.15)" }}>&nbsp;</td>
       </tr>
