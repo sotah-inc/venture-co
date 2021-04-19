@@ -74,7 +74,7 @@ export class RelatedRecipes extends React.Component<Props> {
         return a > b ? -1 :1;
       }
 
-      return foundA.rank > foundB.rank ? -1 : 1;
+      return foundA.rank > foundB.rank ? 1 : -1;
     });
 
     return foundRecipeIds.map((recipeId, index) => this.renderRecipe(index, recipeId));
