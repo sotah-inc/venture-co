@@ -52,14 +52,22 @@ export class RelatedRecipes extends React.Component<Props> {
     }
 
     foundRecipeIds.sort((a, b) => {
-      const foundA = itemsRecipes.recipes.find(v => v.id === a);
-      const foundB = itemsRecipes.recipes.find(v => v.id === b);
-      if (foundA === undefined || foundB === undefined) {
+      function compareById(): number {
         if (a === b) {
           return 0;
         }
 
         return a > b ? -1 :1;
+      }
+
+      const foundA = itemsRecipes.recipes.find(v => v.id === a);
+      const foundB = itemsRecipes.recipes.find(v => v.id === b);
+      if (foundA === undefined || foundB === undefined) {
+        return compareById();
+      }
+
+      if (foundA.skilltier_id !== foundB.skilltier_id) {
+        return foundA.skilltier_id > foundB.skilltier_id ? -1 : 1;
       }
 
       if (foundA.name !== foundB.name) {
@@ -67,11 +75,7 @@ export class RelatedRecipes extends React.Component<Props> {
       }
 
       if (foundA.rank === foundB.rank) {
-        if (a === b) {
-          return 0;
-        }
-
-        return a > b ? -1 :1;
+        compareById();
       }
 
       return foundA.rank > foundB.rank ? 1 : -1;
