@@ -67,7 +67,13 @@ export class RelatedRecipes extends React.Component<Props> {
       }
 
       if (foundA.skilltier_id !== foundB.skilltier_id) {
-        return foundA.skilltier_id > foundB.skilltier_id ? -1 : 1;
+        const foundASkillTier = itemsRecipes.skillTiers.find(v => v.id === foundA.skilltier_id);
+        const foundBSkillTier = itemsRecipes.skillTiers.find(v => v.id === foundB.skilltier_id);
+        if (foundASkillTier === undefined || foundBSkillTier === undefined) {
+          return foundA.skilltier_id > foundB.skilltier_id ? -1 : 1;
+        }
+
+        return foundASkillTier.name.localeCompare(foundBSkillTier.name);
       }
 
       if (foundA.name !== foundB.name) {
