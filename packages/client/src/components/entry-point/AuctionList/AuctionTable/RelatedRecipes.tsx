@@ -55,7 +55,7 @@ export class RelatedRecipes extends React.Component<Props> {
       const foundA = itemsRecipes.recipes.find(v => v.id === a);
       const foundB = itemsRecipes.recipes.find(v => v.id === b);
       if (foundA === undefined || foundB === undefined) {
-        return a > b ? -1 :1;
+        return a > b ? -1 : 1;
       }
 
       if (foundA.skilltier_id !== foundB.skilltier_id) {
@@ -73,7 +73,7 @@ export class RelatedRecipes extends React.Component<Props> {
       }
 
       if (foundA.rank === foundB.rank) {
-        return a > b ? -1 :1;
+        return a > b ? -1 : 1;
       }
 
       return foundA.rank > foundB.rank ? 1 : -1;
@@ -110,6 +110,21 @@ export class RelatedRecipes extends React.Component<Props> {
       return null;
     }
 
+    const recipeLabel = ((): string => {
+      if (foundRecipe.rank > 0) {
+        return `${foundRecipe.name} (Rank ${foundRecipe.rank})`;
+      }
+
+      const hasSimilarRecipes = itemsRecipes.recipes.some(
+        v => v.id !== recipeId && v.name === foundRecipe.name,
+      );
+      if (!hasSimilarRecipes) {
+        return foundRecipe.name;
+      }
+
+      return `${foundRecipe.name} (#${foundRecipe.id})`;
+    })();
+
     const boxShadow: string = index === 0 ? "none" : "inset 0 1px 0 0 rgba(255, 255, 255, 0.15)";
 
     return (
@@ -134,11 +149,6 @@ export class RelatedRecipes extends React.Component<Props> {
             <RecipePopover
               recipe={{ id: foundRecipe.id, recipe: foundRecipe }}
               renderContent={() => {
-                const recipeLabel =
-                  foundRecipe.rank > 0
-                    ? `${foundRecipe.name} (Rank ${foundRecipe.rank})`
-                    : foundRecipe.name;
-
                 return (
                   <Button
                     icon={<img src={foundRecipe.icon_url} className="recipe-icon" alt="" />}
