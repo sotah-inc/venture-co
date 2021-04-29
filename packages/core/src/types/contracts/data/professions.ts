@@ -43,10 +43,10 @@ export type QueryRecipesResponse =
   | null;
 
 export interface IGetItemsRecipesResponseData {
-  itemsRecipes: {
+  itemsRecipes: Array<{
     kind: ItemRecipeKind;
     ids: { [itemId: number]: RecipeId[] | null | undefined };
-  };
+  }>;
   recipes: IShortRecipe[];
   skillTiers: IShortSkillTier[];
   professions: IShortProfession[];
