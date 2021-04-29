@@ -25,6 +25,7 @@ import {
   IShortItem,
   IShortPet,
   ItemId,
+  ItemRecipeKind,
   IValidationErrorResponse,
   Locale,
   ProfessionId,
@@ -326,6 +327,7 @@ export class DataController {
     }
 
     const itemRecipeIdsMessage = await this.messengers.professions.getItemsRecipes({
+      kind: ItemRecipeKind.CraftedBy,
       item_ids: [itemId],
     });
     if (itemRecipeIdsMessage.code !== code.ok) {
@@ -596,6 +598,7 @@ export class DataController {
 
     // resolving items-recipe-ids
     const itemRecipeIdsMessage = await this.messengers.professions.getItemsRecipes({
+      kind: ItemRecipeKind.CraftedBy,
       item_ids: itemIds,
     });
     if (itemRecipeIdsMessage.code !== code.ok) {

@@ -354,6 +354,7 @@ export class ProfessionsController {
 
     // resolving items-recipe-ids
     const itemRecipeIdsMessage = await this.messengers.professions.getItemsRecipes({
+      kind: result.data.kind,
       item_ids: result.data.itemIds.map(Number),
     });
     if (itemRecipeIdsMessage.code !== code.ok) {
