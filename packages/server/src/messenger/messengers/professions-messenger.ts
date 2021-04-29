@@ -1,6 +1,7 @@
 import {
   IProfessionSkillTierTuple,
   ItemId,
+  ItemRecipeKind,
   Locale,
   ProfessionId,
   RecipeId,
@@ -11,14 +12,17 @@ import * as nats from "nats";
 import { gzip } from "../../util";
 import { code, IQueryItemsRequest } from "../contracts";
 import {
-  IItemRecipesIntakeRequest, IItemRecipesRequest,
+  IItemRecipesIntakeRequest,
+  IItemRecipesRequest,
   IItemsRecipesResponse,
   IProfessionsResponse,
   IQueryRecipesResponse,
   IRecipeResponse,
   IRecipesResponse,
+  IResolveAllItemsRecipesResponseItem,
   ISkillTierResponse,
   ISkillTiersResponse,
+  ResolveAllItemsRecipesResponse,
   ResolveQueryRecipesResponse,
   ResolveRecipeResponse,
   ResolveRecipesResponse,
@@ -226,6 +230,70 @@ export class ProfessionsMessenger extends BaseMessenger {
       body: JSON.stringify(req),
       parseKind: ParseKind.GzipJsonEncoded,
     });
+  }
+
+  public async resolveAllItemRecipes(ids: ItemId[]): Promise<ResolveAllItemsRecipesResponse> {
+    const kinds: ItemRecipeKind[] = [
+      ItemRecipeKind.CraftedBy,
+      ItemRecipeKind.ReagentFor,
+      ItemRecipeKind.Teaches,
+    ];
+    const itemRecipesMessages = await Promise.all(
+      kinds.map(async v => {
+        return {
+          kind: v,
+          message: await this.getItemsRecipes({ kind: v, item_ids: ids }),
+        };
+      }),
+    );
+    const erroneousMessages = itemRecipesMessages.filter(v => v.message.code !== code.ok);
+    if (erroneousMessages.length > 0) {
+      return {
+        code: erroneousMessages[0].message.code,
+        error: erroneousMessages[0].message.error?.message ?? "",
+        data: null,
+      };
+    }
+
+    const itemRecipesResults = await Promise.all(
+      itemRecipesMessages.map(async v => {
+        return {
+          kind: v.kind,
+          result: await v.message.decode(),
+        };
+      }),
+    );
+    const erroneousResults = itemRecipesResults.filter(v => v.result === null);
+    if (erroneousResults.length > 0) {
+      return {
+        code: code.msgJsonParseError,
+        error: "failed to decode message",
+        data: null,
+      };
+    }
+
+    const itemRecipes = itemRecipesResults.reduce<IResolveAllItemsRecipesResponseItem[]>(
+      (results, v) => {
+        if (v.result === null) {
+          return results;
+        }
+
+        return [
+          ...results,
+          {
+            kind: v.kind,
+            response: v.result,
+          },
+        ];
+      },
+      [],
+    );
+
+    return {
+      data: { itemRecipes },
+      code: code.ok,
+      error: null,
+    };
   }
 
   public async resolveRecipes(ids: RecipeId[], locale: Locale): Promise<ResolveRecipesResponse> {

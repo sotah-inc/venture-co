@@ -52,6 +52,15 @@ export interface IItemsRecipesResponse {
   [itemId: number]: RecipeId[] | null | undefined;
 }
 
+export interface IResolveAllItemsRecipesResponseItem {
+  kind: ItemRecipeKind;
+  response: IItemsRecipesResponse;
+}
+
+export type ResolveAllItemsRecipesResponse = IResolveResponse<{
+  itemRecipes: IResolveAllItemsRecipesResponseItem[];
+}>
+
 export type ResolveRecipesResponse = IResolveResponse<{
   recipes: IShortRecipe[];
   skillTiers: IShortSkillTier[];
