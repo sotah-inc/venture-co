@@ -1,5 +1,5 @@
 import { IShortItem } from "../../short-item";
-import { IShortProfession } from "../../short-profession";
+import { IShortProfession, ItemRecipeKind } from "../../short-profession";
 import { IShortRecipe, RecipeId } from "../../short-recipe";
 import { IShortSkillTier } from "../../short-skilltier";
 import { IErrorResponse, IValidationErrorResponse } from "../index";
@@ -43,7 +43,10 @@ export type QueryRecipesResponse =
   | null;
 
 export interface IGetItemsRecipesResponseData {
-  itemsRecipeIds: { [itemId: number]: RecipeId[] | null | undefined };
+  itemsRecipes: {
+    kind: ItemRecipeKind;
+    ids: { [itemId: number]: RecipeId[] | null | undefined };
+  };
   recipes: IShortRecipe[];
   skillTiers: IShortSkillTier[];
   professions: IShortProfession[];
