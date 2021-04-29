@@ -1,6 +1,8 @@
 import {
   GetItemsRecipesResponse,
-  GetRecipePriceHistoriesResponse, IShortSkillTier, IShortSkillTierCategory,
+  GetRecipePriceHistoriesResponse,
+  IShortSkillTier,
+  IShortSkillTierCategory,
   IValidationErrorResponse,
   Locale,
   ProfessionId,
@@ -353,19 +355,10 @@ export class ProfessionsController {
     const locale = result.data.locale as Locale;
 
     // resolving items-recipe-ids
-    const itemRecipeIdsMessage = await this.messengers.professions.getItemsRecipes({
-      kind: result.data.kind,
-      item_ids: result.data.itemIds.map(Number),
-    });
-    if (itemRecipeIdsMessage.code !== code.ok) {
-      return {
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-        data: null,
-      };
-    }
-
-    const itemRecipeIdsResult = await itemRecipeIdsMessage.decode();
-    if (itemRecipeIdsResult === null) {
+    const itemRecipeIdsResult = await this.messengers.professions.resolveAllItemRecipes(
+      result.data.itemIds.map(Number),
+    );
+    if (itemRecipeIdsResult.code !== code.ok || itemRecipeIdsResult.data === null) {
       return {
         status: HTTPStatus.INTERNAL_SERVER_ERROR,
         data: null,
@@ -373,24 +366,27 @@ export class ProfessionsController {
     }
 
     // resolving recipes
-    const recipeIds = Array.from(
-      Object.keys(itemRecipeIdsResult).reduce<Set<RecipeId>>((recipeIdsSet, itemId) => {
-        const itemRecipeIds = itemRecipeIdsResult[Number(itemId)];
-        if (itemRecipeIds === undefined || itemRecipeIds === null) {
-          return recipeIdsSet;
-        }
+    const recipeIds = ((): RecipeId[] => {
+      const recipeIdSet = new Set<RecipeId>();
+      for (const resolveItem of itemRecipeIdsResult.data.itemRecipes) {
+        for (const itemIdString of Object.keys(resolveItem.response)) {
+          const foundRecipeIds = resolveItem.response[Number(itemIdString)];
+          if (foundRecipeIds === null || foundRecipeIds === undefined) {
+            continue;
+          }
 
-        for (const id of itemRecipeIds) {
-          recipeIdsSet.add(id);
+          for (const recipeId of foundRecipeIds) {
+            recipeIdSet.add(recipeId);
+          }
         }
+      }
 
-        return recipeIdsSet;
-      }, new Set<RecipeId>()),
-    );
+      return Array.from(recipeIdSet);
+    })();
     if (recipeIds.length === 0) {
       return {
         data: {
-          itemsRecipeIds: itemRecipeIdsResult,
+          itemsRecipes: [],
           skillTiers: [],
           professions: [],
           recipes: [],
@@ -413,7 +409,12 @@ export class ProfessionsController {
     return {
       data: {
         ...resolveRecipesResult.data,
-        itemsRecipeIds: itemRecipeIdsResult,
+        itemsRecipes: itemRecipeIdsResult.data.itemRecipes.map(v => {
+          return {
+            kind: v.kind,
+            ids: v.response,
+          };
+        }),
       },
       status: HTTPStatus.OK,
     };

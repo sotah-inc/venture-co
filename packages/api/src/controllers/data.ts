@@ -597,19 +597,8 @@ export class DataController {
     }, []);
 
     // resolving items-recipe-ids
-    const itemRecipeIdsMessage = await this.messengers.professions.getItemsRecipes({
-      kind: ItemRecipeKind.CraftedBy,
-      item_ids: itemIds,
-    });
-    if (itemRecipeIdsMessage.code !== code.ok) {
-      return {
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-        data: null,
-      };
-    }
-
-    const itemRecipeIdsResult = await itemRecipeIdsMessage.decode();
-    if (itemRecipeIdsResult === null) {
+    const itemRecipeIdsResult = await this.messengers.professions.resolveAllItemRecipes(itemIds);
+    if (itemRecipeIdsResult.code !== code.ok || itemRecipeIdsResult.data === null) {
       return {
         status: HTTPStatus.INTERNAL_SERVER_ERROR,
         data: null,
@@ -617,20 +606,23 @@ export class DataController {
     }
 
     // resolving recipes
-    const recipeIds = Array.from(
-      Object.keys(itemRecipeIdsResult).reduce<Set<RecipeId>>((recipeIdsSet, itemId) => {
-        const itemRecipeIds = itemRecipeIdsResult[Number(itemId)];
-        if (itemRecipeIds === undefined || itemRecipeIds === null) {
-          return recipeIdsSet;
-        }
+    const recipeIds = ((): RecipeId[] => {
+      const recipeIdSet = new Set<RecipeId>();
+      for (const resolveItem of itemRecipeIdsResult.data.itemRecipes) {
+        for (const itemIdString of Object.keys(resolveItem.response)) {
+          const foundRecipeIds = resolveItem.response[Number(itemIdString)];
+          if (foundRecipeIds === null || foundRecipeIds === undefined) {
+            continue;
+          }
 
-        for (const id of itemRecipeIds) {
-          recipeIdsSet.add(id);
+          for (const recipeId of foundRecipeIds) {
+            recipeIdSet.add(recipeId);
+          }
         }
+      }
 
-        return recipeIdsSet;
-      }, new Set<RecipeId>()),
-    );
+      return Array.from(recipeIdSet);
+    })();
 
     let resolveRecipesResult: ResolveRecipesResponse | null = null;
     if (recipeIds.length > 0) {
@@ -654,7 +646,12 @@ export class DataController {
         pets: [...resolveAuctionsResponse.data.pets.pets],
         professionPricelists: professionPricelists.map(v => v.toJson()),
         itemsRecipes: {
-          itemsRecipeIds: itemRecipeIdsResult,
+          itemsRecipes: itemRecipeIdsResult.data.itemRecipes.map(v => {
+            return {
+              kind: v.kind,
+              ids: v.response,
+            };
+          }),
           professions: [],
           recipes: [],
           skillTiers: [],
