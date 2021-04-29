@@ -278,11 +278,30 @@ export class ProfessionsMessenger extends BaseMessenger {
           return results;
         }
 
+        const recipesResponse = Object.keys(v.result).reduce<IItemsRecipesResponse>(
+          (recipeResponseResult, itemIdString) => {
+            if (v.result === null) {
+              return recipeResponseResult;
+            }
+
+            const foundRecipeIds = v.result[Number(itemIdString)];
+            if (foundRecipeIds === null) {
+              return recipeResponseResult;
+            }
+
+            return {
+              ...recipeResponseResult,
+              [itemIdString]: foundRecipeIds,
+            };
+          },
+          {},
+        );
+
         return [
           ...results,
           {
             kind: v.kind,
-            response: v.result,
+            response: recipesResponse,
           },
         ];
       },
