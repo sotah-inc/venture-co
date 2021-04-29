@@ -11,7 +11,7 @@ import * as nats from "nats";
 import { gzip } from "../../util";
 import { code, IQueryItemsRequest } from "../contracts";
 import {
-  IItemRecipesIntakeRequest,
+  IItemRecipesIntakeRequest, IItemRecipesRequest,
   IItemsRecipesResponse,
   IProfessionsResponse,
   IQueryRecipesResponse,
@@ -221,9 +221,7 @@ export class ProfessionsMessenger extends BaseMessenger {
     };
   }
 
-  public async getItemsRecipes(req: {
-    item_ids: ItemId[];
-  }): Promise<Message<IItemsRecipesResponse>> {
+  public async getItemsRecipes(req: IItemRecipesRequest): Promise<Message<IItemsRecipesResponse>> {
     return this.request(subjects.itemsRecipes, {
       body: JSON.stringify(req),
       parseKind: ParseKind.GzipJsonEncoded,

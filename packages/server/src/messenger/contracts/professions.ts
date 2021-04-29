@@ -1,4 +1,10 @@
-import { IShortProfession, IShortRecipe, IShortSkillTier, RecipeId } from "@sotah-inc/core";
+import {
+  IShortProfession,
+  IShortRecipe,
+  IShortSkillTier, ItemId,
+  ItemRecipeKind,
+  RecipeId,
+} from "@sotah-inc/core";
 
 import { IGetItemsResponse, IResolveResponse } from "./index";
 
@@ -54,4 +60,9 @@ export type ResolveRecipesResponse = IResolveResponse<{
 
 export interface IItemRecipesIntakeRequest {
   [itemId: number]: RecipeId[];
+}
+
+export interface IItemRecipesRequest {
+  kind: ItemRecipeKind;
+  item_ids: ItemId[];
 }
