@@ -46,7 +46,17 @@ export class RelatedRecipes extends React.Component<Props> {
   public render(): React.ReactNode {
     const { itemId, itemsRecipes } = this.props;
 
-    const foundRecipeIds = itemsRecipes.itemsRecipeIds[itemId];
+    const foundRecipeIds = itemsRecipes.itemsRecipes.reduce<RecipeId[]>((recipeIdsResult, v) => {
+      const found = v.ids[itemId];
+      if (found === null || found === undefined) {
+        return recipeIdsResult;
+      }
+
+      return [
+        ...recipeIdsResult,
+        ...found,
+      ];
+    }, []);
     if (foundRecipeIds === undefined || foundRecipeIds === null) {
       return null;
     }

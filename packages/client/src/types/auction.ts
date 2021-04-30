@@ -61,7 +61,7 @@ export const defaultAuctionState: IAuctionState = {
     recipes: [],
     professions: [],
     skillTiers: [],
-    itemsRecipeIds: {},
+    itemsRecipes: [],
   },
   options: {
     auctionsPerPage: SortPerPage.Ten,
