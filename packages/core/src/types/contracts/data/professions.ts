@@ -57,3 +57,7 @@ export type GetItemsRecipesResponse =
   | IErrorResponse
   | IValidationErrorResponse
   | null;
+
+export interface IItemsVendorPricesResponse {
+  vendor_prices: { [id: string]: number | undefined };
+}
