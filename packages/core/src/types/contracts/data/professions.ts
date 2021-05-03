@@ -61,3 +61,9 @@ export type GetItemsRecipesResponse =
 export interface IItemsVendorPricesResponse {
   vendor_prices: { [id: string]: number | undefined };
 }
+
+export type ItemsVendorPricesResponse =
+  | IItemsVendorPricesResponse
+  | IErrorResponse
+  | IValidationErrorResponse
+  | null;
