@@ -6,3 +6,7 @@ export const ItemsRecipesQuery = z.object({
   itemIds: z.array(z.string()),
   kind: z.nativeEnum(ItemRecipeKind),
 });
+
+export const ItemsVendorPricesQuery = z.object({
+  itemIds: z.array(z.string()),
+});

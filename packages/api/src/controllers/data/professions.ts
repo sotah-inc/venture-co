@@ -2,7 +2,7 @@ import {
   GetItemsRecipesResponse,
   GetRecipePriceHistoriesResponse,
   IShortSkillTier,
-  IShortSkillTierCategory,
+  IShortSkillTierCategory, ItemsVendorPricesResponse,
   IValidationErrorResponse,
   Locale,
   ProfessionId,
@@ -20,7 +20,7 @@ import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
 import HTTPStatus from "http-status";
 import { ParsedQs } from "qs";
 
-import { ItemsRecipesQuery } from "../../lib/next-validator-rules";
+import { ItemsRecipesQuery, ItemsVendorPricesQuery } from "../../lib/next-validator-rules";
 import { QueryParamRules, validate, yupValidationErrorToResponse } from "../../lib/validator-rules";
 import { IRequestResult } from "../index";
 
@@ -416,6 +416,41 @@ export class ProfessionsController {
           };
         }),
       },
+      status: HTTPStatus.OK,
+    };
+  }
+
+  public async vendorPrices(query: ParsedQs): Promise<IRequestResult<ItemsVendorPricesResponse>> {
+    // parsing query
+    const result = ItemsVendorPricesQuery.safeParse(query);
+    if (!result.success) {
+      return {
+        status: HTTPStatus.BAD_REQUEST,
+        data: null,
+      };
+    }
+
+    // gathering item-vendor-prices
+    const vendorPricesMessage = await this.messengers.professions.itemsVendorPrices({
+      item_ids: result.data.itemIds.map(Number),
+    });
+    if (vendorPricesMessage.code !== code.ok) {
+      return {
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+        data: null,
+      };
+    }
+
+    const vendorPricesResult = await vendorPricesMessage.decode();
+    if (vendorPricesResult === null) {
+      return {
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+        data: null,
+      };
+    }
+
+    return {
+      data: vendorPricesResult,
       status: HTTPStatus.OK,
     };
   }

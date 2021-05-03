@@ -245,6 +245,12 @@ export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
       handleResult(res, await professionsController.getItemsRecipes(req.query));
     }),
   );
+  router.get(
+    "/items-vendor-prices",
+    wrap(async (req: Request, res: Response) => {
+      handleResult(res, await professionsController.vendorPrices(req.query));
+    }),
+  );
 
   return router;
 }
