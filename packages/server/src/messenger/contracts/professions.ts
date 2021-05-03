@@ -75,3 +75,11 @@ export interface IItemRecipesRequest {
   kind: ItemRecipeKind;
   item_ids: ItemId[];
 }
+
+export interface IItemsVendorPricesRequest {
+  item_ids: ItemId[];
+}
+
+export interface IItemsVendorPricesResponse {
+  vendor_prices: { [id: string]: number | undefined };
+}

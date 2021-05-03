@@ -15,6 +15,8 @@ import {
   IItemRecipesIntakeRequest,
   IItemRecipesRequest,
   IItemsRecipesResponse,
+  IItemsVendorPricesRequest,
+  IItemsVendorPricesResponse,
   IProfessionsResponse,
   IQueryRecipesResponse,
   IRecipeResponse,
@@ -39,6 +41,7 @@ enum subjects {
   recipe = "recipe",
   recipes = "recipes",
   recipesQuery = "recipesQuery",
+  itemsVendorPrices = "itemsVendorPrices",
   itemsRecipes = "itemsRecipes",
   itemRecipesIntake = "itemRecipesIntake",
 }
@@ -172,6 +175,12 @@ export class ProfessionsMessenger extends BaseMessenger {
 
   public queryRecipes(request: IQueryItemsRequest): Promise<Message<IQueryRecipesResponse>> {
     return this.request(subjects.recipesQuery, { body: JSON.stringify(request) });
+  }
+
+  public itemsVendorPrices(
+    request: IItemsVendorPricesRequest,
+  ): Promise<Message<IItemsVendorPricesResponse>> {
+    return this.request(subjects.itemsVendorPrices, { body: JSON.stringify(request) });
   }
 
   public async resolveQueryRecipes(
