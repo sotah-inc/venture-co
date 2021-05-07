@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Callout, Intent, Tab, Tabs } from "@blueprintjs/core";
-import { IShortRecipe, ItemId } from "@sotah-inc/core";
+import { IItemsVendorPricesResponse, IShortRecipe, ItemId } from "@sotah-inc/core";
 import { ResponsiveContainer } from "recharts";
 
 import { IFetchData, IItemsData } from "../../../../../types/global";
@@ -22,6 +22,7 @@ import { ReagentPricesLegend } from "./RecipePriceHistoriesGraph/ReagentPricesLe
 export interface IStateProps {
   selectedRecipe: IItemsData<IShortRecipe> | null | undefined;
   recipePriceHistories: IFetchData<IRecipePriceHistoriesState>;
+  itemsVendorPrices: IFetchData<IItemsVendorPricesResponse>;
 }
 
 export type Props = Readonly<IStateProps>;
@@ -177,6 +178,7 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
 
   private renderChart(): JSX.Element {
     const {
+      itemsVendorPrices: { data: itemsVendorPrices },
       recipePriceHistories: {
         data: {
           recipeData: { histories: recipePriceHistories, recipeItemIds },
@@ -195,7 +197,10 @@ export class RecipePriceHistoriesGraph extends React.Component<Props, State> {
     }
 
     const craftingCostData = convertRecipePriceHistoriesToLineData(recipePriceHistories);
-    const reagentPricesData = convertItemPriceHistoriesToLineData(recipeItemPriceHistories);
+    const reagentPricesData = convertItemPriceHistoriesToLineData(
+      recipeItemPriceHistories,
+      itemsVendorPrices,
+    );
 
     switch (currentTabKind) {
     case TabKind.craftingCost:

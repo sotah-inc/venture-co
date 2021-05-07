@@ -231,21 +231,21 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
             level: FetchLevel.success,
           };
         })();
-        const itemVendorPrices = ((): IFetchData<IItemsVendorPricesResponse> => {
-          if (typeof action.payload.itemVendorPrices === "undefined") {
-            return defaultProfessionsState.itemVendorPrices;
+        const itemsVendorPrices = ((): IFetchData<IItemsVendorPricesResponse> => {
+          if (typeof action.payload.itemsVendorPrices === "undefined") {
+            return defaultProfessionsState.itemsVendorPrices;
           }
 
-          if (action.payload.itemVendorPrices === null) {
+          if (action.payload.itemsVendorPrices === null) {
             return {
-              ...defaultProfessionsState.itemVendorPrices,
+              ...defaultProfessionsState.itemsVendorPrices,
               level: FetchLevel.failure,
             };
           }
 
           return {
             data: {
-              vendor_prices: action.payload.itemVendorPrices.vendor_prices,
+              vendor_prices: action.payload.itemsVendorPrices.vendor_prices,
             },
             errors: {},
             level: FetchLevel.success,
@@ -255,7 +255,7 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
         return {
           ...state,
           loadId: action.payload.loadId,
-          itemVendorPrices,
+          itemsVendorPrices,
           priceTable,
           professions,
           recipePriceHistories,

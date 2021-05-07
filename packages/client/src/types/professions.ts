@@ -46,12 +46,12 @@ export interface IProfessionsState {
   selectedSkillTierCategory: ISelectedSkillTierCategory;
   recipePriceHistories: IFetchData<IRecipePriceHistoriesState>;
   priceTable: IFetchData<IItemsData<IItemPrices>>;
-  itemVendorPrices: IFetchData<IItemsVendorPricesResponse>;
+  itemsVendorPrices: IFetchData<IItemsVendorPricesResponse>;
 }
 
 export const defaultProfessionsState: IProfessionsState = {
   loadId: "",
-  itemVendorPrices: {
+  itemsVendorPrices: {
     data: {
       vendor_prices: {},
     },

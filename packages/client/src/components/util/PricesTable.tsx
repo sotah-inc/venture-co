@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Classes, H4, HTMLTable, Intent, Spinner } from "@blueprintjs/core";
-import { IItemPrices, IShortItem, ItemId } from "@sotah-inc/core";
+import { IItemPrices, IItemsVendorPricesResponse, IShortItem, ItemId } from "@sotah-inc/core";
 
 import { ItemPopoverContainer } from "../../containers/util/ItemPopover";
 import { IFetchData, IItemsData } from "../../types/global";
@@ -19,6 +19,7 @@ export interface IOwnProps {
   priceTable: IFetchData<IItemsData<IItemPrices>>;
   title: string;
   footerContent?: React.ReactNode;
+  priceOverrides?: IItemsVendorPricesResponse;
 }
 
 type Props = Readonly<IOwnProps>;
@@ -132,7 +133,16 @@ export class PricesTable extends React.Component<Props> {
       priceTable: {
         data: { data: pricelistMap },
       },
+      priceOverrides,
     } = this.props;
+
+    const foundPriceOverride = priceOverrides?.vendor_prices[itemId];
+    if (foundPriceOverride) {
+      return {
+        buyout: foundPriceOverride,
+        volume: 0,
+      };
+    }
 
     const foundEntry = pricelistMap[itemId];
 

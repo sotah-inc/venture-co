@@ -18,7 +18,7 @@ export interface ILoadProfessionsEndpoint {
   selectedRecipeId?: RecipeId;
   recipePriceHistories?: IGetRecipePriceHistoriesResponseData | null;
   currentPrices?: IGetPricelistResponseData | null;
-  itemVendorPrices?: IItemsVendorPricesResponse | null;
+  itemsVendorPrices?: IItemsVendorPricesResponse | null;
 }
 
 export const LOAD_PROFESSIONS_ENTRYPOINT = "LOAD_PROFESSIONS_ENTRYPOINT";

@@ -1,5 +1,5 @@
 import {
-  IItemPriceHistories,
+  IItemPriceHistories, IItemsVendorPricesResponse,
   IPricesFlagged,
   IQueryAuctionStatsResponseData,
   IRecipePriceHistories,
@@ -129,6 +129,7 @@ export function convertRecipePriceHistoriesToLineData(
 
 export function convertItemPriceHistoriesToLineData(
   itemPriceHistories: IItemPriceHistories<IPricesFlagged>,
+  itemsVendorPrices?: IItemsVendorPricesResponse,
 ): ILineItemOpen[] {
   // gathering unix timestamps
   const unixTimestamps = Object.values(itemPriceHistories).reduce<Set<UnixTimestamp>>(
@@ -149,6 +150,16 @@ export function convertItemPriceHistoriesToLineData(
   // going over it all
   return Array.from(unixTimestamps).map<ILineItemOpen>(unixTimestamp => {
     const data = itemIds.reduce<ILineItemOpenData>((result, itemId) => {
+      // checking items-vendor-prices
+      const itemVendorPrice = itemsVendorPrices?.vendor_prices[itemId];
+      if (itemVendorPrice) {
+        return {
+          ...result,
+          [`${itemId}_market_per`]: itemVendorPrice,
+          [`${itemId}_volume`]: 0,
+        };
+      }
+
       const itemPriceHistory = itemPriceHistories[itemId];
       if (typeof itemPriceHistory === "undefined") {
         return {

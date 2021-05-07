@@ -1,6 +1,12 @@
 import React from "react";
 
-import { IItemPrices, IShortRecipe, ItemId, resolveCraftedItemIds } from "@sotah-inc/core";
+import {
+  IItemPrices,
+  IItemsVendorPricesResponse,
+  IShortRecipe,
+  ItemId,
+  resolveCraftedItemIds,
+} from "@sotah-inc/core";
 
 import { IFetchData, IItemsData } from "../../../../../types/global";
 import { Currency, ItemPopover } from "../../../../util";
@@ -10,13 +16,14 @@ import { IEntryRow, PricesTable } from "../../../../util/PricesTable";
 export interface IStateProps {
   selectedRecipe: IItemsData<IShortRecipe> | null | undefined;
   priceTable: IFetchData<IItemsData<IItemPrices>>;
+  itemsVendorPrices: IFetchData<IItemsVendorPricesResponse>;
 }
 
 export type Props = Readonly<IStateProps>;
 
 export class ReagentPricesTable extends React.Component<Props> {
   public render(): React.ReactNode {
-    const { selectedRecipe, priceTable } = this.props;
+    const { selectedRecipe, priceTable, itemsVendorPrices } = this.props;
 
     if (typeof selectedRecipe === "undefined" || selectedRecipe === null) {
       return null;
@@ -36,19 +43,25 @@ export class ReagentPricesTable extends React.Component<Props> {
           entryRows={entryRows}
           title="Reagent Prices"
           footerContent={this.renderFooter()}
+          priceOverrides={itemsVendorPrices.data}
         />
       </>
     );
   }
 
   private getRecipeReagentTotalCost(): number {
-    const { selectedRecipe, priceTable } = this.props;
+    const { selectedRecipe, priceTable, itemsVendorPrices } = this.props;
 
     if (typeof selectedRecipe === "undefined" || selectedRecipe === null) {
       return 0;
     }
 
     return selectedRecipe.data.reagents.reduce((foundTotal, v): number => {
+      const foundVendorPrice = itemsVendorPrices.data.vendor_prices[v.reagent.id];
+      if (foundVendorPrice) {
+        return foundTotal + foundVendorPrice * v.quantity;
+      }
+
       const foundPrice = priceTable.data.data[v.reagent.id];
       if (!foundPrice) {
         return foundTotal;
