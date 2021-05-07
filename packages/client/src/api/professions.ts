@@ -133,7 +133,7 @@ export async function getItemsRecipes(
   return body as IGetItemsRecipesResponseData;
 }
 
-export async function itemsVendorPrices(
+export async function getItemsVendorPrices(
   itemIds: ItemId[],
 ): Promise<IItemsVendorPricesResponse | null> {
   const { body, status } = await gatherWithQuery<
