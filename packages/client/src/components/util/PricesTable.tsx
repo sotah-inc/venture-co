@@ -170,29 +170,33 @@ export class PricesTable extends React.Component<Props> {
     }
 
     const isItemVendorPrice = itemVendorPrices?.vendor_prices[item_id] !== undefined;
-    const vendorItemMessage = (() => {
+    const itemCellContent = (() => {
       if (!isItemVendorPrice) {
-        return null;
+        return (
+          <ItemPopoverContainer
+            item={item}
+            itemTextFormatter={(itemText: string) => `${itemText} \u00D7${quantity_modifier}`}
+            interactive={false}
+          />
+        );
       }
 
       return (
         <>
-          <br />
-          <em>Vendor item</em>
+          <ItemPopoverContainer
+            item={item}
+            itemTextFormatter={(itemText: string) =>
+              `${itemText} \u00D7${quantity_modifier} [vendor item]`
+            }
+            interactive={false}
+          />
         </>
       );
     })();
 
     return (
       <tr key={index}>
-        <td className={qualityToColorClass(item.quality.type)}>
-          <ItemPopoverContainer
-            item={item}
-            itemTextFormatter={(itemText: string) => `${itemText} \u00D7${quantity_modifier}`}
-            interactive={false}
-          />
-          {vendorItemMessage}
-        </td>
+        <td className={qualityToColorClass(item.quality.type)}>{itemCellContent}</td>
         <td>
           <Currency amount={buyout * quantity_modifier} />
         </td>
