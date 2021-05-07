@@ -170,6 +170,18 @@ export class PricesTable extends React.Component<Props> {
     }
 
     const isItemVendorPrice = itemVendorPrices?.vendor_prices[item_id] !== undefined;
+    const vendorItemMessage = (() => {
+      if (!isItemVendorPrice) {
+        return null;
+      }
+
+      return (
+        <>
+          <br />
+          <em>Vendor item</em>
+        </>
+      );
+    })();
 
     return (
       <tr key={index}>
@@ -179,7 +191,7 @@ export class PricesTable extends React.Component<Props> {
             itemTextFormatter={(itemText: string) => `${itemText} \u00D7${quantity_modifier}`}
             interactive={false}
           />
-          {isItemVendorPrice && <em>Vendor item</em>}
+          {vendorItemMessage}
         </td>
         <td>
           <Currency amount={buyout * quantity_modifier} />
