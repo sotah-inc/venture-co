@@ -1,12 +1,13 @@
 import {
   GetItemsRecipesResponse,
   IGetItemsRecipesResponseData,
+  IItemsVendorPricesResponse,
   IProfessionsResponseData,
   IQueryRecipesResponseData,
   IQueryRequest,
   IRecipeResponseData,
   ISkillTierResponseData,
-  ItemId,
+  ItemId, ItemsVendorPricesResponse,
   Locale,
   ProfessionId,
   ProfessionsResponse,
@@ -130,4 +131,22 @@ export async function getItemsRecipes(
   }
 
   return body as IGetItemsRecipesResponseData;
+}
+
+export async function itemsVendorPrices(
+  itemIds: ItemId[],
+): Promise<IItemsVendorPricesResponse | null> {
+  const { body, status } = await gatherWithQuery<
+    {  itemIds: ItemId[] },
+    ItemsVendorPricesResponse
+  >({
+    method: "GET",
+    query: { itemIds },
+    url: `${getApiEndpoint()}/items-vendor-prices`,
+  });
+  if (status !== HTTPStatus.OK) {
+    return null;
+  }
+
+  return body as IItemsVendorPricesResponse;
 }

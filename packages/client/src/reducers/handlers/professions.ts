@@ -1,4 +1,9 @@
-import { IItemPrices, IShortProfession, IShortRecipe } from "@sotah-inc/core";
+import {
+  IItemPrices,
+  IItemsVendorPricesResponse,
+  IShortProfession,
+  IShortRecipe,
+} from "@sotah-inc/core";
 
 import {
   DeselectSkillTierCategory,
@@ -226,10 +231,31 @@ export const handlers: IKindHandlers<IProfessionsState, ProfessionsActions> = {
             level: FetchLevel.success,
           };
         })();
+        const itemVendorPrices = ((): IFetchData<IItemsVendorPricesResponse> => {
+          if (typeof action.payload.itemVendorPrices === "undefined") {
+            return defaultProfessionsState.itemVendorPrices;
+          }
+
+          if (action.payload.itemVendorPrices === null) {
+            return {
+              ...defaultProfessionsState.itemVendorPrices,
+              level: FetchLevel.failure,
+            };
+          }
+
+          return {
+            data: {
+              vendor_prices: action.payload.itemVendorPrices.vendor_prices,
+            },
+            errors: {},
+            level: FetchLevel.success,
+          };
+        })();
 
         return {
           ...state,
           loadId: action.payload.loadId,
+          itemVendorPrices,
           priceTable,
           professions,
           recipePriceHistories,

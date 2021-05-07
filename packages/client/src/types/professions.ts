@@ -1,6 +1,7 @@
 import {
   IItemPriceHistories,
   IItemPrices,
+  IItemsVendorPricesResponse,
   IPricesFlagged,
   IRecipePriceHistories,
   IShortProfession,
@@ -45,10 +46,18 @@ export interface IProfessionsState {
   selectedSkillTierCategory: ISelectedSkillTierCategory;
   recipePriceHistories: IFetchData<IRecipePriceHistoriesState>;
   priceTable: IFetchData<IItemsData<IItemPrices>>;
+  itemVendorPrices: IFetchData<IItemsVendorPricesResponse>;
 }
 
 export const defaultProfessionsState: IProfessionsState = {
   loadId: "",
+  itemVendorPrices: {
+    data: {
+      vendor_prices: {},
+    },
+    level: FetchLevel.initial,
+    errors: {},
+  },
   priceTable: {
     data: {
       data: {},

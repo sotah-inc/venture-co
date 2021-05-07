@@ -1,7 +1,7 @@
 /* eslint-disable func-style,@typescript-eslint/explicit-module-boundary-types */
 import {
   IGetPricelistResponseData,
-  IGetRecipePriceHistoriesResponseData,
+  IGetRecipePriceHistoriesResponseData, IItemsVendorPricesResponse,
   ProfessionId,
   RecipeId,
 } from "@sotah-inc/core";
@@ -18,6 +18,7 @@ export interface ILoadProfessionsEndpoint {
   selectedRecipeId?: RecipeId;
   recipePriceHistories?: IGetRecipePriceHistoriesResponseData | null;
   currentPrices?: IGetPricelistResponseData | null;
+  itemVendorPrices?: IItemsVendorPricesResponse | null;
 }
 
 export const LOAD_PROFESSIONS_ENTRYPOINT = "LOAD_PROFESSIONS_ENTRYPOINT";
