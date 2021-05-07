@@ -43,7 +43,7 @@ export class ReagentPricesTable extends React.Component<Props> {
           entryRows={entryRows}
           title="Reagent Prices"
           footerContent={this.renderFooter()}
-          priceOverrides={itemsVendorPrices.data}
+          itemVendorPrices={itemsVendorPrices.data}
         />
       </>
     );

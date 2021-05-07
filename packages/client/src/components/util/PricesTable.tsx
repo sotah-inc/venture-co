@@ -19,7 +19,7 @@ export interface IOwnProps {
   priceTable: IFetchData<IItemsData<IItemPrices>>;
   title: string;
   footerContent?: React.ReactNode;
-  priceOverrides?: IItemsVendorPricesResponse;
+  itemVendorPrices?: IItemsVendorPricesResponse;
 }
 
 type Props = Readonly<IOwnProps>;
@@ -133,10 +133,10 @@ export class PricesTable extends React.Component<Props> {
       priceTable: {
         data: { data: pricelistMap },
       },
-      priceOverrides,
+      itemVendorPrices,
     } = this.props;
 
-    const foundPriceOverride = priceOverrides?.vendor_prices[itemId];
+    const foundPriceOverride = itemVendorPrices?.vendor_prices[itemId];
     if (foundPriceOverride) {
       return {
         buyout: foundPriceOverride,
@@ -153,6 +153,7 @@ export class PricesTable extends React.Component<Props> {
   }
 
   private renderEntry(index: number, entry: IEntryRow) {
+    const { itemVendorPrices } = this.props;
     const { item_id, quantity_modifier } = entry;
 
     const { buyout, volume } = this.getItemInfo(item_id);
@@ -168,6 +169,8 @@ export class PricesTable extends React.Component<Props> {
       );
     }
 
+    const isItemVendorPrice = itemVendorPrices?.vendor_prices[item_id] !== undefined;
+
     return (
       <tr key={index}>
         <td className={qualityToColorClass(item.quality.type)}>
@@ -176,6 +179,7 @@ export class PricesTable extends React.Component<Props> {
             itemTextFormatter={(itemText: string) => `${itemText} \u00D7${quantity_modifier}`}
             interactive={false}
           />
+          {isItemVendorPrice && <em>Vendor item</em>}
         </td>
         <td>
           <Currency amount={buyout * quantity_modifier} />
