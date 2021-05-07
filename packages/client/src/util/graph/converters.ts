@@ -155,7 +155,7 @@ export function convertItemPriceHistoriesToLineData(
       if (itemVendorPrice) {
         return {
           ...result,
-          [`${itemId}_market_per`]: itemVendorPrice,
+          [`${itemId}_market_per`]: itemVendorPrice / 10 / 10,
           [`${itemId}_volume`]: 0,
         };
       }
