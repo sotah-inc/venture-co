@@ -27,6 +27,9 @@ export interface IGetBootResponseData {
   regions: IRegionComposite[];
   expansions: IExpansion[];
   professions: IShortProfession[];
+  firebaseAuth: {
+    browserApiKey: string;
+  };
 }
 
 export type GetBootResponse = IGetBootResponseData | null;
