@@ -2,7 +2,7 @@ import { UserLevel } from "@sotah-inc/core";
 import { withFormik, WithFormikConfig } from "formik";
 import * as Yup from "yup";
 
-import { registerUser } from "../../coal/auth";
+import { registerUser } from "../../coal";
 import { IDispatchProps, IFormValues, IStateProps, Register } from "../../components/App/Register";
 import { UserRules } from "../../validator-rules";
 

@@ -1,21 +1,7 @@
-import firebase from "firebase/app";
+import firebase from "firebase";
 
-import "firebase/auth";
-import { IErrors } from "../types/global";
-
-let app: firebase.app.App;
-
-function resolveApp(browserApiKey: string): firebase.app.App {
-  if (app) {
-    return app;
-  }
-
-  app =  firebase.initializeApp({
-    apiKey: browserApiKey,
-  });
-
-  return app;
-}
+import { IErrors } from "../../types/global";
+import { resolveFirebaseApp } from "../app";
 
 interface IRegisterUserRequest {
   email: string;
@@ -49,7 +35,7 @@ export async function registerUser(
   let res: firebase.auth.UserCredential;
 
   try {
-    res = await resolveApp(browserApiKey)
+    res = await resolveFirebaseApp(browserApiKey)
       .auth()
       .createUserWithEmailAndPassword(req.email, req.password);
   } catch (err) {
