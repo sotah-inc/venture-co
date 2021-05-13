@@ -5,7 +5,7 @@ import { ConnectedRealmId, GameVersion } from "./index";
 
 export interface IWorkOrderJson {
   id: number;
-  user_id: number;
+  user_id: string;
   region_name: RegionName;
   connected_realm_id: ConnectedRealmId;
   item_id: ItemId;
