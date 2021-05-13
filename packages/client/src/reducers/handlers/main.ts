@@ -101,6 +101,7 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
           currentRegion,
           expansions: action.payload.expansions,
           fetchBootLevel: FetchLevel.success,
+          firebaseConfig: action.payload.firebase_config,
           professions: action.payload.professions,
           regions,
         };

@@ -23,6 +23,9 @@ export interface IMainState {
   fetchBootLevel: FetchLevel;
   fetchItemClassesLevel: FetchLevel;
   isRegisterDialogOpen: boolean;
+  firebaseConfig: {
+    browser_api_key: string;
+  };
 }
 
 export enum FetchLevel {
@@ -50,6 +53,9 @@ export const defaultMainState: IMainState = {
   fetchPingLevel: FetchLevel.initial,
   fetchRealmLevel: FetchLevel.initial,
   fetchUserPreferencesLevel: FetchLevel.initial,
+  firebaseConfig: {
+    browser_api_key: "",
+  },
   isLoggedIn: false,
   isLoginDialogOpen: false,
   isRegisterDialogOpen: false,

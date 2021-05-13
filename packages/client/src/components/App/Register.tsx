@@ -10,6 +10,7 @@ import { Generator as FormFieldGenerator } from "../util/FormField";
 export interface IStateProps {
   isRegistered: boolean;
   isRegisterDialogOpen: boolean;
+  firebaseBrowserApiKey: string;
 }
 
 export interface IDispatchProps {

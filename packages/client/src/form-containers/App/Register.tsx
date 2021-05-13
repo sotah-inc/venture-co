@@ -8,7 +8,7 @@ import { UserRules } from "../../validator-rules";
 
 const config: WithFormikConfig<IDispatchProps & IStateProps, IFormValues> = {
   handleSubmit: async (values, { setSubmitting, setErrors, props }) => {
-    const userId = await registerUser(values.email, values.password);
+    const userId = await registerUser(props.firebaseBrowserApiKey, values);
     if (userId === null) {
       setErrors({ email: "failed to register user" });
       setSubmitting(false);

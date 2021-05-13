@@ -6,8 +6,13 @@ import { RegisterFormContainer } from "../../form-containers/App/Register";
 import { IStoreState } from "../../types";
 
 function mapStateToProps(state: IStoreState): IStateProps {
-  const { isRegisterDialogOpen, isRegistered } = state.Main;
-  return { isRegisterDialogOpen, isRegistered };
+  const {
+    isRegisterDialogOpen,
+    isRegistered,
+    firebaseConfig: { browser_api_key },
+  } = state.Main;
+
+  return { isRegisterDialogOpen, isRegistered, firebaseBrowserApiKey: browser_api_key };
 }
 
 const mapDispatchToProps: IDispatchProps = {
