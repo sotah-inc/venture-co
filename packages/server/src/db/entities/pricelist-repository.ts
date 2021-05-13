@@ -4,7 +4,7 @@ import { Pricelist } from "./pricelist";
 
 @EntityRepository(Pricelist)
 export class PricelistRepository extends AbstractRepository<Pricelist> {
-  public async getBelongingToUserById(id: number, userId: number): Promise<Pricelist | null> {
+  public async getBelongingToUserById(id: number, userId: string): Promise<Pricelist | null> {
     const pricelist = await this.repository
       .createQueryBuilder("pricelist")
       .innerJoinAndSelect("pricelist.user", "user", "user.id = :user_id", { user_id: userId })
@@ -19,7 +19,7 @@ export class PricelistRepository extends AbstractRepository<Pricelist> {
     return pricelist;
   }
 
-  public async getFromPricelistSlug(userId: number, slug: string): Promise<Pricelist | null> {
+  public async getFromPricelistSlug(userId: string, slug: string): Promise<Pricelist | null> {
     const queryBuilder = this.repository
       .createQueryBuilder("pricelist")
       .where({ slug })
@@ -35,7 +35,7 @@ export class PricelistRepository extends AbstractRepository<Pricelist> {
     return pricelist;
   }
 
-  public async removeByUserId(id: number, userId: number): Promise<boolean> {
+  public async removeByUserId(id: number, userId: string): Promise<boolean> {
     const pricelist = await this.getBelongingToUserById(id, userId);
     if (pricelist === null) {
       return false;
@@ -47,7 +47,7 @@ export class PricelistRepository extends AbstractRepository<Pricelist> {
     return true;
   }
 
-  public async getAllUserPricelists(userId: number): Promise<Pricelist[]> {
+  public async getAllUserPricelists(userId: string): Promise<Pricelist[]> {
     return this.createQueryBuilder("pricelist")
       .innerJoinAndSelect("pricelist.user", "user", "user.id = :user_id", { user_id: userId })
       .innerJoinAndSelect("pricelist.entries", "entries")
