@@ -28,6 +28,9 @@ export interface IGetSessionSecretResponse {
 export interface IGetBootResponse {
   regions: IConfigRegion[];
   expansions: IExpansion[];
+  firebase_config: {
+    browser_api_key: string;
+  };
 }
 
 export interface IGetItemClassesResponse {
