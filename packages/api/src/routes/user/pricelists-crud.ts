@@ -12,7 +12,7 @@ export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
 
   router.post(
     "/",
-    auth,
+    auth(dbConn),
     wrap(async (req: Request, res: Response) =>
       handleResult(res, await controller.createPricelist(req.user as User, req.body)),
     ),
@@ -20,7 +20,7 @@ export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
 
   router.get(
     "/",
-    auth,
+    auth(dbConn),
     wrap(async (req: Request, res: Response) =>
       handleResult(
         res,
@@ -31,7 +31,7 @@ export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
 
   router.get(
     "/:id([0-9]+)",
-    auth,
+    auth(dbConn),
     wrap(async (req: Request, res: Response) =>
       handleResult(res, await controller.getPricelist(Number(req.params.id), req.user as User)),
     ),
@@ -39,7 +39,7 @@ export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
 
   router.get(
     "/:pricelist_slug",
-    auth,
+    auth(dbConn),
     wrap(async (req: Request, res: Response) =>
       handleResult(
         res,
@@ -50,7 +50,7 @@ export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
 
   router.put(
     "/:id",
-    auth,
+    auth(dbConn),
     wrap(async (req: Request, res: Response) =>
       handleResult(
         res,
@@ -61,7 +61,7 @@ export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
 
   router.delete(
     "/:id",
-    auth,
+    auth(dbConn),
     wrap(async (req: Request, res: Response) =>
       handleResult(
         res,

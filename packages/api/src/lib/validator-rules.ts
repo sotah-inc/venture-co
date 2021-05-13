@@ -6,14 +6,13 @@ import {
   ICreateWorkOrderRequest,
   IGetAuctionsRequest,
   IQueryRequest,
-  IUpdateProfileRequest,
   IValidationErrorResponse,
   Locale,
   OrderDirection,
   OrderKind,
   SortPerPage,
 } from "@sotah-inc/core";
-import { IFindByOptions, PostRepository, UserRepository } from "@sotah-inc/server";
+import { IFindByOptions, PostRepository } from "@sotah-inc/server";
 import * as yup from "yup";
 
 export const PreferenceRules = yup
@@ -112,25 +111,6 @@ export function FullPostRequestBodyRules(repo: PostRepository, exceptSlug?: stri
     .noUnknown();
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export function UpdateProfileRequestBodyRules(repo: UserRepository, exceptEmail?: string) {
-  return yup
-    .object<IUpdateProfileRequest>()
-    .shape({
-      email: yup
-        .string()
-        .email("email must be a valid email")
-        .required("email is required")
-        .test("is-unique", "email must not already be taken", v => {
-          if (!v) {
-            return false;
-          }
-
-          return repo.hasNoEmail(v, exceptEmail);
-        }),
-    })
-    .noUnknown();
-}
 export const AuctionsQueryParamsRules = yup
   .object<IGetAuctionsRequest>({
     count: yup.number().integer("count must be an integer").required("count is required"),

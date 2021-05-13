@@ -12,7 +12,7 @@ export function getRouter(dbConn: Connection): Router {
 
   router.get(
     "/",
-    auth,
+    auth(dbConn),
     wrap(async (req: Request, res: Response) =>
       handleResult(res, await controller.getPreferences(req, res)),
     ),
@@ -20,7 +20,7 @@ export function getRouter(dbConn: Connection): Router {
 
   router.post(
     "/",
-    auth,
+    auth(dbConn),
     wrap(async (req: Request, res: Response) =>
       handleResult(res, await controller.createPreferences(req, res)),
     ),
@@ -28,7 +28,7 @@ export function getRouter(dbConn: Connection): Router {
 
   router.put(
     "/",
-    auth,
+    auth(dbConn),
     wrap(async (req: Request, res: Response) =>
       handleResult(res, await controller.updatePreferences(req, res)),
     ),

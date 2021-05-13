@@ -1,4 +1,4 @@
-import { IMessengers } from "@sotah-inc/server";
+import { auth, IMessengers } from "@sotah-inc/server";
 import { wrap } from "async-middleware";
 import { Request, Response, Router } from "express";
 import { Connection } from "typeorm";
@@ -14,27 +14,21 @@ import { getRouter as getProfileRouter } from "./user/profile";
 
 export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
   const router = Router();
-  const controller = new UserController(messengers, dbConn);
+  const controller = new UserController(dbConn);
 
   router.use("/user/posts", getPostsRouter(dbConn));
   router.use("/user/preferences", getPreferencesRouter(dbConn));
   router.use("/user/pricelists", getPricelistsCrudRouter(dbConn, messengers));
   router.use("/user/profession-pricelists", getProfessionPricelistsCrudRouter(dbConn));
   router.use("/user/profile", getProfileRouter(dbConn));
-  router.use("/user", getBaseRouter());
+  router.use("/user", getBaseRouter(dbConn));
 
   router.post(
     "/users",
+    auth(dbConn),
     wrap(async (req: Request, res: Response) =>
       handleResult(res, await controller.createUser(req.body)),
     ),
-  );
-
-  router.post(
-    "/login",
-    wrap(async (req: Request, res: Response) => {
-      handleResult(res, await controller.login(req.body));
-    }),
   );
 
   return router;

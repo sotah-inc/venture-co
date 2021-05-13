@@ -8,11 +8,11 @@ import { ProfileController } from "../../controllers/user/profile";
 
 export function getRouter(dbConn: Connection): Router {
   const router = Router();
-  const controller = new ProfileController(dbConn);
+  const controller = new ProfileController();
 
   router.put(
     "/",
-    auth,
+    auth(dbConn),
     wrap(async (req: Request, res: Response) =>
       handleResult(res, await controller.updateProfile(req, res)),
     ),

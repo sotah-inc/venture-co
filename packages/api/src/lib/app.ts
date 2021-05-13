@@ -1,4 +1,4 @@
-import { appendSessions, connectDatabase, getMessengers } from "@sotah-inc/server";
+import { connectDatabase, getMessengers } from "@sotah-inc/server";
 import compression from "compression";
 import express from "express";
 import * as HttpStatus from "http-status";
@@ -25,7 +25,7 @@ export async function getApp(opts: IOptions): Promise<express.Express | null> {
   // const errors = isGceEnv ? new ErrorReporting() : null;
 
   // express init
-  let app = express();
+  const app = express();
   app.set("etag", false);
   app.use(express.json());
   app.use(compression());
@@ -78,10 +78,6 @@ export async function getApp(opts: IOptions): Promise<express.Express | null> {
   if (dbConn === null) {
     return null;
   }
-
-  // session init
-  logger.info("appending session middleware");
-  app = await appendSessions(app, messengers.general, dbConn);
 
   // request logging
   logger.info("appending cors middleware");

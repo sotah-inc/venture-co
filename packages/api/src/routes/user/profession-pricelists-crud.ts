@@ -14,7 +14,7 @@ export function getRouter(dbConn: Connection): Router {
 
   router.post(
     "/",
-    auth,
+    auth(dbConn),
     wrap(async (req: Request, res: Response) =>
       handleResult(res, await controller.createProfessionPricelist(req, res)),
     ),
@@ -22,7 +22,7 @@ export function getRouter(dbConn: Connection): Router {
 
   router.delete(
     "/:pricelist_id",
-    auth,
+    auth(dbConn),
     wrap(async (req: Request, res: Response) =>
       handleResult(res, await controller.deleteProfessionPricelist(req, res)),
     ),

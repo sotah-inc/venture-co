@@ -41,7 +41,7 @@ export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
   );
   router.post(
     "/work-orders/:gameVersion/:regionName/:realmSlug",
-    auth,
+    auth(dbConn),
     wrap(async (req: Request, res: Response) =>
       handleResult(res, await controller.createWorkOrder(req, res)),
     ),

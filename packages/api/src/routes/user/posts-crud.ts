@@ -12,7 +12,7 @@ export function getRouter(dbConn: Connection): Router {
 
   router.post(
     "/",
-    auth,
+    auth(dbConn),
     wrap(async (req: Request, res: Response) =>
       handleResult(res, await controller.createPost(req, res)),
     ),
@@ -20,7 +20,7 @@ export function getRouter(dbConn: Connection): Router {
 
   router.put(
     "/:post_id",
-    auth,
+    auth(dbConn),
     wrap(async (req: Request, res: Response) =>
       handleResult(res, await controller.updatePost(req, res)),
     ),
@@ -28,7 +28,7 @@ export function getRouter(dbConn: Connection): Router {
 
   router.delete(
     "/:post_id",
-    auth,
+    auth(dbConn),
     wrap(async (req: Request, res: Response) =>
       handleResult(res, await controller.deletePost(req, res)),
     ),

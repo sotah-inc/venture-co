@@ -1,16 +1,13 @@
 import {
   CreateUserResponse,
   ICreateUserRequest,
-  ILoginRequest,
-  IValidationErrorResponse,
-  LoginResponse,
   UserLevel,
 } from "@sotah-inc/core";
-import { IMessengers, User } from "@sotah-inc/server";
-import * as bcrypt from "bcrypt";
+import {  User } from "@sotah-inc/server";
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
 
+import { registerUser } from "../coal";
 import {
   UserRequestBodyRules,
   validate,
@@ -20,12 +17,9 @@ import {
 import { IRequestResult } from "./index";
 
 export class UserController {
-  private readonly messengers: IMessengers;
-
   private readonly dbConn: Connection;
 
-  constructor(messengers: IMessengers, dbConn: Connection) {
-    this.messengers = messengers;
+  constructor(dbConn: Connection) {
     this.dbConn = dbConn;
   }
 
@@ -38,65 +32,34 @@ export class UserController {
       };
     }
 
-    const existingUser = await this.dbConn
-      .getRepository(User)
-      .findOne({ where: { email: result.data.email } });
-    if (typeof existingUser !== "undefined") {
-      const userValidationError: IValidationErrorResponse = { email: "email is already in use" };
-
+    const registerUserResult = await registerUser({
+      email: result.data.email,
+      password: result.data.password,
+    });
+    if (registerUserResult.errors !== null) {
       return {
-        data: userValidationError,
+        data: registerUserResult.errors,
         status: HTTPStatus.BAD_REQUEST,
+      };
+    }
+    if (registerUserResult.userData === null) {
+      return {
+        data: {},
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
       };
     }
 
     const user = new User();
-    user.email = result.data.email;
-    user.hashedPassword = await bcrypt.hash(result.data.password, 10);
+    user.firebaseUid = registerUserResult.userData.firebaseUid;
     user.level = UserLevel.Unverified;
     await this.dbConn.manager.save(user);
 
     return {
       data: {
-        token: await user.generateJwtToken(this.messengers.general),
+        token: registerUserResult.userData.token,
         user: user.toJson(),
       },
       status: HTTPStatus.CREATED,
-    };
-  }
-
-  public async login(body: ILoginRequest): Promise<IRequestResult<LoginResponse>> {
-    // validating provided email
-    const email: string = body.email;
-    const user = await this.dbConn.getRepository(User).findOne({ where: { email } });
-    if (typeof user === "undefined") {
-      const userValidationError = { email: "invalid email" };
-
-      return {
-        data: userValidationError,
-        status: HTTPStatus.BAD_REQUEST,
-      };
-    }
-
-    // validating provided password
-    const password: string = body.password;
-    const isMatching = await bcrypt.compare(password, user.hashedPassword);
-    if (!isMatching) {
-      const passwordValidationError = { password: "invalid password" };
-
-      return {
-        data: passwordValidationError,
-        status: HTTPStatus.BAD_REQUEST,
-      };
-    }
-
-    // issuing a jwt token
-    return {
-      data: {
-        token: await user.generateJwtToken(this.messengers.general),
-        user: user.toJson(),
-      },
-      status: HTTPStatus.OK,
     };
   }
 }
