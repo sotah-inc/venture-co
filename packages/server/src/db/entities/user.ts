@@ -18,7 +18,7 @@ export class User {
   @Index("idx_user_level")
   public level: UserLevel;
 
-  @Column("string", { nullable: false })
+  @Column({ type: "varchar", length: 255, nullable: false })
   @Index("idx_firebase_id")
   public firebaseUid: string;
 
