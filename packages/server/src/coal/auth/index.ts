@@ -7,7 +7,7 @@ import { loginUser, LoginUserCode } from "./login-user";
 
 export * from "./login-user";
 
-export async function auth(dbConn: Connection) {
+export function auth(dbConn: Connection) {
   return async function (req: Request, res: Response, next: NextFunction): Promise<void> {
     const authToken = req.headers.authorization;
     if (authToken === undefined) {
