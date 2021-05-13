@@ -37,6 +37,7 @@ export enum UserLevel {
 export interface IUserJson {
   id: string;
   level: UserLevel;
+  firebaseUid: string;
 }
 
 export interface IPostJson {
