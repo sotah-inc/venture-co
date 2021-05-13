@@ -12,15 +12,3 @@ export interface ICreateUserResponseData {
 }
 
 export type CreateUserResponse = ICreateUserResponseData | IValidationErrorResponse;
-
-export interface ILoginRequest {
-  email: string;
-  password: string;
-}
-
-export interface ILoginResponseData {
-  token: string;
-  user: IUserJson;
-}
-
-export type LoginResponse = ILoginResponseData | IValidationErrorResponse;
