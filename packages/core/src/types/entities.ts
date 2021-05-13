@@ -35,8 +35,7 @@ export enum UserLevel {
 }
 
 export interface IUserJson {
-  id: number;
-  email: string;
+  id: string;
   level: UserLevel;
 }
 
