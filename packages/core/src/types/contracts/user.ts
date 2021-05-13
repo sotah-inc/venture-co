@@ -3,7 +3,8 @@ import { IUserJson } from "../entities";
 import { IValidationErrorResponse } from "./index";
 
 export interface ICreateUserRequest {
-  firebaseAuthToken: string;
+  email: string;
+  password: string;
 }
 
 export interface ICreateUserResponseData {
