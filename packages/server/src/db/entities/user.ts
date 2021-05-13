@@ -1,6 +1,6 @@
 import { IUserJson, UserLevel } from "@sotah-inc/core";
 import * as jwt from "jsonwebtoken";
-import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, Index, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 import { GeneralMessenger } from "../../messenger";
 import { getJwtOptions } from "../../session";
@@ -11,8 +11,16 @@ import { WorkOrder } from "./work-order";
 
 @Entity({ name: "users" })
 export class User {
-  @PrimaryGeneratedColumn()
-  public id: number | undefined;
+  @PrimaryGeneratedColumn("uuid")
+  public id: string;
+
+  @Column("int", { default: UserLevel.Unverified, nullable: false })
+  @Index("idx_user_level")
+  public level: UserLevel;
+
+  @Column("string", { nullable: false })
+  @Index("idx_firebase_id")
+  public firebaseUid: string;
 
   @OneToOne(
     () => Preference,
@@ -32,15 +40,6 @@ export class User {
   )
   public posts: Post[] | undefined;
 
-  @Column({ nullable: false, unique: true })
-  public email: string;
-
-  @Column({ name: "hashed_password", nullable: false })
-  public hashedPassword: string;
-
-  @Column("int", { default: UserLevel.Unverified, nullable: false })
-  public level: UserLevel;
-
   @OneToMany(
     () => WorkOrder,
     workOrder => workOrder.user,
@@ -48,9 +47,9 @@ export class User {
   public workOrders: WorkOrder[] | undefined;
 
   constructor() {
-    this.email = "";
-    this.hashedPassword = "";
+    this.id = "";
     this.level = UserLevel.Unverified;
+    this.firebaseUid = "";
   }
 
   public async generateJwtToken(generalMessenger: GeneralMessenger): Promise<string> {
@@ -65,9 +64,9 @@ export class User {
 
   public toJson(): IUserJson {
     return {
-      email: this.email,
-      id: this.id ?? 0,
+      id: this.id,
       level: this.level,
+      firebaseUid: this.firebaseUid,
     };
   }
 }

@@ -71,7 +71,7 @@ export class WorkOrder {
       quantity: this.quantity,
       region_name: this.regionName,
       updated_at: (this.updatedAt?.getTime() ?? 0) / 1000,
-      user_id: this.user?.id ?? 0,
+      user_id: this.user?.id ?? "",
     };
   }
 }

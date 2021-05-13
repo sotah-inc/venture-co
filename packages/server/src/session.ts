@@ -4,8 +4,7 @@ import { ExtractJwt, Strategy, StrategyOptions } from "passport-jwt";
 import { Connection } from "typeorm";
 
 import { User } from "./db";
-import { code } from "./messenger/contracts";
-import { GeneralMessenger } from "./messenger/messengers";
+import { code, GeneralMessenger } from "./messenger";
 
 export interface IJwtOptions {
   audience: string;
@@ -19,10 +18,15 @@ export async function getJwtOptions(generalMessenger: GeneralMessenger): Promise
     throw new Error(msg.error?.message);
   }
 
+  const sessionSecret: string | undefined = (await msg.decode())?.session_secret;
+  if (sessionSecret === undefined) {
+    throw new Error("session secret was undefined");
+  }
+
   return {
     audience: "sotah-client",
     issuer: "sotah-api",
-    secret: (await msg.decode())?.session_secret ?? "",
+    secret: sessionSecret,
   };
 }
 
