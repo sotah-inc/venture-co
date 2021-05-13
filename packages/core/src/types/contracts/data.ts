@@ -27,8 +27,8 @@ export interface IGetBootResponseData {
   regions: IRegionComposite[];
   expansions: IExpansion[];
   professions: IShortProfession[];
-  firebaseAuth: {
-    browserApiKey: string;
+  firebase_config: {
+    browser_api_key: string;
   };
 }
 
