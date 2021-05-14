@@ -3,7 +3,6 @@ import React from "react";
 import { Button, Dialog, Intent } from "@blueprintjs/core";
 import { FormikProps } from "formik";
 
-import { IProfile } from "../../types/global";
 import { DialogActions, DialogBody } from "../util";
 import { Generator as FormFieldGenerator } from "../util/FormField";
 
@@ -14,7 +13,7 @@ export interface IStateProps {
 }
 
 export interface IDispatchProps {
-  onUserLogin: (payload: IProfile) => void;
+  onUserLogin: (token: string) => void;
   changeIsLoginDialogOpen: (isLoginDialogOpen: boolean) => void;
 }
 

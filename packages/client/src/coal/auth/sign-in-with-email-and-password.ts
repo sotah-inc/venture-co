@@ -32,8 +32,10 @@ export async function signInWithEmailAndPassword(
   browserApiKey: string,
   req: ISignInWithEmailAndPasswordRequest,
 ): Promise<ISignInWithEmailAndPasswordResult> {
+  let credential: firebase.auth.UserCredential;
+
   try {
-    await resolveFirebaseApp(browserApiKey)
+    credential = await resolveFirebaseApp(browserApiKey)
       .auth()
       .signInWithEmailAndPassword(req.email, req.password);
   } catch (err) {
@@ -43,8 +45,15 @@ export async function signInWithEmailAndPassword(
     };
   }
 
+  if (credential.user === null) {
+    return {
+      errors: { email: "failed to sign in user" },
+      token: null,
+    };
+  }
+
   return {
     errors: null,
-    token: "",
+    token: await credential.user.getIdToken(),
   };
 }

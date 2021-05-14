@@ -1,4 +1,3 @@
-import { UserLevel } from "@sotah-inc/core";
 import { withFormik, WithFormikConfig } from "formik";
 import * as Yup from "yup";
 
@@ -24,14 +23,7 @@ const config: WithFormikConfig<IDispatchProps & IStateProps, IFormValues> = {
     }
 
     setSubmitting(false);
-    props.onUserLogin({
-      user: {
-        id: "",
-        firebaseUid: "",
-        level: UserLevel.Unverified,
-      },
-      token,
-    });
+    props.onUserLogin(token);
   },
   mapPropsToValues: (_: IDispatchProps & IStateProps) => {
     return {
