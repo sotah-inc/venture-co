@@ -1,22 +1,37 @@
+import { UserLevel } from "@sotah-inc/core";
 import { withFormik, WithFormikConfig } from "formik";
 import * as Yup from "yup";
 
-import { loginUser } from "../../api/user";
+import { signInWithEmailAndPassword } from "../../coal/auth/sign-in-with-email-and-password";
 import { IDispatchProps, IFormValues, IStateProps, Login } from "../../components/App/Login";
 import { UserRules } from "../../validator-rules";
 
 const config: WithFormikConfig<IDispatchProps & IStateProps, IFormValues> = {
   handleSubmit: async (values, { setSubmitting, setErrors, props }) => {
-    const { data, errors } = await loginUser(values.email, values.password);
-    if (errors !== null || data === null) {
-      setErrors(errors ?? {});
+    const { token, errors } = await signInWithEmailAndPassword(props.firebaseBrowserApiKey, values);
+    if (errors !== null) {
+      setErrors(errors);
+      setSubmitting(false);
+
+      return;
+    }
+
+    if (token === null) {
+      setErrors({ email: "failed to log in" });
       setSubmitting(false);
 
       return;
     }
 
     setSubmitting(false);
-    props.onUserLogin(data);
+    props.onUserLogin({
+      user: {
+        id: "",
+        firebaseUid: "",
+        level: UserLevel.Unverified,
+      },
+      token,
+    });
   },
   mapPropsToValues: (_: IDispatchProps & IStateProps) => {
     return {

@@ -71,7 +71,7 @@ export class ManageAccount extends React.Component<Props> {
         <H2>Manage Account</H2>
         {this.renderBreadcrumbs()}
         <ManageAccountFormFormContainer
-          defaultFormValues={{ email: user.email }}
+          defaultFormValues={{ email: "" }}
           onComplete={() => {
             insertToast({
               icon: "info-sign",

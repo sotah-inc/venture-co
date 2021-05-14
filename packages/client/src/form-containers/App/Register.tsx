@@ -2,13 +2,14 @@ import { UserLevel } from "@sotah-inc/core";
 import { withFormik, WithFormikConfig } from "formik";
 import * as Yup from "yup";
 
-import { registerUser } from "../../coal";
+import { registerUser } from "../../api/user";
+import { signInUserWithCustomToken } from "../../coal";
 import { IDispatchProps, IFormValues, IStateProps, Register } from "../../components/App/Register";
 import { UserRules } from "../../validator-rules";
 
 const config: WithFormikConfig<IDispatchProps & IStateProps, IFormValues> = {
   handleSubmit: async (values, { setSubmitting, setErrors, props }) => {
-    const registerUserResult = await registerUser(props.firebaseBrowserApiKey, values);
+    const registerUserResult = await registerUser(values.email, values.password);
     if (registerUserResult.errors !== null) {
       setErrors(registerUserResult.errors);
       setSubmitting(false);
@@ -16,8 +17,19 @@ const config: WithFormikConfig<IDispatchProps & IStateProps, IFormValues> = {
       return;
     }
 
-    if (registerUserResult.userId === null) {
+    if (registerUserResult.data === null) {
       setErrors({ email: "failed to register user" });
+      setSubmitting(false);
+
+      return;
+    }
+
+    const signInUserResult = await signInUserWithCustomToken(
+      props.firebaseBrowserApiKey,
+      registerUserResult.data.token,
+    );
+    if (signInUserResult.errors !== null) {
+      setErrors(signInUserResult.errors);
       setSubmitting(false);
 
       return;
@@ -25,10 +37,10 @@ const config: WithFormikConfig<IDispatchProps & IStateProps, IFormValues> = {
 
     setSubmitting(false);
     props.onUserRegister({
-      token: "",
+      token: registerUserResult.data.token,
       user: {
-        email: values.email,
-        id: -1,
+        id: registerUserResult.data.user.id,
+        firebaseUid: registerUserResult.data.user.firebaseUid,
         level: UserLevel.Unverified,
       },
     });

@@ -5,12 +5,9 @@ import {
   ICreateUserRequest,
   ICreateUserResponseData,
   IGetPreferencesResponseData,
-  ILoginRequest,
-  ILoginResponseData,
   IPreferenceJson,
   IUserJson,
   IValidationErrorResponse,
-  LoginResponse,
   UpdatePreferencesRequest,
   UpdatePreferencesResponse,
 } from "@sotah-inc/core";
@@ -33,29 +30,6 @@ export async function registerUser(email: string, password: string): Promise<IRe
   switch (status) {
   case HTTPStatus.CREATED:
     return { errors: null, data: body as ICreateUserResponseData };
-  case HTTPStatus.BAD_REQUEST:
-    return { errors: body as IValidationErrorResponse, data: null };
-  case HTTPStatus.INTERNAL_SERVER_ERROR:
-    return { errors: { email: "There was a server error." }, data: null };
-  default:
-    return { errors: { email: "There was an unknown error." }, data: null };
-  }
-}
-
-interface ILoginResult {
-  data: ILoginResponseData | null;
-  errors: IValidationErrorResponse | null;
-}
-
-export async function loginUser(email: string, password: string): Promise<ILoginResult> {
-  const { body, status } = await gather<ILoginRequest, LoginResponse>({
-    body: { email, password },
-    method: "POST",
-    url: `${getApiEndpoint()}/login`,
-  });
-  switch (status) {
-  case HTTPStatus.OK:
-    return { errors: null, data: body as ILoginResponseData };
   case HTTPStatus.BAD_REQUEST:
     return { errors: body as IValidationErrorResponse, data: null };
   case HTTPStatus.INTERNAL_SERVER_ERROR:
