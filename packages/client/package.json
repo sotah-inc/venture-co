@@ -34,6 +34,7 @@
     "@blueprintjs/icons": "^3.24.0",
     "@blueprintjs/popover2": "^0.3.0",
     "@blueprintjs/select": "^3.15.4",
+    "@sotah-inc/client": "^2.0.490",
     "@sotah-inc/core": "^2.0.177",
     "@types/d3-scale": "^3.2.2",
     "@types/http-status": "^1.1.2",
