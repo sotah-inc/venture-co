@@ -18,7 +18,16 @@ export function auth(dbConn: Connection) {
       return;
     }
 
-    const loginUserResult = await verifyIdToken(authToken.split(" ")[1]);
+    const foundToken = authToken.split(" ")[1];
+    if (foundToken === undefined || foundToken.length === 0) {
+      res.status(HttpStatus.FORBIDDEN).send({
+        error: "auth invalid",
+      });
+
+      return;
+    }
+
+    const loginUserResult = await verifyIdToken(foundToken);
 
     switch (loginUserResult.code) {
     case VerifyIdTokenCode.NotFound:
