@@ -18,7 +18,7 @@ export function auth(dbConn: Connection) {
       return;
     }
 
-    const loginUserResult = await verifyIdToken(authToken.split(" ")[0]);
+    const loginUserResult = await verifyIdToken(authToken.split(" ")[1]);
 
     switch (loginUserResult.code) {
     case VerifyIdTokenCode.NotFound:
