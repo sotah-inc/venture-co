@@ -31,6 +31,9 @@ export async function verifyIdToken(token: string): Promise<IVerifyIdTokenResult
 
   let decodedToken: firebaseAdmin.auth.DecodedIdToken;
   try {
+    // eslint-disable-next-line no-console
+    console.log("verifying id token", { token });
+
     decodedToken = await auth.verifyIdToken(token);
   } catch (err) {
     return {
