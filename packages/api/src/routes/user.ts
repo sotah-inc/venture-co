@@ -1,4 +1,4 @@
-import { auth, IMessengers } from "@sotah-inc/server";
+import { IMessengers } from "@sotah-inc/server";
 import { wrap } from "async-middleware";
 import { Request, Response, Router } from "express";
 import { Connection } from "typeorm";
@@ -25,7 +25,6 @@ export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
 
   router.post(
     "/users",
-    auth(dbConn),
     wrap(async (req: Request, res: Response) =>
       handleResult(res, await controller.createUser(req.body)),
     ),
