@@ -3,9 +3,9 @@ import HttpStatus from "http-status";
 import { Connection } from "typeorm";
 
 import { User } from "../../db";
-import { loginUser, LoginUserCode } from "./login-user";
+import { verifyIdToken, VerifyIdTokenCode } from "./verify-id-token";
 
-export * from "./login-user";
+export * from "./verify-id-token";
 
 export function auth(dbConn: Connection) {
   return async function (req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -18,22 +18,22 @@ export function auth(dbConn: Connection) {
       return;
     }
 
-    const loginUserResult = await loginUser(authToken.split(" ")[0]);
+    const loginUserResult = await verifyIdToken(authToken.split(" ")[0]);
 
     switch (loginUserResult.code) {
-    case LoginUserCode.NotFound:
+    case VerifyIdTokenCode.NotFound:
       res.status(HttpStatus.NOT_FOUND).send({
         error: "user not found",
       });
 
       return;
-    case LoginUserCode.Error:
+    case VerifyIdTokenCode.Error:
       res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
         error: "unknown error",
       });
 
       return;
-    case LoginUserCode.Ok:
+    case VerifyIdTokenCode.Ok:
     default:
       break;
     }
