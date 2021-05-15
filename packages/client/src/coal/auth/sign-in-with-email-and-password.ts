@@ -52,8 +52,13 @@ export async function signInWithEmailAndPassword(
     };
   }
 
+  const token = await credential.user.getIdToken();
+
+  // eslint-disable-next-line no-console
+  console.log("received id token", { token });
+
   return {
     errors: null,
-    token: await credential.user.getIdToken(),
+    token,
   };
 }
