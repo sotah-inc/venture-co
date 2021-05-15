@@ -1,3 +1,4 @@
 #! /bin/sh
 
-docker-compose run --service-ports sotah-api
+export $(cat ~/bin/battlenet-creds.env | xargs) \
+  && docker-compose run --service-ports --entrypoint sh sotah-api
