@@ -93,7 +93,7 @@ export class PricelistCrudController {
     // gathering pricelists associated with this user
     let pricelists = await this.dbConn
       .getCustomRepository(PricelistRepository)
-      .getAllUserPricelists(user.id ?? -1);
+      .getAllUserPricelists(user.id ?? "-1");
 
     // filtering out profession-pricelists
     pricelists = pricelists.filter(
@@ -141,7 +141,7 @@ export class PricelistCrudController {
   ): Promise<IRequestResult<GetUserPricelistResponse>> {
     const pricelist = await this.dbConn
       .getCustomRepository(PricelistRepository)
-      .getBelongingToUserById(id, user.id ?? -1);
+      .getBelongingToUserById(id, user.id ?? "-1");
     if (pricelist === null) {
       return {
         data: null,
@@ -161,7 +161,7 @@ export class PricelistCrudController {
   ): Promise<IRequestResult<GetUserPricelistResponse>> {
     const pricelist = await this.dbConn
       .getCustomRepository(PricelistRepository)
-      .getFromPricelistSlug(user.id ?? -1, slug);
+      .getFromPricelistSlug(user.id ?? "-1", slug);
     if (pricelist === null) {
       return {
         data: null,
@@ -183,7 +183,7 @@ export class PricelistCrudController {
     // resolving the pricelist
     const pricelist = await this.dbConn
       .getCustomRepository(PricelistRepository)
-      .getBelongingToUserById(id, user.id ?? -1);
+      .getBelongingToUserById(id, user.id ?? "-1");
     if (pricelist === null) {
       return {
         data: null,
@@ -265,7 +265,7 @@ export class PricelistCrudController {
     // resolving the pricelist
     const removed = await this.dbConn
       .getCustomRepository(PricelistRepository)
-      .removeByUserId(id, user.id ?? -1);
+      .removeByUserId(id, user.id ?? "-1");
     if (!removed) {
       return {
         data: null,

@@ -29,7 +29,7 @@ export class PreferencesController {
     const user = req.user as User;
     const preference = await this.dbConn
       .getCustomRepository(PreferenceRepository)
-      .getFromUserId(user.id ?? -1);
+      .getFromUserId(user.id ?? "-1");
 
     if (preference === null) {
       return {
@@ -54,7 +54,7 @@ export class PreferencesController {
     const hasPreference: boolean = await (async () => {
       const foundPreference = await this.dbConn
         .getCustomRepository(PreferenceRepository)
-        .getFromUserId(user.id ?? -1);
+        .getFromUserId(user.id ?? "-1");
       return foundPreference !== null;
     })();
     if (hasPreference) {
@@ -85,7 +85,7 @@ export class PreferencesController {
     const user = req.user as User;
     const preference = await this.dbConn
       .getCustomRepository(PreferenceRepository)
-      .getFromUserId(user.id ?? -1);
+      .getFromUserId(user.id ?? "-1");
 
     if (preference === null) {
       return {
