@@ -12,7 +12,7 @@ interface IRegisterUserResult {
 
 function resolveRegisterUserErrors(error: firebaseAdmin.FirebaseError): IValidationErrorResponse {
   switch (error.code) {
-  case "auth/email-already-in-use":
+  case "auth/email-already-exists":
     return { email: "Email is already in use" };
   case "auth/invalid-email":
     return { email: "Email address is not valid" };
