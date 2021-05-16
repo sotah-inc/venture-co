@@ -11,7 +11,7 @@ export function auth(dbConn: Connection) {
   return async function (req: Request, res: Response, next: NextFunction): Promise<void> {
     const authToken = req.headers.authorization;
     if (authToken === undefined) {
-      res.status(HttpStatus.FORBIDDEN).send({
+      res.status(HttpStatus.UNAUTHORIZED).send({
         error: "auth required",
       });
 
@@ -20,7 +20,7 @@ export function auth(dbConn: Connection) {
 
     const foundToken = authToken.split(" ")[1];
     if (foundToken === undefined || foundToken.length === 0) {
-      res.status(HttpStatus.FORBIDDEN).send({
+      res.status(HttpStatus.UNAUTHORIZED).send({
         error: "auth invalid",
       });
 
@@ -31,7 +31,7 @@ export function auth(dbConn: Connection) {
 
     switch (verifyIdTokenResult.code) {
     case VerifyIdTokenCode.NotFound:
-      res.status(HttpStatus.NOT_FOUND).send({
+      res.status(HttpStatus.UNAUTHORIZED).send({
         error: "user not found",
       });
 
@@ -63,7 +63,9 @@ export function auth(dbConn: Connection) {
       .getRepository(User)
       .findOne({ where: { firebaseUid: verifyIdTokenResult.firebaseUid } });
     if (user === undefined) {
-      next();
+      res.status(HttpStatus.UNAUTHORIZED).send({
+        error: "token was valid but user not found",
+      });
 
       return;
     }
