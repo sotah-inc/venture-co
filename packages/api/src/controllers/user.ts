@@ -7,7 +7,7 @@ import {  User } from "@sotah-inc/server";
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
 
-import { registerUser } from "../coal";
+import { createUser } from "../coal";
 import {
   UserRequestBodyRules,
   validate,
@@ -32,7 +32,7 @@ export class UserController {
       };
     }
 
-    const registerUserResult = await registerUser({
+    const registerUserResult = await createUser({
       email: result.data.email,
       password: result.data.password,
     });
