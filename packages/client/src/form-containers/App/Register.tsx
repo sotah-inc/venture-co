@@ -16,7 +16,6 @@ const config: WithFormikConfig<IDispatchProps & IStateProps, IFormValues> = {
 
       return;
     }
-
     if (registerUserResult.data === null) {
       setErrors({ email: "failed to register user" });
       setSubmitting(false);
@@ -34,10 +33,16 @@ const config: WithFormikConfig<IDispatchProps & IStateProps, IFormValues> = {
 
       return;
     }
+    if (signInUserResult.idToken === null) {
+      setErrors({ email: "failed to resolve id token" });
+      setSubmitting(false);
+
+      return;
+    }
 
     setSubmitting(false);
     props.onUserRegister({
-      token: registerUserResult.data.token,
+      token: signInUserResult.idToken,
       user: {
         id: registerUserResult.data.user.id,
         firebaseUid: registerUserResult.data.user.firebaseUid,

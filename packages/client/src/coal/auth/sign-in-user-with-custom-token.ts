@@ -5,6 +5,7 @@ import { resolveFirebaseApp } from "../app";
 
 interface ISignInUserResult {
   errors: IErrors | null;
+  idToken: string | null;
 }
 
 function resolveSignInUserErrors(error: firebase.FirebaseError): IErrors {
@@ -22,15 +23,28 @@ export async function signInUserWithCustomToken(
   browserApiKey: string,
   token: string,
 ): Promise<ISignInUserResult> {
+  let credential: firebase.auth.UserCredential;
+
   try {
-    await resolveFirebaseApp(browserApiKey).auth().signInWithCustomToken(token);
+    credential = await resolveFirebaseApp(browserApiKey).auth().signInWithCustomToken(token);
   } catch (err) {
     return {
       errors: resolveSignInUserErrors(err),
+      idToken: null,
     };
   }
 
+  if (credential.user === null) {
+    return {
+      errors: { email: "Failed to sign in user" },
+      idToken: null,
+    };
+  }
+
+  const idToken = await credential.user.getIdToken();
+
   return {
     errors: null,
+    idToken,
   };
 }
