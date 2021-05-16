@@ -7,7 +7,7 @@ import {  User } from "@sotah-inc/server";
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
 
-import { registerUser } from "../coal";
+// import { registerUser } from "../coal";
 import {
   UserRequestBodyRules,
   validate,
@@ -32,31 +32,31 @@ export class UserController {
       };
     }
 
-    const registerUserResult = await registerUser({
-      email: result.data.email,
-      password: result.data.password,
-    });
-    if (registerUserResult.errors !== null) {
-      return {
-        data: registerUserResult.errors,
-        status: HTTPStatus.BAD_REQUEST,
-      };
-    }
-    if (registerUserResult.userData === null) {
-      return {
-        data: {},
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
+    // const registerUserResult = await registerUser({
+    //   email: result.data.email,
+    //   password: result.data.password,
+    // });
+    // if (registerUserResult.errors !== null) {
+    //   return {
+    //     data: registerUserResult.errors,
+    //     status: HTTPStatus.BAD_REQUEST,
+    //   };
+    // }
+    // if (registerUserResult.userData === null) {
+    //   return {
+    //     data: {},
+    //     status: HTTPStatus.INTERNAL_SERVER_ERROR,
+    //   };
+    // }
 
     const user = new User();
-    user.firebaseUid = registerUserResult.userData.firebaseUid;
+    user.firebaseUid = "firebaseUid";
     user.level = UserLevel.Unverified;
     await this.dbConn.manager.save(user);
 
     return {
       data: {
-        token: registerUserResult.userData.token,
+        token: "token",
         user: user.toJson(),
       },
       status: HTTPStatus.CREATED,
