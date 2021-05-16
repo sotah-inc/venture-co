@@ -63,6 +63,8 @@ export function auth(dbConn: Connection) {
       .getRepository(User)
       .findOne({ where: { firebaseUid: verifyIdTokenResult.firebaseUid } });
     if (user === undefined) {
+      next();
+
       return;
     }
 
