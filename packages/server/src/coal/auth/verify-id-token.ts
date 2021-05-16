@@ -5,8 +5,8 @@ import { resolveFirebaseAdminApp } from "../admin";
 
 export enum VerifyIdTokenCode {
   Ok,
-  NotFound,
-  Error
+  Error,
+  Expired
 }
 
 export interface IVerifyIdTokenResult {
@@ -26,6 +26,10 @@ function resolveVerifyIdTokenErrors(error: firebaseAdmin.FirebaseError): IValida
   }
 }
 
+const FirebaseErrorCodeMap: { [key: string]: VerifyIdTokenCode | undefined } = {
+  "auth/id-token-expired": VerifyIdTokenCode.Expired,
+};
+
 export async function verifyIdToken(token: string): Promise<IVerifyIdTokenResult> {
   const auth = resolveFirebaseAdminApp().auth();
 
@@ -36,7 +40,7 @@ export async function verifyIdToken(token: string): Promise<IVerifyIdTokenResult
     console.error("failed to verify id-token", { err, token });
 
     return {
-      code: VerifyIdTokenCode.Error,
+      code: FirebaseErrorCodeMap[err.code] ?? VerifyIdTokenCode.Error,
       firebaseUid: null,
       errors: resolveVerifyIdTokenErrors(err),
     };

@@ -30,9 +30,9 @@ export function auth(dbConn: Connection) {
     const verifyIdTokenResult = await verifyIdToken(foundToken);
 
     switch (verifyIdTokenResult.code) {
-    case VerifyIdTokenCode.NotFound:
+    case VerifyIdTokenCode.Expired:
       res.status(HttpStatus.UNAUTHORIZED).send({
-        error: "user not found",
+        error: "token was expired",
       });
 
       return;
