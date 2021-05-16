@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 
-import { ChangeIsLoginDialogOpen, FetchUserReload } from "../../actions/main";
+import { ChangeIsLoginDialogOpen, UserLogin } from "../../actions/main";
 import { IDispatchProps, IStateProps } from "../../components/App/Login";
 import { LoginFormContainer } from "../../form-containers/App/Login";
 import { IStoreState } from "../../types";
@@ -16,7 +16,7 @@ function mapStateToProps(state: IStoreState): IStateProps {
 
 const mapDispatchToProps: IDispatchProps = {
   changeIsLoginDialogOpen: ChangeIsLoginDialogOpen,
-  onUserLogin: FetchUserReload,
+  onUserLogin: UserLogin,
 };
 
 export const LoginContainer = connect<

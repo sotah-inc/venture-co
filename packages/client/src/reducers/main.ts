@@ -9,8 +9,7 @@ import {
   ReceiveGetPing,
   RECEIVE_USER_RELOAD,
   REGION_CHANGE,
-  USER_LOGIN,
-  USER_REGISTER,
+  USER_REGISTER, USER_LOGIN,
 } from "../actions/main";
 import { AuthLevel, defaultMainState, FetchLevel, IMainState } from "../types/main";
 import { runners } from "./handlers";
@@ -33,9 +32,8 @@ export function main(state: State | undefined, action: MainActions): State {
   case USER_LOGIN:
     return {
       ...state,
-      authLevel: AuthLevel.authenticated,
-      isLoggedIn: true,
-      profile: action.payload,
+      authLevel: AuthLevel.initial,
+      preloadedToken: action.payload,
     };
   case RECEIVE_USER_RELOAD:
     if (!action.payload.user || action.payload.error !== null) {
@@ -45,6 +43,7 @@ export function main(state: State | undefined, action: MainActions): State {
     return {
       ...state,
       authLevel: AuthLevel.authenticated,
+      isLoggedIn: true,
       profile: { user: action.payload.user, token: state.preloadedToken },
     };
   case CHANGE_AUTH_LEVEL:
