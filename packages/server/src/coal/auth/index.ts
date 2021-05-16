@@ -27,9 +27,9 @@ export function auth(dbConn: Connection) {
       return;
     }
 
-    const loginUserResult = await verifyIdToken(foundToken);
+    const verifyIdTokenResult = await verifyIdToken(foundToken);
 
-    switch (loginUserResult.code) {
+    switch (verifyIdTokenResult.code) {
     case VerifyIdTokenCode.NotFound:
       res.status(HttpStatus.NOT_FOUND).send({
         error: "user not found",
@@ -37,6 +37,8 @@ export function auth(dbConn: Connection) {
 
       return;
     case VerifyIdTokenCode.Error:
+      console.error("could not verify id-token", { verifyIdTokenResult });
+
       res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
         error: "unknown error",
       });
@@ -47,9 +49,19 @@ export function auth(dbConn: Connection) {
       break;
     }
 
+    if (verifyIdTokenResult.firebaseUid === null) {
+      console.error("firebase-uid was null", { verifyIdTokenResult });
+
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+        error: "uid not provided",
+      });
+
+      return;
+    }
+
     const user = await dbConn
       .getRepository(User)
-      .findOne({ where: { firebaseUid: loginUserResult.firebaseUid } });
+      .findOne({ where: { firebaseUid: verifyIdTokenResult.firebaseUid } });
     if (user === undefined) {
       res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
         error: "token was valid but user not found",
