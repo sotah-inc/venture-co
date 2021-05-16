@@ -21,6 +21,8 @@ function resolveRegisterUserErrors(error: firebaseAdmin.FirebaseError): IValidat
   case "auth/weak-password":
     return { password: "That password is not strong enough" };
   default:
+    console.error("failed to register user", { error });
+
     return { email: "Unknown error" };
   }
 }
