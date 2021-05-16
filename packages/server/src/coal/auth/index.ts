@@ -63,10 +63,6 @@ export function auth(dbConn: Connection) {
       .getRepository(User)
       .findOne({ where: { firebaseUid: verifyIdTokenResult.firebaseUid } });
     if (user === undefined) {
-      res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
-        error: "token was valid but user not found",
-      });
-
       return;
     }
 
