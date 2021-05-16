@@ -12,7 +12,7 @@ import { WorkOrder } from "./work-order";
 @Entity({ name: "users" })
 export class User {
   @PrimaryGeneratedColumn("uuid")
-  public id: string;
+  public id: string | undefined;
 
   @Column("int", { default: UserLevel.Unverified, nullable: false })
   @Index("idx_user_level")
@@ -47,7 +47,6 @@ export class User {
   public workOrders: WorkOrder[] | undefined;
 
   constructor() {
-    this.id = "";
     this.level = UserLevel.Unverified;
     this.firebaseUid = "";
   }
@@ -64,7 +63,7 @@ export class User {
 
   public toJson(): IUserJson {
     return {
-      id: this.id,
+      id: this.id ?? "",
       level: this.level,
       firebaseUid: this.firebaseUid,
     };
