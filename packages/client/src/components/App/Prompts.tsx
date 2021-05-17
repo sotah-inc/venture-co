@@ -76,6 +76,8 @@ export class Prompts extends React.Component<Props> {
       <div style={{ marginBottom: "10px" }}>
         <Callout intent={Intent.PRIMARY} title="Unverified Account">
           <p>Your account is not verified!</p>
+          <p>verifyUser.level: {verifyUser.level}</p>
+          <p>FetchLevel.initial: {FetchLevel.initial}</p>
           {errors}
           <p>
             <Button
