@@ -11,7 +11,7 @@ function mapStateToProps(state: IStoreState): IStateProps {
 }
 
 const mapDispatchToProps: IDispatchProps = {
-  verifyUser: FetchVerifyUser,
+  fetchVerifyUser: FetchVerifyUser,
 };
 
 export const PromptsContainer = connect<

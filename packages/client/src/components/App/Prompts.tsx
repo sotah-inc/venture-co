@@ -12,7 +12,7 @@ export interface IStateProps {
 }
 
 export interface IDispatchProps {
-  verifyUser: (token: string) => void;
+  fetchVerifyUser: (token: string) => void;
 }
 
 export interface IRouteProps {
@@ -52,7 +52,7 @@ export class Prompts extends React.Component<Props> {
   }
 
   private renderUnverified() {
-    const { verifyUser, profile } = this.props;
+    const { verifyUser, profile, fetchVerifyUser } = this.props;
 
     if (profile === null) {
       return null;
@@ -88,7 +88,7 @@ export class Prompts extends React.Component<Props> {
                   return;
                 }
 
-                verifyUser(profile.token);
+                fetchVerifyUser(profile.token);
               }}
               text="Verify with Email"
               disabled={verifyUser.level !== FetchLevel.initial}
