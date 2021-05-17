@@ -18,11 +18,11 @@ export function getRouter(dbConn: Connection): Router {
     }),
   );
 
-  router.get(
+  router.post(
     "/verify",
     auth(dbConn),
     wrap(async (req: Request, res: Response) =>
-      handleResult(res, await controller.redirectToVerify(req, res)),
+      handleResult(res, await controller.verifyUser(req, res)),
     ),
   );
 

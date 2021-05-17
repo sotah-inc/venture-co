@@ -1,8 +1,7 @@
 import {
   CreateUserResponse,
   ICreateUserRequest,
-  IValidationErrorResponse,
-  UserLevel,
+  UserLevel, VerifyUserResponse,
 } from "@sotah-inc/core";
 import { User } from "@sotah-inc/server";
 import { Response } from "express";
@@ -67,11 +66,11 @@ export class UserController {
     };
   }
 
-  @Authenticator<null, null>(UserLevel.Unverified)
-  public async redirectToVerify(
+  @Authenticator<null, VerifyUserResponse>(UserLevel.Unverified)
+  public async verifyUser(
     req: IRequest<null>,
     _res: Response,
-  ): Promise<IRequestResult<IValidationErrorResponse | null>> {
+  ): Promise<IRequestResult<VerifyUserResponse>> {
     const user = req.user as User;
     const getUserResult = await getUser(user.firebaseUid);
     if (getUserResult.errors !== null) {
@@ -103,7 +102,7 @@ export class UserController {
     if (result.errors !== null) {
       return {
         status: HTTPStatus.INTERNAL_SERVER_ERROR,
-        data: getUserResult.errors,
+        data: result.errors,
       };
     }
     if (result.destination === null) {
@@ -114,11 +113,10 @@ export class UserController {
     }
 
     return {
-      data: null,
-      headers: {
-        Location: result.destination,
+      data: {
+        destination: result.destination,
       },
-      status: HTTPStatus.SEE_OTHER,
+      status: HTTPStatus.OK,
     };
   }
 }
