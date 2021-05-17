@@ -1,7 +1,9 @@
 import {
   CreateUserResponse,
   ICreateUserRequest,
-  UserLevel, VerifyUserResponse,
+  IValidationErrorResponse,
+  UserLevel,
+  VerifyUserResponse,
 } from "@sotah-inc/core";
 import { User } from "@sotah-inc/server";
 import { Response } from "express";
@@ -116,6 +118,49 @@ export class UserController {
       data: {
         destination: result.destination,
       },
+      status: HTTPStatus.OK,
+    };
+  }
+
+  @Authenticator<null, null>(UserLevel.Unverified)
+  public async verifyUserConfirm(
+    req: IRequest<null>,
+    _res: Response,
+  ): Promise<IRequestResult<null | IValidationErrorResponse>> {
+    const user = req.user as User;
+
+    if (user.level !== UserLevel.Unverified) {
+      return {
+        status: HTTPStatus.BAD_REQUEST,
+        data: { error: "user is already verified (local)" },
+      };
+    }
+
+    const getUserResult = await getUser(user.firebaseUid);
+    if (getUserResult.errors !== null) {
+      return {
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+        data: getUserResult.errors,
+      };
+    }
+    if (getUserResult.user === null) {
+      return {
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+        data: { error: "user in result was null" },
+      };
+    }
+    if (!getUserResult.user.emailVerified) {
+      return {
+        status: HTTPStatus.BAD_REQUEST,
+        data: { error: "user is not verified (firebase)" },
+      };
+    }
+
+    user.level = UserLevel.Regular;
+    await this.dbConn.manager.save(user);
+
+    return {
+      data: null,
       status: HTTPStatus.OK,
     };
   }
