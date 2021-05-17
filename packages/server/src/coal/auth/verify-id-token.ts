@@ -46,9 +46,6 @@ export async function verifyIdToken(token: string): Promise<IVerifyIdTokenResult
     };
   }
 
-  // eslint-disable-next-line no-console
-  console.log("received token", { decodedToken });
-
   return {
     code: VerifyIdTokenCode.Ok,
     firebaseUid: decodedToken.uid,
