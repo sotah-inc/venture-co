@@ -56,6 +56,7 @@ export async function verifyUser(token: string): Promise<IVerifyUserResult> {
   });
   switch (status) {
   case HTTPStatus.UNAUTHORIZED:
+  case HTTPStatus.BAD_REQUEST:
     return { errors: body as IValidationErrorResponse, data: null };
   case HTTPStatus.INTERNAL_SERVER_ERROR:
     return { errors: { email: "There was a server error." }, data: null };
