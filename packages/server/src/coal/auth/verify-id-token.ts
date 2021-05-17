@@ -22,6 +22,8 @@ function resolveVerifyIdTokenErrors(error: firebaseAdmin.FirebaseError): IValida
   case "auth/id-token-expired":
     return { token: "Token was expired" };
   default:
+    console.error("failed to verify id-token", { error });
+
     return { token: "Unknown error" };
   }
 }
@@ -37,8 +39,6 @@ export async function verifyIdToken(token: string): Promise<IVerifyIdTokenResult
   try {
     decodedToken = await auth.verifyIdToken(token);
   } catch (err) {
-    console.error("failed to verify id-token", { err, token });
-
     return {
       code: FirebaseErrorCodeMap[err.code] ?? VerifyIdTokenCode.Error,
       firebaseUid: null,
