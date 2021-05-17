@@ -8,8 +8,9 @@ import {
   IPreferenceJson,
   IUserJson,
   IValidationErrorResponse,
+  IVerifyUserResponseData,
   UpdatePreferencesRequest,
-  UpdatePreferencesResponse,
+  UpdatePreferencesResponse, VerifyUserResponse,
 } from "@sotah-inc/core";
 import * as HTTPStatus from "http-status";
 
@@ -34,6 +35,35 @@ export async function registerUser(email: string, password: string): Promise<IRe
     return { errors: body as IValidationErrorResponse, data: null };
   case HTTPStatus.INTERNAL_SERVER_ERROR:
     return { errors: { email: "There was a server error." }, data: null };
+  default:
+    return { errors: { email: "There was an unknown error." }, data: null };
+  }
+}
+
+export interface IVerifyUserResult {
+  data: IVerifyUserResponseData | null;
+  errors: IValidationErrorResponse | null;
+}
+
+export async function verifyUser(token: string): Promise<IVerifyUserResult> {
+  const { body, status } = await gather<null, VerifyUserResponse>({
+    headers: new Headers({
+      Authorization: `Bearer ${token}`,
+      "content-type": "application/json",
+    }),
+    method: "POST",
+    url: `${getApiEndpoint()}/user/verify`,
+  });
+  switch (status) {
+  case HTTPStatus.UNAUTHORIZED:
+    return { errors: body as IValidationErrorResponse, data: null };
+  case HTTPStatus.INTERNAL_SERVER_ERROR:
+    return { errors: { email: "There was a server error." }, data: null };
+  case HTTPStatus.OK:
+    return {
+      errors: { email: "There was a server error." },
+      data: body as IVerifyUserResponseData,
+    };
   default:
     return { errors: { email: "There was an unknown error." }, data: null };
   }

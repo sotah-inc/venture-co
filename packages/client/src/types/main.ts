@@ -1,6 +1,12 @@
-import { IExpansion, IPreferenceJson, IRegionComposite, IShortProfession } from "@sotah-inc/core";
+import {
+  IExpansion,
+  IPreferenceJson,
+  IRegionComposite,
+  IShortProfession,
+  IVerifyUserResponseData,
+} from "@sotah-inc/core";
 
-import { IClientRealm, IItemClasses, IProfile, IRegions } from "./global";
+import { IClientRealm, IFetchData, IItemClasses, IProfile, IRegions } from "./global";
 
 export interface IMainState {
   fetchPingLevel: FetchLevel;
@@ -26,6 +32,7 @@ export interface IMainState {
   firebaseConfig: {
     browser_api_key: string;
   };
+  verifyUser: IFetchData<IVerifyUserResponseData>;
 }
 
 export enum FetchLevel {
@@ -67,4 +74,11 @@ export const defaultMainState: IMainState = {
   realms: [],
   regions: {},
   userPreferences: null,
+  verifyUser: {
+    data: {
+      destination: "",
+    },
+    errors: {},
+    level: FetchLevel.initial,
+  },
 };

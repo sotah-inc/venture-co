@@ -18,9 +18,9 @@ import {
   ICreatePreferencesResult,
   IGetPreferencesResult,
   IReloadUserResponse,
-  IUpdatePreferencesResult,
+  IUpdatePreferencesResult, IVerifyUserResult,
   reloadUser,
-  updatePreferences,
+  updatePreferences, verifyUser,
 } from "../api/user";
 import { IClientRealm, IProfile } from "../types/global";
 import { AuthLevel } from "../types/main";
@@ -125,11 +125,26 @@ export const ReceiveGetItemClasses = (payload: IGetItemClassesResponseData | nul
   createAction(RECEIVE_GET_ITEMCLASSES, payload);
 type FetchGetItemClassesType = ReturnType<
   typeof RequestGetItemClasses | typeof ReceiveGetItemClasses
->;
+  >;
 export const FetchGetItemClasses = () => {
   return async (dispatch: Dispatch<FetchGetItemClassesType>) => {
     dispatch(RequestGetItemClasses());
     dispatch(ReceiveGetItemClasses(await getItemClasses()));
+  };
+};
+
+export const REQUEST_VERIFY_USER = "REQUEST_VERIFY_USER";
+export const RECEIVE_VERIFY_USER = "RECEIVE_VERIFY_USER";
+export const RequestVerifyUser = () => createAction(REQUEST_VERIFY_USER);
+export const ReceiveVerifyUser = (payload: IVerifyUserResult) =>
+  createAction(RECEIVE_VERIFY_USER, payload);
+type FetchVerifyUserType = ReturnType<
+  typeof RequestVerifyUser | typeof ReceiveVerifyUser
+  >;
+export const FetchVerifyUser = (token: string) => {
+  return async (dispatch: Dispatch<FetchVerifyUserType>) => {
+    dispatch(RequestVerifyUser());
+    dispatch(ReceiveVerifyUser(await verifyUser(token)));
   };
 };
 
@@ -205,6 +220,7 @@ export const MainActions = {
   ReceiveGetPing,
   ReceiveGetUserPreferences,
   ReceiveUserReload,
+  ReceiveVerifyUser,
   RegionChange,
   RequestGetBoot,
   RequestGetConnectedRealms,
@@ -212,6 +228,7 @@ export const MainActions = {
   RequestGetPing,
   RequestGetUserPreferences,
   RequestUserReload,
+  RequestVerifyUser,
   UserLogin,
   UserRegister,
 };

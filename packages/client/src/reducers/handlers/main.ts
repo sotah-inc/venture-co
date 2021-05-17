@@ -10,6 +10,7 @@ import {
   ReceiveGetItemClasses,
   ReceiveGetPing,
   ReceiveGetUserPreferences,
+  ReceiveVerifyUser,
 } from "../../actions/main";
 import { IClientRealm } from "../../types/global";
 import { FetchLevel, IMainState } from "../../types/main";
@@ -245,6 +246,44 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
       },
       request: (state: IMainState): IMainState => {
         return { ...state };
+      },
+    },
+  },
+  user: {
+    verify: {
+      receive: (state: IMainState, action: ReturnType<typeof ReceiveVerifyUser>): IMainState => {
+        if (action.payload.errors !== null) {
+          return {
+            ...state,
+            verifyUser: {
+              ...state.verifyUser,
+              level: FetchLevel.failure,
+              errors: action.payload.errors,
+            },
+          };
+        }
+        if (action.payload.data === null) {
+          return {
+            ...state,
+            verifyUser: {
+              ...state.verifyUser,
+              level: FetchLevel.failure,
+              errors: { error: "payload was null" },
+            },
+          };
+        }
+
+        return {
+          ...state,
+          verifyUser: {
+            level: FetchLevel.success,
+            errors: {},
+            data: action.payload.data,
+          },
+        };
+      },
+      request: (state: IMainState): IMainState => {
+        return { ...state, verifyUser: { ...state.verifyUser, level: FetchLevel.initial } };
       },
     },
   },
