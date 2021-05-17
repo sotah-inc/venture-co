@@ -13,3 +13,9 @@ export interface ICreateUserResponseData {
 }
 
 export type CreateUserResponse = ICreateUserResponseData | IValidationErrorResponse;
+
+export interface IVerifyUserResponseData {
+  destination: string;
+}
+
+export type VerifyUserResponse = IVerifyUserResponseData | IValidationErrorResponse;
