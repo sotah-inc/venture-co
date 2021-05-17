@@ -1,19 +1,17 @@
 import { connect } from "react-redux";
 
+import { FetchVerifyUser } from "../../actions/main";
 import { IDispatchProps, IStateProps, Prompts } from "../../components/App/Prompts";
 import { IStoreState } from "../../types";
 
 function mapStateToProps(state: IStoreState): IStateProps {
-  const { profile } = state.Main;
-  const user = profile === null ? null : profile.user;
+  const { profile, verifyUser } = state.Main;
 
-  return { user };
+  return { profile, verifyUser };
 }
 
 const mapDispatchToProps: IDispatchProps = {
-  hello: () => {
-    return;
-  },
+  verifyUser: FetchVerifyUser,
 };
 
 export const PromptsContainer = connect<

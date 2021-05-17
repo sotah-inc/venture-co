@@ -7,8 +7,12 @@ import { PromptsContainer } from "../../containers/App/Prompts";
 
 type Props = Readonly<WithRouterProps>;
 
-function RouteContainer(_props: Props) {
-  return <PromptsContainer />;
+function RouteContainer({ router }: Props) {
+  return (
+    <PromptsContainer
+      redirectToVerifyUser={destination => router.push(destination)}
+    />
+  );
 }
 
 export const PromptsRouteContainer = withRouter(RouteContainer);

@@ -283,7 +283,7 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
         };
       },
       request: (state: IMainState): IMainState => {
-        return { ...state, verifyUser: { ...state.verifyUser, level: FetchLevel.initial } };
+        return { ...state, verifyUser: { ...state.verifyUser, level: FetchLevel.fetching } };
       },
     },
   },
