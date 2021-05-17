@@ -58,18 +58,38 @@ export class Prompts extends React.Component<Props> {
       return null;
     }
 
+    const errors = (() => {
+      if (verifyUser.level !== FetchLevel.failure) {
+        return null;
+      }
+
+      return (
+        <ul>
+          {Object.values(verifyUser.errors).map((v, i) => (
+            <li key={i}>{v}</li>
+          ))}
+        </ul>
+      );
+    })();
+
     return (
       <div style={{ marginBottom: "10px" }}>
         <Callout intent={Intent.PRIMARY} title="Unverified Account">
           <p>Your account is not verified!</p>
+          {errors}
           <p>
             <Button
               icon={"envelope"}
               intent={Intent.PRIMARY}
               onClick={() => {
+                if (verifyUser.level !== FetchLevel.initial) {
+                  return;
+                }
+
                 verifyUser(profile.token);
               }}
               text="Verify with Email"
+              disabled={verifyUser.level !== FetchLevel.initial}
             />
           </p>
         </Callout>
