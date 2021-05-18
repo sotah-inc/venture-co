@@ -41,12 +41,26 @@ export async function registerUser(email: string, password: string): Promise<IRe
   }
 }
 
-export interface IVerifyUserResult {
-  data: IVerifyUserResponseData | null;
-  errors: IValidationErrorResponse | null;
+export enum VerifyUserCode {
+  Ok,
+  Error,
+  AlreadyVerified,
 }
 
-export async function verifyUser(token: string): Promise<IVerifyUserResult> {
+export type VerifyUserResult =
+  | {
+      code: VerifyUserCode.Ok;
+      destination: string;
+    }
+  | {
+      code: VerifyUserCode.Error;
+      errors: IValidationErrorResponse;
+    }
+  | {
+      code: VerifyUserCode.AlreadyVerified;
+    };
+
+export async function verifyUser(token: string): Promise<VerifyUserResult> {
   const { body, status } = await gather<null, VerifyUserResponse>({
     headers: new Headers({
       Authorization: `Bearer ${token}`,
@@ -58,16 +72,20 @@ export async function verifyUser(token: string): Promise<IVerifyUserResult> {
   switch (status) {
   case HTTPStatus.UNAUTHORIZED:
   case HTTPStatus.BAD_REQUEST:
-    return { errors: body as IValidationErrorResponse, data: null };
+    return { code: VerifyUserCode.Error, errors: body as IValidationErrorResponse };
   case HTTPStatus.INTERNAL_SERVER_ERROR:
-    return { errors: { email: "There was a server error." }, data: null };
+    return { code: VerifyUserCode.Error, errors: { email: "There was a server error." } };
   case HTTPStatus.OK:
     return {
-      errors: null,
-      data: body as IVerifyUserResponseData,
+      code: VerifyUserCode.Ok,
+      destination: (body as IVerifyUserResponseData).destination,
+    };
+  case HTTPStatus.NO_CONTENT:
+    return {
+      code: VerifyUserCode.AlreadyVerified,
     };
   default:
-    return { errors: { email: "There was an unknown error." }, data: null };
+    return { code: VerifyUserCode.Error, errors: { email: "There was an unknown error." } };
   }
 }
 

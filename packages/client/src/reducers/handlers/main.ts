@@ -1,4 +1,4 @@
-import { IRegionComposite } from "@sotah-inc/core";
+import { IRegionComposite, UserLevel } from "@sotah-inc/core";
 
 import {
   LoadRealmEntrypoint,
@@ -12,8 +12,9 @@ import {
   ReceiveGetUserPreferences,
   ReceiveVerifyUser,
 } from "../../actions/main";
+import { VerifyUserCode } from "../../api/user";
 import { IClientRealm } from "../../types/global";
-import { FetchLevel, IMainState } from "../../types/main";
+import { defaultMainState, FetchLevel, IMainState } from "../../types/main";
 import { FormatItemClassList, FormatRegionList } from "../../util";
 
 import { IKindHandlers } from "./index";
@@ -252,7 +253,33 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
   user: {
     verify: {
       receive: (state: IMainState, action: ReturnType<typeof ReceiveVerifyUser>): IMainState => {
-        if (action.payload.errors !== null) {
+        switch (action.payload.code) {
+        case VerifyUserCode.Ok:
+          return {
+            ...state,
+            verifyUser: {
+              level: FetchLevel.success,
+              errors: {},
+              data: { destination: action.payload.destination },
+            },
+          };
+        case VerifyUserCode.AlreadyVerified:
+          if (state.profile === null) {
+            return { ...state };
+          }
+
+          return {
+            ...state,
+            verifyUser: defaultMainState.verifyUser,
+            profile: {
+              ...state.profile,
+              user: {
+                ...state.profile.user,
+                level: UserLevel.Regular,
+              },
+            },
+          };
+        case VerifyUserCode.Error:
           return {
             ...state,
             verifyUser: {
@@ -261,24 +288,16 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
               errors: action.payload.errors,
             },
           };
-        }
-        if (action.payload.data === null) {
-          return {
-            ...state,
-            verifyUser: {
-              ...state.verifyUser,
-              level: FetchLevel.failure,
-              errors: { error: "payload was null" },
-            },
-          };
+        default:
+          break;
         }
 
         return {
           ...state,
           verifyUser: {
-            level: FetchLevel.success,
+            ...state.verifyUser,
+            level: FetchLevel.failure,
             errors: {},
-            data: action.payload.data,
           },
         };
       },
