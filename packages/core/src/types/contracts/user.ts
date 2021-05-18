@@ -18,4 +18,4 @@ export interface IVerifyUserResponseData {
   destination: string;
 }
 
-export type VerifyUserResponse = IVerifyUserResponseData | IValidationErrorResponse;
+export type VerifyUserResponse = IVerifyUserResponseData | IValidationErrorResponse | null;
