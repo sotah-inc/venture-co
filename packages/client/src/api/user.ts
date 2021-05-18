@@ -10,7 +10,8 @@ import {
   IValidationErrorResponse,
   IVerifyUserResponseData,
   UpdatePreferencesRequest,
-  UpdatePreferencesResponse, VerifyUserResponse,
+  UpdatePreferencesResponse,
+  VerifyUserResponse,
 } from "@sotah-inc/core";
 import * as HTTPStatus from "http-status";
 
@@ -62,7 +63,7 @@ export async function verifyUser(token: string): Promise<IVerifyUserResult> {
     return { errors: { email: "There was a server error." }, data: null };
   case HTTPStatus.OK:
     return {
-      errors: { email: "There was a server error." },
+      errors: null,
       data: body as IVerifyUserResponseData,
     };
   default:
