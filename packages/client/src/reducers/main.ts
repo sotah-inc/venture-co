@@ -32,8 +32,10 @@ export function main(state: State | undefined, action: MainActions): State {
   case USER_LOGIN:
     return {
       ...state,
-      authLevel: AuthLevel.initial,
-      preloadedToken: action.payload,
+      authLevel: AuthLevel.authenticated,
+      isLoggedIn: true,
+      preloadedToken: action.payload.token,
+      profile: action.payload,
     };
   case RECEIVE_USER_RELOAD:
     if (!action.payload.user || action.payload.error !== null) {

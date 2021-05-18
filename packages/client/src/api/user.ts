@@ -76,18 +76,26 @@ export interface IReloadUserResponse {
 }
 
 export async function reloadUser(token: string): Promise<IReloadUserResponse> {
-  const res = await fetch(`${getApiEndpoint()}/user`, {
+  const { body, status } = await gather<null, IUserJson | IValidationErrorResponse>({
+    url: `${getApiEndpoint()}/user`,
     headers: new Headers({
       Authorization: `Bearer ${token}`,
       "content-type": "application/json",
     }),
     method: "GET",
   });
-  if (res.status === HTTPStatus.UNAUTHORIZED) {
-    return { error: "Unauthorized", user: null };
+  switch (status) {
+  case HTTPStatus.OK:
+    break;
+  case HTTPStatus.UNAUTHORIZED:
+  default: {
+    const error = Object.values(body as IValidationErrorResponse).find(v => !!v);
+
+    return { error: error ?? "Unauthorized", user: null };
+  }
   }
 
-  return { user: await res.json(), error: null };
+  return { user: body as IUserJson, error: null };
 }
 
 export interface IGetPreferencesResult {

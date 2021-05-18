@@ -1,6 +1,7 @@
 import { withFormik, WithFormikConfig } from "formik";
 import * as Yup from "yup";
 
+import { reloadUser } from "../../api/user";
 import { signInWithEmailAndPassword } from "../../coal/auth/sign-in-with-email-and-password";
 import { IDispatchProps, IFormValues, IStateProps, Login } from "../../components/App/Login";
 import { UserRules } from "../../validator-rules";
@@ -14,7 +15,6 @@ const config: WithFormikConfig<IDispatchProps & IStateProps, IFormValues> = {
 
       return;
     }
-
     if (token === null) {
       setErrors({ email: "failed to log in" });
       setSubmitting(false);
@@ -22,8 +22,25 @@ const config: WithFormikConfig<IDispatchProps & IStateProps, IFormValues> = {
       return;
     }
 
+    const reloadedUser = await reloadUser(token);
+    if (reloadedUser.error !== null) {
+      setErrors({ email: reloadedUser.error });
+      setSubmitting(false);
+
+      return;
+    }
+    if (reloadedUser.user === null) {
+      setErrors({ email: "failed to log in" });
+      setSubmitting(false);
+
+      return;
+    }
+
     setSubmitting(false);
-    props.onUserLogin(token);
+    props.onUserLogin({
+      token,
+      user: reloadedUser.user,
+    });
   },
   mapPropsToValues: (_: IDispatchProps & IStateProps) => {
     return {

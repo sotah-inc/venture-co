@@ -42,7 +42,7 @@ export const USER_REGISTER = "USER_REGISTER";
 export const UserRegister = (payload: IProfile) => createAction(USER_REGISTER, payload);
 
 export const USER_LOGIN = "USER_LOGIN";
-export const UserLogin = (payload: string) => createAction(USER_LOGIN, payload);
+export const UserLogin = (payload: IProfile) => createAction(USER_LOGIN, payload);
 
 export const REQUEST_USER_RELOAD = "REQUEST_USER_RELOAD";
 export const RECEIVE_USER_RELOAD = "RECEIVE_USER_RELOAD";

@@ -47,7 +47,7 @@ function localStorageMiddleware() {
     switch (action.type) {
     case USER_LOGIN:
       if (typeof localStorage !== "undefined") {
-        localStorage.setItem("token", action.payload);
+        localStorage.setItem("token", action.payload.token);
       }
 
       break;
