@@ -71,6 +71,34 @@ export async function verifyUser(token: string): Promise<IVerifyUserResult> {
   }
 }
 
+export interface IVerifyUserConfirmResult {
+  errors: IValidationErrorResponse | null;
+}
+
+export async function verifyUserConfirm(token: string): Promise<IVerifyUserConfirmResult> {
+  const { body, status } = await gather<null, IValidationErrorResponse>({
+    headers: new Headers({
+      Authorization: `Bearer ${token}`,
+      "content-type": "application/json",
+    }),
+    method: "POST",
+    url: `${getApiEndpoint()}/user/verify-confirm`,
+  });
+  switch (status) {
+  case HTTPStatus.UNAUTHORIZED:
+  case HTTPStatus.BAD_REQUEST:
+    return { errors: body as IValidationErrorResponse };
+  case HTTPStatus.INTERNAL_SERVER_ERROR:
+    return { errors: { email: "There was a server error." } };
+  case HTTPStatus.OK:
+    return {
+      errors: null,
+    };
+  default:
+    return { errors: { email: "There was an unknown error." } };
+  }
+}
+
 export interface IReloadUserResponse {
   user: IUserJson | null;
   error: string | null;
