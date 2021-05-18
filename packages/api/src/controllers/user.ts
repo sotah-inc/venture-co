@@ -88,9 +88,12 @@ export class UserController {
       };
     }
     if (getUserResult.user.emailVerified) {
+      user.level = UserLevel.Regular;
+      await this.dbConn.manager.save(user);
+
       return {
-        status: HTTPStatus.BAD_REQUEST,
-        data: { error: "user is already verified" },
+        status: HTTPStatus.NO_CONTENT,
+        data: null,
       };
     }
     if (getUserResult.user.email === undefined) {
