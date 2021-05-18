@@ -6,7 +6,12 @@ import * as nats from "nats";
 import { v4 as uuidv4 } from "uuid";
 import { Logger } from "winston";
 
-import { defaultRouter, getDataRouter, getUserRouter, getWorkOrderRouter } from "../routes";
+import { publicApp } from "./app/public";
+
+export enum AppKind {
+  Private,
+  Public
+}
 
 export interface IOptions {
   logger: Logger;
@@ -15,6 +20,7 @@ export interface IOptions {
   dbHost: string;
   dbPassword?: string;
   isGceEnv: boolean;
+  appKind: AppKind;
 }
 
 export async function getApp(opts: IOptions): Promise<express.Express | null> {
@@ -92,10 +98,15 @@ export async function getApp(opts: IOptions): Promise<express.Express | null> {
 
   // route init
   logger.info("appending route middlewares");
-  app.use("/", defaultRouter);
-  app.use("/", getDataRouter(dbConn, messengers));
-  app.use("/", getUserRouter(dbConn, messengers));
-  app.use("/", getWorkOrderRouter(dbConn, messengers));
+  switch(opts.appKind) {
+  case AppKind.Public:
+    publicApp(app, dbConn, messengers);
+
+    break;
+  case AppKind.Private:
+  default:
+    break;
+  }
 
   // error handlers
   // if (isGceEnv && errors !== null) {
