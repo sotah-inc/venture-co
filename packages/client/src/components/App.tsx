@@ -241,7 +241,7 @@ export class App extends React.Component<Props> {
         });
 
         if (profile !== null) {
-          cookies.set("token", profile.token);
+          cookies.set("token", profile.token, { path: "/" });
         }
       }
 
