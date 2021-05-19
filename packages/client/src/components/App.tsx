@@ -2,7 +2,7 @@ import React, { ReactNode } from "react";
 
 import { Classes, Intent, IToastProps, NonIdealState, Spinner } from "@blueprintjs/core";
 import { IPreferenceJson, IRegionComposite } from "@sotah-inc/core";
-import { useCookies } from "react-cookie";
+import { Cookies, withCookies } from "react-cookie";
 
 import { ILoadRootEntrypoint } from "../actions/main";
 import { PromptsRouteContainer } from "../route-containers/App/Prompts";
@@ -38,7 +38,11 @@ export interface IOwnProps {
   rootEntrypointData?: ILoadRootEntrypoint;
 }
 
-export type Props = Readonly<IStateProps & IDispatchProps & IOwnProps>;
+export interface ICookieProps {
+  cookies: Cookies;
+}
+
+export type Props = Readonly<IStateProps & IDispatchProps & IOwnProps & ICookieProps>;
 
 export class App extends React.Component<Props> {
   private static renderContent(content: ReactNode) {
@@ -218,9 +222,8 @@ export class App extends React.Component<Props> {
       reloadUser,
       insertToast,
       profile,
+      cookies,
     } = this.props;
-
-    const [, setCookie] = useCookies(["token"]);
 
     switch (authLevel) {
     case AuthLevel.unauthenticated:
@@ -238,7 +241,7 @@ export class App extends React.Component<Props> {
         });
 
         if (profile !== null) {
-          setCookie("token", profile.token);
+          cookies.set("token", profile.token);
         }
       }
 
@@ -356,3 +359,5 @@ export class App extends React.Component<Props> {
     }
   }
 }
+
+export const AppWithCookies = withCookies(App);

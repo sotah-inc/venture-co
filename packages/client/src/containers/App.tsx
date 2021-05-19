@@ -8,7 +8,7 @@ import {
   LoadRootEntrypoint,
 } from "../actions/main";
 import { InsertToast } from "../actions/oven";
-import { App, IDispatchProps, IOwnProps, IStateProps } from "../components/App";
+import { AppWithCookies, IDispatchProps, IOwnProps, IStateProps } from "../components/App";
 import { IStoreState } from "../types";
 
 function mapStateToProps(state: IStoreState): IStateProps {
@@ -52,4 +52,4 @@ const mapDispatchToProps: IDispatchProps = {
 export const AppContainer = connect<IStateProps, IDispatchProps, IOwnProps>(
   mapStateToProps,
   mapDispatchToProps,
-)(App);
+)(AppWithCookies);
