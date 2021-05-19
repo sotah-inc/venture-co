@@ -9,8 +9,8 @@ import { Logger } from "winston";
 import { publicApp } from "./app/public";
 
 export enum AppKind {
-  Private,
-  Public
+  Private = "private",
+  Public = "public",
 }
 
 export interface IOptions {
@@ -98,7 +98,7 @@ export async function getApp(opts: IOptions): Promise<express.Express | null> {
 
   // route init
   logger.info("appending route middlewares");
-  switch(opts.appKind) {
+  switch (opts.appKind) {
   case AppKind.Public:
     publicApp(app, dbConn, messengers);
 
