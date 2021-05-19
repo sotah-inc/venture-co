@@ -20,17 +20,11 @@ const hostname: string = (() => {
 const defaultApiEndpoint = "https://api.sotah.info";
 export function getApiEndpoint(): string {
   const { publicRuntimeConfig, serverRuntimeConfig }: IConfig = getConfig();
-  if (
-    typeof serverRuntimeConfig !== "undefined" &&
-    typeof serverRuntimeConfig.serverApiEndpoint !== "undefined"
-  ) {
+  if (serverRuntimeConfig?.serverApiEndpoint) {
     return serverRuntimeConfig.serverApiEndpoint;
   }
 
-  if (
-    typeof publicRuntimeConfig !== "undefined" &&
-    typeof publicRuntimeConfig.publicApiEndpoint !== "undefined"
-  ) {
+  if (publicRuntimeConfig?.publicApiEndpoint) {
     return publicRuntimeConfig.publicApiEndpoint;
   }
 
