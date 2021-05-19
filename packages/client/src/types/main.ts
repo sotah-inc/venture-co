@@ -57,7 +57,7 @@ export const defaultMainState: IMainState = {
   expansions: [],
   fetchBootLevel: FetchLevel.initial,
   fetchItemClassesLevel: FetchLevel.initial,
-  fetchPingLevel: FetchLevel.initial,
+  fetchPingLevel: FetchLevel.success,
   fetchRealmLevel: FetchLevel.initial,
   fetchUserPreferencesLevel: FetchLevel.initial,
   firebaseConfig: {
