@@ -2,10 +2,10 @@ import React, { ReactNode } from "react";
 
 import { Cookies, CookiesProvider } from "react-cookie";
 import { Provider } from "react-redux";
-import { AnyAction, applyMiddleware, compose, createStore, Dispatch, Store } from "redux";
+import { applyMiddleware, compose, createStore, Store } from "redux";
 import thunk from "redux-thunk";
 
-import { ILoadRootEntrypoint, USER_LOGIN, USER_REGISTER } from "./actions/main";
+import { ILoadRootEntrypoint } from "./actions/main";
 import { OvenContainer } from "./containers/util/Oven";
 import { rootReducer } from "./reducers";
 import { AppRouteContainer } from "./route-containers/App";
@@ -32,40 +32,6 @@ export const defaultState: IStoreState = {
   WorkOrder: defaultWorkOrderState,
 };
 
-const token: string | null = (() => {
-  if (typeof localStorage === "undefined") {
-    return null;
-  }
-
-  return localStorage.getItem("token");
-})();
-if (token !== null) {
-  defaultState.Main.preloadedToken = token;
-}
-
-function localStorageMiddleware() {
-  return (next: Dispatch) => (action: AnyAction) => {
-    switch (action.type) {
-    case USER_LOGIN:
-      if (typeof localStorage !== "undefined") {
-        localStorage.setItem("token", action.payload.token);
-      }
-
-      break;
-    case USER_REGISTER:
-      if (typeof localStorage !== "undefined") {
-        localStorage.setItem("token", action.payload.token);
-      }
-
-      break;
-    default:
-      break;
-    }
-
-    return next(action);
-  };
-}
-
 type StoreType = Store<IStoreState>;
 
 let store: StoreType | null = null;
@@ -83,6 +49,12 @@ export function Boot({
   rootEntrypointData,
   cookiesHeader,
 }: IProps): JSX.Element {
+  const cookies = new Cookies(cookiesHeader ?? null);
+  const cookiesToken = cookies.get("token");
+  if (cookiesToken) {
+    defaultState.Main.preloadedToken = cookiesToken;
+  }
+
   if (store === null) {
     const preloadedState = typeof predefinedState === "undefined" ? defaultState : predefinedState;
     const composeEnhancers = (() => {
@@ -97,7 +69,7 @@ export function Boot({
     store = createStore(
       rootReducer,
       preloadedState,
-      composeEnhancers(applyMiddleware(localStorageMiddleware, thunk)),
+      composeEnhancers(applyMiddleware(thunk)),
     );
   }
 
