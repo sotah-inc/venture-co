@@ -20,7 +20,7 @@ export interface IOptions {
   dbHost: string;
   dbPassword?: string;
   isGceEnv: boolean;
-  appKind: AppKind;
+  appKind: string;
 }
 
 export async function getApp(opts: IOptions): Promise<express.Express | null> {
