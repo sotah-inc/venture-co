@@ -238,7 +238,17 @@ export class Topbar extends React.Component<Props> {
     const { currentRegion, currentRealm, selectedExpansion } = this.props;
 
     if (currentRegion === null || currentRealm === null) {
-      return null;
+      return (
+        <LinkButtonRouteContainer
+          destination={""}
+          buttonProps={{
+            icon: "polygon-filter",
+            minimal: true,
+            text: "Profession Pricelists",
+            disabled: true,
+          }}
+        />
+      );
     }
 
     const { asDest, url } = (() => {
@@ -267,7 +277,17 @@ export class Topbar extends React.Component<Props> {
     const { currentRegion, currentRealm } = this.props;
 
     if (currentRegion === null || currentRealm === null) {
-      return null;
+      return (
+        <LinkButtonRouteContainer
+          buttonProps={{
+            icon: "series-search",
+            minimal: true,
+            text: "Professions",
+            disabled: true,
+          }}
+          destination={""}
+        />
+      );
     }
 
     const { asDest, url } = toRealmProfessions(currentRegion, currentRealm);
