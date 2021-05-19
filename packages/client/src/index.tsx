@@ -1,5 +1,6 @@
 import React, { ReactNode } from "react";
 
+import { Cookies, CookiesProvider } from "react-cookie";
 import { Provider } from "react-redux";
 import { AnyAction, applyMiddleware, compose, createStore, Dispatch, Store } from "redux";
 import thunk from "redux-thunk";
@@ -71,11 +72,17 @@ let store: StoreType | null = null;
 
 interface IProps {
   viewport: ReactNode;
+  cookiesHeader: string;
   predefinedState?: IStoreState;
   rootEntrypointData?: ILoadRootEntrypoint;
 }
 
-export function Boot({ viewport, predefinedState, rootEntrypointData }: IProps): JSX.Element {
+export function Boot({
+  viewport,
+  predefinedState,
+  rootEntrypointData,
+  cookiesHeader,
+}: IProps): JSX.Element {
   if (store === null) {
     const preloadedState = typeof predefinedState === "undefined" ? defaultState : predefinedState;
     const composeEnhancers = (() => {
@@ -98,8 +105,10 @@ export function Boot({ viewport, predefinedState, rootEntrypointData }: IProps):
     <div className="pure-g">
       <div className="pure-u-1">
         <Provider store={store}>
-          <AppRouteContainer viewport={viewport} rootEntrypointData={rootEntrypointData} />
-          <OvenContainer />
+          <CookiesProvider cookies={new Cookies(cookiesHeader)}>
+            <AppRouteContainer viewport={viewport} rootEntrypointData={rootEntrypointData} />
+            <OvenContainer />
+          </CookiesProvider>
         </Provider>
       </div>
     </div>

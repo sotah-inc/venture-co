@@ -2,6 +2,7 @@ import React, { ReactNode } from "react";
 
 import { Classes, Intent, IToastProps, NonIdealState, Spinner } from "@blueprintjs/core";
 import { IPreferenceJson, IRegionComposite } from "@sotah-inc/core";
+import { useCookies } from "react-cookie";
 
 import { ILoadRootEntrypoint } from "../actions/main";
 import { PromptsRouteContainer } from "../route-containers/App/Prompts";
@@ -210,7 +211,16 @@ export class App extends React.Component<Props> {
   }
 
   private handleConnected(prevProps: Props) {
-    const { authLevel, preloadedToken, changeAuthLevel, reloadUser, insertToast } = this.props;
+    const {
+      authLevel,
+      preloadedToken,
+      changeAuthLevel,
+      reloadUser,
+      insertToast,
+      profile,
+    } = this.props;
+
+    const [, setCookie] = useCookies(["token"]);
 
     switch (authLevel) {
     case AuthLevel.unauthenticated:
@@ -219,13 +229,17 @@ export class App extends React.Component<Props> {
       return;
     case AuthLevel.authenticated: {
       const hasBeenAuthorized =
-        [AuthLevel.unauthenticated, AuthLevel.initial].indexOf(prevProps.authLevel) > -1;
+          [AuthLevel.unauthenticated, AuthLevel.initial].indexOf(prevProps.authLevel) > -1;
       if (hasBeenAuthorized) {
         insertToast({
           icon: "user",
           intent: Intent.SUCCESS,
           message: "You are logged in.",
         });
+
+        if (profile !== null) {
+          setCookie("token", profile.token);
+        }
       }
 
       this.handleAuth(prevProps);
