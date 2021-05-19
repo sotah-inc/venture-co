@@ -5,7 +5,8 @@ interface IConfig {
     publicApiEndpoint: string;
   };
   serverRuntimeConfig?: {
-    serverApiEndpoint: string;
+    publicServerApiEndpoint: string;
+    privateServerApiEndpoint: string;
   };
 }
 
@@ -20,8 +21,8 @@ const hostname: string = (() => {
 const defaultApiEndpoint = "https://api.sotah.info";
 export function getApiEndpoint(): string {
   const { publicRuntimeConfig, serverRuntimeConfig }: IConfig = getConfig();
-  if (serverRuntimeConfig?.serverApiEndpoint) {
-    return serverRuntimeConfig.serverApiEndpoint;
+  if (serverRuntimeConfig?.publicServerApiEndpoint) {
+    return serverRuntimeConfig.publicServerApiEndpoint;
   }
 
   if (publicRuntimeConfig?.publicApiEndpoint) {
@@ -33,4 +34,10 @@ export function getApiEndpoint(): string {
   }
 
   return defaultApiEndpoint;
+}
+
+export function getPrivateApiEndpoint(): string | null {
+  const { serverRuntimeConfig }: IConfig = getConfig();
+
+  return serverRuntimeConfig?.privateServerApiEndpoint ?? null;
 }
