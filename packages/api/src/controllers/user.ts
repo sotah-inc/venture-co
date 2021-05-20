@@ -22,8 +22,11 @@ import { Authenticator, IRequest, IRequestResult, Validator } from "./index";
 export class UserController {
   private readonly dbConn: Connection;
 
-  constructor(dbConn: Connection) {
+  private readonly clientHost: string;
+
+  constructor(dbConn: Connection, clientHost: string) {
     this.dbConn = dbConn;
+    this.clientHost = clientHost;
   }
 
   @Validator<ICreateUserRequest, CreateUserResponse>(UserRequestBodyRules)
@@ -97,7 +100,7 @@ export class UserController {
       };
     }
 
-    const result = await generateEmailVerificationLink(getUserResult.user.email);
+    const result = await generateEmailVerificationLink(this.clientHost, getUserResult.user.email);
     if (result.errors !== null) {
       return {
         status: HTTPStatus.INTERNAL_SERVER_ERROR,

@@ -94,7 +94,13 @@ export async function getApp(opts: IOptions): Promise<express.Express | null> {
 
   // route init
   logger.info("appending route middlewares");
-  mount(opts.appKind, app, dbConn, messengers);
+  mount({
+    clientHost: opts.clientHost,
+    dbConn,
+    messengers,
+    app,
+    kind: opts.appKind,
+  });
 
   // error handlers
   // if (isGceEnv && errors !== null) {

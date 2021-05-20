@@ -6,9 +6,9 @@ import { Connection } from "typeorm";
 import { handleResult } from "../../../controllers";
 import { UserController } from "../../../controllers/user";
 
-export function getRouter(dbConn: Connection): Router {
+export function getRouter(dbConn: Connection, clientHost: string): Router {
   const router = Router();
-  const controller = new UserController(dbConn);
+  const controller = new UserController(dbConn, clientHost);
 
   router.get(
     "/",

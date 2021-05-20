@@ -12,16 +12,16 @@ import { getRouter as getPricelistsCrudRouter } from "./user/pricelists-crud";
 import { getRouter as getProfessionPricelistsCrudRouter } from "./user/profession-pricelists-crud";
 import { getRouter as getProfileRouter } from "./user/profile";
 
-export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
+export function getRouter(dbConn: Connection, messengers: IMessengers, clientHost: string): Router {
   const router = Router();
-  const controller = new UserController(dbConn);
+  const controller = new UserController(dbConn, clientHost);
 
   router.use("/user/posts", getPostsRouter(dbConn));
   router.use("/user/preferences", getPreferencesRouter(dbConn));
   router.use("/user/pricelists", getPricelistsCrudRouter(dbConn, messengers));
   router.use("/user/profession-pricelists", getProfessionPricelistsCrudRouter(dbConn));
   router.use("/user/profile", getProfileRouter(dbConn));
-  router.use("/user", getBaseRouter(dbConn));
+  router.use("/user", getBaseRouter(dbConn, clientHost));
 
   router.post(
     "/users",

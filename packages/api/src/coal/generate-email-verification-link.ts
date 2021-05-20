@@ -19,6 +19,7 @@ function resolveGenerateEmailVerificationLinkErrors(
 }
 
 export async function generateEmailVerificationLink(
+  clientHost: string,
   email: string,
 ): Promise<IGenerateEmailVerificationLinkResult> {
   const auth = resolveFirebaseAdminApp().auth();
@@ -26,7 +27,7 @@ export async function generateEmailVerificationLink(
   let dest: string;
   try {
     dest = await auth.generateEmailVerificationLink(email, {
-      url: "http://localhost:3000/user/verified",
+      url: `${clientHost}/user-verified`,
     });
   } catch (err) {
     return {

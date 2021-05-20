@@ -6,8 +6,8 @@ import { Connection } from "typeorm";
 import { handleResult } from "../../controllers";
 import { UserController } from "../../controllers/user";
 
-export function mount(app: Express, dbConn: Connection): void {
-  const controller = new UserController(dbConn);
+export function mount(app: Express, dbConn: Connection, clientHost: string): void {
+  const controller = new UserController(dbConn, clientHost);
 
   app.post(
     "/user/last-path",
