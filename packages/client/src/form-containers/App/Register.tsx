@@ -47,6 +47,7 @@ const config: WithFormikConfig<IDispatchProps & IStateProps, IFormValues> = {
         id: registerUserResult.data.user.id,
         firebaseUid: registerUserResult.data.user.firebaseUid,
         level: UserLevel.Unverified,
+        lastClientPath: null,
       },
     });
   },

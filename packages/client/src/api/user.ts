@@ -6,6 +6,7 @@ import {
   ICreateUserResponseData,
   IGetPreferencesResponseData,
   IPreferenceJson,
+  ISaveLastPathRequest,
   IUserJson,
   IValidationErrorResponse,
   IVerifyUserResponseData,
@@ -15,7 +16,7 @@ import {
 } from "@sotah-inc/core";
 import * as HTTPStatus from "http-status";
 
-import { getApiEndpoint } from "./config";
+import { getApiEndpoint, getPrivateApiEndpoint } from "./config";
 import { gather } from "./gather";
 
 interface IRegisterUserResult {
@@ -222,4 +223,29 @@ export async function updatePreferences(
   }
 
   return { data: (body as IGetPreferencesResponseData).preference, error: null };
+}
+
+export async function saveLastPath(
+  token: string,
+  request: ISaveLastPathRequest,
+): Promise<void | null> {
+  const privateApiEndpoint = getPrivateApiEndpoint();
+  if (privateApiEndpoint === null) {
+    return null;
+  }
+
+  const { status } = await gather<ISaveLastPathRequest, null>({
+    body: request,
+    headers: new Headers({
+      Authorization: `Bearer ${token}`,
+      "content-type": "application/json",
+    }),
+    method: "POST",
+    url: `${privateApiEndpoint}/user/last-path`,
+  });
+  if (status !== HTTPStatus.OK) {
+    return null;
+  }
+
+  return;
 }
