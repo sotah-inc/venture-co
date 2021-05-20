@@ -1,7 +1,9 @@
 import {
   CreateUserResponse,
   ICreateUserRequest,
+  ISaveLastPathRequest,
   IValidationErrorResponse,
+  SaveLastPathResponse,
   UserLevel,
   VerifyUserResponse,
 } from "@sotah-inc/core";
@@ -13,13 +15,9 @@ import { Connection } from "typeorm";
 import { createUser } from "../coal";
 import { generateEmailVerificationLink } from "../coal/generate-email-verification-link";
 import { getUser } from "../coal/get-user";
-import {
-  UserRequestBodyRules,
-  validate,
-  yupValidationErrorToResponse,
-} from "../lib/validator-rules";
+import { SaveLastPathRules, UserRequestBodyRules } from "../lib/validator-rules";
 
-import { Authenticator, IRequest, IRequestResult } from "./index";
+import { Authenticator, IRequest, IRequestResult, Validator } from "./index";
 
 export class UserController {
   private readonly dbConn: Connection;
@@ -28,18 +26,14 @@ export class UserController {
     this.dbConn = dbConn;
   }
 
-  public async createUser(body: ICreateUserRequest): Promise<IRequestResult<CreateUserResponse>> {
-    const result = await validate(UserRequestBodyRules, body);
-    if (result.error || !result.data) {
-      return {
-        data: yupValidationErrorToResponse(result.error),
-        status: HTTPStatus.BAD_REQUEST,
-      };
-    }
-
+  @Validator<ICreateUserRequest, CreateUserResponse>(UserRequestBodyRules)
+  public async createUser(
+    req: IRequest<ICreateUserRequest>,
+    _res: Response,
+  ): Promise<IRequestResult<CreateUserResponse>> {
     const registerUserResult = await createUser({
-      email: result.data.email,
-      password: result.data.password,
+      email: req.body.email,
+      password: req.body.password,
     });
     if (registerUserResult.errors !== null) {
       return {
@@ -121,6 +115,23 @@ export class UserController {
       data: {
         destination: result.destination,
       },
+      status: HTTPStatus.OK,
+    };
+  }
+
+  @Validator<ISaveLastPathRequest, SaveLastPathResponse>(SaveLastPathRules)
+  @Authenticator<ISaveLastPathRequest, SaveLastPathResponse>(UserLevel.Unverified)
+  public async saveLastPath(
+    req: IRequest<ISaveLastPathRequest>,
+    _res: Response,
+  ): Promise<IRequestResult<SaveLastPathResponse>> {
+    const user = req.user as User;
+
+    user.lastClientPath = req.body.lastPath;
+    await this.dbConn.manager.save(user);
+
+    return {
+      data: null,
       status: HTTPStatus.OK,
     };
   }

@@ -5,7 +5,7 @@ import {
   ICreateUserRequest,
   ICreateWorkOrderRequest,
   IGetAuctionsRequest,
-  IQueryRequest,
+  IQueryRequest, ISaveLastPathRequest,
   IValidationErrorResponse,
   Locale,
   OrderDirection,
@@ -19,6 +19,13 @@ export const PreferenceRules = yup
   .object<ICreatePreferencesRequest>({
     current_realm: yup.string().required(),
     current_region: yup.string().required(),
+  })
+  .required()
+  .noUnknown();
+
+export const SaveLastPathRules = yup
+  .object<ISaveLastPathRequest>({
+    lastPath: yup.string().required("last-path is required"),
   })
   .required()
   .noUnknown();

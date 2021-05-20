@@ -6,6 +6,7 @@ import * as nats from "nats";
 import { v4 as uuidv4 } from "uuid";
 import { Logger } from "winston";
 
+import { privateApp } from "./app/private";
 import { publicApp } from "./app/public";
 
 export enum AppKind {
@@ -21,6 +22,7 @@ export interface IOptions {
   dbPassword?: string;
   isGceEnv: boolean;
   appKind: string;
+  clientHost: string;
 }
 
 export async function getApp(opts: IOptions): Promise<express.Express | null> {
@@ -105,6 +107,8 @@ export async function getApp(opts: IOptions): Promise<express.Express | null> {
     break;
   case AppKind.Private:
   default:
+    privateApp(app, dbConn);
+
     break;
   }
 

@@ -26,7 +26,7 @@ export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
   router.post(
     "/users",
     wrap(async (req: Request, res: Response) =>
-      handleResult(res, await controller.createUser(req.body)),
+      handleResult(res, await controller.createUser(req, res)),
     ),
   );
 
