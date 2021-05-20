@@ -19,3 +19,9 @@ export interface IVerifyUserResponseData {
 }
 
 export type VerifyUserResponse = IVerifyUserResponseData | IValidationErrorResponse | null;
+
+export interface ISaveLastPathRequest {
+  lastPath: string;
+}
+
+export type SaveLastPathResponse = IValidationErrorResponse | null;
