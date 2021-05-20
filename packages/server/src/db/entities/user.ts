@@ -22,6 +22,9 @@ export class User {
   @Index("idx_firebase_id")
   public firebaseUid: string;
 
+  @Column({ type: "varchar", length: 255, nullable: true })
+  public lastClientPath: string | undefined;
+
   @OneToOne(
     () => Preference,
     preference => preference.user,
@@ -66,6 +69,7 @@ export class User {
       id: this.id ?? "",
       level: this.level,
       firebaseUid: this.firebaseUid,
+      lastClientPath: this.lastClientPath ?? null,
     };
   }
 }
