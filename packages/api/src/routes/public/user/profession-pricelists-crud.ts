@@ -3,10 +3,10 @@ import { wrap } from "async-middleware";
 import { Request, Response, Router } from "express";
 import { Connection } from "typeorm";
 
-import { handleResult } from "../../controllers";
+import { handleResult } from "../../../controllers";
 import {
   ProfessionPricelistsCrudController,
-} from "../../controllers/user/profession-pricelists-crud";
+} from "../../../controllers/user/profession-pricelists-crud";
 
 export function getRouter(dbConn: Connection): Router {
   const router = Router();

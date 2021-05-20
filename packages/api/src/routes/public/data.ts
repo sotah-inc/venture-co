@@ -8,8 +8,8 @@ import { wrap } from "async-middleware";
 import { Request, Response, Router } from "express";
 import { Connection } from "typeorm";
 
-import { DataController, handleResult } from "../controllers";
-import { ProfessionsController } from "../controllers/data/professions";
+import { DataController, handleResult } from "../../controllers";
+import { ProfessionsController } from "../../controllers/data/professions";
 import { getRouter as getQueryAuctionStatsRouter } from "./data/query-auction-stats";
 
 export function getRouter(dbConn: Connection, messengers: IMessengers): Router {

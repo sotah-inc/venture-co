@@ -3,34 +3,34 @@ import { wrap } from "async-middleware";
 import { Request, Response, Router } from "express";
 import { Connection } from "typeorm";
 
-import { handleResult } from "../../controllers";
-import { PostCrudController } from "../../controllers/user/post-crud";
+import { handleResult } from "../../../controllers";
+import { PreferencesController } from "../../../controllers/user/preferences";
 
 export function getRouter(dbConn: Connection): Router {
   const router = Router();
-  const controller = new PostCrudController(dbConn);
+  const controller = new PreferencesController(dbConn);
+
+  router.get(
+    "/",
+    auth(dbConn),
+    wrap(async (req: Request, res: Response) =>
+      handleResult(res, await controller.getPreferences(req, res)),
+    ),
+  );
 
   router.post(
     "/",
     auth(dbConn),
     wrap(async (req: Request, res: Response) =>
-      handleResult(res, await controller.createPost(req, res)),
+      handleResult(res, await controller.createPreferences(req, res)),
     ),
   );
 
   router.put(
-    "/:post_id",
+    "/",
     auth(dbConn),
     wrap(async (req: Request, res: Response) =>
-      handleResult(res, await controller.updatePost(req, res)),
-    ),
-  );
-
-  router.delete(
-    "/:post_id",
-    auth(dbConn),
-    wrap(async (req: Request, res: Response) =>
-      handleResult(res, await controller.deletePost(req, res)),
+      handleResult(res, await controller.updatePreferences(req, res)),
     ),
   );
 

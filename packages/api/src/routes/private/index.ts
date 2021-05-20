@@ -6,7 +6,7 @@ import { Connection } from "typeorm";
 import { handleResult } from "../../controllers";
 import { UserController } from "../../controllers/user";
 
-export function privateApp(app: Express, dbConn: Connection): void {
+export function mount(app: Express, dbConn: Connection): void {
   const controller = new UserController(dbConn);
 
   app.post(

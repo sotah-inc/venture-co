@@ -6,13 +6,7 @@ import * as nats from "nats";
 import { v4 as uuidv4 } from "uuid";
 import { Logger } from "winston";
 
-import { privateApp } from "./app/private";
-import { publicApp } from "./app/public";
-
-export enum AppKind {
-  Private = "private",
-  Public = "public",
-}
+import { mount } from "../routes";
 
 export interface IOptions {
   logger: Logger;
@@ -100,17 +94,7 @@ export async function getApp(opts: IOptions): Promise<express.Express | null> {
 
   // route init
   logger.info("appending route middlewares");
-  switch (opts.appKind) {
-  case AppKind.Public:
-    publicApp(app, dbConn, messengers);
-
-    break;
-  case AppKind.Private:
-  default:
-    privateApp(app, dbConn);
-
-    break;
-  }
+  mount(opts.appKind, app, dbConn, messengers);
 
   // error handlers
   // if (isGceEnv && errors !== null) {

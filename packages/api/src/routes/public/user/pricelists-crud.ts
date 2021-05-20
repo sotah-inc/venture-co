@@ -3,8 +3,8 @@ import { wrap } from "async-middleware";
 import { Request, Response, Router } from "express";
 import { Connection } from "typeorm";
 
-import { handleResult } from "../../controllers";
-import { PricelistCrudController } from "../../controllers/user/pricelist-crud";
+import { handleResult } from "../../../controllers";
+import { PricelistCrudController } from "../../../controllers/user/pricelist-crud";
 
 export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
   const router = Router();

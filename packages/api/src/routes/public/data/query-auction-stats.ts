@@ -2,8 +2,8 @@ import { IMessengers } from "@sotah-inc/server";
 import { wrap } from "async-middleware";
 import { Request, Response, Router } from "express";
 
-import { handleResult } from "../../controllers";
-import { QueryAuctionStatsController } from "../../controllers/data/query-auction-stats";
+import { handleResult } from "../../../controllers";
+import { QueryAuctionStatsController } from "../../../controllers/data/query-auction-stats";
 
 export function getRouter(messengers: IMessengers): Router {
   const router = Router();

@@ -3,8 +3,8 @@ import { wrap } from "async-middleware";
 import { Request, Response, Router } from "express";
 import { Connection } from "typeorm";
 
-import { handleResult } from "../controllers";
-import { UserController } from "../controllers/user";
+import { handleResult } from "../../controllers";
+import { UserController } from "../../controllers/user";
 import { getRouter as getBaseRouter } from "./user/base";
 import { getRouter as getPostsRouter } from "./user/posts-crud";
 import { getRouter as getPreferencesRouter } from "./user/preferences";

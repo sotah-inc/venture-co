@@ -3,8 +3,8 @@ import { wrap } from "async-middleware";
 import { Request, Response, Router } from "express";
 import { Connection } from "typeorm";
 
-import { handleResult } from "../controllers";
-import { WorkOrderController } from "../controllers/work-order";
+import { handleResult } from "../../controllers";
+import { WorkOrderController } from "../../controllers/work-order";
 
 export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
   const router = Router();
