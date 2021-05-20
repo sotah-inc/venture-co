@@ -38,6 +38,7 @@ export interface IUserJson {
   id: string;
   level: UserLevel;
   firebaseUid: string;
+  lastClientPath: string | null;
 }
 
 export interface IPostJson {
