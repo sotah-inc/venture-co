@@ -25,7 +25,8 @@ export const PreferenceRules = yup
 
 export const SaveLastPathRules = yup
   .object<ISaveLastPathRequest>({
-    lastPath: yup.string().required("last-path is required"),
+    lastClientAsPath: yup.string().required("last-client-as-path is required"),
+    lastClientPathname: yup.string().required("last-client-pathname is required"),
   })
   .required()
   .noUnknown();

@@ -130,7 +130,8 @@ export class UserController {
   ): Promise<IRequestResult<SaveLastPathResponse>> {
     const user = req.user as User;
 
-    user.lastClientPath = req.body.lastPath;
+    user.lastClientAsPath = req.body.lastClientAsPath;
+    user.lastClientPathname = req.body.lastClientPathname;
     await this.dbConn.manager.save(user);
 
     return {
