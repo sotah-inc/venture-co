@@ -15,6 +15,12 @@ function RouteContainer({ router }: Props) {
           await router.replace(pathname, asPath);
         })();
       }}
+      asPath={router.asPath}
+      redirectToHome={() => {
+        (async () => {
+          await router.replace("/", "/");
+        })();
+      }}
     />
   );
 }

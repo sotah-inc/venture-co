@@ -9,20 +9,33 @@ export interface IStateProps {
 }
 
 export interface IRouteProps {
+  asPath: string;
+
   redirectToLastPath: (pathname: string, asPath: string) => void;
+  redirectToHome: () => void;
 }
 
 export type Props = Readonly<IStateProps & IRouteProps>;
 
 export class UserVerify extends React.Component<Props> {
   public componentDidMount(): void {
-    const { redirectToLastPath, profile } = this.props;
+    const { redirectToLastPath, profile, redirectToHome, asPath } = this.props;
 
-    if (
-      profile === null ||
-      profile.user.lastClientAsPath === null ||
-      profile.user.lastClientPathname === null
-    ) {
+    if (profile === null) {
+      redirectToHome();
+
+      return;
+    }
+
+    if (profile.user.lastClientAsPath === null || profile.user.lastClientPathname === null) {
+      redirectToHome();
+
+      return;
+    }
+
+    if (profile.user.lastClientAsPath === asPath) {
+      redirectToHome();
+
       return;
     }
 
