@@ -101,7 +101,7 @@ export async function verifyUserConfirm(token: string): Promise<IVerifyUserConfi
       "content-type": "application/json",
     }),
     method: "POST",
-    url: `${getApiEndpoint()}/user/verify-confirm`,
+    url: `${getPrivateApiEndpoint()}/user/verify-confirm`,
   });
   switch (status) {
   case HTTPStatus.UNAUTHORIZED:
