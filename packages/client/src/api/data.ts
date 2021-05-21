@@ -21,15 +21,6 @@ import * as HTTPStatus from "http-status";
 import { getApiEndpoint } from "./config";
 import { gather, gatherWithQuery } from "./gather";
 
-export async function getPing(): Promise<boolean> {
-  try {
-    await fetch(`${getApiEndpoint()}/ping`);
-    return true;
-  } catch (err) {
-    return false;
-  }
-}
-
 export async function getBoot(): Promise<IGetBootResponseData | null> {
   const { body, status } = await gather<null, GetBootResponse>({
     url: `${getApiEndpoint()}/boot`,

@@ -1,38 +1,31 @@
 import {
-  IExpansion,
+  IGetBootResponseData,
   IPreferenceJson,
   IRegionComposite,
-  IShortProfession,
   IVerifyUserResponseData,
 } from "@sotah-inc/core";
 
-import { IClientRealm, IFetchData, IItemClasses, IProfile, IRegions } from "./global";
+import { IClientRealm, IFetchData, IItemClasses, IProfile } from "./global";
 
 export interface IMainState {
-  fetchPingLevel: FetchLevel;
-  profile: IProfile | null;
-  userPreferences: IPreferenceJson | null;
-  fetchUserPreferencesLevel: FetchLevel;
+  bootData: IFetchData<IGetBootResponseData>;
+
   preloadedToken: string;
-  isRegistered: boolean;
-  isLoggedIn: boolean;
-  regions: IRegions;
-  currentRegion: IRegionComposite | null;
-  fetchRealmLevel: FetchLevel;
-  realms: IClientRealm[];
-  currentRealm: IClientRealm | null;
+  profile: IProfile | null;
   authLevel: AuthLevel;
-  isLoginDialogOpen: boolean;
-  expansions: IExpansion[];
-  professions: IShortProfession[];
-  itemClasses: IItemClasses;
-  fetchBootLevel: FetchLevel;
-  fetchItemClassesLevel: FetchLevel;
-  isRegisterDialogOpen: boolean;
-  firebaseConfig: {
-    browser_api_key: string;
-  };
   verifyUser: IFetchData<IVerifyUserResponseData>;
+  userPreferences: IFetchData<IPreferenceJson>;
+
+  isLoggedIn: boolean;
+  isRegisterDialogOpen: boolean;
+  isLoginDialogOpen: boolean;
+
+  currentRegion: IRegionComposite | null;
+
+  realms: IFetchData<IClientRealm[]>;
+  currentRealm: IClientRealm | null;
+
+  itemClasses: IFetchData<IItemClasses>;
 }
 
 export enum FetchLevel {
@@ -52,28 +45,44 @@ export enum AuthLevel {
 
 export const defaultMainState: IMainState = {
   authLevel: AuthLevel.initial,
+  bootData: {
+    level: FetchLevel.initial,
+    errors: {},
+    data: {
+      regions: [],
+      expansions: [],
+      professions: [],
+      firebase_config: {
+        browser_api_key: "",
+      },
+    },
+  },
   currentRealm: null,
   currentRegion: null,
-  expansions: [],
-  fetchBootLevel: FetchLevel.initial,
-  fetchItemClassesLevel: FetchLevel.initial,
-  fetchPingLevel: FetchLevel.success,
-  fetchRealmLevel: FetchLevel.initial,
-  fetchUserPreferencesLevel: FetchLevel.initial,
-  firebaseConfig: {
-    browser_api_key: "",
-  },
   isLoggedIn: false,
   isLoginDialogOpen: false,
   isRegisterDialogOpen: false,
-  isRegistered: false,
-  itemClasses: {},
+  itemClasses: {
+    level: FetchLevel.initial,
+    errors: {},
+    data: {},
+  },
   preloadedToken: "",
-  professions: [],
   profile: null,
-  realms: [],
-  regions: {},
-  userPreferences: null,
+  realms: {
+    level: FetchLevel.initial,
+    errors: {},
+    data: [],
+  },
+  userPreferences: {
+    level: FetchLevel.initial,
+    errors: {},
+    data: {
+      id: 0,
+      current_realm: null,
+      current_region: null,
+    },
+  },
   verifyUser: {
     data: {
       destination: "",

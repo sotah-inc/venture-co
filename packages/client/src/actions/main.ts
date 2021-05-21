@@ -11,7 +11,7 @@ import {
 } from "@sotah-inc/core";
 import { Dispatch } from "redux";
 
-import { getBoot, getConnectedRealms, getItemClasses, getPing } from "../api/data";
+import { getConnectedRealms, getItemClasses } from "../api/data";
 import {
   createPreferences,
   getPreferences,
@@ -27,18 +27,6 @@ import {
 import { IClientRealm, IProfile } from "../types/global";
 import { AuthLevel } from "../types/main";
 import { ActionsUnion, createAction } from "./helpers";
-
-export const REQUEST_GET_PING = "REQUEST_GET_PING";
-export const RECEIVE_GET_PING = "RECEIVE_GET_PING";
-export const RequestGetPing = () => createAction(REQUEST_GET_PING);
-export const ReceiveGetPing = (payload: boolean) => createAction(RECEIVE_GET_PING, payload);
-type FetchGetPingType = ReturnType<typeof RequestGetPing | typeof ReceiveGetPing>;
-export const FetchGetPing = () => {
-  return async (dispatch: Dispatch<FetchGetPingType>) => {
-    dispatch(RequestGetPing());
-    dispatch(ReceiveGetPing(await getPing()));
-  };
-};
 
 export const USER_REGISTER = "USER_REGISTER";
 export const UserRegister = (payload: IProfile) => createAction(USER_REGISTER, payload);
@@ -104,19 +92,6 @@ export const FetchUserPreferencesUpdate = (token: string, body: UpdatePreference
   return async (dispatch: Dispatch<FetchUserPreferencesUpdateType>) => {
     dispatch(RequestUserPreferencesUpdate());
     dispatch(ReceiveUserPreferencesUpdate(await updatePreferences(token, body)));
-  };
-};
-
-export const REQUEST_GET_BOOT = "REQUEST_GET_BOOT";
-export const RECEIVE_GET_BOOT = "RECEIVE_GET_BOOT";
-export const RequestGetBoot = () => createAction(REQUEST_GET_BOOT);
-export const ReceiveGetBoot = (payload: IGetBootResponseData | null) =>
-  createAction(RECEIVE_GET_BOOT, payload);
-type FetchGetBootType = ReturnType<typeof RequestGetBoot | typeof ReceiveGetBoot>;
-export const FetchGetBoot = () => {
-  return async (dispatch: Dispatch<FetchGetBootType>) => {
-    dispatch(RequestGetBoot());
-    dispatch(ReceiveGetBoot(await getBoot()));
   };
 };
 
@@ -214,18 +189,14 @@ export const MainActions = {
   LoadRegionEntrypoint,
   LoadRootEntrypoint,
   RealmChange,
-  ReceiveGetBoot,
   ReceiveGetConnectedRealms,
   ReceiveGetItemClasses,
-  ReceiveGetPing,
   ReceiveGetUserPreferences,
   ReceiveUserReload,
   ReceiveVerifyUser,
   RegionChange,
-  RequestGetBoot,
   RequestGetConnectedRealms,
   RequestGetItemClasses,
-  RequestGetPing,
   RequestGetUserPreferences,
   RequestUserReload,
   RequestVerifyUser,

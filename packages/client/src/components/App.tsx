@@ -25,10 +25,8 @@ export interface IStateProps {
 }
 
 export interface IDispatchProps {
-  reloadUser: (token: string) => void;
   changeIsLoginDialogOpen: (isLoginDialogOpen: boolean) => void;
   loadUserPreferences: (token: string) => void;
-  changeAuthLevel: (authLevel: AuthLevel) => void;
   insertToast: (toast: IToastProps) => void;
   loadRootEntrypoint: (payload: ILoadRootEntrypoint) => void;
 }
@@ -217,9 +215,6 @@ export class App extends React.Component<Props> {
   private handleConnected(prevProps: Props) {
     const {
       authLevel,
-      preloadedToken,
-      changeAuthLevel,
-      reloadUser,
       insertToast,
       profile,
       cookies,
@@ -249,16 +244,6 @@ export class App extends React.Component<Props> {
 
       return;
     }
-    case AuthLevel.initial:
-      if (preloadedToken.length === 0) {
-        changeAuthLevel(AuthLevel.unauthenticated);
-
-        return;
-      }
-
-      reloadUser(preloadedToken);
-
-      return;
     default:
       return;
     }
