@@ -1,10 +1,8 @@
 import { connect } from "react-redux";
 
 import {
-  ChangeAuthLevel,
   ChangeIsLoginDialogOpen,
   FetchGetUserPreferences,
-  FetchUserReload,
   LoadRootEntrypoint,
 } from "../actions/main";
 import { InsertToast } from "../actions/oven";
@@ -36,17 +34,14 @@ function mapStateToProps(state: IStoreState): IStateProps {
     isLoginDialogOpen,
     preloadedToken,
     profile,
-    userPreferences,
   };
 }
 
 const mapDispatchToProps: IDispatchProps = {
-  changeAuthLevel: ChangeAuthLevel,
   changeIsLoginDialogOpen: ChangeIsLoginDialogOpen,
   insertToast: InsertToast,
   loadRootEntrypoint: LoadRootEntrypoint,
   loadUserPreferences: FetchGetUserPreferences,
-  reloadUser: FetchUserReload,
 };
 
 export const AppContainer = connect<IStateProps, IDispatchProps, IOwnProps>(

@@ -5,10 +5,8 @@ import {
   LoadRegionEntrypoint,
   MainActions,
   RECEIVE_GET_CONNECTEDREALMS,
-  ReceiveGetBoot,
   ReceiveGetConnectedRealms,
   ReceiveGetItemClasses,
-  ReceiveGetPing,
   ReceiveGetUserPreferences,
   ReceiveVerifyUser,
 } from "../../actions/main";
@@ -24,7 +22,7 @@ function receiveGetConnectedRealmsHandler(
   action: ReturnType<typeof ReceiveGetConnectedRealms>,
 ): IMainState {
   if (action.payload === null || action.payload.length === 0) {
-    return { ...state, fetchRealmLevel: FetchLevel.failure };
+    return { ...state, realms: { ...state.realms, level: FetchLevel.failure } };
   }
 
   const realms = action.payload.reduce<IClientRealm[]>((out, connectedRealm) => {
@@ -44,20 +42,28 @@ function receiveGetConnectedRealmsHandler(
 
   const currentRealm: IClientRealm = (() => {
     // optionally halting on blank user-preferences
-    if (state.userPreferences === null || state.currentRegion === null) {
+    if (state.userPreferences.level !== FetchLevel.success) {
+      return realms[0];
+    }
+
+    if (state.currentRegion === null || state.userPreferences.data.current_realm === null) {
       return realms[0];
     }
 
     // defaulting to first realm in list if region is different from preferred region
-    if (state.currentRegion.config_region.name !== state.userPreferences.current_region) {
+    if (state.currentRegion.config_region.name !== state.userPreferences.data.current_realm) {
       return realms[0];
     }
 
     // defaulting to first realm in list if non-match
-    return realms.find(v => v.realm.slug === state.userPreferences?.current_realm) ?? realms[0];
+    return realms.find(v => v.realm.slug === state.userPreferences.data.current_realm) ?? realms[0];
   })();
 
-  return { ...state, fetchRealmLevel: FetchLevel.success, realms, currentRealm };
+  return {
+    ...state,
+    currentRealm,
+    realms: { level: FetchLevel.success, data: realms, errors: {} },
+  };
 }
 
 export const handlers: IKindHandlers<IMainState, MainActions> = {

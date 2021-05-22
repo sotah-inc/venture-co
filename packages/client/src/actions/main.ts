@@ -17,15 +17,12 @@ import {
   getPreferences,
   ICreatePreferencesResult,
   IGetPreferencesResult,
-  IReloadUserResponse,
   IUpdatePreferencesResult,
-  reloadUser,
   updatePreferences,
   verifyUser,
   VerifyUserResult,
 } from "../api/user";
 import { IClientRealm, IProfile } from "../types/global";
-import { AuthLevel } from "../types/main";
 import { ActionsUnion, createAction } from "./helpers";
 
 export const USER_REGISTER = "USER_REGISTER";
@@ -33,22 +30,6 @@ export const UserRegister = (payload: IProfile) => createAction(USER_REGISTER, p
 
 export const USER_LOGIN = "USER_LOGIN";
 export const UserLogin = (payload: IProfile) => createAction(USER_LOGIN, payload);
-
-export const REQUEST_USER_RELOAD = "REQUEST_USER_RELOAD";
-export const RECEIVE_USER_RELOAD = "RECEIVE_USER_RELOAD";
-const RequestUserReload = () => createAction(REQUEST_USER_RELOAD);
-const ReceiveUserReload = (payload: IReloadUserResponse) =>
-  createAction(RECEIVE_USER_RELOAD, payload);
-type FetchUserReloadType = ReturnType<typeof RequestUserReload | typeof ReceiveUserReload>;
-export const FetchUserReload = (token: string) => {
-  return async (dispatch: Dispatch<FetchUserReloadType>) => {
-    dispatch(RequestUserReload());
-    dispatch(ReceiveUserReload(await reloadUser(token)));
-  };
-};
-
-export const CHANGE_AUTH_LEVEL = "CHANGE_AUTH_LEVEL";
-export const ChangeAuthLevel = (payload: AuthLevel) => createAction(CHANGE_AUTH_LEVEL, payload);
 
 export const REQUEST_GET_USERPREFERENCES = "REQUEST_GET_USERPREFERENCES";
 export const RECEIVE_GET_USERPREFERENCES = "RECEIVE_GET_USERPREFERENCES";
@@ -155,7 +136,6 @@ export const ChangeIsRegisterDialogOpen = (payload: boolean) =>
 export interface ILoadRootEntrypoint {
   boot: IGetBootResponseData | null;
   itemClasses: IGetItemClassesResponseData | null;
-  ping: boolean;
 }
 
 export const LOAD_ROOT_ENTRYPOINT = "LOAD_ROOT_ENTRYPOINT";
@@ -182,7 +162,6 @@ export const LoadRealmEntrypoint = (payload: ILoadRealmEntrypoint) =>
   createAction(LOAD_REALM_ENTRYPOINT, payload);
 
 export const MainActions = {
-  ChangeAuthLevel,
   ChangeIsLoginDialogOpen,
   ChangeIsRegisterDialogOpen,
   LoadRealmEntrypoint,
@@ -192,13 +171,11 @@ export const MainActions = {
   ReceiveGetConnectedRealms,
   ReceiveGetItemClasses,
   ReceiveGetUserPreferences,
-  ReceiveUserReload,
   ReceiveVerifyUser,
   RegionChange,
   RequestGetConnectedRealms,
   RequestGetItemClasses,
   RequestGetUserPreferences,
-  RequestUserReload,
   RequestVerifyUser,
   UserLogin,
   UserRegister,

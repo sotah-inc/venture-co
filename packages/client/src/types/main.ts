@@ -5,18 +5,27 @@ import {
   IVerifyUserResponseData,
 } from "@sotah-inc/core";
 
-import { IClientRealm, IFetchData, IItemClasses, IProfile } from "./global";
+import { IGetItemClassesResponseData } from "../../../core/src";
+import { IClientRealm, IFetchData, IProfile } from "./global";
+
+export type UserData = {
+  authLevel: AuthLevel.initial | AuthLevel.unauthenticated;
+  profile: null;
+  preloadedToken: string | null;
+} | {
+  authLevel: AuthLevel.authenticated;
+  profile: IProfile;
+  preloadedToken: string | null;
+}
 
 export interface IMainState {
   bootData: IFetchData<IGetBootResponseData>;
 
   preloadedToken: string;
-  profile: IProfile | null;
-  authLevel: AuthLevel;
+  userData: UserData;
   verifyUser: IFetchData<IVerifyUserResponseData>;
   userPreferences: IFetchData<IPreferenceJson>;
 
-  isLoggedIn: boolean;
   isRegisterDialogOpen: boolean;
   isLoginDialogOpen: boolean;
 
@@ -25,7 +34,7 @@ export interface IMainState {
   realms: IFetchData<IClientRealm[]>;
   currentRealm: IClientRealm | null;
 
-  itemClasses: IFetchData<IItemClasses>;
+  itemClasses: IFetchData<IGetItemClassesResponseData>;
 }
 
 export enum FetchLevel {
@@ -44,7 +53,6 @@ export enum AuthLevel {
 }
 
 export const defaultMainState: IMainState = {
-  authLevel: AuthLevel.initial,
   bootData: {
     level: FetchLevel.initial,
     errors: {},
@@ -59,16 +67,16 @@ export const defaultMainState: IMainState = {
   },
   currentRealm: null,
   currentRegion: null,
-  isLoggedIn: false,
   isLoginDialogOpen: false,
   isRegisterDialogOpen: false,
   itemClasses: {
     level: FetchLevel.initial,
     errors: {},
-    data: {},
+    data: {
+      item_classes: [],
+    },
   },
   preloadedToken: "",
-  profile: null,
   realms: {
     level: FetchLevel.initial,
     errors: {},
@@ -82,6 +90,11 @@ export const defaultMainState: IMainState = {
       current_realm: null,
       current_region: null,
     },
+  },
+  userData: {
+    authLevel: AuthLevel.initial,
+    profile: null,
+    preloadedToken: null,
   },
   verifyUser: {
     data: {
