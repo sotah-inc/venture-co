@@ -76,21 +76,6 @@ export const FetchUserPreferencesUpdate = (token: string, body: UpdatePreference
   };
 };
 
-export const REQUEST_GET_ITEMCLASSES = "REQUEST_GET_ITEMCLASSES";
-export const RECEIVE_GET_ITEMCLASSES = "RECEIVE_GET_ITEMCLASSES";
-export const RequestGetItemClasses = () => createAction(REQUEST_GET_ITEMCLASSES);
-export const ReceiveGetItemClasses = (payload: IGetItemClassesResponseData | null) =>
-  createAction(RECEIVE_GET_ITEMCLASSES, payload);
-type FetchGetItemClassesType = ReturnType<
-  typeof RequestGetItemClasses | typeof ReceiveGetItemClasses
->;
-export const FetchGetItemClasses = () => {
-  return async (dispatch: Dispatch<FetchGetItemClassesType>) => {
-    dispatch(RequestGetItemClasses());
-    dispatch(ReceiveGetItemClasses(await getItemClasses()));
-  };
-};
-
 export const REQUEST_VERIFY_USER = "REQUEST_VERIFY_USER";
 export const RECEIVE_VERIFY_USER = "RECEIVE_VERIFY_USER";
 export const RequestVerifyUser = () => createAction(REQUEST_VERIFY_USER);
@@ -169,12 +154,10 @@ export const MainActions = {
   LoadRootEntrypoint,
   RealmChange,
   ReceiveGetConnectedRealms,
-  ReceiveGetItemClasses,
   ReceiveGetUserPreferences,
   ReceiveVerifyUser,
   RegionChange,
   RequestGetConnectedRealms,
-  RequestGetItemClasses,
   RequestGetUserPreferences,
   RequestVerifyUser,
   UserLogin,
