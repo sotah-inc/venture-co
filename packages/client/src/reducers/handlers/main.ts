@@ -221,20 +221,6 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
       },
     },
   },
-  ping: {
-    get: {
-      receive: (state: IMainState, action: ReturnType<typeof ReceiveGetPing>): IMainState => {
-        if (!action.payload) {
-          return { ...state, fetchPingLevel: FetchLevel.failure };
-        }
-
-        return { ...state, fetchPingLevel: FetchLevel.success };
-      },
-      request: (state: IMainState): IMainState => {
-        return { ...state, fetchPingLevel: FetchLevel.fetching };
-      },
-    },
-  },
   userpreferences: {
     get: {
       receive: (
