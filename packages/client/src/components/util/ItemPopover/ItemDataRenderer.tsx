@@ -1,6 +1,7 @@
 import React from "react";
 
 import {
+  IItemClass,
   InventoryType,
   IShortItem,
   IShortItemBase,
@@ -8,7 +9,6 @@ import {
   ItemSubClass,
 } from "@sotah-inc/core";
 
-import { IItemClasses } from "../../../types/global";
 import { getItemTextValue, qualityToColorClass } from "../../../util";
 import {
   ItemCurrency,
@@ -58,7 +58,7 @@ function renderBasicCraftingReagent(item: IShortItemBase): JSX.Element {
 
 function renderProfessionRecipe(
   item: IShortItem | IShortItemBase,
-  itemClasses: IItemClasses,
+  itemClasses: IItemClass[],
 ): JSX.Element {
   return (
     <>
@@ -85,7 +85,7 @@ function renderProfessionRecipe(
 export interface IItemDataRenderer {
   itemClass?: ItemClass;
   itemSubClass?: ItemSubClass;
-  render: (item: IShortItem | IShortItemBase, _itemClasses: IItemClasses) => JSX.Element;
+  render: (item: IShortItem | IShortItemBase, _itemClasses: IItemClass[]) => JSX.Element;
 }
 
 export const defaultItemDataRenderer: IItemDataRenderer = {
@@ -490,7 +490,7 @@ export function ItemDataRenderer({
   itemClasses,
 }: {
   item: IShortItem | IShortItemBase;
-  itemClasses: IItemClasses;
+  itemClasses: IItemClass[];
 }): JSX.Element {
   const itemDataRenderer: IItemDataRenderer =
     itemDataRenderers.find(

@@ -2,14 +2,14 @@ import React from "react";
 
 import { PopoverInteractionKind } from "@blueprintjs/core";
 import { Placement, Popover2 } from "@blueprintjs/popover2";
-import { IShortItem } from "@sotah-inc/core";
+import { IGetItemClassesResponseData, IShortItem } from "@sotah-inc/core";
 
-import { IItemClasses } from "../../types/global";
+import { IFetchData } from "../../types/global";
 import { ItemLink } from "./ItemLink";
 import { ItemPopoverContent } from "./ItemPopover/ItemPopoverContent";
 
 export interface IStateProps {
-  itemClasses: IItemClasses;
+  itemClasses: IFetchData<IGetItemClassesResponseData>;
 }
 
 type ItemTextFormatterResult = string | React.ReactNode;
@@ -35,8 +35,8 @@ export class ItemPopover extends React.Component<Props> {
 
   public render(): React.ReactNode {
     const {
-      item,
       itemClasses,
+      item,
       placement,
       interactive,
       itemTextFormatter,
@@ -45,7 +45,7 @@ export class ItemPopover extends React.Component<Props> {
 
     return (
       <Popover2
-        content={<ItemPopoverContent item={item} itemClasses={itemClasses} />}
+        content={<ItemPopoverContent item={item} itemClasses={itemClasses.data.item_classes} />}
         interactionKind={PopoverInteractionKind.HOVER}
         placement={placement ?? "right"}
       >

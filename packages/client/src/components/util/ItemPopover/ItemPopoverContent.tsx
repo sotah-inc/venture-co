@@ -1,8 +1,7 @@
 import React from "react";
 
-import { IShortItem } from "@sotah-inc/core";
+import { IItemClass, IShortItem } from "@sotah-inc/core";
 
-import { IItemClasses } from "../../../types/global";
 import { getItemIconUrl, qualityToColorClass } from "../../../util";
 import { ItemDataRenderer } from "./ItemDataRenderer";
 
@@ -11,7 +10,7 @@ export function ItemPopoverContent({
   item,
 }: {
   item: IShortItem;
-  itemClasses: IItemClasses;
+  itemClasses: IItemClass[];
 }): JSX.Element {
   const itemTextClass = qualityToColorClass(item.quality.type);
   const itemIconUrl = getItemIconUrl(item);

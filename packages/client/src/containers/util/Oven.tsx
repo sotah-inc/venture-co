@@ -5,6 +5,7 @@ import { IStoreState } from "../../types";
 
 function mapStateToProps(state: IStoreState): IStateProps {
   const { index, toast } = state.Oven;
+
   return { index, toast };
 }
 

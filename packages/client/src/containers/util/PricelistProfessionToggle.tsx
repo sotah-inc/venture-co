@@ -8,15 +8,12 @@ import {
 import { IStoreState } from "../../types";
 
 function mapStateToProps(state: IStoreState): IStateProps {
-  const { professions } = state.Main;
+  const { bootData } = state.Main;
   const {
     selectedProfession: { value: selectedProfession },
   } = state.PriceLists;
 
-  return {
-    professions,
-    selectedProfession,
-  };
+  return { bootData, selectedProfession };
 }
 
 export const PricelistProfessionToggleContainer = connect<
