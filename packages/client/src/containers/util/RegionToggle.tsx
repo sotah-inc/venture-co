@@ -5,10 +5,11 @@ import { IDispatchProps, IStateProps, RegionToggle } from "../../components/util
 import { IStoreState } from "../../types";
 
 function mapStateToProps(state: IStoreState): IStateProps {
-  const { regions, currentRegion } = state.Main;
+  const { bootData, currentRegion } = state.Main;
+
   return {
+    bootData,
     currentRegion,
-    regions,
   };
 }
 

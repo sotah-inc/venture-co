@@ -2,13 +2,13 @@ import React from "react";
 
 import { Button, Classes, H6, Menu, MenuItem } from "@blueprintjs/core";
 import { Popover2 } from "@blueprintjs/popover2";
-import { IRegionComposite } from "@sotah-inc/core";
+import { IGetBootResponseData, IRegionComposite } from "@sotah-inc/core";
 
-import { IRegions } from "../../types/global";
+import { IFetchData } from "../../types/global";
 
 export interface IStateProps {
+  bootData: IFetchData<IGetBootResponseData>;
   currentRegion: IRegionComposite | null;
-  regions: IRegions;
 }
 
 export interface IDispatchProps {
@@ -18,7 +18,7 @@ export interface IDispatchProps {
 type Props = Readonly<IStateProps & IDispatchProps>;
 
 export class RegionToggle extends React.Component<Props> {
-  public renderMenuItem(region: IRegionComposite, index: number): React.ReactElement {
+  private renderMenuItem(region: IRegionComposite, index: number): React.ReactElement {
     const { currentRegion, onRegionChange } = this.props;
 
     let className = "";
@@ -37,20 +37,15 @@ export class RegionToggle extends React.Component<Props> {
     );
   }
 
-  public renderMenu(regions: IRegions): React.ReactElement {
+  private renderMenu(): React.ReactElement {
+    const { bootData } = this.props;
+
     return (
       <Menu>
         <li>
           <H6>Select Region</H6>
         </li>
-        {Object.keys(regions).map((regionName, index) => {
-          const foundRegion = regions[regionName];
-          if (foundRegion === undefined) {
-            return null;
-          }
-
-          return this.renderMenuItem(foundRegion, index);
-        })}
+        {bootData.data.regions.map((region, index) => this.renderMenuItem(region, index))}
       </Menu>
     );
   }
@@ -63,7 +58,7 @@ export class RegionToggle extends React.Component<Props> {
     }
 
     return (
-      <Popover2 content={this.renderMenu(this.props.regions)} placement={"bottom-end"}>
+      <Popover2 content={this.renderMenu()} placement={"bottom-end"}>
         <Button icon="double-caret-vertical">
           {currentRegion.config_region.name.toUpperCase()}
         </Button>
