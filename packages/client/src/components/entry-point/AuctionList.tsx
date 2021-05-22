@@ -12,7 +12,7 @@ import {
   Spinner,
 } from "@blueprintjs/core";
 import {
-  IPreferenceJson,
+  IGetBootResponseData,
   IRegionComposite,
   IShortItem,
   IShortPet,
@@ -33,7 +33,7 @@ import { RealmToggleContainer } from "../../containers/util/RealmToggle";
 import { RegionToggleContainer } from "../../containers/util/RegionToggle";
 import { IAuctionsOptions, IAuctionResultData } from "../../types/auction";
 import { IClientRealm, IFetchData } from "../../types/global";
-import { AuthLevel, FetchLevel } from "../../types/main";
+import { FetchLevel } from "../../types/main";
 import { hasNewItems, hasNewPets, setTitle } from "../../util";
 import { LastModified, Pagination } from "../util";
 
@@ -41,16 +41,12 @@ export interface IStateProps {
   options: IAuctionsOptions;
   auctionsResult: IFetchData<IAuctionResultData>;
   totalResults: number;
-  fetchUserPreferencesLevel: FetchLevel;
-  userPreferences: IPreferenceJson | null;
   activeSelect: boolean;
 
-  fetchRealmLevel: FetchLevel;
-  realms: IClientRealm[];
   currentRegion: IRegionComposite | null;
   currentRealm: IClientRealm | null;
-  authLevel: AuthLevel;
-  regions: IRegionComposite[];
+  realms: IFetchData<IClientRealm[]>;
+  bootData: IFetchData<IGetBootResponseData>;
 }
 
 export interface IDispatchProps {
@@ -194,7 +190,7 @@ export class AuctionList extends React.Component<Props> {
 
   private renderUnmatchedRegion() {
     const {
-      regions,
+      bootData,
       routeParams: { region_name },
     } = this.props;
 
@@ -207,7 +203,7 @@ export class AuctionList extends React.Component<Props> {
       );
     }
 
-    if (!regions.map(v => v.config_region.name).includes(region_name)) {
+    if (!bootData.data.regions.map(v => v.config_region.name).includes(region_name)) {
       return (
         <NonIdealState
           title={`Region ${region_name} not found!`}
@@ -225,9 +221,9 @@ export class AuctionList extends React.Component<Props> {
   }
 
   private renderMatchedRegion() {
-    const { fetchRealmLevel } = this.props;
+    const { realms } = this.props;
 
-    switch (fetchRealmLevel) {
+    switch (realms.level) {
     case FetchLevel.prompted:
     case FetchLevel.fetching:
     case FetchLevel.refetching:
@@ -274,7 +270,7 @@ export class AuctionList extends React.Component<Props> {
       );
     }
 
-    const hasRealm = realms.reduce<boolean>(
+    const hasRealm = realms.data.reduce<boolean>(
       (result, v) => result || v.realm.slug === realm_slug,
       false,
     );
