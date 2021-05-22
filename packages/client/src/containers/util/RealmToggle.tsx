@@ -8,19 +8,16 @@ function mapStateToProps(state: IStoreState): IStateProps {
   const {
     realms,
     currentRealm,
-    fetchRealmLevel,
     userPreferences,
-    authLevel,
-    profile,
     currentRegion,
+    userData,
   } = state.Main;
+
   return {
-    authLevel,
     currentRealm,
     currentRegion,
-    fetchRealmLevel,
-    profile,
     realms,
+    userData,
     userPreferences,
   };
 }

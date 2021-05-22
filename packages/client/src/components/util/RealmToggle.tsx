@@ -16,19 +16,17 @@ import {
   UpdatePreferencesRequest,
 } from "@sotah-inc/core";
 
-import { IClientRealm, IProfile } from "../../types/global";
-import { AuthLevel, FetchLevel } from "../../types/main";
+import { IClientRealm, IFetchData } from "../../types/global";
+import { AuthLevel, FetchLevel, UserData } from "../../types/main";
 import { didRealmChange } from "../../util";
 
 const RealmToggleSelect = Select.ofType<IClientRealm>();
 
 export interface IStateProps {
-  realms: IClientRealm[];
+  realms: IFetchData<IClientRealm[]>;
   currentRealm: IClientRealm | null;
-  fetchRealmLevel: FetchLevel;
-  userPreferences: IPreferenceJson | null;
-  authLevel: AuthLevel;
-  profile: IProfile | null;
+  userPreferences: IFetchData<IPreferenceJson>;
+  userData: UserData;
   currentRegion: IRegionComposite | null;
 }
 
@@ -52,19 +50,17 @@ export class RealmToggle extends React.Component<Props> {
   public componentDidUpdate(prevProps: Props): void {
     const {
       currentRealm,
-      authLevel,
       userPreferences,
-      profile,
       createUserPreferences,
       updateUserPreferences,
       currentRegion,
+      userData,
     } = this.props;
 
     if (
-      authLevel !== AuthLevel.authenticated ||
+      userData.authLevel !== AuthLevel.authenticated ||
       currentRealm === null ||
-      currentRegion === null ||
-      profile === null
+      currentRegion === null
     ) {
       return;
     }
@@ -77,12 +73,14 @@ export class RealmToggle extends React.Component<Props> {
       return createUserPreferences;
     })();
 
-    if (didRealmChange(prevProps.currentRealm, currentRealm)) {
-      persistUserPreferences(profile.token, {
-        current_realm: currentRealm.realm.slug,
-        current_region: currentRegion.config_region.name,
-      });
+    if (!didRealmChange(prevProps.currentRealm, currentRealm)) {
+      return;
     }
+
+    persistUserPreferences(userData.profile.token, {
+      current_realm: currentRealm.realm.slug,
+      current_region: currentRegion.config_region.name,
+    });
   }
 
   public itemPredicate: ItemPredicate<IClientRealm> = (query: string, item: IClientRealm) => {
@@ -131,18 +129,18 @@ export class RealmToggle extends React.Component<Props> {
   };
 
   public render(): React.ReactNode {
-    const { realms, onRealmChange, currentRealm, fetchRealmLevel } = this.props;
+    const { onRealmChange, currentRealm, realms } = this.props;
 
-    switch (fetchRealmLevel) {
+    switch (realms.level) {
     case FetchLevel.success: {
-      let highlightedRealm = realms[0];
+      let highlightedRealm = realms.data[0];
       if (currentRealm !== null) {
         highlightedRealm = currentRealm;
       }
 
       return (
         <RealmToggleSelect
-          items={realms}
+          items={realms.data}
           itemRenderer={this.itemRenderer}
           itemListRenderer={this.itemListRenderer}
           itemPredicate={this.itemPredicate}
