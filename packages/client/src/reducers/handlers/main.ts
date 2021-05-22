@@ -12,7 +12,6 @@ import {
 import { VerifyUserCode } from "../../api/user";
 import { IClientRealm } from "../../types/global";
 import { defaultMainState, FetchLevel, IMainState } from "../../types/main";
-import { FormatItemClassList } from "../../util";
 import { receiveGetConnectedRealms } from "./receivers";
 
 import { IKindHandlers } from "./index";
@@ -171,18 +170,27 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
         state: IMainState,
         action: ReturnType<typeof ReceiveGetUserPreferences>,
       ): IMainState => {
-        if (action.payload.error !== null) {
-          return { ...state, fetchUserPreferencesLevel: FetchLevel.failure };
+        if (action.payload.error !== null || action.payload.preference === null) {
+          return {
+            ...state,
+            userPreferences: { ...state.userPreferences, level: FetchLevel.failure },
+          };
         }
 
         return {
           ...state,
-          fetchUserPreferencesLevel: FetchLevel.success,
-          userPreferences: action.payload.preference,
+          userPreferences: {
+            level: FetchLevel.success,
+            data: action.payload.preference,
+            errors: {},
+          },
         };
       },
       request: (state: IMainState): IMainState => {
-        return { ...state };
+        return {
+          ...state,
+          userPreferences: { ...state.userPreferences, level: FetchLevel.fetching },
+        };
       },
     },
   },
@@ -200,18 +208,21 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
             },
           };
         case VerifyUserCode.AlreadyVerified:
-          if (state.profile === null) {
+          if (state.userData.profile === null) {
             return { ...state };
           }
 
           return {
             ...state,
             verifyUser: defaultMainState.verifyUser,
-            profile: {
-              ...state.profile,
-              user: {
-                ...state.profile.user,
-                level: UserLevel.Regular,
+            userData: {
+              ...state.userData,
+              profile: {
+                ...state.userData.profile,
+                user: {
+                  ...state.userData.profile.user,
+                  level: UserLevel.Regular,
+                },
               },
             },
           };

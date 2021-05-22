@@ -11,7 +11,7 @@ import {
 } from "@sotah-inc/core";
 import { Dispatch } from "redux";
 
-import { getConnectedRealms, getItemClasses } from "../api/data";
+import { getConnectedRealms } from "../api/data";
 import {
   createPreferences,
   getPreferences,
