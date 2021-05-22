@@ -5,7 +5,7 @@ import {
   LoadRegionEntrypoint,
   MainActions,
   RECEIVE_GET_CONNECTEDREALMS,
-  ReceiveGetConnectedRealms,
+  ReceiveGetConnectedRealms as ReceiveGetConnectedRealmsAction,
   ReceiveGetItemClasses,
   ReceiveGetUserPreferences,
   ReceiveVerifyUser,
@@ -17,9 +17,9 @@ import { FormatItemClassList, FormatRegionList } from "../../util";
 
 import { IKindHandlers } from "./index";
 
-function receiveGetConnectedRealmsHandler(
+function receiveGetConnectedRealms(
   state: IMainState,
-  action: ReturnType<typeof ReceiveGetConnectedRealms>,
+  action: ReturnType<typeof ReceiveGetConnectedRealmsAction>,
 ): IMainState {
   if (action.payload === null || action.payload.length === 0) {
     return { ...state, realms: { ...state.realms, level: FetchLevel.failure } };
@@ -121,9 +121,9 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
   },
   connectedrealms: {
     get: {
-      receive: receiveGetConnectedRealmsHandler,
+      receive: receiveGetConnectedRealms,
       request: (state: IMainState): IMainState => {
-        return { ...state, fetchRealmLevel: FetchLevel.fetching };
+        return { ...state, realms: { ...state.realms, level: FetchLevel.fetching } };
       },
     },
   },
