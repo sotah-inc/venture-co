@@ -56,7 +56,6 @@ export function Boot({
   }
 
   if (store === null) {
-    const preloadedState = typeof predefinedState === "undefined" ? defaultState : predefinedState;
     const composeEnhancers = (() => {
       if (typeof window === "undefined") {
         return compose;
@@ -68,7 +67,7 @@ export function Boot({
 
     store = createStore(
       rootReducer,
-      preloadedState,
+      predefinedState ?? defaultState,
       composeEnhancers(applyMiddleware(thunk)),
     );
   }

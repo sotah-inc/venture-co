@@ -9,6 +9,7 @@ import { IStoreState } from "../../types";
 
 function mapStateToProps(state: IStoreState): IStateProps {
   const { currentRegion } = state.Main;
+
   return { currentRegion };
 }
 
