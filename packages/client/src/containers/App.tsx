@@ -11,29 +11,21 @@ import { IStoreState } from "../types";
 
 function mapStateToProps(state: IStoreState): IStateProps {
   const {
-    fetchBootLevel,
-    fetchPingLevel,
+    bootData,
     currentRegion,
-    fetchRealmLevel,
     currentRealm,
-    preloadedToken,
-    authLevel,
-    isLoginDialogOpen,
-    fetchUserPreferencesLevel,
+    userData,
     userPreferences,
-    profile,
-  } = state.Main;
-  return {
-    authLevel,
-    currentRealm,
-    currentRegion,
-    fetchBootLevel,
-    fetchPingLevel,
-    fetchRealmLevel,
-    fetchUserPreferencesLevel,
     isLoginDialogOpen,
-    preloadedToken,
-    profile,
+  } = state.Main;
+
+  return {
+    bootData,
+    currentRegion,
+    currentRealm,
+    userData,
+    userPreferences,
+    isLoginDialogOpen,
   };
 }
 

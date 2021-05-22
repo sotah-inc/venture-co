@@ -1,27 +1,22 @@
 import React, { ReactNode } from "react";
 
 import { Classes, Intent, IToastProps, NonIdealState, Spinner } from "@blueprintjs/core";
-import { IPreferenceJson, IRegionComposite } from "@sotah-inc/core";
+import { IGetBootResponseData, IPreferenceJson, IRegionComposite } from "@sotah-inc/core";
 import { Cookies, withCookies } from "react-cookie";
 
 import { ILoadRootEntrypoint } from "../actions/main";
 import { PromptsRouteContainer } from "../route-containers/App/Prompts";
 import { TopbarRouteContainer } from "../route-containers/App/Topbar";
-import { IClientRealm, IProfile } from "../types/global";
-import { AuthLevel, FetchLevel } from "../types/main";
+import { IClientRealm, IFetchData } from "../types/global";
+import { AuthLevel, FetchLevel, UserData } from "../types/main";
 
 export interface IStateProps {
-  fetchPingLevel: FetchLevel;
+  bootData: IFetchData<IGetBootResponseData>;
   currentRegion: IRegionComposite | null;
-  fetchRealmLevel: FetchLevel;
   currentRealm: IClientRealm | null;
-  preloadedToken: string;
-  authLevel: AuthLevel;
+  userData: UserData;
+  userPreferences: IFetchData<IPreferenceJson>;
   isLoginDialogOpen: boolean;
-  fetchUserPreferencesLevel: FetchLevel;
-  userPreferences: IPreferenceJson | null;
-  profile: IProfile | null;
-  fetchBootLevel: FetchLevel;
 }
 
 export interface IDispatchProps {
@@ -67,53 +62,37 @@ export class App extends React.Component<Props> {
   }
 
   public componentDidUpdate(prevProps: Props): void {
-    const { fetchPingLevel, insertToast } = this.props;
+    const { userData, insertToast, cookies } = this.props;
 
-    switch (fetchPingLevel) {
-    case FetchLevel.failure:
-      if (prevProps.fetchPingLevel === FetchLevel.fetching) {
-        insertToast({
-          icon: "warning-sign",
-          intent: Intent.DANGER,
-          message: "Could not connect to Sotah API.",
-        });
-      }
+    switch (userData.authLevel) {
+    case AuthLevel.unauthenticated:
+      this.handleUnauth(prevProps);
 
       return;
-    case FetchLevel.success:
-      if (prevProps.fetchPingLevel === FetchLevel.fetching) {
+    case AuthLevel.authenticated: {
+      const hasBeenAuthorized = [AuthLevel.unauthenticated, AuthLevel.initial].includes(
+        prevProps.userData.authLevel,
+      );
+      if (hasBeenAuthorized) {
         insertToast({
-          icon: "info-sign",
+          icon: "user",
           intent: Intent.SUCCESS,
-          message: "Connected to Sotah API.",
+          message: "You are logged in.",
         });
+
+        cookies.set("token", userData.profile.token, { path: "/" });
       }
 
-      this.handleConnected(prevProps);
+      this.handleAuth(prevProps);
 
       return;
+    }
     default:
       return;
     }
   }
 
   public render(): React.ReactNode {
-    const { fetchPingLevel } = this.props;
-    switch (fetchPingLevel) {
-    case FetchLevel.initial:
-      return <>Welcome!</>;
-    case FetchLevel.fetching:
-      return <>Connecting...</>;
-    case FetchLevel.failure:
-      return <>Could not connect!</>;
-    case FetchLevel.success:
-      return this.renderConnected();
-    default:
-      return <>You should never see this!</>;
-    }
-  }
-
-  private renderConnected() {
     return (
       <div id="app" className={`${Classes.DARK} dark-app`}>
         {this.renderConnectedContent()}
@@ -122,9 +101,9 @@ export class App extends React.Component<Props> {
   }
 
   private renderConnectedContent() {
-    const { authLevel } = this.props;
+    const { userData } = this.props;
 
-    switch (authLevel) {
+    switch (userData.authLevel) {
     case AuthLevel.authenticated:
       return this.renderAuth();
     case AuthLevel.unauthenticated:
@@ -141,9 +120,9 @@ export class App extends React.Component<Props> {
   }
 
   private renderAuth() {
-    const { fetchBootLevel } = this.props;
+    const { bootData } = this.props;
 
-    switch (fetchBootLevel) {
+    switch (bootData.level) {
     case FetchLevel.success:
       return this.renderBootAuth();
     case FetchLevel.fetching:
@@ -172,9 +151,9 @@ export class App extends React.Component<Props> {
   }
 
   private renderBootAuth() {
-    const { fetchUserPreferencesLevel } = this.props;
+    const { userPreferences } = this.props;
 
-    switch (fetchUserPreferencesLevel) {
+    switch (userPreferences.level) {
     case FetchLevel.fetching:
     case FetchLevel.refetching:
     case FetchLevel.prompted:
@@ -212,55 +191,18 @@ export class App extends React.Component<Props> {
     return App.renderContent(this.props.viewport);
   }
 
-  private handleConnected(prevProps: Props) {
-    const {
-      authLevel,
-      insertToast,
-      profile,
-      cookies,
-    } = this.props;
-
-    switch (authLevel) {
-    case AuthLevel.unauthenticated:
-      this.handleUnauth(prevProps);
-
-      return;
-    case AuthLevel.authenticated: {
-      const hasBeenAuthorized =
-          [AuthLevel.unauthenticated, AuthLevel.initial].indexOf(prevProps.authLevel) > -1;
-      if (hasBeenAuthorized) {
-        insertToast({
-          icon: "user",
-          intent: Intent.SUCCESS,
-          message: "You are logged in.",
-        });
-
-        if (profile !== null) {
-          cookies.set("token", profile.token, { path: "/" });
-        }
-      }
-
-      this.handleAuth(prevProps);
-
-      return;
-    }
-    default:
-      return;
-    }
-  }
-
   private handleUnauth(prevProps: Props) {
     const {
-      fetchBootLevel,
-      preloadedToken,
+      bootData,
+      userData,
       changeIsLoginDialogOpen,
       isLoginDialogOpen,
       insertToast,
     } = this.props;
 
-    switch (fetchBootLevel) {
+    switch (bootData.level) {
     case FetchLevel.failure:
-      if (prevProps.fetchBootLevel === FetchLevel.fetching) {
+      if (prevProps.bootData.level === FetchLevel.fetching) {
         insertToast({
           icon: "info-sign",
           intent: Intent.DANGER,
@@ -270,8 +212,8 @@ export class App extends React.Component<Props> {
 
       return;
     case FetchLevel.success:
-      if (prevProps.fetchBootLevel === FetchLevel.fetching) {
-        if (preloadedToken.length > 0) {
+      if (prevProps.bootData.level === FetchLevel.fetching) {
+        if (userData.preloadedToken !== null && userData.preloadedToken.length > 0) {
           insertToast({
             action: {
               icon: "log-in",
@@ -294,19 +236,19 @@ export class App extends React.Component<Props> {
   }
 
   private handleAuth(prevProps: Props) {
-    const { fetchUserPreferencesLevel, loadUserPreferences, profile, insertToast } = this.props;
+    const { loadUserPreferences, insertToast, userData, userPreferences } = this.props;
 
-    if (profile === null) {
+    if (userData.authLevel !== AuthLevel.authenticated) {
       return;
     }
 
-    switch (fetchUserPreferencesLevel) {
+    switch (userPreferences.level) {
     case FetchLevel.initial:
-      loadUserPreferences(profile.token);
+      loadUserPreferences(userData.profile.token);
 
       return;
     case FetchLevel.failure:
-      if (prevProps.fetchUserPreferencesLevel === FetchLevel.fetching) {
+      if (prevProps.userPreferences.level === FetchLevel.fetching) {
         insertToast({
           icon: "warning-sign",
           intent: Intent.DANGER,
@@ -325,11 +267,11 @@ export class App extends React.Component<Props> {
   }
 
   private handleAuthWithPreferences(prevProps: Props) {
-    const { fetchBootLevel, insertToast } = this.props;
+    const { bootData, insertToast } = this.props;
 
-    switch (fetchBootLevel) {
+    switch (bootData.level) {
     case FetchLevel.failure:
-      if (prevProps.fetchBootLevel === FetchLevel.fetching) {
+      if (prevProps.bootData.level === FetchLevel.fetching) {
         insertToast({
           icon: "info-sign",
           intent: Intent.DANGER,
