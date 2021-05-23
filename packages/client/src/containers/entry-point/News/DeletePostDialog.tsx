@@ -10,14 +10,14 @@ import {
 import { IStoreState } from "../../../types";
 
 function mapStateToProps(state: IStoreState): IStateProps {
-  const { profile } = state.Main;
+  const { userData } = state.Main;
   const { deletePostLevel, isDeletePostDialogOpen, currentPost } = state.Posts;
 
   return {
     currentPost,
     deletePostLevel,
     isDeletePostDialogOpen,
-    profile,
+    userData,
   };
 }
 

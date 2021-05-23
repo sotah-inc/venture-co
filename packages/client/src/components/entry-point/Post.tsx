@@ -15,21 +15,21 @@ import {
   NonIdealState,
   Spinner,
 } from "@blueprintjs/core";
-import { IGetPostResponseData, IPostJson, IUserJson, UserLevel } from "@sotah-inc/core";
+import { IGetPostResponseData, IPostJson, UserLevel } from "@sotah-inc/core";
 import moment from "moment";
 
 import { IDeletePostOptions } from "../../actions/posts";
 import {
   DeletePostDialogRouteContainer,
 } from "../../route-containers/entry-point/News/DeletePostDialog";
-import { FetchLevel } from "../../types/main";
+import { AuthLevel, FetchLevel, UserData } from "../../types/main";
 import { setTitle } from "../../util";
 import { MarkdownRenderer } from "../util";
 
 export interface IStateProps {
   currentPost: IPostJson | null;
   getPostLevel: FetchLevel;
-  user: IUserJson | null;
+  userData: UserData;
 }
 
 export interface IDispatchProps {
@@ -211,9 +211,12 @@ export class Post extends React.Component<Props> {
   }
 
   private renderActionBar() {
-    const { user, currentPost, browseToPostEdit, changeIsDeletePostDialogOpen } = this.props;
+    const { userData, currentPost, browseToPostEdit, changeIsDeletePostDialogOpen } = this.props;
 
-    if (user === null || user.level < UserLevel.Admin) {
+    if (
+      userData.authLevel !== AuthLevel.authenticated ||
+      userData.profile.user.level < UserLevel.Admin
+    ) {
       return null;
     }
 

@@ -2,11 +2,11 @@ import React from "react";
 
 import { Icon, Intent, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
-import { IShortTokenHistory, RegionName } from "@sotah-inc/core";
+import { IGetBootResponseData, IShortTokenHistory, RegionName } from "@sotah-inc/core";
 import moment from "moment";
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
-import { IFetchData, ILineItemOpen, IRegions } from "../../../types/global";
+import { IFetchData, ILineItemOpen } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
 import {
   convertTokenHistoriesToLineData,
@@ -18,7 +18,7 @@ import {
 
 export interface IStateProps {
   tokenHistories: IFetchData<IShortTokenHistory>;
-  regions: IRegions;
+  bootData: IFetchData<IGetBootResponseData>;
 }
 
 type Props = Readonly<IStateProps>;
@@ -223,16 +223,17 @@ export class TokenHistoryGraph extends React.Component<Props, State> {
   }
 
   private renderLines() {
-    const { regions } = this.props;
+    const { bootData } = this.props;
 
-    return Object.keys(regions).map((v, i) => this.renderLine(i, v));
+    return Object.keys(bootData.data.regions).map((v, i) => this.renderLine(i, v));
   }
 
   private renderLegend() {
-    const { regions } = this.props;
+    const { bootData } = this.props;
 
-    const groupedRegionNames = Object.keys(regions).reduce<Array<Array<[RegionName, number]>>>(
-      (result, v, i) => {
+    const groupedRegionNames = bootData.data.regions
+      .map(v => v.config_region.name)
+      .reduce<Array<Array<[RegionName, number]>>>((result, v, i) => {
         const column = i % 2;
         if (Object.keys(result).indexOf(column.toString()) === -1) {
           result[column] = [];
@@ -241,9 +242,7 @@ export class TokenHistoryGraph extends React.Component<Props, State> {
         result[column].push([v, i]);
 
         return result;
-      },
-      [],
-    );
+      }, []);
 
     return (
       <div className="pure-g">

@@ -13,13 +13,13 @@ import {
 import { ICreatePostRequest, IPostJson, UserLevel } from "@sotah-inc/core";
 
 import { PostFormFormContainer } from "../../../form-containers/entry-point/Content/PostForm";
-import { IErrors, IProfile } from "../../../types/global";
-import { FetchLevel } from "../../../types/main";
+import { IErrors } from "../../../types/global";
+import { AuthLevel, FetchLevel, UserData } from "../../../types/main";
 import { setTitle } from "../../../util";
 import { IFormValues } from "./PostForm";
 
 export interface IStateProps {
-  profile: IProfile | null;
+  userData: UserData;
   currentPost: IPostJson | null;
   createPostLevel: FetchLevel;
   createPostErrors: IErrors;
@@ -47,7 +47,7 @@ export class NewsCreator extends React.Component<Props> {
 
   public render(): React.ReactNode {
     const {
-      profile,
+      userData,
       createPost,
       createPostLevel,
       createPostErrors,
@@ -56,7 +56,10 @@ export class NewsCreator extends React.Component<Props> {
       insertToast,
     } = this.props;
 
-    if (profile === null || profile.user.level < UserLevel.Admin) {
+    if (
+      userData.authLevel !== AuthLevel.authenticated ||
+      userData.profile.user.level < UserLevel.Admin
+    ) {
       return (
         <NonIdealState
           title="Unauthorized."
@@ -72,7 +75,7 @@ export class NewsCreator extends React.Component<Props> {
         <PostFormFormContainer
           mutatePostLevel={createPostLevel}
           mutatePostErrors={createPostErrors}
-          onSubmit={(v: IFormValues) => createPost(profile.token, v)}
+          onSubmit={(v: IFormValues) => createPost(userData.profile.token, v)}
           onComplete={() => {
             if (currentPost === null) {
               return;

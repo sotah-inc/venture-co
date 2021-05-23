@@ -11,10 +11,10 @@ import {
 import { IStoreState } from "../../../types";
 
 function mapStateToProps(state: IStoreState): IStateProps {
-  const { profile } = state.Main;
+  const { userData } = state.Main;
   const { currentPost, updatePostErrors, updatePostLevel, getPostLevel } = state.Posts;
 
-  return { currentPost, getPostLevel, profile, updatePostErrors, updatePostLevel };
+  return { currentPost, getPostLevel, userData, updatePostErrors, updatePostLevel };
 }
 
 const mapDispatchToProps: IDispatchProps = {

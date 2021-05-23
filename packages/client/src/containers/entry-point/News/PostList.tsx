@@ -9,13 +9,12 @@ import {
 import { IStoreState } from "../../../types";
 
 function mapStateToProps(state: IStoreState): IStateProps {
-  const { profile } = state.Main;
+  const { userData } = state.Main;
   const {
     posts: { data: posts, level: getPostsLevel },
   } = state.Posts;
-  const user = profile === null ? null : profile.user;
 
-  return { getPostsLevel, posts, user };
+  return { getPostsLevel, posts, userData };
 }
 
 const mapDispatchToProps: IDispatchProps = {

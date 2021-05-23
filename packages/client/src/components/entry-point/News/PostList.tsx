@@ -1,12 +1,12 @@
 import React from "react";
 
 import { Button, ButtonGroup, Card, Classes, H2, H5, Intent, Spinner } from "@blueprintjs/core";
-import { IPostJson, IUserJson, UserLevel } from "@sotah-inc/core";
+import { IPostJson, UserLevel } from "@sotah-inc/core";
 import moment from "moment";
 
 import { IDeletePostOptions } from "../../../actions/posts";
 import { LinkButtonRouteContainer } from "../../../route-containers/util/LinkButton";
-import { FetchLevel } from "../../../types/main";
+import { AuthLevel, FetchLevel, UserData } from "../../../types/main";
 import { MarkdownRenderer } from "../../util";
 
 export interface IDispatchProps {
@@ -16,7 +16,7 @@ export interface IDispatchProps {
 export interface IStateProps {
   posts: IPostJson[];
   getPostsLevel: FetchLevel;
-  user: IUserJson | null;
+  userData: UserData;
 }
 
 export interface IRouteProps {
@@ -133,9 +133,12 @@ export class PostList extends React.Component<Props> {
   }
 
   private renderActionButtons(post: IPostJson) {
-    const { user, changeIsDeletePostDialogOpen } = this.props;
+    const { userData, changeIsDeletePostDialogOpen } = this.props;
 
-    if (user === null || user.level < UserLevel.Admin) {
+    if (
+      userData.authLevel !== AuthLevel.authenticated ||
+      userData.profile.user.level < UserLevel.Admin
+    ) {
       return PostList.renderReadMoreButton(post);
     }
 

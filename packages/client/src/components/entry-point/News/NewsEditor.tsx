@@ -13,13 +13,13 @@ import {
 import { IPostJson, UpdatePostRequest, UserLevel } from "@sotah-inc/core";
 
 import { PostFormFormContainer } from "../../../form-containers/entry-point/Content/PostForm";
-import { IErrors, IProfile } from "../../../types/global";
-import { FetchLevel } from "../../../types/main";
+import { IErrors } from "../../../types/global";
+import { AuthLevel, FetchLevel, UserData } from "../../../types/main";
 import { setTitle } from "../../../util";
 import { IFormValues } from "./PostForm";
 
 export interface IStateProps {
-  profile: IProfile | null;
+  userData: UserData;
   currentPost: IPostJson | null;
   updatePostLevel: FetchLevel;
   updatePostErrors: IErrors;
@@ -59,7 +59,7 @@ export class NewsEditor extends React.Component<Props> {
   public render(): React.ReactNode {
     const {
       routeParams: { post_slug },
-      profile,
+      userData,
       updatePost,
       updatePostLevel,
       currentPost,
@@ -68,7 +68,10 @@ export class NewsEditor extends React.Component<Props> {
       insertToast,
     } = this.props;
 
-    if (profile === null || profile.user.level < UserLevel.Admin) {
+    if (
+      userData.authLevel !== AuthLevel.authenticated ||
+      userData.profile.user.level < UserLevel.Admin
+    ) {
       return (
         <NonIdealState
           title="Unauthorized."
@@ -125,7 +128,7 @@ export class NewsEditor extends React.Component<Props> {
           mutatePostLevel={updatePostLevel}
           mutatePostErrors={updatePostErrors}
           defaultFormValues={currentPost}
-          onSubmit={(v: IFormValues) => updatePost(profile.token, currentPost.id, v)}
+          onSubmit={(v: IFormValues) => updatePost(userData.profile.token, currentPost.id, v)}
           onComplete={() => {
             return;
           }}
@@ -194,13 +197,16 @@ export class NewsEditor extends React.Component<Props> {
       currentPost,
       getPost,
       getPostLevel,
-      profile,
+      userData,
       updatePostLevel,
       browseToPost,
       insertToast,
     } = this.props;
 
-    if (profile === null || profile.user.level < UserLevel.Admin) {
+    if (
+      userData.authLevel !== AuthLevel.authenticated ||
+      userData.profile.user.level < UserLevel.Admin
+    ) {
       return;
     }
 

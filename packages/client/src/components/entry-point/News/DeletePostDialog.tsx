@@ -1,15 +1,14 @@
 import React from "react";
 
 import { Button, Callout, Dialog, Intent, IToastProps } from "@blueprintjs/core";
-import { IPostJson } from "@sotah-inc/core";
+import { IPostJson, UserLevel } from "@sotah-inc/core";
 
 import { IDeletePostOptions } from "../../../actions/posts";
-import { IProfile } from "../../../types/global";
-import { FetchLevel } from "../../../types/main";
+import { AuthLevel, FetchLevel, UserData } from "../../../types/main";
 import { DialogActions, DialogBody } from "../../util";
 
 export interface IStateProps {
-  profile: IProfile | null;
+  userData: UserData;
   isDeletePostDialogOpen: boolean;
   deletePostLevel: FetchLevel;
   currentPost: IPostJson | null;
@@ -103,12 +102,16 @@ export class DeletePostDialog extends React.Component<Props> {
   }
 
   private onDialogConfirm() {
-    const { profile, deletePost, currentPost } = this.props;
+    const { userData, deletePost, currentPost } = this.props;
 
-    if (profile === null || currentPost === null) {
+    if (
+      userData.authLevel !== AuthLevel.authenticated ||
+      userData.profile.user.level < UserLevel.Admin ||
+      currentPost === null
+    ) {
       return;
     }
 
-    deletePost(profile.token, currentPost.id);
+    deletePost(userData.profile.token, currentPost.id);
   }
 }
