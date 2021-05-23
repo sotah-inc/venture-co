@@ -7,8 +7,8 @@ import { ICreateWorkOrderOptions, IPrefillWorkOrderItemOptions } from "../../../
 import {
   WorkOrderFormFormContainer,
 } from "../../../form-containers/entry-point/WorkOrders/WorkOrderForm";
-import { IClientRealm, IErrors, IFetchData, IProfile } from "../../../types/global";
-import { FetchLevel } from "../../../types/main";
+import { IClientRealm, IErrors, IFetchData } from "../../../types/global";
+import { AuthLevel, FetchLevel, UserData } from "../../../types/main";
 
 export interface IStateProps {
   isWorkOrderDialogOpen: boolean;
@@ -16,7 +16,7 @@ export interface IStateProps {
   mutateOrderErrors: IErrors;
   currentRegion: IRegionComposite | null;
   currentRealm: IClientRealm | null;
-  profile: IProfile | null;
+  userData: UserData;
   prefillWorkOrderItem: IFetchData<IPrefillWorkOrderItemResponseData>;
 }
 
@@ -41,7 +41,7 @@ export class CreateWorkOrderDialog extends React.Component<Props> {
       mutateOrderLevel,
       mutateOrderErrors,
       insertToast,
-      profile,
+      userData,
       prefillWorkOrderItem,
       callPrefillWorkOrderItem,
       resetWorkOrderItemPrefill,
@@ -64,11 +64,15 @@ export class CreateWorkOrderDialog extends React.Component<Props> {
           currentRealm={currentRealm}
           resetWorkOrderItemPrefill={resetWorkOrderItemPrefill}
           onSubmit={v => {
-            if (profile === null || currentRegion === null || currentRealm === null) {
+            if (
+              userData.authLevel !== AuthLevel.authenticated ||
+              currentRegion === null ||
+              currentRealm === null
+            ) {
               return;
             }
 
-            createWorkOrder(profile.token, {
+            createWorkOrder(userData.profile.token, {
               gameVersion: GameVersion.Retail,
               realmSlug: currentRealm.realm.slug,
               regionName: currentRegion.config_region.name,

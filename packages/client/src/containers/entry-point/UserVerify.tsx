@@ -4,9 +4,9 @@ import { IRouteProps, IStateProps, UserVerify } from "../../components/entry-poi
 import { IStoreState } from "../../types";
 
 function mapStateToProps(state: IStoreState): IStateProps {
-  const { profile } = state.Main;
+  const { userData } = state.Main;
 
-  return { profile };
+  return { userData };
 }
 
 export const UserVerifyContainer = connect<

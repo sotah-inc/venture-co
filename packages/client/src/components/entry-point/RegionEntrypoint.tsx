@@ -1,18 +1,18 @@
 import React from "react";
 
 import { Classes, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
-import { IRegionComposite } from "@sotah-inc/core";
+import { IGetBootResponseData, IRegionComposite } from "@sotah-inc/core";
 
 import { ILoadRegionEntrypoint } from "../../actions/main";
-import { IClientRealm } from "../../types/global";
-import { AuthLevel, FetchLevel } from "../../types/main";
+import { IClientRealm, IFetchData } from "../../types/global";
+import { FetchLevel, UserData } from "../../types/main";
 
 export interface IStateProps {
   currentRegion: IRegionComposite | null;
   currentRealm: IClientRealm | null;
-  authLevel: AuthLevel;
-  regions: IRegionComposite[];
-  fetchRealmLevel: FetchLevel;
+  userData: UserData;
+  realms: IFetchData<IClientRealm[]>;
+  bootData: IFetchData<IGetBootResponseData>;
 }
 
 export interface IDispatchProps {
@@ -57,9 +57,9 @@ export class RegionEntrypoint extends React.Component<Props> {
   }
 
   private renderMatched() {
-    const { fetchRealmLevel } = this.props;
+    const { realms } = this.props;
 
-    switch (fetchRealmLevel) {
+    switch (realms.level) {
     case FetchLevel.prompted:
     case FetchLevel.fetching:
     case FetchLevel.refetching:
@@ -108,7 +108,7 @@ export class RegionEntrypoint extends React.Component<Props> {
 
   private renderUnmatched() {
     const {
-      regions,
+      bootData,
       routeParams: { region_name },
     } = this.props;
 
@@ -121,7 +121,7 @@ export class RegionEntrypoint extends React.Component<Props> {
       );
     }
 
-    if (!regions.map(v => v.config_region.name).includes(region_name)) {
+    if (!bootData.data.regions.find(v => v.config_region.name === region_name)) {
       return (
         <NonIdealState
           title={`Region ${region_name} not found!`}

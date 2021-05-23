@@ -1,4 +1,3 @@
-import { IRegionComposite } from "@sotah-inc/core";
 import { connect } from "react-redux";
 
 import { LoadRegionEntrypoint, RegionChange } from "../../actions/main";
@@ -12,16 +11,14 @@ import {
 import { IStoreState } from "../../types";
 
 function mapStateToProps(state: IStoreState): IStateProps {
-  const { currentRegion, currentRealm, authLevel, regions, fetchRealmLevel } = state.Main;
+  const { currentRegion, currentRealm, bootData, realms, userData } = state.Main;
+
   return {
-    authLevel,
     currentRealm,
     currentRegion,
-    fetchRealmLevel,
-    regions: Object.values(regions).reduce<IRegionComposite[]>(
-      (result, v) => (v === undefined ? result : [...result, v]),
-      [],
-    ),
+    bootData,
+    realms,
+    userData,
   };
 }
 

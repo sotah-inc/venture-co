@@ -2,10 +2,10 @@ import React from "react";
 
 import { Classes, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
 
-import { IProfile } from "../../types/global";
+import { AuthLevel, UserData } from "../../types/main";
 
 export interface IStateProps {
-  profile: IProfile | null;
+  userData: UserData;
 }
 
 export interface IRouteProps {
@@ -19,27 +19,33 @@ export type Props = Readonly<IStateProps & IRouteProps>;
 
 export class UserVerify extends React.Component<Props> {
   public componentDidMount(): void {
-    const { redirectToLastPath, profile, redirectToHome, asPath } = this.props;
+    const { redirectToLastPath, userData, redirectToHome, asPath } = this.props;
 
-    if (profile === null) {
+    if (userData.authLevel !== AuthLevel.authenticated) {
       redirectToHome();
 
       return;
     }
 
-    if (profile.user.lastClientAsPath === null || profile.user.lastClientPathname === null) {
+    if (
+      userData.profile.user.lastClientAsPath === null ||
+      userData.profile.user.lastClientPathname === null
+    ) {
       redirectToHome();
 
       return;
     }
 
-    if (profile.user.lastClientAsPath === asPath) {
+    if (userData.profile.user.lastClientAsPath === asPath) {
       redirectToHome();
 
       return;
     }
 
-    redirectToLastPath(profile.user.lastClientPathname, profile.user.lastClientAsPath);
+    redirectToLastPath(
+      userData.profile.user.lastClientPathname,
+      userData.profile.user.lastClientAsPath,
+    );
   }
 
   public render(): React.ReactNode {

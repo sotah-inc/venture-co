@@ -21,7 +21,7 @@ function mapStateToProps(state: IStoreState): IStateProps {
     isWorkOrderDialogOpen,
     prefillWorkOrderItem,
   } = state.WorkOrder;
-  const { currentRegion, currentRealm, profile } = state.Main;
+  const { currentRegion, currentRealm, userData } = state.Main;
 
   return {
     currentRealm,
@@ -30,7 +30,7 @@ function mapStateToProps(state: IStoreState): IStateProps {
     mutateOrderErrors,
     mutateOrderLevel,
     prefillWorkOrderItem,
-    profile,
+    userData,
   };
 }
 
