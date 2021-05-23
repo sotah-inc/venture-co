@@ -1,11 +1,11 @@
 import React from "react";
 
 import { Intent, IToastProps } from "@blueprintjs/core";
-import { IExpansion, IPricelistJson, IShortProfession, IRegionComposite } from "@sotah-inc/core";
+import { IExpansion, IPricelistJson, IRegionComposite, IShortProfession } from "@sotah-inc/core";
 
 import { ListDialogContainer } from "../../../containers/entry-point/PriceLists/util/ListDialog";
-import { IClientRealm, IErrors, IProfile } from "../../../types/global";
-import { FetchLevel } from "../../../types/main";
+import { IClientRealm, IErrors } from "../../../types/global";
+import { AuthLevel, FetchLevel, UserData } from "../../../types/main";
 import { IUpdatePricelistRequestOptions } from "../../../types/price-lists";
 import { IOnCompleteOptions } from "./util/ListDialog";
 
@@ -13,7 +13,7 @@ export interface IStateProps {
   isEditListDialogOpen: boolean;
   updatePricelistLevel: FetchLevel;
   updatePricelistErrors: IErrors;
-  profile: IProfile | null;
+  userData: UserData;
   selectedList: IPricelistJson | null;
   currentRegion: IRegionComposite | null;
   currentRealm: IClientRealm | null;
@@ -137,9 +137,9 @@ export class EditListDialog extends React.Component<Props, State> {
   }
 
   private onListDialogComplete({ name, entries, slug }: IOnCompleteOptions) {
-    const { updatePricelist, profile, selectedList } = this.props;
+    const { updatePricelist, userData, selectedList } = this.props;
 
-    if (selectedList === null || profile === null) {
+    if (selectedList === null || userData.authLevel !== AuthLevel.authenticated) {
       return;
     }
 
@@ -147,7 +147,7 @@ export class EditListDialog extends React.Component<Props, State> {
       id: selectedList.id,
       meta: { isEditListDialogOpen: false },
       request: { entries, pricelist: { name, slug } },
-      token: profile.token,
+      token: userData.profile.token,
     });
   }
 }

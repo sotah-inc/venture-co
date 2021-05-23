@@ -9,7 +9,7 @@ import {
 import { IStoreState } from "../../../../../../types";
 
 function mapStateToProps(state: IStoreState): IStateProps {
-  const { professions, currentRegion, currentRealm } = state.Main;
+  const { bootData, currentRegion, currentRealm } = state.Main;
   const {
     selectedExpansion,
     unmetDemand: {
@@ -22,11 +22,11 @@ function mapStateToProps(state: IStoreState): IStateProps {
   } = state.PriceLists;
 
   return {
+    bootData,
     currentRealm,
     currentRegion,
     getUnmetDemandLevel,
     items,
-    professions,
     selectedExpansion,
     unmetDemandItemIds: unmetItemIds,
     unmetDemandProfessionPricelists,

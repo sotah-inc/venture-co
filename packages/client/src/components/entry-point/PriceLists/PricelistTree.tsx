@@ -27,9 +27,6 @@ export interface IStateProps {
   selectedExpansion: IExpansion | null;
   selectedList: IPricelistJson | null;
 
-  professions: IShortProfession[];
-  expansions: IExpansion[];
-
   professionPricelists: IFetchData<IItemsData<IProfessionPricelistJson[]>>;
 }
 

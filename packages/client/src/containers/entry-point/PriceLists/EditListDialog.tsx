@@ -10,7 +10,7 @@ import {
 import { IStoreState } from "../../../types";
 
 function mapStateToProps(state: IStoreState): IStateProps {
-  const { profile, currentRegion, currentRealm } = state.Main;
+  const { userData, currentRegion, currentRealm } = state.Main;
   const {
     isEditListDialogOpen,
     updatePricelist: { level: updatePricelistLevel, errors: updatePricelistErrors },
@@ -23,7 +23,7 @@ function mapStateToProps(state: IStoreState): IStateProps {
     currentRealm,
     currentRegion,
     isEditListDialogOpen,
-    profile,
+    userData,
     selectedExpansion,
     selectedList,
     selectedProfession,

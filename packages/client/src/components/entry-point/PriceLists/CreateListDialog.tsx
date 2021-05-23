@@ -6,19 +6,19 @@ import {
   ICreateProfessionPricelistRequest,
   IExpansion,
   IPricelistJson,
-  IShortProfession,
   IRegionComposite,
+  IShortProfession,
 } from "@sotah-inc/core";
 
 import { ListDialogContainer } from "../../../containers/entry-point/PriceLists/util/ListDialog";
-import { IClientRealm, IFetchInfo, IProfile } from "../../../types/global";
-import { FetchLevel } from "../../../types/main";
+import { IClientRealm, IFetchInfo } from "../../../types/global";
+import { AuthLevel, FetchLevel, UserData } from "../../../types/main";
 import { IOnCompleteOptions } from "./util/ListDialog";
 
 export interface IStateProps {
   isAddListDialogOpen: boolean;
   createPricelist: IFetchInfo;
-  profile: IProfile | null;
+  userData: UserData;
   selectedProfession: IShortProfession | null;
   selectedExpansion: IExpansion | null;
   currentRegion: IRegionComposite | null;
@@ -136,23 +136,23 @@ export class CreateListDialog extends React.Component<Props, State> {
   private onListDialogComplete({ name, slug, entries }: IOnCompleteOptions) {
     const {
       FetchCreatePricelist,
-      profile,
+      userData,
       selectedProfession,
       FetchCreateProfessionPricelist,
       selectedExpansion,
     } = this.props;
 
-    if (profile === null || selectedExpansion === null) {
+    if (userData.authLevel !== AuthLevel.authenticated || selectedExpansion === null) {
       return;
     }
 
     if (selectedProfession === null) {
-      FetchCreatePricelist(profile.token, {
+      FetchCreatePricelist(userData.profile.token, {
         entries,
         pricelist: { name, slug },
       });
     } else {
-      FetchCreateProfessionPricelist(profile.token, {
+      FetchCreateProfessionPricelist(userData.profile.token, {
         entries,
         expansion_name: selectedExpansion.name,
         pricelist: { name, slug },

@@ -14,8 +14,8 @@ import { Tooltip2 } from "@blueprintjs/popover2";
 import {
   IExpansion,
   IPricelistJson,
-  IShortProfession,
   IRegionComposite,
+  IShortProfession,
   UserLevel,
 } from "@sotah-inc/core";
 
@@ -25,8 +25,8 @@ import {
 } from "../../../containers/util/PricelistProfessionToggle";
 import { RealmToggleContainer } from "../../../containers/util/RealmToggle";
 import { RegionToggleContainer } from "../../../containers/util/RegionToggle";
-import { IClientRealm, IProfile } from "../../../types/global";
-import { AuthLevel } from "../../../types/main";
+import { IClientRealm } from "../../../types/global";
+import { AuthLevel, UserData } from "../../../types/main";
 
 export interface IStateProps {
   currentRegion: IRegionComposite | null;
@@ -35,8 +35,7 @@ export interface IStateProps {
   isAddEntryDialogOpen: boolean;
   selectedList: IPricelistJson | null;
   selectedProfession: IShortProfession | null;
-  authLevel: AuthLevel;
-  profile: IProfile | null;
+  userData: UserData;
   selectedExpansion: IExpansion | null;
 }
 
@@ -161,19 +160,29 @@ export class ActionBar extends React.Component<Props> {
 
   private renderListButtons() {
     const {
-      authLevel,
       selectedList,
       changeIsAddEntryDialogOpen,
       changeIsDeleteListDialogOpen,
       changeIsEditListDialogOpen,
       selectedProfession,
-      profile,
+      userData,
     } = this.props;
 
-    let canMutateEntry = authLevel === AuthLevel.authenticated && selectedList !== null;
-    if (selectedProfession !== null && profile !== null && profile.user.level !== UserLevel.Admin) {
-      canMutateEntry = false;
-    }
+    const canMutateEntry = ((): boolean => {
+      if (selectedProfession === null) {
+        return false;
+      }
+
+      if (selectedList === null) {
+        return false;
+      }
+
+      if (userData.authLevel !== AuthLevel.authenticated) {
+        return false;
+      }
+
+      return userData.profile.user.level === UserLevel.Admin;
+    })();
 
     return (
       <>
@@ -202,18 +211,18 @@ export class ActionBar extends React.Component<Props> {
   }
 
   private renderAddListButton() {
-    const { changeIsAddListDialogOpen, selectedProfession, authLevel, profile } = this.props;
+    const { changeIsAddListDialogOpen, selectedProfession, userData } = this.props;
 
     let createListText = "List";
     if (selectedProfession !== null) {
       createListText = `${selectedProfession.name} List`;
     }
 
-    if (authLevel === AuthLevel.unauthenticated || profile === null) {
+    if (userData.authLevel !== AuthLevel.authenticated) {
       return <Button icon="plus" text={createListText} disabled={true} />;
     }
 
-    if (selectedProfession !== null && profile.user.level !== UserLevel.Admin) {
+    if (userData.profile.user.level !== UserLevel.Admin) {
       return (
         <Tooltip2
           content="You are not authorized to manage profession pricelists!"

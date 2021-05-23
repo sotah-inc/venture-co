@@ -11,7 +11,7 @@ import { PricesTable } from "../../../../../util/PricesTable";
 export interface IStateProps {
   selectedList: IPricelistJson | null;
   priceTable: IFetchData<IItemsData<IItemPrices>>;
-  fetchRealmLevel: FetchLevel;
+  realms: IFetchData<IClientRealm[]>;
   currentRegion: IRegionComposite | null;
   currentRealm: IClientRealm | null;
 }
@@ -63,9 +63,9 @@ export class CurrentPricesTable extends React.Component<Props> {
   }
 
   private renderContent() {
-    const { fetchRealmLevel } = this.props;
+    const { realms } = this.props;
 
-    switch (fetchRealmLevel) {
+    switch (realms.level) {
     case FetchLevel.prompted:
     case FetchLevel.fetching:
     case FetchLevel.refetching:

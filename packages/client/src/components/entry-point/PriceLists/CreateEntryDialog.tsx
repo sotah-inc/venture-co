@@ -3,18 +3,15 @@ import React from "react";
 import { Dialog } from "@blueprintjs/core";
 import { IPricelistEntryJson, IPricelistJson, IShortItem, ItemId } from "@sotah-inc/core";
 
-import {
-  CreateEntryFormFormContainer,
-} from "../../../form-containers/entry-point/PriceLists/util/CreateEntryForm";
-import { IProfile } from "../../../types/global";
-import { FetchLevel } from "../../../types/main";
+import { CreateEntryFormFormContainer } from "../../../form-containers/entry-point/PriceLists/util/CreateEntryForm";
+import { AuthLevel, FetchLevel, UserData } from "../../../types/main";
 import { IUpdatePricelistRequestOptions } from "../../../types/price-lists";
 
 export interface IStateProps {
   isAddEntryDialogOpen: boolean;
   updatePricelistLevel: FetchLevel;
   selectedList: IPricelistJson | null;
-  profile: IProfile | null;
+  userData: UserData;
 }
 
 export interface IDispatchProps {
@@ -68,9 +65,13 @@ export class CreateEntryDialog extends React.Component<Props, IState> {
   }
 
   private onCreateEntryFormComplete(entry: IPricelistEntryJson) {
-    const { selectedList, updatePricelist, profile } = this.props;
+    const { selectedList, updatePricelist, userData } = this.props;
 
-    if (selectedList === null || selectedList.slug === null || profile === null) {
+    if (
+      selectedList === null ||
+      selectedList.slug === null ||
+      userData.authLevel !== AuthLevel.authenticated
+    ) {
       return;
     }
 
@@ -81,7 +82,7 @@ export class CreateEntryDialog extends React.Component<Props, IState> {
         entries: [...selectedList.pricelist_entries, entry],
         pricelist: { name: selectedList.name, slug: selectedList.slug },
       },
-      token: profile.token,
+      token: userData.profile.token,
     });
   }
 

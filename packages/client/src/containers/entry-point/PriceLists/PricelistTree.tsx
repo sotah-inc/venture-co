@@ -8,7 +8,7 @@ import {
 import { IStoreState } from "../../../types";
 
 function mapStateToProps(state: IStoreState): IStateProps {
-  const { currentRealm, professions, currentRegion, expansions } = state.Main;
+  const { currentRealm, currentRegion } = state.Main;
   const {
     selectedExpansion,
     selectedProfession,
@@ -19,9 +19,7 @@ function mapStateToProps(state: IStoreState): IStateProps {
   return {
     currentRealm,
     currentRegion,
-    expansions,
     professionPricelists,
-    professions,
     selectedExpansion,
     selectedList,
     selectedProfession,

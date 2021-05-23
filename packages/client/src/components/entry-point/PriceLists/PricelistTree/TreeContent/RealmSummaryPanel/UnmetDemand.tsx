@@ -14,6 +14,7 @@ import {
 } from "@blueprintjs/core";
 import {
   IExpansion,
+  IGetBootResponseData,
   IPricelistEntryJson,
   IPricelistJson,
   IProfessionPricelistJson,
@@ -26,7 +27,7 @@ import {
 } from "@sotah-inc/core";
 
 import { ItemPopoverContainer } from "../../../../../../containers/util/ItemPopover";
-import { IClientRealm } from "../../../../../../types/global";
+import { IClientRealm, IFetchData } from "../../../../../../types/global";
 import { FetchLevel } from "../../../../../../types/main";
 import { getItemFromPricelist, qualityToColorClass } from "../../../../../../util";
 import { Pagination, ProfessionIcon } from "../../../../../util";
@@ -35,7 +36,7 @@ import { ItemIcon } from "../../../../../util/ItemIcon";
 export interface IStateProps {
   unmetDemandItemIds: ItemId[];
   unmetDemandProfessionPricelists: IProfessionPricelistJson[];
-  professions: IShortProfession[];
+  bootData: IFetchData<IGetBootResponseData>;
   getUnmetDemandLevel: FetchLevel;
   items: IShortItem[];
   selectedExpansion: IExpansion | null;
@@ -107,7 +108,7 @@ export class UnmetDemand extends React.Component<Props, IState> {
   public onPricelistClick(pricelist: IPricelistJson, professionId: ProfessionId): void {
     const {
       browseToProfessionPricelist,
-      professions,
+      bootData,
       currentRegion,
       currentRealm,
       selectedExpansion,
@@ -117,17 +118,20 @@ export class UnmetDemand extends React.Component<Props, IState> {
       return;
     }
 
-    const profession = professions.reduce<IShortProfession | null>((currentValue, v) => {
-      if (currentValue !== null) {
+    const profession = bootData.data.professions.reduce<IShortProfession | null>(
+      (currentValue, v) => {
+        if (currentValue !== null) {
+          return currentValue;
+        }
+
+        if (v.id === professionId) {
+          return v;
+        }
+
         return currentValue;
-      }
-
-      if (v.id === professionId) {
-        return v;
-      }
-
-      return currentValue;
-    }, null);
+      },
+      null,
+    );
 
     if (profession === null) {
       return;
@@ -288,10 +292,10 @@ export class UnmetDemand extends React.Component<Props, IState> {
   }
 
   private renderItemRow(index: number, resultItem: ICollapsedResultItem) {
-    const { items, professions } = this.props;
+    const { items, bootData } = this.props;
 
     const { professionPricelist, entry } = resultItem;
-    const profession: IShortProfession | null = professions.reduce(
+    const profession: IShortProfession | null = bootData.data.professions.reduce(
       (currentValue: IShortProfession | null, v) => {
         if (currentValue !== null) {
           return currentValue;

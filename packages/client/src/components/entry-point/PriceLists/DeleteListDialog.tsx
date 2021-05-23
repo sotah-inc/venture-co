@@ -1,15 +1,15 @@
 import React from "react";
 
 import { Button, Callout, Dialog, Intent, IToastProps } from "@blueprintjs/core";
-import { IExpansion, IPricelistJson, IShortProfession, IRegionComposite } from "@sotah-inc/core";
+import { IExpansion, IPricelistJson, IRegionComposite, IShortProfession } from "@sotah-inc/core";
 
-import { IClientRealm, IErrors, IProfile } from "../../../types/global";
-import { FetchLevel } from "../../../types/main";
+import { IClientRealm, IErrors } from "../../../types/global";
+import { AuthLevel, FetchLevel, UserData } from "../../../types/main";
 import { DialogActions, DialogBody } from "../../util";
 
 export interface IStateProps {
   selectedList: IPricelistJson | null;
-  profile: IProfile | null;
+  userData: UserData;
   isDeleteListDialogOpen: boolean;
   deletePricelistErrors: IErrors;
   deletePricelistLevel: FetchLevel;
@@ -144,21 +144,21 @@ export class DeleteListDialog extends React.Component<Props> {
     const {
       selectedList,
       deletePricelist,
-      profile,
+      userData,
       selectedProfession,
       deleteProfessionPricelist,
     } = this.props;
 
-    if (profile === null || selectedList === null) {
+    if (userData.authLevel !== AuthLevel.authenticated || selectedList === null) {
       return;
     }
 
     if (selectedProfession === null) {
-      deletePricelist(profile.token, selectedList.id);
+      deletePricelist(userData.profile.token, selectedList.id);
 
       return;
     }
 
-    deleteProfessionPricelist(profile.token, selectedList.id);
+    deleteProfessionPricelist(userData.profile.token, selectedList.id);
   }
 }
