@@ -1,4 +1,3 @@
-import { IRegionComposite } from "@sotah-inc/core";
 import { connect } from "react-redux";
 
 import { ChangeIsLoginDialogOpen, LoadRealmEntrypoint } from "../../actions/main";
@@ -16,19 +15,14 @@ function mapStateToProps(state: IStoreState): IStateProps {
   const {
     currentRegion,
     currentRealm,
-    authLevel,
-    fetchRealmLevel,
-    regions,
-    realms,
-    professions,
-    expansions,
+    userData,
+    bootData,
   } = state.Main;
   const {
     selectedProfession: { value: selectedProfession },
     selectedExpansion,
     selectedList,
     professionPricelists: {
-      level: getProfessionPricelistsLevel,
       data: { data: professionPricelists },
     },
     pricelists: {
@@ -37,23 +31,14 @@ function mapStateToProps(state: IStoreState): IStateProps {
   } = state.PriceLists;
 
   return {
-    authLevel,
     currentRealm,
     currentRegion,
-    expansions,
-    fetchRealmLevel,
-    getProfessionPricelistsLevel,
     pricelists,
     professionPricelists,
-    professions,
-    realms,
-    regions: Object.values(regions).reduce<IRegionComposite[]>(
-      (result, v) => (v === undefined ? result : [...result, v]),
-      [],
-    ),
+    bootData,
     selectedExpansion,
     selectedList,
-    selectedProfession,
+    selectedProfession,userData,
   };
 }
 

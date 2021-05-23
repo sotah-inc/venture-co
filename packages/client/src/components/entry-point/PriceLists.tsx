@@ -7,6 +7,7 @@ import {
   IShortProfession,
   IProfessionPricelistJson,
   IRegionComposite,
+  IGetBootResponseData,
 } from "@sotah-inc/core";
 
 import { ILoadRealmEntrypoint } from "../../actions/main";
@@ -30,25 +31,20 @@ import {
 import {
   PricelistTreeRouteContainer,
 } from "../../route-containers/entry-point/PriceLists/PricelistTree";
-import { IClientRealm } from "../../types/global";
-import { AuthLevel, FetchLevel } from "../../types/main";
+import { IClientRealm, IFetchData } from "../../types/global";
+import { AuthLevel, UserData } from "../../types/main";
 import { setTitle } from "../../util";
 
 export interface IStateProps {
-  authLevel: AuthLevel;
   currentRealm: IClientRealm | null;
   currentRegion: IRegionComposite | null;
-  regions: IRegionComposite[];
-  fetchRealmLevel: FetchLevel;
-  realms: IClientRealm[];
   selectedProfession: IShortProfession | null;
   selectedExpansion: IExpansion | null;
-  professions: IShortProfession[];
-  expansions: IExpansion[];
-  getProfessionPricelistsLevel: FetchLevel;
+  bootData: IFetchData<IGetBootResponseData>;
   selectedList: IPricelistJson | null;
   professionPricelists: IProfessionPricelistJson[];
   pricelists: IPricelistJson[];
+  userData: UserData;
 }
 
 export interface IDispatchProps {
@@ -101,15 +97,14 @@ export class PriceLists extends React.Component<Props> {
       loadRealmEntrypoint,
       pricelistsEntrypointData,
       realmEntrypointData,
-      expansions,
-      professions,
+      bootData,
     } = this.props;
 
     loadRealmEntrypoint(realmEntrypointData);
     loadPricelistsEntrypoint({
       ...pricelistsEntrypointData,
-      expansions,
-      professions,
+      expansions: bootData.data.expansions,
+      professions: bootData.data.professions,
     });
   }
 
@@ -119,8 +114,7 @@ export class PriceLists extends React.Component<Props> {
       currentRegion,
       loadRealmEntrypoint,
       realmEntrypointData,
-      expansions,
-      professions,
+      bootData,
       pricelistsEntrypointData,
       loadPricelistsEntrypoint,
     } = this.props;
@@ -129,8 +123,8 @@ export class PriceLists extends React.Component<Props> {
       loadRealmEntrypoint(realmEntrypointData);
       loadPricelistsEntrypoint({
         ...pricelistsEntrypointData,
-        expansions,
-        professions,
+        expansions: bootData.data.expansions,
+        professions: bootData.data.professions,
       });
 
       return;
@@ -149,15 +143,15 @@ export class PriceLists extends React.Component<Props> {
 
   public render(): React.ReactNode {
     const {
-      authLevel,
+      userData,
       routeParams: { profession_slug },
-      professions,
+      bootData,
     } = this.props;
 
     if (profession_slug !== undefined && profession_slug.length > 0) {
       const professionId = Number(profession_slug.split("-")[0]);
 
-      if (!professions.some(v => v.id === professionId)) {
+      if (!bootData.data.professions.some(v => v.id === professionId)) {
         return (
           <NonIdealState
             title="Profession not found"
@@ -168,7 +162,7 @@ export class PriceLists extends React.Component<Props> {
       }
     }
 
-    if (authLevel === AuthLevel.unauthenticated) {
+    if (userData.authLevel === AuthLevel.unauthenticated) {
       return (
         <>
           <ActionBarRouteContainer />
@@ -211,12 +205,12 @@ export class PriceLists extends React.Component<Props> {
       routeParams: { expansion_name },
       selectedExpansion,
       redirectToExpansion,
-      expansions,
+      bootData,
     } = this.props;
 
     if (selectedExpansion === null) {
       if (expansion_name === undefined) {
-        const nextExpansion = expansions.find(v => v.primary);
+        const nextExpansion = bootData.data.expansions.find(v => v.primary);
         if (nextExpansion === undefined) {
           return;
         }
@@ -244,17 +238,19 @@ export class PriceLists extends React.Component<Props> {
     const {
       routeParams: { profession_slug },
       selectedProfession,
-      professions,
+      bootData,
       redirectToProfession,
     } = this.props;
 
     if (selectedProfession === null) {
       if (profession_slug === undefined) {
-        if (professions.length === 0) {
+        if (bootData.data.professions.length === 0) {
           return;
         }
 
-        const nextProfession = professions.sort((a, b) => a.name.localeCompare(b.name))[0];
+        const nextProfession = bootData.data.professions.sort((a, b) =>
+          a.name.localeCompare(b.name),
+        )[0];
 
         redirectToProfession(region, realm, expansion, nextProfession);
 
