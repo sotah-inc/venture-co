@@ -6,12 +6,8 @@ import { LoginFormContainer } from "../../form-containers/App/Login";
 import { IStoreState } from "../../types";
 
 function mapStateToProps(state: IStoreState): IStateProps {
-  const {
-    isLoggedIn,
-    isLoginDialogOpen,
-    firebaseConfig: { browser_api_key },
-  } = state.Main;
-  return { isLoggedIn, isLoginDialogOpen, firebaseBrowserApiKey: browser_api_key };
+  const { bootData, isLoginDialogOpen, userData } = state.Main;
+  return { userData, isLoginDialogOpen, bootData };
 }
 
 const mapDispatchToProps: IDispatchProps = {

@@ -1,16 +1,18 @@
 import React from "react";
 
 import { Button, Dialog, Intent } from "@blueprintjs/core";
+import { IGetBootResponseData } from "@sotah-inc/core";
 import { FormikProps } from "formik";
 
-import { IProfile } from "../../types/global";
+import { IFetchData, IProfile } from "../../types/global";
+import { AuthLevel, UserData } from "../../types/main";
 import { DialogActions, DialogBody } from "../util";
 import { Generator as FormFieldGenerator } from "../util/FormField";
 
 export interface IStateProps {
-  isLoggedIn: boolean;
   isLoginDialogOpen: boolean;
-  firebaseBrowserApiKey: string;
+  userData: UserData;
+  bootData: IFetchData<IGetBootResponseData>;
 }
 
 export interface IDispatchProps {
@@ -27,10 +29,10 @@ export type Props = Readonly<IStateProps & IDispatchProps & FormikProps<IFormVal
 
 export class Login extends React.Component<Props> {
   public componentDidUpdate(): void {
-    const { isLoggedIn } = this.props;
+    const { userData, changeIsLoginDialogOpen } = this.props;
 
-    if (isLoggedIn) {
-      this.toggleDialog(this.props);
+    if (userData.authLevel === AuthLevel.authenticated) {
+      changeIsLoginDialogOpen(false);
     }
   }
 
@@ -86,19 +88,20 @@ export class Login extends React.Component<Props> {
     );
   }
 
-  public toggleDialog(props: Props) {
-    return (): void => props.changeIsLoginDialogOpen(!props.isLoginDialogOpen);
-  }
-
   public render(): React.ReactNode {
-    const { isLoginDialogOpen } = this.props;
+    const { isLoginDialogOpen, changeIsLoginDialogOpen } = this.props;
 
     return (
       <>
-        <Button onClick={this.toggleDialog(this.props)} type="button" icon="log-in" text="Login" />
+        <Button
+          onClick={() => changeIsLoginDialogOpen(true)}
+          type="button"
+          icon="log-in"
+          text="Login"
+        />
         <Dialog
           isOpen={isLoginDialogOpen}
-          onClose={this.toggleDialog(this.props)}
+          onClose={() => changeIsLoginDialogOpen(false)}
           title="Login"
           icon="manually-entered-data"
         >

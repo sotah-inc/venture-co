@@ -4,12 +4,10 @@ import { IOwnProps, IStateProps, Topbar } from "../../components/App/Topbar";
 import { IStoreState } from "../../types";
 
 function mapStateToProps(state: IStoreState): IStateProps {
-  const { profile, currentRealm, currentRegion, expansions } = state.Main;
+  const { userData, currentRealm, currentRegion } = state.Main;
   const { selectedExpansion } = state.PriceLists;
 
-  const user = profile === null ? null : profile.user;
-
-  return { user, currentRealm, currentRegion, expansions, selectedExpansion };
+  return { userData, currentRealm, currentRegion, selectedExpansion };
 }
 
 export const TopbarContainer = connect<

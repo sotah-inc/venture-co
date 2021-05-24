@@ -24,7 +24,7 @@ const config: WithFormikConfig<IDispatchProps & IStateProps, IFormValues> = {
     }
 
     const signInUserResult = await signInUserWithCustomToken(
-      props.firebaseBrowserApiKey,
+      props.bootData.data.firebase_config.browser_api_key,
       registerUserResult.data.token,
     );
     if (signInUserResult.errors !== null) {

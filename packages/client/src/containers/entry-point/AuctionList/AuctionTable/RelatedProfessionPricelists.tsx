@@ -7,7 +7,7 @@ import {
 import { IStoreState } from "../../../../types";
 
 function mapStateToProps(state: IStoreState): IStateProps {
-  const { professions, expansions, currentRealm, currentRegion } = state.Main;
+  const { bootData, currentRealm, currentRegion } = state.Main;
   const {
     auctionsResult: { data: auctionsResultData },
   } = state.Auction;
@@ -16,8 +16,7 @@ function mapStateToProps(state: IStoreState): IStateProps {
     auctionsResultData,
     currentRealm,
     currentRegion,
-    expansions,
-    professions,
+    bootData,
   };
 }
 

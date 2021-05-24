@@ -11,7 +11,7 @@ import {
   NavbarHeading,
 } from "@blueprintjs/core";
 import { Tooltip2 } from "@blueprintjs/popover2";
-import { IExpansion, IRegionComposite, IUserJson } from "@sotah-inc/core";
+import { IExpansion, IRegionComposite } from "@sotah-inc/core";
 
 import { LoginContainer } from "../../containers/App/Login";
 import { RegisterContainer } from "../../containers/App/Register";
@@ -19,6 +19,7 @@ import { NewsButtonRouteContainer } from "../../route-containers/App/Topbar/News
 import { WorkOrdersButtonRouteContainer } from "../../route-containers/App/Topbar/WorkOrderButtons";
 import { LinkButtonRouteContainer } from "../../route-containers/util/LinkButton";
 import { IClientRealm } from "../../types/global";
+import { AuthLevel, UserData } from "../../types/main";
 import {
   toExpansionProfessionPricelists,
   toRealmProfessionPricelists,
@@ -27,10 +28,9 @@ import {
 import { prefixActiveCheck } from "../util/LinkButton";
 
 export interface IStateProps {
-  user: IUserJson | null;
+  userData: UserData;
   currentRealm: IClientRealm | null;
   currentRegion: IRegionComposite | null;
-  expansions: IExpansion[];
   selectedExpansion: IExpansion | null;
 }
 
@@ -203,9 +203,9 @@ export class Topbar extends React.Component<Props> {
   }
 
   private renderManageAccountButton() {
-    const { user } = this.props;
+    const { userData } = this.props;
 
-    if (user === null) {
+    if (userData.authLevel !== AuthLevel.authenticated) {
       return (
         <LinkButtonRouteContainer
           destination={""}
@@ -328,8 +328,8 @@ export class Topbar extends React.Component<Props> {
   }
 
   private renderUserInfo() {
-    const { user } = this.props;
-    if (user === null) {
+    const { userData } = this.props;
+    if (userData.authLevel !== AuthLevel.authenticated) {
       return (
         <ButtonGroup>
           <RegisterContainer />

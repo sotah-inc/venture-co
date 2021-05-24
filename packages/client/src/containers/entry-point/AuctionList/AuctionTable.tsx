@@ -9,7 +9,7 @@ import {
 import { IStoreState } from "../../../types";
 
 function mapStateToProps(state: IStoreState): IStateProps {
-  const { professions, expansions, currentRealm, currentRegion } = state.Main;
+  const { currentRealm, currentRegion } = state.Main;
   const {
     relatedProfessionPricelists,
     auctionsResult: { data: auctionsResultData },
@@ -22,9 +22,7 @@ function mapStateToProps(state: IStoreState): IStateProps {
     auctionsResultData,
     currentRealm,
     currentRegion,
-    expansions,
     options,
-    professions,
     relatedProfessionPricelists,
     totalResults,
     itemsRecipes,

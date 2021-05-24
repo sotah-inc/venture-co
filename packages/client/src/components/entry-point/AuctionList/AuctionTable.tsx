@@ -3,13 +3,11 @@ import React from "react";
 import { Classes, HTMLTable } from "@blueprintjs/core";
 import {
   IAuction,
-  IExpansion,
   IGetItemsRecipesResponseData,
   IProfessionPricelistJson,
   IRegionComposite,
   IShortItem,
   IShortPet,
-  IShortProfession,
   ItemQuality,
   PetId,
   PetQuality,
@@ -35,8 +33,6 @@ export interface IStateProps {
   auctionsResultData: IAuctionResultData;
   relatedProfessionPricelists: IProfessionPricelistJson[];
   options: IAuctionsOptions;
-  expansions: IExpansion[];
-  professions: IShortProfession[];
   currentRealm: IClientRealm | null;
   currentRegion: IRegionComposite | null;
   totalResults: number;

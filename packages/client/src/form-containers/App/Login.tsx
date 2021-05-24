@@ -8,7 +8,10 @@ import { UserRules } from "../../validator-rules";
 
 const config: WithFormikConfig<IDispatchProps & IStateProps, IFormValues> = {
   handleSubmit: async (values, { setSubmitting, setErrors, props }) => {
-    const { token, errors } = await signInWithEmailAndPassword(props.firebaseBrowserApiKey, values);
+    const { token, errors } = await signInWithEmailAndPassword(
+      props.bootData.data.firebase_config.browser_api_key,
+      values,
+    );
     if (errors !== null) {
       setErrors(errors);
       setSubmitting(false);

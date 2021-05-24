@@ -3,11 +3,11 @@ import React from "react";
 import { Button, Callout, Intent } from "@blueprintjs/core";
 import { IVerifyUserResponseData, UserLevel } from "@sotah-inc/core";
 
-import { IFetchData, IProfile } from "../../types/global";
-import { FetchLevel } from "../../types/main";
+import { IFetchData } from "../../types/global";
+import { AuthLevel, FetchLevel, UserData } from "../../types/main";
 
 export interface IStateProps {
-  profile: IProfile | null;
+  userData: UserData;
   verifyUser: IFetchData<IVerifyUserResponseData>;
 }
 
@@ -38,13 +38,13 @@ export class Prompts extends React.Component<Props> {
   }
 
   public render(): React.ReactNode {
-    const { profile } = this.props;
+    const { userData } = this.props;
 
-    if (profile === null) {
+    if (userData.authLevel !== AuthLevel.authenticated) {
       return null;
     }
 
-    if (profile.user.level === UserLevel.Unverified) {
+    if (userData.profile.user.level === UserLevel.Unverified) {
       return this.renderUnverified();
     }
 
@@ -52,9 +52,9 @@ export class Prompts extends React.Component<Props> {
   }
 
   private renderUnverified() {
-    const { verifyUser, profile, fetchVerifyUser } = this.props;
+    const { verifyUser, userData, fetchVerifyUser } = this.props;
 
-    if (profile === null) {
+    if (userData.authLevel !== AuthLevel.authenticated) {
       return null;
     }
 
@@ -86,7 +86,7 @@ export class Prompts extends React.Component<Props> {
                   return;
                 }
 
-                fetchVerifyUser(profile.token);
+                fetchVerifyUser(userData.profile.token);
               }}
               text="Verify with Email"
               disabled={verifyUser.level !== FetchLevel.initial}

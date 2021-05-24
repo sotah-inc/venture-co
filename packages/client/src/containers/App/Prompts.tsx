@@ -5,9 +5,9 @@ import { IDispatchProps, IStateProps, Prompts } from "../../components/App/Promp
 import { IStoreState } from "../../types";
 
 function mapStateToProps(state: IStoreState): IStateProps {
-  const { profile, verifyUser } = state.Main;
+  const { userData, verifyUser } = state.Main;
 
-  return { profile, verifyUser };
+  return { userData, verifyUser };
 }
 
 const mapDispatchToProps: IDispatchProps = {

@@ -2,7 +2,7 @@ import React from "react";
 
 import { Button, ButtonGroup } from "@blueprintjs/core";
 import {
-  IExpansion,
+  IExpansion, IGetBootResponseData,
   IPricelistJson,
   IProfessionPricelistJson,
   IRegionComposite,
@@ -10,15 +10,14 @@ import {
 } from "@sotah-inc/core";
 
 import { IAuctionResultData } from "../../../../types/auction";
-import { IClientRealm } from "../../../../types/global";
+import { IClientRealm, IFetchData } from "../../../../types/global";
 import { getItemFromPricelist } from "../../../../util";
 import { ProfessionIcon } from "../../../util";
 import { ItemIcon } from "../../../util/ItemIcon";
 
 export interface IStateProps {
   auctionsResultData: IAuctionResultData;
-  expansions: IExpansion[];
-  professions: IShortProfession[];
+  bootData: IFetchData<IGetBootResponseData>;
   currentRealm: IClientRealm | null;
   currentRegion: IRegionComposite | null;
 }
@@ -55,8 +54,7 @@ export class RelatedProfessionPricelists extends React.Component<Props> {
 
   private renderProfessionPricelist(index: number, professionPricelist: IProfessionPricelistJson) {
     const {
-      expansions,
-      professions,
+      bootData,
       currentRegion,
       currentRealm,
       browseToProfessionPricelist,
@@ -68,7 +66,7 @@ export class RelatedProfessionPricelists extends React.Component<Props> {
       return null;
     }
 
-    const expansion = expansions.reduce<IExpansion | null>((prev, v) => {
+    const expansion = bootData.data.expansions.reduce<IExpansion | null>((prev, v) => {
       if (prev !== null) {
         return prev;
       }
@@ -83,7 +81,7 @@ export class RelatedProfessionPricelists extends React.Component<Props> {
       return null;
     }
 
-    const profession = professions.reduce<IShortProfession | null>((prev, v) => {
+    const profession = bootData.data.professions.reduce<IShortProfession | null>((prev, v) => {
       if (prev !== null) {
         return prev;
       }

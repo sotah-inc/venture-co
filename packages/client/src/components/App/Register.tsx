@@ -1,16 +1,18 @@
 import React from "react";
 
 import { Button, Dialog, Intent } from "@blueprintjs/core";
+import { IGetBootResponseData } from "@sotah-inc/core";
 import { FormikProps } from "formik";
 
-import { IProfile } from "../../types/global";
+import { IFetchData, IProfile } from "../../types/global";
+import { AuthLevel, UserData } from "../../types/main";
 import { DialogActions, DialogBody } from "../util";
 import { Generator as FormFieldGenerator } from "../util/FormField";
 
 export interface IStateProps {
-  isRegistered: boolean;
+  userData: UserData;
   isRegisterDialogOpen: boolean;
-  firebaseBrowserApiKey: string;
+  bootData: IFetchData<IGetBootResponseData>;
 }
 
 export interface IDispatchProps {
@@ -27,9 +29,9 @@ export type Props = Readonly<IStateProps & IDispatchProps & FormikProps<IFormVal
 
 export class Register extends React.Component<Props> {
   public componentDidUpdate(): void {
-    const { isRegistered, changeIsRegisterDialogOpen } = this.props;
+    const { userData, changeIsRegisterDialogOpen } = this.props;
 
-    if (isRegistered) {
+    if (userData.authLevel === AuthLevel.authenticated) {
       changeIsRegisterDialogOpen(false);
     }
   }

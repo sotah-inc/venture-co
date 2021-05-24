@@ -11,14 +11,13 @@ import {
 import { IStoreState } from "../../../types";
 
 function mapStateToProps(state: IStoreState): IStateProps {
-  const { profile } = state.Main;
+  const { userData } = state.Main;
   const { updateProfileLevel, updateProfileErrors } = state.Profile;
 
   return {
-    token: profile === null ? null : profile.token,
+    userData,
     updateProfileErrors,
     updateProfileLevel,
-    user: profile === null ? null : profile.user,
   };
 }
 

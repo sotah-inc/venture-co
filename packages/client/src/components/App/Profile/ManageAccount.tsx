@@ -10,21 +10,20 @@ import {
   NonIdealState,
   Spinner,
 } from "@blueprintjs/core";
-import { IUpdateProfileRequest, IUserJson } from "@sotah-inc/core";
+import { IUpdateProfileRequest } from "@sotah-inc/core";
 
 import {
   ManageAccountFormFormContainer,
 } from "../../../form-containers/App/Profile/ManageAccountForm";
 import { IErrors } from "../../../types/global";
-import { FetchLevel } from "../../../types/main";
+import { AuthLevel, FetchLevel, UserData } from "../../../types/main";
 import { setTitle } from "../../../util";
 import { IFormValues } from "./ManageAccountForm";
 
 export interface IStateProps {
-  user: IUserJson | null;
+  userData: UserData;
   updateProfileLevel: FetchLevel;
   updateProfileErrors: IErrors;
-  token: string | null;
 }
 
 export interface IDispatchProps {
@@ -48,15 +47,14 @@ export class ManageAccount extends React.Component<Props> {
 
   public render(): React.ReactNode {
     const {
-      user,
       updateProfile,
-      token,
+      userData,
       updateProfileErrors,
       updateProfileLevel,
       insertToast,
     } = this.props;
 
-    if (user === null) {
+    if (userData.authLevel !== AuthLevel.authenticated) {
       return (
         <NonIdealState
           title="Unauthorized"
@@ -86,13 +84,7 @@ export class ManageAccount extends React.Component<Props> {
               message: `Could not save profile: ${err}`,
             });
           }}
-          onSubmit={(v: IFormValues) => {
-            if (token === null) {
-              return;
-            }
-
-            updateProfile(token, { email: v.email });
-          }}
+          onSubmit={(v: IFormValues) => updateProfile(userData.profile.token, { email: v.email })}
           updateProfileErrors={updateProfileErrors}
           updateProfileLevel={updateProfileLevel}
         />

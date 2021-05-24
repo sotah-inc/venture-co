@@ -1,13 +1,14 @@
 import React from "react";
 
 import { ButtonGroup } from "@blueprintjs/core";
-import { IUserJson, UserLevel } from "@sotah-inc/core";
+import { UserLevel } from "@sotah-inc/core";
 
 import { LinkButtonRouteContainer } from "../../../route-containers/util/LinkButton";
+import { AuthLevel, UserData } from "../../../types/main";
 import { prefixActiveCheck } from "../../util/LinkButton";
 
 export interface IStateProps {
-  user: IUserJson | null;
+  userData: UserData;
 }
 
 export interface IRouteProps {
@@ -28,9 +29,12 @@ export class NewsButton extends React.Component<Props> {
   }
 
   public render(): React.ReactNode {
-    const { user, locationPathname } = this.props;
+    const { userData, locationPathname } = this.props;
 
-    if (user === null || user.level < UserLevel.Admin) {
+    if (
+      userData.authLevel !== AuthLevel.authenticated ||
+      userData.profile.user.level < UserLevel.Admin
+    ) {
       return NewsButton.renderHomeButton();
     }
 
