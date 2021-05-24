@@ -3,7 +3,9 @@ import React from "react";
 import { Dialog } from "@blueprintjs/core";
 import { IPricelistEntryJson, IPricelistJson, IShortItem, ItemId } from "@sotah-inc/core";
 
-import { CreateEntryFormFormContainer } from "../../../form-containers/entry-point/PriceLists/util/CreateEntryForm";
+import {
+  CreateEntryFormFormContainer,
+} from "../../../form-containers/entry-point/PriceLists/util/CreateEntryForm";
 import { AuthLevel, FetchLevel, UserData } from "../../../types/main";
 import { IUpdatePricelistRequestOptions } from "../../../types/price-lists";
 
