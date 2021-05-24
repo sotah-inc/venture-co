@@ -1,14 +1,6 @@
 import React from "react";
 
-import {
-  Button,
-  Classes,
-  FormGroup,
-  H5,
-  HTMLTable,
-  Intent,
-  Slider,
-} from "@blueprintjs/core";
+import { Button, Classes, FormGroup, H5, HTMLTable, Intent, Slider } from "@blueprintjs/core";
 import {
   GameVersion,
   ICreateWorkOrderRequest,

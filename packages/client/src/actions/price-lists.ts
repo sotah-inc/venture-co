@@ -7,7 +7,8 @@ import {
   IGetItemPriceHistoriesResponseData,
   IGetPricelistResponseData,
   IGetPricelistsResponseData,
-  IPricelistJson, IShortProfession,
+  IPricelistJson,
+  IShortProfession,
   Locale,
   ProfessionId,
 } from "@sotah-inc/core";

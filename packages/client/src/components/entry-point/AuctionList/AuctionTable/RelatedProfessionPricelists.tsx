@@ -2,7 +2,8 @@ import React from "react";
 
 import { Button, ButtonGroup } from "@blueprintjs/core";
 import {
-  IExpansion, IGetBootResponseData,
+  IExpansion,
+  IGetBootResponseData,
   IPricelistJson,
   IProfessionPricelistJson,
   IRegionComposite,

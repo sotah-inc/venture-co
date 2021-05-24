@@ -1,5 +1,6 @@
 import {
-  IItemPriceHistories, IItemsVendorPricesResponse,
+  IItemPriceHistories,
+  IItemsVendorPricesResponse,
   IPricesFlagged,
   IQueryAuctionStatsResponseData,
   IRecipePriceHistories,

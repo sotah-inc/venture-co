@@ -89,7 +89,7 @@ export interface IItemDataRenderer {
 }
 
 export const defaultItemDataRenderer: IItemDataRenderer = {
-  render (item) {
+  render(item) {
     return (
       <>
         <li className="item-level">Item level {item.level}</li>
@@ -102,7 +102,7 @@ export const defaultItemDataRenderer: IItemDataRenderer = {
 export const itemDataRenderers: IItemDataRenderer[] = [
   {
     itemClass: ItemClass.Container,
-    render (item: IShortItem | IShortItemBase): JSX.Element {
+    render(item: IShortItem | IShortItemBase): JSX.Element {
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
@@ -115,7 +115,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   },
   {
     itemClass: ItemClass.Consumable,
-    render (item: IShortItem | IShortItemBase): JSX.Element {
+    render(item: IShortItem | IShortItemBase): JSX.Element {
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
@@ -135,7 +135,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   {
     itemClass: ItemClass.Armor,
     itemSubClass: ItemSubClass.Misc,
-    render (item: IShortItem | IShortItemBase): JSX.Element {
+    render(item: IShortItem | IShortItemBase): JSX.Element {
       if (
         [
           InventoryType.Neck,
@@ -158,7 +158,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   },
   {
     itemClass: ItemClass.Misc,
-    render (item: IShortItem | IShortItemBase): JSX.Element {
+    render(item: IShortItem | IShortItemBase): JSX.Element {
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
@@ -170,7 +170,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   {
     itemClass: ItemClass.Misc,
     itemSubClass: ItemSubClass.MiscOther,
-    render (item: IShortItem | IShortItemBase): JSX.Element {
+    render(item: IShortItem | IShortItemBase): JSX.Element {
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
@@ -186,7 +186,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   {
     itemClass: ItemClass.Misc,
     itemSubClass: ItemSubClass.MiscMount,
-    render (item: IShortItem | IShortItemBase): JSX.Element {
+    render(item: IShortItem | IShortItemBase): JSX.Element {
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
@@ -202,7 +202,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   {
     itemClass: ItemClass.Misc,
     itemSubClass: ItemSubClass.Junk,
-    render (item: IShortItem | IShortItemBase): JSX.Element {
+    render(item: IShortItem | IShortItemBase): JSX.Element {
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
@@ -214,7 +214,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   },
   {
     itemClass: ItemClass.Tradeskill,
-    render (item: IShortItem | IShortItemBase): JSX.Element {
+    render(item: IShortItem | IShortItemBase): JSX.Element {
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
@@ -227,7 +227,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   {
     itemClass: ItemClass.Tradeskill,
     itemSubClass: ItemSubClass.Herb,
-    render (item: IShortItem | IShortItemBase): JSX.Element {
+    render(item: IShortItem | IShortItemBase): JSX.Element {
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
@@ -242,7 +242,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   {
     itemClass: ItemClass.Tradeskill,
     itemSubClass: ItemSubClass.Elemental,
-    render (item: IShortItem | IShortItemBase): JSX.Element {
+    render(item: IShortItem | IShortItemBase): JSX.Element {
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
@@ -281,7 +281,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   {
     itemClass: ItemClass.Tradeskill,
     itemSubClass: ItemSubClass.TradeskillEnchanting,
-    render (item: IShortItem | IShortItemBase): JSX.Element {
+    render(item: IShortItem | IShortItemBase): JSX.Element {
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
@@ -294,7 +294,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   {
     itemClass: ItemClass.Tradeskill,
     itemSubClass: ItemSubClass.MetalAndStone,
-    render (item: IShortItem | IShortItemBase): JSX.Element {
+    render(item: IShortItem | IShortItemBase): JSX.Element {
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
@@ -309,7 +309,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   {
     itemClass: ItemClass.Tradeskill,
     itemSubClass: ItemSubClass.TradeskillInscription,
-    render (item: IShortItem | IShortItemBase): JSX.Element {
+    render(item: IShortItem | IShortItemBase): JSX.Element {
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
@@ -321,7 +321,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   },
   {
     itemClass: ItemClass.ItemEnhancement,
-    render (item: IShortItem | IShortItemBase): JSX.Element {
+    render(item: IShortItem | IShortItemBase): JSX.Element {
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
@@ -333,7 +333,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   },
   {
     itemClass: ItemClass.Weapon,
-    render (item: IShortItem | IShortItemBase): JSX.Element {
+    render(item: IShortItem | IShortItemBase): JSX.Element {
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
@@ -356,7 +356,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   },
   {
     itemClass: ItemClass.BattlePets,
-    render (item: IShortItem | IShortItemBase): JSX.Element {
+    render(item: IShortItem | IShortItemBase): JSX.Element {
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
@@ -367,7 +367,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   },
   {
     itemClass: ItemClass.Recipe,
-    render (item: IShortItem | IShortItemBase): JSX.Element {
+    render(item: IShortItem | IShortItemBase): JSX.Element {
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
@@ -396,7 +396,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   {
     itemClass: ItemClass.Recipe,
     itemSubClass: ItemSubClass.Enchanting,
-    render (item: IShortItem | IShortItemBase): JSX.Element {
+    render(item: IShortItem | IShortItemBase): JSX.Element {
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
@@ -415,7 +415,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   {
     itemClass: ItemClass.Recipe,
     itemSubClass: ItemSubClass.Book,
-    render (item: IShortItem | IShortItemBase): JSX.Element {
+    render(item: IShortItem | IShortItemBase): JSX.Element {
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
@@ -434,7 +434,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   },
   {
     itemClass: ItemClass.Gem,
-    render (item: IShortItem | IShortItemBase): JSX.Element {
+    render(item: IShortItem | IShortItemBase): JSX.Element {
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
@@ -450,7 +450,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   },
   {
     itemClass: ItemClass.Quest,
-    render (item: IShortItem | IShortItemBase): JSX.Element {
+    render(item: IShortItem | IShortItemBase): JSX.Element {
       return (
         <>
           <li className="item-level">Item level {item.level}</li>
@@ -465,7 +465,7 @@ export const itemDataRenderers: IItemDataRenderer[] = [
   },
   {
     itemClass: ItemClass.Glyph,
-    render (item: IShortItem | IShortItemBase): JSX.Element {
+    render(item: IShortItem | IShortItemBase): JSX.Element {
       return (
         <>
           <li className="item-level">Item level {item.level}</li>

@@ -12,12 +12,7 @@ import {
 import { IStoreState } from "../../types";
 
 function mapStateToProps(state: IStoreState): IStateProps {
-  const {
-    currentRegion,
-    currentRealm,
-    userData,
-    bootData,
-  } = state.Main;
+  const { currentRegion, currentRealm, userData, bootData } = state.Main;
   const {
     selectedProfession: { value: selectedProfession },
     selectedExpansion,
@@ -38,7 +33,8 @@ function mapStateToProps(state: IStoreState): IStateProps {
     bootData,
     selectedExpansion,
     selectedList,
-    selectedProfession,userData,
+    selectedProfession,
+    userData,
   };
 }
 

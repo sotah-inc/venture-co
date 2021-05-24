@@ -8,10 +8,10 @@ interface IRenderers {
 }
 
 const renderers: IRenderers = {
-  Currency (attributes: IAttributes)  {
+  Currency(attributes: IAttributes) {
     return <Currency amount={Number(attributes.amount)} />;
   },
-  Item (attrs) {
+  Item(attrs) {
     return <ItemStandalone itemId={attrs.itemId} />;
   },
 };

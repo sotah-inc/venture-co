@@ -6,7 +6,7 @@ import { IPricelistJson, IRegionComposite, Locale } from "@sotah-inc/core";
 import { IGetItemPriceHistoriesOptions } from "../../../../../api/item-price-histories";
 import {
   CurrentPricesTableContainer,
-// eslint-disable-next-line max-len
+  // eslint-disable-next-line max-len
 } from "../../../../../containers/entry-point/PriceLists/PricelistTree/PricelistPanel/PricelistTable/CurrentPricesTable";
 import {
   IClientRealm,

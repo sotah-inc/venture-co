@@ -52,10 +52,7 @@ export class CountToggle extends React.Component<Props> {
     const { auctionsPerPage } = this.props;
 
     return (
-      <Popover2
-        content={this.renderMenu()}
-        placement={"bottom-start"}
-      >
+      <Popover2 content={this.renderMenu()} placement={"bottom-start"}>
         <Button icon="double-caret-vertical">{auctionsPerPage} results</Button>
       </Popover2>
     );

@@ -8,15 +8,17 @@ import {
 import { IGetItemClassesResponseData } from "../../../core/src";
 import { IClientRealm, IFetchData, IProfile } from "./global";
 
-export type UserData = {
-  authLevel: AuthLevel.initial | AuthLevel.unauthenticated;
-  profile: null;
-  preloadedToken: string | null;
-} | {
-  authLevel: AuthLevel.authenticated;
-  profile: IProfile;
-  preloadedToken: string | null;
-}
+export type UserData =
+  | {
+      authLevel: AuthLevel.initial | AuthLevel.unauthenticated;
+      profile: null;
+      preloadedToken: string | null;
+    }
+  | {
+      authLevel: AuthLevel.authenticated;
+      profile: IProfile;
+      preloadedToken: string | null;
+    };
 
 export interface IMainState {
   bootData: IFetchData<IGetBootResponseData>;

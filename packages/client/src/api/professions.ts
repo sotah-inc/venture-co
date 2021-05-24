@@ -7,7 +7,8 @@ import {
   IQueryRequest,
   IRecipeResponseData,
   ISkillTierResponseData,
-  ItemId, ItemsVendorPricesResponse,
+  ItemId,
+  ItemsVendorPricesResponse,
   Locale,
   ProfessionId,
   ProfessionsResponse,
@@ -136,10 +137,7 @@ export async function getItemsRecipes(
 export async function getItemsVendorPrices(
   itemIds: ItemId[],
 ): Promise<IItemsVendorPricesResponse | null> {
-  const { body, status } = await gatherWithQuery<
-    {  itemIds: ItemId[] },
-    ItemsVendorPricesResponse
-  >({
+  const { body, status } = await gatherWithQuery<{ itemIds: ItemId[] }, ItemsVendorPricesResponse>({
     method: "GET",
     query: { itemIds },
     url: `${getApiEndpoint()}/items-vendor-prices`,

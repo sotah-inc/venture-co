@@ -9,7 +9,7 @@ export function resolveFirebaseApp(browserApiKey: string): firebase.app.App {
     return firebaseApp;
   }
 
-  firebaseApp =  firebase.initializeApp({
+  firebaseApp = firebase.initializeApp({
     apiKey: browserApiKey,
   });
 

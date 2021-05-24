@@ -44,11 +44,7 @@ export class RecipePopover extends React.Component<Props> {
         <div className="pure-g">
           <div className="pure-u-1-6">
             <p style={{ paddingBottom: "17px", marginBottom: 0 }}>
-              <img
-                src={recipe.recipe.icon_url}
-                className="recipe-icon"
-                alt={this.renderLabel()}
-              />
+              <img src={recipe.recipe.icon_url} className="recipe-icon" alt={this.renderLabel()} />
             </p>
           </div>
           <div className="pure-u-5-6">

@@ -52,10 +52,7 @@ export class RelatedRecipes extends React.Component<Props> {
         return recipeIdsResult;
       }
 
-      return [
-        ...recipeIdsResult,
-        ...found,
-      ];
+      return [...recipeIdsResult, ...found];
     }, []);
     if (foundRecipeIds === undefined || foundRecipeIds === null) {
       return null;

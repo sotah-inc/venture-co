@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import {
   IStateProps,
   ReagentPricesTable,
-// eslint-disable-next-line max-len
+  // eslint-disable-next-line max-len
 } from "../../../../../components/entry-point/Professions/ProfessionsTree/TreeContent/ReagentPricesTable";
 import { IStoreState } from "../../../../../types";
 

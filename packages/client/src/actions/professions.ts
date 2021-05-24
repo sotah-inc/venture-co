@@ -1,7 +1,8 @@
 /* eslint-disable func-style,@typescript-eslint/explicit-module-boundary-types */
 import {
   IGetPricelistResponseData,
-  IGetRecipePriceHistoriesResponseData, IItemsVendorPricesResponse,
+  IGetRecipePriceHistoriesResponseData,
+  IItemsVendorPricesResponse,
   ProfessionId,
   RecipeId,
 } from "@sotah-inc/core";

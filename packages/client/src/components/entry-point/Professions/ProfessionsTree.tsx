@@ -327,9 +327,8 @@ export class ProfessionsTree extends React.Component<Props, State> {
         return null;
       }
 
-      const selectedCategoryItem = selectedSkillTier
-        .data
-        .categories[selectedSkillTierCategory.index];
+      const selectedCategoryItem =
+        selectedSkillTier.data.categories[selectedSkillTierCategory.index];
       const foundCount = categoryNameCounts[selectedCategoryItem.name]?.[v.recipe.name];
       if (foundCount === undefined || foundCount === 1) {
         return null;

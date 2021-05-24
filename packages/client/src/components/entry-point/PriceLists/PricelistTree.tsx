@@ -5,7 +5,8 @@ import {
   IExpansion,
   IPricelistJson,
   IProfessionPricelistJson,
-  IRegionComposite, IShortProfession,
+  IRegionComposite,
+  IShortProfession,
 } from "@sotah-inc/core";
 
 import {

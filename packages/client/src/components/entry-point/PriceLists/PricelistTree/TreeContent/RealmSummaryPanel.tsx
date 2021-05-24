@@ -44,7 +44,9 @@ export class RealmSummaryPanel extends React.Component<Props> {
       <>
         <Callout style={{ marginBottom: "10px" }}>
           <H5>Summary</H5>
-          <p style={{ marginBottom: 0 }}>{realmString} is a {population} realm</p>
+          <p style={{ marginBottom: 0 }}>
+            {realmString} is a {population} realm
+          </p>
         </Callout>
         <Card>{<UnmetDemandRouteContainer />}</Card>
       </>

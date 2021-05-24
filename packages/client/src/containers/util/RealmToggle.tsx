@@ -5,13 +5,7 @@ import { IDispatchProps, IStateProps, RealmToggle } from "../../components/util/
 import { IStoreState } from "../../types";
 
 function mapStateToProps(state: IStoreState): IStateProps {
-  const {
-    realms,
-    currentRealm,
-    userPreferences,
-    currentRegion,
-    userData,
-  } = state.Main;
+  const { realms, currentRealm, userPreferences, currentRegion, userData } = state.Main;
 
   return {
     currentRealm,

@@ -16,12 +16,7 @@ import {
 import { IStoreState } from "../../types";
 
 function mapStateToProps(state: IStoreState): IStateProps {
-  const {
-    realms,
-    currentRegion,
-    currentRealm,
-    bootData,
-  } = state.Main;
+  const { realms, currentRegion, currentRealm, bootData } = state.Main;
   const { options, auctionsResult, totalResults, activeSelect } = state.Auction;
 
   return {
