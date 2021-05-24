@@ -10,13 +10,13 @@ import {
   DeletePostDialogRouteContainer,
 } from "../../route-containers/entry-point/News/DeletePostDialog";
 import { PostListRouteContainer } from "../../route-containers/entry-point/News/PostList";
-import { AuthLevel } from "../../types/main";
+import { AuthLevel, UserData } from "../../types/main";
 import { setTitle } from "../../util";
 import { CardCallout } from "../util";
 
 export interface IStateProps {
   currentRegion: IRegionComposite | null;
-  authLevel: AuthLevel;
+  userData: UserData;
 }
 
 export interface IDispatchProps {
@@ -113,9 +113,9 @@ export class News extends React.Component<Props> {
   }
 
   private renderUserCallout() {
-    const { changeIsRegisterDialogOpen, authLevel } = this.props;
+    const { changeIsRegisterDialogOpen, userData } = this.props;
 
-    if (authLevel === AuthLevel.authenticated) {
+    if (userData.authLevel === AuthLevel.authenticated) {
       return (
         <div className="pure-u-1-4 homepage-card-container">
           {this.renderCard("/content/feed", "feed", "Check Your Feed")}
