@@ -68,8 +68,7 @@ type GeneratorFunc = (propsOpts: IPropsOptions) => React.ReactNode;
 export const Generator: GeneratorInterface = (opts: IGeneratorOptions) => {
   const { setFieldValue } = opts;
 
-  // eslint-disable-next-line react/display-name
-  return (propsOpts: IPropsOptions) => {
+  return function GeneratorFunc(propsOpts: IPropsOptions) {
     const {
       fieldName,
       helperText,
