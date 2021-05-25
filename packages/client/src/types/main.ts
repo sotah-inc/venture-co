@@ -1,11 +1,11 @@
 import {
   IGetBootResponseData,
+  IGetItemClassesResponseData,
   IPreferenceJson,
   IRegionComposite,
   IVerifyUserResponseData,
 } from "@sotah-inc/core";
 
-import { IGetItemClassesResponseData } from "../../../core/src";
 import { IClientRealm, IFetchData, IProfile } from "./global";
 
 export type UserData =

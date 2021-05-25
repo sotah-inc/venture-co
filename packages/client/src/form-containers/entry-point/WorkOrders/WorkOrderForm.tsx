@@ -27,7 +27,7 @@ const config: WithFormikConfig<IOwnProps, IFormValues> = {
       quantity: values.quantity,
     });
   },
-  validationSchema: Yup.object<IFormValues>().shape({
+  validationSchema: Yup.object({
     item: WorkOrderRules.item,
     price: WorkOrderRules.price,
     quantity: WorkOrderRules.quantity,
