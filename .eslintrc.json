@@ -52,6 +52,7 @@
     ],
     "@typescript-eslint/tslint/config": [0],
     "react/jsx-no-bind": [0],
+    "react/no-unused-prop-types": [2],
     "import/order": [
       "error",
       {
