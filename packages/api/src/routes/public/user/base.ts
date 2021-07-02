@@ -26,13 +26,5 @@ export function getRouter(dbConn: Connection, clientHost: string): Router {
     ),
   );
 
-  router.post(
-    "/verify-confirm",
-    auth(dbConn),
-    wrap(async (req: Request, res: Response) =>
-      handleResult(res, await controller.verifyUserConfirm(req, res)),
-    ),
-  );
-
   return router;
 }

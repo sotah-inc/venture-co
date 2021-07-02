@@ -16,4 +16,12 @@ export function mount(app: Express, dbConn: Connection, clientHost: string): voi
       handleResult(res, await controller.saveLastPath(req, res)),
     ),
   );
+
+  app.post(
+    "/user/verify-confirm",
+    auth(dbConn),
+    wrap(async (req: Request, res: Response) =>
+      handleResult(res, await controller.verifyUserConfirm(req, res)),
+    ),
+  );
 }
