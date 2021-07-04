@@ -52,7 +52,7 @@ export class WorkOrder {
   public updatedAt: Date | undefined;
 
   constructor() {
-    this.gameVersion = GameVersion.Retail;
+    this.gameVersion = "";
     this.connectedRealmId = -1;
     this.regionName = "";
     this.itemId = -1;
