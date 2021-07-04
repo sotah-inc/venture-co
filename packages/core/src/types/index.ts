@@ -41,10 +41,7 @@ export enum SortPerPage {
   OneHundred = 100,
 }
 
-export enum GameVersion {
-  Retail = "retail",
-  Classic = "classic",
-}
+export type GameVersion = string;
 
 export interface ILinksBase {
   _links: {
