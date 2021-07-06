@@ -1,3 +1,4 @@
+import { NatsConnection } from "nats";
 import * as nats from "nats";
 
 import { code } from "../contracts";
@@ -25,19 +26,24 @@ interface IDefaultRequestOptions {
 }
 
 export abstract class BaseMessenger {
-  protected client: nats.Client;
+  protected client: nats.NatsConnection;
 
-  constructor(client: nats.Client) {
+  constructor(client: nats.NatsConnection) {
     this.client = client;
   }
 
-  protected request<T>(subject: string, opts?: IRequestOptions): Promise<Message<T>> {
+  protected async request<T>(subject: string, opts?: IRequestOptions): Promise<Message<T>> {
     const { body, parseKind, timeout }: IDefaultRequestOptions = {
       body: "",
       parseKind: ParseKind.JsonEncoded,
       timeout: DEFAULT_TIMEOUT,
       ...opts,
     };
+
+    const msg: Promise<nats.Msg> = await Promise.race([
+      this.client.request(subject, Buffer.from(body)),
+      new Promise((_resolve,reject) => setTimeout(() => reject(new Error("Timed out!")), timeout)),
+    ]);
 
     return new Promise<Message<T>>((resolve, reject) => {
       const tId = setTimeout(() => reject(new Error("Timed out!")), timeout);

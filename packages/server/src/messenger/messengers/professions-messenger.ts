@@ -7,6 +7,7 @@ import {
   RecipeId,
   SkillTierId,
 } from "@sotah-inc/core";
+import { NatsConnection } from "nats";
 import * as nats from "nats";
 
 import { gzip } from "../../util";
@@ -49,7 +50,7 @@ enum subjects {
 export class ProfessionsMessenger extends BaseMessenger {
   private itemsMessenger: ItemsMessenger;
 
-  constructor(client: nats.Client, itemsMessenger: ItemsMessenger) {
+  constructor(client: nats.NatsConnection, itemsMessenger: ItemsMessenger) {
     super(client);
 
     this.itemsMessenger = itemsMessenger;
