@@ -8,7 +8,6 @@ import {
   SkillTierId,
 } from "@sotah-inc/core";
 import { NatsConnection } from "nats";
-import * as nats from "nats";
 
 import { gzip } from "../../util";
 import { code, IQueryItemsRequest } from "../contracts";
@@ -50,8 +49,8 @@ enum subjects {
 export class ProfessionsMessenger extends BaseMessenger {
   private itemsMessenger: ItemsMessenger;
 
-  constructor(client: nats.NatsConnection, itemsMessenger: ItemsMessenger) {
-    super(client);
+  constructor(conn: NatsConnection, itemsMessenger: ItemsMessenger) {
+    super(conn);
 
     this.itemsMessenger = itemsMessenger;
   }

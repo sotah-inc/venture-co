@@ -1,4 +1,4 @@
-import * as nats from "nats";
+import { NatsConnection } from "nats";
 
 import {
   AuctionsMessenger,
@@ -20,16 +20,16 @@ export interface IMessengers {
   regions: RegionsMessenger;
 }
 
-export function getMessengers(natsClient: nats.Client): IMessengers {
-  const itemsMessenger = new ItemsMessenger(natsClient);
-  const petsMessenger = new PetsMessenger(natsClient);
+export function getMessengers(conn: NatsConnection): IMessengers {
+  const itemsMessenger = new ItemsMessenger(conn);
+  const petsMessenger = new PetsMessenger(conn);
 
   return {
-    auctions: new AuctionsMessenger(natsClient, itemsMessenger, petsMessenger),
+    auctions: new AuctionsMessenger(conn, itemsMessenger, petsMessenger),
     items: itemsMessenger,
     pets: petsMessenger,
-    general: new GeneralMessenger(natsClient, itemsMessenger, petsMessenger),
-    professions: new ProfessionsMessenger(natsClient, itemsMessenger),
-    regions: new RegionsMessenger(natsClient),
+    general: new GeneralMessenger(conn, itemsMessenger, petsMessenger),
+    professions: new ProfessionsMessenger(conn, itemsMessenger),
+    regions: new RegionsMessenger(conn),
   };
 }

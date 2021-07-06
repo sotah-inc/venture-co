@@ -1,5 +1,5 @@
 import { IRegionConnectedRealmTuple, Locale } from "@sotah-inc/core";
-import * as nats from "nats";
+import { NatsConnection } from "nats";
 
 import {
   code,
@@ -31,8 +31,8 @@ export class AuctionsMessenger extends BaseMessenger {
 
   private petsMessenger: PetsMessenger;
 
-  constructor(client: nats.Client, itemsMessenger: ItemsMessenger, petsMessenger: PetsMessenger) {
-    super(client);
+  constructor(conn: NatsConnection, itemsMessenger: ItemsMessenger, petsMessenger: PetsMessenger) {
+    super(conn);
 
     this.itemsMessenger = itemsMessenger;
     this.petsMessenger = petsMessenger;

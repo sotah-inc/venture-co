@@ -1,5 +1,4 @@
-import { NatsConnection } from "nats";
-import * as nats from "nats";
+import { Msg, NatsConnection } from "nats";
 
 import { code } from "../contracts";
 import { Message, ParseKind } from "../message";
@@ -25,11 +24,15 @@ interface IDefaultRequestOptions {
   timeout: number;
 }
 
-export abstract class BaseMessenger {
-  protected client: nats.NatsConnection;
+function isNatsMessage(v: unknown): v is Msg {
+  return (v as Msg).subject !== undefined;
+}
 
-  constructor(client: nats.NatsConnection) {
-    this.client = client;
+export abstract class BaseMessenger {
+  protected conn: NatsConnection;
+
+  constructor(conn: NatsConnection) {
+    this.conn = conn;
   }
 
   protected async request<T>(subject: string, opts?: IRequestOptions): Promise<Message<T>> {
@@ -40,32 +43,24 @@ export abstract class BaseMessenger {
       ...opts,
     };
 
-    const msg: Promise<nats.Msg> = await Promise.race([
-      this.client.request(subject, Buffer.from(body)),
+    const natsMessage = await Promise.race([
+      this.conn.request(subject, Buffer.from(body)),
       new Promise((_resolve,reject) => setTimeout(() => reject(new Error("Timed out!")), timeout)),
     ]);
+    if (!isNatsMessage(natsMessage)) {
+      throw new Error("failed to resolve nats message");
+    }
 
-    return new Promise<Message<T>>((resolve, reject) => {
-      const tId = setTimeout(() => reject(new Error("Timed out!")), timeout);
+    const parsedMsg: IMessage = JSON.parse(natsMessage.data.toString());
+    const msg = new Message<T>(parsedMsg, parseKind);
+    if (msg.error !== null && msg.code === code.genericError) {
+      const reason = new MessageError();
+      reason.code = msg.code;
+      reason.message = msg.error.message;
 
-      this.client.request(subject, body, (natsMsg: string) => {
-        (async () => {
-          clearTimeout(tId);
-          const parsedMsg: IMessage = JSON.parse(natsMsg.toString());
-          const msg = new Message<T>(parsedMsg, parseKind);
-          if (msg.error !== null && msg.code === code.genericError) {
-            const reason: MessageError = {
-              code: msg.code,
-              message: msg.error.message,
-            };
-            reject(reason);
+      throw reason;
+    }
 
-            return;
-          }
-
-          resolve(msg);
-        })();
-      });
-    });
+    return msg;
   }
 }
