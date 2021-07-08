@@ -19,12 +19,12 @@ import { BaseMessenger } from "./base";
 enum subjects {
   status = "status",
   connectedRealms = "connectedRealms",
-  validateRegionConnectedRealm = "validateRegionConnectedRealm",
   resolveConnectedRealm = "resolveConnectedRealm",
-  validateRegionRealm = "validateRegionRealm",
   queryRealmModificationDates = "queryRealmModificationDates",
   connectedRealmModificationDates = "connectedRealmModificationDates",
-
+  validateGameVersion = "validateGameVersion",
+  validateRegionRealm = "validateRegionRealm",
+  validateRegionConnectedRealm = "validateRegionConnectedRealm",
 }
 
 export class RegionsMessenger extends BaseMessenger {
