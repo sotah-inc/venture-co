@@ -65,6 +65,14 @@ export class RegionsMessenger extends BaseMessenger {
     });
   }
 
+  public validateGameVersion(
+    tuple: IRegionRealmTuple,
+  ): Promise<Message<ValidateRegionRealmResponse>> {
+    return this.request(subjects.validateRegionRealm, {
+      body: JSON.stringify(tuple),
+    });
+  }
+
   public queryRealmModificationDates(
     tuple: IRegionConnectedRealmTuple,
   ): Promise<Message<IConnectedRealmModificationDates>> {
