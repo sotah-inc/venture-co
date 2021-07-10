@@ -41,6 +41,10 @@ export enum SortPerPage {
   OneHundred = 100,
 }
 
+export interface IGameVersionTuple {
+  version: GameVersion;
+}
+
 export type GameVersion = string;
 
 export interface ILinksBase {

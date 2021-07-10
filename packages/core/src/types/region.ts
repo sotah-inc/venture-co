@@ -1,8 +1,14 @@
-import { IHrefReference, ILinksBase, LocaleMapping, UnixTimestamp } from "./index";
+import {
+  IGameVersionTuple,
+  IHrefReference,
+  ILinksBase,
+  LocaleMapping,
+  UnixTimestamp,
+} from "./index";
 
 export type RegionName = string;
 
-export interface IRegionTuple {
+export interface IRegionVersionTuple extends IGameVersionTuple {
   region_name: RegionName;
 }
 
@@ -73,11 +79,11 @@ export interface IConnectedRealmComposite {
   modification_dates: IConnectedRealmModificationDates;
 }
 
-export interface IRegionConnectedRealmTuple extends IRegionTuple {
+export interface IRegionVersionConnectedRealmTuple extends IRegionVersionTuple {
   connected_realm_id: ConnectedRealmId;
 }
 
-export interface IRegionRealmTuple extends IRegionTuple {
+export interface IRegionVersionRealmTuple extends IRegionVersionTuple {
   realm_slug: RealmSlug;
 }
 
