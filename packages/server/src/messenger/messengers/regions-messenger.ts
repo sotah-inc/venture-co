@@ -2,9 +2,7 @@ import {
   IConnectedRealmComposite,
   IConnectedRealmModificationDates,
   IRegionComposite,
-  IRegionConnectedRealmTuple,
-  IRegionRealmTuple,
-  IRegionTuple,
+  IRegionVersionTuple,
 } from "@sotah-inc/core";
 
 import {
@@ -28,13 +26,15 @@ enum subjects {
 }
 
 export class RegionsMessenger extends BaseMessenger {
-  public getStatus(tuple: IRegionTuple): Promise<Message<IRegionComposite>> {
+  public getStatus(tuple: IRegionVersionTuple): Promise<Message<IRegionComposite>> {
     return this.request(subjects.status, {
       body: JSON.stringify(tuple),
     });
   }
 
-  public getConnectedRealms(tuple: IRegionTuple): Promise<Message<IConnectedRealmComposite[]>> {
+  public getConnectedRealms(
+    tuple: IRegionVersionTuple,
+  ): Promise<Message<IConnectedRealmComposite[]>> {
     return this.request(subjects.connectedRealms, {
       body: JSON.stringify(tuple),
       parseKind: ParseKind.GzipJsonEncoded,
@@ -68,7 +68,7 @@ export class RegionsMessenger extends BaseMessenger {
   public validateGameVersion(
     tuple: IRegionRealmTuple,
   ): Promise<Message<ValidateRegionRealmResponse>> {
-    return this.request(subjects.validateRegionRealm, {
+    return this.request(subjects.validateGameVersion, {
       body: JSON.stringify(tuple),
     });
   }
@@ -82,5 +82,4 @@ export class RegionsMessenger extends BaseMessenger {
   public getConnectedRealmModificationDates(): Promise<Message<IRealmModificationDatesResponse>> {
     return this.request(subjects.connectedRealmModificationDates);
   }
-
 }
