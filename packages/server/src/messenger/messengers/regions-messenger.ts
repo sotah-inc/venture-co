@@ -5,7 +5,7 @@ import {
   IRegionComposite,
   IRegionVersionConnectedRealmTuple,
   IRegionVersionRealmTuple,
-  IRegionVersionTuple,
+  RegionVersionTuple,
 } from "@sotah-inc/core";
 
 import {
@@ -33,7 +33,7 @@ export class RegionsMessenger extends BaseMessenger {
     return this.request(subjects.connectedRealmModificationDates);
   }
 
-  public connectedRealms(tuple: IRegionVersionTuple): Promise<Message<IConnectedRealmComposite[]>> {
+  public connectedRealms(tuple: RegionVersionTuple): Promise<Message<IConnectedRealmComposite[]>> {
     return this.request(subjects.connectedRealms, {
       body: JSON.stringify(tuple),
       parseKind: ParseKind.GzipJsonEncoded,
@@ -54,7 +54,7 @@ export class RegionsMessenger extends BaseMessenger {
     });
   }
 
-  public status(tuple: IRegionVersionTuple): Promise<Message<IRegionComposite>> {
+  public status(tuple: RegionVersionTuple): Promise<Message<IRegionComposite>> {
     return this.request(subjects.status, {
       body: JSON.stringify(tuple),
     });
