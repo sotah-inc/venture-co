@@ -9,10 +9,8 @@ import { NatsConnection } from "nats";
 
 import {
   code,
-  IGetBootResponse,
   IGetItemPriceHistoriesRequest,
   IGetItemPriceHistoriesResponse,
-  IGetSessionSecretResponse,
   IQueryGeneralItem,
   IQueryGeneralRequest,
   ResolveItemPriceHistoriesResponse,
@@ -28,9 +26,6 @@ import { ItemsMessenger } from "./items-messenger";
 import { PetsMessenger } from "./pets-messenger";
 
 enum subjects {
-  boot = "boot",
-  sessionSecret = "sessionSecret",
-
   regionTokenHistory = "regionTokenHistory",
   tokenHistory = "tokenHistory",
 
@@ -48,14 +43,6 @@ export class GeneralMessenger extends BaseMessenger {
 
     this.itemsMessenger = itemsMessenger;
     this.petsMessenger = petsMessenger;
-  }
-
-  public getBoot(): Promise<Message<IGetBootResponse>> {
-    return this.request(subjects.boot);
-  }
-
-  public getSessionSecret(): Promise<Message<IGetSessionSecretResponse>> {
-    return this.request(subjects.sessionSecret);
   }
 
   public async queryGeneral(request: IQueryGeneralRequest): Promise<IQueryGeneralItem[] | null> {
