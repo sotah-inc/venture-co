@@ -8,9 +8,11 @@ import {
 
 export type RegionName = string;
 
-export interface IRegionVersionTuple extends IGameVersionTuple {
+export interface IRegionTuple {
   region_name: RegionName;
 }
+
+export type RegionVersionTuple = IRegionTuple & IGameVersionTuple;
 
 export type ConnectedRealmId = number;
 
@@ -79,11 +81,11 @@ export interface IConnectedRealmComposite {
   modification_dates: IConnectedRealmModificationDates;
 }
 
-export interface IRegionVersionConnectedRealmTuple extends IRegionVersionTuple {
+export interface IRegionVersionConnectedRealmTuple extends RegionVersionTuple {
   connected_realm_id: ConnectedRealmId;
 }
 
-export interface IRegionVersionRealmTuple extends IRegionVersionTuple {
+export interface IRegionVersionRealmTuple extends RegionVersionTuple {
   realm_slug: RealmSlug;
 }
 
