@@ -4,95 +4,35 @@ import { NatsConnection } from "nats";
 import {
   code,
   IGetItemPriceHistoriesRequest,
-  IQueryGeneralItem,
-  IQueryGeneralRequest,
+  IGetItemPriceHistoriesResponse,
   ResolveItemPriceHistoriesResponse,
 } from "../contracts";
-import {
-  IGetRecipePricesHistoryRequest,
-  IGetRecipePricesHistoryResponse,
-} from "../contracts/recipe-prices";
 import { Message, ParseKind } from "../message";
 import { BaseMessenger } from "./base";
-import { ItemsMessenger } from "./items-messenger";
-import { PetsMessenger } from "./pets-messenger";
-import { PricelistHistoryMessenger } from "./pricelist-history-messenger";
 
 enum subjects {
   itemPricesHistory = "itemPricesHistory",
-  recipePricesHistory = "recipePricesHistory",
 }
 
-export class GeneralMessenger extends BaseMessenger {
-  private itemsMessenger: ItemsMessenger;
-
-  private petsMessenger: PetsMessenger;
-
-  private pricelistHistoryMessenger: PricelistHistoryMessenger;
-
-  constructor(
-    conn: NatsConnection,
-    itemsMessenger: ItemsMessenger,
-    petsMessenger: PetsMessenger,
-    pricelistHistoryMessenger: PricelistHistoryMessenger,
-  ) {
+export class PricelistHistoryMessenger extends BaseMessenger {
+  constructor(conn: NatsConnection) {
     super(conn);
-
-    this.itemsMessenger = itemsMessenger;
-    this.petsMessenger = petsMessenger;
-    this.pricelistHistoryMessenger = pricelistHistoryMessenger;
   }
 
-  public async queryGeneral(request: IQueryGeneralRequest): Promise<IQueryGeneralItem[] | null> {
-    const queriedItems = await this.itemsMessenger.resolveQueryItems(request);
-    if (queriedItems === null) {
-      return null;
-    }
-
-    const queriedPets = await this.petsMessenger.resolveQueryPets(request);
-    if (queriedPets === null) {
-      return null;
-    }
-
-    return [
-      ...queriedItems.map<IQueryGeneralItem>(v => {
-        return {
-          item: {
-            item: v.item,
-            pet: null,
-          },
-          rank: v.rank,
-          target: v.target,
-        };
-      }),
-      ...queriedPets.map<IQueryGeneralItem>(v => {
-        return {
-          item: {
-            item: null,
-            pet: v.item,
-          },
-          rank: v.rank,
-          target: v.target,
-        };
-      }),
-    ]
-      .sort((a, b) => {
-        if (a.rank === b.rank) {
-          return a.target.localeCompare(b.target);
-        }
-
-        return a.rank < b.rank ? -1 : 1;
-      })
-      .slice(0, 10);
+  public async getItemPricesHistory(
+    req: IGetItemPriceHistoriesRequest,
+  ): Promise<Message<IGetItemPriceHistoriesResponse>> {
+    return this.request(subjects.itemPricesHistory, {
+      body: JSON.stringify(req),
+      parseKind: ParseKind.GzipJsonEncoded,
+    });
   }
 
   public async resolveItemPricesHistory(
     req: IGetItemPriceHistoriesRequest,
   ): Promise<ResolveItemPriceHistoriesResponse> {
     // gathering item-price-histories
-    const itemPriceHistoriesMessage = await this.pricelistHistoryMessenger.getItemPricesHistory(
-      req,
-    );
+    const itemPriceHistoriesMessage = await this.getItemPricesHistory(req);
     if (itemPriceHistoriesMessage.code !== code.ok) {
       return {
         code: itemPriceHistoriesMessage.code,
@@ -212,15 +152,5 @@ export class GeneralMessenger extends BaseMessenger {
       },
       error: null,
     };
-  }
-
-  // via recipe-price-histories
-  public async getRecipePricesHistory(
-    req: IGetRecipePricesHistoryRequest,
-  ): Promise<Message<IGetRecipePricesHistoryResponse>> {
-    return this.request(subjects.recipePricesHistory, {
-      body: JSON.stringify(req),
-      parseKind: ParseKind.GzipJsonEncoded,
-    });
   }
 }
