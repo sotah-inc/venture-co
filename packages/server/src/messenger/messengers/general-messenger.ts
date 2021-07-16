@@ -1,10 +1,4 @@
-import {
-  IItemPriceHistories,
-  IPriceHistories,
-  IPricesFlagged,
-  IRegionTokenHistory,
-  IRegionTuple,
-} from "@sotah-inc/core";
+import { IItemPriceHistories, IPriceHistories, IPricesFlagged } from "@sotah-inc/core";
 import { NatsConnection } from "nats";
 
 import {
@@ -19,16 +13,12 @@ import {
   IGetRecipePricesHistoryRequest,
   IGetRecipePricesHistoryResponse,
 } from "../contracts/recipe-prices";
-import { IShortTokenHistoryResponse } from "../contracts/tokens";
 import { Message, ParseKind } from "../message";
 import { BaseMessenger } from "./base";
 import { ItemsMessenger } from "./items-messenger";
 import { PetsMessenger } from "./pets-messenger";
 
 enum subjects {
-  regionTokenHistory = "regionTokenHistory",
-  tokenHistory = "tokenHistory",
-
   itemPricesHistory = "itemPricesHistory",
   recipePricesHistory = "recipePricesHistory",
 }
@@ -86,19 +76,6 @@ export class GeneralMessenger extends BaseMessenger {
         return a.rank < b.rank ? -1 : 1;
       })
       .slice(0, 10);
-  }
-
-  // via token-histories
-  public getRegionTokenHistory(tuple: IRegionTuple): Promise<Message<IRegionTokenHistory>> {
-    return this.request(subjects.regionTokenHistory, {
-      body: JSON.stringify(tuple),
-    });
-  }
-
-  public getTokenHistory(): Promise<Message<IShortTokenHistoryResponse>> {
-    return this.request(subjects.tokenHistory, {
-      parseKind: ParseKind.GzipJsonEncoded,
-    });
   }
 
   // via item-price-histories
