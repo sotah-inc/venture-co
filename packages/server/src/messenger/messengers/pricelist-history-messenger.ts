@@ -7,11 +7,16 @@ import {
   IGetItemPriceHistoriesResponse,
   ResolveItemPriceHistoriesResponse,
 } from "../contracts";
+import {
+  IGetRecipePricesHistoryRequest,
+  IGetRecipePricesHistoryResponse,
+} from "../contracts/recipe-prices";
 import { Message, ParseKind } from "../message";
 import { BaseMessenger } from "./base";
 
 enum subjects {
   itemPricesHistory = "itemPricesHistory",
+  recipePricesHistory = "recipePricesHistory",
 }
 
 export class PricelistHistoryMessenger extends BaseMessenger {
@@ -152,5 +157,14 @@ export class PricelistHistoryMessenger extends BaseMessenger {
       },
       error: null,
     };
+  }
+
+  public async getRecipePricesHistory(
+    req: IGetRecipePricesHistoryRequest,
+  ): Promise<Message<IGetRecipePricesHistoryResponse>> {
+    return this.request(subjects.recipePricesHistory, {
+      body: JSON.stringify(req),
+      parseKind: ParseKind.GzipJsonEncoded,
+    });
   }
 }

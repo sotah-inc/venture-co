@@ -8,20 +8,10 @@ import {
   IQueryGeneralRequest,
   ResolveItemPriceHistoriesResponse,
 } from "../contracts";
-import {
-  IGetRecipePricesHistoryRequest,
-  IGetRecipePricesHistoryResponse,
-} from "../contracts/recipe-prices";
-import { Message, ParseKind } from "../message";
 import { BaseMessenger } from "./base";
 import { ItemsMessenger } from "./items-messenger";
 import { PetsMessenger } from "./pets-messenger";
 import { PricelistHistoryMessenger } from "./pricelist-history-messenger";
-
-enum subjects {
-  itemPricesHistory = "itemPricesHistory",
-  recipePricesHistory = "recipePricesHistory",
-}
 
 export class GeneralMessenger extends BaseMessenger {
   private itemsMessenger: ItemsMessenger;
@@ -212,15 +202,5 @@ export class GeneralMessenger extends BaseMessenger {
       },
       error: null,
     };
-  }
-
-  // via recipe-price-histories
-  public async getRecipePricesHistory(
-    req: IGetRecipePricesHistoryRequest,
-  ): Promise<Message<IGetRecipePricesHistoryResponse>> {
-    return this.request(subjects.recipePricesHistory, {
-      body: JSON.stringify(req),
-      parseKind: ParseKind.GzipJsonEncoded,
-    });
   }
 }
