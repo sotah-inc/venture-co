@@ -1,7 +1,8 @@
 import { IQueryItem, IShortItem } from "@sotah-inc/core";
 
 import {
-  code, IGetItemClassesResponse,
+  code,
+  IGetItemClassesResponse,
   IGetItemsRequest,
   IGetItemsResponse,
   IQueryItemsRequest,
@@ -13,18 +14,18 @@ import { BaseMessenger } from "./base";
 enum subjects {
   items = "items",
   itemsQuery = "itemsQuery",
-  itemClasses = "itemClasses"
+  itemClasses = "itemClasses",
 }
 
 export class ItemsMessenger extends BaseMessenger {
-  public async getItems(request: IGetItemsRequest): Promise<Message<IGetItemsResponse>> {
+  public async items(request: IGetItemsRequest): Promise<Message<IGetItemsResponse>> {
     return this.request(subjects.items, {
       body: JSON.stringify(request),
       parseKind: ParseKind.GzipJsonEncoded,
     });
   }
 
-  public queryItems(request: IQueryItemsRequest): Promise<Message<IQueryItemsResponse>> {
+  public itemsQuery(request: IQueryItemsRequest): Promise<Message<IQueryItemsResponse>> {
     return this.request(subjects.itemsQuery, { body: JSON.stringify(request) });
   }
 
@@ -32,7 +33,7 @@ export class ItemsMessenger extends BaseMessenger {
     request: IQueryItemsRequest,
   ): Promise<Array<IQueryItem<IShortItem>> | null> {
     // resolving items-query message
-    const itemsQueryMessage = await this.queryItems(request);
+    const itemsQueryMessage = await this.itemsQuery(request);
     if (itemsQueryMessage.code !== code.ok) {
       return null;
     }
@@ -43,7 +44,7 @@ export class ItemsMessenger extends BaseMessenger {
     }
 
     // resolving items from item-ids in items-query response data
-    const getItemsMessage = await this.getItems({
+    const getItemsMessage = await this.items({
       itemIds: itemsQueryResult.items.map(v => v.item_id),
       locale: request.locale,
     });
@@ -65,7 +66,7 @@ export class ItemsMessenger extends BaseMessenger {
     });
   }
 
-  public getItemClasses(): Promise<Message<IGetItemClassesResponse>> {
+  public itemClasses(): Promise<Message<IGetItemClassesResponse>> {
     return this.request(subjects.itemClasses);
   }
 }

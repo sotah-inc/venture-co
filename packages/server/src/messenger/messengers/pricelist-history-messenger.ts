@@ -8,6 +8,10 @@ import {
   ResolveItemPriceHistoriesResponse,
 } from "../contracts";
 import {
+  IItemsMarketPriceRequest,
+  IItemsMarketPriceResponse,
+} from "../contracts/items-market-price";
+import {
   IGetRecipePricesHistoryRequest,
   IGetRecipePricesHistoryResponse,
 } from "../contracts/recipe-prices";
@@ -16,6 +20,7 @@ import { BaseMessenger } from "./base";
 
 enum subjects {
   itemPricesHistory = "itemPricesHistory",
+  itemsMarketPrice = "itemsMarketPrice",
   recipePricesHistory = "recipePricesHistory",
 }
 
@@ -24,7 +29,7 @@ export class PricelistHistoryMessenger extends BaseMessenger {
     super(conn);
   }
 
-  public async getItemPricesHistory(
+  public async itemPricesHistory(
     req: IGetItemPriceHistoriesRequest,
   ): Promise<Message<IGetItemPriceHistoriesResponse>> {
     return this.request(subjects.itemPricesHistory, {
@@ -37,7 +42,7 @@ export class PricelistHistoryMessenger extends BaseMessenger {
     req: IGetItemPriceHistoriesRequest,
   ): Promise<ResolveItemPriceHistoriesResponse> {
     // gathering item-price-histories
-    const itemPriceHistoriesMessage = await this.getItemPricesHistory(req);
+    const itemPriceHistoriesMessage = await this.itemPricesHistory(req);
     if (itemPriceHistoriesMessage.code !== code.ok) {
       return {
         code: itemPriceHistoriesMessage.code,
@@ -159,7 +164,15 @@ export class PricelistHistoryMessenger extends BaseMessenger {
     };
   }
 
-  public async getRecipePricesHistory(
+  public itemsMarketPrice(
+    req: IItemsMarketPriceRequest,
+  ): Promise<Message<IItemsMarketPriceResponse>> {
+    return this.request(subjects.itemsMarketPrice, {
+      body: JSON.stringify(req),
+    });
+  }
+
+  public async recipePricesHistory(
     req: IGetRecipePricesHistoryRequest,
   ): Promise<Message<IGetRecipePricesHistoryResponse>> {
     return this.request(subjects.recipePricesHistory, {

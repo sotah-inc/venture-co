@@ -1,4 +1,4 @@
-import { IRegionConnectedRealmTuple, Locale } from "@sotah-inc/core";
+import { Locale } from "@sotah-inc/core";
 import { NatsConnection } from "nats";
 
 import {
@@ -7,13 +7,8 @@ import {
   IGetAuctionsResponse,
   IGetPricelistRequest,
   IGetPricelistResponse,
-  IQueryAuctionStatsResponse,
   ResolveAuctionsResponse,
 } from "../contracts";
-import {
-  IItemsMarketPriceRequest,
-  IItemsMarketPriceResponse,
-} from "../contracts/items-market-price";
 import { Message, ParseKind } from "../message";
 import { BaseMessenger } from "./base";
 import { ItemsMessenger } from "./items-messenger";
@@ -21,12 +16,10 @@ import { PetsMessenger } from "./pets-messenger";
 
 enum subjects {
   auctions = "auctions",
-  queryAuctionStats = "queryAuctionStats",
   priceList = "priceList",
-  itemsMarketPrice = "itemsMarketPrice",
 }
 
-export class AuctionsMessenger extends BaseMessenger {
+export class LiveAuctionsMessenger extends BaseMessenger {
   private itemsMessenger: ItemsMessenger;
 
   private petsMessenger: PetsMessenger;
@@ -38,8 +31,15 @@ export class AuctionsMessenger extends BaseMessenger {
     this.petsMessenger = petsMessenger;
   }
 
-  public async getAuctions(request: IGetAuctionsRequest): Promise<Message<IGetAuctionsResponse>> {
+  public async auctions(request: IGetAuctionsRequest): Promise<Message<IGetAuctionsResponse>> {
     return this.request(subjects.auctions, {
+      body: JSON.stringify(request),
+      parseKind: ParseKind.GzipJsonEncoded,
+    });
+  }
+
+  public async priceList(request: IGetPricelistRequest): Promise<Message<IGetPricelistResponse>> {
+    return this.request(subjects.priceList, {
       body: JSON.stringify(request),
       parseKind: ParseKind.GzipJsonEncoded,
     });
@@ -49,7 +49,7 @@ export class AuctionsMessenger extends BaseMessenger {
     request: IGetAuctionsRequest,
     locale: Locale,
   ): Promise<ResolveAuctionsResponse> {
-    const auctionsMessage = await this.getAuctions(request);
+    const auctionsMessage = await this.auctions(request);
     if (auctionsMessage.code !== code.ok) {
       return {
         code: auctionsMessage.code,
@@ -122,30 +122,5 @@ export class AuctionsMessenger extends BaseMessenger {
       },
       error: null,
     };
-  }
-
-  public queryAuctionStats(
-    tuple: Partial<IRegionConnectedRealmTuple>,
-  ): Promise<Message<IQueryAuctionStatsResponse>> {
-    return this.request(subjects.queryAuctionStats, {
-      body: JSON.stringify(tuple),
-    });
-  }
-
-  public itemsMarketPrice(
-    req: IItemsMarketPriceRequest,
-  ): Promise<Message<IItemsMarketPriceResponse>> {
-    return this.request(subjects.itemsMarketPrice, {
-      body: JSON.stringify(req),
-    });
-  }
-
-  public async getPriceList(
-    request: IGetPricelistRequest,
-  ): Promise<Message<IGetPricelistResponse>> {
-    return this.request(subjects.priceList, {
-      body: JSON.stringify(request),
-      parseKind: ParseKind.GzipJsonEncoded,
-    });
   }
 }
