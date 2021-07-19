@@ -1,4 +1,4 @@
-import { code, GeneralMessenger } from "./messenger";
+import { BootMessenger, code } from "./messenger";
 
 export interface IJwtOptions {
   audience: string;
@@ -6,8 +6,8 @@ export interface IJwtOptions {
   secret: string;
 }
 
-export async function getJwtOptions(generalMessenger: GeneralMessenger): Promise<IJwtOptions> {
-  const msg = await generalMessenger.getSessionSecret();
+export async function getJwtOptions(mess: BootMessenger): Promise<IJwtOptions> {
+  const msg = await mess.sessionSecret();
   if (msg.code !== code.ok) {
     throw new Error(msg.error?.message);
   }

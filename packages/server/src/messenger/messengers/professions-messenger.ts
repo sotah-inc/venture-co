@@ -34,6 +34,9 @@ import { BaseMessenger } from "./base";
 import { ItemsMessenger } from "./items-messenger";
 
 enum subjects {
+  itemRecipesIntake = "itemRecipesIntake",
+  itemsRecipes = "itemsRecipes",
+
   professions = "professions",
   professionsFromIds = "professionsFromIds",
   skillTier = "skillTier",
@@ -42,8 +45,6 @@ enum subjects {
   recipes = "recipes",
   recipesQuery = "recipesQuery",
   itemsVendorPrices = "itemsVendorPrices",
-  itemsRecipes = "itemsRecipes",
-  itemRecipesIntake = "itemRecipesIntake",
 }
 
 export class ProfessionsMessenger extends BaseMessenger {
@@ -55,7 +56,7 @@ export class ProfessionsMessenger extends BaseMessenger {
     this.itemsMessenger = itemsMessenger;
   }
 
-  public async getProfessions(locale: Locale): Promise<Message<IProfessionsResponse>> {
+  public async professions(locale: Locale): Promise<Message<IProfessionsResponse>> {
     return this.request(subjects.professions, {
       body: JSON.stringify({ locale }),
       parseKind: ParseKind.GzipJsonEncoded,
