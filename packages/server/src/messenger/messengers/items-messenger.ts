@@ -8,6 +8,7 @@ import {
   IQueryItemsRequest,
   IQueryItemsResponse,
 } from "../contracts";
+import { IItemsVendorPricesRequest, IItemsVendorPricesResponse } from "../contracts/professions";
 import { Message, ParseKind } from "../message";
 import { BaseMessenger } from "./base";
 
@@ -15,6 +16,7 @@ enum subjects {
   items = "items",
   itemsQuery = "itemsQuery",
   itemClasses = "itemClasses",
+  itemsVendorPrices = "itemsVendorPrices",
 }
 
 export class ItemsMessenger extends BaseMessenger {
@@ -68,5 +70,11 @@ export class ItemsMessenger extends BaseMessenger {
 
   public itemClasses(): Promise<Message<IGetItemClassesResponse>> {
     return this.request(subjects.itemClasses);
+  }
+
+  public itemsVendorPrices(
+    request: IItemsVendorPricesRequest,
+  ): Promise<Message<IItemsVendorPricesResponse>> {
+    return this.request(subjects.itemsVendorPrices, { body: JSON.stringify(request) });
   }
 }

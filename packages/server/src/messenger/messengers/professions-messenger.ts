@@ -15,8 +15,6 @@ import {
   IItemRecipesIntakeRequest,
   IItemRecipesRequest,
   IItemsRecipesResponse,
-  IItemsVendorPricesRequest,
-  IItemsVendorPricesResponse,
   IProfessionsResponse,
   IQueryRecipesResponse,
   IRecipeResponse,
@@ -36,15 +34,13 @@ import { ItemsMessenger } from "./items-messenger";
 enum subjects {
   itemRecipesIntake = "itemRecipesIntake",
   itemsRecipes = "itemsRecipes",
-
   professions = "professions",
   professionsFromIds = "professionsFromIds",
-  skillTier = "skillTier",
-  skillTiers = "skillTiers",
   recipe = "recipe",
   recipes = "recipes",
   recipesQuery = "recipesQuery",
-  itemsVendorPrices = "itemsVendorPrices",
+  skillTier = "skillTier",
+  skillTiers = "skillTiers",
 }
 
 export class ProfessionsMessenger extends BaseMessenger {
@@ -56,6 +52,23 @@ export class ProfessionsMessenger extends BaseMessenger {
     this.itemsMessenger = itemsMessenger;
   }
 
+  public async itemRecipesIntake(req: IItemRecipesIntakeRequest): Promise<Message<null>> {
+    const jsonEncoded = JSON.stringify(req);
+    const gzipEncoded = await gzip(Buffer.from(jsonEncoded));
+    const base64Encoded = gzipEncoded.toString("base64");
+
+    return this.request(subjects.itemRecipesIntake, {
+      body: base64Encoded,
+    });
+  }
+
+  public async itemsRecipes(req: IItemRecipesRequest): Promise<Message<IItemsRecipesResponse>> {
+    return this.request(subjects.itemsRecipes, {
+      body: JSON.stringify(req),
+      parseKind: ParseKind.GzipJsonEncoded,
+    });
+  }
+
   public async professions(locale: Locale): Promise<Message<IProfessionsResponse>> {
     return this.request(subjects.professions, {
       body: JSON.stringify({ locale }),
@@ -63,7 +76,7 @@ export class ProfessionsMessenger extends BaseMessenger {
     });
   }
 
-  public async getProfessionsFromIds(
+  public async professionsFromIds(
     ids: ProfessionId[],
     locale: Locale,
   ): Promise<Message<IProfessionsResponse>> {
@@ -73,7 +86,25 @@ export class ProfessionsMessenger extends BaseMessenger {
     });
   }
 
-  public async getSkillTier(
+  public async recipe(recipeId: RecipeId, locale: Locale): Promise<Message<IRecipeResponse>> {
+    return this.request(subjects.recipe, {
+      body: JSON.stringify({ recipe_id: recipeId, locale }),
+      parseKind: ParseKind.GzipJsonEncoded,
+    });
+  }
+
+  public async recipes(recipeIds: RecipeId[], locale: Locale): Promise<Message<IRecipesResponse>> {
+    return this.request(subjects.recipes, {
+      body: JSON.stringify({ recipe_ids: recipeIds, locale }),
+      parseKind: ParseKind.GzipJsonEncoded,
+    });
+  }
+
+  public recipesQuery(request: IQueryItemsRequest): Promise<Message<IQueryRecipesResponse>> {
+    return this.request(subjects.recipesQuery, { body: JSON.stringify(request) });
+  }
+
+  public async skillTier(
     professionId: ProfessionId,
     skillTierId: SkillTierId,
     locale: Locale,
@@ -84,7 +115,7 @@ export class ProfessionsMessenger extends BaseMessenger {
     });
   }
 
-  public async getSkillTiers(
+  public async skillTiers(
     tuples: IProfessionSkillTierTuple[],
     locale: Locale,
   ): Promise<Message<ISkillTiersResponse>> {
@@ -94,25 +125,8 @@ export class ProfessionsMessenger extends BaseMessenger {
     });
   }
 
-  public async getRecipe(recipeId: RecipeId, locale: Locale): Promise<Message<IRecipeResponse>> {
-    return this.request(subjects.recipe, {
-      body: JSON.stringify({ recipe_id: recipeId, locale }),
-      parseKind: ParseKind.GzipJsonEncoded,
-    });
-  }
-
-  public async getRecipes(
-    recipeIds: RecipeId[],
-    locale: Locale,
-  ): Promise<Message<IRecipesResponse>> {
-    return this.request(subjects.recipes, {
-      body: JSON.stringify({ recipe_ids: recipeIds, locale }),
-      parseKind: ParseKind.GzipJsonEncoded,
-    });
-  }
-
   public async resolveRecipe(recipeId: RecipeId, locale: Locale): Promise<ResolveRecipeResponse> {
-    const recipeMsg = await this.getRecipe(recipeId, locale);
+    const recipeMsg = await this.recipe(recipeId, locale);
     if (recipeMsg.code !== code.ok) {
       return {
         code: recipeMsg.code,
@@ -146,7 +160,7 @@ export class ProfessionsMessenger extends BaseMessenger {
 
       return Array.from(out);
     })();
-    const itemsMsg = await this.itemsMessenger.getItems({
+    const itemsMsg = await this.itemsMessenger.items({
       itemIds,
       locale,
     });
@@ -174,21 +188,11 @@ export class ProfessionsMessenger extends BaseMessenger {
     };
   }
 
-  public queryRecipes(request: IQueryItemsRequest): Promise<Message<IQueryRecipesResponse>> {
-    return this.request(subjects.recipesQuery, { body: JSON.stringify(request) });
-  }
-
-  public itemsVendorPrices(
-    request: IItemsVendorPricesRequest,
-  ): Promise<Message<IItemsVendorPricesResponse>> {
-    return this.request(subjects.itemsVendorPrices, { body: JSON.stringify(request) });
-  }
-
   public async resolveQueryRecipes(
     request: IQueryItemsRequest,
   ): Promise<ResolveQueryRecipesResponse> {
     // resolving items-query message
-    const itemsQueryMessage = await this.queryRecipes(request);
+    const itemsQueryMessage = await this.recipesQuery(request);
     if (itemsQueryMessage.code !== code.ok) {
       return {
         data: null,
@@ -235,13 +239,6 @@ export class ProfessionsMessenger extends BaseMessenger {
     };
   }
 
-  public async getItemsRecipes(req: IItemRecipesRequest): Promise<Message<IItemsRecipesResponse>> {
-    return this.request(subjects.itemsRecipes, {
-      body: JSON.stringify(req),
-      parseKind: ParseKind.GzipJsonEncoded,
-    });
-  }
-
   public async resolveAllItemRecipes(ids: ItemId[]): Promise<ResolveAllItemsRecipesResponse> {
     const kinds: ItemRecipeKind[] = [
       ItemRecipeKind.CraftedBy,
@@ -252,7 +249,7 @@ export class ProfessionsMessenger extends BaseMessenger {
       kinds.map(async v => {
         return {
           kind: v,
-          message: await this.getItemsRecipes({ kind: v, item_ids: ids }),
+          message: await this.itemsRecipes({ kind: v, item_ids: ids }),
         };
       }),
     );
@@ -327,7 +324,7 @@ export class ProfessionsMessenger extends BaseMessenger {
 
   public async resolveRecipes(ids: RecipeId[], locale: Locale): Promise<ResolveRecipesResponse> {
     // resolving recipes from recipe-ids
-    const getRecipesMessage = await this.getRecipes(ids, locale);
+    const getRecipesMessage = await this.recipes(ids, locale);
     if (getRecipesMessage.code !== code.ok) {
       return {
         data: null,
@@ -348,7 +345,7 @@ export class ProfessionsMessenger extends BaseMessenger {
     const professionIds = Array.from<ProfessionId>(
       new Set<ProfessionId>(getRecipesResult.recipes.map(v => v.profession_id)),
     );
-    const getProfessionsFromIdsMessage = await this.getProfessionsFromIds(professionIds, locale);
+    const getProfessionsFromIdsMessage = await this.professionsFromIds(professionIds, locale);
     if (getProfessionsFromIdsMessage.code !== code.ok) {
       return {
         data: null,
@@ -393,7 +390,7 @@ export class ProfessionsMessenger extends BaseMessenger {
 
       return [...tuples, ...skillTiersTuples];
     }, []);
-    const getSkillTiersMessage = await this.getSkillTiers(professionSkillTierTuples, locale);
+    const getSkillTiersMessage = await this.skillTiers(professionSkillTierTuples, locale);
     if (getSkillTiersMessage.code !== code.ok) {
       return {
         data: null,
@@ -420,15 +417,5 @@ export class ProfessionsMessenger extends BaseMessenger {
       },
       error: null,
     };
-  }
-
-  public async itemRecipesIntake(req: IItemRecipesIntakeRequest): Promise<Message<null>> {
-    const jsonEncoded = JSON.stringify(req);
-    const gzipEncoded = await gzip(Buffer.from(jsonEncoded));
-    const base64Encoded = gzipEncoded.toString("base64");
-
-    return this.request(subjects.itemRecipesIntake, {
-      body: base64Encoded,
-    });
   }
 }

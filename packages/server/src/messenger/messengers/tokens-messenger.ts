@@ -15,13 +15,13 @@ export class TokensMessenger extends BaseMessenger {
     super(conn);
   }
 
-  public getRegionTokenHistory(tuple: IRegionTuple): Promise<Message<IRegionTokenHistory>> {
+  public regionTokenHistory(tuple: IRegionTuple): Promise<Message<IRegionTokenHistory>> {
     return this.request(subjects.regionTokenHistory, {
       body: JSON.stringify(tuple),
     });
   }
 
-  public getTokenHistory(): Promise<Message<IShortTokenHistoryResponse>> {
+  public tokenHistory(): Promise<Message<IShortTokenHistoryResponse>> {
     return this.request(subjects.tokenHistory, {
       parseKind: ParseKind.GzipJsonEncoded,
     });
