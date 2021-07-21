@@ -70,7 +70,7 @@ export class LiveAuctionsMessenger extends BaseMessenger {
     const itemIds = [...Array.from(new Set(auctionsResult.auctions.map(v => v.itemId)))];
     const petIds = [...Array.from(new Set(auctionsResult.auctions.map(v => v.pet_species_id)))];
     const [itemsMsg, petsMsg] = await Promise.all([
-      this.itemsMessenger.getItems({
+      this.itemsMessenger.items({
         itemIds,
         locale,
       }),

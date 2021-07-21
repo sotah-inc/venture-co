@@ -3,7 +3,7 @@ import {
   IPriceHistories,
   IPrices,
   IPricesFlagged,
-  IRegionConnectedRealmTuple,
+  IRegionVersionConnectedRealmTuple,
   ItemId,
   UnixTimestamp,
 } from "@sotah-inc/core";
@@ -11,7 +11,7 @@ import {
 import { IResolveResponse } from "./index";
 
 export interface IGetItemPriceHistoriesRequest {
-  tuple: IRegionConnectedRealmTuple;
+  tuple: IRegionVersionConnectedRealmTuple;
   item_ids: ItemId[];
   lower_bounds: UnixTimestamp;
   upper_bounds: UnixTimestamp;

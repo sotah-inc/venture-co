@@ -80,9 +80,7 @@ export class GeneralMessenger extends BaseMessenger {
     req: IGetItemPriceHistoriesRequest,
   ): Promise<ResolveItemPriceHistoriesResponse> {
     // gathering item-price-histories
-    const itemPriceHistoriesMessage = await this.pricelistHistoryMessenger.getItemPricesHistory(
-      req,
-    );
+    const itemPriceHistoriesMessage = await this.pricelistHistoryMessenger.itemPricesHistory(req);
     if (itemPriceHistoriesMessage.code !== code.ok) {
       return {
         code: itemPriceHistoriesMessage.code,

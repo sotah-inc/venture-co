@@ -24,7 +24,7 @@ export class PetsMessenger extends BaseMessenger {
     });
   }
 
-  public queryPets(request: QueryPetsRequest): Promise<Message<IQueryPetsResponse>> {
+  public petsQuery(request: QueryPetsRequest): Promise<Message<IQueryPetsResponse>> {
     return this.request(subjects.petsQuery, { body: JSON.stringify(request) });
   }
 
@@ -32,7 +32,7 @@ export class PetsMessenger extends BaseMessenger {
     request: IQueryItemsRequest,
   ): Promise<Array<IQueryItem<IShortPet>> | null> {
     // resolving pets-query message
-    const petsQueryMessage = await this.queryPets(request);
+    const petsQueryMessage = await this.petsQuery(request);
     if (petsQueryMessage.code !== code.ok) {
       return null;
     }

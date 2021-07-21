@@ -1,6 +1,6 @@
 import {
   IAuction,
-  IRegionConnectedRealmTuple,
+  IRegionVersionConnectedRealmTuple,
   ItemId,
   PetId,
   SortDirection,
@@ -13,7 +13,7 @@ import { IGetPetsResponse } from "./pets";
 import { IResolveResponse } from "./index";
 
 export interface IGetAuctionsRequest {
-  tuple: IRegionConnectedRealmTuple;
+  tuple: IRegionVersionConnectedRealmTuple;
   page: number;
   count: number;
   sort_kind: SortKind;

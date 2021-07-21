@@ -1,7 +1,7 @@
-import { IItemPrices, IRegionConnectedRealmTuple, ItemId } from "@sotah-inc/core";
+import { IItemPrices, IRegionVersionConnectedRealmTuple, ItemId } from "@sotah-inc/core";
 
 export interface IGetPricelistRequest {
-  tuple: IRegionConnectedRealmTuple;
+  tuple: IRegionVersionConnectedRealmTuple;
   item_ids: ItemId[];
 }
 

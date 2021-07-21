@@ -2,7 +2,7 @@ import { IUserJson, UserLevel } from "@sotah-inc/core";
 import * as jwt from "jsonwebtoken";
 import { Column, Entity, Index, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
-import { GeneralMessenger } from "../../messenger";
+import { BootMessenger } from "../../messenger";
 import { getJwtOptions } from "../../session";
 import { Post } from "./post";
 import { Preference } from "./preference";
@@ -28,28 +28,16 @@ export class User {
   @Column({ type: "varchar", length: 255, nullable: true })
   public lastClientPathname: string | undefined;
 
-  @OneToOne(
-    () => Preference,
-    preference => preference.user,
-  )
+  @OneToOne(() => Preference, preference => preference.user)
   public preference: Preference | undefined;
 
-  @OneToMany(
-    () => Pricelist,
-    pricelist => pricelist.user,
-  )
+  @OneToMany(() => Pricelist, pricelist => pricelist.user)
   public pricelists: Pricelist[] | undefined;
 
-  @OneToMany(
-    () => Post,
-    post => post.user,
-  )
+  @OneToMany(() => Post, post => post.user)
   public posts: Post[] | undefined;
 
-  @OneToMany(
-    () => WorkOrder,
-    workOrder => workOrder.user,
-  )
+  @OneToMany(() => WorkOrder, workOrder => workOrder.user)
   public workOrders: WorkOrder[] | undefined;
 
   constructor() {
@@ -57,8 +45,8 @@ export class User {
     this.firebaseUid = "";
   }
 
-  public async generateJwtToken(generalMessenger: GeneralMessenger): Promise<string> {
-    const jwtOptions = await getJwtOptions(generalMessenger);
+  public async generateJwtToken(mess: BootMessenger): Promise<string> {
+    const jwtOptions = await getJwtOptions(mess);
 
     return jwt.sign({ data: this.id }, jwtOptions.secret, {
       algorithm: "HS512",
