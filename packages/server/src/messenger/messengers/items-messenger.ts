@@ -31,6 +31,16 @@ export class ItemsMessenger extends BaseMessenger {
     return this.request(subjects.itemsQuery, { body: JSON.stringify(request) });
   }
 
+  public itemClasses(): Promise<Message<IGetItemClassesResponse>> {
+    return this.request(subjects.itemClasses);
+  }
+
+  public itemsVendorPrices(
+    request: IItemsVendorPricesRequest,
+  ): Promise<Message<IItemsVendorPricesResponse>> {
+    return this.request(subjects.itemsVendorPrices, { body: JSON.stringify(request) });
+  }
+
   public async resolveQueryItems(
     request: IQueryItemsRequest,
   ): Promise<Array<IQueryItem<IShortItem>> | null> {
@@ -49,6 +59,7 @@ export class ItemsMessenger extends BaseMessenger {
     const getItemsMessage = await this.items({
       itemIds: itemsQueryResult.items.map(v => v.item_id),
       locale: request.locale,
+      game_version: request.game_version,
     });
     if (getItemsMessage.code !== code.ok) {
       return null;
@@ -66,15 +77,5 @@ export class ItemsMessenger extends BaseMessenger {
         target: v.target,
       };
     });
-  }
-
-  public itemClasses(): Promise<Message<IGetItemClassesResponse>> {
-    return this.request(subjects.itemClasses);
-  }
-
-  public itemsVendorPrices(
-    request: IItemsVendorPricesRequest,
-  ): Promise<Message<IItemsVendorPricesResponse>> {
-    return this.request(subjects.itemsVendorPrices, { body: JSON.stringify(request) });
   }
 }

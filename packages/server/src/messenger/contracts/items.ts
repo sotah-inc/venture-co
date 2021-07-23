@@ -1,7 +1,8 @@
-import { IShortItem, ItemId, Locale } from "@sotah-inc/core";
+import { GameVersion, IShortItem, ItemId, Locale } from "@sotah-inc/core";
 
 export interface IQueryItemsRequest {
   query: string;
+  game_version: GameVersion;
   locale: Locale;
 }
 
@@ -24,6 +25,7 @@ export interface IQueryItemsResponse {
 export interface IGetItemsRequest {
   itemIds: ItemId[];
   locale: Locale;
+  game_version: GameVersion;
 }
 
 export interface IGetItemsResponse {

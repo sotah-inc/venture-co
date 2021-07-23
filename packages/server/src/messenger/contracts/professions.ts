@@ -1,4 +1,5 @@
 import {
+  GameVersion,
   IShortProfession,
   IShortRecipe,
   IShortSkillTier, ItemId,
@@ -78,6 +79,7 @@ export interface IItemRecipesRequest {
 
 export interface IItemsVendorPricesRequest {
   item_ids: ItemId[];
+  game_version: GameVersion;
 }
 
 export interface IItemsVendorPricesResponse {
