@@ -38,6 +38,23 @@ export class PricelistHistoryMessenger extends BaseMessenger {
     });
   }
 
+  public itemsMarketPrice(
+    req: IItemsMarketPriceRequest,
+  ): Promise<Message<IItemsMarketPriceResponse>> {
+    return this.request(subjects.itemsMarketPrice, {
+      body: JSON.stringify(req),
+    });
+  }
+
+  public async recipePricesHistory(
+    req: IGetRecipePricesHistoryRequest,
+  ): Promise<Message<IGetRecipePricesHistoryResponse>> {
+    return this.request(subjects.recipePricesHistory, {
+      body: JSON.stringify(req),
+      parseKind: ParseKind.GzipJsonEncoded,
+    });
+  }
+
   public async resolveItemPricesHistory(
     req: IGetItemPriceHistoriesRequest,
   ): Promise<ResolveItemPriceHistoriesResponse> {
@@ -162,22 +179,5 @@ export class PricelistHistoryMessenger extends BaseMessenger {
       },
       error: null,
     };
-  }
-
-  public itemsMarketPrice(
-    req: IItemsMarketPriceRequest,
-  ): Promise<Message<IItemsMarketPriceResponse>> {
-    return this.request(subjects.itemsMarketPrice, {
-      body: JSON.stringify(req),
-    });
-  }
-
-  public async recipePricesHistory(
-    req: IGetRecipePricesHistoryRequest,
-  ): Promise<Message<IGetRecipePricesHistoryResponse>> {
-    return this.request(subjects.recipePricesHistory, {
-      body: JSON.stringify(req),
-      parseKind: ParseKind.GzipJsonEncoded,
-    });
   }
 }
