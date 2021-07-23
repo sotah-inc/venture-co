@@ -42,7 +42,7 @@ export enum SortPerPage {
 }
 
 export interface IGameVersionTuple {
-  version: GameVersion;
+  game_version: GameVersion;
 }
 
 export type GameVersion = string;
