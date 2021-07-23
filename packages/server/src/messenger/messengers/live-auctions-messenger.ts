@@ -73,6 +73,7 @@ export class LiveAuctionsMessenger extends BaseMessenger {
       this.itemsMessenger.items({
         itemIds,
         locale,
+        game_version: request.tuple.game_version,
       }),
       this.petsMessenger.getPets({
         locale,

@@ -1,4 +1,5 @@
 import {
+  GameVersion,
   IProfessionSkillTierTuple,
   ItemId,
   ItemRecipeKind,
@@ -125,7 +126,7 @@ export class ProfessionsMessenger extends BaseMessenger {
     });
   }
 
-  public async resolveRecipe(recipeId: RecipeId, locale: Locale): Promise<ResolveRecipeResponse> {
+  public async resolveRecipe(version: GameVersion, recipeId: RecipeId, locale: Locale): Promise<ResolveRecipeResponse> {
     const recipeMsg = await this.recipe(recipeId, locale);
     if (recipeMsg.code !== code.ok) {
       return {
@@ -163,6 +164,7 @@ export class ProfessionsMessenger extends BaseMessenger {
     const itemsMsg = await this.itemsMessenger.items({
       itemIds,
       locale,
+      game_version: version,
     });
     if (itemsMsg.code !== code.ok) {
       return {
