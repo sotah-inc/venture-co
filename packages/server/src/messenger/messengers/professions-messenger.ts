@@ -126,7 +126,11 @@ export class ProfessionsMessenger extends BaseMessenger {
     });
   }
 
-  public async resolveRecipe(version: GameVersion, recipeId: RecipeId, locale: Locale): Promise<ResolveRecipeResponse> {
+  public async resolveRecipe(
+    version: GameVersion,
+    recipeId: RecipeId,
+    locale: Locale,
+  ): Promise<ResolveRecipeResponse> {
     const recipeMsg = await this.recipe(recipeId, locale);
     if (recipeMsg.code !== code.ok) {
       return {
