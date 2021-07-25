@@ -7,13 +7,18 @@ import {
   IQueryRequest,
   ISaveLastPathRequest,
   IValidationErrorResponse,
-  Locale,
-  OrderDirection,
-  OrderKind,
-  SortPerPage,
 } from "@sotah-inc/core";
-import { code, IFindByOptions, PostRepository, RegionsMessenger } from "@sotah-inc/server";
+import { IFindByOptions, PostRepository, RegionsMessenger } from "@sotah-inc/server";
 import * as yup from "yup";
+
+import {
+  GameVersionRule,
+  LocaleRule,
+  OrderDirectionRule,
+  OrderKindRule,
+  PerPageRule,
+  SlugRule,
+} from "./validator-rules/params";
 
 export const PreferenceRules = yup
   .object<ICreatePreferencesRequest>({
@@ -43,11 +48,7 @@ export const PriceListEntryRules = yup
 export const PricelistRules = yup
   .object({
     name: yup.string().required(),
-    slug: yup
-      .string()
-      .min(4)
-      .matches(/^[a-z0-9_-]+$/)
-      .required(),
+    slug: SlugRule,
   })
   .required()
   .noUnknown();
@@ -84,11 +85,7 @@ export const UserRequestBodyRules = yup
 export const PostRequestBodyRules = yup
   .object<ICreatePostRequest>({
     body: yup.string().required("body is required"),
-    slug: yup
-      .string()
-      .min(4, "post slug must be 4 characters")
-      .matches(/^[a-z0-9_-]+$/, "post slug must be a-z, 0-9, or underscore")
-      .required("post slug is required"),
+    slug: SlugRule,
     summary: yup.string().required("summary is required"),
     title: yup.string().required("post title is required"),
   })
@@ -100,18 +97,13 @@ export function FullPostRequestBodyRules(repo: PostRepository, exceptSlug?: stri
   return yup
     .object<ICreatePostRequest>({
       body: yup.string().required("body is required"),
-      slug: yup
-        .string()
-        .min(4, "post slug must be 4 characters")
-        .matches(/^[a-z0-9_-]+$/, "post slug must be a-z, 0-9, or underscore")
-        .required("post slug is required")
-        .test("is-unique", "post must be unique", v => {
-          if (!v) {
-            return false;
-          }
+      slug: SlugRule.test("is-unique", "post must be unique", v => {
+        if (!v) {
+          return false;
+        }
 
-          return repo.hasNoSlug(v, exceptSlug);
-        }),
+        return repo.hasNoSlug(v, exceptSlug);
+      }),
       summary: yup.string().required("summary is required"),
       title: yup.string().required("post title is required"),
     })
@@ -123,7 +115,7 @@ export const AuctionsQueryParamsRules = yup
   .object<IGetAuctionsRequest>({
     count: yup.number().integer("count must be an integer").required("count is required"),
     itemFilters: yup.array(yup.number().required().integer("item-id must be an integer")),
-    locale: yup.string().oneOf(Object.values(Locale)).required("locale is required"),
+    locale: LocaleRule,
     page: yup.number().integer("page must be an integer").required("page is required"),
     petFilters: yup.array(yup.number().required().integer("pet-id must be an integer")),
     sortDirection: yup
@@ -140,7 +132,7 @@ export const AuctionsQueryParamsRules = yup
 
 export const QueryParamRules = yup
   .object<IQueryRequest>({
-    locale: yup.string().oneOf(Object.values(Locale)).required("locale is required"),
+    locale: LocaleRule,
     query: yup.string(),
   })
   .required()
@@ -151,43 +143,12 @@ export function QueryWorkOrdersParamsRules(mess: RegionsMessenger) {
   return yup
     .object<IFindByOptions>()
     .shape({
-      gameVersion: yup
-        .string()
-        .required()
-        .test(
-          "exists",
-          "game-version must be valid",
-          async (v): Promise<boolean> => {
-            if (!v) {
-              return false;
-            }
-
-            const result = await mess.validateGameVersion({ game_version: v });
-            if (result.code !== code.ok) {
-              throw new Error("code was not ok");
-            }
-
-            const resultData = await result.decode();
-            if (resultData === null) {
-              throw new Error("result data was null");
-            }
-
-            return resultData.is_valid;
-          },
-        ),
-      locale: yup.string().required().oneOf(Object.values(Locale)),
-      orderBy: yup.string().required().oneOf(Object.values(OrderKind)),
-      orderDirection: yup.string().required().oneOf(Object.values(OrderDirection)),
+      gameVersion: GameVersionRule(mess),
+      locale: LocaleRule,
+      orderBy: OrderKindRule,
+      orderDirection: OrderDirectionRule,
       page: yup.number().required().positive(),
-      perPage: yup
-        .number()
-        .required()
-        .positive()
-        .oneOf(
-          Object.values(SortPerPage)
-            .filter(v => !isNaN(Number(v)))
-            .map(Number),
-        ),
+      perPage: PerPageRule,
     })
     .noUnknown();
 }
