@@ -1,18 +1,18 @@
 import {
-  GameVersion,
   ICreatePostRequest,
   ICreatePreferencesRequest,
   ICreateUserRequest,
   ICreateWorkOrderRequest,
   IGetAuctionsRequest,
-  IQueryRequest, ISaveLastPathRequest,
+  IQueryRequest,
+  ISaveLastPathRequest,
   IValidationErrorResponse,
   Locale,
   OrderDirection,
   OrderKind,
   SortPerPage,
 } from "@sotah-inc/core";
-import { IFindByOptions, PostRepository } from "@sotah-inc/server";
+import { code, IFindByOptions, PostRepository, RegionsMessenger } from "@sotah-inc/server";
 import * as yup from "yup";
 
 export const PreferenceRules = yup
@@ -146,25 +146,51 @@ export const QueryParamRules = yup
   .required()
   .noUnknown();
 
-export const QueryWorkOrdersParamsRules = yup
-  .object<IFindByOptions>()
-  .shape({
-    gameVersion: yup.string().required().oneOf(Object.values(GameVersion)),
-    locale: yup.string().required().oneOf(Object.values(Locale)),
-    orderBy: yup.string().required().oneOf(Object.values(OrderKind)),
-    orderDirection: yup.string().required().oneOf(Object.values(OrderDirection)),
-    page: yup.number().required().positive(),
-    perPage: yup
-      .number()
-      .required()
-      .positive()
-      .oneOf(
-        Object.values(SortPerPage)
-          .filter(v => !isNaN(Number(v)))
-          .map(Number),
-      ),
-  })
-  .noUnknown();
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export function QueryWorkOrdersParamsRules(mess: RegionsMessenger) {
+  return yup
+    .object<IFindByOptions>()
+    .shape({
+      gameVersion: yup
+        .string()
+        .required()
+        .test(
+          "exists",
+          "game-version must be valid",
+          async (v): Promise<boolean> => {
+            if (!v) {
+              return false;
+            }
+
+            const result = await mess.validateGameVersion({ game_version: v });
+            if (result.code !== code.ok) {
+              throw new Error("code was not ok");
+            }
+
+            const resultData = await result.decode();
+            if (resultData === null) {
+              throw new Error("result data was null");
+            }
+
+            return resultData.is_valid;
+          },
+        ),
+      locale: yup.string().required().oneOf(Object.values(Locale)),
+      orderBy: yup.string().required().oneOf(Object.values(OrderKind)),
+      orderDirection: yup.string().required().oneOf(Object.values(OrderDirection)),
+      page: yup.number().required().positive(),
+      perPage: yup
+        .number()
+        .required()
+        .positive()
+        .oneOf(
+          Object.values(SortPerPage)
+            .filter(v => !isNaN(Number(v)))
+            .map(Number),
+        ),
+    })
+    .noUnknown();
+}
 
 export const CreateWorkOrderRequestRules = yup
   .object<ICreateWorkOrderRequest>({

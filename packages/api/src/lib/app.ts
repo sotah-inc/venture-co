@@ -38,26 +38,13 @@ export async function getApp(opts: IOptions): Promise<express.Express | null> {
 
   // messenger init
   logger.info("connecting to nats", { natsHost, natsPort });
-  const natsConnection = await (async () => {
-    const conn = nats.connect({
-      maxReconnectAttempts: 5,
-      reconnectTimeWait: 100,
-      url: `nats://${natsHost}:${natsPort}`,
-    });
-    return new Promise<nats.Client | null>(resolve => {
-      conn.on("connect", () => resolve(conn));
-      conn.on("error", err => {
-        logger.error("failed to connect to nats", { err });
-
-        resolve(null);
-      });
-    });
-  })();
-  if (natsConnection === null) {
-    return null;
-  }
+  const natsConnection = await nats.connect({
+    maxReconnectAttempts: 5,
+    reconnectTimeWait: 100,
+    servers: [`nats://${natsHost}:${natsPort}`],
+  });
   const messengers = getMessengers(natsConnection);
-  await messengers.general.getBoot();
+  await messengers.boot.boot();
 
   // db init
   logger.info("connecting to db", { dbHost, dbPassword });
