@@ -1,13 +1,7 @@
-import { ItemRecipeKind, IValidationErrorResponse } from "@sotah-inc/core";
-import * as HTTPStatus from "http-status";
+import { ItemRecipeKind } from "@sotah-inc/core";
 import { z } from "zod";
 
-import {
-  ControllerDescriptor,
-  IRequestResult,
-  IValidateResultError,
-  ValidateResult,
-} from "../index";
+import { IValidateResultError, ValidateResult } from "../index";
 
 export const ItemsRecipesQuery = z.object({
   locale: z.string(),
@@ -42,57 +36,4 @@ export function validate<T>(schema: z.Schema<T>, data: unknown): ValidateResult<
       }),
     };
   }
-}
-
-export function Validator<T, A>(schema: z.Schema<T>) {
-  return function validatorCallable(
-    _target: unknown,
-    _propertyKey: string,
-    descriptor: TypedPropertyDescriptor<ControllerDescriptor<T, A>>,
-  ): TypedPropertyDescriptor<ControllerDescriptor<T, A>> {
-    const originalMethod = descriptor.value;
-    if (originalMethod === undefined) {
-      return descriptor;
-    }
-
-    descriptor.value = async function (
-      req,
-      res,
-    ): Promise<IRequestResult<A | IValidationErrorResponse>> {
-      const result = validate(schema, req.body);
-      if (result.errors) {
-        const validationErrors = result.errors.reduce<IValidationErrorResponse>(
-          (foundValidationErrors, error) => {
-            return {
-              ...foundValidationErrors,
-              [error.path.join("_")]: error.message,
-            };
-          },
-          {},
-        );
-
-        return {
-          data: validationErrors,
-          status: HTTPStatus.BAD_REQUEST,
-        };
-      }
-      if (result.body === null) {
-        const validationErrors: IValidationErrorResponse = {
-          "error": "result body was null",
-        };
-
-        return {
-          data: validationErrors,
-          status: HTTPStatus.BAD_REQUEST,
-        };
-      }
-
-      req.body = result.body;
-
-      /* tslint:disable-next-line:no-invalid-this */
-      return originalMethod.apply(this, [req, res]);
-    };
-
-    return descriptor;
-  };
 }

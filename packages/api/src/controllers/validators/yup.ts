@@ -6,19 +6,66 @@ import {
   IGetAuctionsRequest,
   IQueryRequest,
   ISaveLastPathRequest,
-  IValidationErrorResponse,
+  Locale,
+  OrderDirection,
+  OrderKind,
+  SortPerPage,
 } from "@sotah-inc/core";
 import { IFindByOptions, PostRepository, RegionsMessenger } from "@sotah-inc/server";
-import * as HTTPStatus from "http-status";
+import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
 import * as yup from "yup";
 
-import {
-  GameVersionRule,
-  LocaleRule, OrderDirectionRule,
-  OrderKindRule, PerPageRule,
-  SlugRule,
-} from "../../lib/validator-rules/params";
-import { ControllerDescriptor, IRequestResult, ValidateResult } from "../index";
+import { ValidateResult } from "../index";
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+export function GameVersionRule(mess: RegionsMessenger): yup.StringSchema<string, object> {
+  return yup
+    .string()
+    .required()
+    .test(
+      "exists",
+      "game-version must be valid",
+      async (v): Promise<boolean> => {
+        if (!v) {
+          return false;
+        }
+
+        const result = await mess.validateGameVersion({ game_version: v });
+        if (result.code !== code.ok) {
+          throw new Error("code was not ok");
+        }
+
+        const resultData = await result.decode();
+        if (resultData === null) {
+          throw new Error("result data was null");
+        }
+
+        return resultData.is_valid;
+      },
+    );
+}
+
+export const SlugRule = yup
+  .string()
+  .min(4, "post slug must be 4 characters")
+  .matches(/^[a-z0-9_-]+$/, "post slug must be a-z, 0-9, or underscore")
+  .required("post slug is required");
+
+export const LocaleRule = yup.string().required().oneOf(Object.values(Locale));
+
+export const OrderKindRule = yup.string().required().oneOf(Object.values(OrderKind));
+
+export const OrderDirectionRule = yup.string().required().oneOf(Object.values(OrderDirection));
+
+export const PerPageRule = yup
+  .number()
+  .required()
+  .positive()
+  .oneOf(
+    Object.values(SortPerPage)
+      .filter(v => !isNaN(Number(v)))
+      .map(Number),
+  );
 
 export const PreferenceRules = yup
   .object<ICreatePreferencesRequest>({
@@ -181,58 +228,4 @@ export async function validate<T>(
       errors: [{ path: [err.path], message: err.message }],
     };
   }
-}
-
-// eslint-disable-next-line @typescript-eslint/ban-types
-export function Validator<T extends object, A>(schema: yup.ObjectSchema<T>) {
-  return function validatorCallable(
-    _target: unknown,
-    _propertyKey: string,
-    descriptor: TypedPropertyDescriptor<ControllerDescriptor<T, A>>,
-  ): TypedPropertyDescriptor<ControllerDescriptor<T, A>> {
-    const originalMethod = descriptor.value;
-    if (originalMethod === undefined) {
-      return descriptor;
-    }
-
-    descriptor.value = async function (
-      req,
-      res,
-    ): Promise<IRequestResult<A | IValidationErrorResponse>> {
-      const result = await validate(schema, req.body);
-      if (result.errors) {
-        const validationErrors = result.errors.reduce<IValidationErrorResponse>(
-          (foundValidationErrors, error) => {
-            return {
-              ...foundValidationErrors,
-              [error.path.join("_")]: error.message,
-            };
-          },
-          {},
-        );
-
-        return {
-          data: validationErrors,
-          status: HTTPStatus.BAD_REQUEST,
-        };
-      }
-      if (result.body === null) {
-        const validationErrors: IValidationErrorResponse = {
-          "error": "result body was null",
-        };
-
-        return {
-          data: validationErrors,
-          status: HTTPStatus.BAD_REQUEST,
-        };
-      }
-
-      req.body = result.body;
-
-      /* tslint:disable-next-line:no-invalid-this */
-      return originalMethod.apply(this, [req, res]);
-    };
-
-    return descriptor;
-  };
 }

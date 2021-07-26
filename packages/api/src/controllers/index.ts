@@ -3,7 +3,6 @@ import { User } from "@sotah-inc/server";
 import { Request, Response } from "express";
 import * as HTTPStatus from "http-status";
 import "passport";
-import * as yup from "yup";
 
 export { DataController } from "./data";
 
