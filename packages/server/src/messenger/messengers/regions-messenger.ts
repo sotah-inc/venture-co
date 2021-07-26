@@ -3,6 +3,7 @@ import {
   IConnectedRealmModificationDates,
   IGameVersionTuple,
   IRegionComposite,
+  IRegionTuple,
   IRegionVersionConnectedRealmTuple,
   IRegionVersionRealmTuple,
   RegionVersionTuple,
@@ -70,7 +71,7 @@ export class RegionsMessenger extends BaseMessenger {
     });
   }
 
-  public validateRegion(tuple: RegionVersionTuple): Promise<Message<ValidateRegionResponse>> {
+  public validateRegion(tuple: IRegionTuple): Promise<Message<ValidateRegionResponse>> {
     return this.request(subjects.validateRegion, {
       body: JSON.stringify(tuple),
     });
