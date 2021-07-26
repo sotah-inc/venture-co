@@ -51,6 +51,8 @@ export interface IValidateRegionConnectedRealmResponse {
 
 export type ValidateRegionRealmResponse = IValidateRegionConnectedRealmResponse;
 
+export type ValidateRegionResponse = IValidateRegionConnectedRealmResponse;
+
 export interface IResolveConnectedRealmResponse {
   connected_realm: IConnectedRealmComposite;
 }

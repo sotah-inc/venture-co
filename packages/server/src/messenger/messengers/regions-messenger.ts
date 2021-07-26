@@ -13,6 +13,7 @@ import {
   IResolveConnectedRealmResponse,
   IValidateRegionConnectedRealmResponse,
   ValidateRegionRealmResponse,
+  ValidateRegionResponse,
 } from "../contracts";
 import { Message, ParseKind } from "../message";
 import { BaseMessenger } from "./base";
@@ -24,6 +25,7 @@ enum subjects {
   resolveConnectedRealm = "resolveConnectedRealm",
   status = "status",
   validateGameVersion = "validateGameVersion",
+  validateRegion = "validateRegion",
   validateRegionConnectedRealm = "validateRegionConnectedRealm",
   validateRegionRealm = "validateRegionRealm",
 }
@@ -64,6 +66,12 @@ export class RegionsMessenger extends BaseMessenger {
     tuple: IGameVersionTuple,
   ): Promise<Message<ValidateRegionRealmResponse>> {
     return this.request(subjects.validateGameVersion, {
+      body: JSON.stringify(tuple),
+    });
+  }
+
+  public validateRegion(tuple: RegionVersionTuple): Promise<Message<ValidateRegionResponse>> {
+    return this.request(subjects.validateRegion, {
       body: JSON.stringify(tuple),
     });
   }
