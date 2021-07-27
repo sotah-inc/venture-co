@@ -26,6 +26,7 @@ import {
   validate,
   yupValidationErrorToResponse,
 } from "../lib/validator-rules";
+import { resolveRealmSlug } from "./resolvers";
 
 import { Authenticator, IRequest, IRequestResult, Validator } from "./index";
 
@@ -269,96 +270,18 @@ export class WorkOrderController {
     req: IRequest<ICreateWorkOrderRequest>,
     _res: Response,
   ): Promise<IRequestResult<CreateWorkOrderResponse>> {
-    const { realmSlug, regionName, gameVersion } = req.params;
-
-    const validateMessage = await this.messengers.regions.validateGameVersion({
-      game_version: gameVersion,
-    });
-    switch (validateMessage.code) {
-    case code.ok:
-      break;
-    case code.notFound: {
-      const notFoundValidationErrors: IValidationErrorResponse = {
-        error: "could not resolve connected-realm",
-      };
-
-      return {
-        data: notFoundValidationErrors,
-        status: HTTPStatus.NOT_FOUND,
-      };
-    }
-    default: {
-      const defaultValidationErrors: IValidationErrorResponse = {
-        error: "could not resolve connected-realm",
-      };
-
-      return {
-        data: defaultValidationErrors,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-    }
-    const validateResult = await validateMessage.decode();
-    if (validateResult === null) {
-      const resolveError: IValidationErrorResponse = {
-        error: "could not validate game-version",
-      };
-
-      return {
-        data: resolveError,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-
-    const resolveMessage = await this.messengers.regions.resolveConnectedRealm({
-      realm_slug: realmSlug,
-      region_name: regionName,
-      game_version: gameVersion,
-    });
-    switch (resolveMessage.code) {
-    case code.ok:
-      break;
-    case code.notFound: {
-      const notFoundValidationErrors: IValidationErrorResponse = {
-        error: "could not resolve connected-realm",
-      };
-
-      return {
-        data: notFoundValidationErrors,
-        status: HTTPStatus.NOT_FOUND,
-      };
-    }
-    default: {
-      const defaultValidationErrors: IValidationErrorResponse = {
-        error: "could not resolve connected-realm",
-      };
-
-      return {
-        data: defaultValidationErrors,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-    }
-
-    const resolveResult = await resolveMessage.decode();
-    if (resolveResult === null) {
-      const resolveError: IValidationErrorResponse = {
-        error: "could not resolve connected-realm",
-      };
-
-      return {
-        data: resolveError,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
+    const resolveResult = await resolveRealmSlug(req.params, this.messengers.regions);
+    if (resolveResult.errorResponse !== null) {
+      return resolveResult.errorResponse;
     }
 
     const { body } = req;
 
     const workOrder = new WorkOrder();
     workOrder.user = req.user as User;
-    workOrder.gameVersion = gameVersion as GameVersion;
-    workOrder.regionName = regionName;
-    workOrder.connectedRealmId = resolveResult.connected_realm.connected_realm.id;
+    workOrder.gameVersion = resolveResult.data.gameVersion;
+    workOrder.regionName = resolveResult.data.regionName;
+    workOrder.connectedRealmId = resolveResult.data.connectedRealm.connected_realm.id;
     workOrder.itemId = body.itemId;
     workOrder.price = body.price;
     workOrder.quantity = body.quantity;
