@@ -20,15 +20,11 @@ import HTTPStatus from "http-status";
 import { ParsedQs } from "qs";
 import { Connection } from "typeorm";
 
-import {
-  CreateWorkOrderRequestRules,
-  QueryWorkOrdersParamsRules,
-  validate,
-  yupValidationErrorToResponse,
-} from "../lib/validator-rules";
 import { resolveRealmSlug } from "./resolvers";
+import { validate, Validator } from "./validators";
+import { CreateWorkOrderRequestRules, QueryWorkOrdersParamsRules } from "./validators/yup";
 
-import { Authenticator, IRequest, IRequestResult, Validator } from "./index";
+import { Authenticator, IRequest, IRequestResult } from "./index";
 
 export class WorkOrderController {
   private messengers: IMessengers;
@@ -46,7 +42,7 @@ export class WorkOrderController {
     realmSlug: RealmSlug,
     query: ParsedQs,
   ): Promise<IRequestResult<QueryWorkOrdersResponse>> {
-    const result = await validate(QueryWorkOrdersParamsRules, {
+    const result = await validate(QueryWorkOrdersParamsRules(this.messengers.regions), {
       ...query,
       gameVersion,
     });
