@@ -5,7 +5,7 @@ import {
   ICreateWorkOrderRequest,
   IGetAuctionsRequest,
   IQueryRequest,
-  ISaveLastPathRequest,
+  ISaveLastPathRequest, IValidationErrorResponse,
   Locale,
   OrderDirection,
   OrderKind,
@@ -228,4 +228,10 @@ export async function validate<T>(
       errors: [{ path: [err.path], message: err.message }],
     };
   }
+}
+
+export function validationErrorToResponse(
+  error: yup.ValidationError | null,
+): IValidationErrorResponse {
+  return error ? { [error.path]: error.message } : {};
 }
