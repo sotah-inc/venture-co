@@ -62,9 +62,9 @@ export class WorkOrderController {
         connectedRealmId: resolveResult.data.connectedRealm.connected_realm.id,
         gameVersion: resolveResult.data.gameVersion,
         orderBy: validateResult.body.orderBy,
-        orderDirection: result.data.orderDirection as OrderDirection,
-        page: result.data.page,
-        perPage: result.data.perPage,
+        orderDirection: resolveResult.data.orderDirection as OrderDirection,
+        page: resolveResult.data.page,
+        perPage: resolveResult.data.perPage,
         regionName,
       });
 
@@ -195,7 +195,7 @@ export class WorkOrderController {
       };
     }
 
-    const pricesMessage = await this.messengers.auctions.getPriceList({
+    const pricesMessage = await this.messengers.liveAuctions.priceList({
       item_ids: [foundItem.id],
       tuple: {
         connected_realm_id: resolveResult.connected_realm.connected_realm.id,
