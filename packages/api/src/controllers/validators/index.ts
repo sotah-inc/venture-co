@@ -3,7 +3,12 @@ import * as HTTPStatus from "http-status";
 import * as yup from "yup";
 import { z } from "zod";
 
-import { ControllerDescriptor, IRequestResult, ValidateResult } from "../index";
+import {
+  ControllerDescriptor,
+  IRequestResult,
+  IValidateResultError,
+  ValidateResult,
+} from "../index";
 import { validate as yupValidate } from "./yup";
 import { validate as zodValidate } from "./zod";
 
@@ -30,6 +35,17 @@ export async function validate<T>(
   }
 
   throw new Error("failed to validate");
+}
+
+export function validationErrorsToResponse(
+  errors: IValidateResultError[],
+): IValidationErrorResponse {
+  return errors.reduce<IValidationErrorResponse>((foundValidationErrors, error) => {
+    return {
+      ...foundValidationErrors,
+      [error.path.join("_")]: error.message,
+    };
+  }, {});
 }
 
 export function Validator<T, A>(schema: ValidatorSchema<T>) {

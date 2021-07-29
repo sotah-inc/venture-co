@@ -29,7 +29,7 @@ export interface IValidateResultError {
 
 export type ValidateResult<T> =
   | { body: T; errors: null }
-  | { body: null; errors: IValidateResultError[] };
+  | { errors: IValidateResultError[] };
 
 export function handleResult<T>(res: Response, { data, headers, status }: IRequestResult<T>): void {
   res.status(status);

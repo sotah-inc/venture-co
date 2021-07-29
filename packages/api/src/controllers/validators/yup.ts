@@ -186,19 +186,16 @@ export const QueryParamRules = yup
   .noUnknown();
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export function QueryWorkOrdersParamsRules(mess: RegionsMessenger) {
-  return yup
-    .object<IFindByOptions>()
-    .shape({
-      gameVersion: GameVersionRule(mess),
-      locale: LocaleRule,
-      orderBy: OrderKindRule,
-      orderDirection: OrderDirectionRule,
-      page: yup.number().required().positive(),
-      perPage: PerPageRule,
-    })
-    .noUnknown();
-}
+export const QueryWorkOrdersParamsRules = yup
+  .object<IFindByOptions>()
+  .shape({
+    locale: LocaleRule,
+    orderBy: OrderKindRule,
+    orderDirection: OrderDirectionRule,
+    page: yup.number().required().positive(),
+    perPage: PerPageRule,
+  })
+  .noUnknown();
 
 export const CreateWorkOrderRequestRules = yup
   .object<ICreateWorkOrderRequest>({
