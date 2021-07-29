@@ -5,6 +5,8 @@ import { z } from "zod";
 
 import { IValidateResultError, ValidateResult } from "../index";
 
+export const LocaleRule = z.en;
+
 export const ItemsRecipesQuery = z.object({
   locale: z.string(),
   itemIds: z.array(z.string()),
@@ -13,6 +15,10 @@ export const ItemsRecipesQuery = z.object({
 
 export const ItemsVendorPricesQuery = z.object({
   itemIds: z.array(z.string()),
+});
+
+export const PrefillWorkOrderItemQuery = z.object({
+  itemId: z.number().min(0),
 });
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
