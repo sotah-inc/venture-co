@@ -15,12 +15,7 @@ export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
     wrap(async (req: Request, res: Response) =>
       handleResult(
         res,
-        await controller.queryWorkOrders(
-          req.params.gameVersion,
-          req.params.regionName,
-          req.params.realmSlug,
-          req.query,
-        ),
+        await controller.queryWorkOrders(req, res),
       ),
     ),
   );

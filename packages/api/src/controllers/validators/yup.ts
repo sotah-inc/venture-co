@@ -210,9 +210,11 @@ export async function validate<T>(
   schema: yup.Schema<T>,
   payload: unknown,
 ): Promise<ValidateResult<T>> {
-  let body: T;
   try {
-    body = await schema.validate(payload);
+    return {
+      body: await schema.validate(payload),
+      errors: null,
+    };
   } catch (err) {
     if (!(err instanceof yup.ValidationError)) {
       throw new Error("error was not yup error");
@@ -223,14 +225,6 @@ export async function validate<T>(
     };
   }
 
-  if (body === undefined) {
-    throw new Error("validate result was undefined");
-  }
-
-  return {
-    body,
-    errors: null,
-  };
 }
 
 export function validationErrorToResponse(

@@ -47,6 +47,14 @@ export class WorkOrderController {
     if (validateResult.errors !== null) {
       return {
         data: validationErrorsToResponse(validateResult.errors),
+        status: HTTPStatus.BAD_REQUEST,
+      };
+    }
+    if (validateResult.body === undefined) {
+      return {
+        data: {
+          error: "validate-result was undefined",
+        },
         status: HTTPStatus.INTERNAL_SERVER_ERROR,
       };
     }
@@ -57,15 +65,16 @@ export class WorkOrderController {
         connectedRealmId: resolveResult.data.connectedRealm.connected_realm.id,
         gameVersion: resolveResult.data.gameVersion,
         orderBy: validateResult.body.orderBy,
-        orderDirection: resolveResult.data.orderDirection as OrderDirection,
-        page: resolveResult.data.page,
-        perPage: resolveResult.data.perPage,
-        regionName,
+        orderDirection: validateResult.body.orderDirection,
+        page: validateResult.body.page,
+        perPage: validateResult.body.perPage,
+        regionName: resolveResult.data.regionName,
       });
 
-    const itemsMsg = await this.messengers.items.getItems({
+    const itemsMsg = await this.messengers.items.items({
       itemIds: orders.map(v => v.itemId),
-      locale: result.data.locale,
+      locale: validateResult.body.locale,
+      game_version: resolveResult.data.gameVersion,
     });
     if (itemsMsg.code !== code.ok) {
       const validationErrors: IValidationErrorResponse = { error: "failed to resolve items" };

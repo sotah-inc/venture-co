@@ -1,11 +1,11 @@
-import { ItemRecipeKind } from "@sotah-inc/core";
+import { ItemRecipeKind, Locale } from "@sotah-inc/core";
 import { RegionsMessenger } from "@sotah-inc/server";
 import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
 import { z } from "zod";
 
 import { IValidateResultError, ValidateResult } from "../index";
 
-export const LocaleRule = z.en;
+export const LocaleRule = z.nativeEnum(Locale);
 
 export const ItemsRecipesQuery = z.object({
   locale: z.string(),
