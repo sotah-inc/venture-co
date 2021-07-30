@@ -6,7 +6,6 @@ import {
   IValidationErrorResponse,
   Locale,
   OrderDirection,
-  OrderKind,
   PrefillWorkOrderItemResponse,
   QueryWorkOrdersResponse,
   RealmSlug,
@@ -17,15 +16,11 @@ import { IMessengers, User, WorkOrder, WorkOrderRepository } from "@sotah-inc/se
 import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
 import { Response } from "express";
 import HTTPStatus from "http-status";
-import { ParsedQs } from "qs";
 import { Connection } from "typeorm";
 
 import { resolveRealmSlug } from "./resolvers";
 import { validate, validationErrorsToResponse, Validator } from "./validators";
-import {
-  CreateWorkOrderRequestRules,
-  QueryWorkOrdersParamsRules,
-} from "./validators/yup";
+import { CreateWorkOrderRequestRules, QueryWorkOrdersParamsRules } from "./validators/yup";
 
 import { Authenticator, IRequest, IRequestResult } from "./index";
 
