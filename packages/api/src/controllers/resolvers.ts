@@ -59,6 +59,15 @@ export async function resolveItem(
     locale: validateResult.body.locale,
   });
   switch (itemsMessage.code) {
+  case code.notFound:
+    return {
+      errorResponse: {
+        status: HTTPStatus.NOT_FOUND,
+        data: {
+          error: "item not found",
+        },
+      },
+    };
   case code.ok:
     break;
   default:
@@ -143,7 +152,7 @@ export async function resolveRealmSlug(
     return {
       errorResponse: {
         data: {
-          error: "could not resolve connected-realm",
+          error: "game-version not found",
         },
         status: HTTPStatus.NOT_FOUND,
       },
@@ -167,7 +176,7 @@ export async function resolveRealmSlug(
         data: {
           error: "could not validate game-version",
         },
-        status: HTTPStatus.NOT_FOUND,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
       },
     };
   }
@@ -184,7 +193,7 @@ export async function resolveRealmSlug(
     return {
       errorResponse: {
         data: {
-          error: "could not resolve connected-realm",
+          error: "connected-realm not found",
         },
         status: HTTPStatus.NOT_FOUND,
       },
