@@ -24,13 +24,7 @@ export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
     wrap(async (req: Request, res: Response) =>
       handleResult(
         res,
-        await controller.prefillWorkOrderItem(
-          req.params.gameVersion,
-          req.params.regionName,
-          req.params.realmSlug,
-          Number(req.query.itemId),
-          String(req.query.locale),
-        ),
+        await controller.prefillWorkOrderItem(req, res),
       ),
     ),
   );

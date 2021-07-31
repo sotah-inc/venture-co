@@ -1,15 +1,9 @@
 import {
   CreateWorkOrderResponse,
-  GameVersion,
   ICreateWorkOrderRequest,
-  ItemId,
   IValidationErrorResponse,
-  Locale,
-  OrderDirection,
   PrefillWorkOrderItemResponse,
   QueryWorkOrdersResponse,
-  RealmSlug,
-  RegionName,
   UserLevel,
 } from "@sotah-inc/core";
 import { IMessengers, User, WorkOrder, WorkOrderRepository } from "@sotah-inc/server";
@@ -21,6 +15,7 @@ import { Connection } from "typeorm";
 import { resolveRealmSlug } from "./resolvers";
 import { validate, validationErrorsToResponse, Validator } from "./validators";
 import { CreateWorkOrderRequestRules, QueryWorkOrdersParamsRules } from "./validators/yup";
+import { PrefillWorkOrderItemQuery } from "./validators/zod";
 
 import { Authenticator, IRequest, IRequestResult } from "./index";
 
@@ -103,37 +98,26 @@ export class WorkOrderController {
   }
 
   public async prefillWorkOrderItem(
-    gameVersion: string,
-    regionName: RegionName,
-    realmSlug: RealmSlug,
-    itemId: ItemId,
-    locale: string,
+    req: IRequest<null>,
+    _res: Response,
   ): Promise<IRequestResult<PrefillWorkOrderItemResponse>> {
-    if (!Object.values(GameVersion).includes(gameVersion as GameVersion)) {
-      const validationErrors: IValidationErrorResponse = {
-        error: "could not validate game-version",
-      };
+    const resolveResult = await resolveRealmSlug(req.params, this.messengers.regions);
+    if (resolveResult.errorResponse !== null) {
+      return resolveResult.errorResponse;
+    }
 
+    const validateResult = await validate(PrefillWorkOrderItemQuery, req.query);
+    if (validateResult.errors !== null) {
       return {
-        data: validationErrors,
         status: HTTPStatus.BAD_REQUEST,
+        data: validationErrorsToResponse(validateResult.errors),
       };
     }
 
-    if (!Object.values(Locale).includes(locale as Locale)) {
-      const validationErrors: IValidationErrorResponse = {
-        error: "could not validate locale",
-      };
-
-      return {
-        data: validationErrors,
-        status: HTTPStatus.BAD_REQUEST,
-      };
-    }
-
-    const itemsMsg = await this.messengers.items.getItems({
-      locale: locale as Locale,
-      itemIds: [itemId],
+    const itemsMsg = await this.messengers.items.items({
+      game_version: resolveResult.data.gameVersion,
+      locale: validateResult.body.locale,
+      itemIds: [validateResult.body.itemId],
     });
     if (itemsMsg.code !== code.ok) {
       const validationErrors: IValidationErrorResponse = { error: "failed to fetch items" };
@@ -152,7 +136,7 @@ export class WorkOrderController {
       };
     }
 
-    const foundItem = itemsResult.items[itemId];
+    const foundItem = itemsResult.items.find(v => v.id === validateResult.body.itemId);
     if (typeof foundItem === "undefined") {
       const validationErrors: IValidationErrorResponse = { error: "failed to resolve item" };
 
@@ -162,48 +146,12 @@ export class WorkOrderController {
       };
     }
 
-    const resolveMessage = await this.messengers.regions.resolveConnectedRealm({
-      realm_slug: realmSlug,
-      region_name: regionName,
-    });
-    switch (resolveMessage.code) {
-    case code.ok:
-      break;
-    case code.notFound: {
-      const notFoundValidationErrors: IValidationErrorResponse = {
-        error: "could not resolve connected-realm",
-      };
-
-      return {
-        data: notFoundValidationErrors,
-        status: HTTPStatus.NOT_FOUND,
-      };
-    }
-    default: {
-      const defaultValidationErrors: IValidationErrorResponse = {
-        error: "could not resolve connected-realm",
-      };
-
-      return {
-        data: defaultValidationErrors,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-    }
-
-    const resolveResult = await resolveMessage.decode();
-    if (resolveResult === null) {
-      return {
-        data: null,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-
     const pricesMessage = await this.messengers.liveAuctions.priceList({
       item_ids: [foundItem.id],
       tuple: {
-        connected_realm_id: resolveResult.connected_realm.connected_realm.id,
-        region_name: regionName,
+        connected_realm_id: resolveResult.data.connectedRealm.connected_realm.id,
+        region_name: resolveResult.data.regionName,
+        game_version: resolveResult.data.gameVersion,
       },
     });
     if (pricesMessage.code !== code.ok) {

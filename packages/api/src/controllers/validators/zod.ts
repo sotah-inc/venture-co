@@ -18,7 +18,8 @@ export const ItemsVendorPricesQuery = z.object({
 });
 
 export const PrefillWorkOrderItemQuery = z.object({
-  itemId: z.number().min(0),
+  itemId: z.number(),
+  locale: LocaleRule,
 });
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -96,7 +97,7 @@ export function RegionNameRule(mess: RegionsMessenger) {
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export function RealmSlugRules(mess: RegionsMessenger) {
+export function RealmSlugRule(mess: RegionsMessenger) {
   return z
     .string()
     .nonempty("connected-realm-id cannot be empty")
