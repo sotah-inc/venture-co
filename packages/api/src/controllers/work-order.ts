@@ -12,10 +12,9 @@ import { Response } from "express";
 import HTTPStatus from "http-status";
 import { Connection } from "typeorm";
 
-import { resolveRealmSlug } from "./resolvers";
+import { resolveItem, resolveRealmSlug } from "./resolvers";
 import { validate, validationErrorsToResponse, Validator } from "./validators";
 import { CreateWorkOrderRequestRules, QueryWorkOrdersParamsRules } from "./validators/yup";
-import { PrefillWorkOrderItemQuery } from "./validators/zod";
 
 import { Authenticator, IRequest, IRequestResult } from "./index";
 
@@ -106,48 +105,16 @@ export class WorkOrderController {
       return resolveResult.errorResponse;
     }
 
-    const validateResult = await validate(PrefillWorkOrderItemQuery, req.query);
-    if (validateResult.errors !== null) {
-      return {
-        status: HTTPStatus.BAD_REQUEST,
-        data: validationErrorsToResponse(validateResult.errors),
-      };
-    }
-
-    const itemsMsg = await this.messengers.items.items({
-      game_version: resolveResult.data.gameVersion,
-      locale: validateResult.body.locale,
-      itemIds: [validateResult.body.itemId],
-    });
-    if (itemsMsg.code !== code.ok) {
-      const validationErrors: IValidationErrorResponse = { error: "failed to fetch items" };
-
-      return {
-        data: validationErrors,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-
-    const itemsResult = await itemsMsg.decode();
-    if (itemsResult === null) {
-      return {
-        data: null,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-
-    const foundItem = itemsResult.items.find(v => v.id === validateResult.body.itemId);
-    if (typeof foundItem === "undefined") {
-      const validationErrors: IValidationErrorResponse = { error: "failed to resolve item" };
-
-      return {
-        data: validationErrors,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
+    const resolveItemResult = await resolveItem({
+      ...req.query,
+      gameVersion: resolveResult.data.gameVersion,
+    }, this.messengers.items);
+    if (resolveItemResult.errorResponse !== null) {
+      return resolveItemResult.errorResponse;
     }
 
     const pricesMessage = await this.messengers.liveAuctions.priceList({
-      item_ids: [foundItem.id],
+      item_ids: [resolveItemResult.data.item.id],
       tuple: {
         connected_realm_id: resolveResult.data.connectedRealm.connected_realm.id,
         region_name: resolveResult.data.regionName,
@@ -170,7 +137,7 @@ export class WorkOrderController {
       };
     }
 
-    const foundPrice = pricesResult.price_list[foundItem.id];
+    const foundPrice = pricesResult.price_list[resolveItemResult.data.item.id];
 
     return {
       data: { currentPrice: foundPrice?.market_price_buyout_per ?? null },

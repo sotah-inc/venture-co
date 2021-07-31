@@ -17,11 +17,6 @@ export const ItemsVendorPricesQuery = z.object({
   itemIds: z.array(z.string()),
 });
 
-export const PrefillWorkOrderItemQuery = z.object({
-  itemId: z.number(),
-  locale: LocaleRule,
-});
-
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function GameVersionRule(mess: RegionsMessenger) {
   return z

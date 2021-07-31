@@ -1,7 +1,15 @@
-import { IConnectedRealmComposite, IValidationErrorResponse } from "@sotah-inc/core";
-import { RegionsMessenger } from "@sotah-inc/server";
+import {
+  IConnectedRealmComposite,
+  IShortItem,
+  IValidationErrorResponse,
+} from "@sotah-inc/core";
+import { ItemsMessenger, RegionsMessenger } from "@sotah-inc/server";
 import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
 import HTTPStatus from "http-status";
+import { z } from "zod";
+
+import { validate, validationErrorsToResponse } from "./validators";
+import { LocaleRule } from "./validators/zod";
 
 import { IRequestResult } from "./index";
 
@@ -18,6 +26,84 @@ export type ResolveResult<TData> =
       errorResponse: IRequestResult<IValidationErrorResponse>;
     };
 
+export interface IResolveItemResult {
+  item: IShortItem;
+}
+
+export async function resolveItem(
+  params: ResolveParams,
+  mess: ItemsMessenger,
+): Promise<ResolveResult<IResolveItemResult>> {
+  const validateResult = await validate(
+    z
+      .object({
+        itemId: z.number(),
+        locale: LocaleRule,
+        gameVersion: z.string().nonempty(),
+      })
+      .required(),
+    params,
+  );
+  if (validateResult.errors !== null) {
+    return {
+      errorResponse: {
+        status: HTTPStatus.BAD_REQUEST,
+        data: validationErrorsToResponse(validateResult.errors),
+      },
+    };
+  }
+
+  const itemsMessage = await mess.items({
+    itemIds: [validateResult.body.itemId],
+    game_version: validateResult.body.gameVersion,
+    locale: validateResult.body.locale,
+  });
+  switch (itemsMessage.code) {
+  case code.ok:
+    break;
+  default:
+    return {
+      errorResponse: {
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+        data: {
+          error: "failed to resolve items message",
+        },
+      },
+    };
+  }
+
+  const itemsResult = await itemsMessage.decode();
+  if (itemsResult === null) {
+    return {
+      errorResponse: {
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+        data: {
+          error: "failed to decode items message",
+        },
+      },
+    };
+  }
+
+  const foundItem = itemsResult.items.find(v => v.id === validateResult.body.itemId);
+  if (foundItem === undefined) {
+    return {
+      errorResponse: {
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+        data: {
+          error: "item was not in message data",
+        },
+      },
+    };
+  }
+
+  return {
+    data: {
+      item: foundItem,
+    },
+    errorResponse: null,
+  };
+}
+
 export interface IResolveRealmSlugResult {
   gameVersion: string;
   regionName: string;
@@ -28,10 +114,29 @@ export async function resolveRealmSlug(
   params: ResolveParams,
   mess: RegionsMessenger,
 ): Promise<ResolveResult<IResolveRealmSlugResult>> {
-  const { realmSlug, regionName, gameVersion } = params;
+  const validateResult = await validate(
+    z
+      .object({
+        realmSlug: z.string().nonempty(),
+        regionName: z.string().nonempty(),
+        gameVersion: z.string().nonempty(),
+      })
+      .required(),
+    params,
+  );
+  if (validateResult.errors !== null) {
+    return {
+      errorResponse: {
+        status: HTTPStatus.BAD_REQUEST,
+        data: validationErrorsToResponse(validateResult.errors),
+      },
+    };
+  }
 
-  const validateMessage = await mess.validateGameVersion({ game_version: gameVersion });
-  switch (validateMessage.code) {
+  const validateGameVersionMsg = await mess.validateGameVersion({
+    game_version: validateResult.body.gameVersion,
+  });
+  switch (validateGameVersionMsg.code) {
   case code.ok:
     break;
   case code.notFound: {
@@ -45,7 +150,6 @@ export async function resolveRealmSlug(
     };
   }
   default: {
-
     return {
       errorResponse: {
         data: {
@@ -56,8 +160,8 @@ export async function resolveRealmSlug(
     };
   }
   }
-  const validateResult = await validateMessage.decode();
-  if (validateResult === null) {
+  const validateGameVersionResult = await validateGameVersionMsg.decode();
+  if (validateGameVersionResult === null) {
     return {
       errorResponse: {
         data: {
@@ -69,9 +173,9 @@ export async function resolveRealmSlug(
   }
 
   const resolveMessage = await mess.resolveConnectedRealm({
-    realm_slug: realmSlug,
-    region_name: regionName,
-    game_version: gameVersion,
+    realm_slug: validateResult.body.realmSlug,
+    region_name: validateResult.body.regionName,
+    game_version: validateResult.body.gameVersion,
   });
   switch (resolveMessage.code) {
   case code.ok:
@@ -114,8 +218,8 @@ export async function resolveRealmSlug(
     errorResponse: null,
     data: {
       connectedRealm: resolveResult.connected_realm,
-      gameVersion,
-      regionName,
+      gameVersion: validateResult.body.gameVersion,
+      regionName: validateResult.body.regionName,
     },
   };
 }
