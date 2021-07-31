@@ -17,10 +17,8 @@ export const ItemsVendorPricesQuery = z.object({
 
 export function validate<T>(schema: z.Schema<T>, data: unknown): ValidateResult<T> {
   try {
-    const result = schema.parse(data);
-
     return {
-      body: result,
+      body: schema.parse(data),
       errors: null,
     };
   } catch (err) {
@@ -29,7 +27,6 @@ export function validate<T>(schema: z.Schema<T>, data: unknown): ValidateResult<
     }
 
     return {
-      body: null,
       errors: err.issues.map<IValidateResultError>(v => {
         return {
           message: v.message,
