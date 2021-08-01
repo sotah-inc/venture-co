@@ -16,8 +16,9 @@ import { Response } from "express";
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
 
-import { ProfessionPricelistRequestBodyRules } from "../../lib/validator-rules";
-import { Authenticator, IRequest, IRequestResult, Validator } from "../index";
+import { Authenticator, IRequest, IRequestResult } from "../index";
+import { Validator } from "../validators";
+import { ProfessionPricelistRequestBodyRules } from "../validators/yup";
 
 export class ProfessionPricelistsCrudController {
   private dbConn: Connection;

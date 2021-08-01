@@ -21,12 +21,9 @@ import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
 
-import {
-  PricelistRequestBodyRules,
-  validate,
-  yupValidationErrorToResponse,
-} from "../../lib/validator-rules";
 import { IRequestResult } from "../index";
+import { validate, validationErrorsToResponse } from "../validators";
+import { PricelistRequestBodyRules } from "../validators/yup";
 
 export class PricelistCrudController {
   private dbConn: Connection;
@@ -43,24 +40,20 @@ export class PricelistCrudController {
     body: ICreatePricelistRequest,
   ): Promise<IRequestResult<CreatePricelistResponse>> {
     const result = await validate(PricelistRequestBodyRules, body);
-    if (result.error || !result.data) {
-      const validationErrors: IValidationErrorResponse = result.error
-        ? { [result.error.path]: result.error.message }
-        : {};
-
+    if (result.errors !== null || result.body === undefined) {
       return {
-        data: validationErrors,
+        data: validationErrorsToResponse(result.errors || []),
         status: HTTPStatus.INTERNAL_SERVER_ERROR,
       };
     }
 
     const pricelist = new Pricelist();
     pricelist.user = user;
-    pricelist.name = result.data.pricelist.name;
-    pricelist.slug = result.data.pricelist.slug;
+    pricelist.name = result.body.pricelist.name;
+    pricelist.slug = result.body.pricelist.slug;
     await this.dbConn.manager.save(pricelist);
     const entries = await Promise.all(
-      result.data.entries.map(v => {
+      result.body.entries.map(v => {
         const entry = new PricelistEntry();
         entry.pricelist = pricelist;
         entry.itemId = v.item_id;
@@ -110,7 +103,7 @@ export class PricelistCrudController {
         return entriesItemIds;
       }, pricelistsItemIds);
     }, []);
-    const itemsMessage = await this.messengers.items.getItems({
+    const itemsMessage = await this.messengers.items.items({
       itemIds,
       locale: locale as Locale,
     });
