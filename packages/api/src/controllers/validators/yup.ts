@@ -57,6 +57,17 @@ export const SlugRule = yup
   .matches(/^[a-z0-9_-]+$/, "post slug must be a-z, 0-9, or underscore")
   .required("post slug is required");
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export function FullSlugRule(repo: PostRepository, exceptSlug?: string) {
+  return SlugRule.test("is-unique", "post must be unique", v => {
+    if (!v) {
+      return false;
+    }
+
+    return repo.hasNoSlug(v, exceptSlug);
+  });
+}
+
 export const LocaleRule = yup.string().required().oneOf(Object.values(Locale));
 
 export const OrderKindRule = yup.string().required().oneOf(Object.values(OrderKind));
@@ -196,13 +207,7 @@ export const PostRequestBodyRules = yup
 export function FullPostRequestBodyRules(repo: PostRepository, exceptSlug?: string) {
   return yup
     .object<Pick<ICreatePostRequest, "slug">>({
-      slug: SlugRule.test("is-unique", "post must be unique", v => {
-        if (!v) {
-          return false;
-        }
-
-        return repo.hasNoSlug(v, exceptSlug);
-      }),
+      slug: FullSlugRule(repo, exceptSlug),
     })
     .concat(PostRequestBodyRules);
 }
@@ -248,6 +253,10 @@ export const CreateWorkOrderRequestRules = yup
   })
   .required()
   .noUnknown();
+
+/*
+  misc
+ */
 
 export async function validate<T>(
   schema: yup.Schema<T>,

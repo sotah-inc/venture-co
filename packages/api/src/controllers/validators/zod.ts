@@ -3,6 +3,10 @@ import { z } from "zod";
 
 import { IValidateResultError, ValidateResult } from "../index";
 
+/*
+  individual rules
+ */
+
 export const LocaleRule = z.nativeEnum(Locale);
 
 export const ItemsRecipesQuery = z.object({
@@ -14,6 +18,10 @@ export const ItemsRecipesQuery = z.object({
 export const ItemsVendorPricesQuery = z.object({
   itemIds: z.array(z.string()),
 });
+
+/*
+  misc
+ */
 
 export function validate<T>(schema: z.Schema<T>, data: unknown): ValidateResult<T> {
   try {
