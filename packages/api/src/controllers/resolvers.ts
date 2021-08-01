@@ -1,9 +1,5 @@
-import {
-  IConnectedRealmComposite,
-  IShortItem,
-  IValidationErrorResponse,
-} from "@sotah-inc/core";
-import { ItemsMessenger, RegionsMessenger } from "@sotah-inc/server";
+import { IConnectedRealmComposite, IShortItem, IValidationErrorResponse } from "@sotah-inc/core";
+import { IMessengers, RegionsMessenger } from "@sotah-inc/server";
 import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
 import HTTPStatus from "http-status";
 import { z } from "zod";
@@ -26,13 +22,62 @@ export type ResolveResult<TData> =
       errorResponse: IRequestResult<IValidationErrorResponse>;
     };
 
+export async function resolveGameVersion(
+  gameVersion: string,
+  mess: RegionsMessenger,
+): Promise<ResolveResult<null>> {
+  const validateGameVersionMsg = await mess.validateGameVersion({
+    game_version: gameVersion,
+  });
+  switch (validateGameVersionMsg.code) {
+  case code.ok:
+    break;
+  case code.notFound: {
+    return {
+      errorResponse: {
+        data: {
+          error: "game-version not found",
+        },
+        status: HTTPStatus.NOT_FOUND,
+      },
+    };
+  }
+  default: {
+    return {
+      errorResponse: {
+        data: {
+          error: "could not resolve connected-realm",
+        },
+        status: HTTPStatus.NOT_FOUND,
+      },
+    };
+  }
+  }
+  const validateGameVersionResult = await validateGameVersionMsg.decode();
+  if (validateGameVersionResult === null) {
+    return {
+      errorResponse: {
+        data: {
+          error: "could not validate game-version",
+        },
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      },
+    };
+  }
+
+  return {
+    errorResponse: null,
+    data: null,
+  };
+}
+
 export interface IResolveItemResult {
   item: IShortItem;
 }
 
 export async function resolveItem(
   params: ResolveParams,
-  mess: ItemsMessenger,
+  messengers: IMessengers,
 ): Promise<ResolveResult<IResolveItemResult>> {
   const validateResult = await validate(
     z
@@ -53,7 +98,7 @@ export async function resolveItem(
     };
   }
 
-  const itemsMessage = await mess.items({
+  const itemsMessage = await messengers.items.items({
     itemIds: [validateResult.body.itemId],
     game_version: validateResult.body.gameVersion,
     locale: validateResult.body.locale,
@@ -138,45 +183,6 @@ export async function resolveRealmSlug(
       errorResponse: {
         status: HTTPStatus.BAD_REQUEST,
         data: validationErrorsToResponse(validateResult.errors),
-      },
-    };
-  }
-
-  const validateGameVersionMsg = await mess.validateGameVersion({
-    game_version: validateResult.body.gameVersion,
-  });
-  switch (validateGameVersionMsg.code) {
-  case code.ok:
-    break;
-  case code.notFound: {
-    return {
-      errorResponse: {
-        data: {
-          error: "game-version not found",
-        },
-        status: HTTPStatus.NOT_FOUND,
-      },
-    };
-  }
-  default: {
-    return {
-      errorResponse: {
-        data: {
-          error: "could not resolve connected-realm",
-        },
-        status: HTTPStatus.NOT_FOUND,
-      },
-    };
-  }
-  }
-  const validateGameVersionResult = await validateGameVersionMsg.decode();
-  if (validateGameVersionResult === null) {
-    return {
-      errorResponse: {
-        data: {
-          error: "could not validate game-version",
-        },
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
       },
     };
   }

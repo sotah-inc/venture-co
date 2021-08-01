@@ -1,6 +1,6 @@
 import {
   CreatePricelistResponse,
-  DeletePricelistResponse,
+  DeletePricelistResponse, GameVersion,
   GetPricelistsResponse,
   GetUserPricelistResponse,
   ICreatePricelistRequest,
@@ -71,6 +71,7 @@ export class PricelistCrudController {
   public async getPricelists(
     user: User,
     locale: string,
+    gameVersion: GameVersion,
   ): Promise<IRequestResult<GetPricelistsResponse>> {
     if (!Object.values(Locale).includes(locale as Locale)) {
       const validationErrors: IValidationErrorResponse = {
@@ -106,6 +107,7 @@ export class PricelistCrudController {
     const itemsMessage = await this.messengers.items.items({
       itemIds,
       locale: locale as Locale,
+      game_version: gameVersion,
     });
     if (itemsMessage.code !== code.ok) {
       return {

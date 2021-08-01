@@ -5,10 +5,11 @@ import {
   ICreateWorkOrderRequest,
   IGetAuctionsRequest,
   IQueryRequest,
-  ISaveLastPathRequest, IValidationErrorResponse,
+  ISaveLastPathRequest,
+  IValidationErrorResponse,
   Locale,
   OrderDirection,
-  OrderKind,
+  OrderKind, SortDirection,
   SortPerPage,
 } from "@sotah-inc/core";
 import { IFindByOptions, PostRepository, RegionsMessenger } from "@sotah-inc/server";
@@ -16,6 +17,8 @@ import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
 import * as yup from "yup";
 
 import { ValidateResult } from "../index";
+
+// individual rules
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export function GameVersionRule(mess: RegionsMessenger): yup.StringSchema<string, object> {
@@ -67,6 +70,42 @@ export const PerPageRule = yup
       .map(Number),
   );
 
+export const PageRule = yup
+  .number()
+  .integer("page must be an integer")
+  .required("page is required");
+
+export const CountRule = yup
+  .number()
+  .integer("count must be an integer")
+  .required("count is required");
+
+export const SortDirectionRule = yup
+  .number()
+  .integer("sort-direction must be an integer")
+  .required("sort-direction is required")
+  .oneOf(Object.values(SortDirection).map(Number));
+
+export const ItemIdRule = yup.number().required();
+
+export const ItemIdsRule = yup.array(ItemIdRule);
+
+export const PetIdRule = yup.number().required().integer("pet-id must be an integer");
+
+export const PetIdsRule = yup.array(PetIdRule);
+
+export const EmailRule = yup
+  .string()
+  .email("email must be a valid email")
+  .required("email is required");
+
+export const PasswordRule = yup
+  .string()
+  .min(6, "password must be at least 6 characters")
+  .required("password is required");
+
+// request contract rules
+
 export const PreferenceRules = yup
   .object<ICreatePreferencesRequest>({
     current_realm: yup.string().required(),
@@ -86,7 +125,7 @@ export const SaveLastPathRules = yup
 export const PriceListEntryRules = yup
   .object({
     id: yup.number(),
-    item_id: yup.number().required(),
+    item_id: ItemIdRule,
     quantity_modifier: yup.number().required(),
   })
   .required()
@@ -120,11 +159,8 @@ export const ProfessionPricelistRequestBodyRules = yup
 
 export const UserRequestBodyRules = yup
   .object<ICreateUserRequest>({
-    email: yup.string().email("email must be a valid email").required("email is required"),
-    password: yup
-      .string()
-      .min(6, "password must be at least 6 characters")
-      .required("password is required"),
+    email: EmailRule,
+    password: PasswordRule,
   })
   .required()
   .noUnknown();
@@ -160,11 +196,11 @@ export function FullPostRequestBodyRules(repo: PostRepository, exceptSlug?: stri
 
 export const AuctionsQueryParamsRules = yup
   .object<IGetAuctionsRequest>({
-    count: yup.number().integer("count must be an integer").required("count is required"),
-    itemFilters: yup.array(yup.number().required().integer("item-id must be an integer")),
+    count: CountRule,
+    itemFilters: ItemIdsRule,
     locale: LocaleRule,
-    page: yup.number().integer("page must be an integer").required("page is required"),
-    petFilters: yup.array(yup.number().required().integer("pet-id must be an integer")),
+    page: PageRule,
+    petFilters: PetIdsRule,
     sortDirection: yup
       .number()
       .integer("sort-direction must be an integer")
@@ -186,7 +222,7 @@ export const QueryParamRules = yup
   .noUnknown();
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const QueryWorkOrdersParamsRules = yup
+export const QueryWorkOrdersQueryRules = yup
   .object<IFindByOptions>()
   .shape({
     locale: LocaleRule,
@@ -224,7 +260,6 @@ export async function validate<T>(
       errors: [{ path: [err.path], message: err.message }],
     };
   }
-
 }
 
 export function validationErrorToResponse(

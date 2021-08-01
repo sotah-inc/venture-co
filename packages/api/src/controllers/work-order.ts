@@ -14,7 +14,10 @@ import { Connection } from "typeorm";
 
 import { resolveItem, resolveRealmSlug } from "./resolvers";
 import { validate, validationErrorsToResponse, Validator } from "./validators";
-import { CreateWorkOrderRequestRules, QueryWorkOrdersParamsRules } from "./validators/yup";
+import {
+  CreateWorkOrderRequestRules,
+  QueryWorkOrdersQueryRules,
+} from "./validators/yup";
 
 import { Authenticator, IRequest, IRequestResult } from "./index";
 
@@ -37,7 +40,7 @@ export class WorkOrderController {
       return resolveResult.errorResponse;
     }
 
-    const validateResult = await validate(QueryWorkOrdersParamsRules, req.query);
+    const validateResult = await validate(QueryWorkOrdersQueryRules, req.query);
     if (validateResult.errors !== null) {
       return {
         data: validationErrorsToResponse(validateResult.errors),
