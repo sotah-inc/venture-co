@@ -130,6 +130,10 @@ export const PostSummaryRule = yup.string().required("summary is required");
 
 export const PostTitleRule = yup.string().required("post title is required");
 
+export const WorkOrderPriceRule = yup.number().integer().required().positive();
+
+export const WorkOrderQuantityRule = yup.number().integer().positive().required();
+
 /*
   request contract rules
  */
@@ -248,8 +252,8 @@ export const QueryWorkOrdersQueryRules = yup
 export const CreateWorkOrderRequestRules = yup
   .object<ICreateWorkOrderRequest>({
     itemId: ItemIdRule,
-    price: yup.number().integer().required().positive(),
-    quantity: yup.number().integer().positive().required(),
+    price: WorkOrderPriceRule,
+    quantity: WorkOrderQuantityRule,
   })
   .required()
   .noUnknown();
