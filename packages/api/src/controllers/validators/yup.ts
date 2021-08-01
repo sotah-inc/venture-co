@@ -6,10 +6,11 @@ import {
   IGetAuctionsRequest,
   IQueryRequest,
   ISaveLastPathRequest,
-  IValidationErrorResponse,
   Locale,
   OrderDirection,
-  OrderKind, SortDirection,
+  OrderKind,
+  SortDirection,
+  SortKind,
   SortPerPage,
 } from "@sotah-inc/core";
 import { IFindByOptions, PostRepository, RegionsMessenger } from "@sotah-inc/server";
@@ -18,7 +19,9 @@ import * as yup from "yup";
 
 import { ValidateResult } from "../index";
 
-// individual rules
+/*
+  individual rules
+ */
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export function GameVersionRule(mess: RegionsMessenger): yup.StringSchema<string, object> {
@@ -86,6 +89,12 @@ export const SortDirectionRule = yup
   .required("sort-direction is required")
   .oneOf(Object.values(SortDirection).map(Number));
 
+export const SortKindRule = yup
+  .number()
+  .integer("sort-kind must be an integer")
+  .required("sort-kind is required")
+  .oneOf(Object.values(SortKind).map(Number));
+
 export const ItemIdRule = yup.number().required();
 
 export const ItemIdsRule = yup.array(ItemIdRule);
@@ -104,7 +113,15 @@ export const PasswordRule = yup
   .min(6, "password must be at least 6 characters")
   .required("password is required");
 
-// request contract rules
+export const PostBodyRule = yup.string().required("body is required");
+
+export const PostSummaryRule = yup.string().required("summary is required");
+
+export const PostTitleRule = yup.string().required("post title is required");
+
+/*
+  request contract rules
+ */
 
 export const PreferenceRules = yup
   .object<ICreatePreferencesRequest>({
@@ -167,10 +184,10 @@ export const UserRequestBodyRules = yup
 
 export const PostRequestBodyRules = yup
   .object<ICreatePostRequest>({
-    body: yup.string().required("body is required"),
+    body: PostBodyRule,
     slug: SlugRule,
-    summary: yup.string().required("summary is required"),
-    title: yup.string().required("post title is required"),
+    summary: PostSummaryRule,
+    title: PostTitleRule,
   })
   .required()
   .noUnknown();
@@ -178,8 +195,7 @@ export const PostRequestBodyRules = yup
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function FullPostRequestBodyRules(repo: PostRepository, exceptSlug?: string) {
   return yup
-    .object<ICreatePostRequest>({
-      body: yup.string().required("body is required"),
+    .object<Pick<ICreatePostRequest, "slug">>({
       slug: SlugRule.test("is-unique", "post must be unique", v => {
         if (!v) {
           return false;
@@ -187,11 +203,8 @@ export function FullPostRequestBodyRules(repo: PostRepository, exceptSlug?: stri
 
         return repo.hasNoSlug(v, exceptSlug);
       }),
-      summary: yup.string().required("summary is required"),
-      title: yup.string().required("post title is required"),
     })
-    .required()
-    .noUnknown();
+    .concat(PostRequestBodyRules);
 }
 
 export const AuctionsQueryParamsRules = yup
@@ -201,14 +214,8 @@ export const AuctionsQueryParamsRules = yup
     locale: LocaleRule,
     page: PageRule,
     petFilters: PetIdsRule,
-    sortDirection: yup
-      .number()
-      .integer("sort-direction must be an integer")
-      .required("sort-direction is required"),
-    sortKind: yup
-      .number()
-      .integer("sort-kind must be an integer")
-      .required("sort-kind is required"),
+    sortDirection: SortDirectionRule,
+    sortKind: SortKindRule,
   })
   .required()
   .noUnknown();
@@ -228,14 +235,14 @@ export const QueryWorkOrdersQueryRules = yup
     locale: LocaleRule,
     orderBy: OrderKindRule,
     orderDirection: OrderDirectionRule,
-    page: yup.number().required().positive(),
+    page: PageRule,
     perPage: PerPageRule,
   })
   .noUnknown();
 
 export const CreateWorkOrderRequestRules = yup
   .object<ICreateWorkOrderRequest>({
-    itemId: yup.number().positive().required(),
+    itemId: ItemIdRule,
     price: yup.number().integer().required().positive(),
     quantity: yup.number().integer().positive().required(),
   })
@@ -260,10 +267,4 @@ export async function validate<T>(
       errors: [{ path: [err.path], message: err.message }],
     };
   }
-}
-
-export function validationErrorToResponse(
-  error: yup.ValidationError | null,
-): IValidationErrorResponse {
-  return error ? { [error.path]: error.message } : {};
 }
