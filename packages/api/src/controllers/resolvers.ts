@@ -1,5 +1,5 @@
 import { IConnectedRealmComposite, IShortItem, IValidationErrorResponse } from "@sotah-inc/core";
-import { IMessengers, RegionsMessenger } from "@sotah-inc/server";
+import { ItemsMessenger, RegionsMessenger } from "@sotah-inc/server";
 import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
 import HTTPStatus from "http-status";
 import { z } from "zod";
@@ -77,7 +77,7 @@ export interface IResolveItemResult {
 
 export async function resolveItem(
   params: ResolveParams,
-  messengers: IMessengers,
+  mess: ItemsMessenger,
 ): Promise<ResolveResult<IResolveItemResult>> {
   const validateResult = await validate(
     z
@@ -98,7 +98,7 @@ export async function resolveItem(
     };
   }
 
-  const itemsMessage = await messengers.items.items({
+  const itemsMessage = await mess.items({
     itemIds: [validateResult.body.itemId],
     game_version: validateResult.body.gameVersion,
     locale: validateResult.body.locale,
