@@ -2,7 +2,6 @@ import {
   ICreatePostRequest,
   ICreatePreferencesRequest,
   ICreateUserRequest,
-  ICreateWorkOrderRequest,
   IGetAuctionsRequest,
   IQueryRequest,
   ISaveLastPathRequest,
@@ -13,7 +12,7 @@ import {
   SortKind,
   SortPerPage,
 } from "@sotah-inc/core";
-import { IFindByOptions, PostRepository, RegionsMessenger } from "@sotah-inc/server";
+import { PostRepository, RegionsMessenger } from "@sotah-inc/server";
 import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
 import * as yup from "yup";
 
@@ -138,74 +137,52 @@ export const WorkOrderQuantityRule = yup.number().integer().positive().required(
   request contract rules
  */
 
-export const PreferenceRules = yup
-  .object<ICreatePreferencesRequest>({
-    current_realm: yup.string().required(),
-    current_region: yup.string().required(),
-  })
-  .required()
-  .noUnknown();
+export const PreferenceRules = createSchema<ICreatePreferencesRequest>({
+  current_realm: yup.string().required(),
+  current_region: yup.string().required(),
+});
 
-export const SaveLastPathRules = yup
-  .object<ISaveLastPathRequest>({
-    lastClientAsPath: yup.string().required("last-client-as-path is required"),
-    lastClientPathname: yup.string().required("last-client-pathname is required"),
-  })
-  .required()
-  .noUnknown();
+export const SaveLastPathRules = createSchema<ISaveLastPathRequest>({
+  lastClientAsPath: yup.string().required("last-client-as-path is required"),
+  lastClientPathname: yup.string().required("last-client-pathname is required"),
+});
 
-export const PriceListEntryRules = yup
-  .object({
-    id: yup.number(),
-    item_id: ItemIdRule,
-    quantity_modifier: yup.number().required(),
-  })
-  .required()
-  .noUnknown();
+export const PriceListEntryRules = createSchema({
+  id: yup.number(),
+  item_id: ItemIdRule,
+  quantity_modifier: yup.number().required(),
+});
 
-export const PricelistRules = yup
-  .object({
-    name: yup.string().required(),
-    slug: SlugRule,
-  })
-  .required()
-  .noUnknown();
+export const PricelistRules = createSchema({
+  name: yup.string().required(),
+  slug: SlugRule,
+});
 
-export const PricelistRequestBodyRules = yup
-  .object({
-    entries: yup.array(PriceListEntryRules).required(),
-    pricelist: PricelistRules.required(),
-  })
-  .required()
-  .noUnknown();
+export const PricelistRequestBodyRules = createSchema({
+  entries: yup.array(PriceListEntryRules).required(),
+  pricelist: PricelistRules,
+});
 
-export const ProfessionPricelistRequestBodyRules = yup
-  .object({
-    entries: yup.array(PriceListEntryRules).required(),
-    expansion_name: yup.string().required(),
-    pricelist: PricelistRules.required(),
-    profession_id: yup.number().required(),
-  })
-  .required()
-  .noUnknown();
+export const ProfessionPricelistRequestBodyRules = createSchema({
+  entries: yup.array(PriceListEntryRules).required(),
+  expansion_name: yup.string().required(),
+  pricelist: PricelistRules,
+  profession_id: yup.number().required(),
+});
 
-export const UserRequestBodyRules = yup
-  .object<ICreateUserRequest>({
-    email: EmailRule,
-    password: PasswordRule,
-  })
-  .required()
-  .noUnknown();
+export const UserRequestBodyRules = createSchema<ICreateUserRequest>({
+  email: EmailRule,
+  password: PasswordRule,
+});
 
-export const PostRequestBodyRules = yup
-  .object<ICreatePostRequest>({
-    body: PostBodyRule,
-    slug: SlugRule,
-    summary: PostSummaryRule,
-    title: PostTitleRule,
-  })
-  .required()
-  .noUnknown();
+export const PostRequestBodyDefinition = {
+  body: PostBodyRule,
+  slug: SlugRule,
+  summary: PostSummaryRule,
+  title: PostTitleRule,
+};
+
+export const PostRequestBodyRules = createSchema<ICreatePostRequest>(PostRequestBodyDefinition);
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function FullPostRequestBodyRules(repo: PostRepository, exceptSlug?: string) {
@@ -213,54 +190,48 @@ export function FullPostRequestBodyRules(repo: PostRepository, exceptSlug?: stri
     .object<Pick<ICreatePostRequest, "slug">>({
       slug: FullSlugRule(repo, exceptSlug),
     })
-    .concat(PostRequestBodyRules);
+    .concat(yup.object(PostRequestBodyDefinition));
 }
 
-export const AuctionsQueryParamsRules = yup
-  .object<IGetAuctionsRequest>({
-    count: CountRule,
-    itemFilters: ItemIdsRule,
-    locale: LocaleRule,
-    page: PageRule,
-    petFilters: PetIdsRule,
-    sortDirection: SortDirectionRule,
-    sortKind: SortKindRule,
-  })
-  .required()
-  .noUnknown();
+export const AuctionsQueryParamsRules = createSchema<IGetAuctionsRequest>({
+  count: CountRule,
+  itemFilters: ItemIdsRule,
+  locale: LocaleRule,
+  page: PageRule,
+  petFilters: PetIdsRule,
+  sortDirection: SortDirectionRule,
+  sortKind: SortKindRule,
+});
 
-export const QueryParamRules = yup
-  .object<IQueryRequest>({
-    locale: LocaleRule,
-    query: yup.string(),
-  })
-  .required()
-  .noUnknown();
+export const QueryParamRules = createSchema<IQueryRequest>({
+  locale: LocaleRule,
+  query: yup.string(),
+});
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const QueryWorkOrdersQueryRules = yup
-  .object<IFindByOptions>()
-  .shape({
-    locale: LocaleRule,
-    orderBy: OrderKindRule,
-    orderDirection: OrderDirectionRule,
-    page: PageRule,
-    perPage: PerPageRule,
-  })
-  .noUnknown();
+export const QueryWorkOrdersQueryRules = createSchema({
+  locale: LocaleRule,
+  orderBy: OrderKindRule,
+  orderDirection: OrderDirectionRule,
+  page: PageRule,
+  perPage: PerPageRule,
+});
 
-export const CreateWorkOrderRequestRules = yup
-  .object<ICreateWorkOrderRequest>({
-    itemId: ItemIdRule,
-    price: WorkOrderPriceRule,
-    quantity: WorkOrderQuantityRule,
-  })
-  .required()
-  .noUnknown();
+export const CreateWorkOrderRequestRules = createSchema({
+  itemId: ItemIdRule,
+  price: WorkOrderPriceRule,
+  quantity: WorkOrderQuantityRule,
+});
 
 /*
   misc
  */
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+export function createSchema<T extends object>(
+  definition: yup.ObjectSchemaDefinition<T>,
+): yup.Schema<T> {
+  return yup.object(definition).required().noUnknown();
+}
 
 export async function validate<T>(
   schema: yup.Schema<T>,
