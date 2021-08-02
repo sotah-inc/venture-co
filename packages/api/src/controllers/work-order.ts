@@ -19,7 +19,14 @@ import {
   QueryWorkOrdersQueryRules,
 } from "./validators/yup";
 
-import { Authenticator, IRequest, IRequestResult } from "./index";
+import {
+  Authenticator,
+  EmptyStringMap,
+  IRequest,
+  IRequestResult,
+  PlainRequest,
+  StringMap,
+} from "./index";
 
 export class WorkOrderController {
   private messengers: IMessengers;
@@ -32,7 +39,7 @@ export class WorkOrderController {
   }
 
   public async queryWorkOrders(
-    req: IRequest<null>,
+    req: IRequest<undefined, StringMap, StringMap>,
     _res: Response,
   ): Promise<IRequestResult<QueryWorkOrdersResponse>> {
     const resolveResult = await resolveRealmSlug(req.params, this.messengers.regions);
@@ -100,7 +107,7 @@ export class WorkOrderController {
   }
 
   public async prefillWorkOrderItem(
-    req: IRequest<null>,
+    req: PlainRequest,
     _res: Response,
   ): Promise<IRequestResult<PrefillWorkOrderItemResponse>> {
     const resolveResult = await resolveRealmSlug(req.params, this.messengers.regions);
@@ -148,10 +155,10 @@ export class WorkOrderController {
     };
   }
 
-  @Authenticator<ICreateWorkOrderRequest, CreateWorkOrderResponse>(UserLevel.Regular)
-  @Validator<ICreateWorkOrderRequest, CreateWorkOrderResponse>(CreateWorkOrderRequestRules)
+  @Authenticator(UserLevel.Regular)
+  @Validator(CreateWorkOrderRequestRules)
   public async createWorkOrder(
-    req: IRequest<ICreateWorkOrderRequest>,
+    req: IRequest<ICreateWorkOrderRequest, EmptyStringMap, EmptyStringMap>,
     _res: Response,
   ): Promise<IRequestResult<CreateWorkOrderResponse>> {
     const resolveResult = await resolveRealmSlug(req.params, this.messengers.regions);
