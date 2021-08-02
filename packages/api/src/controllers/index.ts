@@ -8,9 +8,13 @@ export { DataController } from "./data";
 
 export type StringMap = { [k: string]: string };
 
+export type EmptyStringMap = Record<string, never>;
+
+export type PlainRequest = IRequest<undefined, EmptyStringMap, EmptyStringMap>;
+
 export interface IRequest<TBody, TParams extends StringMap, TQuery extends StringMap>
   extends Request {
-  body: TBody;
+  body: TBody | undefined;
   user?: User;
   params: TParams;
   query: TQuery;
@@ -45,7 +49,7 @@ export function Authenticator<
   TQuery extends StringMap,
   TResponse
 >(requiredLevel: UserLevel) {
-  return function authenticatorCallable(
+  return function (
     _target: unknown,
     _propertyKey: string,
     descriptor: PropertyDescriptor,

@@ -8,6 +8,7 @@ import {
   IRequest,
   IRequestResult,
   IValidateResultError,
+  StringMap,
   ValidateResult,
 } from "../index";
 import { validate as yupValidate } from "./yup";
@@ -53,14 +54,16 @@ export interface IValidatorOptions<T> {
   bodySchema?: ValidatorSchema<T>;
 }
 
-export function Validator<TRequest, TResponse>(schema: ValidatorSchema<TRequest>) {
-  return function validatorCallable(
+export function Validator<TRequest, TParams extends StringMap, TQuery extends StringMap, TResponse>(
+  schema: ValidatorSchema<TRequest>,
+) {
+  return function (
     _target: unknown,
     _propertyKey: string,
     descriptor: PropertyDescriptor,
   ): PropertyDescriptor {
     descriptor.value = async function (
-      req: IRequest<TRequest>,
+      req: IRequest<TRequest, TParams, TQuery>,
       res: Response,
     ): Promise<IRequestResult<TResponse | IValidationErrorResponse>> {
       const result = await validate(schema, req.body);
