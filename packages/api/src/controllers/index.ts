@@ -6,17 +6,19 @@ import "passport";
 
 export { DataController } from "./data";
 
-export interface IRequest<T> extends Request {
-  body: T;
-  user?: Express.User;
-  params: {
-    [key: string]: string;
-  };
+export type StringMap = { [k: string]: string };
+
+export interface IRequest<TBody, TParams extends StringMap, TQuery extends StringMap>
+  extends Request {
+  body: TBody;
+  user?: User;
+  params: TParams;
+  query: TQuery;
 }
 
-export interface IRequestResult<T> {
+export interface IRequestResult<TResponse> {
   status: number;
-  data: T;
+  data: TResponse;
   headers?: {
     [key: string]: string | string[];
   };
@@ -27,9 +29,7 @@ export interface IValidateResultError {
   message: string;
 }
 
-export type ValidateResult<T> =
-  | { body: T; errors: null }
-  | { errors: IValidateResultError[] };
+export type ValidateResult<T> = { body: T; errors: null } | { errors: IValidateResultError[] };
 
 export function handleResult<T>(res: Response, { data, headers, status }: IRequestResult<T>): void {
   res.status(status);
@@ -39,41 +39,31 @@ export function handleResult<T>(res: Response, { data, headers, status }: IReque
   res.send(data);
 }
 
-export type ControllerDescriptor<T, A> = (
-  req: IRequest<T>,
-  res: Response,
-) => Promise<IRequestResult<A | IValidationErrorResponse>>;
-
-export function Authenticator<T, A>(requiredLevel: UserLevel) {
+export function Authenticator<
+  TRequest,
+  TParams extends StringMap,
+  TQuery extends StringMap,
+  TResponse
+>(requiredLevel: UserLevel) {
   return function authenticatorCallable(
     _target: unknown,
     _propertyKey: string,
-    descriptor: TypedPropertyDescriptor<ControllerDescriptor<T, A>>,
-  ): TypedPropertyDescriptor<ControllerDescriptor<T, A>> {
-    const originalMethod = descriptor.value;
-    if (originalMethod === undefined) {
-      return descriptor;
-    }
-
+    descriptor: PropertyDescriptor,
+  ): PropertyDescriptor {
     descriptor.value = async function (
-      req,
-      res,
-    ): Promise<IRequestResult<A | IValidationErrorResponse>> {
-      const user = req.user as User;
-      if (typeof user === "undefined" || user === null) {
-        const validationErrors: IValidationErrorResponse = { unauthorized: "Unauthorized" };
-
-        return { data: validationErrors, status: HTTPStatus.UNAUTHORIZED };
+      req: IRequest<TRequest, TParams, TQuery>,
+      res: TResponse,
+    ): Promise<IRequestResult<TResponse | IValidationErrorResponse>> {
+      const user = req.user;
+      if (typeof user === "undefined") {
+        return { data: { unauthorized: "Unauthenticated" }, status: HTTPStatus.UNAUTHORIZED };
       }
 
       if (user.level < requiredLevel) {
-        const validationErrors: IValidationErrorResponse = { unauthorized: "Unauthorized" };
-
-        return { data: validationErrors, status: HTTPStatus.UNAUTHORIZED };
+        return { data: { unauthorized: "Unauthorized" }, status: HTTPStatus.UNAUTHORIZED };
       }
 
-      /* tslint:disable-next-line:no-invalid-this */
-      return originalMethod.apply(this, [req, res]);
+      return descriptor.value(req, res);
     };
 
     return descriptor;

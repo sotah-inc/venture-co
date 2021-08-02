@@ -1,10 +1,11 @@
 import { IValidationErrorResponse } from "@sotah-inc/core";
+import { Response } from "express";
 import * as HTTPStatus from "http-status";
 import * as yup from "yup";
 import { z } from "zod";
 
 import {
-  ControllerDescriptor,
+  IRequest,
   IRequestResult,
   IValidateResultError,
   ValidateResult,
@@ -48,53 +49,31 @@ export function validationErrorsToResponse(
   }, {});
 }
 
-export function Validator<T, A>(schema: ValidatorSchema<T>) {
+export interface IValidatorOptions<T> {
+  bodySchema?: ValidatorSchema<T>;
+}
+
+export function Validator<TRequest, TResponse>(schema: ValidatorSchema<TRequest>) {
   return function validatorCallable(
     _target: unknown,
     _propertyKey: string,
-    descriptor: TypedPropertyDescriptor<ControllerDescriptor<T, A>>,
-  ): TypedPropertyDescriptor<ControllerDescriptor<T, A>> {
-    const originalMethod = descriptor.value;
-    if (originalMethod === undefined) {
-      return descriptor;
-    }
-
+    descriptor: PropertyDescriptor,
+  ): PropertyDescriptor {
     descriptor.value = async function (
-      req,
-      res,
-    ): Promise<IRequestResult<A | IValidationErrorResponse>> {
+      req: IRequest<TRequest>,
+      res: Response,
+    ): Promise<IRequestResult<TResponse | IValidationErrorResponse>> {
       const result = await validate(schema, req.body);
-      if (result.errors) {
-        const validationErrors = result.errors.reduce<IValidationErrorResponse>(
-          (foundValidationErrors, error) => {
-            return {
-              ...foundValidationErrors,
-              [error.path.join("_")]: error.message,
-            };
-          },
-          {},
-        );
-
+      if (result.errors !== null) {
         return {
-          data: validationErrors,
-          status: HTTPStatus.BAD_REQUEST,
-        };
-      }
-      if (result.body === null) {
-        const validationErrors: IValidationErrorResponse = {
-          error: "result body was null",
-        };
-
-        return {
-          data: validationErrors,
+          data: validationErrorsToResponse(result.errors),
           status: HTTPStatus.BAD_REQUEST,
         };
       }
 
       req.body = result.body;
 
-      /* tslint:disable-next-line:no-invalid-this */
-      return originalMethod.apply(this, [req, res]);
+      return descriptor.value(req, res);
     };
 
     return descriptor;

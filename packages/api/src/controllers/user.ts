@@ -15,9 +15,10 @@ import { Connection } from "typeorm";
 import { createUser } from "../coal";
 import { generateEmailVerificationLink } from "../coal/generate-email-verification-link";
 import { getUser } from "../coal/get-user";
-import { SaveLastPathRules, UserRequestBodyRules } from "../lib/validator-rules";
+import { Validator } from "./validators";
+import { SaveLastPathRules, UserRequestBodyRules } from "./validators/yup";
 
-import { Authenticator, IRequest, IRequestResult, Validator } from "./index";
+import { Authenticator, IRequest, IRequestResult } from "./index";
 
 export class UserController {
   private readonly dbConn: Connection;
@@ -122,10 +123,10 @@ export class UserController {
     };
   }
 
-  @Validator<ISaveLastPathRequest, SaveLastPathResponse>(SaveLastPathRules)
-  @Authenticator<ISaveLastPathRequest, SaveLastPathResponse>(UserLevel.Unverified)
+  @Validator(SaveLastPathRules)
+  @Authenticator(UserLevel.Unverified)
   public async saveLastPath(
-    req: IRequest<ISaveLastPathRequest>,
+    req: IRequest<ISaveLastPathRequest, Record<string, never>, Record<string, never>>,
     _res: Response,
   ): Promise<IRequestResult<SaveLastPathResponse>> {
     const user = req.user as User;
@@ -140,12 +141,12 @@ export class UserController {
     };
   }
 
-  @Authenticator<null, null>(UserLevel.Unverified)
+  @Authenticator(UserLevel.Unverified)
   public async verifyUserConfirm(
-    req: IRequest<null>,
+    req: IRequest<null, Record<string, never>, Record<string, never>>,
     _res: Response,
   ): Promise<IRequestResult<null | IValidationErrorResponse>> {
-    const user = req.user as User;
+    const user = req.user;
 
     if (user.level !== UserLevel.Unverified) {
       return {
