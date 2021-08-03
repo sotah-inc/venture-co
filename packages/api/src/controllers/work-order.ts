@@ -166,16 +166,22 @@ export class WorkOrderController {
       return resolveResult.errorResponse;
     }
 
-    const { body } = req;
+    const validateResult = await validate(CreateWorkOrderRequestRules, req.body);
+    if (validateResult.errors !== null) {
+      return {
+        status: HTTPStatus.BAD_REQUEST,
+        data: validationErrorsToResponse(validateResult.errors),
+      };
+    }
 
     const workOrder = new WorkOrder();
     workOrder.user = req.user as User;
     workOrder.gameVersion = resolveResult.data.gameVersion;
     workOrder.regionName = resolveResult.data.regionName;
     workOrder.connectedRealmId = resolveResult.data.connectedRealm.connected_realm.id;
-    workOrder.itemId = body.itemId;
-    workOrder.price = body.price;
-    workOrder.quantity = body.quantity;
+    workOrder.itemId = validateResult.body.itemId;
+    workOrder.price = validateResult.body.price;
+    workOrder.quantity = validateResult.body.quantity;
     await this.dbConn.manager.save(workOrder);
 
     return { status: HTTPStatus.CREATED, data: { order: workOrder.toJson() } };
