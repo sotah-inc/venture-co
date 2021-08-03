@@ -11,14 +11,15 @@ import { User } from "@sotah-inc/server";
 import { Response } from "express";
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
+import * as yup from "yup";
 
 import { createUser } from "../coal";
 import { generateEmailVerificationLink } from "../coal/generate-email-verification-link";
 import { getUser } from "../coal/get-user";
-import { Validator } from "./validators";
-import { SaveLastPathRules, UserRequestBodyRules } from "./validators/yup";
+import { Validator, validate, validationErrorsToResponse } from "./validators";
+import { EmailRule, SaveLastPathRules, UserRequestBodyRules } from "./validators/yup";
 
-import { Authenticator, IRequest, IRequestResult } from "./index";
+import { Authenticator, EmptyStringMap, IRequest, IRequestResult } from "./index";
 
 export class UserController {
   private readonly dbConn: Connection;
@@ -30,11 +31,20 @@ export class UserController {
     this.clientHost = clientHost;
   }
 
-  @Validator<ICreateUserRequest, CreateUserResponse>(UserRequestBodyRules)
+  @Validator(UserRequestBodyRules)
   public async createUser(
-    req: IRequest<ICreateUserRequest>,
+    req: IRequest<ICreateUserRequest, EmptyStringMap, EmptyStringMap>,
     _res: Response,
   ): Promise<IRequestResult<CreateUserResponse>> {
+    if (req.body === undefined) {
+      return {
+        status: HTTPStatus.BAD_REQUEST,
+        data: {
+          error: "request body was undefined",
+        },
+      };
+    }
+
     const registerUserResult = await createUser({
       email: req.body.email,
       password: req.body.password,
