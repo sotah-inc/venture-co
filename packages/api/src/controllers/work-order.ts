@@ -14,18 +14,15 @@ import { Connection } from "typeorm";
 
 import { resolveItem, resolveRealmSlug } from "./resolvers";
 import { validate, validationErrorsToResponse, Validator } from "./validators";
-import {
-  CreateWorkOrderRequestRules,
-  QueryWorkOrdersQueryRules,
-} from "./validators/yup";
+import { CreateWorkOrderRequestRules, QueryWorkOrdersQueryRules } from "./validators/yup";
 
 import {
   Authenticator,
+  EmptyRequestBodyResponse,
   EmptyStringMap,
   IRequest,
   IRequestResult,
   PlainRequest,
-  StringMap,
 } from "./index";
 
 export class WorkOrderController {
@@ -39,7 +36,7 @@ export class WorkOrderController {
   }
 
   public async queryWorkOrders(
-    req: IRequest<undefined, StringMap, StringMap>,
+    req: PlainRequest,
     _res: Response,
   ): Promise<IRequestResult<QueryWorkOrdersResponse>> {
     const resolveResult = await resolveRealmSlug(req.params, this.messengers.regions);
@@ -115,10 +112,13 @@ export class WorkOrderController {
       return resolveResult.errorResponse;
     }
 
-    const resolveItemResult = await resolveItem({
-      ...req.query,
-      gameVersion: resolveResult.data.gameVersion,
-    }, this.messengers.items);
+    const resolveItemResult = await resolveItem(
+      {
+        ...req.query,
+        gameVersion: resolveResult.data.gameVersion,
+      },
+      this.messengers.items,
+    );
     if (resolveItemResult.errorResponse !== null) {
       return resolveItemResult.errorResponse;
     }
@@ -166,12 +166,8 @@ export class WorkOrderController {
       return resolveResult.errorResponse;
     }
 
-    const validateResult = await validate(CreateWorkOrderRequestRules, req.body);
-    if (validateResult.errors !== null) {
-      return {
-        status: HTTPStatus.BAD_REQUEST,
-        data: validationErrorsToResponse(validateResult.errors),
-      };
+    if (req.body === undefined) {
+      return EmptyRequestBodyResponse;
     }
 
     const workOrder = new WorkOrder();
@@ -179,9 +175,9 @@ export class WorkOrderController {
     workOrder.gameVersion = resolveResult.data.gameVersion;
     workOrder.regionName = resolveResult.data.regionName;
     workOrder.connectedRealmId = resolveResult.data.connectedRealm.connected_realm.id;
-    workOrder.itemId = validateResult.body.itemId;
-    workOrder.price = validateResult.body.price;
-    workOrder.quantity = validateResult.body.quantity;
+    workOrder.itemId = req.body.itemId;
+    workOrder.price = req.body.price;
+    workOrder.quantity = req.body.quantity;
     await this.dbConn.manager.save(workOrder);
 
     return { status: HTTPStatus.CREATED, data: { order: workOrder.toJson() } };

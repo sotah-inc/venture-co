@@ -11,15 +11,21 @@ import { User } from "@sotah-inc/server";
 import { Response } from "express";
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
-import * as yup from "yup";
 
 import { createUser } from "../coal";
 import { generateEmailVerificationLink } from "../coal/generate-email-verification-link";
 import { getUser } from "../coal/get-user";
-import { Validator, validate, validationErrorsToResponse } from "./validators";
-import { EmailRule, SaveLastPathRules, UserRequestBodyRules } from "./validators/yup";
+import { Validator } from "./validators";
+import { SaveLastPathRules, UserRequestBodyRules } from "./validators/yup";
 
-import { Authenticator, EmptyStringMap, IRequest, IRequestResult } from "./index";
+import {
+  Authenticator,
+  EmptyRequestBodyResponse,
+  EmptyStringMap,
+  IRequest,
+  IRequestResult,
+  UnauthenticatedUserResponse,
+} from "./index";
 
 export class UserController {
   private readonly dbConn: Connection;
@@ -37,12 +43,7 @@ export class UserController {
     _res: Response,
   ): Promise<IRequestResult<CreateUserResponse>> {
     if (req.body === undefined) {
-      return {
-        status: HTTPStatus.BAD_REQUEST,
-        data: {
-          error: "request body was undefined",
-        },
-      };
+      return EmptyRequestBodyResponse;
     }
 
     const registerUserResult = await createUser({
@@ -76,13 +77,16 @@ export class UserController {
     };
   }
 
-  @Authenticator<null, VerifyUserResponse>(UserLevel.Unverified)
+  @Authenticator(UserLevel.Unverified)
   public async verifyUser(
-    req: IRequest<null>,
+    req: IRequest<undefined, EmptyStringMap, EmptyStringMap>,
     _res: Response,
   ): Promise<IRequestResult<VerifyUserResponse>> {
-    const user = req.user as User;
-    const getUserResult = await getUser(user.firebaseUid);
+    if (req.user === undefined) {
+      return UnauthenticatedUserResponse;
+    }
+
+    const getUserResult = await getUser(req.user.firebaseUid);
     if (getUserResult.errors !== null) {
       return {
         status: HTTPStatus.INTERNAL_SERVER_ERROR,
@@ -95,15 +99,17 @@ export class UserController {
         data: { error: "user in result was null" },
       };
     }
+
     if (getUserResult.user.emailVerified) {
-      user.level = UserLevel.Regular;
-      await this.dbConn.manager.save(user);
+      req.user.level = UserLevel.Regular;
+      await this.dbConn.manager.save(req.user);
 
       return {
         status: HTTPStatus.NO_CONTENT,
         data: null,
       };
     }
+
     if (getUserResult.user.email === undefined) {
       return {
         status: HTTPStatus.INTERNAL_SERVER_ERROR,
@@ -136,10 +142,18 @@ export class UserController {
   @Validator(SaveLastPathRules)
   @Authenticator(UserLevel.Unverified)
   public async saveLastPath(
-    req: IRequest<ISaveLastPathRequest, Record<string, never>, Record<string, never>>,
+    req: IRequest<ISaveLastPathRequest, EmptyStringMap, EmptyStringMap>,
     _res: Response,
   ): Promise<IRequestResult<SaveLastPathResponse>> {
-    const user = req.user as User;
+    if (req.user === undefined) {
+      return UnauthenticatedUserResponse;
+    }
+
+    if (req.body === undefined) {
+      return EmptyRequestBodyResponse;
+    }
+
+    const user = req.user;
 
     user.lastClientAsPath = req.body.lastClientAsPath;
     user.lastClientPathname = req.body.lastClientPathname;
@@ -156,16 +170,18 @@ export class UserController {
     req: IRequest<null, Record<string, never>, Record<string, never>>,
     _res: Response,
   ): Promise<IRequestResult<null | IValidationErrorResponse>> {
-    const user = req.user;
+    if (req.user === undefined) {
+      return UnauthenticatedUserResponse;
+    }
 
-    if (user.level !== UserLevel.Unverified) {
+    if (req.user.level !== UserLevel.Unverified) {
       return {
         status: HTTPStatus.BAD_REQUEST,
         data: { error: "user is already verified (local)" },
       };
     }
 
-    const getUserResult = await getUser(user.firebaseUid);
+    const getUserResult = await getUser(req.user.firebaseUid);
     if (getUserResult.errors !== null) {
       return {
         status: HTTPStatus.INTERNAL_SERVER_ERROR,
@@ -185,8 +201,8 @@ export class UserController {
       };
     }
 
-    user.level = UserLevel.Regular;
-    await this.dbConn.manager.save(user);
+    req.user.level = UserLevel.Regular;
+    await this.dbConn.manager.save(req.user);
 
     return {
       data: null,

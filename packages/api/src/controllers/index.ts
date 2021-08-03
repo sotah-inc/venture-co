@@ -6,6 +6,20 @@ import "passport";
 
 export { DataController } from "./data";
 
+export const UnauthenticatedUserResponse: IRequestResult<IValidationErrorResponse> = {
+  status: HTTPStatus.UNAUTHORIZED,
+  data: {
+    error: "unauthenticated user",
+  },
+};
+
+export const EmptyRequestBodyResponse: IRequestResult<IValidationErrorResponse> = {
+  status: HTTPStatus.BAD_REQUEST,
+  data: {
+    error: "missing request body",
+  },
+};
+
 export type StringMap = { [k: string]: string };
 
 export type EmptyStringMap = Record<string, never>;
