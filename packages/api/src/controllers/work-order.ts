@@ -16,14 +16,7 @@ import { resolveItem, resolveRealmSlug } from "./resolvers";
 import { validate, validationErrorsToResponse, Validator } from "./validators";
 import { CreateWorkOrderRequestRules, QueryWorkOrdersQueryRules } from "./validators/yup";
 
-import {
-  Authenticator,
-  EmptyRequestBodyResponse,
-  EmptyStringMap,
-  IRequest,
-  IRequestResult,
-  PlainRequest,
-} from "./index";
+import { Authenticator, EmptyStringMap, IRequest, IRequestResult, PlainRequest } from "./index";
 
 export class WorkOrderController {
   private messengers: IMessengers;
@@ -164,10 +157,6 @@ export class WorkOrderController {
     const resolveResult = await resolveRealmSlug(req.params, this.messengers.regions);
     if (resolveResult.errorResponse !== null) {
       return resolveResult.errorResponse;
-    }
-
-    if (req.body === undefined) {
-      return EmptyRequestBodyResponse;
     }
 
     const workOrder = new WorkOrder();

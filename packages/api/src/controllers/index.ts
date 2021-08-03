@@ -28,7 +28,7 @@ export type PlainRequest = IRequest<undefined, EmptyStringMap, EmptyStringMap>;
 
 export interface IRequest<TBody, TParams extends StringMap, TQuery extends StringMap>
   extends Request {
-  body: TBody | undefined;
+  body: TBody;
   user?: User;
   params: TParams;
   query: TQuery;

@@ -20,7 +20,6 @@ import { SaveLastPathRules, UserRequestBodyRules } from "./validators/yup";
 
 import {
   Authenticator,
-  EmptyRequestBodyResponse,
   EmptyStringMap,
   IRequest,
   IRequestResult,
@@ -42,10 +41,6 @@ export class UserController {
     req: IRequest<ICreateUserRequest, EmptyStringMap, EmptyStringMap>,
     _res: Response,
   ): Promise<IRequestResult<CreateUserResponse>> {
-    if (req.body === undefined) {
-      return EmptyRequestBodyResponse;
-    }
-
     const registerUserResult = await createUser({
       email: req.body.email,
       password: req.body.password,
@@ -147,10 +142,6 @@ export class UserController {
   ): Promise<IRequestResult<SaveLastPathResponse>> {
     if (req.user === undefined) {
       return UnauthenticatedUserResponse;
-    }
-
-    if (req.body === undefined) {
-      return EmptyRequestBodyResponse;
     }
 
     const user = req.user;
