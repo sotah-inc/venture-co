@@ -18,8 +18,9 @@ import { CreateWorkOrderRequestRules, QueryWorkOrdersQueryRules } from "./valida
 
 import {
   AuthenticatedRequest,
-  Authenticator, EmptyRequestBodyResponse,
-  EmptyStringMap, IRequest,
+  Authenticator,
+  EmptyRequestBodyResponse,
+  EmptyStringMap,
   IRequestResult,
   PlainRequest,
 } from "./index";

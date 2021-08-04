@@ -19,10 +19,12 @@ import { Validator } from "./validators";
 import { SaveLastPathRules, UserRequestBodyRules } from "./validators/yup";
 
 import {
+  AuthenticatedRequest,
   Authenticator,
+  EmptyRequestBodyResponse,
   EmptyStringMap,
-  IRequest,
   IRequestResult,
+  UnauthenticatedRequest,
   UnauthenticatedUserResponse,
 } from "./index";
 
@@ -38,9 +40,13 @@ export class UserController {
 
   @Validator(UserRequestBodyRules)
   public async createUser(
-    req: IRequest<ICreateUserRequest, EmptyStringMap, EmptyStringMap>,
+    req: UnauthenticatedRequest<ICreateUserRequest, EmptyStringMap, EmptyStringMap>,
     _res: Response,
   ): Promise<IRequestResult<CreateUserResponse>> {
+    if (req.body === undefined) {
+      return EmptyRequestBodyResponse;
+    }
+
     const registerUserResult = await createUser({
       email: req.body.email,
       password: req.body.password,
@@ -74,7 +80,7 @@ export class UserController {
 
   @Authenticator(UserLevel.Unverified)
   public async verifyUser(
-    req: IRequest<undefined, EmptyStringMap, EmptyStringMap>,
+    req: AuthenticatedRequest<undefined, EmptyStringMap, EmptyStringMap>,
     _res: Response,
   ): Promise<IRequestResult<VerifyUserResponse>> {
     if (req.user === undefined) {
@@ -137,11 +143,11 @@ export class UserController {
   @Validator(SaveLastPathRules)
   @Authenticator(UserLevel.Unverified)
   public async saveLastPath(
-    req: IRequest<ISaveLastPathRequest, EmptyStringMap, EmptyStringMap>,
+    req: AuthenticatedRequest<ISaveLastPathRequest, EmptyStringMap, EmptyStringMap>,
     _res: Response,
   ): Promise<IRequestResult<SaveLastPathResponse>> {
-    if (req.user === undefined) {
-      return UnauthenticatedUserResponse;
+    if (req.body === undefined) {
+      return EmptyRequestBodyResponse;
     }
 
     const user = req.user;
@@ -158,13 +164,9 @@ export class UserController {
 
   @Authenticator(UserLevel.Unverified)
   public async verifyUserConfirm(
-    req: IRequest<null, Record<string, never>, Record<string, never>>,
+    req: AuthenticatedRequest<undefined, EmptyStringMap, EmptyStringMap>,
     _res: Response,
   ): Promise<IRequestResult<null | IValidationErrorResponse>> {
-    if (req.user === undefined) {
-      return UnauthenticatedUserResponse;
-    }
-
     if (req.user.level !== UserLevel.Unverified) {
       return {
         status: HTTPStatus.BAD_REQUEST,
