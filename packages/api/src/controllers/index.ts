@@ -24,12 +24,30 @@ export type StringMap = { [k: string]: string };
 
 export type EmptyStringMap = Record<string, never>;
 
-export type PlainRequest = IRequest<undefined, EmptyStringMap, EmptyStringMap>;
+export type PlainRequest = IRequest<undefined, EmptyStringMap, EmptyStringMap, undefined>;
 
-export interface IRequest<TBody, TParams extends StringMap, TQuery extends StringMap>
-  extends Request {
-  body: TBody;
-  user?: User;
+export type RequestUser = User | undefined;
+
+export type AuthenticatedRequest<
+  TBody,
+  TParams extends StringMap,
+  TQuery extends StringMap
+> = IRequest<TBody, TParams, TQuery, User>;
+
+export type UnauthenticatedRequest<
+  TBody,
+  TParams extends StringMap,
+  TQuery extends StringMap
+> = IRequest<TBody, TParams, TQuery, User>;
+
+export interface IRequest<
+  TBody,
+  TParams extends StringMap,
+  TQuery extends StringMap,
+  TUser extends RequestUser
+> extends Request {
+  body: TBody | undefined;
+  user: TUser;
   params: TParams;
   query: TQuery;
 }
@@ -57,19 +75,19 @@ export function handleResult<T>(res: Response, { data, headers, status }: IReque
   res.send(data);
 }
 
-export function Authenticator<
-  TRequest,
-  TParams extends StringMap,
-  TQuery extends StringMap,
-  TResponse
->(requiredLevel: UserLevel) {
+export function Authenticator(requiredLevel: UserLevel) {
   return function (
     _target: unknown,
     _propertyKey: string,
     descriptor: PropertyDescriptor,
   ): PropertyDescriptor {
-    descriptor.value = async function (
-      req: IRequest<TRequest, TParams, TQuery>,
+    descriptor.value = async function <
+      TRequest,
+      TParams extends StringMap,
+      TQuery extends StringMap,
+      TResponse
+    >(
+      req: IRequest<TRequest, TParams, TQuery, RequestUser>,
       res: TResponse,
     ): Promise<IRequestResult<TResponse | IValidationErrorResponse>> {
       const user = req.user;

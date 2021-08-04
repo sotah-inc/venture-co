@@ -16,7 +16,13 @@ import { resolveItem, resolveRealmSlug } from "./resolvers";
 import { validate, validationErrorsToResponse, Validator } from "./validators";
 import { CreateWorkOrderRequestRules, QueryWorkOrdersQueryRules } from "./validators/yup";
 
-import { Authenticator, EmptyStringMap, IRequest, IRequestResult, PlainRequest } from "./index";
+import {
+  AuthenticatedRequest,
+  Authenticator, EmptyRequestBodyResponse,
+  EmptyStringMap, IRequest,
+  IRequestResult,
+  PlainRequest,
+} from "./index";
 
 export class WorkOrderController {
   private messengers: IMessengers;
@@ -151,12 +157,16 @@ export class WorkOrderController {
   @Authenticator(UserLevel.Regular)
   @Validator(CreateWorkOrderRequestRules)
   public async createWorkOrder(
-    req: IRequest<ICreateWorkOrderRequest, EmptyStringMap, EmptyStringMap>,
+    req: AuthenticatedRequest<ICreateWorkOrderRequest, EmptyStringMap, EmptyStringMap>,
     _res: Response,
   ): Promise<IRequestResult<CreateWorkOrderResponse>> {
     const resolveResult = await resolveRealmSlug(req.params, this.messengers.regions);
     if (resolveResult.errorResponse !== null) {
       return resolveResult.errorResponse;
+    }
+
+    if (req.body === undefined) {
+      return EmptyRequestBodyResponse;
     }
 
     const workOrder = new WorkOrder();
