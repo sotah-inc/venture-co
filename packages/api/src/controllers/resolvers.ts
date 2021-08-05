@@ -1,4 +1,9 @@
-import { IConnectedRealmComposite, IShortItem, IValidationErrorResponse } from "@sotah-inc/core";
+import {
+  IConnectedRealmComposite,
+  IRegionVersionConnectedRealmTuple,
+  IShortItem,
+  IValidationErrorResponse,
+} from "@sotah-inc/core";
 import { ItemsMessenger, RegionsMessenger } from "@sotah-inc/server";
 import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
 import HTTPStatus from "http-status";
@@ -162,6 +167,7 @@ export interface IResolveRealmSlugResult {
   gameVersion: string;
   regionName: string;
   connectedRealm: IConnectedRealmComposite;
+  tuple: IRegionVersionConnectedRealmTuple;
 }
 
 export async function resolveRealmSlug(
@@ -235,6 +241,11 @@ export async function resolveRealmSlug(
       connectedRealm: resolveResult.connected_realm,
       gameVersion: validateResult.body.gameVersion,
       regionName: validateResult.body.regionName,
+      tuple: {
+        connected_realm_id: resolveResult.connected_realm.connected_realm.id,
+        region_name: validateResult.body.regionName,
+        game_version: validateResult.body.gameVersion,
+      },
     },
   };
 }

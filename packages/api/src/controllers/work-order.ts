@@ -125,11 +125,7 @@ export class WorkOrderController {
 
     const pricesMessage = await this.messengers.liveAuctions.priceList({
       item_ids: [resolveItemResult.data.item.id],
-      tuple: {
-        connected_realm_id: resolveResult.data.connectedRealm.connected_realm.id,
-        region_name: resolveResult.data.regionName,
-        game_version: resolveResult.data.gameVersion,
-      },
+      tuple: resolveResult.data.tuple,
     });
     if (pricesMessage.code !== code.ok) {
       const validationErrors: IValidationErrorResponse = { error: "failed to fetch prices" };

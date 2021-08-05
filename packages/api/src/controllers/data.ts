@@ -1,7 +1,6 @@
 import {
   ConnectedRealmId,
   ExpansionName,
-  GetAuctionsResponse,
   GetBootResponse,
   GetConnectedRealmsResponse,
   GetItemClassesResponse,
@@ -15,7 +14,6 @@ import {
   GetUnmetDemandResponse,
   IErrorResponse,
   IGetItemResponseData,
-  IItemsMarketPrice,
   IQueryGeneralResponseData,
   IQueryResponseData,
   IRegionComposite,
@@ -31,7 +29,6 @@ import {
   QueryGeneralResponse,
   QueryResponse,
   RealmSlug,
-  RecipeId,
   RegionName,
 } from "@sotah-inc/core";
 import {
@@ -40,18 +37,12 @@ import {
   ProfessionPricelistRepository,
 } from "@sotah-inc/server";
 import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
-import { ResolveRecipesResponse } from "@sotah-inc/server/build/dist/messenger/contracts/professions";
 import HTTPStatus from "http-status";
 import moment from "moment";
 import { ParsedQs } from "qs";
 import { Connection } from "typeorm";
 
-import {
-  AuctionsQueryParamsRules,
-  QueryParamRules,
-  validate,
-  yupValidationErrorToResponse,
-} from "../lib/validator-rules";
+import { QueryParamRules, validate, yupValidationErrorToResponse } from "../lib/validator-rules";
 
 import { IRequestResult } from "./index";
 
@@ -322,315 +313,6 @@ export class DataController {
     };
 
     return { data: itemResponse, status: HTTPStatus.OK };
-  }
-
-  // eslint-disable-next-line complexity
-  public async getAuctions(
-    regionName: RegionName,
-    realmSlug: RealmSlug,
-    query: ParsedQs,
-    ifModifiedSince?: string,
-  ): Promise<IRequestResult<GetAuctionsResponse>> {
-    // resolving connected-realm
-    const resolveMessage = await this.messengers.regions.resolveConnectedRealm({
-      realm_slug: realmSlug,
-      region_name: regionName,
-    });
-    switch (resolveMessage.code) {
-    case code.ok:
-      break;
-    case code.notFound: {
-      const notFoundValidationErrors: IValidationErrorResponse = {
-        error: "could not resolve connected-realm",
-      };
-
-      return {
-        data: notFoundValidationErrors,
-        status: HTTPStatus.NOT_FOUND,
-      };
-    }
-    default: {
-      const defaultValidationErrors: IValidationErrorResponse = {
-        error: "could not resolve connected-realm",
-      };
-
-      return {
-        data: defaultValidationErrors,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-    }
-
-    const resolveResult = await resolveMessage.decode();
-    if (resolveResult === null) {
-      return {
-        data: null,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-
-    // gathering last-modified
-    const realmModificationDatesMessage = await this.messengers.regions.queryRealmModificationDates(
-      {
-        connected_realm_id: resolveResult.connected_realm.connected_realm.id,
-        region_name: regionName,
-      },
-    );
-    switch (realmModificationDatesMessage.code) {
-    case code.ok:
-      break;
-    case code.notFound:
-      return {
-        data: {
-          error: `${realmModificationDatesMessage.error?.message} (realm-modification-dates)`,
-        },
-        status: HTTPStatus.NOT_FOUND,
-      };
-    default:
-      return {
-        data: { error: realmModificationDatesMessage.error?.message },
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-
-    const realmModificationDatesResult = await realmModificationDatesMessage.decode();
-    if (realmModificationDatesResult === null) {
-      return {
-        data: null,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-
-    const lastModifiedDate = moment(realmModificationDatesResult.downloaded * 1000).utc();
-    const lastModified = `${lastModifiedDate.format("ddd, DD MMM YYYY HH:mm:ss")} GMT`;
-
-    // checking if-modified-since header
-    if (ifModifiedSince) {
-      const ifModifiedSinceDate = moment(new Date(ifModifiedSince)).utc();
-      if (lastModifiedDate.isSameOrBefore(ifModifiedSinceDate)) {
-        // eslint-disable-next-line no-console
-        console.log("serving cached request");
-
-        return {
-          data: null,
-          headers: {
-            "Cache-Control": ["public", `max-age=${60 * 30}`],
-            "Last-Modified": lastModified,
-          },
-          status: HTTPStatus.NOT_MODIFIED,
-        };
-      }
-    }
-
-    // parsing request params
-    const validateParamsResult = await validate(AuctionsQueryParamsRules, query);
-    if (validateParamsResult.error || !validateParamsResult.data) {
-      return {
-        data: yupValidationErrorToResponse(validateParamsResult.error),
-        status: HTTPStatus.BAD_REQUEST,
-      };
-    }
-
-    const {
-      count,
-      page,
-      sortDirection,
-      sortKind,
-      itemFilters,
-      locale,
-      petFilters,
-    } = validateParamsResult.data;
-
-    // gathering auctions
-    const resolveAuctionsResponse = await this.messengers.auctions.resolveAuctions(
-      {
-        count,
-        item_filters: itemFilters ?? [],
-        page,
-        pet_filters: petFilters ?? [],
-        sort_direction: sortDirection,
-        sort_kind: sortKind,
-        tuple: {
-          connected_realm_id: resolveResult.connected_realm.connected_realm.id,
-          region_name: regionName,
-        },
-      },
-      locale,
-    );
-    switch (resolveAuctionsResponse.code) {
-    case code.ok:
-      break;
-    case code.notFound:
-      return {
-        data: { error: `${resolveAuctionsResponse.error ?? ""} (auctions)` },
-        status: HTTPStatus.NOT_FOUND,
-      };
-    case code.userError:
-      return {
-        data: { error: resolveAuctionsResponse.error ?? "" },
-        status: HTTPStatus.BAD_REQUEST,
-      };
-    default:
-      return {
-        data: { error: resolveAuctionsResponse.error ?? "" },
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-
-    if (resolveAuctionsResponse.data === null) {
-      return {
-        data: { error: resolveAuctionsResponse.error ?? "" },
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-
-    const itemIds = resolveAuctionsResponse.data.items.items.map(v => v.id);
-
-    const professionPricelists = await (async () => {
-      if (!resolveAuctionsResponse.data || itemIds.length === 0) {
-        return [];
-      }
-
-      const itemIdsClause = resolveAuctionsResponse.data.items.items.map(v => v.id).join(", ");
-
-      return this.dbConn
-        .getRepository(ProfessionPricelist)
-        .createQueryBuilder("professionpricelist")
-        .leftJoinAndSelect("professionpricelist.pricelist", "pricelist")
-        .leftJoinAndSelect("pricelist.entries", "entry")
-        .where(`entry.itemId IN (${itemIdsClause})`)
-        .getMany();
-    })();
-
-    const pricelistItemIds: ItemId[] = [
-      ...professionPricelists.map(v => (v.pricelist?.entries ?? []).map(y => y.itemId)[0]),
-    ];
-    const pricelistItemsMsg = await this.messengers.items.getItems({
-      itemIds: pricelistItemIds,
-      locale,
-    });
-    if (pricelistItemsMsg.code !== code.ok) {
-      return {
-        data: { error: pricelistItemsMsg.error?.message ?? "" },
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-
-    const pricelistItemsResult = await pricelistItemsMsg.decode();
-    if (pricelistItemsResult === null) {
-      return {
-        data: null,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-
-    const itemsMarketPriceMessage = await this.messengers.auctions.itemsMarketPrice({
-      item_ids: resolveAuctionsResponse.data.items.items.map(v => v.id),
-      tuple: {
-        connected_realm_id: resolveResult.connected_realm.connected_realm.id,
-        region_name: regionName,
-      },
-    });
-    if (itemsMarketPriceMessage.code !== code.ok) {
-      return {
-        data: null,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-
-    const itemsMarketPriceResult = await itemsMarketPriceMessage.decode();
-    if (itemsMarketPriceResult === null) {
-      return {
-        data: null,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-
-    const itemsMarketPrice = Object.keys(itemsMarketPriceResult.items_market_price).reduce<
-      IItemsMarketPrice[]
-    >((result, itemIdString) => {
-      const foundPrice = itemsMarketPriceResult.items_market_price[Number(itemIdString)];
-      if (foundPrice === undefined) {
-        return result;
-      }
-
-      return [
-        ...result,
-        {
-          id: Number(itemIdString),
-          market_price: foundPrice,
-        },
-      ];
-    }, []);
-
-    // resolving items-recipe-ids
-    const itemRecipeIdsResult = await this.messengers.professions.resolveAllItemRecipes(itemIds);
-    if (itemRecipeIdsResult.code !== code.ok || itemRecipeIdsResult.data === null) {
-      return {
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-        data: null,
-      };
-    }
-
-    // resolving recipes
-    const recipeIds = ((): RecipeId[] => {
-      const recipeIdSet = new Set<RecipeId>();
-      for (const resolveItem of itemRecipeIdsResult.data.itemRecipes) {
-        for (const itemIdString of Object.keys(resolveItem.response)) {
-          const foundRecipeIds = resolveItem.response[Number(itemIdString)];
-          if (foundRecipeIds === null || foundRecipeIds === undefined) {
-            continue;
-          }
-
-          for (const recipeId of foundRecipeIds) {
-            recipeIdSet.add(recipeId);
-          }
-        }
-      }
-
-      return Array.from(recipeIdSet);
-    })();
-
-    let resolveRecipesResult: ResolveRecipesResponse | null = null;
-    if (recipeIds.length > 0) {
-      resolveRecipesResult = await this.messengers.professions.resolveRecipes(recipeIds, locale);
-      if (resolveRecipesResult.code !== code.ok || resolveRecipesResult.data === null) {
-        return {
-          status: HTTPStatus.INTERNAL_SERVER_ERROR,
-          data: null,
-        };
-      }
-    }
-
-    // eslint-disable-next-line no-console
-    console.log("serving un-cached request");
-
-    return {
-      data: {
-        ...resolveAuctionsResponse.data.auctions,
-        items: [...resolveAuctionsResponse.data.items.items, ...pricelistItemsResult.items],
-        items_market_price: itemsMarketPrice,
-        pets: [...resolveAuctionsResponse.data.pets.pets],
-        professionPricelists: professionPricelists.map(v => v.toJson()),
-        itemsRecipes: {
-          itemsRecipes: itemRecipeIdsResult.data.itemRecipes.map(v => {
-            return {
-              kind: v.kind,
-              ids: v.response,
-            };
-          }),
-          professions: [],
-          recipes: [],
-          skillTiers: [],
-          ...resolveRecipesResult?.data,
-        },
-      },
-      headers: {
-        "Cache-Control": ["public", `max-age=${60 * 30}`],
-        "Last-Modified": lastModified,
-      },
-      status: HTTPStatus.OK,
-    };
   }
 
   public async queryItems(query: ParsedQs): Promise<IRequestResult<QueryResponse<IShortItem>>> {
