@@ -7,8 +7,6 @@ import {
   GetItemClassesResponse,
   GetItemPriceHistoriesResponse,
   GetItemResponse,
-  GetPostResponse,
-  GetPostsResponse,
   GetPricelistResponse,
   GetProfessionPricelistResponse,
   GetProfessionPricelistsResponse,
@@ -38,14 +36,11 @@ import {
 } from "@sotah-inc/core";
 import {
   IMessengers,
-  Post,
   ProfessionPricelist,
   ProfessionPricelistRepository,
 } from "@sotah-inc/server";
 import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
-import {
-  ResolveRecipesResponse,
-} from "@sotah-inc/server/build/dist/messenger/contracts/professions";
+import { ResolveRecipesResponse } from "@sotah-inc/server/build/dist/messenger/contracts/professions";
 import HTTPStatus from "http-status";
 import moment from "moment";
 import { ParsedQs } from "qs";
@@ -68,34 +63,6 @@ export class DataController {
   constructor(messengers: IMessengers, dbConn: Connection) {
     this.messengers = messengers;
     this.dbConn = dbConn;
-  }
-
-  public async getPost(slug: string): Promise<IRequestResult<GetPostResponse>> {
-    const post = await this.dbConn.getRepository(Post).findOne({ where: { slug } });
-    if (typeof post === "undefined" || post === null) {
-      const validationResponse: IValidationErrorResponse = {
-        notFound: "Not Found",
-      };
-
-      return {
-        data: validationResponse,
-        status: HTTPStatus.NOT_FOUND,
-      };
-    }
-
-    return {
-      data: { post: post.toJson() },
-      status: HTTPStatus.OK,
-    };
-  }
-
-  public async getPosts(): Promise<IRequestResult<GetPostsResponse>> {
-    const posts = await this.dbConn.getRepository(Post).find({ order: { id: "DESC" }, take: 3 });
-
-    return {
-      data: { posts: posts.map(v => v.toJson()) },
-      status: HTTPStatus.OK,
-    };
   }
 
   public async getBoot(): Promise<IRequestResult<GetBootResponse>> {
