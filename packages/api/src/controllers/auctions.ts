@@ -9,7 +9,7 @@ import HTTPStatus from "http-status";
 import moment from "moment";
 import { Connection } from "typeorm";
 
-import { resolveRealmSlug } from "./resolvers";
+import { resolveRealmModificationDates, resolveRealmSlug } from "./resolvers";
 import { validate, validationErrorsToResponse } from "./validators";
 import { AuctionsQueryParamsRules } from "./validators/yup";
 
@@ -29,40 +29,22 @@ export class AuctionsController {
     req: PlainRequest,
     _res: Response,
   ): Promise<IRequestResult<GetAuctionsResponse>> {
-    const resolveResult = await resolveRealmSlug(req.params, this.messengers.regions);
-    if (resolveResult.errorResponse !== null) {
-      return resolveResult.errorResponse;
+    const resolveRealmSlugResult = await resolveRealmSlug(req.params, this.messengers.regions);
+    if (resolveRealmSlugResult.errorResponse !== null) {
+      return resolveRealmSlugResult.errorResponse;
     }
 
-    const realmModificationDatesMessage = await this.messengers.regions.queryRealmModificationDates(
-      resolveResult.data.tuple,
+    const resolveRealmModificationDatesResult = await resolveRealmModificationDates(
+      resolveRealmSlugResult.data.tuple,
+      this.messengers.regions,
     );
-    switch (realmModificationDatesMessage.code) {
-    case code.ok:
-      break;
-    case code.notFound:
-      return {
-        data: {
-          error: `${realmModificationDatesMessage.error?.message} (realm-modification-dates)`,
-        },
-        status: HTTPStatus.NOT_FOUND,
-      };
-    default:
-      return {
-        data: { error: realmModificationDatesMessage.error?.message },
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
+    if (resolveRealmModificationDatesResult.errorResponse !== null) {
+      return resolveRealmModificationDatesResult.errorResponse;
     }
 
-    const realmModificationDatesResult = await realmModificationDatesMessage.decode();
-    if (realmModificationDatesResult === null) {
-      return {
-        data: null,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-
-    const lastModifiedDate = moment(realmModificationDatesResult.downloaded * 1000).utc();
+    const lastModifiedDate = moment(
+      resolveRealmModificationDatesResult.data.dates.downloaded * 1000,
+    ).utc();
     const lastModified = `${lastModifiedDate.format("ddd, DD MMM YYYY HH:mm:ss")} GMT`;
 
     // checking if-modified-since header
@@ -112,7 +94,7 @@ export class AuctionsController {
         pet_filters: petFilters ?? [],
         sort_direction: sortDirection,
         sort_kind: sortKind,
-        tuple: resolveResult.data.tuple,
+        tuple: resolveRealmSlugResult.data.tuple,
       },
       locale,
     );
@@ -167,7 +149,7 @@ export class AuctionsController {
     const pricelistItemsMsg = await this.messengers.items.items({
       itemIds: pricelistItemIds,
       locale,
-      game_version: resolveResult.data.gameVersion,
+      game_version: resolveRealmSlugResult.data.gameVersion,
     });
     if (pricelistItemsMsg.code !== code.ok) {
       return {
@@ -186,7 +168,7 @@ export class AuctionsController {
 
     const itemsMarketPriceMessage = await this.messengers.pricelistHistory.itemsMarketPrice({
       item_ids: resolveAuctionsResponse.data.items.items.map(v => v.id),
-      tuple: resolveResult.data.tuple,
+      tuple: resolveRealmSlugResult.data.tuple,
     });
     if (itemsMarketPriceMessage.code !== code.ok) {
       return {

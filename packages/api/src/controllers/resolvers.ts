@@ -1,5 +1,6 @@
 import {
   IConnectedRealmComposite,
+  IConnectedRealmModificationDates,
   IRegionVersionConnectedRealmTuple,
   IShortItem,
   IValidationErrorResponse,
@@ -246,6 +247,56 @@ export async function resolveRealmSlug(
         region_name: validateResult.body.regionName,
         game_version: validateResult.body.gameVersion,
       },
+    },
+  };
+}
+
+export interface IResolveRealmModificationDatesResult {
+  dates: IConnectedRealmModificationDates;
+}
+
+export async function resolveRealmModificationDates(
+  tuple: IRegionVersionConnectedRealmTuple,
+  mess: RegionsMessenger,
+): Promise<ResolveResult<IResolveRealmModificationDatesResult>> {
+  const realmModificationDatesMessage = await mess.queryRealmModificationDates(
+    tuple,
+  );
+  switch (realmModificationDatesMessage.code) {
+  case code.ok:
+    break;
+  case code.notFound:
+    return {
+      errorResponse: {
+        data: {
+          error: `${realmModificationDatesMessage.error?.message} (realm-modification-dates)`,
+        },
+        status: HTTPStatus.NOT_FOUND,
+      },
+    };
+  default:
+    return {
+      errorResponse: {
+        data: { error: realmModificationDatesMessage.error?.message },
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      },
+    };
+  }
+
+  const realmModificationDatesResult = await realmModificationDatesMessage.decode();
+  if (realmModificationDatesResult === null) {
+    return {
+      errorResponse: {
+        data: { error: "could not decode realm-modification-dates response" },
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      },
+    };
+  }
+
+  return {
+    errorResponse: null,
+    data: {
+      dates: realmModificationDatesResult,
     },
   };
 }
