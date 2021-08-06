@@ -4,12 +4,18 @@ import {
   IRegionVersionConnectedRealmTuple,
   IShortItem,
   IValidationErrorResponse,
+  Locale,
 } from "@sotah-inc/core";
-import { ItemsMessenger, RegionsMessenger } from "@sotah-inc/server";
+import { ItemsMessenger, LiveAuctionsMessenger, RegionsMessenger } from "@sotah-inc/server";
 import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
 import HTTPStatus from "http-status";
 import { z } from "zod";
 
+import {
+  IGetAuctionsRequest, IGetAuctionsResponse,
+  IGetItemsResponse, IGetPetsResponse,
+  ResolveAuctionsResponse,
+} from "../../../server/src";
 import { validate, validationErrorsToResponse } from "./validators";
 import { LocaleRule } from "./validators/zod";
 
@@ -259,9 +265,7 @@ export async function resolveRealmModificationDates(
   tuple: IRegionVersionConnectedRealmTuple,
   mess: RegionsMessenger,
 ): Promise<ResolveResult<IResolveRealmModificationDatesResult>> {
-  const realmModificationDatesMessage = await mess.queryRealmModificationDates(
-    tuple,
-  );
+  const realmModificationDatesMessage = await mess.queryRealmModificationDates(tuple);
   switch (realmModificationDatesMessage.code) {
   case code.ok:
     break;
@@ -297,6 +301,63 @@ export async function resolveRealmModificationDates(
     errorResponse: null,
     data: {
       dates: realmModificationDatesResult,
+    },
+  };
+}
+
+export interface IResolveAuctionsResult {
+  response: {
+    auctions: IGetAuctionsResponse;
+    items: IGetItemsResponse;
+    pets: IGetPetsResponse;
+  };
+}
+
+export async function resolveAuctions(
+  req: IGetAuctionsRequest,
+  locale: Locale,
+  mess: LiveAuctionsMessenger,
+): Promise<ResolveResult<IResolveAuctionsResult>> {
+  const resolveAuctionsResponse = await mess.resolveAuctions(req, locale);
+  switch (resolveAuctionsResponse.code) {
+  case code.ok:
+    break;
+  case code.notFound:
+    return {
+      errorResponse: {
+        data: { error: `${resolveAuctionsResponse.error ?? ""} (auctions)` },
+        status: HTTPStatus.NOT_FOUND,
+      },
+    };
+  case code.userError:
+    return {
+      errorResponse: {
+        data: { error: resolveAuctionsResponse.error ?? "" },
+        status: HTTPStatus.BAD_REQUEST,
+      },
+    };
+  default:
+    return {
+      errorResponse: {
+        data: { error: resolveAuctionsResponse.error ?? "" },
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      },
+    };
+  }
+
+  if (resolveAuctionsResponse.data === null) {
+    return {
+      errorResponse: {
+        data: { error: resolveAuctionsResponse.error ?? "" },
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      },
+    };
+  }
+
+  return {
+    errorResponse: null,
+    data: {
+      response: resolveAuctionsResponse.data,
     },
   };
 }

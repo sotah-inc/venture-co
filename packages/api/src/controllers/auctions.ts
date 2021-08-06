@@ -1,15 +1,13 @@
 import { GetAuctionsResponse, IItemsMarketPrice, ItemId, RecipeId } from "@sotah-inc/core";
 import { IMessengers, ProfessionPricelist } from "@sotah-inc/server";
 import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
-import {
-  ResolveRecipesResponse,
-} from "@sotah-inc/server/build/dist/messenger/contracts/professions";
+import { ResolveRecipesResponse } from "@sotah-inc/server/build/dist/messenger/contracts/professions";
 import { Response } from "express";
 import HTTPStatus from "http-status";
 import moment from "moment";
 import { Connection } from "typeorm";
 
-import { resolveRealmModificationDates, resolveRealmSlug } from "./resolvers";
+import { resolveAuctions, resolveRealmModificationDates, resolveRealmSlug } from "./resolvers";
 import { validate, validationErrorsToResponse } from "./validators";
 import { AuctionsQueryParamsRules } from "./validators/yup";
 
@@ -85,8 +83,7 @@ export class AuctionsController {
       petFilters,
     } = validateQueryResult.body;
 
-    // gathering auctions
-    const resolveAuctionsResponse = await this.messengers.liveAuctions.resolveAuctions(
+    const resolveAuctionsResult = await resolveAuctions(
       {
         count,
         item_filters: itemFilters ?? [],
@@ -97,42 +94,22 @@ export class AuctionsController {
         tuple: resolveRealmSlugResult.data.tuple,
       },
       locale,
+      this.messengers.liveAuctions,
     );
-    switch (resolveAuctionsResponse.code) {
-    case code.ok:
-      break;
-    case code.notFound:
-      return {
-        data: { error: `${resolveAuctionsResponse.error ?? ""} (auctions)` },
-        status: HTTPStatus.NOT_FOUND,
-      };
-    case code.userError:
-      return {
-        data: { error: resolveAuctionsResponse.error ?? "" },
-        status: HTTPStatus.BAD_REQUEST,
-      };
-    default:
-      return {
-        data: { error: resolveAuctionsResponse.error ?? "" },
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
+    if (resolveAuctionsResult.errorResponse !== null) {
+      return resolveAuctionsResult.errorResponse;
     }
 
-    if (resolveAuctionsResponse.data === null) {
-      return {
-        data: { error: resolveAuctionsResponse.error ?? "" },
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-
-    const itemIds = resolveAuctionsResponse.data.items.items.map(v => v.id);
+    const itemIds = resolveAuctionsResult.data.response.items.items.map(v => v.id);
 
     const professionPricelists = await (async () => {
-      if (!resolveAuctionsResponse.data || itemIds.length === 0) {
+      if (itemIds.length === 0) {
         return [];
       }
 
-      const itemIdsClause = resolveAuctionsResponse.data.items.items.map(v => v.id).join(", ");
+      const itemIdsClause = resolveAuctionsResult.data.response.items.items
+        .map(v => v.id)
+        .join(", ");
 
       return this.dbConn
         .getRepository(ProfessionPricelist)
@@ -167,7 +144,7 @@ export class AuctionsController {
     }
 
     const itemsMarketPriceMessage = await this.messengers.pricelistHistory.itemsMarketPrice({
-      item_ids: resolveAuctionsResponse.data.items.items.map(v => v.id),
+      item_ids: resolveAuctionsResult.data.response.items.items.map(v => v.id),
       tuple: resolveRealmSlugResult.data.tuple,
     });
     if (itemsMarketPriceMessage.code !== code.ok) {
