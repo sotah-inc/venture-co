@@ -1,7 +1,9 @@
 import { GetAuctionsResponse, IItemsMarketPrice, ItemId, RecipeId } from "@sotah-inc/core";
 import { IMessengers, ProfessionPricelist } from "@sotah-inc/server";
 import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
-import { ResolveRecipesResponse } from "@sotah-inc/server/build/dist/messenger/contracts/professions";
+import {
+  ResolveRecipesResponse,
+} from "@sotah-inc/server/build/dist/messenger/contracts/professions";
 import { Response } from "express";
 import HTTPStatus from "http-status";
 import moment from "moment";
