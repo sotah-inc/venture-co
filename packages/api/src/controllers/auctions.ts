@@ -225,10 +225,10 @@ export class AuctionsController {
 
     return {
       data: {
-        ...resolveAuctionsResponse.data.auctions,
-        items: [...resolveAuctionsResponse.data.items.items, ...pricelistItemsResult.items],
+        ...resolveAuctionsResult.data.response.auctions,
+        items: [...resolveAuctionsResult.data.response.items.items, ...pricelistItemsResult.items],
         items_market_price: itemsMarketPrice,
-        pets: [...resolveAuctionsResponse.data.pets.pets],
+        pets: [...resolveAuctionsResult.data.response.pets.pets],
         professionPricelists: professionPricelists.map(v => v.toJson()),
         itemsRecipes: {
           itemsRecipes: itemRecipeIdsResult.data.itemRecipes.map(v => {
