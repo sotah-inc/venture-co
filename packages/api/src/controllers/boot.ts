@@ -1,9 +1,10 @@
-import { GetBootResponse, IRegionComposite, Locale } from "@sotah-inc/core";
+import { GetBootResponse, Locale } from "@sotah-inc/core";
 import { IMessengers } from "@sotah-inc/server";
 import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
 import { Response } from "express";
 import HTTPStatus from "http-status";
 
+import { resolveRegionComposites } from "./resolvers";
 import { validate, validationErrorsToResponse } from "./validators";
 import { GameVersionRules } from "./validators/yup";
 
@@ -44,50 +45,13 @@ export class BootController {
       };
     }
 
-    const regionCompositeResults = await Promise.all(
-      bootResult.regions.map(configRegion => {
-        return new Promise<IRegionComposite | null>((resolve, reject) => {
-          this.messengers.regions
-            .connectedRealms({
-              region_name: configRegion.name,
-              game_version: validateResult.body.game_version,
-            })
-            .then(v => v.decode())
-            .then(v => {
-              if (v === null) {
-                resolve(null);
-
-                return;
-              }
-
-              resolve({
-                config_region: configRegion,
-                connected_realms: v,
-              });
-            })
-            .catch(reject);
-        });
-      }),
+    const resolveRegionCompositesResult = await resolveRegionComposites(
+      bootResult.regions,
+      validateResult.body.game_version,
+      this.messengers.regions,
     );
-    const regionComposites = regionCompositeResults.reduce<IRegionComposite[] | null>(
-      (result, v) => {
-        if (result === null) {
-          return null;
-        }
-
-        if (v === null) {
-          return null;
-        }
-
-        return [...result, v];
-      },
-      [],
-    );
-    if (regionComposites === null) {
-      return {
-        data: null,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
+    if (resolveRegionCompositesResult.errorResponse !== null) {
+      return resolveRegionCompositesResult.errorResponse;
     }
 
     const professionsMessage = await this.messengers.professions.professions(Locale.EnUS);
@@ -108,7 +72,7 @@ export class BootController {
     return {
       data: {
         ...bootResult,
-        regions: regionComposites,
+        regions: resolveRegionCompositesResult.data,
         professions: professionsResult.professions,
       },
       status: HTTPStatus.OK,

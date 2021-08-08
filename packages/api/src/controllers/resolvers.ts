@@ -1,6 +1,9 @@
 import {
+  GameVersion,
+  IConfigRegion,
   IConnectedRealmComposite,
   IConnectedRealmModificationDates,
+  IRegionComposite,
   IRegionVersionConnectedRealmTuple,
   IShortItem,
   IValidationErrorResponse,
@@ -34,6 +37,62 @@ export type ResolveResult<TData> =
   | {
       errorResponse: IRequestResult<IValidationErrorResponse>;
     };
+
+export async function resolveRegionComposites(
+  regions: IConfigRegion[],
+  gameVersion: GameVersion,
+  mess: RegionsMessenger,
+): Promise<ResolveResult<IRegionComposite[]>> {
+  const regionCompositeResults = await Promise.all(
+    regions.map(configRegion => {
+      return new Promise<IRegionComposite | null>((resolve, reject) => {
+        mess
+          .connectedRealms({
+            region_name: configRegion.name,
+            game_version: gameVersion,
+          })
+          .then(v => v.decode())
+          .then(v => {
+            if (v === null) {
+              resolve(null);
+
+              return;
+            }
+
+            resolve({
+              config_region: configRegion,
+              connected_realms: v,
+            });
+          })
+          .catch(reject);
+      });
+    }),
+  );
+  const regionComposites = regionCompositeResults.reduce<IRegionComposite[] | null>((result, v) => {
+    if (result === null) {
+      return null;
+    }
+
+    if (v === null) {
+      return null;
+    }
+
+    return [...result, v];
+  }, []);
+  if (regionComposites === null) {
+    return {
+      errorResponse: {
+        data: { error: "could not resolve region-composites" },
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      },
+    };
+  }
+
+  return {
+    errorResponse: null,
+    data: regionComposites,
+  };
+}
 
 export async function resolveGameVersion(
   gameVersion: string,

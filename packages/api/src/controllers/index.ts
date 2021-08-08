@@ -24,7 +24,7 @@ export type StringMap = { [k: string]: string };
 
 export type EmptyStringMap = Record<string, never>;
 
-export type PlainRequest = IRequest<undefined, EmptyStringMap, EmptyStringMap, undefined>;
+export type PlainRequest = IRequest<undefined, StringMap, StringMap, undefined>;
 
 export type RequestUser = User | undefined;
 
