@@ -12,9 +12,10 @@ import HTTPStatus from "http-status";
 import { z } from "zod";
 
 import {
-  IGetAuctionsRequest, IGetAuctionsResponse,
-  IGetItemsResponse, IGetPetsResponse,
-  ResolveAuctionsResponse,
+  IGetAuctionsRequest,
+  IGetAuctionsResponse,
+  IGetItemsResponse,
+  IGetPetsResponse,
 } from "../../../server/src";
 import { validate, validationErrorsToResponse } from "./validators";
 import { LocaleRule } from "./validators/zod";

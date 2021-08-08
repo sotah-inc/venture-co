@@ -137,6 +137,13 @@ export const WorkOrderQuantityRule = yup.number().integer().positive().required(
   request contract rules
  */
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export function GameVersionRules(mess: RegionsMessenger) {
+  return createSchema({
+    game_version: GameVersionRule(mess),
+  });
+}
+
 export const PreferenceRules = createSchema<ICreatePreferencesRequest>({
   current_realm: yup.string().required(),
   current_region: yup.string().required(),
