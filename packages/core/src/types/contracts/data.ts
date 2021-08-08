@@ -32,7 +32,7 @@ export interface IGetBootResponseData {
   };
 }
 
-export type GetBootResponse = IGetBootResponseData | null;
+export type GetBootResponse = IGetBootResponseData | IValidationErrorResponse | null;
 
 export interface IGetItemClassesResponseData {
   item_classes: IItemClass[];
