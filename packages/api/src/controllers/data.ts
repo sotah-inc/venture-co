@@ -693,7 +693,7 @@ export class DataController {
     );
 
     // gathering items
-    const itemsMsg = await this.messengers.items.getItems({ itemIds, locale: locale as Locale });
+    const itemsMsg = await this.messengers.items.items({ itemIds, locale: locale as Locale });
     if (itemsMsg.code !== code.ok) {
       return {
         data: { error: itemsMsg.error?.message },
@@ -795,7 +795,7 @@ export class DataController {
       [],
     );
 
-    const itemsMessage = await this.messengers.items.getItems({
+    const itemsMessage = await this.messengers.items.items({
       itemIds,
       locale: locale as Locale,
     });
@@ -826,7 +826,7 @@ export class DataController {
   public async getRegionTokenHistory(
     regionName: RegionName,
   ): Promise<IRequestResult<GetRegionTokenHistoryResponse>> {
-    const msg = await this.messengers.general.getRegionTokenHistory({ region_name: regionName });
+    const msg = await this.messengers.tokens.regionTokenHistory({ region_name: regionName });
     if (msg.code !== code.ok) {
       if (msg.code === code.notFound) {
         return {
@@ -904,7 +904,7 @@ export class DataController {
       };
     })();
 
-    const msg = await this.messengers.auctions.queryAuctionStats(params);
+    const msg = await this.messengers.stats.queryAuctionStats(params);
     if (msg.code !== code.ok) {
       if (msg.code === code.notFound) {
         return {
