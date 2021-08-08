@@ -22,32 +22,31 @@ import { ValidateResult } from "../index";
   individual rules
  */
 
+export const GameVersionRule = yup.string().required();
+
 // eslint-disable-next-line @typescript-eslint/ban-types
-export function GameVersionRule(mess: RegionsMessenger): yup.StringSchema<string, object> {
-  return yup
-    .string()
-    .required()
-    .test(
-      "exists",
-      "game-version must be valid",
-      async (v): Promise<boolean> => {
-        if (!v) {
-          return false;
-        }
+export function FullGameVersionRule(mess: RegionsMessenger): yup.StringSchema<string, object> {
+  return GameVersionRule.test(
+    "exists",
+    "game-version must be valid",
+    async (v): Promise<boolean> => {
+      if (!v) {
+        return false;
+      }
 
-        const result = await mess.validateGameVersion({ game_version: v });
-        if (result.code !== code.ok) {
-          throw new Error("code was not ok");
-        }
+      const result = await mess.validateGameVersion({ game_version: v });
+      if (result.code !== code.ok) {
+        throw new Error("code was not ok");
+      }
 
-        const resultData = await result.decode();
-        if (resultData === null) {
-          throw new Error("result data was null");
-        }
+      const resultData = await result.decode();
+      if (resultData === null) {
+        throw new Error("result data was null");
+      }
 
-        return resultData.is_valid;
-      },
-    );
+      return resultData.is_valid;
+    },
+  );
 }
 
 export const SlugRule = yup
@@ -140,7 +139,7 @@ export const WorkOrderQuantityRule = yup.number().integer().positive().required(
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function GameVersionRules(mess: RegionsMessenger) {
   return createSchema({
-    game_version: GameVersionRule(mess),
+    game_version: FullGameVersionRule(mess),
   });
 }
 
