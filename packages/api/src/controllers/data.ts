@@ -57,7 +57,7 @@ export class DataController {
   }
 
   public async getBoot(): Promise<IRequestResult<GetBootResponse>> {
-    const bootMessage = await this.messengers.general.getBoot();
+    const bootMessage = await this.messengers.boot.boot();
     if (bootMessage.code !== code.ok) {
       return {
         data: null,
@@ -116,7 +116,7 @@ export class DataController {
       };
     }
 
-    const professionsMessage = await this.messengers.professions.getProfessions(Locale.EnUS);
+    const professionsMessage = await this.messengers.professions.professions(Locale.EnUS);
     if (professionsMessage.code !== code.ok) {
       return {
         data: null,
@@ -142,7 +142,7 @@ export class DataController {
   }
 
   public async getItemClasses(): Promise<IRequestResult<GetItemClassesResponse>> {
-    const msg = await this.messengers.items.getItemClasses();
+    const msg = await this.messengers.items.itemClasses();
     if (msg.code !== code.ok) {
       return {
         data: null,
@@ -170,7 +170,7 @@ export class DataController {
     regionName: RegionName,
     ifModifiedSince?: string,
   ): Promise<IRequestResult<GetConnectedRealmsResponse>> {
-    const realmsMessage = await this.messengers.regions.getConnectedRealms({
+    const realmsMessage = await this.messengers.regions.connectedRealms({
       region_name: regionName,
     });
     switch (realmsMessage.code) {
@@ -251,7 +251,7 @@ export class DataController {
       };
     }
 
-    const msg = await this.messengers.items.getItems({
+    const msg = await this.messengers.items.items({
       itemIds: [itemId],
       locale: locale as Locale,
     });
@@ -284,7 +284,7 @@ export class DataController {
       };
     }
 
-    const itemRecipeIdsMessage = await this.messengers.professions.getItemsRecipes({
+    const itemRecipeIdsMessage = await this.messengers.professions.itemsRecipes({
       kind: ItemRecipeKind.CraftedBy,
       item_ids: [itemId],
     });
