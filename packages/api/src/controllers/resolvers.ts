@@ -5,7 +5,7 @@ import {
   IConnectedRealmModificationDates,
   IRegionComposite,
   IRegionVersionConnectedRealmTuple,
-  IShortItem,
+  IShortItem, ItemId,
   IValidationErrorResponse,
   Locale,
 } from "@sotah-inc/core";
@@ -21,7 +21,6 @@ import {
   IGetPetsResponse,
 } from "../../../server/src";
 import { validate, validationErrorsToResponse } from "./validators";
-import { LocaleRule } from "./validators/zod";
 
 import { IRequestResult } from "./index";
 
@@ -148,32 +147,15 @@ export interface IResolveItemResult {
 }
 
 export async function resolveItem(
-  params: ResolveParams,
+  gameVersion: GameVersion,
+  locale: Locale,
+  itemId: ItemId,
   mess: ItemsMessenger,
 ): Promise<ResolveResult<IResolveItemResult>> {
-  const validateResult = await validate(
-    z
-      .object({
-        itemId: z.number(),
-        locale: LocaleRule,
-        gameVersion: z.string().nonempty(),
-      })
-      .required(),
-    params,
-  );
-  if (validateResult.errors !== null) {
-    return {
-      errorResponse: {
-        status: HTTPStatus.BAD_REQUEST,
-        data: validationErrorsToResponse(validateResult.errors),
-      },
-    };
-  }
-
   const itemsMessage = await mess.items({
-    itemIds: [validateResult.body.itemId],
-    game_version: validateResult.body.gameVersion,
-    locale: validateResult.body.locale,
+    itemIds: [itemId],
+    game_version: gameVersion,
+    locale,
   });
   switch (itemsMessage.code) {
   case code.notFound:
@@ -210,7 +192,7 @@ export async function resolveItem(
     };
   }
 
-  const foundItem = itemsResult.items.find(v => v.id === validateResult.body.itemId);
+  const foundItem = itemsResult.items.find(v => v.id === itemId);
   if (foundItem === undefined) {
     return {
       errorResponse: {

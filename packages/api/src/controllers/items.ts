@@ -4,7 +4,6 @@ import {
   GetItemResponse,
   GetPricelistResponse,
   IErrorResponse,
-  IGetItemResponseData,
   IQueryResponseData,
   IShortItem,
   ItemId,
@@ -21,6 +20,7 @@ import { Response } from "express";
 import HTTPStatus from "http-status";
 import { ParsedQs } from "qs";
 
+import { resolveItem } from "./resolvers";
 import { validate, validationErrorsToResponse } from "./validators";
 import { createSchema, GameVersionRule, ItemIdRule, LocaleRule } from "./validators/yup";
 
@@ -92,38 +92,14 @@ export class ItemsController {
       };
     }
 
-    const msg = await this.messengers.items.items({
-      itemIds: [validateParamsResult.body.itemId],
-      locale: validateQueryResult.body.locale,
-      game_version: validateParamsResult.body.gameVersion,
-    });
-    if (msg.code !== code.ok) {
-      const errorResponse: IErrorResponse = { error: "failed to fetch items" };
-
-      return {
-        data: errorResponse,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-
-    const itemsResult = await msg.decode();
-    if (itemsResult === null) {
-      const errorResponse: IErrorResponse = { error: "failed to fetch items" };
-
-      return {
-        data: errorResponse,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-
-    const foundItem = itemsResult.items.find(v => v.id === validateParamsResult.body.itemId);
-    if (typeof foundItem === "undefined") {
-      const errorResponse: IErrorResponse = { error: "item not found" };
-
-      return {
-        data: errorResponse,
-        status: HTTPStatus.NOT_FOUND,
-      };
+    const resolveItemResult = await resolveItem(
+      validateParamsResult.body.gameVersion,
+      validateQueryResult.body.locale,
+      validateParamsResult.body.itemId,
+      this.messengers.items,
+    );
+    if (resolveItemResult.errorResponse !== null) {
+      return resolveItemResult.errorResponse;
     }
 
     const itemRecipeIdsMessage = await this.messengers.professions.itemsRecipes({
@@ -149,12 +125,13 @@ export class ItemsController {
       };
     }
 
-    const itemResponse: IGetItemResponseData = {
-      item: foundItem,
-      itemRecipes: itemRecipeIdsResult[validateParamsResult.body.itemId],
+    return {
+      data: {
+        item: resolveItemResult.data.item,
+        itemRecipes: itemRecipeIdsResult[validateParamsResult.body.itemId],
+      },
+      status: HTTPStatus.OK,
     };
-
-    return { data: itemResponse, status: HTTPStatus.OK };
   }
 
   public async queryItems(query: ParsedQs): Promise<IRequestResult<QueryResponse<IShortItem>>> {
