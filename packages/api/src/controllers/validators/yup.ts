@@ -106,7 +106,7 @@ export const SortKindRule = yup
 
 export const ItemIdRule = yup.number().required();
 
-export const ItemIdsRule = yup.array(ItemIdRule);
+export const ItemIdsRule = yup.array(ItemIdRule).required();
 
 export const PetIdRule = yup.number().required().integer("pet-id must be an integer");
 
