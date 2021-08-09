@@ -5,13 +5,8 @@ import {
   GetPricelistResponse,
   IErrorResponse,
   IShortItem,
-  ItemId,
   ItemRecipeKind,
-  IValidationErrorResponse,
-  Locale,
   QueryResponse,
-  RealmSlug,
-  RegionName,
 } from "@sotah-inc/core";
 import { IMessengers } from "@sotah-inc/server";
 import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
@@ -254,69 +249,41 @@ export class ItemsController {
   }
 
   public async getItemPriceHistories(
-    regionName: RegionName,
-    realmSlug: RealmSlug,
-    itemIds: ItemId[],
-    locale: string,
+    req: PlainRequest,
+    _res: Response,
   ): Promise<IRequestResult<GetItemPriceHistoriesResponse>> {
-    if (!Object.values(Locale).includes(locale as Locale)) {
-      const validationErrors: IValidationErrorResponse = {
-        error: "could not validate locale",
-      };
+    const resolveRealmSlugResult = await resolveRealmSlug(req.params, this.messengers.regions);
+    if (resolveRealmSlugResult.errorResponse !== null) {
+      return resolveRealmSlugResult.errorResponse;
+    }
 
+    const resolveQueryResult = await validate(createSchema({ locale: LocaleRule }), req.query);
+    if (resolveQueryResult.errors !== null) {
       return {
-        data: validationErrors,
         status: HTTPStatus.BAD_REQUEST,
+        data: validationErrorsToResponse(resolveQueryResult.errors),
       };
     }
 
-    // resolving connected-realm
-    const resolveMessage = await this.messengers.regions.resolveConnectedRealm({
-      realm_slug: realmSlug,
-      region_name: regionName,
-    });
-    switch (resolveMessage.code) {
-    case code.ok:
-      break;
-    case code.notFound: {
-      const notFoundValidationErrors: IValidationErrorResponse = {
-        error: "could not resolve connected-realm",
-      };
-
+    const itemIdsResult = await validate(
+      createSchema({
+        itemIds: ItemIdsRule,
+      }),
+      req.body,
+    );
+    if (itemIdsResult.errors !== null) {
       return {
-        data: notFoundValidationErrors,
-        status: HTTPStatus.NOT_FOUND,
-      };
-    }
-    default: {
-      const defaultValidationErrors: IValidationErrorResponse = {
-        error: "could not resolve connected-realm",
-      };
-
-      return {
-        data: defaultValidationErrors,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-    }
-
-    const resolveResult = await resolveMessage.decode();
-    if (resolveResult === null) {
-      return {
-        data: null,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+        status: HTTPStatus.BAD_REQUEST,
+        data: validationErrorsToResponse(itemIdsResult.errors),
       };
     }
 
     const currentUnixTimestamp = Math.floor(Date.now() / 1000);
     const lowerBounds = currentUnixTimestamp - 60 * 60 * 24 * 14;
     const itemPricesHistoryMessage = await this.messengers.general.resolveItemPricesHistory({
-      item_ids: itemIds,
+      item_ids: itemIdsResult.body.itemIds,
       lower_bounds: lowerBounds,
-      tuple: {
-        connected_realm_id: resolveResult.connected_realm.connected_realm.id,
-        region_name: regionName,
-      },
+      tuple: resolveRealmSlugResult.data.tuple,
       upper_bounds: currentUnixTimestamp,
     });
     if (itemPricesHistoryMessage.code !== code.ok || itemPricesHistoryMessage.data === null) {
@@ -326,9 +293,10 @@ export class ItemsController {
       };
     }
 
-    const itemsMessage = await this.messengers.items.getItems({
-      itemIds,
-      locale: locale as Locale,
+    const itemsMessage = await this.messengers.items.items({
+      itemIds: itemIdsResult.body.itemIds,
+      locale: resolveQueryResult.body.locale,
+      game_version: resolveRealmSlugResult.data.gameVersion,
     });
     if (itemsMessage.code !== code.ok) {
       return {
