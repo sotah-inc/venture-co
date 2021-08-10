@@ -57,7 +57,10 @@ export interface IGetConnectedRealmsResponseData {
   connectedRealms: IConnectedRealmComposite[];
 }
 
-export type GetConnectedRealmsResponse = IGetConnectedRealmsResponseData | null;
+export type GetConnectedRealmsResponse =
+  | IGetConnectedRealmsResponseData
+  | IValidationErrorResponse
+  | null;
 
 export interface IGetItemResponseData {
   item: IShortItem;
