@@ -22,6 +22,10 @@ import { ValidateResult } from "../index";
   individual rules
  */
 
+export const ProfessionIdRule = yup.number().required();
+
+export const ExpansionNameRule = yup.string().required();
+
 export const RegionNameRule = yup.string().required();
 
 export const GameVersionRule = yup.string().required();
@@ -173,9 +177,9 @@ export const PricelistRequestBodyRules = createSchema({
 
 export const ProfessionPricelistRequestBodyRules = createSchema({
   entries: yup.array(PriceListEntryRules).required(),
-  expansion_name: yup.string().required(),
+  expansion_name: ExpansionNameRule,
   pricelist: PricelistRules,
-  profession_id: yup.number().required(),
+  profession_id: ProfessionIdRule,
 });
 
 export const UserRequestBodyRules = createSchema<ICreateUserRequest>({

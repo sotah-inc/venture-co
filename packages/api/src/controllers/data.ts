@@ -2,33 +2,31 @@ import {
   ConnectedRealmId,
   ExpansionName,
   GetConnectedRealmsResponse,
-  GetProfessionPricelistResponse,
-  GetProfessionPricelistsResponse,
   GetUnmetDemandResponse,
   IQueryGeneralResponseData,
   IQueryResponseData,
-  IRegionConnectedRealmTuple,
   IShortPet,
   ItemId,
   IValidationErrorResponse,
   Locale,
-  ProfessionId,
   QueryAuctionStatsResponse,
   QueryGeneralResponse,
   QueryResponse,
   RealmSlug,
   RegionName,
 } from "@sotah-inc/core";
-import { IMessengers, ProfessionPricelist, ProfessionPricelistRepository } from "@sotah-inc/server";
+import { IMessengers, ProfessionPricelist } from "@sotah-inc/server";
 import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
+import { Response } from "express";
 import HTTPStatus from "http-status";
 import moment from "moment";
 import { ParsedQs } from "qs";
 import { Connection } from "typeorm";
 
-import { QueryParamRules, validate, yupValidationErrorToResponse } from "../lib/validator-rules";
+import { validate, validationErrorsToResponse } from "./validators";
+import { createSchema, GameVersionRule, RegionNameRule } from "./validators/yup";
 
-import { IRequestResult } from "./index";
+import { IRequestResult, PlainRequest } from "./index";
 
 export class DataController {
   private messengers: IMessengers;
@@ -41,9 +39,23 @@ export class DataController {
   }
 
   public async getConnectedRealms(
-    regionName: RegionName,
-    ifModifiedSince?: string,
+    req: PlainRequest,
+    _res: Response,
   ): Promise<IRequestResult<GetConnectedRealmsResponse>> {
+    const validateParamsResult = await validate(
+      createSchema({
+        regionName: RegionNameRule,
+        gameVersion: GameVersionRule,
+      }),
+      req.params,
+    );
+    if (validateParamsResult.errors !== null) {
+      return {
+        status: HTTPStatus.BAD_REQUEST,
+        data: validationErrorsToResponse(validateParamsResult.errors),
+      };
+    }
+
     const realmsMessage = await this.messengers.regions.connectedRealms({
       region_name: regionName,
     });
@@ -319,72 +331,6 @@ export class DataController {
     };
   }
 
-  public async getProfessionPricelists(
-    professionId: ProfessionId,
-    expansionName: ExpansionName,
-    locale: string,
-  ): Promise<IRequestResult<GetProfessionPricelistsResponse>> {
-    if (!Object.values(Locale).includes(locale as Locale)) {
-      const validationErrors: IValidationErrorResponse = {
-        error: "could not validate locale",
-      };
-
-      return {
-        data: validationErrors,
-        status: HTTPStatus.BAD_REQUEST,
-      };
-    }
-
-    // gathering profession-pricelists
-    const professionPricelists = await this.dbConn.getRepository(ProfessionPricelist).find({
-      where: { professionId, expansion: expansionName },
-    });
-
-    // gathering related items
-    const itemIds: ItemId[] = professionPricelists.reduce(
-      (pricelistItemIds: ItemId[], professionPricelist) => {
-        return (professionPricelist.pricelist?.entries ?? []).reduce(
-          (entryItemIds: ItemId[], entry) => {
-            if (entryItemIds.indexOf(entry.itemId) === -1) {
-              entryItemIds.push(entry.itemId);
-            }
-
-            return entryItemIds;
-          },
-          pricelistItemIds,
-        );
-      },
-      [],
-    );
-
-    const itemsMessage = await this.messengers.items.items({
-      itemIds,
-      locale: locale as Locale,
-    });
-    if (itemsMessage.code !== code.ok) {
-      return {
-        data: null,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-    const itemsResult = await itemsMessage.decode();
-    if (!itemsResult) {
-      return {
-        data: null,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-
-    // dumping out a response
-    return {
-      data: {
-        items: itemsResult.items,
-        profession_pricelists: professionPricelists.map(v => v.toJson()),
-      },
-      status: HTTPStatus.OK,
-    };
-  }
-
   public async queryAuctionStats(
     regionName?: RegionName,
     connectedRealmId?: ConnectedRealmId,
@@ -429,60 +375,6 @@ export class DataController {
 
     return {
       data: auctionStatsResult,
-      status: HTTPStatus.OK,
-    };
-  }
-
-  public async getProfessionPricelist(
-    professionId: ProfessionId,
-    expansionName: ExpansionName,
-    pricelistSlug: string,
-  ): Promise<IRequestResult<GetProfessionPricelistResponse>> {
-    const professionPricelist = await this.dbConn
-      .getCustomRepository(ProfessionPricelistRepository)
-      .getFromPricelistSlug(professionId, expansionName, pricelistSlug);
-    if (professionPricelist === null) {
-      return {
-        data: null,
-        status: HTTPStatus.NOT_FOUND,
-      };
-    }
-
-    if (typeof professionPricelist.pricelist === "undefined") {
-      const validationErrors: IValidationErrorResponse = {
-        error: "profession-pricelist pricelist was undefined.",
-      };
-
-      return {
-        data: validationErrors,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-
-    if (typeof professionPricelist.pricelist.user === "undefined") {
-      const validationErrors: IValidationErrorResponse = {
-        error: "profession-pricelist pricelist user was undefined.",
-      };
-
-      return {
-        data: validationErrors,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-
-    if (typeof professionPricelist.pricelist.entries === "undefined") {
-      const validationErrors: IValidationErrorResponse = {
-        error: "profession-pricelist pricelist entries was undefined.",
-      };
-
-      return {
-        data: validationErrors,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-
-    return {
-      data: professionPricelist.toJson(),
       status: HTTPStatus.OK,
     };
   }
