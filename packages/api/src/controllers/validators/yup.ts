@@ -3,7 +3,6 @@ import {
   ICreatePreferencesRequest,
   ICreateUserRequest,
   IGetAuctionsRequest,
-  IQueryRequest,
   ISaveLastPathRequest,
   Locale,
   OrderDirection,
@@ -215,9 +214,10 @@ export const AuctionsQueryParamsRules = createSchema<IGetAuctionsRequest>({
   sortKind: SortKindRule,
 });
 
-export const QueryParamRules = createSchema<IQueryRequest>({
+export const QueryParamRules = createSchema({
   locale: LocaleRule,
   query: yup.string(),
+  gameVersion: GameVersionRule,
 });
 
 export const QueryWorkOrdersQueryRules = createSchema({

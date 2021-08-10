@@ -4,14 +4,11 @@ import {
   GetConnectedRealmsResponse,
   GetUnmetDemandResponse,
   IQueryGeneralResponseData,
-  IQueryResponseData,
-  IShortPet,
   ItemId,
   IValidationErrorResponse,
   Locale,
   QueryAuctionStatsResponse,
   QueryGeneralResponse,
-  QueryResponse,
   RealmSlug,
   RegionName,
 } from "@sotah-inc/core";
@@ -121,39 +118,6 @@ export class DataController {
     return {
       data: { connectedRealms: realmsResult },
       headers,
-      status: HTTPStatus.OK,
-    };
-  }
-
-  public async queryPets(query: ParsedQs): Promise<IRequestResult<QueryResponse<IShortPet>>> {
-    // parsing request params
-    const validateParamsResult = await validate(QueryParamRules, query);
-    if (validateParamsResult.error || !validateParamsResult.data) {
-      return {
-        data: yupValidationErrorToResponse(validateParamsResult.error),
-        status: HTTPStatus.BAD_REQUEST,
-      };
-    }
-
-    // resolving pets-query message
-    const results = await this.messengers.pets.resolveQueryPets({
-      locale: validateParamsResult.data.locale as Locale,
-      query: validateParamsResult.data.query ?? "",
-    });
-    if (results === null) {
-      return {
-        data: null,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-
-    // formatting a response
-    const data: IQueryResponseData<IShortPet> = {
-      items: results,
-    };
-
-    return {
-      data,
       status: HTTPStatus.OK,
     };
   }
