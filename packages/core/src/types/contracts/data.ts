@@ -13,7 +13,8 @@ import {
   IShortTokenHistory,
   IValidationErrorResponse,
   Locale,
-  PetId, RecipeId,
+  PetId,
+  RecipeId,
   SortDirection,
   SortKind,
 } from "../index";
@@ -138,9 +139,15 @@ export type GetProfessionPricelistsResponse =
 export interface IGetRegionTokenHistoryResponseData {
   history: IRegionTokenHistory;
 }
-export type GetRegionTokenHistoryResponse = IGetRegionTokenHistoryResponseData | null;
+export type GetRegionTokenHistoryResponse =
+  | IGetRegionTokenHistoryResponseData
+  | IValidationErrorResponse
+  | null;
 
-export type GetShortTokenHistoryResponse = IGetShortTokenHistoryResponseData | null;
+export type GetShortTokenHistoryResponse =
+  | IGetShortTokenHistoryResponseData
+  | IValidationErrorResponse
+  | null;
 
 export interface IGetShortTokenHistoryResponseData {
   history: IShortTokenHistory;
