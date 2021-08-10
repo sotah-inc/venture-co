@@ -22,6 +22,8 @@ import { ValidateResult } from "../index";
   individual rules
  */
 
+export const RegionNameRule = yup.string().required();
+
 export const GameVersionRule = yup.string().required();
 
 // eslint-disable-next-line @typescript-eslint/ban-types

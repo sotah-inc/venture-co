@@ -4,8 +4,6 @@ import {
   GetConnectedRealmsResponse,
   GetProfessionPricelistResponse,
   GetProfessionPricelistsResponse,
-  GetRegionTokenHistoryResponse,
-  GetShortTokenHistoryResponse,
   GetUnmetDemandResponse,
   IQueryGeneralResponseData,
   IQueryResponseData,
@@ -383,68 +381,6 @@ export class DataController {
         items: itemsResult.items,
         profession_pricelists: professionPricelists.map(v => v.toJson()),
       },
-      status: HTTPStatus.OK,
-    };
-  }
-
-  public async getRegionTokenHistory(
-    regionName: RegionName,
-  ): Promise<IRequestResult<GetRegionTokenHistoryResponse>> {
-    const msg = await this.messengers.tokens.regionTokenHistory({ region_name: regionName });
-    if (msg.code !== code.ok) {
-      if (msg.code === code.notFound) {
-        return {
-          data: null,
-          status: HTTPStatus.NOT_FOUND,
-        };
-      }
-
-      return {
-        data: null,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-
-    const regionTokenHistoryResult = await msg.decode();
-    if (!regionTokenHistoryResult) {
-      return {
-        data: null,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-
-    return {
-      data: { history: regionTokenHistoryResult },
-      status: HTTPStatus.OK,
-    };
-  }
-
-  public async getTokenHistory(): Promise<IRequestResult<GetShortTokenHistoryResponse>> {
-    const msg = await this.messengers.general.getTokenHistory();
-    if (msg.code !== code.ok) {
-      if (msg.code === code.notFound) {
-        return {
-          data: null,
-          status: HTTPStatus.NOT_FOUND,
-        };
-      }
-
-      return {
-        data: null,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-
-    const tokenHistoryResult = await msg.decode();
-    if (!tokenHistoryResult) {
-      return {
-        data: null,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-
-    return {
-      data: { history: tokenHistoryResult.history },
       status: HTTPStatus.OK,
     };
   }
