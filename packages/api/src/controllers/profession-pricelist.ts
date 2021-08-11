@@ -22,7 +22,7 @@ import {
 
 import { IRequestResult, PlainRequest } from "./index";
 
-export class DataController {
+export class ProfessionPricelistController {
   private messengers: IMessengers;
 
   private dbConn: Connection;

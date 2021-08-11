@@ -8,7 +8,7 @@ import { QueryParamRules } from "./validators/yup";
 
 import { IRequestResult, PlainRequest } from "./index";
 
-export class DataController {
+export class PetsController {
   private messengers: IMessengers;
 
   constructor(messengers: IMessengers) {
