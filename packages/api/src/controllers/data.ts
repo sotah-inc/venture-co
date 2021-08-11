@@ -1,27 +1,27 @@
 import {
-  ConnectedRealmId,
-  ExpansionName,
   GetConnectedRealmsResponse,
   GetUnmetDemandResponse,
-  IQueryGeneralResponseData,
   ItemId,
-  IValidationErrorResponse,
-  Locale,
-  QueryAuctionStatsResponse,
   QueryGeneralResponse,
-  RealmSlug,
-  RegionName,
 } from "@sotah-inc/core";
 import { IMessengers, ProfessionPricelist } from "@sotah-inc/server";
 import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
 import { Response } from "express";
 import HTTPStatus from "http-status";
 import moment from "moment";
-import { ParsedQs } from "qs";
 import { Connection } from "typeorm";
 
+import { resolveRealmSlug } from "./resolvers";
 import { validate, validationErrorsToResponse } from "./validators";
-import { createSchema, GameVersionRule, RegionNameRule } from "./validators/yup";
+import {
+  createSchema,
+  ExpansionNameRule,
+  GameVersionRule,
+  LocaleRule,
+  QueryParamRules,
+  RegionNameRule,
+  SlugRule,
+} from "./validators/yup";
 
 import { IRequestResult, PlainRequest } from "./index";
 
@@ -54,7 +54,8 @@ export class DataController {
     }
 
     const realmsMessage = await this.messengers.regions.connectedRealms({
-      region_name: regionName,
+      region_name: validateParamsResult.body.regionName,
+      game_version: validateParamsResult.body.gameVersion,
     });
     switch (realmsMessage.code) {
     case code.notFound:
@@ -71,8 +72,8 @@ export class DataController {
     if (realmsResult === null) {
       return { status: HTTPStatus.INTERNAL_SERVER_ERROR, data: null };
     }
+    const data = { connectedRealms: realmsResult };
 
-    // gathering earliest downloaded realm-modification-date
     const lastModifiedDate: moment.Moment | null = (() => {
       const latestDownloaded = realmsResult.reduce<number | null>((result, connectedRealm) => {
         if (result === null || connectedRealm.modification_dates.downloaded > result) {
@@ -88,54 +89,59 @@ export class DataController {
 
       return moment(latestDownloaded * 1000).utc();
     })();
-
-    // checking if-modified-since header
-    if (lastModifiedDate !== null && typeof ifModifiedSince !== "undefined") {
-      const ifModifiedSinceDate = moment(new Date(ifModifiedSince)).utc();
-      if (lastModifiedDate.isSameOrBefore(ifModifiedSinceDate)) {
-        return {
-          data: null,
-          headers: {
-            "Cache-Control": ["public", `max-age=${60 * 30}`],
-            "Last-Modified": `${lastModifiedDate.format("ddd, DD MMM YYYY HH:mm:ss")} GMT`,
-          },
-          status: HTTPStatus.NOT_MODIFIED,
-        };
-      }
+    if (lastModifiedDate === null) {
+      return {
+        data,
+        status: HTTPStatus.OK,
+      };
     }
 
-    const headers = (() => {
-      if (lastModifiedDate === null) {
-        return;
-      }
+    const headers = {
+      "Cache-Control": ["public", `max-age=${60 * 30}`],
+      "Last-Modified": `${lastModifiedDate.format("ddd, DD MMM YYYY HH:mm:ss")} GMT`,
+    };
 
+    const ifModifiedSince = req.header("if-modified-since");
+    if (ifModifiedSince === undefined) {
       return {
-        "Cache-Control": ["public", `max-age=${60 * 30}`],
-        "Last-Modified": `${lastModifiedDate.format("ddd, DD MMM YYYY HH:mm:ss")} GMT`,
+        data,
+        headers,
+        status: HTTPStatus.OK,
       };
-    })();
+    }
+
+    const ifModifiedSinceDate = moment(new Date(ifModifiedSince)).utc();
+    if (lastModifiedDate.isSameOrBefore(ifModifiedSinceDate)) {
+      return {
+        data: null,
+        headers,
+        status: HTTPStatus.NOT_MODIFIED,
+      };
+    }
 
     return {
-      data: { connectedRealms: realmsResult },
+      data,
       headers,
       status: HTTPStatus.OK,
     };
   }
 
-  public async queryGeneral(query: ParsedQs): Promise<IRequestResult<QueryGeneralResponse>> {
-    // parsing request params
-    const validateParamsResult = await validate(QueryParamRules, query);
-    if (validateParamsResult.error || !validateParamsResult.data) {
+  public async queryGeneral(
+    req: PlainRequest,
+    _res: Response,
+  ): Promise<IRequestResult<QueryGeneralResponse>> {
+    const validateQueryResult = await validate(QueryParamRules, req.query);
+    if (validateQueryResult.errors !== null) {
       return {
-        data: yupValidationErrorToResponse(validateParamsResult.error),
+        data: validationErrorsToResponse(validateQueryResult.errors),
         status: HTTPStatus.BAD_REQUEST,
       };
     }
 
-    // resolving pets-query message
     const results = await this.messengers.general.queryGeneral({
-      locale: validateParamsResult.data.locale as Locale,
-      query: validateParamsResult.data.query ?? "",
+      locale: validateQueryResult.body.locale,
+      query: validateQueryResult.body.query,
+      game_version: validateQueryResult.body.gameVersion,
     });
     if (results === null) {
       return {
@@ -144,75 +150,50 @@ export class DataController {
       };
     }
 
-    // formatting a response
-    const data: IQueryGeneralResponseData = {
-      items: results,
-    };
-
     return {
-      data,
+      data: {
+        items: results,
+      },
       status: HTTPStatus.OK,
     };
   }
 
   public async getUnmetDemand(
-    regionName: RegionName,
-    realmSlug: RealmSlug,
-    expansionName: ExpansionName,
-    locale: string,
+    req: PlainRequest,
+    _res: Response,
   ): Promise<IRequestResult<GetUnmetDemandResponse>> {
-    if (!Object.values(Locale).includes(locale as Locale)) {
-      const validationErrors: IValidationErrorResponse = {
-        error: "could not validate locale",
-      };
-
+    const validateParamsResult = await validate(
+      createSchema({
+        gameVersion: GameVersionRule,
+        regionName: RegionNameRule,
+        realmSlug: SlugRule,
+        expansionName: ExpansionNameRule,
+        locale: LocaleRule,
+      }),
+      req.params,
+    );
+    if (validateParamsResult.errors !== null) {
       return {
-        data: validationErrors,
         status: HTTPStatus.BAD_REQUEST,
+        data: validationErrorsToResponse(validateParamsResult.errors),
       };
     }
 
-    // resolving connected-realm
-    const resolveMessage = await this.messengers.regions.resolveConnectedRealm({
-      realm_slug: realmSlug,
-      region_name: regionName,
-    });
-    switch (resolveMessage.code) {
-    case code.ok:
-      break;
-    case code.notFound: {
-      const notFoundValidationErrors: IValidationErrorResponse = {
-        error: "could not resolve connected-realm",
-      };
-
-      return {
-        data: notFoundValidationErrors,
-        status: HTTPStatus.NOT_FOUND,
-      };
-    }
-    default: {
-      const defaultValidationErrors: IValidationErrorResponse = {
-        error: "could not resolve connected-realm",
-      };
-
-      return {
-        data: defaultValidationErrors,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-    }
-
-    const resolveResult = await resolveMessage.decode();
-    if (resolveResult === null) {
-      return {
-        data: null,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
+    const resolveRealmSlugResult = await resolveRealmSlug(
+      {
+        gameVersion: validateParamsResult.body.gameVersion,
+        regionName: validateParamsResult.body.regionName,
+        realmSlug: validateParamsResult.body.realmSlug,
+      },
+      this.messengers.regions,
+    );
+    if (resolveRealmSlugResult.errorResponse !== null) {
+      return resolveRealmSlugResult.errorResponse;
     }
 
     // gathering profession-pricelists
     const professionPricelists = await this.dbConn.getRepository(ProfessionPricelist).find({
-      where: { expansion: expansionName },
+      where: { expansion: validateParamsResult.body.expansionName },
     });
 
     // gathering included item-ids
@@ -231,7 +212,11 @@ export class DataController {
     );
 
     // gathering items
-    const itemsMsg = await this.messengers.items.items({ itemIds, locale: locale as Locale });
+    const itemsMsg = await this.messengers.items.items({
+      itemIds,
+      locale: validateParamsResult.body.locale,
+      game_version: validateParamsResult.body.gameVersion,
+    });
     if (itemsMsg.code !== code.ok) {
       return {
         data: { error: itemsMsg.error?.message },
@@ -247,12 +232,9 @@ export class DataController {
     }
 
     // gathering pricing data
-    const pricelistMessage = await this.messengers.auctions.getPriceList({
+    const pricelistMessage = await this.messengers.liveAuctions.priceList({
       item_ids: itemIds,
-      tuple: {
-        connected_realm_id: resolveResult.connected_realm.connected_realm.id,
-        region_name: regionName,
-      },
+      tuple: resolveRealmSlugResult.data.tuple,
     });
     if (pricelistMessage.code !== code.ok) {
       return {
@@ -291,54 +273,6 @@ export class DataController {
         professionPricelists: unmetProfessionPricelists.map(v => v.toJson()),
         unmetItemIds,
       },
-      status: HTTPStatus.OK,
-    };
-  }
-
-  public async queryAuctionStats(
-    regionName?: RegionName,
-    connectedRealmId?: ConnectedRealmId,
-  ): Promise<IRequestResult<QueryAuctionStatsResponse>> {
-    const params = ((): Partial<IRegionConnectedRealmTuple> => {
-      if (typeof regionName === "undefined" || regionName.length === 0) {
-        return {};
-      }
-
-      if (typeof connectedRealmId === "undefined") {
-        return { region_name: regionName };
-      }
-
-      return {
-        connected_realm_id: Number(connectedRealmId),
-        region_name: regionName,
-      };
-    })();
-
-    const msg = await this.messengers.stats.queryAuctionStats(params);
-    if (msg.code !== code.ok) {
-      if (msg.code === code.notFound) {
-        return {
-          data: null,
-          status: HTTPStatus.NOT_FOUND,
-        };
-      }
-
-      return {
-        data: null,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-
-    const auctionStatsResult = await msg.decode();
-    if (!auctionStatsResult) {
-      return {
-        data: null,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-
-    return {
-      data: auctionStatsResult,
       status: HTTPStatus.OK,
     };
   }
