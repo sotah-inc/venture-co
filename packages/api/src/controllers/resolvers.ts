@@ -5,21 +5,24 @@ import {
   IConnectedRealmModificationDates,
   IRegionComposite,
   IRegionVersionConnectedRealmTuple,
-  IShortItem, ItemId,
+  IShortItem,
+  ItemId,
   IValidationErrorResponse,
   Locale,
 } from "@sotah-inc/core";
-import { ItemsMessenger, LiveAuctionsMessenger, RegionsMessenger } from "@sotah-inc/server";
-import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
-import HTTPStatus from "http-status";
-import { z } from "zod";
-
 import {
   IGetAuctionsRequest,
   IGetAuctionsResponse,
   IGetItemsResponse,
   IGetPetsResponse,
-} from "../../../server/src";
+  ItemsMessenger,
+  LiveAuctionsMessenger,
+  RegionsMessenger,
+} from "@sotah-inc/server";
+import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
+import HTTPStatus from "http-status";
+import { z } from "zod";
+
 import { validate, validationErrorsToResponse } from "./validators";
 
 import { IRequestResult } from "./index";
