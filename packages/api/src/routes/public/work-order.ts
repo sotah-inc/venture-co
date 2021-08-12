@@ -12,12 +12,14 @@ export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
 
   router.get(
     "/work-orders/:gameVersion/:regionName/:realmSlug",
-    wrap(async (req: Request, res: Response) =>
-      handleResult(
+    wrap(async (req: Request, res: Response) => {
+      const user = req.user;
+
+      return handleResult(
         res,
         await controller.queryWorkOrders(req, res),
-      ),
-    ),
+      );
+    }),
   );
   router.get(
     "/work-orders/:gameVersion/:regionName/:realmSlug/prefill-item",

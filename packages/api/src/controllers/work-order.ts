@@ -6,7 +6,7 @@ import {
   QueryWorkOrdersResponse,
   UserLevel,
 } from "@sotah-inc/core";
-import { IMessengers, User, WorkOrder, WorkOrderRepository } from "@sotah-inc/server";
+import { IMessengers, WorkOrder, WorkOrderRepository } from "@sotah-inc/server";
 import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
 import { Response } from "express";
 import HTTPStatus from "http-status";
@@ -14,7 +14,13 @@ import { Connection } from "typeorm";
 
 import { resolveItem, resolveRealmSlug } from "./resolvers";
 import { validate, validationErrorsToResponse, Validator } from "./validators";
-import { CreateWorkOrderRequestRules, QueryWorkOrdersQueryRules } from "./validators/yup";
+import {
+  createSchema,
+  CreateWorkOrderRequestRules,
+  ItemIdRule,
+  LocaleRule,
+  QueryWorkOrdersQueryRules,
+} from "./validators/yup";
 
 import {
   AuthenticatedRequest,
@@ -22,7 +28,7 @@ import {
   EmptyRequestBodyResponse,
   EmptyStringMap,
   IRequestResult,
-  PlainRequest,
+  PlainRequest, UnauthenticatedUserResponse,
 } from "./index";
 
 export class WorkOrderController {
@@ -112,11 +118,36 @@ export class WorkOrderController {
       return resolveResult.errorResponse;
     }
 
+    const validateQueryResult = await validate(
+      createSchema({
+        locale: LocaleRule,
+      }),
+      req.query,
+    );
+    if (validateQueryResult.errors !== null) {
+      return {
+        status: HTTPStatus.BAD_REQUEST,
+        data: validationErrorsToResponse(validateQueryResult.errors),
+      };
+    }
+
+    const validateParamsResult = await validate(
+      createSchema({
+        itemId: ItemIdRule,
+      }),
+      { itemId: req.params.itemId },
+    );
+    if (validateParamsResult.errors !== null) {
+      return {
+        status: HTTPStatus.BAD_REQUEST,
+        data: validationErrorsToResponse(validateParamsResult.errors),
+      };
+    }
+
     const resolveItemResult = await resolveItem(
-      {
-        ...req.query,
-        gameVersion: resolveResult.data.gameVersion,
-      },
+      resolveResult.data.gameVersion,
+      validateQueryResult.body.locale,
+      validateParamsResult.body.itemId,
       this.messengers.items,
     );
     if (resolveItemResult.errorResponse !== null) {
@@ -166,8 +197,12 @@ export class WorkOrderController {
       return EmptyRequestBodyResponse;
     }
 
+    if (req.sotahUser === undefined) {
+      return UnauthenticatedUserResponse;
+    }
+
     const workOrder = new WorkOrder();
-    workOrder.user = req.user as User;
+    workOrder.user = req.sotahUser;
     workOrder.gameVersion = resolveResult.data.gameVersion;
     workOrder.regionName = resolveResult.data.regionName;
     workOrder.connectedRealmId = resolveResult.data.connectedRealm.connected_realm.id;

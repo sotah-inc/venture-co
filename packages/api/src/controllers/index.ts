@@ -1,5 +1,4 @@
 import { IValidationErrorResponse, UserLevel } from "@sotah-inc/core";
-import { User } from "@sotah-inc/server";
 import { Request, Response } from "express";
 import * as HTTPStatus from "http-status";
 import "passport";
@@ -24,30 +23,23 @@ export type StringMap = { [k: string]: string };
 
 export type EmptyStringMap = Record<string, never>;
 
-export type PlainRequest = IRequest<undefined, StringMap, StringMap, undefined>;
-
-export type RequestUser = User | undefined;
+export type PlainRequest = IRequest<undefined, StringMap, StringMap>;
 
 export type AuthenticatedRequest<
   TBody,
   TParams extends StringMap,
   TQuery extends StringMap
-> = IRequest<TBody, TParams, TQuery, User>;
+> = IRequest<TBody, TParams, TQuery>;
 
 export type UnauthenticatedRequest<
   TBody,
   TParams extends StringMap,
   TQuery extends StringMap
-> = IRequest<TBody, TParams, TQuery, User>;
+> = IRequest<TBody, TParams, TQuery>;
 
-export interface IRequest<
-  TBody,
-  TParams extends StringMap,
-  TQuery extends StringMap,
-  TUser extends RequestUser
-> extends Request {
+export interface IRequest<TBody, TParams extends StringMap, TQuery extends StringMap>
+  extends Request {
   body: TBody | undefined;
-  user: TUser;
   params: TParams;
   query: TQuery;
 }
@@ -87,10 +79,10 @@ export function Authenticator(requiredLevel: UserLevel) {
       TQuery extends StringMap,
       TResponse
     >(
-      req: IRequest<TRequest, TParams, TQuery, RequestUser>,
+      req: IRequest<TRequest, TParams, TQuery>,
       res: TResponse,
     ): Promise<IRequestResult<TResponse | IValidationErrorResponse>> {
-      const user = req.user;
+      const user = req.sotahUser;
       if (typeof user === "undefined") {
         return { data: { unauthorized: "Unauthenticated" }, status: HTTPStatus.UNAUTHORIZED };
       }

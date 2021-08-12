@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
     "baseUrl": "src",
-    "outDir": "build/dist"
+    "outDir": "build/dist",
+    "typeRoots": ["./types"]
   },
   "exclude": [
     "node_modules",
