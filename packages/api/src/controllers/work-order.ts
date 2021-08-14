@@ -23,11 +23,12 @@ import {
 } from "./validators/yup";
 
 import {
-  AuthenticatedRequest,
   Authenticator,
-  EmptyRequestBodyResponse,
+  EmptyRequestBodyResponse, IRequest,
   IRequestResult,
-  PlainRequest, StringMap, UnauthenticatedUserResponse,
+  PlainRequest,
+  StringMap,
+  UnauthenticatedUserResponse,
 } from "./index";
 
 export class WorkOrderController {
@@ -184,7 +185,7 @@ export class WorkOrderController {
   @Authenticator(UserLevel.Regular)
   @Validator(CreateWorkOrderRequestRules)
   public async createWorkOrder(
-    req: AuthenticatedRequest<ICreateWorkOrderRequest, StringMap>,
+    req: IRequest<ICreateWorkOrderRequest, StringMap>,
     _res: Response,
   ): Promise<IRequestResult<CreateWorkOrderResponse>> {
     const resolveResult = await resolveRealmSlug(req.params, this.messengers.regions);

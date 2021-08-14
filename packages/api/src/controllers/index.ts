@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import * as HTTPStatus from "http-status";
 import "passport";
 import { ParsedQs } from "qs";
+import { User as SotahUser } from "@sotah-inc/server";
 
 export { DataController } from "./data";
 
@@ -22,11 +23,9 @@ export const EmptyRequestBodyResponse: IRequestResult<IValidationErrorResponse> 
 
 export type StringMap = { [k: string]: string };
 
+export type User = SotahUser | undefined;
+
 export type PlainRequest = IRequest<undefined, StringMap>;
-
-export type AuthenticatedRequest<TBody, TParams extends StringMap> = IRequest<TBody, TParams>;
-
-export type UnauthenticatedRequest<TBody, TParams extends StringMap> = IRequest<TBody, TParams>;
 
 export interface IRequest<TBody, TParams extends StringMap> extends Request {
   body: TBody | undefined;
