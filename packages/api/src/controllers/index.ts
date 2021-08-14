@@ -2,6 +2,7 @@ import { IValidationErrorResponse, UserLevel } from "@sotah-inc/core";
 import { Request, Response } from "express";
 import * as HTTPStatus from "http-status";
 import "passport";
+import { ParsedQs } from "qs";
 
 export { DataController } from "./data";
 
@@ -21,27 +22,16 @@ export const EmptyRequestBodyResponse: IRequestResult<IValidationErrorResponse> 
 
 export type StringMap = { [k: string]: string };
 
-export type EmptyStringMap = Record<string, never>;
+export type PlainRequest = IRequest<undefined, StringMap>;
 
-export type PlainRequest = IRequest<undefined, StringMap, StringMap>;
+export type AuthenticatedRequest<TBody, TParams extends StringMap> = IRequest<TBody, TParams>;
 
-export type AuthenticatedRequest<
-  TBody,
-  TParams extends StringMap,
-  TQuery extends StringMap
-> = IRequest<TBody, TParams, TQuery>;
+export type UnauthenticatedRequest<TBody, TParams extends StringMap> = IRequest<TBody, TParams>;
 
-export type UnauthenticatedRequest<
-  TBody,
-  TParams extends StringMap,
-  TQuery extends StringMap
-> = IRequest<TBody, TParams, TQuery>;
-
-export interface IRequest<TBody, TParams extends StringMap, TQuery extends StringMap>
-  extends Request {
+export interface IRequest<TBody, TParams extends StringMap> extends Request {
   body: TBody | undefined;
   params: TParams;
-  query: TQuery;
+  query: ParsedQs;
 }
 
 export interface IRequestResult<TResponse> {
@@ -73,13 +63,8 @@ export function Authenticator(requiredLevel: UserLevel) {
     _propertyKey: string,
     descriptor: PropertyDescriptor,
   ): PropertyDescriptor {
-    descriptor.value = async function <
-      TRequest,
-      TParams extends StringMap,
-      TQuery extends StringMap,
-      TResponse
-    >(
-      req: IRequest<TRequest, TParams, TQuery>,
+    descriptor.value = async function <TRequest, TParams extends StringMap, TResponse>(
+      req: IRequest<TRequest, TParams>,
       res: TResponse,
     ): Promise<IRequestResult<TResponse | IValidationErrorResponse>> {
       const user = req.sotahUser;
