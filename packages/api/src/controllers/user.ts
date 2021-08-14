@@ -19,12 +19,12 @@ import { Validator } from "./validators";
 import { SaveLastPathRules, UserRequestBodyRules } from "./validators/yup";
 
 import {
-  AuthenticatedRequest,
   Authenticator,
   EmptyRequestBodyResponse,
-  EmptyStringMap,
-  IRequestResult,
-  UnauthenticatedRequest,
+  IRequest,
+  IRequestResult, PlainRequest,
+  StringMap,
+  UnauthenticatedOnly,
   UnauthenticatedUserResponse,
 } from "./index";
 
@@ -38,9 +38,10 @@ export class UserController {
     this.clientHost = clientHost;
   }
 
+  @UnauthenticatedOnly()
   @Validator(UserRequestBodyRules)
   public async createUser(
-    req: UnauthenticatedRequest<ICreateUserRequest, EmptyStringMap, EmptyStringMap>,
+    req: IRequest<ICreateUserRequest, StringMap>,
     _res: Response,
   ): Promise<IRequestResult<CreateUserResponse>> {
     if (req.body === undefined) {
@@ -80,14 +81,15 @@ export class UserController {
 
   @Authenticator(UserLevel.Unverified)
   public async verifyUser(
-    req: AuthenticatedRequest<undefined, EmptyStringMap, EmptyStringMap>,
+    req: IRequest<undefined, StringMap>,
     _res: Response,
   ): Promise<IRequestResult<VerifyUserResponse>> {
-    if (req.user === undefined) {
+    const user = req.sotahUser;
+    if (user === undefined) {
       return UnauthenticatedUserResponse;
     }
 
-    const getUserResult = await getUser(req.user.firebaseUid);
+    const getUserResult = await getUser(user.firebaseUid);
     if (getUserResult.errors !== null) {
       return {
         status: HTTPStatus.INTERNAL_SERVER_ERROR,
@@ -102,8 +104,8 @@ export class UserController {
     }
 
     if (getUserResult.user.emailVerified) {
-      req.user.level = UserLevel.Regular;
-      await this.dbConn.manager.save(req.user);
+      user.level = UserLevel.Regular;
+      await this.dbConn.manager.save(user);
 
       return {
         status: HTTPStatus.NO_CONTENT,
@@ -143,14 +145,17 @@ export class UserController {
   @Validator(SaveLastPathRules)
   @Authenticator(UserLevel.Unverified)
   public async saveLastPath(
-    req: AuthenticatedRequest<ISaveLastPathRequest, EmptyStringMap, EmptyStringMap>,
+    req: IRequest<ISaveLastPathRequest, StringMap>,
     _res: Response,
   ): Promise<IRequestResult<SaveLastPathResponse>> {
     if (req.body === undefined) {
       return EmptyRequestBodyResponse;
     }
 
-    const user = req.user;
+    const user = req.sotahUser;
+    if (user === undefined) {
+      return UnauthenticatedUserResponse;
+    }
 
     user.lastClientAsPath = req.body.lastClientAsPath;
     user.lastClientPathname = req.body.lastClientPathname;
@@ -162,19 +167,17 @@ export class UserController {
     };
   }
 
-  @Authenticator(UserLevel.Unverified)
+  @Authenticator(UserLevel.Unverified, { exact: true })
   public async verifyUserConfirm(
-    req: AuthenticatedRequest<undefined, EmptyStringMap, EmptyStringMap>,
+    req: PlainRequest,
     _res: Response,
   ): Promise<IRequestResult<null | IValidationErrorResponse>> {
-    if (req.user.level !== UserLevel.Unverified) {
-      return {
-        status: HTTPStatus.BAD_REQUEST,
-        data: { error: "user is already verified (local)" },
-      };
+    const user = req.sotahUser;
+    if (user === undefined) {
+      return UnauthenticatedUserResponse;
     }
 
-    const getUserResult = await getUser(req.user.firebaseUid);
+    const getUserResult = await getUser(user.firebaseUid);
     if (getUserResult.errors !== null) {
       return {
         status: HTTPStatus.INTERNAL_SERVER_ERROR,
@@ -194,7 +197,7 @@ export class UserController {
       };
     }
 
-    req.user.level = UserLevel.Regular;
+    user.level = UserLevel.Regular;
     await this.dbConn.manager.save(req.user);
 
     return {

@@ -56,7 +56,21 @@ export function handleResult<T>(res: Response, { data, headers, status }: IReque
   res.send(data);
 }
 
-export function Authenticator(requiredLevel: UserLevel) {
+export interface IAuthenticatorSettings {
+  exact: boolean;
+}
+
+const defaultAuthenticatorSettings: IAuthenticatorSettings = {
+  exact: true,
+};
+
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export function Authenticator(requiredLevel: UserLevel, opts?: Partial<IAuthenticatorSettings>) {
+  const settings: IAuthenticatorSettings = {
+    ...defaultAuthenticatorSettings,
+    ...opts,
+  };
+
   return function (
     _target: unknown,
     _propertyKey: string,
@@ -71,7 +85,29 @@ export function Authenticator(requiredLevel: UserLevel) {
         return { data: { unauthorized: "Unauthenticated" }, status: HTTPStatus.UNAUTHORIZED };
       }
 
-      if (user.level < requiredLevel) {
+      if (settings.exact ? user.level === requiredLevel : user.level < requiredLevel) {
+        return { data: { unauthorized: "Unauthorized" }, status: HTTPStatus.UNAUTHORIZED };
+      }
+
+      return descriptor.value(req, res);
+    };
+
+    return descriptor;
+  };
+}
+
+export function UnauthenticatedOnly() {
+  return function (
+    _target: unknown,
+    _propertyKey: string,
+    descriptor: PropertyDescriptor,
+  ): PropertyDescriptor {
+    descriptor.value = async function <TRequest, TParams extends StringMap, TResponse>(
+      req: IRequest<TRequest, TParams>,
+      res: TResponse,
+    ): Promise<IRequestResult<TResponse | IValidationErrorResponse>> {
+      const user = req.sotahUser;
+      if (typeof user !== "undefined") {
         return { data: { unauthorized: "Unauthorized" }, status: HTTPStatus.UNAUTHORIZED };
       }
 

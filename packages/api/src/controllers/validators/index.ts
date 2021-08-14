@@ -54,7 +54,7 @@ export interface IValidatorOptions<T> {
   bodySchema?: ValidatorSchema<T>;
 }
 
-export function Validator<TRequest, TParams extends StringMap, TQuery extends StringMap, TResponse>(
+export function Validator<TRequest, TParams extends StringMap, TResponse>(
   schema: ValidatorSchema<TRequest>,
 ) {
   return function (
@@ -63,7 +63,7 @@ export function Validator<TRequest, TParams extends StringMap, TQuery extends St
     descriptor: PropertyDescriptor,
   ): PropertyDescriptor {
     descriptor.value = async function (
-      req: IRequest<TRequest, TParams, TQuery>,
+      req: IRequest<TRequest, TParams>,
       res: Response,
     ): Promise<IRequestResult<TResponse | IValidationErrorResponse>> {
       const result = await validate(schema, req.body);
