@@ -70,7 +70,7 @@ export function auth(dbConn: Connection) {
       return;
     }
 
-    req.user = user;
+    req.sotahUser = user;
 
     next();
   };
