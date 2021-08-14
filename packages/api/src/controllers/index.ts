@@ -1,9 +1,9 @@
 import { IValidationErrorResponse, UserLevel } from "@sotah-inc/core";
+import { User as SotahUser } from "@sotah-inc/server";
 import { Request, Response } from "express";
 import * as HTTPStatus from "http-status";
 import "passport";
 import { ParsedQs } from "qs";
-import { User as SotahUser } from "@sotah-inc/server";
 
 export { DataController } from "./data";
 
