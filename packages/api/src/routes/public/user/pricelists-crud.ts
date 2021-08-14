@@ -22,10 +22,7 @@ export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
     "/",
     auth(dbConn),
     wrap(async (req: Request, res: Response) =>
-      handleResult(
-        res,
-        await controller.getPricelists(req.user as User, String(req.query.locale)),
-      ),
+      handleResult(res, await controller.getPricelists(req, res)),
     ),
   );
 
@@ -63,10 +60,7 @@ export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
     "/:id",
     auth(dbConn),
     wrap(async (req: Request, res: Response) =>
-      handleResult(
-        res,
-        await controller.deletePricelist(Number(req.params.id), req.user as User),
-      ),
+      handleResult(res, await controller.deletePricelist(Number(req.params.id), req.user as User)),
     ),
   );
 

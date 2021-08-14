@@ -1,6 +1,7 @@
 import {
   CreatePricelistResponse,
-  DeletePricelistResponse, GameVersion,
+  DeletePricelistResponse,
+  GameVersion,
   GetPricelistsResponse,
   GetUserPricelistResponse,
   ICreatePricelistRequest,
@@ -9,6 +10,7 @@ import {
   Locale,
   UpdatePricelistRequest,
   UpdatePricelistResponse,
+  UserLevel,
 } from "@sotah-inc/core";
 import {
   IMessengers,
@@ -18,12 +20,18 @@ import {
   User,
 } from "@sotah-inc/server";
 import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
+import { Response } from "express";
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
 
-import { IRequestResult } from "../index";
+import { Authenticator, IRequestResult, PlainRequest, UnauthenticatedUserResponse } from "../index";
 import { validate, validationErrorsToResponse } from "../validators";
-import { PricelistRequestBodyRules } from "../validators/yup";
+import {
+  createSchema,
+  GameVersionRule,
+  LocaleRule,
+  PricelistRequestBodyRules,
+} from "../validators/yup";
 
 export class PricelistCrudController {
   private dbConn: Connection;
@@ -68,19 +76,37 @@ export class PricelistCrudController {
     };
   }
 
+  @Authenticator(UserLevel.Regular)
   public async getPricelists(
-    user: User,
-    locale: string,
-    gameVersion: GameVersion,
+    req: PlainRequest,
+    _res: Response,
   ): Promise<IRequestResult<GetPricelistsResponse>> {
-    if (!Object.values(Locale).includes(locale as Locale)) {
-      const validationErrors: IValidationErrorResponse = {
-        error: "could not validate locale",
-      };
+    const user = req.sotahUser;
+    if (user === undefined) {
+      return UnauthenticatedUserResponse;
+    }
 
+    const validateQueryResult = await validate(
+      createSchema({
+        locale: LocaleRule,
+      }),
+      req.query,
+    );
+    if (validateQueryResult.errors !== null) {
       return {
-        data: validationErrors,
         status: HTTPStatus.BAD_REQUEST,
+        data: validationErrorsToResponse(validateQueryResult.errors),
+      };
+    }
+
+    const validateParamsResult = await validate(
+      createSchema({ gameVersion: GameVersionRule }),
+      req.params,
+    );
+    if (validateParamsResult.errors !== null) {
+      return {
+        status: HTTPStatus.BAD_REQUEST,
+        data: validationErrorsToResponse(validateParamsResult.errors),
       };
     }
 
@@ -106,8 +132,8 @@ export class PricelistCrudController {
     }, []);
     const itemsMessage = await this.messengers.items.items({
       itemIds,
-      locale: locale as Locale,
-      game_version: gameVersion,
+      locale: validateQueryResult.body.locale,
+      game_version: validateParamsResult.body.gameVersion,
     });
     if (itemsMessage.code !== code.ok) {
       return {
