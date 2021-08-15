@@ -10,12 +10,14 @@ import { Connection } from "typeorm";
 
 import { DataController, handleResult } from "../../controllers";
 import { ProfessionsController } from "../../controllers/data/professions";
+import { ProfessionPricelistController } from "../../controllers/profession-pricelist";
 import { getRouter as getQueryAuctionStatsRouter } from "./data/query-auction-stats";
 
 export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
   const router = Router();
   const controller = new DataController(messengers, dbConn);
   const professionsController = new ProfessionsController(messengers);
+  const professionPricelistController = new ProfessionPricelistController(messengers, dbConn);
 
   router.use("/query-auction-stats", getQueryAuctionStatsRouter(messengers));
 
@@ -192,14 +194,7 @@ export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
   router.get(
     "/profession-pricelists/:professionId/:expansion/:pricelist_slug",
     wrap(async (req: Request, res: Response) => {
-      const professionId = req.params.professionId;
-      const expansionName = req.params.expansion;
-      const pricelistSlug = req.params.pricelist_slug;
-
-      handleResult(
-        res,
-        await controller.getProfessionPricelist(Number(professionId), expansionName, pricelistSlug),
-      );
+      handleResult(res, await professionPricelistController.getProfessionPricelist(req, res));
     }),
   );
   router.get(
