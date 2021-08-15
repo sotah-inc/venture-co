@@ -1,143 +1,116 @@
-import {
-  IGetItemPriceHistoriesRequest,
-  IGetPricelistRequest,
-  IGetUnmetDemandRequest,
-} from "@sotah-inc/core";
 import { IMessengers } from "@sotah-inc/server";
 import { wrap } from "async-middleware";
 import { Request, Response, Router } from "express";
 import { Connection } from "typeorm";
 
 import { DataController, handleResult } from "../../controllers";
+import { AuctionsController } from "../../controllers/auctions";
+import { BootController } from "../../controllers/boot";
 import { ProfessionsController } from "../../controllers/data/professions";
+import { ItemsController } from "../../controllers/items";
+import { PetsController } from "../../controllers/pets";
+import { PostsController } from "../../controllers/posts";
 import { ProfessionPricelistController } from "../../controllers/profession-pricelist";
+import { TokenHistoryController } from "../../controllers/token-history";
 import { getRouter as getQueryAuctionStatsRouter } from "./data/query-auction-stats";
 
 export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
   const router = Router();
-  const controller = new DataController(messengers, dbConn);
+  const dataController = new DataController(messengers, dbConn);
   const professionsController = new ProfessionsController(messengers);
   const professionPricelistController = new ProfessionPricelistController(messengers, dbConn);
+  const itemsController = new ItemsController(messengers);
+  const petsController = new PetsController(messengers);
+  const auctionsController = new AuctionsController(messengers, dbConn);
+  const tokenHistoryController = new TokenHistoryController(messengers);
+  const bootController = new BootController(messengers);
+  const postsController = new PostsController(dbConn);
 
   router.use("/query-auction-stats", getQueryAuctionStatsRouter(messengers));
 
   router.get(
     "/posts",
-    wrap(async (_req: Request, res: Response) => handleResult(res, await controller.getPosts())),
+    wrap(async (req: Request, res: Response) =>
+      handleResult(res, await postsController.getPosts(req, res)),
+    ),
   );
   router.get(
     "/posts/:post_slug",
-    wrap(async (req: Request, res: Response) => {
-      const postSlug = req.params.post_slug;
-
-      handleResult(res, await controller.getPost(postSlug));
-    }),
+    wrap(async (req: Request, res: Response) =>
+      handleResult(res, await postsController.getPost(req, res)),
+    ),
   );
   router.get(
     "/boot",
-    wrap(async (_req: Request, res: Response) => handleResult(res, await controller.getBoot())),
+    wrap(async (req: Request, res: Response) =>
+      handleResult(res, await bootController.getBoot(req, res)),
+    ),
   );
   router.get(
     "/item-classes",
-    wrap(async (_req: Request, res: Response) =>
-      handleResult(res, await controller.getItemClasses()),
+    wrap(async (req: Request, res: Response) =>
+      handleResult(res, await itemsController.getItemClasses(req, res)),
     ),
   );
   router.get(
     "/connected-realms/:regionName",
-    wrap(async (req: Request, res: Response) => {
-      const regionName = req.params.regionName;
-
-      handleResult(res, await controller.getConnectedRealms(regionName));
-    }),
+    wrap(async (req: Request, res: Response) =>
+      handleResult(res, await dataController.getConnectedRealms(req, res)),
+    ),
   );
   router.get(
     "/token-history",
-    wrap(async (_req: Request, res: Response) => {
-      handleResult(res, await controller.getTokenHistory());
-    }),
+    wrap(async (req: Request, res: Response) =>
+      handleResult(res, await tokenHistoryController.getTokenHistory(req, res)),
+    ),
   );
   router.get(
     "/token-history/:regionName",
-    wrap(async (req: Request, res: Response) => {
-      const regionName = req.params.regionName;
-
-      handleResult(res, await controller.getRegionTokenHistory(regionName));
-    }),
+    wrap(async (req: Request, res: Response) =>
+      handleResult(res, await tokenHistoryController.getRegionTokenHistory(req, res)),
+    ),
   );
   router.get(
     "/auctions/:regionName/:realmSlug",
-    wrap(async (req: Request, res: Response) => {
-      const regionName = req.params.regionName;
-      const realmSlug = req.params.realmSlug;
-
-      handleResult(
-        res,
-        await controller.getAuctions(
-          regionName,
-          realmSlug,
-          req.query,
-          req.headers["if-modified-since"],
-        ),
-      );
-    }),
+    wrap(async (req: Request, res: Response) =>
+      handleResult(res, await auctionsController.getAuctions(req, res)),
+    ),
   );
   router.get(
     "/items",
     wrap(async (req: Request, res: Response) => {
-      handleResult(res, await controller.queryItems(req.query));
+      handleResult(res, await itemsController.queryItems(req, res));
     }),
   );
   router.get(
     "/item/:itemId",
-    wrap(async (req: Request, res: Response) => {
-      const itemId = Number(req.params.itemId);
-
-      handleResult(res, await controller.getItem(itemId, String(req.query.locale)));
-    }),
+    wrap(async (req: Request, res: Response) =>
+      handleResult(res, await itemsController.getItem(req, res)),
+    ),
   );
   router.get(
     "/pets",
     wrap(async (req: Request, res: Response) => {
-      handleResult(res, await controller.queryPets(req.query));
+      handleResult(res, await petsController.queryPets(req, res));
     }),
   );
   router.get(
     "/query-general",
     wrap(async (req: Request, res: Response) => {
-      handleResult(res, await controller.queryGeneral(req.query));
+      handleResult(res, await dataController.queryGeneral(req, res));
     }),
   );
   router.post(
     "/price-list/:regionName/:realmSlug",
-    wrap(async (req: Request, res: Response) => {
-      const regionName = req.params.regionName;
-      const realmSlug = req.params.realmSlug;
-      const itemIds = (req.body as IGetPricelistRequest).item_ids;
-
-      handleResult(
-        res,
-        await controller.getPricelist(regionName, realmSlug, itemIds, String(req.query.locale)),
-      );
-    }),
+    wrap(async (req: Request, res: Response) =>
+      handleResult(res, await itemsController.getPricelist(req, res)),
+    ),
   );
   router.post(
     "/item-price-histories/:regionName/:realmSlug",
-    wrap(async (req: Request, res: Response) => {
-      const regionName = req.params.regionName;
-      const realmSlug = req.params.realmSlug;
-      const itemIds = (req.body as IGetItemPriceHistoriesRequest).item_ids;
-
-      handleResult(
-        res,
-        await controller.getItemPriceHistories(
-          regionName,
-          realmSlug,
-          itemIds,
-          String(req.query.locale),
-        ),
-      );
-    }),
+    wrap(async (req: Request, res: Response) =>
+      handleResult(res, await itemsController.getItemPriceHistories(req, res)),
+    ),
   );
   router.get(
     "/recipe-price-histories/:regionName/:realmSlug/:recipeId",
@@ -160,7 +133,7 @@ export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
   router.post(
     "/unmet-demand/:regionName/:realmSlug",
     wrap(async (req: Request, res: Response) =>
-      handleResult(res, await controller.getUnmetDemand(req, res)),
+      handleResult(res, await dataController.getUnmetDemand(req, res)),
     ),
   );
   router.get(
