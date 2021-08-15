@@ -159,37 +159,15 @@ export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
   );
   router.post(
     "/unmet-demand/:regionName/:realmSlug",
-    wrap(async (req: Request, res: Response) => {
-      const regionName = req.params.regionName;
-      const realmSlug = req.params.realmSlug;
-      const expansionName = (req.body as IGetUnmetDemandRequest).expansion;
-
-      handleResult(
-        res,
-        await controller.getUnmetDemand(
-          regionName,
-          realmSlug,
-          expansionName,
-          String(req.query.locale),
-        ),
-      );
-    }),
+    wrap(async (req: Request, res: Response) =>
+      handleResult(res, await controller.getUnmetDemand(req, res)),
+    ),
   );
   router.get(
     "/profession-pricelists/:professionId/:expansion",
-    wrap(async (req: Request, res: Response) => {
-      const professionId = req.params.professionId;
-      const expansionName = req.params.expansion;
-
-      handleResult(
-        res,
-        await controller.getProfessionPricelists(
-          Number(professionId),
-          expansionName,
-          String(req.query.locale),
-        ),
-      );
-    }),
+    wrap(async (req: Request, res: Response) =>
+      handleResult(res, await professionPricelistController.getProfessionPricelists(req, res)),
+    ),
   );
   router.get(
     "/profession-pricelists/:professionId/:expansion/:pricelist_slug",
