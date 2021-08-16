@@ -16,7 +16,15 @@ import { Response } from "express";
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
 
-import { Authenticator, IRequest, IRequestResult } from "../index";
+import {
+  Authenticator,
+  EmptyRequestBodyResponse,
+  IRequest,
+  IRequestResult,
+  PlainRequest,
+  StringMap,
+  UnauthenticatedUserResponse,
+} from "../index";
 import { Validator } from "../validators";
 import { ProfessionPricelistRequestBodyRules } from "../validators/yup";
 
@@ -27,24 +35,30 @@ export class ProfessionPricelistsCrudController {
     this.dbConn = dbConn;
   }
 
-  @Authenticator<ICreateProfessionPricelistRequest, CreateProfessionPricelistResponse>(
-    UserLevel.Admin,
-  )
-  @Validator<ICreateProfessionPricelistRequest, CreateProfessionPricelistResponse>(
-    ProfessionPricelistRequestBodyRules,
-  )
+  @Authenticator(UserLevel.Admin)
+  @Validator(ProfessionPricelistRequestBodyRules)
   public async createProfessionPricelist(
-    req: IRequest<ICreateProfessionPricelistRequest>,
+    req: IRequest<ICreateProfessionPricelistRequest, StringMap>,
     _res: Response,
   ): Promise<IRequestResult<CreateProfessionPricelistResponse>> {
+    const body = req.body;
+    if (body === undefined) {
+      return EmptyRequestBodyResponse;
+    }
+
+    const user = req.sotahUser;
+    if (user === undefined) {
+      return UnauthenticatedUserResponse;
+    }
+
     const pricelist = new Pricelist();
-    pricelist.user = req.user as User;
-    pricelist.name = req.body.pricelist.name;
-    pricelist.slug = req.body.pricelist.slug;
+    pricelist.user = user;
+    pricelist.name = body.pricelist.name;
+    pricelist.slug = body.pricelist.slug;
     await this.dbConn.manager.save(pricelist);
 
     const entries = await Promise.all(
-      req.body.entries.map(v => {
+      body.entries.map(v => {
         const entry = new PricelistEntry();
         entry.pricelist = pricelist;
         entry.itemId = v.item_id;
@@ -56,8 +70,8 @@ export class ProfessionPricelistsCrudController {
 
     const professionPricelist = new ProfessionPricelist();
     professionPricelist.pricelist = pricelist;
-    professionPricelist.professionId = req.body.profession_id;
-    professionPricelist.expansion = req.body.expansion_name;
+    professionPricelist.professionId = body.profession_id;
+    professionPricelist.expansion = body.expansion_name;
     await this.dbConn.manager.save(professionPricelist);
 
     return {
@@ -70,9 +84,9 @@ export class ProfessionPricelistsCrudController {
     };
   }
 
-  @Authenticator<null, DeleteProfessionPricelistResponse>(UserLevel.Admin)
+  @Authenticator(UserLevel.Admin)
   public async deleteProfessionPricelist(
-    req: IRequest<null>,
+    req: PlainRequest,
     _res: Response,
   ): Promise<IRequestResult<DeleteProfessionPricelistResponse>> {
     const professionPricelist = await this.dbConn

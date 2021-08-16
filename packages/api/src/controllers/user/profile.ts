@@ -1,24 +1,17 @@
-import {
-  IUpdateProfileRequest,
-  IValidationErrorResponse,
-  UpdateProfileResponse,
-  UserLevel,
-} from "@sotah-inc/core";
+import { IUpdateProfileRequest, UpdateProfileResponse, UserLevel } from "@sotah-inc/core";
 import { Response } from "express";
 import * as HTTPStatus from "http-status";
 
-import { Authenticator, IRequest, IRequestResult } from "../index";
+import { Authenticator, IRequest, IRequestResult, StringMap } from "../index";
 
 export class ProfileController {
-  @Authenticator<IUpdateProfileRequest, UpdateProfileResponse>(UserLevel.Regular)
+  @Authenticator(UserLevel.Regular)
   public async updateProfile(
-    _req: IRequest<IUpdateProfileRequest>,
+    _req: IRequest<IUpdateProfileRequest, StringMap>,
     _res: Response,
   ): Promise<IRequestResult<UpdateProfileResponse>> {
-    const data: IValidationErrorResponse = {};
-
     return {
-      data,
+      data: {},
       status: HTTPStatus.OK,
     };
   }
