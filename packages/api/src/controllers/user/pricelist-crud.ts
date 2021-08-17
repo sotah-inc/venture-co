@@ -22,16 +22,16 @@ import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
 
 import {
-  Authenticator,
+  Authenticator, EmptyRequestBodyResponse,
   IRequest,
   IRequestResult,
   PlainRequest,
   StringMap,
   UnauthenticatedUserResponse,
 } from "../index";
-import { validate, validationErrorsToResponse } from "../validators";
+import { validate, validationErrorsToResponse, Validator } from "../validators";
 import {
-  createSchema,
+  createSchema, CreateWorkOrderRequestRules,
   GameVersionRule,
   LocaleRule,
   PricelistIdRule,
@@ -202,6 +202,7 @@ export class PricelistCrudController {
   }
 
   @Authenticator(UserLevel.Regular)
+  @Validator(PricelistRequestBodyRules)
   public async updatePricelist(
     req: IRequest<UpdatePricelistRequest, StringMap>,
     _res: Response,
@@ -224,12 +225,9 @@ export class PricelistCrudController {
       };
     }
 
-    const validateBodyResult = await validate(PricelistRequestBodyRules, req.body);
-    if (validateBodyResult.errors !== null) {
-      return {
-        status: HTTPStatus.BAD_REQUEST,
-        data: validationErrorsToResponse(validateBodyResult.errors),
-      };
+    const body = req.body;
+    if (body === undefined) {
+      return EmptyRequestBodyResponse;
     }
 
     const userId = user.id;
@@ -254,15 +252,15 @@ export class PricelistCrudController {
     }
 
     // saving the pricelist
-    pricelist.name = validateBodyResult.body.pricelist.name;
-    pricelist.slug = validateBodyResult.body.pricelist.slug;
+    pricelist.name = body.pricelist.name;
+    pricelist.slug = body.pricelist.slug;
     await this.dbConn.manager.save(pricelist);
 
     // misc
     const entries = pricelist.entries ?? [];
 
     // creating new entries
-    const newRequestEntries = validateBodyResult.body.entries.filter(v => v.id === -1);
+    const newRequestEntries = body.entries.filter(v => v.id === -1);
     const newEntries = await Promise.all(
       newRequestEntries.map(v => {
         const entry = new PricelistEntry();
@@ -275,7 +273,7 @@ export class PricelistCrudController {
     );
 
     // updating existing entries
-    const receivedRequestEntries = validateBodyResult.body.entries.filter(v => v.id !== -1);
+    const receivedRequestEntries = body.entries.filter(v => v.id !== -1);
     let receivedEntries: PricelistEntry[] = [];
     if (receivedRequestEntries.length > 0) {
       receivedEntries = await this.dbConn
