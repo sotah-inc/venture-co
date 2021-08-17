@@ -23,6 +23,8 @@ import { ValidateResult } from "../index";
 
 export const ProfessionIdRule = yup.number().required();
 
+export const PricelistIdRule = yup.number().required();
+
 export const ExpansionNameRule = yup.string().required();
 
 export const RegionNameRule = yup.string().required();

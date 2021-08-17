@@ -1,13 +1,10 @@
 import {
   CreatePricelistResponse,
   DeletePricelistResponse,
-  GameVersion,
   GetPricelistsResponse,
   GetUserPricelistResponse,
   ICreatePricelistRequest,
   ItemId,
-  IValidationErrorResponse,
-  Locale,
   UpdatePricelistRequest,
   UpdatePricelistResponse,
   UserLevel,
@@ -24,12 +21,20 @@ import { Response } from "express";
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
 
-import { Authenticator, IRequestResult, PlainRequest, UnauthenticatedUserResponse } from "../index";
+import {
+  Authenticator,
+  IRequest,
+  IRequestResult,
+  PlainRequest,
+  StringMap,
+  UnauthenticatedUserResponse,
+} from "../index";
 import { validate, validationErrorsToResponse } from "../validators";
 import {
   createSchema,
   GameVersionRule,
   LocaleRule,
+  PricelistIdRule,
   PricelistRequestBodyRules,
 } from "../validators/yup";
 
@@ -196,15 +201,51 @@ export class PricelistCrudController {
     };
   }
 
+  @Authenticator(UserLevel.Regular)
   public async updatePricelist(
-    id: number,
-    user: User,
-    body: UpdatePricelistRequest,
+    req: IRequest<UpdatePricelistRequest, StringMap>,
+    _res: Response,
   ): Promise<IRequestResult<UpdatePricelistResponse>> {
+    const user = req.sotahUser;
+    if (user === undefined) {
+      return UnauthenticatedUserResponse;
+    }
+
+    const validateParamsResult = await validate(
+      createSchema({
+        id: PricelistIdRule,
+      }),
+      req.params,
+    );
+    if (validateParamsResult.errors !== null) {
+      return {
+        status: HTTPStatus.BAD_REQUEST,
+        data: validationErrorsToResponse(validateParamsResult.errors),
+      };
+    }
+
+    const validateBodyResult = await validate(PricelistRequestBodyRules, req.body);
+    if (validateBodyResult.errors !== null) {
+      return {
+        status: HTTPStatus.BAD_REQUEST,
+        data: validationErrorsToResponse(validateBodyResult.errors),
+      };
+    }
+
+    const userId = user.id;
+    if (userId === undefined) {
+      return {
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+        data: {
+          error: "user did not have an id",
+        },
+      };
+    }
+
     // resolving the pricelist
     const pricelist = await this.dbConn
       .getCustomRepository(PricelistRepository)
-      .getBelongingToUserById(id, user.id ?? "-1");
+      .getBelongingToUserById(validateParamsResult.body.id, userId);
     if (pricelist === null) {
       return {
         data: null,
@@ -212,25 +253,16 @@ export class PricelistCrudController {
       };
     }
 
-    // validating the request body
-    const result = await validate(PricelistRequestBodyRules, body);
-    if (result.error || !result.data) {
-      return {
-        data: yupValidationErrorToResponse(result.error),
-        status: HTTPStatus.BAD_REQUEST,
-      };
-    }
-
     // saving the pricelist
-    pricelist.name = result.data.pricelist.name;
-    pricelist.slug = result.data.pricelist.slug;
+    pricelist.name = validateBodyResult.body.pricelist.name;
+    pricelist.slug = validateBodyResult.body.pricelist.slug;
     await this.dbConn.manager.save(pricelist);
 
     // misc
     const entries = pricelist.entries ?? [];
 
     // creating new entries
-    const newRequestEntries = result.data.entries.filter(v => v.id === -1);
+    const newRequestEntries = validateBodyResult.body.entries.filter(v => v.id === -1);
     const newEntries = await Promise.all(
       newRequestEntries.map(v => {
         const entry = new PricelistEntry();
@@ -243,7 +275,7 @@ export class PricelistCrudController {
     );
 
     // updating existing entries
-    const receivedRequestEntries = result.data.entries.filter(v => v.id !== -1);
+    const receivedRequestEntries = validateBodyResult.body.entries.filter(v => v.id !== -1);
     let receivedEntries: PricelistEntry[] = [];
     if (receivedRequestEntries.length > 0) {
       receivedEntries = await this.dbConn
