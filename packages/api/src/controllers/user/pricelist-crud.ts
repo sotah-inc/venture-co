@@ -9,20 +9,15 @@ import {
   UpdatePricelistResponse,
   UserLevel,
 } from "@sotah-inc/core";
-import {
-  IMessengers,
-  Pricelist,
-  PricelistEntry,
-  PricelistRepository,
-  User,
-} from "@sotah-inc/server";
+import { IMessengers, Pricelist, PricelistEntry, PricelistRepository } from "@sotah-inc/server";
 import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
 import { Response } from "express";
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
 
 import {
-  Authenticator, EmptyRequestBodyResponse,
+  Authenticator,
+  EmptyRequestBodyResponse,
   IRequest,
   IRequestResult,
   PlainRequest,
@@ -31,11 +26,12 @@ import {
 } from "../index";
 import { validate, validationErrorsToResponse, Validator } from "../validators";
 import {
-  createSchema, CreateWorkOrderRequestRules,
+  createSchema,
   GameVersionRule,
   LocaleRule,
   PricelistIdRule,
   PricelistRequestBodyRules,
+  SlugRule,
 } from "../validators/yup";
 
 export class PricelistCrudController {
@@ -48,25 +44,29 @@ export class PricelistCrudController {
     this.messengers = messengers;
   }
 
+  @Authenticator(UserLevel.Regular)
+  @Validator(PricelistRequestBodyRules)
   public async createPricelist(
-    user: User,
-    body: ICreatePricelistRequest,
+    req: IRequest<ICreatePricelistRequest, StringMap>,
+    _res: Response,
   ): Promise<IRequestResult<CreatePricelistResponse>> {
-    const result = await validate(PricelistRequestBodyRules, body);
-    if (result.errors !== null || result.body === undefined) {
-      return {
-        data: validationErrorsToResponse(result.errors || []),
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
+    const body = req.body;
+    if (body === undefined) {
+      return EmptyRequestBodyResponse;
+    }
+
+    const user = req.sotahUser;
+    if (user === undefined) {
+      return UnauthenticatedUserResponse;
     }
 
     const pricelist = new Pricelist();
     pricelist.user = user;
-    pricelist.name = result.body.pricelist.name;
-    pricelist.slug = result.body.pricelist.slug;
+    pricelist.name = body.pricelist.name;
+    pricelist.slug = body.pricelist.slug;
     await this.dbConn.manager.save(pricelist);
     const entries = await Promise.all(
-      result.body.entries.map(v => {
+      body.entries.map(v => {
         const entry = new PricelistEntry();
         entry.pricelist = pricelist;
         entry.itemId = v.item_id;
@@ -162,12 +162,38 @@ export class PricelistCrudController {
   }
 
   public async getPricelist(
-    id: number,
-    user: User,
+    req: PlainRequest,
+    _res: Response,
   ): Promise<IRequestResult<GetUserPricelistResponse>> {
+    const validateParamsResult = await validate(
+      createSchema({
+        id: PricelistIdRule,
+      }),
+      req.params,
+    );
+    if (validateParamsResult.errors !== null) {
+      return {
+        status: HTTPStatus.BAD_REQUEST,
+        data: validationErrorsToResponse(validateParamsResult.errors),
+      };
+    }
+
+    const user = req.sotahUser;
+    if (user === undefined) {
+      return UnauthenticatedUserResponse;
+    }
+
+    const userId = user.id;
+    if (userId === undefined) {
+      return {
+        status: HTTPStatus.BAD_REQUEST,
+        data: { error: "user-id was undefined" },
+      };
+    }
+
     const pricelist = await this.dbConn
       .getCustomRepository(PricelistRepository)
-      .getBelongingToUserById(id, user.id ?? "-1");
+      .getBelongingToUserById(validateParamsResult.body.id, userId);
     if (pricelist === null) {
       return {
         data: null,
@@ -181,13 +207,39 @@ export class PricelistCrudController {
     };
   }
 
+  @Authenticator(UserLevel.Regular)
   public async getPricelistFromSlug(
-    user: User,
-    slug: string,
+    req: PlainRequest,
+    _res: Response,
   ): Promise<IRequestResult<GetUserPricelistResponse>> {
+    const validateParamsResult = await validate(
+      createSchema({
+        slug: SlugRule,
+      }),
+      req.params,
+    );
+    if (validateParamsResult.errors !== null) {
+      return {
+        status: HTTPStatus.BAD_REQUEST,
+        data: validationErrorsToResponse(validateParamsResult.errors),
+      };
+    }
+
+    const user = req.sotahUser;
+    if (user === undefined) {
+      return UnauthenticatedUserResponse;
+    }
+
+    const userId = user.id;
+    if (userId === undefined) {
+      return {
+        status: HTTPStatus.BAD_REQUEST,
+        data: { error: "user-id was undefined" },
+      };
+    }
     const pricelist = await this.dbConn
       .getCustomRepository(PricelistRepository)
-      .getFromPricelistSlug(user.id ?? "-1", slug);
+      .getFromPricelistSlug(userId, validateParamsResult.body.slug);
     if (pricelist === null) {
       return {
         data: null,
@@ -309,14 +361,41 @@ export class PricelistCrudController {
     };
   }
 
+  @Authenticator(UserLevel.Regular)
   public async deletePricelist(
-    id: number,
-    user: User,
+    req: PlainRequest,
+    _res: Response,
   ): Promise<IRequestResult<DeletePricelistResponse>> {
+    const validateParamsResult = await validate(
+      createSchema({
+        id: PricelistIdRule,
+      }),
+      req.params,
+    );
+    if (validateParamsResult.errors !== null) {
+      return {
+        status: HTTPStatus.BAD_REQUEST,
+        data: validationErrorsToResponse(validateParamsResult.errors),
+      };
+    }
+
+    const user = req.sotahUser;
+    if (user === undefined) {
+      return UnauthenticatedUserResponse;
+    }
+
+    const userId = user.id;
+    if (userId === undefined) {
+      return {
+        status: HTTPStatus.BAD_REQUEST,
+        data: { error: "user-id was undefined" },
+      };
+    }
+
     // resolving the pricelist
     const removed = await this.dbConn
       .getCustomRepository(PricelistRepository)
-      .removeByUserId(id, user.id ?? "-1");
+      .removeByUserId(validateParamsResult.body.id, userId);
     if (!removed) {
       return {
         data: null,
