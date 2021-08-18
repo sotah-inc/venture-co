@@ -32,7 +32,10 @@ export interface IGetUserPricelistResponseData {
   pricelist: IPricelistJson;
 }
 
-export type GetUserPricelistResponse = IGetUserPricelistResponseData | null;
+export type GetUserPricelistResponse =
+  | IGetUserPricelistResponseData
+  | IValidationErrorResponse
+  | null;
 
 export type UpdatePricelistRequest = ICreatePricelistRequest;
 
@@ -41,4 +44,4 @@ export type UpdatePricelistResponse =
   | IValidationErrorResponse
   | null;
 
-export type DeletePricelistResponse = null;
+export type DeletePricelistResponse = IValidationErrorResponse | null;
