@@ -7,7 +7,7 @@ import yup from "yup";
 
 import { validate, validationErrorsToResponse } from "./validators";
 
-import { IRequestResult, PlainRequest, UnauthenticatedRequest } from "./index";
+import { IRequestResult, PlainRequest } from "./index";
 
 export class PostsController {
   private dbConn: Connection;
@@ -17,7 +17,7 @@ export class PostsController {
   }
 
   public async getPost(
-    req: UnauthenticatedRequest<undefined, { slug: string }>,
+    req: PlainRequest,
     _res: Response,
   ): Promise<IRequestResult<GetPostResponse>> {
     const validateResult = await validate(

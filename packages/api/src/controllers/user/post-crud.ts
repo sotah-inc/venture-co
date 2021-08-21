@@ -1,24 +1,19 @@
 import {
   CreatePostResponse,
   DeletePostResponse,
-  ICreatePostRequest,
-  IValidationErrorResponse,
   UpdatePostRequest,
   UpdatePostResponse,
   UserLevel,
 } from "@sotah-inc/core";
-import { Post, PostRepository, User } from "@sotah-inc/server";
+import { Post, PostRepository } from "@sotah-inc/server";
 import { Response } from "express";
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
 
-import {
-  FullPostRequestBodyRules,
-  PostRequestBodyRules,
-  validate,
-  yupValidationErrorToResponse,
-} from "../../lib/validator-rules";
-import { Authenticator, IRequest, IRequestResult, Validator } from "../index";
+import { Authenticator, IRequest, IRequestResult, PlainRequest, StringMap } from "../index";
+import { resolveUser, resolveWriteablePost } from "../resolvers";
+import { validate, validationErrorsToResponse } from "../validators";
+import { FullPostRequestBodyRules } from "../validators/yup";
 
 export class PostCrudController {
   private dbConn: Connection;
@@ -27,29 +22,33 @@ export class PostCrudController {
     this.dbConn = dbConn;
   }
 
-  @Authenticator<ICreatePostRequest, CreatePostResponse>(UserLevel.Admin)
-  @Validator<ICreatePostRequest, CreatePostResponse>(PostRequestBodyRules)
+  @Authenticator(UserLevel.Admin)
   public async createPost(
-    req: IRequest<ICreatePostRequest>,
+    req: PlainRequest,
     _res: Response,
   ): Promise<IRequestResult<CreatePostResponse>> {
-    const result = await validate(
+    const resolveUserResult = resolveUser(req.sotahUser);
+    if (resolveUserResult.errorResponse !== null) {
+      return resolveUserResult.errorResponse;
+    }
+
+    const validateBodyResult = await validate(
       FullPostRequestBodyRules(this.dbConn.getCustomRepository(PostRepository)),
-      req,
+      req.body,
     );
-    if (result.error || !result.data) {
+    if (validateBodyResult.errors !== null) {
       return {
-        data: yupValidationErrorToResponse(result.error),
+        data: validationErrorsToResponse(validateBodyResult.errors),
         status: HTTPStatus.BAD_REQUEST,
       };
     }
 
     const post = new Post();
-    post.title = result.data.title;
-    post.slug = result.data.slug;
-    post.user = req.user as User;
-    post.body = result.data.body;
-    post.summary = result.data.summary;
+    post.title = validateBodyResult.body.title;
+    post.slug = validateBodyResult.body.slug;
+    post.user = resolveUserResult.data.user;
+    post.body = validateBodyResult.body.body;
+    post.summary = validateBodyResult.body.summary;
     await this.dbConn.manager.save(post);
 
     return {
@@ -58,53 +57,39 @@ export class PostCrudController {
     };
   }
 
-  @Authenticator<UpdatePostRequest, UpdatePostResponse>(UserLevel.Admin)
-  @Validator<UpdatePostRequest, UpdatePostResponse>(PostRequestBodyRules)
+  @Authenticator(UserLevel.Admin)
   public async updatePost(
-    req: IRequest<UpdatePostRequest>,
+    req: IRequest<UpdatePostRequest, StringMap>,
     _res: Response,
   ): Promise<IRequestResult<UpdatePostResponse>> {
-    const post = await this.dbConn
-      .getCustomRepository(PostRepository)
-      .getWithUser(Number(req.params.post_id));
-    if (post === null) {
-      const validationResponse: IValidationErrorResponse = {
-        notFound: "Not Found",
-      };
-
-      return {
-        data: validationResponse,
-        status: HTTPStatus.NOT_FOUND,
-      };
-    }
-
-    const user = req.user as User;
-    if (!post.user || post.user.id !== user.id) {
-      const validationResponse: IValidationErrorResponse = {
-        unauthorized: "Unauthorized",
-      };
-
-      return {
-        data: validationResponse,
-        status: HTTPStatus.UNAUTHORIZED,
-      };
-    }
-
-    const result = await validate(
-      FullPostRequestBodyRules(this.dbConn.getCustomRepository(PostRepository), post.slug),
-      req,
+    const resolveWriteablePostResult = await resolveWriteablePost(
+      this.dbConn,
+      req.params,
+      req.sotahUser,
     );
-    if (result.error || !result.data) {
+    if (resolveWriteablePostResult.errorResponse !== null) {
+      return resolveWriteablePostResult.errorResponse;
+    }
+
+    const validateBodyResult = await validate(
+      FullPostRequestBodyRules(
+        this.dbConn.getCustomRepository(PostRepository),
+        resolveWriteablePostResult.data.slug,
+      ),
+      req.body,
+    );
+    if (validateBodyResult.errors !== null) {
       return {
-        data: yupValidationErrorToResponse(result.error),
+        data: validationErrorsToResponse(validateBodyResult.errors),
         status: HTTPStatus.BAD_REQUEST,
       };
     }
 
-    post.title = result.data.title;
-    post.slug = result.data.slug;
-    post.body = result.data.body;
-    post.summary = result.data.summary;
+    const post = resolveWriteablePostResult.data;
+    post.title = validateBodyResult.body.title;
+    post.slug = validateBodyResult.body.slug;
+    post.body = validateBodyResult.body.body;
+    post.summary = validateBodyResult.body.summary;
     await this.dbConn.manager.save(post);
 
     return {
@@ -113,38 +98,21 @@ export class PostCrudController {
     };
   }
 
-  @Authenticator<null, DeletePostResponse>(UserLevel.Admin)
+  @Authenticator(UserLevel.Admin)
   public async deletePost(
-    req: IRequest<null>,
+    req: PlainRequest,
     _res: Response,
   ): Promise<IRequestResult<DeletePostResponse>> {
-    const user = req.user as User;
-    const post = await this.dbConn
-      .getCustomRepository(PostRepository)
-      .getWithUser(Number(req.params.post_id));
-    if (post === null) {
-      const validationResponse: IValidationErrorResponse = {
-        notFound: "Not Found",
-      };
-
-      return {
-        data: validationResponse,
-        status: HTTPStatus.NOT_FOUND,
-      };
+    const resolveWriteablePostResult = await resolveWriteablePost(
+      this.dbConn,
+      req.params,
+      req.sotahUser,
+    );
+    if (resolveWriteablePostResult.errorResponse !== null) {
+      return resolveWriteablePostResult.errorResponse;
     }
 
-    if (!post.user || post.user.id !== user.id) {
-      const validationResponse: IValidationErrorResponse = {
-        unauthorized: "Unauthorized",
-      };
-
-      return {
-        data: validationResponse,
-        status: HTTPStatus.UNAUTHORIZED,
-      };
-    }
-
-    await this.dbConn.manager.remove(post);
+    await this.dbConn.manager.remove(resolveWriteablePostResult.data);
 
     return {
       data: null,

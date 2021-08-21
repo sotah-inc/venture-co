@@ -17,16 +17,20 @@ import {
   IGetPetsResponse,
   ItemsMessenger,
   LiveAuctionsMessenger,
+  Post,
+  PostRepository,
   RegionsMessenger,
   User,
 } from "@sotah-inc/server";
 import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
 import HTTPStatus from "http-status";
+import { Connection } from "typeorm";
 import { z } from "zod";
 
 import { validate, validationErrorsToResponse } from "./validators";
+import { createSchema, PostIdRule } from "./validators/yup";
 
-import { IRequestResult, UnauthenticatedUserResponse } from "./index";
+import { IRequestResult, StringMap, UnauthenticatedUserResponse } from "./index";
 
 type ResolveParams = {
   [key: string]: string;
@@ -40,6 +44,83 @@ export type ResolveResult<TData> =
   | {
       errorResponse: IRequestResult<IValidationErrorResponse>;
     };
+
+export async function resolveWriteablePost(
+  dbConn: Connection,
+  params: StringMap,
+  user: User | undefined,
+): Promise<ResolveResult<Post>> {
+  const resolveUserIdResult = resolveUserId(user);
+  if (resolveUserIdResult.errorResponse !== null) {
+    return {
+      errorResponse: resolveUserIdResult.errorResponse,
+    };
+  }
+
+  const validateParamsResult = await validate(
+    createSchema({
+      post_id: PostIdRule,
+    }),
+    params,
+  );
+  if (validateParamsResult.errors !== null) {
+    return {
+      errorResponse: {
+        status: HTTPStatus.BAD_REQUEST,
+        data: validationErrorsToResponse(validateParamsResult.errors),
+      },
+    };
+  }
+
+  const post = await dbConn
+    .getCustomRepository(PostRepository)
+    .getWithUser(validateParamsResult.body.post_id);
+  if (post === null) {
+    const validationResponse: IValidationErrorResponse = {
+      notFound: "Not Found",
+    };
+
+    return {
+      errorResponse: {
+        data: validationResponse,
+        status: HTTPStatus.NOT_FOUND,
+      },
+    };
+  }
+
+  if (post.user === undefined) {
+    return {
+      errorResponse: {
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+        data: { error: "post user was undefined" },
+      },
+    };
+  }
+  if (post.user.id === undefined) {
+    return {
+      errorResponse: {
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+        data: { error: "post user-id was undefined" },
+      },
+    };
+  }
+
+  if (post.user.id !== resolveUserIdResult.data) {
+    return {
+      errorResponse: {
+        data: {
+          unauthorized: "Unauthorized",
+        },
+        status: HTTPStatus.UNAUTHORIZED,
+      },
+    };
+  }
+
+  return {
+    data: post,
+    errorResponse: null,
+  };
+}
 
 export function resolveUserId(user: User | undefined): ResolveResult<string> {
   if (user === undefined) {

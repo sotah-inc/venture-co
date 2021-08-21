@@ -25,6 +25,8 @@ export const ProfessionIdRule = yup.number().required();
 
 export const PricelistIdRule = yup.number().required();
 
+export const PostIdRule = yup.number().required();
+
 export const ExpansionNameRule = yup.string().required();
 
 export const RegionNameRule = yup.string().required();
@@ -200,10 +202,15 @@ export const PostRequestBodyRules = createSchema<ICreatePostRequest>(PostRequest
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function FullPostRequestBodyRules(repo: PostRepository, exceptSlug?: string) {
   return yup
-    .object<Pick<ICreatePostRequest, "slug">>({
-      slug: FullSlugRule(repo, exceptSlug),
-    })
-    .concat(yup.object(PostRequestBodyDefinition));
+    .object(PostRequestBodyDefinition)
+    .concat(
+      yup
+        .object<Pick<ICreatePostRequest, "slug">>({
+          slug: FullSlugRule(repo, exceptSlug),
+        })
+        .required(),
+    )
+    .required();
 }
 
 export const AuctionsQueryParamsRules = createSchema<IGetAuctionsRequest>({
