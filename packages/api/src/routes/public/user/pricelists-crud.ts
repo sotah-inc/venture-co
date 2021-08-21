@@ -1,4 +1,4 @@
-import { auth, IMessengers, User } from "@sotah-inc/server";
+import { auth, IMessengers } from "@sotah-inc/server";
 import { wrap } from "async-middleware";
 import { Request, Response, Router } from "express";
 import { Connection } from "typeorm";
@@ -14,7 +14,7 @@ export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
     "/",
     auth(dbConn),
     wrap(async (req: Request, res: Response) =>
-      handleResult(res, await controller.createPricelist(req.user as User, req.body)),
+      handleResult(res, await controller.createPricelist(req, res)),
     ),
   );
 
@@ -30,7 +30,7 @@ export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
     "/:id([0-9]+)",
     auth(dbConn),
     wrap(async (req: Request, res: Response) =>
-      handleResult(res, await controller.getPricelist(Number(req.params.id), req.user as User)),
+      handleResult(res, await controller.getPricelist(req, res)),
     ),
   );
 
@@ -40,7 +40,7 @@ export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
     wrap(async (req: Request, res: Response) =>
       handleResult(
         res,
-        await controller.getPricelistFromSlug(req.user as User, req.params.pricelist_slug),
+        await controller.getPricelistFromSlug(req, res),
       ),
     ),
   );
@@ -51,7 +51,7 @@ export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
     wrap(async (req: Request, res: Response) =>
       handleResult(
         res,
-        await controller.updatePricelist(Number(req.params.id), req.user as User, req.body),
+        await controller.updatePricelist(req, res),
       ),
     ),
   );
@@ -60,7 +60,7 @@ export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
     "/:id",
     auth(dbConn),
     wrap(async (req: Request, res: Response) =>
-      handleResult(res, await controller.deletePricelist(Number(req.params.id), req.user as User)),
+      handleResult(res, await controller.deletePricelist(req, res)),
     ),
   );
 
