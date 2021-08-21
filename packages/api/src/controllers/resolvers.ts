@@ -18,6 +18,7 @@ import {
   ItemsMessenger,
   LiveAuctionsMessenger,
   RegionsMessenger,
+  User,
 } from "@sotah-inc/server";
 import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
 import HTTPStatus from "http-status";
@@ -25,7 +26,7 @@ import { z } from "zod";
 
 import { validate, validationErrorsToResponse } from "./validators";
 
-import { IRequestResult } from "./index";
+import { IRequestResult, UnauthenticatedUserResponse } from "./index";
 
 type ResolveParams = {
   [key: string]: string;
@@ -39,6 +40,53 @@ export type ResolveResult<TData> =
   | {
       errorResponse: IRequestResult<IValidationErrorResponse>;
     };
+
+export function resolveUserId(user: User | undefined): ResolveResult<string> {
+  if (user === undefined) {
+    return { errorResponse: UnauthenticatedUserResponse };
+  }
+
+  const userId = user.id;
+  if (userId === undefined) {
+    return {
+      errorResponse: {
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+        data: { error: "user-id was undefined" },
+      },
+    };
+  }
+
+  return { data: userId, errorResponse: null };
+}
+
+export interface IResolveUserResult {
+  user: User;
+  id: string;
+}
+
+export function resolveUser(user: User | undefined): ResolveResult<IResolveUserResult> {
+  if (user === undefined) {
+    return { errorResponse: UnauthenticatedUserResponse };
+  }
+
+  const userId = user.id;
+  if (userId === undefined) {
+    return {
+      errorResponse: {
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+        data: { error: "user-id was undefined" },
+      },
+    };
+  }
+
+  return {
+    data: {
+      user,
+      id: userId,
+    },
+    errorResponse: null,
+  };
+}
 
 export async function resolveRegionComposites(
   regions: IConfigRegion[],

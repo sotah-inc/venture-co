@@ -6,13 +6,22 @@ import {
   UpdatePreferencesResponse,
   UserLevel,
 } from "@sotah-inc/core";
-import { Preference, PreferenceRepository, User } from "@sotah-inc/server";
+import { Preference, PreferenceRepository } from "@sotah-inc/server";
 import { Response } from "express";
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
 
-import { PreferenceRules } from "../../lib/validator-rules";
-import { Authenticator, IRequest, IRequestResult, Validator } from "../index";
+import {
+  Authenticator,
+  EmptyRequestBodyResponse,
+  IRequest,
+  IRequestResult,
+  PlainRequest,
+  StringMap,
+} from "../index";
+import { resolveUser, resolveUserId } from "../resolvers";
+import { Validator } from "../validators";
+import { PreferenceRules } from "../validators/yup";
 
 export class PreferencesController {
   private dbConn: Connection;
@@ -21,16 +30,19 @@ export class PreferencesController {
     this.dbConn = dbConn;
   }
 
-  @Authenticator<null, GetPreferencesResponse>(UserLevel.Unverified)
+  @Authenticator(UserLevel.Unverified)
   public async getPreferences(
-    req: IRequest<null>,
+    req: PlainRequest,
     _res: Response,
   ): Promise<IRequestResult<GetPreferencesResponse>> {
-    const user = req.user as User;
+    const resolveUserIdResult = resolveUserId(req.sotahUser);
+    if (resolveUserIdResult.errorResponse !== null) {
+      return resolveUserIdResult.errorResponse;
+    }
+
     const preference = await this.dbConn
       .getCustomRepository(PreferenceRepository)
-      .getFromUserId(user.id ?? "-1");
-
+      .getFromUserId(resolveUserIdResult.data);
     if (preference === null) {
       return {
         data: { notFound: "Not Found" },
@@ -44,17 +56,26 @@ export class PreferencesController {
     };
   }
 
-  @Authenticator<ICreatePreferencesRequest, CreatePreferencesResponse>(UserLevel.Unverified)
-  @Validator<ICreatePreferencesRequest, CreatePreferencesResponse>(PreferenceRules)
+  @Authenticator(UserLevel.Unverified)
+  @Validator(PreferenceRules)
   public async createPreferences(
-    req: IRequest<ICreatePreferencesRequest>,
+    req: IRequest<ICreatePreferencesRequest, StringMap>,
     _res: Response,
   ): Promise<IRequestResult<CreatePreferencesResponse>> {
-    const user = req.user as User;
+    const resolveUserResult = resolveUser(req.sotahUser);
+    if (resolveUserResult.errorResponse !== null) {
+      return resolveUserResult.errorResponse;
+    }
+
+    const body = req.body;
+    if (body === undefined) {
+      return EmptyRequestBodyResponse;
+    }
+
     const hasPreference: boolean = await (async () => {
       const foundPreference = await this.dbConn
         .getCustomRepository(PreferenceRepository)
-        .getFromUserId(user.id ?? "-1");
+        .getFromUserId(resolveUserResult.data.id);
       return foundPreference !== null;
     })();
     if (hasPreference) {
@@ -65,9 +86,9 @@ export class PreferencesController {
     }
 
     const preference = new Preference();
-    preference.user = user;
-    preference.currentRealm = req.body.current_realm;
-    preference.currentRegion = req.body.current_region;
+    preference.user = resolveUserResult.data.user;
+    preference.currentRealm = body.current_realm;
+    preference.currentRegion = body.current_region;
     await this.dbConn.manager.save(preference);
 
     return {
@@ -76,16 +97,25 @@ export class PreferencesController {
     };
   }
 
-  @Authenticator<UpdatePreferencesRequest, UpdatePreferencesResponse>(UserLevel.Unverified)
-  @Validator<UpdatePreferencesRequest, UpdatePreferencesResponse>(PreferenceRules)
+  @Authenticator(UserLevel.Unverified)
+  @Validator(PreferenceRules)
   public async updatePreferences(
-    req: IRequest<UpdatePreferencesRequest>,
+    req: IRequest<UpdatePreferencesRequest, StringMap>,
     _res: Response,
   ): Promise<IRequestResult<UpdatePreferencesResponse>> {
-    const user = req.user as User;
+    const resolveUserIdResult = resolveUserId(req.sotahUser);
+    if (resolveUserIdResult.errorResponse !== null) {
+      return resolveUserIdResult.errorResponse;
+    }
+
+    const body = req.body;
+    if (body === undefined) {
+      return EmptyRequestBodyResponse;
+    }
+
     const preference = await this.dbConn
       .getCustomRepository(PreferenceRepository)
-      .getFromUserId(user.id ?? "-1");
+      .getFromUserId(resolveUserIdResult.data);
 
     if (preference === null) {
       return {
@@ -94,8 +124,8 @@ export class PreferencesController {
       };
     }
 
-    preference.currentRealm = req.body.current_realm;
-    preference.currentRegion = req.body.current_region;
+    preference.currentRealm = body.current_realm;
+    preference.currentRegion = body.current_region;
     await this.dbConn.manager.save(preference);
 
     return {
