@@ -60,6 +60,7 @@ export interface IResolveAllItemsRecipesResponseItem {
 
 export type ResolveAllItemsRecipesResponse = IResolveResponse<{
   itemRecipes: IResolveAllItemsRecipesResponseItem[];
+  recipeIds: RecipeId[];
 }>
 
 export type ResolveRecipesResponse = IResolveResponse<{

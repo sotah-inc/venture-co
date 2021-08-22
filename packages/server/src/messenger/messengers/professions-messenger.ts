@@ -321,8 +321,26 @@ export class ProfessionsMessenger extends BaseMessenger {
       [],
     );
 
+    const recipeIds = ((): RecipeId[] => {
+      const recipeIdSet = new Set<RecipeId>();
+      for (const resolveItem of itemRecipes) {
+        for (const itemIdString of Object.keys(resolveItem.response)) {
+          const foundRecipeIds = resolveItem.response[Number(itemIdString)];
+          if (foundRecipeIds === null || foundRecipeIds === undefined) {
+            continue;
+          }
+
+          for (const recipeId of foundRecipeIds) {
+            recipeIdSet.add(recipeId);
+          }
+        }
+      }
+
+      return Array.from(recipeIdSet);
+    })();
+
     return {
-      data: { itemRecipes },
+      data: { itemRecipes, recipeIds },
       code: code.ok,
       error: null,
     };
