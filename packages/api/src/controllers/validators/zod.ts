@@ -10,7 +10,7 @@ import { IValidateResultError, ValidateResult } from "../index";
 export const LocaleRule = z.nativeEnum(Locale);
 
 export const ItemsRecipesQuery = z.object({
-  locale: z.string(),
+  locale: LocaleRule,
   itemIds: z.array(z.string()),
   kind: z.nativeEnum(ItemRecipeKind),
 });

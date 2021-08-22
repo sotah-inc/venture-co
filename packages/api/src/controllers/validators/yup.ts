@@ -226,7 +226,6 @@ export const AuctionsQueryParamsRules = createSchema<IGetAuctionsRequest>({
 export const QueryParamRules = createSchema({
   locale: LocaleRule,
   query: yup.string(),
-  gameVersion: GameVersionRule,
 });
 
 export const QueryWorkOrdersQueryRules = createSchema({

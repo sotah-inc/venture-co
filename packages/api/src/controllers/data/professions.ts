@@ -2,7 +2,8 @@ import {
   GetItemsRecipesResponse,
   GetRecipePriceHistoriesResponse,
   IShortSkillTier,
-  IShortSkillTierCategory, ItemsVendorPricesResponse,
+  IShortSkillTierCategory,
+  ItemsVendorPricesResponse,
   IValidationErrorResponse,
   Locale,
   ProfessionId,
@@ -17,12 +18,14 @@ import {
 } from "@sotah-inc/core";
 import { IMessengers } from "@sotah-inc/server";
 import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
+import { Response } from "express";
 import HTTPStatus from "http-status";
 import { ParsedQs } from "qs";
 
-import { ItemsRecipesQuery, ItemsVendorPricesQuery } from "../../lib/next-validator-rules";
-import { QueryParamRules, validate, yupValidationErrorToResponse } from "../../lib/validator-rules";
-import { IRequestResult } from "../index";
+import { IRequestResult, PlainRequest } from "../index";
+import { validate, validationErrorsToResponse } from "../validators";
+import { createSchema, GameVersionRule, QueryParamRules } from "../validators/yup";
+import { ItemsRecipesQuery, ItemsVendorPricesQuery } from "../validators/zod";
 
 export class ProfessionsController {
   private messengers: IMessengers;
@@ -182,7 +185,7 @@ export class ProfessionsController {
       };
     }
 
-    const professionsMsg = await this.messengers.professions.getProfessions(locale as Locale);
+    const professionsMsg = await this.messengers.professions.professions(locale as Locale);
     if (professionsMsg.code !== code.ok) {
       return {
         data: null,
@@ -303,20 +306,34 @@ export class ProfessionsController {
     };
   }
 
-  public async queryRecipes(query: ParsedQs): Promise<IRequestResult<QueryRecipesResponse>> {
-    // parsing request params
-    const validateParamsResult = await validate(QueryParamRules, query);
-    if (validateParamsResult.error || !validateParamsResult.data) {
+  public async queryRecipes(
+    req: PlainRequest,
+    _res: Response,
+  ): Promise<IRequestResult<QueryRecipesResponse>> {
+    const validateQueryResult = await validate(QueryParamRules, req.query);
+    if (validateQueryResult.errors !== null) {
       return {
-        data: yupValidationErrorToResponse(validateParamsResult.error),
         status: HTTPStatus.BAD_REQUEST,
+        data: validationErrorsToResponse(validateQueryResult.errors),
+      };
+    }
+
+    const validateParamsResult = await validate(
+      createSchema({ gameVersion: GameVersionRule }),
+      req.params,
+    );
+    if (validateParamsResult.errors !== null) {
+      return {
+        status: HTTPStatus.BAD_REQUEST,
+        data: validationErrorsToResponse(validateParamsResult.errors),
       };
     }
 
     // resolving items-query message
     const results = await this.messengers.professions.resolveQueryRecipes({
-      locale: validateParamsResult.data.locale as Locale,
-      query: validateParamsResult.data.query ?? "",
+      locale: validateQueryResult.body.locale,
+      query: validateQueryResult.body.query,
+      game_version: validateParamsResult.body.gameVersion,
     });
     if (results.code !== code.ok || results.data === null) {
       return {
@@ -331,32 +348,21 @@ export class ProfessionsController {
     };
   }
 
-  public async getItemsRecipes(query: ParsedQs): Promise<IRequestResult<GetItemsRecipesResponse>> {
-    // parsing query
-    const result = ItemsRecipesQuery.safeParse(query);
-    if (!result.success) {
+  public async getItemsRecipes(
+    req: PlainRequest,
+    _res: Response,
+  ): Promise<IRequestResult<GetItemsRecipesResponse>> {
+    const validateQueryResult = await validate(ItemsRecipesQuery, req.query);
+    if (validateQueryResult.errors !== null) {
       return {
         status: HTTPStatus.BAD_REQUEST,
-        data: null,
+        data: validationErrorsToResponse(validateQueryResult.errors),
       };
     }
-
-    // validating locale
-    if (!Object.values(Locale).includes(result.data.locale as Locale)) {
-      const validationErrors: IValidationErrorResponse = {
-        error: "could not validate locale",
-      };
-
-      return {
-        data: validationErrors,
-        status: HTTPStatus.BAD_REQUEST,
-      };
-    }
-    const locale = result.data.locale as Locale;
 
     // resolving items-recipe-ids
     const itemRecipeIdsResult = await this.messengers.professions.resolveAllItemRecipes(
-      result.data.itemIds.map(Number),
+      validateQueryResult.body.itemIds.map(Number),
     );
     if (itemRecipeIdsResult.code !== code.ok || itemRecipeIdsResult.data === null) {
       return {
@@ -365,25 +371,7 @@ export class ProfessionsController {
       };
     }
 
-    // resolving recipes
-    const recipeIds = ((): RecipeId[] => {
-      const recipeIdSet = new Set<RecipeId>();
-      for (const resolveItem of itemRecipeIdsResult.data.itemRecipes) {
-        for (const itemIdString of Object.keys(resolveItem.response)) {
-          const foundRecipeIds = resolveItem.response[Number(itemIdString)];
-          if (foundRecipeIds === null || foundRecipeIds === undefined) {
-            continue;
-          }
-
-          for (const recipeId of foundRecipeIds) {
-            recipeIdSet.add(recipeId);
-          }
-        }
-      }
-
-      return Array.from(recipeIdSet);
-    })();
-    if (recipeIds.length === 0) {
+    if (itemRecipeIdsResult.data.recipeIds.length === 0) {
       return {
         data: {
           itemsRecipes: [],
@@ -396,8 +384,8 @@ export class ProfessionsController {
     }
 
     const resolveRecipesResult = await this.messengers.professions.resolveRecipes(
-      recipeIds,
-      locale,
+      itemRecipeIdsResult.data.recipeIds,
+      validateQueryResult.body.locale,
     );
     if (resolveRecipesResult.code !== code.ok || resolveRecipesResult.data === null) {
       return {
@@ -420,19 +408,33 @@ export class ProfessionsController {
     };
   }
 
-  public async vendorPrices(query: ParsedQs): Promise<IRequestResult<ItemsVendorPricesResponse>> {
-    // parsing query
-    const result = ItemsVendorPricesQuery.safeParse(query);
-    if (!result.success) {
+  public async vendorPrices(
+    req: PlainRequest,
+    _res: Response,
+  ): Promise<IRequestResult<ItemsVendorPricesResponse>> {
+    const validateParamsResult = await validate(
+      createSchema({ gameVersion: GameVersionRule }),
+      req.params,
+    );
+    if (validateParamsResult.errors !== null) {
       return {
         status: HTTPStatus.BAD_REQUEST,
-        data: null,
+        data: validationErrorsToResponse(validateParamsResult.errors),
+      };
+    }
+
+    const validateQueryResult = await validate(ItemsVendorPricesQuery, req.query);
+    if (validateQueryResult.errors !== null) {
+      return {
+        status: HTTPStatus.BAD_REQUEST,
+        data: validationErrorsToResponse(validateQueryResult.errors),
       };
     }
 
     // gathering item-vendor-prices
-    const vendorPricesMessage = await this.messengers.professions.itemsVendorPrices({
-      item_ids: result.data.itemIds.map(Number),
+    const vendorPricesMessage = await this.messengers.items.itemsVendorPrices({
+      item_ids: validateQueryResult.body.itemIds.map(Number),
+      game_version: validateParamsResult.body.gameVersion,
     });
     if (vendorPricesMessage.code !== code.ok) {
       return {

@@ -192,10 +192,10 @@ export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
     }),
   );
   router.get(
-    "/items-vendor-prices",
-    wrap(async (req: Request, res: Response) => {
-      handleResult(res, await professionsController.vendorPrices(req.query));
-    }),
+    "/items-vendor-prices/:gameVersion",
+    wrap(async (req: Request, res: Response) =>
+      handleResult(res, await professionsController.vendorPrices(req, res)),
+    ),
   );
 
   return router;
