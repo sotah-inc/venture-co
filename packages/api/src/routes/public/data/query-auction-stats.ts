@@ -11,25 +11,20 @@ export function getRouter(messengers: IMessengers): Router {
 
   router.get(
     "/:regionName/:connectedRealmId",
-    wrap(async (req: Request, res: Response) => {
-      const regionName = req.params.regionName;
-      const connectedRealmId = Number(req.params.connectedRealmId);
-
-      handleResult(res, await controller.queryAuctionStats(regionName, connectedRealmId));
-    }),
+    wrap(async (req: Request, res: Response) =>
+      handleResult(res, await controller.queryAuctionStats(req, res)),
+    ),
   );
   router.get(
     "/:regionName",
-    wrap(async (req: Request, res: Response) => {
-      const regionName = req.params.regionName;
-
-      handleResult(res, await controller.queryAuctionStats(regionName));
-    }),
+    wrap(async (req: Request, res: Response) =>
+      handleResult(res, await controller.queryAuctionStats(req, res)),
+    ),
   );
   router.get(
     "/",
-    wrap(async (_req: Request, res: Response) =>
-      handleResult(res, await controller.queryAuctionStats()),
+    wrap(async (req: Request, res: Response) =>
+      handleResult(res, await controller.queryAuctionStats(req, res)),
     ),
   );
 
