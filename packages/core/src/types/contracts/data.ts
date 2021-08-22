@@ -166,7 +166,10 @@ export interface IQueryAuctionStatsResponseData {
   [key: number]: IQueryAuctionStatsItem | undefined;
 }
 
-export type QueryAuctionStatsResponse = IQueryAuctionStatsResponseData | null;
+export type QueryAuctionStatsResponse =
+  | IQueryAuctionStatsResponseData
+  | IValidationErrorResponse
+  | null;
 
 export type GetProfessionPricelistResponse =
   | IProfessionPricelistJson
