@@ -1,14 +1,11 @@
-import {
-  ConnectedRealmId,
-  IRegionConnectedRealmTuple,
-  QueryAuctionStatsResponse,
-  RegionName,
-} from "@sotah-inc/core";
+import { QueryAuctionStatsResponse } from "@sotah-inc/core";
 import { IMessengers } from "@sotah-inc/server";
 import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
+import { Response } from "express";
 import HTTPStatus from "http-status";
 
-import { IRequestResult } from "../index";
+import { IRequestResult, PlainRequest } from "../index";
+import { resolveRealmSlug } from "../resolvers";
 
 export class QueryAuctionStatsController {
   private messengers: IMessengers;
@@ -18,25 +15,15 @@ export class QueryAuctionStatsController {
   }
 
   public async queryAuctionStats(
-    regionName?: RegionName,
-    connectedRealmId?: ConnectedRealmId,
+    req: PlainRequest,
+    _res: Response,
   ): Promise<IRequestResult<QueryAuctionStatsResponse>> {
-    const params = ((): Partial<IRegionConnectedRealmTuple> => {
-      if (typeof regionName === "undefined" || regionName.length === 0) {
-        return {};
-      }
+    const resolveRealmSlugResult = await resolveRealmSlug(req.params, this.messengers.regions);
+    if (resolveRealmSlugResult.errorResponse !== null) {
+      return resolveRealmSlugResult.errorResponse;
+    }
 
-      if (typeof connectedRealmId === "undefined") {
-        return { region_name: regionName };
-      }
-
-      return {
-        connected_realm_id: Number(connectedRealmId),
-        region_name: regionName,
-      };
-    })();
-
-    const msg = await this.messengers.auctions.queryAuctionStats(params);
+    const msg = await this.messengers.stats.queryAuctionStats(resolveRealmSlugResult.data.tuple);
     if (msg.code !== code.ok) {
       if (msg.code === code.notFound) {
         return {
