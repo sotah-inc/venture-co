@@ -182,13 +182,13 @@ export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
   router.get(
     "/recipes",
     wrap(async (req: Request, res: Response) => {
-      handleResult(res, await professionsController.queryRecipes(req.query));
+      handleResult(res, await professionsController.queryRecipes(req, res));
     }),
   );
   router.get(
     "/items-recipes",
     wrap(async (req: Request, res: Response) => {
-      handleResult(res, await professionsController.getItemsRecipes(req.query));
+      handleResult(res, await professionsController.getItemsRecipes(req, res));
     }),
   );
   router.get(

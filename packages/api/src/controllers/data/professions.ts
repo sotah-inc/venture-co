@@ -4,27 +4,28 @@ import {
   IShortSkillTier,
   IShortSkillTierCategory,
   ItemsVendorPricesResponse,
-  IValidationErrorResponse,
-  Locale,
-  ProfessionId,
   ProfessionsResponse,
   QueryRecipesResponse,
-  RealmSlug,
-  RecipeId,
   RecipeResponse,
-  RegionName,
-  SkillTierId,
   SkillTierResponse,
 } from "@sotah-inc/core";
 import { IMessengers } from "@sotah-inc/server";
 import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
 import { Response } from "express";
 import HTTPStatus from "http-status";
-import { ParsedQs } from "qs";
 
 import { IRequestResult, PlainRequest } from "../index";
+import { resolveRealmSlug } from "../resolvers";
 import { validate, validationErrorsToResponse } from "../validators";
-import { createSchema, GameVersionRule, QueryParamRules } from "../validators/yup";
+import {
+  createSchema,
+  GameVersionRule,
+  LocaleRule,
+  ProfessionIdRule,
+  QueryParamRules,
+  RecipeIdRule,
+  SkillTierIdRule,
+} from "../validators/yup";
 import { ItemsRecipesQuery, ItemsVendorPricesQuery } from "../validators/zod";
 
 export class ProfessionsController {
@@ -35,61 +36,39 @@ export class ProfessionsController {
   }
 
   public async getRecipePriceHistories(
-    regionName: RegionName,
-    realmSlug: RealmSlug,
-    recipeId: RecipeId,
-    locale: string,
+    req: PlainRequest,
+    _res: Response,
   ): Promise<IRequestResult<GetRecipePriceHistoriesResponse>> {
-    if (!Object.values(Locale).includes(locale as Locale)) {
-      const validationErrors: IValidationErrorResponse = {
-        error: "could not validate locale",
-      };
+    const resolveRealmSlugResult = await resolveRealmSlug(req.params, this.messengers.regions);
+    if (resolveRealmSlugResult.errorResponse !== null) {
+      return resolveRealmSlugResult.errorResponse;
+    }
 
+    const validateQueryResult = await validate(createSchema({ locale: LocaleRule }), req.query);
+    if (validateQueryResult.errors !== null) {
       return {
-        data: validationErrors,
         status: HTTPStatus.BAD_REQUEST,
+        data: validationErrorsToResponse(validateQueryResult.errors),
       };
     }
 
-    // resolving connected-realm
-    const resolveMessage = await this.messengers.regions.resolveConnectedRealm({
-      realm_slug: realmSlug,
-      region_name: regionName,
-    });
-    switch (resolveMessage.code) {
-    case code.ok:
-      break;
-    case code.notFound: {
-      const notFoundValidationErrors: IValidationErrorResponse = {
-        error: "could not resolve connected-realm",
-      };
-
+    const validateParamsResult = await validate(
+      createSchema({
+        recipeId: RecipeIdRule,
+      }),
+      req.params,
+    );
+    if (validateParamsResult.errors !== null) {
       return {
-        data: notFoundValidationErrors,
-        status: HTTPStatus.NOT_FOUND,
-      };
-    }
-    default: {
-      const defaultValidationErrors: IValidationErrorResponse = {
-        error: "could not resolve connected-realm",
-      };
-
-      return {
-        data: defaultValidationErrors,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
-      };
-    }
-    }
-
-    const resolveResult = await resolveMessage.decode();
-    if (resolveResult === null) {
-      return {
-        data: null,
-        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+        status: HTTPStatus.BAD_REQUEST,
+        data: validationErrorsToResponse(validateParamsResult.errors),
       };
     }
 
-    const recipeMessage = await this.messengers.professions.getRecipe(recipeId, locale as Locale);
+    const recipeMessage = await this.messengers.professions.recipe(
+      validateParamsResult.body.recipeId,
+      validateQueryResult.body.locale,
+    );
     if (recipeMessage.code !== code.ok) {
       return {
         data: null,
@@ -107,13 +86,10 @@ export class ProfessionsController {
 
     const currentUnixTimestamp = Math.floor(Date.now() / 1000);
     const lowerBounds = currentUnixTimestamp - 60 * 60 * 24 * 14;
-    const historyMessage = await this.messengers.general.getRecipePricesHistory({
+    const historyMessage = await this.messengers.pricelistHistory.recipePricesHistory({
       lower_bounds: lowerBounds,
-      recipe_ids: [recipeId],
-      tuple: {
-        connected_realm_id: resolveResult.connected_realm.connected_realm.id,
-        region_name: regionName,
-      },
+      recipe_ids: [validateParamsResult.body.recipeId],
+      tuple: resolveRealmSlugResult.data.tuple,
       upper_bounds: currentUnixTimestamp,
     });
     if (historyMessage.code !== code.ok) {
@@ -134,10 +110,7 @@ export class ProfessionsController {
     const itemPricesHistoryMessage = await this.messengers.general.resolveItemPricesHistory({
       item_ids: recipeResult.recipe.reagents.map(v => v.reagent.id),
       lower_bounds: lowerBounds,
-      tuple: {
-        connected_realm_id: resolveResult.connected_realm.connected_realm.id,
-        region_name: regionName,
-      },
+      tuple: resolveRealmSlugResult.data.tuple,
       upper_bounds: currentUnixTimestamp,
     });
     if (itemPricesHistoryMessage.code !== code.ok) {
@@ -161,7 +134,7 @@ export class ProfessionsController {
         recipeData: {
           history: foundHistory,
           recipeItemIds: {
-            [recipeId]: [
+            [validateParamsResult.body.recipeId]: [
               recipeResult.recipe.alliance_crafted_item.id,
               recipeResult.recipe.horde_crafted_item.id,
               recipeResult.recipe.crafted_item.id,
@@ -173,19 +146,21 @@ export class ProfessionsController {
     };
   }
 
-  public async getProfessions(locale: string): Promise<IRequestResult<ProfessionsResponse>> {
-    if (!Object.values(Locale).includes(locale as Locale)) {
-      const validationErrors: IValidationErrorResponse = {
-        error: "could not validate locale",
-      };
-
+  public async getProfessions(
+    req: PlainRequest,
+    _res: Response,
+  ): Promise<IRequestResult<ProfessionsResponse>> {
+    const validateQueryResult = await validate(createSchema({ locale: LocaleRule }), req.query);
+    if (validateQueryResult.errors !== null) {
       return {
-        data: validationErrors,
         status: HTTPStatus.BAD_REQUEST,
+        data: validationErrorsToResponse(validateQueryResult.errors),
       };
     }
 
-    const professionsMsg = await this.messengers.professions.professions(locale as Locale);
+    const professionsMsg = await this.messengers.professions.professions(
+      validateQueryResult.body.locale,
+    );
     if (professionsMsg.code !== code.ok) {
       return {
         data: null,
@@ -208,25 +183,40 @@ export class ProfessionsController {
   }
 
   public async getSkillTier(
-    professionId: ProfessionId,
-    skillTierId: SkillTierId,
-    locale: string,
+    req: PlainRequest,
+    _res: Response,
   ): Promise<IRequestResult<SkillTierResponse>> {
-    if (!Object.values(Locale).includes(locale as Locale)) {
-      const validationErrors: IValidationErrorResponse = {
-        error: "could not validate locale",
-      };
-
+    const validateParamsResult = await validate(
+      createSchema({
+        professionId: ProfessionIdRule,
+        skillTierId: SkillTierIdRule,
+      }),
+      req.params,
+    );
+    if (validateParamsResult.errors !== null) {
       return {
-        data: validationErrors,
         status: HTTPStatus.BAD_REQUEST,
+        data: validationErrorsToResponse(validateParamsResult.errors),
       };
     }
 
-    const skillTierMsg = await this.messengers.professions.getSkillTier(
-      professionId,
-      skillTierId,
-      locale as Locale,
+    const validateQueryResult = await validate(
+      createSchema({
+        locale: LocaleRule,
+      }),
+      req.params,
+    );
+    if (validateQueryResult.errors !== null) {
+      return {
+        status: HTTPStatus.BAD_REQUEST,
+        data: validationErrorsToResponse(validateQueryResult.errors),
+      };
+    }
+
+    const skillTierMsg = await this.messengers.professions.skillTier(
+      validateParamsResult.body.professionId,
+      validateParamsResult.body.skillTierId,
+      validateQueryResult.body.locale,
     );
     if (skillTierMsg.code !== code.ok) {
       return {
@@ -272,23 +262,40 @@ export class ProfessionsController {
   }
 
   public async getRecipe(
-    recipeId: RecipeId,
-    locale: string,
+    req: PlainRequest,
+    _res: Response,
   ): Promise<IRequestResult<RecipeResponse>> {
-    if (!Object.values(Locale).includes(locale as Locale)) {
-      const validationErrors: IValidationErrorResponse = {
-        error: "could not validate locale",
-      };
-
+    const validateParamsResult = await validate(
+      createSchema({
+        gameVersion: GameVersionRule,
+        recipeId: RecipeIdRule,
+      }),
+      req.params,
+    );
+    if (validateParamsResult.errors !== null) {
       return {
-        data: validationErrors,
         status: HTTPStatus.BAD_REQUEST,
+        data: validationErrorsToResponse(validateParamsResult.errors),
+      };
+    }
+
+    const validateQueryResult = await validate(
+      createSchema({
+        locale: LocaleRule,
+      }),
+      req.params,
+    );
+    if (validateQueryResult.errors !== null) {
+      return {
+        status: HTTPStatus.BAD_REQUEST,
+        data: validationErrorsToResponse(validateQueryResult.errors),
       };
     }
 
     const resolveRecipeResult = await this.messengers.professions.resolveRecipe(
-      recipeId,
-      locale as Locale,
+      validateParamsResult.body.gameVersion,
+      validateParamsResult.body.recipeId,
+      validateQueryResult.body.locale,
     );
     if (resolveRecipeResult.code !== code.ok || resolveRecipeResult.data === null) {
       return {

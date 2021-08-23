@@ -23,9 +23,13 @@ import { ValidateResult } from "../index";
 
 export const ProfessionIdRule = yup.number().required();
 
+export const SkillTierIdRule = yup.number().required();
+
 export const PricelistIdRule = yup.number().required();
 
 export const PostIdRule = yup.number().required();
+
+export const RecipeIdRule = yup.number().required();
 
 export const ExpansionNameRule = yup.string().required();
 
