@@ -39,7 +39,7 @@ export class UserController {
   }
 
   @UnauthenticatedOnly()
-  @Validator(UserRequestBodyRules)
+  @Validator({ body: UserRequestBodyRules })
   public async createUser(
     req: IRequest<ICreateUserRequest, StringMap>,
     _res: Response,
@@ -142,7 +142,7 @@ export class UserController {
     };
   }
 
-  @Validator(SaveLastPathRules)
+  @Validator({ body: SaveLastPathRules })
   @Authenticator(UserLevel.Unverified)
   public async saveLastPath(
     req: IRequest<ISaveLastPathRequest, StringMap>,

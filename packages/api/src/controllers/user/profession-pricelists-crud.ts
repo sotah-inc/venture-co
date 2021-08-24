@@ -1,7 +1,6 @@
 import {
   CreateProfessionPricelistResponse,
   DeleteProfessionPricelistResponse,
-  ICreateProfessionPricelistRequest,
   IValidationErrorResponse,
   UserLevel,
 } from "@sotah-inc/core";
@@ -15,6 +14,7 @@ import {
 import { Response } from "express";
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
+import * as yup from "yup";
 
 import {
   Authenticator,
@@ -36,9 +36,9 @@ export class ProfessionPricelistsCrudController {
   }
 
   @Authenticator(UserLevel.Admin)
-  @Validator(ProfessionPricelistRequestBodyRules)
+  @Validator({ body: ProfessionPricelistRequestBodyRules })
   public async createProfessionPricelist(
-    req: IRequest<ICreateProfessionPricelistRequest, StringMap>,
+    req: IRequest<yup.InferType<typeof ProfessionPricelistRequestBodyRules>, StringMap>,
     _res: Response,
   ): Promise<IRequestResult<CreateProfessionPricelistResponse>> {
     const body = req.body;

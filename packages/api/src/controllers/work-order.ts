@@ -1,6 +1,5 @@
 import {
   CreateWorkOrderResponse,
-  ICreateWorkOrderRequest,
   IValidationErrorResponse,
   PrefillWorkOrderItemResponse,
   QueryWorkOrdersResponse,
@@ -11,6 +10,7 @@ import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
 import { Response } from "express";
 import HTTPStatus from "http-status";
 import { Connection } from "typeorm";
+import * as yup from "yup";
 
 import { resolveItem, resolveRealmSlug } from "./resolvers";
 import { validate, validationErrorsToResponse, Validator } from "./validators";
@@ -183,9 +183,11 @@ export class WorkOrderController {
   }
 
   @Authenticator(UserLevel.Regular)
-  @Validator(CreateWorkOrderRequestRules)
+  @Validator({
+    body: CreateWorkOrderRequestRules,
+  })
   public async createWorkOrder(
-    req: IRequest<ICreateWorkOrderRequest, StringMap>,
+    req: IRequest<yup.InferType<typeof CreateWorkOrderRequestRules>, StringMap>,
     _res: Response,
   ): Promise<IRequestResult<CreateWorkOrderResponse>> {
     const resolveResult = await resolveRealmSlug(req.params, this.messengers.regions);

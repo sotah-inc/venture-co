@@ -57,7 +57,7 @@ export class PreferencesController {
   }
 
   @Authenticator(UserLevel.Unverified)
-  @Validator(PreferenceRules)
+  @Validator({ body: PreferenceRules })
   public async createPreferences(
     req: IRequest<ICreatePreferencesRequest, StringMap>,
     _res: Response,
@@ -98,7 +98,7 @@ export class PreferencesController {
   }
 
   @Authenticator(UserLevel.Unverified)
-  @Validator(PreferenceRules)
+  @Validator({ body: PreferenceRules })
   public async updatePreferences(
     req: IRequest<UpdatePreferencesRequest, StringMap>,
     _res: Response,

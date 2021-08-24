@@ -3,9 +3,7 @@ import {
   DeletePricelistResponse,
   GetPricelistsResponse,
   GetUserPricelistResponse,
-  ICreatePricelistRequest,
   ItemId,
-  UpdatePricelistRequest,
   UpdatePricelistResponse,
   UserLevel,
 } from "@sotah-inc/core";
@@ -14,6 +12,7 @@ import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
 import { Response } from "express";
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
+import * as yup from "yup";
 
 import {
   Authenticator,
@@ -45,9 +44,9 @@ export class PricelistCrudController {
   }
 
   @Authenticator(UserLevel.Regular)
-  @Validator(PricelistRequestBodyRules)
+  @Validator({ body: PricelistRequestBodyRules })
   public async createPricelist(
-    req: IRequest<ICreatePricelistRequest, StringMap>,
+    req: IRequest<yup.InferType<typeof PricelistRequestBodyRules>, StringMap>,
     _res: Response,
   ): Promise<IRequestResult<CreatePricelistResponse>> {
     const body = req.body;
@@ -254,9 +253,9 @@ export class PricelistCrudController {
   }
 
   @Authenticator(UserLevel.Regular)
-  @Validator(PricelistRequestBodyRules)
+  @Validator({ body: PricelistRequestBodyRules })
   public async updatePricelist(
-    req: IRequest<UpdatePricelistRequest, StringMap>,
+    req: IRequest<yup.InferType<typeof PricelistRequestBodyRules>, StringMap>,
     _res: Response,
   ): Promise<IRequestResult<UpdatePricelistResponse>> {
     const user = req.sotahUser;
