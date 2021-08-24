@@ -51,11 +51,11 @@ export function validationErrorsToResponse(
 }
 
 export interface IValidatorOptions<T> {
-  bodySchema?: ValidatorSchema<T>;
+  body?: ValidatorSchema<T>;
 }
 
 export function Validator<TRequest, TParams extends StringMap, TResponse>(
-  schema: ValidatorSchema<TRequest>,
+  opts: IValidatorOptions<TRequest>,
 ) {
   return function (
     _target: unknown,
@@ -66,15 +66,17 @@ export function Validator<TRequest, TParams extends StringMap, TResponse>(
       req: IRequest<TRequest, TParams>,
       res: Response,
     ): Promise<IRequestResult<TResponse | IValidationErrorResponse>> {
-      const result = await validate(schema, req.body);
-      if (result.errors !== null) {
-        return {
-          data: validationErrorsToResponse(result.errors),
-          status: HTTPStatus.BAD_REQUEST,
-        };
-      }
+      if (opts.body) {
+        const validateBodyResult = await validate(opts.body, req.body);
+        if (validateBodyResult.errors !== null) {
+          return {
+            data: validationErrorsToResponse(validateBodyResult.errors),
+            status: HTTPStatus.BAD_REQUEST,
+          };
+        }
 
-      req.body = result.body;
+        req.body = validateBodyResult.body;
+      }
 
       return descriptor.value(req, res);
     };
