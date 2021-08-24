@@ -20,7 +20,6 @@ import {
   IRequest,
   IRequestResult,
   PlainRequest,
-  StringMap,
   UnauthenticatedUserResponse,
 } from "../index";
 import { validate, validationErrorsToResponse, Validator } from "../validators";
@@ -44,9 +43,9 @@ export class PricelistCrudController {
   }
 
   @Authenticator(UserLevel.Regular)
-  @Validator({ body: PricelistRequestBodyRules })
+  @Validator(PricelistRequestBodyRules)
   public async createPricelist(
-    req: IRequest<yup.InferType<typeof PricelistRequestBodyRules>, StringMap>,
+    req: IRequest<yup.InferType<typeof PricelistRequestBodyRules>>,
     _res: Response,
   ): Promise<IRequestResult<CreatePricelistResponse>> {
     const body = req.body;
@@ -253,9 +252,9 @@ export class PricelistCrudController {
   }
 
   @Authenticator(UserLevel.Regular)
-  @Validator({ body: PricelistRequestBodyRules })
+  @Validator(PricelistRequestBodyRules)
   public async updatePricelist(
-    req: IRequest<yup.InferType<typeof PricelistRequestBodyRules>, StringMap>,
+    req: IRequest<yup.InferType<typeof PricelistRequestBodyRules>>,
     _res: Response,
   ): Promise<IRequestResult<UpdatePricelistResponse>> {
     const user = req.sotahUser;

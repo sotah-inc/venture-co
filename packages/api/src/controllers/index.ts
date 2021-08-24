@@ -25,11 +25,11 @@ export type StringMap = { [k: string]: string };
 
 export type User = SotahUser | undefined;
 
-export type PlainRequest = IRequest<undefined, StringMap>;
+export type PlainRequest = IRequest<undefined>;
 
-export interface IRequest<TBody, TParams extends StringMap> extends Request {
+export interface IRequest<TBody> extends Request {
   body: TBody | undefined;
-  params: TParams;
+  params: StringMap;
   query: ParsedQs;
 }
 
@@ -76,8 +76,8 @@ export function Authenticator(requiredLevel: UserLevel, opts?: Partial<IAuthenti
     _propertyKey: string,
     descriptor: PropertyDescriptor,
   ): PropertyDescriptor {
-    descriptor.value = async function <TRequest, TParams extends StringMap, TResponse>(
-      req: IRequest<TRequest, TParams>,
+    descriptor.value = async function <TRequest, TResponse>(
+      req: IRequest<TRequest>,
       res: TResponse,
     ): Promise<IRequestResult<TResponse | IValidationErrorResponse>> {
       const user = req.sotahUser;
@@ -102,8 +102,8 @@ export function UnauthenticatedOnly() {
     _propertyKey: string,
     descriptor: PropertyDescriptor,
   ): PropertyDescriptor {
-    descriptor.value = async function <TRequest, TParams extends StringMap, TResponse>(
-      req: IRequest<TRequest, TParams>,
+    descriptor.value = async function <TRequest, TResponse>(
+      req: IRequest<TRequest>,
       res: TResponse,
     ): Promise<IRequestResult<TResponse | IValidationErrorResponse>> {
       const user = req.sotahUser;

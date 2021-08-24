@@ -10,7 +10,7 @@ import { Response } from "express";
 import * as HTTPStatus from "http-status";
 import { Connection } from "typeorm";
 
-import { Authenticator, IRequest, IRequestResult, PlainRequest, StringMap } from "../index";
+import { Authenticator, IRequest, IRequestResult, PlainRequest } from "../index";
 import { resolveUser, resolveWriteablePost } from "../resolvers";
 import { validate, validationErrorsToResponse } from "../validators";
 import { FullPostRequestBodyRules } from "../validators/yup";
@@ -59,7 +59,7 @@ export class PostCrudController {
 
   @Authenticator(UserLevel.Admin)
   public async updatePost(
-    req: IRequest<UpdatePostRequest, StringMap>,
+    req: IRequest<UpdatePostRequest>,
     _res: Response,
   ): Promise<IRequestResult<UpdatePostResponse>> {
     const resolveWriteablePostResult = await resolveWriteablePost(

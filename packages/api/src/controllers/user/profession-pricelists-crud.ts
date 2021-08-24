@@ -22,7 +22,6 @@ import {
   IRequest,
   IRequestResult,
   PlainRequest,
-  StringMap,
   UnauthenticatedUserResponse,
 } from "../index";
 import { Validator } from "../validators";
@@ -36,9 +35,9 @@ export class ProfessionPricelistsCrudController {
   }
 
   @Authenticator(UserLevel.Admin)
-  @Validator({ body: ProfessionPricelistRequestBodyRules })
+  @Validator(ProfessionPricelistRequestBodyRules)
   public async createProfessionPricelist(
-    req: IRequest<yup.InferType<typeof ProfessionPricelistRequestBodyRules>, StringMap>,
+    req: IRequest<yup.InferType<typeof ProfessionPricelistRequestBodyRules>>,
     _res: Response,
   ): Promise<IRequestResult<CreateProfessionPricelistResponse>> {
     const body = req.body;

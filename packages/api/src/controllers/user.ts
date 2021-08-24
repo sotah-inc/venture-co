@@ -22,8 +22,8 @@ import {
   Authenticator,
   EmptyRequestBodyResponse,
   IRequest,
-  IRequestResult, PlainRequest,
-  StringMap,
+  IRequestResult,
+  PlainRequest,
   UnauthenticatedOnly,
   UnauthenticatedUserResponse,
 } from "./index";
@@ -39,9 +39,9 @@ export class UserController {
   }
 
   @UnauthenticatedOnly()
-  @Validator({ body: UserRequestBodyRules })
+  @Validator(UserRequestBodyRules)
   public async createUser(
-    req: IRequest<ICreateUserRequest, StringMap>,
+    req: IRequest<ICreateUserRequest>,
     _res: Response,
   ): Promise<IRequestResult<CreateUserResponse>> {
     if (req.body === undefined) {
@@ -81,7 +81,7 @@ export class UserController {
 
   @Authenticator(UserLevel.Unverified)
   public async verifyUser(
-    req: IRequest<undefined, StringMap>,
+    req: PlainRequest,
     _res: Response,
   ): Promise<IRequestResult<VerifyUserResponse>> {
     const user = req.sotahUser;
@@ -142,10 +142,10 @@ export class UserController {
     };
   }
 
-  @Validator({ body: SaveLastPathRules })
+  @Validator(SaveLastPathRules)
   @Authenticator(UserLevel.Unverified)
   public async saveLastPath(
-    req: IRequest<ISaveLastPathRequest, StringMap>,
+    req: IRequest<ISaveLastPathRequest>,
     _res: Response,
   ): Promise<IRequestResult<SaveLastPathResponse>> {
     if (req.body === undefined) {

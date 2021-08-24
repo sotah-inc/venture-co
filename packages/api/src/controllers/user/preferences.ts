@@ -17,7 +17,6 @@ import {
   IRequest,
   IRequestResult,
   PlainRequest,
-  StringMap,
 } from "../index";
 import { resolveUser, resolveUserId } from "../resolvers";
 import { Validator } from "../validators";
@@ -57,9 +56,9 @@ export class PreferencesController {
   }
 
   @Authenticator(UserLevel.Unverified)
-  @Validator({ body: PreferenceRules })
+  @Validator(PreferenceRules)
   public async createPreferences(
-    req: IRequest<ICreatePreferencesRequest, StringMap>,
+    req: IRequest<ICreatePreferencesRequest>,
     _res: Response,
   ): Promise<IRequestResult<CreatePreferencesResponse>> {
     const resolveUserResult = resolveUser(req.sotahUser);
@@ -98,9 +97,9 @@ export class PreferencesController {
   }
 
   @Authenticator(UserLevel.Unverified)
-  @Validator({ body: PreferenceRules })
+  @Validator(PreferenceRules)
   public async updatePreferences(
-    req: IRequest<UpdatePreferencesRequest, StringMap>,
+    req: IRequest<UpdatePreferencesRequest>,
     _res: Response,
   ): Promise<IRequestResult<UpdatePreferencesResponse>> {
     const resolveUserIdResult = resolveUserId(req.sotahUser);

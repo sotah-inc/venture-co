@@ -2,12 +2,12 @@ import { IUpdateProfileRequest, UpdateProfileResponse, UserLevel } from "@sotah-
 import { Response } from "express";
 import * as HTTPStatus from "http-status";
 
-import { Authenticator, IRequest, IRequestResult, StringMap } from "../index";
+import { Authenticator, IRequest, IRequestResult } from "../index";
 
 export class ProfileController {
   @Authenticator(UserLevel.Regular)
   public async updateProfile(
-    _req: IRequest<IUpdateProfileRequest, StringMap>,
+    _req: IRequest<IUpdateProfileRequest>,
     _res: Response,
   ): Promise<IRequestResult<UpdateProfileResponse>> {
     return {

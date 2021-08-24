@@ -24,10 +24,10 @@ import {
 
 import {
   Authenticator,
-  EmptyRequestBodyResponse, IRequest,
+  EmptyRequestBodyResponse,
+  IRequest,
   IRequestResult,
   PlainRequest,
-  StringMap,
   UnauthenticatedUserResponse,
 } from "./index";
 
@@ -50,14 +50,14 @@ export class WorkOrderController {
       return resolveResult.errorResponse;
     }
 
-    const validateResult = await validate(QueryWorkOrdersQueryRules, req.query);
-    if (validateResult.errors !== null) {
+    const validateQueryResult = await validate(QueryWorkOrdersQueryRules, req.query);
+    if (validateQueryResult.errors !== null) {
       return {
-        data: validationErrorsToResponse(validateResult.errors),
+        data: validationErrorsToResponse(validateQueryResult.errors),
         status: HTTPStatus.BAD_REQUEST,
       };
     }
-    if (validateResult.body === undefined) {
+    if (validateQueryResult.body === undefined) {
       return {
         data: {
           error: "validate-result was undefined",
@@ -71,16 +71,16 @@ export class WorkOrderController {
       .findBy({
         connectedRealmId: resolveResult.data.connectedRealm.connected_realm.id,
         gameVersion: resolveResult.data.gameVersion,
-        orderBy: validateResult.body.orderBy,
-        orderDirection: validateResult.body.orderDirection,
-        page: validateResult.body.page,
-        perPage: validateResult.body.perPage,
+        orderBy: validateQueryResult.body.orderBy,
+        orderDirection: validateQueryResult.body.orderDirection,
+        page: validateQueryResult.body.page,
+        perPage: validateQueryResult.body.perPage,
         regionName: resolveResult.data.regionName,
       });
 
     const itemsMsg = await this.messengers.items.items({
       itemIds: orders.map(v => v.itemId),
-      locale: validateResult.body.locale,
+      locale: validateQueryResult.body.locale,
       game_version: resolveResult.data.gameVersion,
     });
     if (itemsMsg.code !== code.ok) {
@@ -183,11 +183,9 @@ export class WorkOrderController {
   }
 
   @Authenticator(UserLevel.Regular)
-  @Validator({
-    body: CreateWorkOrderRequestRules,
-  })
+  @Validator(CreateWorkOrderRequestRules)
   public async createWorkOrder(
-    req: IRequest<yup.InferType<typeof CreateWorkOrderRequestRules>, StringMap>,
+    req: IRequest<yup.InferType<typeof CreateWorkOrderRequestRules>>,
     _res: Response,
   ): Promise<IRequestResult<CreateWorkOrderResponse>> {
     const resolveResult = await resolveRealmSlug(req.params, this.messengers.regions);
