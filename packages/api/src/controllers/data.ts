@@ -10,6 +10,7 @@ import { Response } from "express";
 import HTTPStatus from "http-status";
 import moment from "moment";
 import { Connection } from "typeorm";
+import * as yup from "yup";
 
 import { resolveRealmSlug } from "./resolvers";
 import { validate, validationErrorsToResponse } from "./validators";
@@ -18,7 +19,6 @@ import {
   ExpansionNameRule,
   GameVersionRule,
   LocaleRule,
-  QueryParamRules,
   RegionNameRule,
   SlugRule,
 } from "./validators/yup";
@@ -130,7 +130,14 @@ export class DataController {
     req: PlainRequest,
     _res: Response,
   ): Promise<IRequestResult<QueryGeneralResponse>> {
-    const validateQueryResult = await validate(QueryParamRules, req.query);
+    const validateQueryResult = await validate(
+      createSchema({
+        locale: LocaleRule,
+        query: yup.string(),
+        gameVersion: GameVersionRule,
+      }),
+      req.query,
+    );
     if (validateQueryResult.errors !== null) {
       return {
         data: validationErrorsToResponse(validateQueryResult.errors),

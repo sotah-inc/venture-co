@@ -1,10 +1,11 @@
-import { IShortPet, Locale, QueryResponse } from "@sotah-inc/core";
+import { IShortPet, QueryResponse } from "@sotah-inc/core";
 import { IMessengers } from "@sotah-inc/server";
 import { Response } from "express";
 import HTTPStatus from "http-status";
+import * as yup from "yup";
 
 import { validate, validationErrorsToResponse } from "./validators";
-import { QueryParamRules } from "./validators/yup";
+import { createSchema, GameVersionRule, LocaleRule } from "./validators/yup";
 
 import { IRequestResult, PlainRequest } from "./index";
 
@@ -19,7 +20,14 @@ export class PetsController {
     req: PlainRequest,
     _res: Response,
   ): Promise<IRequestResult<QueryResponse<IShortPet>>> {
-    const validateQueryResult = await validate(QueryParamRules, req.query);
+    const validateQueryResult = await validate(
+      createSchema({
+        locale: LocaleRule,
+        query: yup.string(),
+        gameVersion: GameVersionRule,
+      }),
+      req.query,
+    );
     if (validateQueryResult.errors !== null) {
       return {
         data: validationErrorsToResponse(validateQueryResult.errors),
@@ -29,8 +37,8 @@ export class PetsController {
 
     // resolving pets-query message
     const results = await this.messengers.pets.resolveQueryPets({
-      locale: validateQueryResult.body.locale as Locale,
-      query: validateQueryResult.body.query ?? "",
+      locale: validateQueryResult.body.locale,
+      query: validateQueryResult.body.query,
       game_version: validateQueryResult.body.gameVersion,
     });
     if (results === null) {

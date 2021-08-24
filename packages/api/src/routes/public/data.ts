@@ -114,21 +114,9 @@ export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
   );
   router.get(
     "/recipe-price-histories/:regionName/:realmSlug/:recipeId",
-    wrap(async (req: Request, res: Response) => {
-      const regionName = req.params.regionName;
-      const realmSlug = req.params.realmSlug;
-      const recipeId = req.params.recipeId;
-
-      handleResult(
-        res,
-        await professionsController.getRecipePriceHistories(
-          regionName,
-          realmSlug,
-          Number(recipeId),
-          String(req.query.locale),
-        ),
-      );
-    }),
+    wrap(async (req: Request, res: Response) =>
+      handleResult(res, await professionsController.getRecipePriceHistories(req, res)),
+    ),
   );
   router.post(
     "/unmet-demand/:regionName/:realmSlug",
@@ -144,40 +132,27 @@ export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
   );
   router.get(
     "/profession-pricelists/:professionId/:expansion/:pricelist_slug",
-    wrap(async (req: Request, res: Response) => {
-      handleResult(res, await professionPricelistController.getProfessionPricelist(req, res));
-    }),
+    wrap(async (req: Request, res: Response) =>
+      handleResult(res, await professionPricelistController.getProfessionPricelist(req, res)),
+    ),
   );
   router.get(
     "/professions",
-    wrap(async (req: Request, res: Response) => {
-      handleResult(res, await professionsController.getProfessions(String(req.query.locale)));
-    }),
+    wrap(async (req: Request, res: Response) =>
+      handleResult(res, await professionsController.getProfessions(req, res)),
+    ),
   );
   router.get(
     "/skill-tier/:profession/:skillTier",
-    wrap(async (req: Request, res: Response) => {
-      const professionId = req.params.profession;
-      const skillTierId = req.params.skillTier;
-      handleResult(
-        res,
-        await professionsController.getSkillTier(
-          Number(professionId),
-          Number(skillTierId),
-          String(req.query.locale),
-        ),
-      );
-    }),
+    wrap(async (req: Request, res: Response) =>
+      handleResult(res, await professionsController.getSkillTier(req, res)),
+    ),
   );
   router.get(
     "/recipe/:recipe",
-    wrap(async (req: Request, res: Response) => {
-      const recipeId = req.params.recipe;
-      handleResult(
-        res,
-        await professionsController.getRecipe(Number(recipeId), String(req.query.locale)),
-      );
-    }),
+    wrap(async (req: Request, res: Response) =>
+      handleResult(res, await professionsController.getRecipe(req, res)),
+    ),
   );
   router.get(
     "/recipes",
