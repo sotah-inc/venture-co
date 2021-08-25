@@ -198,7 +198,7 @@ export class UserController {
     }
 
     user.level = UserLevel.Regular;
-    await this.dbConn.manager.save(req.user);
+    await this.dbConn.manager.save(user);
 
     return {
       data: null,

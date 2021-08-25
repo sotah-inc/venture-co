@@ -1,4 +1,4 @@
-import { auth, User } from "@sotah-inc/server";
+import { auth } from "@sotah-inc/server";
 import { wrap } from "async-middleware";
 import { Request, Response, Router } from "express";
 import { Connection } from "typeorm";
@@ -14,7 +14,14 @@ export function getRouter(dbConn: Connection, clientHost: string): Router {
     "/",
     auth(dbConn),
     wrap(async (req: Request, res: Response) => {
-      res.json((req.user as User).toJson());
+      const user = req.sotahUser;
+      if (user === undefined) {
+        res.json({});
+
+        return;
+      }
+
+      res.json(user.toJson());
     }),
   );
 

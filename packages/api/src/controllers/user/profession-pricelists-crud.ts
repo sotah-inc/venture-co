@@ -9,7 +9,6 @@ import {
   PricelistEntry,
   ProfessionPricelist,
   ProfessionPricelistRepository,
-  User,
 } from "@sotah-inc/server";
 import { Response } from "express";
 import * as HTTPStatus from "http-status";
@@ -88,6 +87,11 @@ export class ProfessionPricelistsCrudController {
     req: PlainRequest,
     _res: Response,
   ): Promise<IRequestResult<DeleteProfessionPricelistResponse>> {
+    const user = req.sotahUser;
+    if (user === undefined) {
+      return UnauthenticatedUserResponse;
+    }
+
     const professionPricelist = await this.dbConn
       .getCustomRepository(ProfessionPricelistRepository)
       .getFromPricelistId(Number(req.params.pricelist_id));
@@ -120,7 +124,7 @@ export class ProfessionPricelistsCrudController {
       };
     }
 
-    if (professionPricelist.pricelist.user.id !== (req.user as User).id) {
+    if (professionPricelist.pricelist.user.id !== user.id) {
       return {
         data: null,
         status: HTTPStatus.UNAUTHORIZED,
