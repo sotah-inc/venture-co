@@ -34,7 +34,7 @@
     "@blueprintjs/icons": "^3.27.0",
     "@blueprintjs/popover2": "^0.11.0",
     "@blueprintjs/select": "^3.16.5",
-    "@sotah-inc/core": "^2.0.188",
+    "@sotah-inc/core": "2.0.197",
     "@types/d3-scale": "^4.0.1",
     "@types/http-status": "^1.1.2",
     "@types/isomorphic-fetch": "0.0.35",
@@ -56,6 +56,7 @@
     "normalize.css": "^8.0.1",
     "purecss": "^2.0.6",
     "query-string": "^7.0.1",
+    "react": "^16.14.0",
     "react-cookie": "^4.0.3",
     "react-dom": "^16.14.0",
     "react-markdown": "^6.0.2",
@@ -65,8 +66,7 @@
     "redux-thunk": "^2.3.0",
     "remark-shortcodes": "^0.3.1",
     "speakingurl": "^14.0.1",
-    "yup": "^0.32.9",
-    "react": "^16.14.0"
+    "yup": "^0.32.9"
   },
   "devDependencies": {
     "@mr-hope/gulp-sass": "^2.0.0",
