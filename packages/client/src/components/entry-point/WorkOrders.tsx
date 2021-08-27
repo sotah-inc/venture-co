@@ -1,7 +1,6 @@
 import React from "react";
 
 import {
-  GameVersion,
   IQueryWorkOrdersResponseData,
   IRegionComposite,
   OrderDirection,
@@ -12,13 +11,9 @@ import {
 import { ILoadRealmEntrypoint } from "../../actions/main";
 import { ILoadWorkOrderEntrypoint } from "../../actions/work-order";
 import { QueryWorkOrdersOptions } from "../../api/work-order";
-import {
-  CreateWorkOrderDialogContainer,
-} from "../../containers/entry-point/WorkOrders/CreateWorkOrderDialog";
+import { CreateWorkOrderDialogContainer } from "../../containers/entry-point/WorkOrders/CreateWorkOrderDialog";
 import { WorkOrdersListContainer } from "../../containers/entry-point/WorkOrders/WorkOrdersList";
-import {
-  WorkOrdersNavRouteContainer,
-} from "../../route-containers/entry-point/WorkOrders/WorkOrdersNav";
+import { WorkOrdersNavRouteContainer } from "../../route-containers/entry-point/WorkOrders/WorkOrdersNav";
 import { IClientRealm, IFetchData } from "../../types/global";
 import { FetchLevel } from "../../types/main";
 import { setTitle } from "../../util";
@@ -158,7 +153,7 @@ export class WorkOrders extends React.Component<Props> {
     }
 
     queryWorkOrders({
-      gameVersion: GameVersion.Retail,
+      gameVersion: "",
       orderBy: OrderKind.CreatedAt,
       orderDirection: OrderDirection.Desc,
       page: currentPage + 1,

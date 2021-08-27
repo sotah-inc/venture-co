@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Dialog, IToastProps } from "@blueprintjs/core";
-import { GameVersion, IPrefillWorkOrderItemResponseData, IRegionComposite } from "@sotah-inc/core";
+import { IPrefillWorkOrderItemResponseData, IRegionComposite } from "@sotah-inc/core";
 
 import { ICreateWorkOrderOptions, IPrefillWorkOrderItemOptions } from "../../../api/work-order";
 import {
@@ -73,7 +73,7 @@ export class CreateWorkOrderDialog extends React.Component<Props> {
             }
 
             createWorkOrder(userData.profile.token, {
-              gameVersion: GameVersion.Retail,
+              gameVersion: "",
               realmSlug: currentRealm.realm.slug,
               regionName: currentRegion.config_region.name,
               req: v,

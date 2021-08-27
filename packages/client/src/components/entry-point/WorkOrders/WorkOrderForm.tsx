@@ -2,7 +2,6 @@ import React from "react";
 
 import { Button, Classes, FormGroup, H5, HTMLTable, Intent, Slider } from "@blueprintjs/core";
 import {
-  GameVersion,
   ICreateWorkOrderRequest,
   IPrefillWorkOrderItemResponseData,
   IRegionComposite,
@@ -422,7 +421,7 @@ export class WorkOrderForm extends React.Component<Props> {
     setFieldValue("item", item);
     setFieldTouched("item");
     callPrefillWorkOrderItem({
-      gameVersion: GameVersion.Retail,
+      gameVersion: "",
       itemId: item.id,
       realmSlug: currentRealm.realm.slug,
       regionName: currentRegion.config_region.name,

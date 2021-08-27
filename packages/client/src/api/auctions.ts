@@ -64,5 +64,5 @@ export async function queryAuctionStats({
     return { response: null, error: "Failure" };
   }
 
-  return { response: body, error: null };
+  return { response: body as IQueryAuctionStatsResponseData, error: null };
 }

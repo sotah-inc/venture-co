@@ -16,6 +16,7 @@ import {
   RegionName,
   GetItemClassesResponse,
 } from "@sotah-inc/core";
+import { IGetConnectedRealmsResponseData } from "@sotah-inc/core/build/dist/types/contracts/data";
 import * as HTTPStatus from "http-status";
 
 import { getApiEndpoint } from "./config";
@@ -29,7 +30,7 @@ export async function getBoot(): Promise<IGetBootResponseData | null> {
     return null;
   }
 
-  return body;
+  return body as IGetBootResponseData;
 }
 
 export async function getItemClasses(): Promise<IGetItemClassesResponseData | null> {
@@ -53,7 +54,7 @@ export async function getConnectedRealms(
     return null;
   }
 
-  return body.connectedRealms;
+  return (body as IGetConnectedRealmsResponseData).connectedRealms;
 }
 
 export async function queryGeneral(

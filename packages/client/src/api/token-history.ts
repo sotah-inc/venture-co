@@ -5,6 +5,10 @@ import {
   IShortTokenHistory,
   RegionName,
 } from "@sotah-inc/core";
+import {
+  IGetRegionTokenHistoryResponseData,
+  IGetShortTokenHistoryResponseData,
+} from "@sotah-inc/core/build/dist/types/contracts/data";
 import * as HTTPStatus from "http-status";
 
 import { getApiEndpoint } from "./config";
@@ -35,7 +39,7 @@ export async function getRegionTokenHistory(
     return { history: null, error: "Empty body" };
   }
 
-  return { history: body.history, error: null };
+  return { history: (body as IGetRegionTokenHistoryResponseData).history, error: null };
 }
 
 export interface IGetShortTokenHistoryResult {
@@ -57,9 +61,5 @@ export async function getShortTokenHistory(): Promise<IGetShortTokenHistoryResul
     return { history: null, error: "Failure" };
   }
 
-  if (body === null) {
-    return { history: null, error: "Empty body" };
-  }
-
-  return { history: body.history, error: null };
+  return { history: (body as IGetShortTokenHistoryResponseData).history, error: null };
 }
