@@ -35,6 +35,9 @@ export async function gather<T, A>(opts: IGatherOptions<T>): Promise<IGatherResu
 
   const resolvedUrl = typeof opts.url === "string" ? opts.url : opts.url.filter(v => !!v).join("/");
 
+  // eslint-disable-next-line no-console
+  console.log("calling fetch", { resolvedUrl });
+
   const response = await fetch(resolvedUrl, {
     body,
     cache: "default",
