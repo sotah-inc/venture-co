@@ -89,15 +89,24 @@ async function handleResponse<A>(response: Response): Promise<IGatherResult<A>> 
   const responseBody: A | null = await (async () => {
     const responseText = await response.text();
     if (responseText.length === 0) {
+      // eslint-disable-next-line no-console
+      console.log("response text was zero length");
+
       return null;
     }
 
     const contentType = response.headers.get("content-type");
     if (contentType === null) {
+      // eslint-disable-next-line no-console
+      console.log("header content-type was null");
+
       return null;
     }
 
     if (!/^application\/json/.test(contentType)) {
+      // eslint-disable-next-line no-console
+      console.log("content-type did not match application json regex", { contentType });
+
       return null;
     }
 
