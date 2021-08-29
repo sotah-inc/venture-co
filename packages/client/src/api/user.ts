@@ -137,6 +137,9 @@ export async function reloadUser(token: string): Promise<IReloadUserResponse> {
     break;
   case HTTPStatus.UNAUTHORIZED:
   default: {
+    // eslint-disable-next-line no-console
+    console.log("reloadUser() default body", { body });
+
     const error = Object.values(body as IValidationErrorResponse).find(v => !!v);
 
     return { error: error ?? "Unauthorized", user: null };
