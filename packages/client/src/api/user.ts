@@ -125,7 +125,7 @@ export interface IReloadUserResponse {
 
 export async function reloadUser(token: string): Promise<IReloadUserResponse> {
   const { body, status } = await gather<null, IUserJson | IValidationErrorResponse>({
-    url: `${getPrivateApiEndpoint()}/user`,
+    url: `${getApiEndpoint()}/user`,
     headers: new Headers({
       Authorization: `Bearer ${token}`,
       "content-type": "application/json",
