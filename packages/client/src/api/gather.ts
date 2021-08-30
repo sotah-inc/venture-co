@@ -35,9 +35,6 @@ export async function gather<T, A>(opts: IGatherOptions<T>): Promise<IGatherResu
 
   const resolvedUrl = typeof opts.url === "string" ? opts.url : opts.url.filter(v => !!v).join("/");
 
-  // eslint-disable-next-line no-console
-  console.log("calling fetch", { resolvedUrl });
-
   const response = await fetch(resolvedUrl, {
     body,
     cache: "default",
@@ -108,7 +105,10 @@ async function handleResponse<A>(response: Response): Promise<IGatherResult<A>> 
 
     if (!/^application\/json/.test(contentType)) {
       // eslint-disable-next-line no-console
-      console.log("content-type did not match application json regex", { contentType });
+      console.log("content-type did not match application json regex", {
+        contentType,
+        url: response.url,
+      });
 
       return null;
     }
