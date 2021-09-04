@@ -11,7 +11,7 @@ export enum ParseKind {
 export class Message<T> {
   public readonly error: Error | null;
 
-  private readonly rawData: string;
+  public readonly rawData: string;
 
   public readonly code: code;
 
