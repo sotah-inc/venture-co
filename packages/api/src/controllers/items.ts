@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import {
   GetItemClassesResponse,
   GetItemPriceHistoriesResponse,
@@ -44,6 +45,8 @@ export class ItemsController {
         status: HTTPStatus.INTERNAL_SERVER_ERROR,
       };
     }
+
+    console.log(msg.rawData);
 
     const result = await msg.decode();
     if (result === null) {
