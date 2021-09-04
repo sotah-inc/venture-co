@@ -51,9 +51,6 @@ export abstract class BaseMessenger {
       throw new Error("failed to resolve nats message");
     }
 
-    // eslint-disable-next-line no-console
-    console.log("received message", { subject, data: natsMessage.data.toString() });
-
     const parsedMsg: IMessage = JSON.parse(natsMessage.data.toString());
     const msg = new Message<T>(parsedMsg, parseKind);
     if (msg.error !== null && msg.code === code.genericError) {

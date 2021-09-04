@@ -32,7 +32,7 @@ export class ItemsMessenger extends BaseMessenger {
   }
 
   public itemClasses(): Promise<Message<IGetItemClassesResponse>> {
-    return this.request(subjects.itemClasses);
+    return this.request(subjects.itemClasses, { parseKind: ParseKind.GzipJsonEncoded });
   }
 
   public itemsVendorPrices(
