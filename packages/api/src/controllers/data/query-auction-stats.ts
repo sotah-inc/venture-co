@@ -35,6 +35,9 @@ export class QueryAuctionStatsController {
       };
     }
 
+    // eslint-disable-next-line no-console
+    console.log("received params", { params: validateParamsResult.body });
+
     const connectedRealmIdResult = await (async (): Promise<ResolveResult<number>> => {
       if (validateParamsResult.body.regionName === undefined) {
         return {
@@ -73,11 +76,16 @@ export class QueryAuctionStatsController {
       return connectedRealmIdResult.errorResponse;
     }
 
-    const msg = await this.messengers.stats.queryAuctionStats({
+    const queryAuctionStatsParams = {
       game_version: validateParamsResult.body.gameVersion,
       region_name: validateParamsResult.body.regionName ?? "",
       connected_realm_id: connectedRealmIdResult.data,
-    });
+    };
+
+    // eslint-disable-next-line no-console
+    console.log("using params", { queryAuctionStatsParams });
+
+    const msg = await this.messengers.stats.queryAuctionStats(queryAuctionStatsParams);
     if (msg.code !== code.ok) {
       if (msg.code === code.notFound) {
         return {
