@@ -46,8 +46,6 @@ export class ItemsController {
       };
     }
 
-    console.log(msg.rawData);
-
     const result = await msg.decode();
     if (result === null) {
       return {
