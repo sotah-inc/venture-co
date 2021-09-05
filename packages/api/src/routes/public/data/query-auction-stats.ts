@@ -10,19 +10,19 @@ export function getRouter(messengers: IMessengers): Router {
   const controller = new QueryAuctionStatsController(messengers);
 
   router.get(
-    "/:regionName/:connectedRealmId",
+    "/:gameVersion/:regionName/:realmSlug",
     wrap(async (req: Request, res: Response) =>
       handleResult(res, await controller.queryAuctionStats(req, res)),
     ),
   );
   router.get(
-    "/:regionName",
+    "/:gameVersion/:regionName",
     wrap(async (req: Request, res: Response) =>
       handleResult(res, await controller.queryAuctionStats(req, res)),
     ),
   );
   router.get(
-    "/",
+    "/:gameVersion",
     wrap(async (req: Request, res: Response) =>
       handleResult(res, await controller.queryAuctionStats(req, res)),
     ),

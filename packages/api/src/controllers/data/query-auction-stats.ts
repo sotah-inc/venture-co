@@ -3,9 +3,11 @@ import { IMessengers } from "@sotah-inc/server";
 import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
 import { Response } from "express";
 import HTTPStatus from "http-status";
+import { z } from "zod";
 
 import { IRequestResult, PlainRequest } from "../index";
-import { resolveRealmSlug } from "../resolvers";
+import { resolveRealmSlug, ResolveResult } from "../resolvers";
+import { validate, validationErrorsToResponse } from "../validators";
 
 export class QueryAuctionStatsController {
   private messengers: IMessengers;
@@ -18,12 +20,62 @@ export class QueryAuctionStatsController {
     req: PlainRequest,
     _res: Response,
   ): Promise<IRequestResult<QueryAuctionStatsResponse>> {
-    const resolveRealmSlugResult = await resolveRealmSlug(req.params, this.messengers.regions);
-    if (resolveRealmSlugResult.errorResponse !== null) {
-      return resolveRealmSlugResult.errorResponse;
+    const validateParamsResult = await validate(
+      z.object({
+        gameVersion: z.string().nonempty(),
+        regionName: z.string(),
+        realmSlug: z.string(),
+      }),
+      req.params,
+    );
+    if (validateParamsResult.errors !== null) {
+      return {
+        status: HTTPStatus.BAD_REQUEST,
+        data: validationErrorsToResponse(validateParamsResult.errors),
+      };
     }
 
-    const msg = await this.messengers.stats.queryAuctionStats(resolveRealmSlugResult.data.tuple);
+    const connectedRealmIdResult = await (async (): Promise<ResolveResult<number>> => {
+      if (validateParamsResult.body.regionName.length === 0) {
+        return {
+          errorResponse: null,
+          data: 0,
+        };
+      }
+
+      if (validateParamsResult.body.realmSlug.length === 0) {
+        return {
+          errorResponse: null,
+          data: 0,
+        };
+      }
+
+      const resolveRealmSlugResult = await resolveRealmSlug(
+        {
+          ...validateParamsResult.body,
+        },
+        this.messengers.regions,
+      );
+      if (resolveRealmSlugResult.errorResponse !== null) {
+        return {
+          errorResponse: resolveRealmSlugResult.errorResponse,
+        };
+      }
+
+      return {
+        errorResponse: null,
+        data: resolveRealmSlugResult.data.connectedRealm.connected_realm.id,
+      };
+    })();
+    if (connectedRealmIdResult.errorResponse !== null) {
+      return connectedRealmIdResult.errorResponse;
+    }
+
+    const msg = await this.messengers.stats.queryAuctionStats({
+      game_version: validateParamsResult.body.gameVersion,
+      region_name: validateParamsResult.body.regionName,
+      connected_realm_id: connectedRealmIdResult.data,
+    });
     if (msg.code !== code.ok) {
       if (msg.code === code.notFound) {
         return {
