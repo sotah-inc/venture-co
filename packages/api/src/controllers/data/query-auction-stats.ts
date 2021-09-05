@@ -68,7 +68,9 @@ export class QueryAuctionStatsController {
       }
 
       // eslint-disable-next-line no-console
-      console.log("resolve realm-slug result", { resolveRealmSlugResult });
+      console.log("resolve realm-slug result", {
+        resolveRealmSlugResult: JSON.stringify(resolveRealmSlugResult),
+      });
 
       return {
         errorResponse: null,
