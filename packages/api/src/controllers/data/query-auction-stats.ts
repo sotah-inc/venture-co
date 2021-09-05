@@ -67,6 +67,9 @@ export class QueryAuctionStatsController {
         };
       }
 
+      // eslint-disable-next-line no-console
+      console.log("resolve realm-slug result", { resolveRealmSlugResult });
+
       return {
         errorResponse: null,
         data: resolveRealmSlugResult.data.connectedRealm.connected_realm.id,
