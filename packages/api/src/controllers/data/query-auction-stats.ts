@@ -23,8 +23,8 @@ export class QueryAuctionStatsController {
     const validateParamsResult = await validate(
       z.object({
         gameVersion: z.string().nonempty(),
-        regionName: z.string(),
-        realmSlug: z.string(),
+        regionName: z.string().optional(),
+        realmSlug: z.string().optional(),
       }),
       req.params,
     );
@@ -36,14 +36,14 @@ export class QueryAuctionStatsController {
     }
 
     const connectedRealmIdResult = await (async (): Promise<ResolveResult<number>> => {
-      if (validateParamsResult.body.regionName.length === 0) {
+      if (validateParamsResult.body.regionName === undefined) {
         return {
           errorResponse: null,
           data: 0,
         };
       }
 
-      if (validateParamsResult.body.realmSlug.length === 0) {
+      if (validateParamsResult.body.realmSlug === undefined) {
         return {
           errorResponse: null,
           data: 0,
@@ -52,7 +52,9 @@ export class QueryAuctionStatsController {
 
       const resolveRealmSlugResult = await resolveRealmSlug(
         {
-          ...validateParamsResult.body,
+          gameVersion: validateParamsResult.body.gameVersion,
+          regionName: validateParamsResult.body.regionName,
+          realmSlug: validateParamsResult.body.realmSlug,
         },
         this.messengers.regions,
       );
@@ -73,7 +75,7 @@ export class QueryAuctionStatsController {
 
     const msg = await this.messengers.stats.queryAuctionStats({
       game_version: validateParamsResult.body.gameVersion,
-      region_name: validateParamsResult.body.regionName,
+      region_name: validateParamsResult.body.regionName ?? "",
       connected_realm_id: connectedRealmIdResult.data,
     });
     if (msg.code !== code.ok) {
