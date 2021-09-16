@@ -34,19 +34,11 @@ function resolveEpisodeName(
     return episodeFilename.split("-").map(v => v.trim()).pop() ?? null;
   }
 
-  if (dashPrefix === "DBZ") {
+  if (dashPrefix === "Dragonball Z Remastered") {
     return episodeFilename
       .split("-")
       .map(v => v.trim())
       .slice(2)
-      .join("");
-  }
-
-  if (spacePrefix === "Dragonball Z") {
-    return episodeFilename
-      .split("-")
-      .map(v => v.trim())
-      .slice(1)
       .join("");
   }
 
