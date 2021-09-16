@@ -6,7 +6,7 @@ import HTTPStatus from "http-status";
 
 import { resolveRegionComposites } from "./resolvers";
 import { validate, validationErrorsToResponse } from "./validators";
-import { GameVersionRules } from "./validators/yup";
+import { createSchema, GameVersionRule } from "./validators/yup";
 
 import { IRequestResult, PlainRequest } from "./index";
 
@@ -21,7 +21,10 @@ export class BootController {
     req: PlainRequest,
     _res: Response,
   ): Promise<IRequestResult<GetBootResponse>> {
-    const validateResult = await validate(GameVersionRules(this.messengers.regions), req.params);
+    const validateResult = await validate(
+      createSchema({ game_version: GameVersionRule }),
+      req.params,
+    );
     if (validateResult.errors !== null) {
       return {
         status: HTTPStatus.BAD_REQUEST,

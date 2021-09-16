@@ -41,7 +41,7 @@ export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
     ),
   );
   router.get(
-    "/boot",
+    "/boot/:game_version",
     wrap(async (req: Request, res: Response) =>
       handleResult(res, await bootController.getBoot(req, res)),
     ),
