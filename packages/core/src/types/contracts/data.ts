@@ -2,11 +2,11 @@ import { IAuction } from "../auction";
 import { IPostJson, IProfessionPricelistJson } from "../entities";
 import { ExpansionName, IExpansion } from "../expansion";
 import {
+  GameVersion,
   IConnectedRealmComposite,
   IErrorResponse,
   IGetItemsRecipesResponseData,
-  IItemPrices,
-  IRegionComposite,
+  IItemPrices, IRegionComposite,
   IRegionTokenHistory,
   IShortPet,
   IShortProfession,
@@ -25,15 +25,21 @@ import { IShortItem } from "../short-item";
 export * from "./data/index";
 
 export interface IGetBootResponseData {
-  regions: IRegionComposite[];
-  expansions: IExpansion[];
-  professions: IShortProfession[];
+  gameVersions: GameVersion[];
   firebase_config: {
     browser_api_key: string;
   };
 }
 
 export type GetBootResponse = IGetBootResponseData | IValidationErrorResponse | null;
+
+export interface IGetRegionsResponseData {
+  regions: IRegionComposite[];
+  expansions: IExpansion[];
+  professions: IShortProfession[];
+}
+
+export type GetRegionsResponse = IGetRegionsResponseData | IValidationErrorResponse | null;
 
 export interface IGetItemClassesResponseData {
   item_classes: IItemClass[];
