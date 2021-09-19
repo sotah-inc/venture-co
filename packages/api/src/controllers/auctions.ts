@@ -1,4 +1,10 @@
-import { GetAuctionsResponse, IItemsMarketPrice, ItemId, RecipeId } from "@sotah-inc/core";
+import {
+  GetAuctionsResponse,
+  IItemsMarketPrice,
+  ItemId,
+  RecipeId,
+  StatusKind,
+} from "@sotah-inc/core";
 import { IMessengers, ProfessionPricelist } from "@sotah-inc/server";
 import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
 import {
@@ -42,9 +48,16 @@ export class AuctionsController {
       return resolveRealmModificationDatesResult.errorResponse;
     }
 
-    const lastModifiedDate = moment(
-      resolveRealmModificationDatesResult.data.dates.downloaded * 1000,
-    ).utc();
+    const foundDownloadedTimestamp =
+      resolveRealmModificationDatesResult.data.dates[StatusKind.Downloaded];
+    if (foundDownloadedTimestamp === undefined) {
+      return {
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+        data: { error: "downloaded timestamp was undefined" },
+      };
+    }
+
+    const lastModifiedDate = moment(foundDownloadedTimestamp * 1000).utc();
     const lastModified = `${lastModifiedDate.format("ddd, DD MMM YYYY HH:mm:ss")} GMT`;
 
     // checking if-modified-since header

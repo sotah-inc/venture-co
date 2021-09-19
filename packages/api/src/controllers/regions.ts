@@ -82,8 +82,13 @@ export class RegionsController {
 
     const lastModifiedDate: moment.Moment | null = (() => {
       const latestDownloaded = realmsResult.reduce<number | null>((result, connectedRealm) => {
-        if (result === null || connectedRealm.status_timestamps[StatusKind.Downloaded] > result) {
-          return connectedRealm.status_timestamps[StatusKind.Downloaded];
+        const foundTimestamp = connectedRealm.status_timestamps[StatusKind.Downloaded];
+        if (foundTimestamp === undefined) {
+          return result;
+        }
+
+        if (result === null || foundTimestamp > result) {
+          return foundTimestamp;
         }
 
         return result;
