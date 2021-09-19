@@ -2,8 +2,8 @@ import {
   GameVersion,
   IConfigRegion,
   IConnectedRealmComposite,
-  IConnectedRealmModificationDates,
   IItemClass,
+  IStatusTimestamps,
 } from "@sotah-inc/core";
 
 export * from "./auctions";
@@ -41,7 +41,7 @@ export interface IRealmModificationDatesResponse {
   [regionName: string]:
     | undefined
     | {
-        [connectedRealmId: number]: IConnectedRealmModificationDates | undefined;
+        [connectedRealmId: number]: IStatusTimestamps | undefined;
       };
 }
 

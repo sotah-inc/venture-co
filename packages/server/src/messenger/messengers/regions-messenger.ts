@@ -1,11 +1,11 @@
 import {
   IConnectedRealmComposite,
-  IConnectedRealmModificationDates,
   IGameVersionTuple,
   IRegionComposite,
   IRegionTuple,
   IRegionVersionConnectedRealmTuple,
   IRegionVersionRealmTuple,
+  IStatusTimestamps,
   RegionVersionTuple,
 } from "@sotah-inc/core";
 
@@ -45,7 +45,7 @@ export class RegionsMessenger extends BaseMessenger {
 
   public queryRealmModificationDates(
     tuple: IRegionVersionConnectedRealmTuple,
-  ): Promise<Message<IConnectedRealmModificationDates>> {
+  ): Promise<Message<IStatusTimestamps>> {
     return this.request(subjects.queryRealmModificationDates, { body: JSON.stringify(tuple) });
   }
 
