@@ -45,10 +45,16 @@ export interface IRealm extends ILinksBase {
   slug: RealmSlug;
 }
 
-export interface IConnectedRealmModificationDates {
-  downloaded: UnixTimestamp;
-  live_auctions_received: UnixTimestamp;
-  pricelist_history_received: UnixTimestamp;
+export enum StatusKind {
+  Downloaded = "downloaded",
+  LiveAuctionsReceived = "liveAuctionsReceived",
+  ItemPricesReceived = "itemPricesReceived",
+  RecipePricesReceived = "recipePricesReceived",
+  StatsReceived = "statsReceived",
+}
+
+export interface IStatusTimestamps {
+  [key: string]: UnixTimestamp;
 }
 
 export enum RealmStatus {
@@ -78,7 +84,7 @@ export interface IConnectedRealmComposite {
     mythic_leaderboards: IHrefReference;
     auctions: IHrefReference;
   };
-  modification_dates: IConnectedRealmModificationDates;
+  status_timestamps: IStatusTimestamps;
 }
 
 export interface IRegionVersionConnectedRealmTuple extends RegionVersionTuple {
