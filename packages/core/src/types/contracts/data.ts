@@ -3,6 +3,7 @@ import { IPostJson, IProfessionPricelistJson } from "../entities";
 import { ExpansionName, IExpansion } from "../expansion";
 import {
   GameVersion,
+  IConfigRegion,
   IConnectedRealmComposite,
   IErrorResponse,
   IGetItemsRecipesResponseData,
@@ -27,6 +28,7 @@ export * from "./data/index";
 
 export interface IGetBootResponseData {
   gameVersions: GameVersion[];
+  regions: IConfigRegion[];
   firebase_config: {
     browser_api_key: string;
   };
