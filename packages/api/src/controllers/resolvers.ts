@@ -2,10 +2,9 @@ import {
   GameVersion,
   IConfigRegion,
   IConnectedRealmComposite,
-  IConnectedRealmModificationDates,
   IRegionComposite,
   IRegionVersionConnectedRealmTuple,
-  IShortItem,
+  IShortItem, IStatusTimestamps,
   ItemId,
   IValidationErrorResponse,
   Locale,
@@ -432,7 +431,7 @@ export async function resolveRealmSlug(
 }
 
 export interface IResolveRealmModificationDatesResult {
-  dates: IConnectedRealmModificationDates;
+  dates: IStatusTimestamps;
 }
 
 export async function resolveRealmModificationDates(

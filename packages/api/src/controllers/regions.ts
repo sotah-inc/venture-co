@@ -1,4 +1,4 @@
-import { GetConnectedRealmsResponse } from "@sotah-inc/core";
+import { GetConnectedRealmsResponse, StatusKind } from "@sotah-inc/core";
 import { GetRegionsResponse } from "@sotah-inc/core/build/dist/types/contracts/data";
 import { IMessengers } from "@sotah-inc/server";
 import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
@@ -82,8 +82,8 @@ export class RegionsController {
 
     const lastModifiedDate: moment.Moment | null = (() => {
       const latestDownloaded = realmsResult.reduce<number | null>((result, connectedRealm) => {
-        if (result === null || connectedRealm.modification_dates.downloaded > result) {
-          return connectedRealm.modification_dates.downloaded;
+        if (result === null || connectedRealm.status_timestamps[StatusKind.Downloaded] > result) {
+          return connectedRealm.status_timestamps[StatusKind.Downloaded];
         }
 
         return result;
