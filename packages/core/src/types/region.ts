@@ -54,7 +54,7 @@ export enum StatusKind {
 }
 
 export interface IStatusTimestamps {
-  [key: string]: UnixTimestamp;
+  [key: string]: UnixTimestamp | undefined;
 }
 
 export enum RealmStatus {
