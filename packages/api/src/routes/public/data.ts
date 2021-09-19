@@ -11,6 +11,7 @@ import { ItemsController } from "../../controllers/items";
 import { PetsController } from "../../controllers/pets";
 import { PostsController } from "../../controllers/posts";
 import { ProfessionPricelistController } from "../../controllers/profession-pricelist";
+import { RegionsController } from "../../controllers/regions";
 import { TokenHistoryController } from "../../controllers/token-history";
 import { getRouter as getQueryAuctionStatsRouter } from "./data/query-auction-stats";
 
@@ -25,6 +26,7 @@ export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
   const tokenHistoryController = new TokenHistoryController(messengers);
   const bootController = new BootController(messengers);
   const postsController = new PostsController(dbConn);
+  const regionsController = new RegionsController(messengers);
 
   router.use("/query-auction-stats", getQueryAuctionStatsRouter(messengers));
 
@@ -53,9 +55,9 @@ export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
     ),
   );
   router.get(
-    "/connected-realms/:regionName",
+    "/connected-realms/:gameVersion/:regionName",
     wrap(async (req: Request, res: Response) =>
-      handleResult(res, await dataController.getConnectedRealms(req, res)),
+      handleResult(res, await regionsController.getConnectedRealms(req, res)),
     ),
   );
   router.get(
