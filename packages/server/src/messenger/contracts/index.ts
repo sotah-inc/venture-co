@@ -1,5 +1,6 @@
 import {
   GameVersion,
+  IConfigRegion,
   IConnectedRealmComposite,
   IConnectedRealmModificationDates,
   IItemClass,
@@ -25,6 +26,7 @@ export interface IGetSessionSecretResponse {
 }
 
 export interface IGetBootResponse {
+  regions: IConfigRegion[];
   gameVersions: GameVersion[];
   firebase_config: {
     browser_api_key: string;
