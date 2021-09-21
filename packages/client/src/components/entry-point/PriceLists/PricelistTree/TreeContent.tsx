@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Classes, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
-import { IPricelistJson, IRegionComposite } from "@sotah-inc/core";
+import { IPricelistJson, IConfigRegion, StatusKind } from "@sotah-inc/core";
 
 import {
   PricelistPanelContainer,
@@ -13,7 +13,7 @@ import { IClientRealm } from "../../../../types/global";
 import { LastModified } from "../../../util";
 
 export interface IStateProps {
-  currentRegion: IRegionComposite | null;
+  currentRegion: IConfigRegion | null;
   currentRealm: IClientRealm | null;
   selectedList: IPricelistJson | null;
 }
@@ -52,8 +52,11 @@ export class TreeContent extends React.Component<Props> {
       return;
     }
 
-    return (
-      <LastModified targetDate={new Date(currentRealm.realmModificationDates.downloaded * 1000)} />
-    );
+    const downloadedTimestamp = currentRealm.statusTimestamps[StatusKind.Downloaded];
+    if (downloadedTimestamp === undefined) {
+      return;
+    }
+
+    return <LastModified targetDate={new Date(downloadedTimestamp * 1000)} />;
   }
 }

@@ -1,14 +1,14 @@
 import React from "react";
 
 import { Classes, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
-import { IGetBootResponseData, IRegionComposite } from "@sotah-inc/core";
+import { IGetBootResponseData, IConfigRegion } from "@sotah-inc/core";
 
 import { ILoadRegionEntrypoint } from "../../actions/main";
 import { IClientRealm, IFetchData } from "../../types/global";
 import { FetchLevel, UserData } from "../../types/main";
 
 export interface IStateProps {
-  currentRegion: IRegionComposite | null;
+  currentRegion: IConfigRegion | null;
   currentRealm: IClientRealm | null;
   userData: UserData;
   realms: IFetchData<IClientRealm[]>;
@@ -16,7 +16,7 @@ export interface IStateProps {
 }
 
 export interface IDispatchProps {
-  onRegionChange: (region: IRegionComposite) => void;
+  onRegionChange: (region: IConfigRegion) => void;
   loadRegionEntrypoint: (payload: ILoadRegionEntrypoint) => void;
 }
 
@@ -27,7 +27,7 @@ export interface IOwnProps {
 
 export interface IRouteProps {
   routeParams: IRouteParams;
-  redirectToRealm: (region: IRegionComposite, realm: IClientRealm) => void;
+  redirectToRealm: (region: IConfigRegion, realm: IClientRealm) => void;
 }
 
 export interface IRouteParams {
@@ -49,7 +49,7 @@ export class RegionEntrypoint extends React.Component<Props> {
       routeParams: { region_name },
     } = this.props;
 
-    if (currentRegion === null || currentRegion.config_region.name !== region_name) {
+    if (currentRegion === null || currentRegion.name !== region_name) {
       return this.renderUnmatched();
     }
 
@@ -121,7 +121,7 @@ export class RegionEntrypoint extends React.Component<Props> {
       );
     }
 
-    if (!bootData.data.regions.find(v => v.config_region.name === region_name)) {
+    if (!bootData.data.regions.find(v => v.name === region_name)) {
       return (
         <NonIdealState
           title={`Region ${region_name} not found!`}

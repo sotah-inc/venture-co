@@ -1,7 +1,7 @@
 import {
+  IConfigRegion,
   IExpansion,
   IPricelistJson,
-  IRegionComposite,
   IShortProfession,
   IShortRecipe,
   IShortSkillTier,
@@ -12,21 +12,21 @@ import getSlug from "speakingurl";
 
 import { IClientRealm, IRouteConfig } from "../types/global";
 
-export function toRealmProfessions(region: IRegionComposite, realm: IClientRealm): IRouteConfig {
-  const asDest = ["professions", region.config_region.name, realm.realm.slug].join("/");
+export function toRealmProfessions(region: IConfigRegion, realm: IClientRealm): IRouteConfig {
+  const asDest = ["professions", region.name, realm.realm.slug].join("/");
   const url = ["professions", "[region_name]", "[realm_slug]"].join("/");
 
   return { url, asDest };
 }
 
 export function toRealmProfession(
-  region: IRegionComposite,
+  region: IConfigRegion,
   realm: IClientRealm,
   profession: IShortProfession,
 ): IRouteConfig {
   const asDest = [
     "professions",
-    region.config_region.name,
+    region.name,
     realm.realm.slug,
     `${profession.id}-${getSlug(profession.name)}`,
   ].join("/");
@@ -36,14 +36,14 @@ export function toRealmProfession(
 }
 
 export function toRealmSkillTier(
-  region: IRegionComposite,
+  region: IConfigRegion,
   realm: IClientRealm,
   profession: IShortProfession,
   skillTier: IShortProfession["skilltiers"][0],
 ): IRouteConfig {
   const asDest = [
     "professions",
-    region.config_region.name,
+    region.name,
     realm.realm.slug,
     `${profession.id}-${getSlug(profession.name)}`,
     `${skillTier.id}-${getSlug(skillTier.name)}`,
@@ -60,7 +60,7 @@ export function toRealmSkillTier(
 }
 
 export function toRealmRecipe(
-  region: IRegionComposite,
+  region: IConfigRegion,
   realm: IClientRealm,
   profession: IShortProfession,
   skillTier: IShortSkillTier,
@@ -68,7 +68,7 @@ export function toRealmRecipe(
 ): IRouteConfig {
   const asDest = [
     "professions",
-    region.config_region.name,
+    region.name,
     realm.realm.slug,
     `${profession.id}-${getSlug(profession.name)}`,
     `${skillTier.id}-${getSlug(skillTier.name)}`,
@@ -87,7 +87,7 @@ export function toRealmRecipe(
 }
 
 export function toRealmCategoryRecipe(
-  region: IRegionComposite,
+  region: IConfigRegion,
   realm: IClientRealm,
   profession: IShortProfession,
   skillTier: IShortSkillTier,
@@ -95,7 +95,7 @@ export function toRealmCategoryRecipe(
 ): IRouteConfig {
   const asDest = [
     "professions",
-    region.config_region.name,
+    region.name,
     realm.realm.slug,
     `${profession.id}-${getSlug(profession.name)}`,
     `${skillTier.id}-${getSlug(skillTier.name)}`,
@@ -114,30 +114,28 @@ export function toRealmCategoryRecipe(
 }
 
 export function toRealmProfessionPricelists(
-  region: IRegionComposite,
+  region: IConfigRegion,
   realm: IClientRealm,
 ): IRouteConfig {
-  const asDest = ["profession-pricelists", region.config_region.name, realm.realm.slug].join("/");
+  const asDest = ["profession-pricelists", region.name, realm.realm.slug].join("/");
   const url = ["profession-pricelists", "[region_name]", "[realm_slug]"].join("/");
 
   return { url, asDest };
 }
 
 export function toUserPricelist(
-  region: IRegionComposite,
+  region: IConfigRegion,
   realm: IClientRealm,
   pricelist: IPricelistJson,
 ): IRouteConfig {
-  const asDest = ["data", region.config_region.name, realm.realm.slug, "user", pricelist.slug].join(
-    "/",
-  );
+  const asDest = ["data", region.name, realm.realm.slug, "user", pricelist.slug].join("/");
   const url = ["data", "[region_name]", "[realm_slug]", "user", "[pricelist_slug]"].join("/");
 
   return { url, asDest };
 }
 
 export function toProfessionPricelist(
-  region: IRegionComposite,
+  region: IConfigRegion,
   realm: IClientRealm,
   expansion: IExpansion,
   profession: IShortProfession,
@@ -145,7 +143,7 @@ export function toProfessionPricelist(
 ): IRouteConfig {
   const asDest = [
     "profession-pricelists",
-    region.config_region.name,
+    region.name,
     realm.realm.slug,
     expansion.name,
     `${profession.id}-${getSlug(profession.name)}`,
@@ -164,14 +162,14 @@ export function toProfessionPricelist(
 }
 
 export function toProfessionPricelistsProfession(
-  region: IRegionComposite,
+  region: IConfigRegion,
   realm: IClientRealm,
   expansion: IExpansion,
   profession: IShortProfession,
 ): IRouteConfig {
   const asDest = [
     "profession-pricelists",
-    region.config_region.name,
+    region.name,
     realm.realm.slug,
     expansion.name,
     `${profession.id}-${getSlug(profession.name)}`,
@@ -188,16 +186,11 @@ export function toProfessionPricelistsProfession(
 }
 
 export function toExpansionProfessionPricelists(
-  region: IRegionComposite,
+  region: IConfigRegion,
   realm: IClientRealm,
   expansion: IExpansion,
 ): IRouteConfig {
-  const asDest = [
-    "profession-pricelists",
-    region.config_region.name,
-    realm.realm.slug,
-    expansion.name,
-  ].join("/");
+  const asDest = ["profession-pricelists", region.name, realm.realm.slug, expansion.name].join("/");
   const url = ["profession-pricelists", "[region_name]", "[realm_slug]", "[expansion_name]"].join(
     "/",
   );
@@ -205,10 +198,8 @@ export function toExpansionProfessionPricelists(
   return { url, asDest };
 }
 
-export function toWorkOrders(region: IRegionComposite, realm: IClientRealm): IRouteConfig {
-  const asDest = ["marketplace", "work-orders", region.config_region.name, realm.realm.slug].join(
-    "/",
-  );
+export function toWorkOrders(region: IConfigRegion, realm: IClientRealm): IRouteConfig {
+  const asDest = ["marketplace", "work-orders", region.name, realm.realm.slug].join("/");
   const url = ["marketplace", "work-orders", "[region_name]", "[realm_slug]"].join("/");
 
   return { url, asDest };

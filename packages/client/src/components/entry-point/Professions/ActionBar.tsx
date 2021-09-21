@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Alignment, ButtonGroup, Navbar, NavbarGroup } from "@blueprintjs/core";
-import { IRegionComposite, IShortProfession, IShortRecipe, IShortSkillTier } from "@sotah-inc/core";
+import { IConfigRegion, IShortProfession, IShortRecipe, IShortSkillTier } from "@sotah-inc/core";
 
 import {
   ProfessionsProfessionToggleContainer,
@@ -13,7 +13,7 @@ import { ISelectedSkillTier } from "../../../types/professions";
 import { RecipeInput } from "../../util/RecipeInput";
 
 export interface IStateProps {
-  currentRegion: IRegionComposite | null;
+  currentRegion: IConfigRegion | null;
   currentRealm: IClientRealm | null;
   selectedProfession: IShortProfession | null | undefined;
   selectedSkillTier: ISelectedSkillTier;
@@ -21,20 +21,20 @@ export interface IStateProps {
 }
 
 export interface IRouteProps {
-  browseToRealm: (region: IRegionComposite, realm: IClientRealm) => void;
+  browseToRealm: (region: IConfigRegion, realm: IClientRealm) => void;
   browseToProfession: (
-    region: IRegionComposite,
+    region: IConfigRegion,
     realm: IClientRealm,
     profession: IShortProfession,
   ) => void;
   browseToSkillTier: (
-    region: IRegionComposite,
+    region: IConfigRegion,
     realm: IClientRealm,
     profession: IShortProfession,
     skillTier: IShortProfession["skilltiers"][0],
   ) => void;
   browseToRecipe: (
-    region: IRegionComposite,
+    region: IConfigRegion,
     realm: IClientRealm,
     profession: IShortProfession,
     skillTier: IShortSkillTier,

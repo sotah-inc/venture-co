@@ -1,8 +1,8 @@
 import React from "react";
 
-import { Classes, Intent, ITreeNode, NonIdealState, Spinner, Tree } from "@blueprintjs/core";
+import { Classes, Intent, NonIdealState, Spinner, Tree, TreeNodeInfo } from "@blueprintjs/core";
 import {
-  IRegionComposite,
+  IConfigRegion,
   IShortProfession,
   IShortRecipe,
   IShortSkillTier,
@@ -21,7 +21,7 @@ import { RecipePopover } from "../../util/RecipePopover";
 // props
 export interface IStateProps {
   loadId: string;
-  currentRegion: IRegionComposite | null;
+  currentRegion: IConfigRegion | null;
   currentRealm: IClientRealm | null;
   selectedProfession: IShortProfession | null | undefined;
   selectedProfessionId: ProfessionId;
@@ -40,18 +40,18 @@ export interface IDispatchProps {
 
 export interface IRouteProps {
   browseToProfession: (
-    region: IRegionComposite,
+    region: IConfigRegion,
     realm: IClientRealm,
     profession: IShortProfession,
   ) => void;
   browseToSkillTier: (
-    region: IRegionComposite,
+    region: IConfigRegion,
     realm: IClientRealm,
     profession: IShortProfession,
     skillTier: IShortProfession["skilltiers"][0],
   ) => void;
   browseToRecipe: (
-    region: IRegionComposite,
+    region: IConfigRegion,
     realm: IClientRealm,
     profession: IShortProfession,
     skillTier: IShortSkillTier,
@@ -177,7 +177,7 @@ export class ProfessionsTree extends React.Component<Props, State> {
   }
 
   // skill-tier nodes
-  private getSkillTierNodes(): ITreeNode[] {
+  private getSkillTierNodes(): TreeNodeInfo[] {
     const { selectedProfession } = this.props;
 
     if (selectedProfession === undefined || selectedProfession === null) {
@@ -195,7 +195,7 @@ export class ProfessionsTree extends React.Component<Props, State> {
       selectedSkillTier.data.id === v.id &&
       selectedSkillTier.isSelected;
 
-    const childNodes = ((): ITreeNode[] => {
+    const childNodes = ((): TreeNodeInfo[] => {
       if (!selectedSkillTier.isSelected) {
         return [];
       }
@@ -209,7 +209,7 @@ export class ProfessionsTree extends React.Component<Props, State> {
       );
     })();
 
-    const result: ITreeNode = {
+    const result: TreeNodeInfo = {
       childNodes,
       className: "skilltier-node",
       hasCaret: true,
@@ -266,13 +266,13 @@ export class ProfessionsTree extends React.Component<Props, State> {
   private getSkillTierCategoryNode(
     v: IShortSkillTier["categories"][0],
     categoryIndex: number,
-  ): ITreeNode {
+  ): TreeNodeInfo {
     const { selectedSkillTierCategory, selectedSkillTier } = this.props;
 
     const isSelected =
       selectedSkillTierCategory.index === categoryIndex && selectedSkillTierCategory.isSelected;
 
-    const childNodes = ((): ITreeNode[] => {
+    const childNodes = ((): TreeNodeInfo[] => {
       if (!isSelected || selectedSkillTier.data === null) {
         return [];
       }
@@ -337,7 +337,7 @@ export class ProfessionsTree extends React.Component<Props, State> {
       return `#${v.recipe.id}`;
     })();
 
-    const result: ITreeNode = {
+    const result: TreeNodeInfo = {
       className: "recipe-node",
       icon: this.renderRecipeNodeIcon(v.recipe.icon_url),
       id: `recipe-${v.id}`,
@@ -397,7 +397,7 @@ export class ProfessionsTree extends React.Component<Props, State> {
     );
   }
 
-  private onNodeClick(node: ITreeNode) {
+  private onNodeClick(node: TreeNodeInfo) {
     const separatorIndex = node.id.toString().lastIndexOf("-");
     if (separatorIndex === -1) {
       return;

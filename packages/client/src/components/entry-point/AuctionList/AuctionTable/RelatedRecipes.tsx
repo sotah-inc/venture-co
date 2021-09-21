@@ -3,7 +3,7 @@ import React from "react";
 import { Button, ButtonGroup } from "@blueprintjs/core";
 import {
   IGetItemsRecipesResponseData,
-  IRegionComposite,
+  IConfigRegion,
   IShortProfession,
   IShortSkillTier,
   IShortSkillTierCategoryRecipe,
@@ -16,19 +16,19 @@ import { RecipePopover } from "../../../util/RecipePopover";
 
 export interface IStateProps {
   currentRealm: IClientRealm | null;
-  currentRegion: IRegionComposite | null;
+  currentRegion: IConfigRegion | null;
   itemsRecipes: IGetItemsRecipesResponseData;
 }
 
 export interface IRouteProps {
   browseToSkillTier: (
-    region: IRegionComposite,
+    region: IConfigRegion,
     realm: IClientRealm,
     profession: IShortProfession,
     skillTier: IShortProfession["skilltiers"][0],
   ) => void;
   browseToRecipe: (
-    region: IRegionComposite,
+    region: IConfigRegion,
     realm: IClientRealm,
     profession: IShortProfession,
     skillTier: IShortSkillTier,

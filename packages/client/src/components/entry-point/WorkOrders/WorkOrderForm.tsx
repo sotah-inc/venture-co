@@ -4,7 +4,7 @@ import { Button, Classes, FormGroup, H5, HTMLTable, Intent, Slider } from "@blue
 import {
   ICreateWorkOrderRequest,
   IPrefillWorkOrderItemResponseData,
-  IRegionComposite,
+  IConfigRegion,
   IShortItem,
 } from "@sotah-inc/core";
 import { FormikProps } from "formik";
@@ -33,7 +33,7 @@ export interface IOwnProps {
   isSubmitDisabled: boolean;
   prefillWorkOrderItem: IFetchData<IPrefillWorkOrderItemResponseData>;
   callPrefillWorkOrderItem: (opts: IPrefillWorkOrderItemOptions) => void;
-  currentRegion: IRegionComposite | null;
+  currentRegion: IConfigRegion | null;
   currentRealm: IClientRealm | null;
   resetWorkOrderItemPrefill: () => void;
 }
@@ -424,7 +424,7 @@ export class WorkOrderForm extends React.Component<Props> {
       gameVersion: "",
       itemId: item.id,
       realmSlug: currentRealm.realm.slug,
-      regionName: currentRegion.config_region.name,
+      regionName: currentRegion.name,
     });
   }
 }

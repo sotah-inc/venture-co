@@ -1,8 +1,8 @@
 import React from "react";
 
 import {
+  IConfigRegion,
   IQueryWorkOrdersResponseData,
-  IRegionComposite,
   OrderDirection,
   OrderKind,
   SortPerPage,
@@ -11,16 +11,20 @@ import {
 import { ILoadRealmEntrypoint } from "../../actions/main";
 import { ILoadWorkOrderEntrypoint } from "../../actions/work-order";
 import { QueryWorkOrdersOptions } from "../../api/work-order";
-import { CreateWorkOrderDialogContainer } from "../../containers/entry-point/WorkOrders/CreateWorkOrderDialog";
+import {
+  CreateWorkOrderDialogContainer,
+} from "../../containers/entry-point/WorkOrders/CreateWorkOrderDialog";
 import { WorkOrdersListContainer } from "../../containers/entry-point/WorkOrders/WorkOrdersList";
-import { WorkOrdersNavRouteContainer } from "../../route-containers/entry-point/WorkOrders/WorkOrdersNav";
+import {
+  WorkOrdersNavRouteContainer,
+} from "../../route-containers/entry-point/WorkOrders/WorkOrdersNav";
 import { IClientRealm, IFetchData } from "../../types/global";
 import { FetchLevel } from "../../types/main";
 import { setTitle } from "../../util";
 
 export interface IStateProps {
   orders: IFetchData<IQueryWorkOrdersResponseData>;
-  currentRegion: IRegionComposite | null;
+  currentRegion: IConfigRegion | null;
   currentRealm: IClientRealm | null;
   perPage: SortPerPage;
   currentPage: number;
@@ -44,7 +48,7 @@ export interface IRouteParams {
 
 export interface IRouteProps {
   routeParams: IRouteParams;
-  browseTo: (region: IRegionComposite, realm: IClientRealm) => void;
+  browseTo: (region: IConfigRegion, realm: IClientRealm) => void;
 }
 
 export type Props = Readonly<IDispatchProps & IStateProps & IOwnProps & IRouteProps>;
@@ -80,7 +84,7 @@ export class WorkOrders extends React.Component<Props> {
       return;
     }
 
-    if (currentRegion === null || currentRegion.config_region.name !== region_name) {
+    if (currentRegion === null || currentRegion.name !== region_name) {
       return;
     }
 
@@ -109,9 +113,7 @@ export class WorkOrders extends React.Component<Props> {
       return;
     }
 
-    setTitle(
-      `Work Orders - ${currentRegion.config_region.name.toUpperCase()} ${currentRealm.realm.name}`,
-    );
+    setTitle(`Work Orders - ${currentRegion.name.toUpperCase()} ${currentRealm.realm.name}`);
   }
 
   private refreshWorkOrdersTrigger(prevProps: Props) {
@@ -159,7 +161,7 @@ export class WorkOrders extends React.Component<Props> {
       page: currentPage + 1,
       perPage,
       realmSlug: currentRealm.realm.slug,
-      regionName: currentRegion.config_region.name,
+      regionName: currentRegion.name,
     });
   }
 }

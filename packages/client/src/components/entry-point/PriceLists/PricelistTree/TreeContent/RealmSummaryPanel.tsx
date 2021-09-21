@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Callout, Card, Classes, H5, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
-import { IRegionComposite } from "@sotah-inc/core";
+import { IConfigRegion } from "@sotah-inc/core";
 
 import {
   UnmetDemandRouteContainer,
@@ -10,7 +10,7 @@ import {
 import { IClientRealm } from "../../../../../types/global";
 
 export interface IStateProps {
-  currentRegion: IRegionComposite | null;
+  currentRegion: IConfigRegion | null;
   currentRealm: IClientRealm | null;
 }
 
@@ -35,7 +35,7 @@ export class RealmSummaryPanel extends React.Component<Props> {
       );
     }
 
-    const realmString = `${currentRegion.config_region.name.toUpperCase()}-${
+    const realmString = `${currentRegion.name.toUpperCase()}-${
       currentRealm.realm.name.en_US
     }`;
     const population = <em>{currentRealm.population.name.en_US} population</em>;

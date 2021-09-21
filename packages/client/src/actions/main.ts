@@ -1,5 +1,6 @@
 /* eslint-disable func-style,@typescript-eslint/explicit-module-boundary-types */
 import {
+  IConfigRegion,
   IConnectedRealmComposite,
   ICreatePreferencesRequest,
   IGetBootResponseData,
@@ -90,7 +91,7 @@ export const FetchVerifyUser = (token: string) => {
 };
 
 export const REGION_CHANGE = "REGION_CHANGE";
-export const RegionChange = (payload: IRegionComposite) => createAction(REGION_CHANGE, payload);
+export const RegionChange = (payload: IConfigRegion) => createAction(REGION_CHANGE, payload);
 
 export const REQUEST_GET_CONNECTEDREALMS = "REQUEST_GET_CONNECTEDREALMS";
 export const RECEIVE_GET_CONNECTEDREALMS = "RECEIVE_GET_CONNECTEDREALMS";

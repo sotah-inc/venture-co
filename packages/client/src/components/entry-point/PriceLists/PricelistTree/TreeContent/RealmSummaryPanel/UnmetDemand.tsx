@@ -18,7 +18,7 @@ import {
   IPricelistEntryJson,
   IPricelistJson,
   IProfessionPricelistJson,
-  IRegionComposite,
+  IConfigRegion,
   IShortItem,
   IShortProfession,
   ItemId,
@@ -40,19 +40,19 @@ export interface IStateProps {
   getUnmetDemandLevel: FetchLevel;
   items: IShortItem[];
   selectedExpansion: IExpansion | null;
-  currentRegion: IRegionComposite | null;
+  currentRegion: IConfigRegion | null;
   currentRealm: IClientRealm | null;
 }
 
 export interface IRouteProps {
   browseToProfession: (
-    region: IRegionComposite,
+    region: IConfigRegion,
     realm: IClientRealm,
     expansion: IExpansion,
     profession: IShortProfession,
   ) => void;
   browseToProfessionPricelist: (
-    region: IRegionComposite,
+    region: IConfigRegion,
     realm: IClientRealm,
     expansion: IExpansion,
     profession: IShortProfession,
@@ -224,7 +224,7 @@ export class UnmetDemand extends React.Component<Props, IState> {
     if (collapsedResult.length === 0) {
       return (
         <Callout intent={Intent.SUCCESS}>
-          All pricelists are fulfilled for {currentRegion.config_region.name.toUpperCase()}-
+          All pricelists are fulfilled for {currentRegion.name.toUpperCase()}-
           {currentRealm.realm.name.en_US}!
         </Callout>
       );
@@ -252,7 +252,7 @@ export class UnmetDemand extends React.Component<Props, IState> {
       <>
         <Callout intent={Intent.PRIMARY} style={{ marginBottom: "10px" }}>
           These items have <strong>0</strong> auctions posted on{" "}
-          {currentRegion.config_region.name.toUpperCase()}-{currentRealm.realm.name.en_US}.
+          {currentRegion.name.toUpperCase()}-{currentRealm.realm.name.en_US}.
         </Callout>
         <Navbar>
           <NavbarGroup align={Alignment.LEFT}>

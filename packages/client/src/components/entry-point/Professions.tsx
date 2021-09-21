@@ -1,7 +1,7 @@
 import React from "react";
 
 import {
-  IRegionComposite,
+  IConfigRegion,
   IShortProfession,
   IShortRecipe,
   IShortSkillTier,
@@ -20,7 +20,7 @@ import { setTitle } from "../../util";
 
 export interface IStateProps {
   professions: IFetchData<IShortProfession[]>;
-  currentRegion: IRegionComposite | null;
+  currentRegion: IConfigRegion | null;
   currentRealm: IClientRealm | null;
   selectedProfession: IShortProfession | null | undefined;
   selectedSkillTierCategory: ISelectedSkillTierCategory;
@@ -40,18 +40,18 @@ export interface IOwnProps {
 
 export interface IRouteProps {
   redirectToProfession: (
-    region: IRegionComposite,
+    region: IConfigRegion,
     realm: IClientRealm,
     profession: IShortProfession,
   ) => void;
   redirectToSkillTier: (
-    region: IRegionComposite,
+    region: IConfigRegion,
     realm: IClientRealm,
     profession: IShortProfession,
     skillTier: IShortProfession["skilltiers"][0],
   ) => void;
   redirectToRecipe: (
-    region: IRegionComposite,
+    region: IConfigRegion,
     realm: IClientRealm,
     profession: IShortProfession,
     skillTier: IShortSkillTier,

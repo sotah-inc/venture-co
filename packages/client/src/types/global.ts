@@ -1,14 +1,13 @@
 import {
   ConnectedRealmId,
   IConnectedRealmComposite,
-  IConnectedRealmModificationDates,
   IItemClass,
   IItemPriceHistories,
   IItemSubClass,
   IPricesFlagged,
   IRealm,
   IRegionComposite,
-  IShortItem,
+  IShortItem, IStatusTimestamps,
   IUserJson,
   RegionName,
 } from "@sotah-inc/core";
@@ -72,7 +71,7 @@ export interface IClientRealm {
   connectedRealmId: ConnectedRealmId;
   realm: IRealm;
   population: IConnectedRealmComposite["connected_realm"]["population"];
-  realmModificationDates: IConnectedRealmModificationDates;
+  statusTimestamps: IStatusTimestamps;
 }
 
 export interface IItemPriceHistoriesState {

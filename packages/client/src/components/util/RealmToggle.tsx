@@ -10,9 +10,9 @@ import {
   Select,
 } from "@blueprintjs/select";
 import {
+  IConfigRegion,
   ICreatePreferencesRequest,
   IPreferenceJson,
-  IRegionComposite,
   UpdatePreferencesRequest,
 } from "@sotah-inc/core";
 
@@ -27,7 +27,7 @@ export interface IStateProps {
   currentRealm: IClientRealm | null;
   userPreferences: IFetchData<IPreferenceJson>;
   userData: UserData;
-  currentRegion: IRegionComposite | null;
+  currentRegion: IConfigRegion | null;
 }
 
 type persistUserPreferencesFunc = (
@@ -79,7 +79,7 @@ export class RealmToggle extends React.Component<Props> {
 
     persistUserPreferences(userData.profile.token, {
       current_realm: currentRealm.realm.slug,
-      current_region: currentRegion.config_region.name,
+      current_region: currentRegion.name,
     });
   }
 

@@ -6,7 +6,7 @@ import {
   IGetBootResponseData,
   IPricelistJson,
   IProfessionPricelistJson,
-  IRegionComposite,
+  IConfigRegion,
   IShortProfession,
 } from "@sotah-inc/core";
 
@@ -20,19 +20,19 @@ export interface IStateProps {
   auctionsResultData: IAuctionResultData;
   bootData: IFetchData<IGetBootResponseData>;
   currentRealm: IClientRealm | null;
-  currentRegion: IRegionComposite | null;
+  currentRegion: IConfigRegion | null;
 }
 
 export interface IRouteProps {
-  browseToExpansion: (region: IRegionComposite, realm: IClientRealm, expansion: IExpansion) => void;
+  browseToExpansion: (region: IConfigRegion, realm: IClientRealm, expansion: IExpansion) => void;
   browseToProfession: (
-    region: IRegionComposite,
+    region: IConfigRegion,
     realm: IClientRealm,
     expansion: IExpansion,
     profession: IShortProfession,
   ) => void;
   browseToProfessionPricelist: (
-    region: IRegionComposite,
+    region: IConfigRegion,
     realm: IClientRealm,
     expansion: IExpansion,
     profession: IShortProfession,

@@ -1,11 +1,11 @@
 import React from "react";
 
-import { Classes, Intent, ITreeNode, Spinner, Tree } from "@blueprintjs/core";
+import { Classes, Intent, TreeNodeInfo, Spinner, Tree } from "@blueprintjs/core";
 import {
   IExpansion,
   IPricelistJson,
   IProfessionPricelistJson,
-  IRegionComposite,
+  IConfigRegion,
   IShortProfession,
 } from "@sotah-inc/core";
 
@@ -19,7 +19,7 @@ import { ProfessionIcon } from "../../util";
 import { ItemIcon } from "../../util/ItemIcon";
 
 export interface IStateProps {
-  currentRegion: IRegionComposite | null;
+  currentRegion: IConfigRegion | null;
   currentRealm: IClientRealm | null;
   selectedProfession: {
     isPredefined: boolean;
@@ -32,9 +32,9 @@ export interface IStateProps {
 }
 
 export interface IRouteProps {
-  browseToExpansion: (region: IRegionComposite, realm: IClientRealm, expansion: IExpansion) => void;
+  browseToExpansion: (region: IConfigRegion, realm: IClientRealm, expansion: IExpansion) => void;
   browseToProfessionPricelist: (
-    region: IRegionComposite,
+    region: IConfigRegion,
     realm: IClientRealm,
     expansion: IExpansion,
     profession: IShortProfession,
@@ -74,14 +74,12 @@ export class PricelistTree extends React.Component<Props, IState> {
     const { currentRealm, currentRegion, selectedProfession } = this.props;
     const { topOpenMap } = this.state;
 
-    const nodes: ITreeNode[] = [];
+    const nodes: TreeNodeInfo[] = [];
     if (currentRegion !== null && currentRealm !== null) {
       nodes.push({
         id: "top-summary",
         isSelected: this.isSummarySelected(),
-        label: `${currentRegion.config_region.name.toUpperCase()}-${
-          currentRealm.realm.name.en_US
-        } Summary`,
+        label: `${currentRegion.name.toUpperCase()}-${currentRealm.realm.name.en_US} Summary`,
       });
     }
 
@@ -134,7 +132,7 @@ export class PricelistTree extends React.Component<Props, IState> {
     return selectedList === null && !hasSelectedProfession;
   }
 
-  private getProfessionPricelistNodes(): ITreeNode[] {
+  private getProfessionPricelistNodes(): TreeNodeInfo[] {
     const { professionPricelists } = this.props;
 
     switch (professionPricelists.level) {
@@ -177,7 +175,7 @@ export class PricelistTree extends React.Component<Props, IState> {
   private getPricelistNode(v: IPricelistJson) {
     const { selectedList } = this.props;
 
-    const result: ITreeNode = {
+    const result: TreeNodeInfo = {
       className: "pricelist-node",
       icon: this.renderPricelistIcon(v),
       id: `pricelist-${v.id}`,
@@ -258,7 +256,7 @@ export class PricelistTree extends React.Component<Props, IState> {
     this.setState({ topOpenMap: { ...topOpenMap, [id]: !topOpenMap[id] } });
   }
 
-  private onNodeClick(node: ITreeNode) {
+  private onNodeClick(node: TreeNodeInfo) {
     const separatorIndex = node.id.toString().indexOf("-");
     if (separatorIndex === -1) {
       return;

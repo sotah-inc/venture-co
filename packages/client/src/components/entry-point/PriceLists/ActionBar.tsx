@@ -14,7 +14,7 @@ import { Tooltip2 } from "@blueprintjs/popover2";
 import {
   IExpansion,
   IPricelistJson,
-  IRegionComposite,
+  IConfigRegion,
   IShortProfession,
   UserLevel,
 } from "@sotah-inc/core";
@@ -29,7 +29,7 @@ import { IClientRealm } from "../../../types/global";
 import { AuthLevel, UserData } from "../../../types/main";
 
 export interface IStateProps {
-  currentRegion: IRegionComposite | null;
+  currentRegion: IConfigRegion | null;
   currentRealm: IClientRealm | null;
   isAddListDialogOpen: boolean;
   isAddEntryDialogOpen: boolean;
@@ -47,15 +47,15 @@ export interface IDispatchProps {
 }
 
 export interface IRouteProps {
-  browseToExpansion: (region: IRegionComposite, realm: IClientRealm, expansion: IExpansion) => void;
+  browseToExpansion: (region: IConfigRegion, realm: IClientRealm, expansion: IExpansion) => void;
   browseToProfession: (
-    region: IRegionComposite,
+    region: IConfigRegion,
     realm: IClientRealm,
     expansion: IExpansion,
     profession: IShortProfession,
   ) => void;
   browseToProfessionPricelist: (
-    region: IRegionComposite,
+    region: IConfigRegion,
     realm: IClientRealm,
     expansion: IExpansion,
     profession: IShortProfession,

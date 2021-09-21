@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Intent, IToastProps } from "@blueprintjs/core";
-import { IExpansion, IPricelistJson, IRegionComposite, IShortProfession } from "@sotah-inc/core";
+import { IExpansion, IPricelistJson, IConfigRegion, IShortProfession } from "@sotah-inc/core";
 
 import { ListDialogContainer } from "../../../containers/entry-point/PriceLists/util/ListDialog";
 import { IClientRealm, IErrors } from "../../../types/global";
@@ -15,7 +15,7 @@ export interface IStateProps {
   updatePricelistErrors: IErrors;
   userData: UserData;
   selectedList: IPricelistJson | null;
-  currentRegion: IRegionComposite | null;
+  currentRegion: IConfigRegion | null;
   currentRealm: IClientRealm | null;
   selectedProfession: IShortProfession | null;
   selectedExpansion: IExpansion | null;
@@ -29,7 +29,7 @@ export interface IDispatchProps {
 
 export interface IRouteProps {
   browseOnUpdate: (
-    region: IRegionComposite,
+    region: IConfigRegion,
     realm: IClientRealm,
     pricelist: IPricelistJson,
     professionData?: {

@@ -6,7 +6,7 @@ import {
   IPricelistJson,
   IShortProfession,
   IProfessionPricelistJson,
-  IRegionComposite,
+  IConfigRegion,
   IGetBootResponseData,
 } from "@sotah-inc/core";
 
@@ -37,7 +37,7 @@ import { setTitle } from "../../util";
 
 export interface IStateProps {
   currentRealm: IClientRealm | null;
-  currentRegion: IRegionComposite | null;
+  currentRegion: IConfigRegion | null;
   selectedProfession: IShortProfession | null;
   selectedExpansion: IExpansion | null;
   bootData: IFetchData<IGetBootResponseData>;
@@ -56,18 +56,18 @@ export interface IDispatchProps {
 export interface IRouteProps {
   routeParams: IRouteParams;
   redirectToExpansion: (
-    region: IRegionComposite,
+    region: IConfigRegion,
     realm: IClientRealm,
     expansion: IExpansion,
   ) => void;
   redirectToProfession: (
-    region: IRegionComposite,
+    region: IConfigRegion,
     realm: IClientRealm,
     expansion: IExpansion,
     profession: IShortProfession,
   ) => void;
   redirectToPricelist: (
-    region: IRegionComposite,
+    region: IConfigRegion,
     realm: IClientRealm,
     expansion: IExpansion,
     profession: IShortProfession,
@@ -133,7 +133,7 @@ export class PriceLists extends React.Component<Props> {
     if (
       currentRegion === null ||
       region_name === undefined ||
-      currentRegion.config_region.name !== region_name
+      currentRegion.name !== region_name
     ) {
       return;
     }
@@ -183,7 +183,7 @@ export class PriceLists extends React.Component<Props> {
     );
   }
 
-  private handleWithRegion(region: IRegionComposite) {
+  private handleWithRegion(region: IConfigRegion) {
     const {
       currentRealm,
       routeParams: { realm_slug },
@@ -200,7 +200,7 @@ export class PriceLists extends React.Component<Props> {
     this.handleWithRealm(region, currentRealm);
   }
 
-  private handleWithRealm(region: IRegionComposite, realm: IClientRealm) {
+  private handleWithRealm(region: IConfigRegion, realm: IClientRealm) {
     const {
       routeParams: { expansion_name },
       selectedExpansion,
@@ -231,7 +231,7 @@ export class PriceLists extends React.Component<Props> {
   }
 
   private handleWithExpansion(
-    region: IRegionComposite,
+    region: IConfigRegion,
     realm: IClientRealm,
     expansion: IExpansion,
   ) {
@@ -273,7 +273,7 @@ export class PriceLists extends React.Component<Props> {
   }
 
   private handleWithProfession(
-    region: IRegionComposite,
+    region: IConfigRegion,
     realm: IClientRealm,
     expansion: IExpansion,
     profession: IShortProfession,
@@ -329,7 +329,7 @@ export class PriceLists extends React.Component<Props> {
 
     const prefixes = [
       "Profession Pricelists",
-      `${currentRegion.config_region.name.toUpperCase()} ${currentRealm.realm.name.en_US}`,
+      `${currentRegion.name.toUpperCase()} ${currentRealm.realm.name.en_US}`,
     ];
 
     if (selectedExpansion === null) {

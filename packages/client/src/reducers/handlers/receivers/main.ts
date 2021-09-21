@@ -13,6 +13,11 @@ export function receiveGetConnectedRealms(
   }
 
   const realms = action.payload.reduce<IClientRealm[]>((out, connectedRealm) => {
+    const currentRegionName = state.currentRegion?.name;
+    if (currentRegionName === undefined) {
+      return out;
+    }
+
     return [
       ...out,
       ...connectedRealm.connected_realm.realms.map<IClientRealm>(v => {
@@ -20,8 +25,8 @@ export function receiveGetConnectedRealms(
           connectedRealmId: connectedRealm.connected_realm.id,
           population: connectedRealm.connected_realm.population,
           realm: v,
-          realmModificationDates: connectedRealm.modification_dates,
-          regionName: state.currentRegion?.config_region.name ?? "",
+          statusTimestamps: connectedRealm.status_timestamps,
+          regionName: currentRegionName,
         };
       }),
     ];
@@ -38,7 +43,7 @@ export function receiveGetConnectedRealms(
     }
 
     // defaulting to first realm in list if region is different from preferred region
-    if (state.currentRegion.config_region.name !== state.userPreferences.data.current_realm) {
+    if (state.currentRegion.name !== state.userPreferences.data.current_realm) {
       return realms[0];
     }
 

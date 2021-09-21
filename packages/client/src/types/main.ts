@@ -1,8 +1,8 @@
 import {
+  IConfigRegion,
   IGetBootResponseData,
   IGetItemClassesResponseData,
   IPreferenceJson,
-  IRegionComposite,
   IVerifyUserResponseData,
 } from "@sotah-inc/core";
 
@@ -31,7 +31,7 @@ export interface IMainState {
   isRegisterDialogOpen: boolean;
   isLoginDialogOpen: boolean;
 
-  currentRegion: IRegionComposite | null;
+  currentRegion: IConfigRegion | null;
 
   realms: IFetchData<IClientRealm[]>;
   currentRealm: IClientRealm | null;
@@ -59,9 +59,8 @@ export const defaultMainState: IMainState = {
     level: FetchLevel.initial,
     errors: {},
     data: {
+      gameVersions: [],
       regions: [],
-      expansions: [],
-      professions: [],
       firebase_config: {
         browser_api_key: "",
       },

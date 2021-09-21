@@ -1,4 +1,4 @@
-import { IRegionComposite, UserLevel } from "@sotah-inc/core";
+import { IConfigRegion, UserLevel } from "@sotah-inc/core";
 
 import {
   LoadRealmEntrypoint,
@@ -30,7 +30,7 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
       load: (state: IMainState, action: ReturnType<typeof LoadRealmEntrypoint>): IMainState => {
         const currentRegion =
           state.bootData.data.regions.find(
-            v => v?.config_region.name === action.payload.nextRegionName,
+            v => v?.name === action.payload.nextRegionName,
           ) ?? null;
 
         const currentRealm: IClientRealm | null = (() => {
@@ -58,8 +58,8 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
                     connectedRealmId: current.connected_realm.id,
                     population: current.connected_realm.population,
                     realm: connectedRealm,
-                    realmModificationDates: current.modification_dates,
-                    regionName: currentRegion.config_region.name,
+                    statusTimestamps: current.status_timestamps,
+                    regionName: currentRegion.name,
                   };
                 }
 
@@ -85,7 +85,7 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
       load: (state: IMainState, action: ReturnType<typeof LoadRegionEntrypoint>): IMainState => {
         const currentRegion =
           state.bootData.data.regions.find(
-            v => v?.config_region.name === action.payload.nextRegionName,
+            v => v?.name === action.payload.nextRegionName,
           ) ?? null;
 
         return {
@@ -119,19 +119,19 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
           };
         }
 
-        const currentRegion = ((): IRegionComposite => {
+        const currentRegion = ((): IConfigRegion => {
           if (state.userPreferences.level !== FetchLevel.success) {
             return action.payload.boot.regions[0];
           }
 
           const { current_region: preferredRegionName } = state.userPreferences.data;
-          const foundRegion = action.payload.boot.regions.reduce<IRegionComposite | null>(
-            (result: IRegionComposite | null, v) => {
+          const foundRegion = action.payload.boot.regions.reduce<IConfigRegion | null>(
+            (result: IConfigRegion | null, v) => {
               if (result !== null) {
                 return result;
               }
 
-              if (v.config_region.name === preferredRegionName) {
+              if (v.name === preferredRegionName) {
                 return v;
               }
 
