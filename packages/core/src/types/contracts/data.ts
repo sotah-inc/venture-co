@@ -8,7 +8,6 @@ import {
   IErrorResponse,
   IGetItemsRecipesResponseData,
   IItemPrices,
-  IRegionComposite,
   IRegionTokenHistory,
   IShortPet,
   IShortProfession,
@@ -36,13 +35,13 @@ export interface IGetBootResponseData {
 
 export type GetBootResponse = IGetBootResponseData | IValidationErrorResponse | null;
 
-export interface IGetRegionsResponseData {
-  regions: IRegionComposite[];
+export interface IGetRegionResponseData {
   expansions: IExpansion[];
   professions: IShortProfession[];
+  connectedRealms: IConnectedRealmComposite[];
 }
 
-export type GetRegionsResponse = IGetRegionsResponseData | IValidationErrorResponse | null;
+export type GetRegionResponse = IGetRegionResponseData | IValidationErrorResponse | null;
 
 export interface IGetItemClassesResponseData {
   item_classes: IItemClass[];
