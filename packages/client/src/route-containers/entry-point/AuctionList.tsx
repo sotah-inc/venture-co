@@ -21,7 +21,7 @@ function RouteContainer({ router, realmEntrypointData, auctionListEntrypointData
       browseToRealmAuctions={(region, realm) =>
         router.replace(
           "/auctions/[region_name]/[realm_slug]",
-          `/auctions/${region.config_region.name}/${realm.realm.slug}`,
+          `/auctions/${region.name}/${realm.realm.slug}`,
         )
       }
       realmEntrypointData={realmEntrypointData}

@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Classes, H1, H4, Icon, IconName, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
-import { IRegionComposite } from "@sotah-inc/core";
+import { IConfigRegion } from "@sotah-inc/core";
 
 import { ILoadPostsEntrypoint } from "../../actions/posts";
 import { AuctionStatsGraphContainer } from "../../containers/entry-point/News/AuctionStatsGraph";
@@ -15,7 +15,7 @@ import { setTitle } from "../../util";
 import { CardCallout } from "../util";
 
 export interface IStateProps {
-  currentRegion: IRegionComposite | null;
+  currentRegion: IConfigRegion | null;
   userData: UserData;
 }
 
@@ -78,7 +78,7 @@ export class News extends React.Component<Props> {
                     "/auctions/[region_name]",
                     "dollar",
                     "Browse Auctions",
-                    `/auctions/${currentRegion.config_region.name}`,
+                    `/auctions/${currentRegion.name}`,
                   )}
                 </div>
                 <div className="pure-u-1-4 homepage-card-container">
@@ -86,7 +86,7 @@ export class News extends React.Component<Props> {
                     "/professions/[region_name]",
                     "chart",
                     "Discover Professions",
-                    `/professions/${currentRegion.config_region.name}`,
+                    `/professions/${currentRegion.name}`,
                   )}
                 </div>
                 {this.renderUserCallout()}

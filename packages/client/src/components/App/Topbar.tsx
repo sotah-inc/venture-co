@@ -11,7 +11,7 @@ import {
   NavbarHeading,
 } from "@blueprintjs/core";
 import { Tooltip2 } from "@blueprintjs/popover2";
-import { IExpansion, IRegionComposite } from "@sotah-inc/core";
+import { IExpansion, IConfigRegion } from "@sotah-inc/core";
 
 import { LoginContainer } from "../../containers/App/Login";
 import { RegisterContainer } from "../../containers/App/Register";
@@ -30,7 +30,7 @@ import { prefixActiveCheck } from "../util/LinkButton";
 export interface IStateProps {
   userData: UserData;
   currentRealm: IClientRealm | null;
-  currentRegion: IRegionComposite | null;
+  currentRegion: IConfigRegion | null;
   selectedExpansion: IExpansion | null;
 }
 
@@ -321,7 +321,7 @@ export class Topbar extends React.Component<Props> {
     return (
       <LinkButtonRouteContainer
         destination={"/auctions/[region_name]/[realm_slug]"}
-        asDestination={`/auctions/${currentRegion.config_region.name}/${currentRealm.realm.slug}`}
+        asDestination={`/auctions/${currentRegion.name}/${currentRealm.realm.slug}`}
         buttonProps={{ icon: "dollar", text: "Auctions", minimal: true }}
       />
     );

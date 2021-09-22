@@ -1,13 +1,13 @@
 import React from "react";
 
-import { IRegionComposite } from "@sotah-inc/core";
+import { IConfigRegion } from "@sotah-inc/core";
 
 export interface IRouteProps {
-  redirectToRegion: (region: IRegionComposite) => void;
+  redirectToRegion: (region: IConfigRegion) => void;
 }
 
 export interface IStateProps {
-  currentRegion: IRegionComposite | null;
+  currentRegion: IConfigRegion | null;
 }
 
 export interface IOwnProps {
@@ -29,7 +29,7 @@ export function BaseEntrypoint({
 
   return (
     <p>
-      Redirecting to {label} for {currentRegion.config_region.name}!
+      Redirecting to {label} for {currentRegion.name}!
     </p>
   );
 }

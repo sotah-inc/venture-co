@@ -1,7 +1,7 @@
 import React from "react";
 
 import { H2, H4 } from "@blueprintjs/core";
-import { IPricelistJson, IRegionComposite, Locale } from "@sotah-inc/core";
+import { IPricelistJson, IConfigRegion, Locale } from "@sotah-inc/core";
 
 import { IGetItemPriceHistoriesOptions } from "../../../../../api/item-price-histories";
 import {
@@ -31,7 +31,7 @@ export interface IDispatchProps {
 
 export interface IOwnProps {
   list: IPricelistJson;
-  region: IRegionComposite;
+  region: IConfigRegion;
   realm: IClientRealm;
 }
 
@@ -57,7 +57,7 @@ export class PricelistTable extends React.Component<Props> {
         itemIds: selectedList.pricelist_entries.map(v => v.item_id),
         locale: Locale.EnUS,
         realmSlug: realm.realm.slug,
-        regionName: region.config_region.name,
+        regionName: region.name,
       });
     }
   }

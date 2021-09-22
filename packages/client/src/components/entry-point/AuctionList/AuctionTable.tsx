@@ -5,7 +5,7 @@ import {
   IAuction,
   IGetItemsRecipesResponseData,
   IProfessionPricelistJson,
-  IRegionComposite,
+  IConfigRegion,
   IShortItem,
   IShortPet,
   ItemQuality,
@@ -34,7 +34,7 @@ export interface IStateProps {
   relatedProfessionPricelists: IProfessionPricelistJson[];
   options: IAuctionsOptions;
   currentRealm: IClientRealm | null;
-  currentRegion: IRegionComposite | null;
+  currentRegion: IConfigRegion | null;
   totalResults: number;
   itemsRecipes: IGetItemsRecipesResponseData;
 }

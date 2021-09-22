@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 
 import { Classes, Intent, IToastProps, NonIdealState, Spinner } from "@blueprintjs/core";
-import { IGetBootResponseData, IPreferenceJson, IRegionComposite } from "@sotah-inc/core";
+import { IGetBootResponseData, IPreferenceJson, IConfigRegion } from "@sotah-inc/core";
 import { Cookies, withCookies } from "react-cookie";
 
 import { ILoadRootEntrypoint } from "../actions/main";
@@ -12,7 +12,7 @@ import { AuthLevel, FetchLevel, UserData } from "../types/main";
 
 export interface IStateProps {
   bootData: IFetchData<IGetBootResponseData>;
-  currentRegion: IRegionComposite | null;
+  currentRegion: IConfigRegion | null;
   currentRealm: IClientRealm | null;
   userData: UserData;
   userPreferences: IFetchData<IPreferenceJson>;

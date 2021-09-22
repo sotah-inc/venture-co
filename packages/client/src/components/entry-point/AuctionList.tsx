@@ -13,12 +13,12 @@ import {
 } from "@blueprintjs/core";
 import {
   IGetBootResponseData,
-  IRegionComposite,
+  IConfigRegion,
   IShortItem,
   IShortPet,
   ItemId,
   Locale,
-  PetId,
+  PetId, StatusKind,
 } from "@sotah-inc/core";
 
 import { ILoadAuctionListEntrypoint } from "../../actions/auction";
@@ -43,7 +43,7 @@ export interface IStateProps {
   totalResults: number;
   activeSelect: boolean;
 
-  currentRegion: IRegionComposite | null;
+  currentRegion: IConfigRegion | null;
   currentRealm: IClientRealm | null;
   realms: IFetchData<IClientRealm[]>;
   bootData: IFetchData<IGetBootResponseData>;
@@ -58,7 +58,7 @@ export interface IDispatchProps {
 
 export interface IRouteProps {
   routeParams: IRouteParams;
-  browseToRealmAuctions: (region: IRegionComposite, realm: IClientRealm) => void;
+  browseToRealmAuctions: (region: IConfigRegion, realm: IClientRealm) => void;
 }
 
 export interface IRouteParams {
@@ -106,7 +106,7 @@ export class AuctionList extends React.Component<Props> {
       return;
     }
 
-    if (currentRegion === null || currentRegion.config_region.name !== region_name) {
+    if (currentRegion === null || currentRegion.name !== region_name) {
       return;
     }
 
@@ -133,7 +133,7 @@ export class AuctionList extends React.Component<Props> {
       );
     }
 
-    if (currentRegion.config_region.name !== region_name) {
+    if (currentRegion.name !== region_name) {
       return this.renderUnmatchedRegion();
     }
 
@@ -148,7 +148,7 @@ export class AuctionList extends React.Component<Props> {
     }
 
     setTitle(
-      `Auctions - ${currentRegion.config_region.name.toUpperCase()} ${
+      `Auctions - ${currentRegion.name.toUpperCase()} ${
         currentRealm.realm.name.en_US
       }`,
     );
@@ -163,7 +163,7 @@ export class AuctionList extends React.Component<Props> {
 
     refreshAuctions({
       realmSlug: currentRealm.realm.slug,
-      regionName: currentRegion.config_region.name,
+      regionName: currentRegion.name,
       request: {
         count: options.auctionsPerPage,
         itemFilters: options.selected.reduce<ItemId[]>((result, v) => {
@@ -203,7 +203,7 @@ export class AuctionList extends React.Component<Props> {
       );
     }
 
-    if (!bootData.data.regions.map(v => v.config_region.name).includes(region_name)) {
+    if (!bootData.data.regions.map(v => v.name).includes(region_name)) {
       return (
         <NonIdealState
           title={`Region ${region_name} not found!`}
@@ -277,7 +277,7 @@ export class AuctionList extends React.Component<Props> {
     if (!hasRealm) {
       return (
         <NonIdealState
-          title={`Realm ${realm_slug} in region ${currentRegion.config_region.name} not found!`}
+          title={`Realm ${realm_slug} in region ${currentRegion.name} not found!`}
           icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={1} />}
         />
       );
@@ -449,10 +449,15 @@ export class AuctionList extends React.Component<Props> {
       return null;
     }
 
+    const downloadedTimestamp = currentRealm.statusTimestamps[StatusKind.Downloaded];
+    if (downloadedTimestamp === undefined) {
+      return null;
+    }
+
     return (
       <>
         <LastModified
-          targetDate={new Date(currentRealm.realmModificationDates.downloaded * 1000)}
+          targetDate={new Date(downloadedTimestamp * 1000)}
         />
       </>
     );

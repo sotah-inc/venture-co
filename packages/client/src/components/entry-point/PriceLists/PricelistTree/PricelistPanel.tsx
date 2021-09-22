@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Button, Classes, NonIdealState } from "@blueprintjs/core";
-import { IItem, IPricelistJson, IRegionComposite } from "@sotah-inc/core";
+import { IItem, IPricelistJson, IConfigRegion } from "@sotah-inc/core";
 
 import {
   PricelistTableContainer,
@@ -9,7 +9,7 @@ import {
 import { IClientRealm } from "../../../../types/global";
 
 export interface IStateProps {
-  currentRegion: IRegionComposite | null;
+  currentRegion: IConfigRegion | null;
   currentRealm: IClientRealm | null;
   isAddEntryDialogOpen: boolean;
 }

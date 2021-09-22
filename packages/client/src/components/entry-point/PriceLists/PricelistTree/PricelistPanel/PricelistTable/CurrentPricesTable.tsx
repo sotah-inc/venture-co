@@ -1,7 +1,7 @@
 import React from "react";
 
 import { H4, Intent, Spinner } from "@blueprintjs/core";
-import { IItemPrices, IPricelistJson, IRegionComposite, Locale } from "@sotah-inc/core";
+import { IItemPrices, IPricelistJson, IConfigRegion, Locale } from "@sotah-inc/core";
 
 import { IGetPriceListOptions } from "../../../../../../api/data";
 import { IClientRealm, IFetchData, IItemsData } from "../../../../../../types/global";
@@ -12,7 +12,7 @@ export interface IStateProps {
   selectedList: IPricelistJson | null;
   priceTable: IFetchData<IItemsData<IItemPrices>>;
   realms: IFetchData<IClientRealm[]>;
-  currentRegion: IRegionComposite | null;
+  currentRegion: IConfigRegion | null;
   currentRealm: IClientRealm | null;
 }
 
@@ -43,7 +43,7 @@ export class CurrentPricesTable extends React.Component<Props> {
           itemIds: selectedList.pricelist_entries.map(v => v.item_id),
           locale: Locale.EnUS,
           realmSlug: currentRealm.realm.slug,
-          regionName: currentRegion.config_region.name,
+          regionName: currentRegion.name,
         });
 
         return;
