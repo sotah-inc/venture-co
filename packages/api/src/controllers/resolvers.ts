@@ -4,10 +4,12 @@ import {
   IConnectedRealmComposite,
   IRegionComposite,
   IRegionVersionConnectedRealmTuple,
-  IShortItem, IStatusTimestamps,
+  IShortItem,
+  IStatusTimestamps,
   ItemId,
   IValidationErrorResponse,
   Locale,
+  RegionName,
 } from "@sotah-inc/core";
 import {
   IGetAuctionsRequest,
@@ -43,6 +45,52 @@ export type ResolveResult<TData> =
   | {
       errorResponse: IRequestResult<IValidationErrorResponse>;
     };
+
+export async function resolveConnectedRealms(
+  gameVersion: GameVersion,
+  regionName: RegionName,
+  mess: RegionsMessenger,
+): Promise<ResolveResult<IConnectedRealmComposite[]>> {
+  const realmsMessage = await mess.connectedRealms({
+    region_name: regionName,
+    game_version: gameVersion,
+  });
+  switch (realmsMessage.code) {
+  case code.notFound:
+    return {
+      errorResponse: {
+        status: HTTPStatus.NOT_FOUND,
+        data: { error: "connected-realms not found" },
+      },
+    };
+  default:
+    if (realmsMessage.code !== code.ok) {
+      return {
+        errorResponse: {
+          status: HTTPStatus.INTERNAL_SERVER_ERROR,
+          data: { error: "failed to resolve connected-realms" },
+        },
+      };
+    }
+
+    break;
+  }
+
+  const realmsResult = await realmsMessage.decode();
+  if (realmsResult === null) {
+    return {
+      errorResponse: {
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+        data: { error: "failed to decode connected-realms" },
+      },
+    };
+  }
+
+  return {
+    data: realmsResult,
+    errorResponse: null,
+  };
+}
 
 export async function resolveWriteablePost(
   dbConn: Connection,

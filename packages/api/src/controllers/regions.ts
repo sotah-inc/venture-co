@@ -1,13 +1,14 @@
 import { GetConnectedRealmsResponse, StatusKind } from "@sotah-inc/core";
-import { GetRegionsResponse } from "@sotah-inc/core/build/dist/types/contracts/data";
+import { GetRegionResponse } from "@sotah-inc/core/build/dist/types/contracts/data";
 import { IMessengers } from "@sotah-inc/server";
 import { code } from "@sotah-inc/server/build/dist/messenger/contracts";
 import { Response } from "express";
 import HTTPStatus from "http-status";
 import moment from "moment";
 
+import { resolveConnectedRealms } from "./resolvers";
 import { validate, validationErrorsToResponse } from "./validators";
-import { createSchema, GameVersionRule, RegionNameRule } from "./validators/yup";
+import { createSchema, GameVersionRule, LocaleRule, RegionNameRule } from "./validators/yup";
 
 import { IRequestResult, PlainRequest } from "./index";
 
@@ -18,13 +19,15 @@ export class RegionsController {
     this.messengers = messengers;
   }
 
-  public async getRegions(
+  public async getRegion(
     req: PlainRequest,
     _res: Response,
-  ): Promise<IRequestResult<GetRegionsResponse>> {
+  ): Promise<IRequestResult<GetRegionResponse>> {
+    // validating params
     const validateParamsResult = await validate(
       createSchema({
         gameVersion: GameVersionRule,
+        regionName: RegionNameRule,
       }),
       req.params,
     );
@@ -35,8 +38,67 @@ export class RegionsController {
       };
     }
 
+    // validating query
+    const validateQueryResult = await validate(createSchema({ locale: LocaleRule }), req.query);
+    if (validateQueryResult.errors !== null) {
+      return {
+        status: HTTPStatus.BAD_REQUEST,
+        data: validationErrorsToResponse(validateQueryResult.errors),
+      };
+    }
+
+    // resolving boot
+    const bootMessage = await this.messengers.boot.boot();
+    if (bootMessage.code !== code.ok) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    const bootResult = await bootMessage.decode();
+    if (bootResult === null) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    // resolving connected-realms
+    const resolveConnectedRealmsResult = await resolveConnectedRealms(
+      validateParamsResult.body.gameVersion,
+      validateParamsResult.body.regionName,
+      this.messengers.regions,
+    );
+    if (resolveConnectedRealmsResult.errorResponse !== null) {
+      return resolveConnectedRealmsResult.errorResponse;
+    }
+
+    // resolving professions
+    const professionsMsg = await this.messengers.professions.professions(
+      validateQueryResult.body.locale,
+    );
+    if (professionsMsg.code !== code.ok) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
+    const professionsResult = await professionsMsg.decode();
+    if (professionsResult === null) {
+      return {
+        data: null,
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
     return {
-      data: null,
+      data: {
+        connectedRealms: resolveConnectedRealmsResult.data,
+        expansions: bootResult.expansions,
+        professions: professionsResult.professions,
+      },
       status: HTTPStatus.INTERNAL_SERVER_ERROR,
     };
   }
@@ -59,40 +121,31 @@ export class RegionsController {
       };
     }
 
-    const realmsMessage = await this.messengers.regions.connectedRealms({
-      region_name: validateParamsResult.body.regionName,
-      game_version: validateParamsResult.body.gameVersion,
-    });
-    switch (realmsMessage.code) {
-    case code.notFound:
-      return { status: HTTPStatus.NOT_FOUND, data: null };
-    default:
-      if (realmsMessage.code !== code.ok) {
-        return { status: HTTPStatus.INTERNAL_SERVER_ERROR, data: null };
-      }
-
-      break;
+    const resolveConnectedRealmsResult = await resolveConnectedRealms(
+      validateParamsResult.body.gameVersion,
+      validateParamsResult.body.regionName,
+      this.messengers.regions,
+    );
+    if (resolveConnectedRealmsResult.errorResponse !== null) {
+      return resolveConnectedRealmsResult.errorResponse;
     }
-
-    const realmsResult = await realmsMessage.decode();
-    if (realmsResult === null) {
-      return { status: HTTPStatus.INTERNAL_SERVER_ERROR, data: null };
-    }
-    const data = { connectedRealms: realmsResult };
 
     const lastModifiedDate: moment.Moment | null = (() => {
-      const latestDownloaded = realmsResult.reduce<number | null>((result, connectedRealm) => {
-        const foundTimestamp = connectedRealm.status_timestamps[StatusKind.Downloaded];
-        if (foundTimestamp === undefined) {
+      const latestDownloaded = resolveConnectedRealmsResult.data.reduce<number | null>(
+        (result, connectedRealm) => {
+          const foundTimestamp = connectedRealm.status_timestamps[StatusKind.Downloaded];
+          if (foundTimestamp === undefined) {
+            return result;
+          }
+
+          if (result === null || foundTimestamp > result) {
+            return foundTimestamp;
+          }
+
           return result;
-        }
-
-        if (result === null || foundTimestamp > result) {
-          return foundTimestamp;
-        }
-
-        return result;
-      }, null);
+        },
+        null,
+      );
 
       if (latestDownloaded === null) {
         return null;
@@ -102,7 +155,7 @@ export class RegionsController {
     })();
     if (lastModifiedDate === null) {
       return {
-        data,
+        data: { connectedRealms: resolveConnectedRealmsResult.data },
         status: HTTPStatus.OK,
       };
     }
@@ -115,7 +168,7 @@ export class RegionsController {
     const ifModifiedSince = req.header("if-modified-since");
     if (ifModifiedSince === undefined) {
       return {
-        data,
+        data: { connectedRealms: resolveConnectedRealmsResult.data },
         headers,
         status: HTTPStatus.OK,
       };
@@ -131,7 +184,7 @@ export class RegionsController {
     }
 
     return {
-      data,
+      data: { connectedRealms: resolveConnectedRealmsResult.data },
       headers,
       status: HTTPStatus.OK,
     };
