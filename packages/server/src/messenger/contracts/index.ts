@@ -2,6 +2,7 @@ import {
   GameVersion,
   IConfigRegion,
   IConnectedRealmComposite,
+  IExpansion,
   IItemClass,
   IStatusTimestamps,
 } from "@sotah-inc/core";
@@ -28,6 +29,7 @@ export interface IGetSessionSecretResponse {
 export interface IGetBootResponse {
   regions: IConfigRegion[];
   gameVersions: GameVersion[];
+  expansions: IExpansion[];
   firebase_config: {
     browser_api_key: string;
   };
