@@ -4,6 +4,7 @@ import {
   IGetItemClassesResponseData,
   IPreferenceJson,
   IVerifyUserResponseData,
+  IGetRegionResponseData,
 } from "@sotah-inc/core";
 
 import { IClientRealm, IFetchData, IProfile } from "./global";
@@ -22,6 +23,7 @@ export type UserData =
 
 export interface IMainState {
   bootData: IFetchData<IGetBootResponseData>;
+  regionData: IFetchData<IGetRegionResponseData>;
 
   preloadedToken: string;
   userData: UserData;
@@ -82,6 +84,15 @@ export const defaultMainState: IMainState = {
     level: FetchLevel.initial,
     errors: {},
     data: [],
+  },
+  regionData: {
+    level: FetchLevel.initial,
+    errors: {},
+    data: {
+      connectedRealms: [],
+      professions: [],
+      expansions: [],
+    },
   },
   userPreferences: {
     level: FetchLevel.initial,

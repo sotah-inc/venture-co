@@ -9,15 +9,14 @@ import {
   ItemRenderer,
   Select,
 } from "@blueprintjs/select";
-import { IGetBootResponseData, IShortProfession } from "@sotah-inc/core";
+import { IShortProfession } from "@sotah-inc/core";
 
-import { IFetchData } from "../../types/global";
 import { ProfessionIcon } from "./ProfessionIcon";
 
 const ProfessionToggleSelect = Select.ofType<IShortProfession>();
 
 export interface IStateProps {
-  bootData: IFetchData<IGetBootResponseData>;
+  professions: IShortProfession[];
   selectedProfession: IShortProfession | null;
 }
 
@@ -80,11 +79,11 @@ export class PricelistProfessionToggle extends React.Component<Props> {
   };
 
   public render(): React.ReactNode {
-    const { bootData, onProfessionChange } = this.props;
+    const { professions, onProfessionChange } = this.props;
 
     return (
       <ProfessionToggleSelect
-        items={bootData.data.professions}
+        items={professions}
         itemRenderer={this.itemRenderer}
         itemListRenderer={this.itemListRenderer}
         itemPredicate={this.itemPredicate}

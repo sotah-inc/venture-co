@@ -4,11 +4,11 @@ import { ExpansionToggle, IOwnProps, IStateProps } from "../../components/util/E
 import { IStoreState } from "../../types";
 
 function mapStateToProps(state: IStoreState): IStateProps {
-  const { bootData } = state.Main;
+  const { regionData: { data: { expansions } } } = state.Main;
   const { selectedExpansion } = state.PriceLists;
 
   return {
-    bootData,
+    expansions,
     selectedExpansion,
   };
 }

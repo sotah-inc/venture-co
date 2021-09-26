@@ -232,7 +232,7 @@ export class TokenHistoryGraph extends React.Component<Props, State> {
     const { bootData } = this.props;
 
     const groupedRegionNames = bootData.data.regions
-      .map(v => v.config_region.name)
+      .map(v => v.name)
       .reduce<Array<Array<[RegionName, number]>>>((result, v, i) => {
         const column = i % 2;
         if (Object.keys(result).indexOf(column.toString()) === -1) {

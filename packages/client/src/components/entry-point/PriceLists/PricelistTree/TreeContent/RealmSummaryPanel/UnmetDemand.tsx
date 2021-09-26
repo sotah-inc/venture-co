@@ -13,32 +13,28 @@ import {
   Spinner,
 } from "@blueprintjs/core";
 import {
+  IConfigRegion,
   IExpansion,
-  IGetBootResponseData,
+  IGetRegionResponseData,
   IPricelistEntryJson,
   IPricelistJson,
   IProfessionPricelistJson,
-  IConfigRegion,
-  IShortItem,
   IShortProfession,
-  ItemId,
   ItemQuality,
   ProfessionId,
 } from "@sotah-inc/core";
 
 import { ItemPopoverContainer } from "../../../../../../containers/util/ItemPopover";
-import { IClientRealm, IFetchData } from "../../../../../../types/global";
+import { IClientRealm, IFetchData, IItemsData } from "../../../../../../types/global";
 import { FetchLevel } from "../../../../../../types/main";
+import { IUnmetDemandState } from "../../../../../../types/price-lists";
 import { getItemFromPricelist, qualityToColorClass } from "../../../../../../util";
 import { Pagination, ProfessionIcon } from "../../../../../util";
 import { ItemIcon } from "../../../../../util/ItemIcon";
 
 export interface IStateProps {
-  unmetDemandItemIds: ItemId[];
-  unmetDemandProfessionPricelists: IProfessionPricelistJson[];
-  bootData: IFetchData<IGetBootResponseData>;
-  getUnmetDemandLevel: FetchLevel;
-  items: IShortItem[];
+  regionData: IFetchData<IGetRegionResponseData>;
+  unmetDemand: IFetchData<IItemsData<IUnmetDemandState>>;
   selectedExpansion: IExpansion | null;
   currentRegion: IConfigRegion | null;
   currentRealm: IClientRealm | null;
@@ -108,7 +104,7 @@ export class UnmetDemand extends React.Component<Props, IState> {
   public onPricelistClick(pricelist: IPricelistJson, professionId: ProfessionId): void {
     const {
       browseToProfessionPricelist,
-      bootData,
+      regionData,
       currentRegion,
       currentRealm,
       selectedExpansion,
@@ -118,7 +114,7 @@ export class UnmetDemand extends React.Component<Props, IState> {
       return;
     }
 
-    const profession = bootData.data.professions.reduce<IShortProfession | null>(
+    const profession = regionData.data.professions.reduce<IShortProfession | null>(
       (currentValue, v) => {
         if (currentValue !== null) {
           return currentValue;
@@ -161,9 +157,9 @@ export class UnmetDemand extends React.Component<Props, IState> {
   }
 
   private renderUnmetDemandContent() {
-    const { getUnmetDemandLevel } = this.props;
+    const { unmetDemand } = this.props;
 
-    switch (getUnmetDemandLevel) {
+    switch (unmetDemand.level) {
     case FetchLevel.success:
       return this.renderUnmetDemandSuccess();
     default:
@@ -177,20 +173,14 @@ export class UnmetDemand extends React.Component<Props, IState> {
   }
 
   private renderUnmetDemandSuccess() {
-    const {
-      currentRealm,
-      currentRegion,
-      unmetDemandProfessionPricelists,
-      unmetDemandItemIds,
-      items,
-    } = this.props;
+    const { currentRealm, currentRegion, unmetDemand } = this.props;
     const { page } = this.state;
 
     if (currentRealm === null || currentRegion === null) {
       return null;
     }
 
-    let collapsedResult: ICollapsedResultItem[] = unmetDemandProfessionPricelists.reduce(
+    let collapsedResult: ICollapsedResultItem[] = unmetDemand.data.data.professionPricelists.reduce(
       (outer: ICollapsedResultItem[], professionPricelist) => [
         ...outer,
         ...professionPricelist.pricelist.pricelist_entries.reduce(
@@ -200,7 +190,9 @@ export class UnmetDemand extends React.Component<Props, IState> {
       ],
       [],
     );
-    collapsedResult = collapsedResult.filter(v => unmetDemandItemIds.indexOf(v.entry.item_id) > -1);
+    collapsedResult = collapsedResult.filter(
+      v => unmetDemand.data.data.unmetItemIds.indexOf(v.entry.item_id) > -1,
+    );
     collapsedResult = collapsedResult.sort((a, b) => {
       if (a.professionPricelist.professionId !== b.professionPricelist.professionId) {
         return a.professionPricelist.professionId > b.professionPricelist.professionId ? 1 : -1;
@@ -211,9 +203,11 @@ export class UnmetDemand extends React.Component<Props, IState> {
       }
 
       const aItemValue: string =
-        items.find(v => v.id === a.entry.item_id)?.name ?? a.entry.item_id.toString();
+        unmetDemand.data.items.find(v => v.id === a.entry.item_id)?.name ??
+        a.entry.item_id.toString();
       const bItemValue: string =
-        items.find(v => v.id === b.entry.item_id)?.name ?? b.entry.item_id.toString();
+        unmetDemand.data.items.find(v => v.id === b.entry.item_id)?.name ??
+        b.entry.item_id.toString();
       if (aItemValue !== bItemValue) {
         return aItemValue > bItemValue ? 1 : -1;
       }
@@ -251,8 +245,8 @@ export class UnmetDemand extends React.Component<Props, IState> {
     return (
       <>
         <Callout intent={Intent.PRIMARY} style={{ marginBottom: "10px" }}>
-          These items have <strong>0</strong> auctions posted on{" "}
-          {currentRegion.name.toUpperCase()}-{currentRealm.realm.name.en_US}.
+          These items have <strong>0</strong> auctions posted on {currentRegion.name.toUpperCase()}-
+          {currentRealm.realm.name.en_US}.
         </Callout>
         <Navbar>
           <NavbarGroup align={Alignment.LEFT}>
@@ -292,10 +286,10 @@ export class UnmetDemand extends React.Component<Props, IState> {
   }
 
   private renderItemRow(index: number, resultItem: ICollapsedResultItem) {
-    const { items, bootData } = this.props;
+    const { unmetDemand, regionData } = this.props;
 
     const { professionPricelist, entry } = resultItem;
-    const profession: IShortProfession | null = bootData.data.professions.reduce(
+    const profession: IShortProfession | null = regionData.data.professions.reduce(
       (currentValue: IShortProfession | null, v) => {
         if (currentValue !== null) {
           return currentValue;
@@ -306,7 +300,7 @@ export class UnmetDemand extends React.Component<Props, IState> {
       null,
     );
     const { item_id } = entry;
-    const item = items.find(v => v.id === item_id);
+    const item = unmetDemand.data.items.find(v => v.id === item_id);
 
     if (typeof item === "undefined") {
       return (
@@ -350,9 +344,9 @@ export class UnmetDemand extends React.Component<Props, IState> {
   }
 
   private renderPricelistIcon(list: IPricelistJson) {
-    const { items } = this.props;
+    const { unmetDemand } = this.props;
 
-    const item = getItemFromPricelist(items, list);
+    const item = getItemFromPricelist(unmetDemand.data.items, list);
     if (item === null) {
       return null;
     }

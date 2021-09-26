@@ -9,14 +9,12 @@ import {
   ItemRenderer,
   Select,
 } from "@blueprintjs/select";
-import { IExpansion, IGetBootResponseData } from "@sotah-inc/core";
-
-import { IFetchData } from "../../types/global";
+import { IExpansion } from "@sotah-inc/core";
 
 const ExpansionToggleSelect = Select.ofType<IExpansion>();
 
 export interface IStateProps {
-  bootData: IFetchData<IGetBootResponseData>;
+  expansions: IExpansion[];
   selectedExpansion: IExpansion | null;
 }
 
@@ -76,11 +74,11 @@ export class ExpansionToggle extends React.Component<Props> {
   };
 
   public render(): React.ReactNode {
-    const { bootData, onExpansionChange } = this.props;
+    const { expansions, onExpansionChange } = this.props;
 
     return (
       <ExpansionToggleSelect
-        items={bootData.data.expansions}
+        items={expansions}
         itemRenderer={this.itemRenderer}
         itemListRenderer={this.itemListRenderer}
         itemPredicate={this.itemPredicate}

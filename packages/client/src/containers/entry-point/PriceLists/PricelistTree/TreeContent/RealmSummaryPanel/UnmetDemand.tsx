@@ -9,27 +9,18 @@ import {
 import { IStoreState } from "../../../../../../types";
 
 function mapStateToProps(state: IStoreState): IStateProps {
-  const { bootData, currentRegion, currentRealm } = state.Main;
+  const { regionData, currentRegion, currentRealm } = state.Main;
   const {
     selectedExpansion,
-    unmetDemand: {
-      level: getUnmetDemandLevel,
-      data: {
-        data: { unmetItemIds, professionPricelists: unmetDemandProfessionPricelists },
-        items,
-      },
-    },
+    unmetDemand,
   } = state.PriceLists;
 
   return {
-    bootData,
+    regionData,
     currentRealm,
     currentRegion,
-    getUnmetDemandLevel,
-    items,
     selectedExpansion,
-    unmetDemandItemIds: unmetItemIds,
-    unmetDemandProfessionPricelists,
+    unmetDemand,
   };
 }
 
