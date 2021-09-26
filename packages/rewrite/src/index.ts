@@ -34,11 +34,11 @@ function resolveEpisodeName(
     return episodeFilename.split("-").map(v => v.trim()).pop() ?? null;
   }
 
-  if (dashPrefix === "Dragonball Z Remastered") {
+  if (spacePrefix === "Dragonball Z") {
     return episodeFilename
       .split("-")
       .map(v => v.trim())
-      .slice(2)
+      .slice(1)
       .join("");
   }
 
@@ -50,11 +50,15 @@ const title = target.split("/").pop();
 for (const seasonFolderName of fs.readdirSync(target)) {
   const seasonFolderPath = `${target}/${seasonFolderName}`;
   if (!fs.statSync(seasonFolderPath).isDirectory()) {
+    console.log("seasonFolderPath was not a directory");
+
     continue;
   }
 
   const seasonNumber = seasonFolderName.split(" ").pop();
   if (seasonNumber === undefined) {
+    console.log("seasonNumber was undefined");
+
     continue;
   }
 
@@ -65,11 +69,15 @@ for (const seasonFolderName of fs.readdirSync(target)) {
     const src = `${seasonFolderPath}/${episodeFilename}`;
     const fileExtension = episodeFilename.split(".").pop();
     if (fileExtension === "txt") {
+      console.log("file extension was txt");
+
       continue;
     }
 
     const episodeName = resolveEpisodeName(seasonNumber, i, episodeFilename);
     if (episodeName === null) {
+      console.log("episodeName was null", { seasonNumber, i, episodeFilename });
+
       continue;
     }
 
@@ -81,6 +89,9 @@ for (const seasonFolderName of fs.readdirSync(target)) {
     const nextEpisodeFilename = [title, seasonCode, episodeName].join(" - ");
 
     const dst = `${seasonFolderPath}/${nextEpisodeFilename}`;
+
+    console.log("renaming", { src, dst });
+
     fs.renameSync(src, dst);
   }
 }
