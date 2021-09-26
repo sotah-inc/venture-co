@@ -5,6 +5,7 @@ import { IGetBootResponseData, IPreferenceJson, IConfigRegion } from "@sotah-inc
 import { Cookies, withCookies } from "react-cookie";
 
 import { ILoadRootEntrypoint } from "../actions/main";
+import { DebugInfoContainer } from "../containers/App/DebugInfo";
 import { PromptsRouteContainer } from "../route-containers/App/Prompts";
 import { TopbarRouteContainer } from "../route-containers/App/Topbar";
 import { IClientRealm, IFetchData } from "../types/global";
@@ -46,6 +47,7 @@ export class App extends React.Component<Props> {
         <div id="content">
           <PromptsRouteContainer />
           {content}
+          <DebugInfoContainer />
         </div>
       </>
     );
