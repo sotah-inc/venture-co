@@ -14,6 +14,12 @@ import {
 
 import { FetchLevel } from "./main";
 
+export enum RenderMode {
+  Initial,
+  Server,
+  Client
+}
+
 export interface IRegions {
   [key: string]: IRegionComposite | undefined;
 }

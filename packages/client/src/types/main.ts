@@ -2,12 +2,12 @@ import {
   IConfigRegion,
   IGetBootResponseData,
   IGetItemClassesResponseData,
+  IGetRegionResponseData,
   IPreferenceJson,
   IVerifyUserResponseData,
-  IGetRegionResponseData,
 } from "@sotah-inc/core";
 
-import { IClientRealm, IFetchData, IProfile } from "./global";
+import { IClientRealm, IFetchData, IProfile, RenderMode } from "./global";
 
 export type UserData =
   | {
@@ -25,6 +25,7 @@ export interface IMainState {
   bootData: IFetchData<IGetBootResponseData>;
   regionData: IFetchData<IGetRegionResponseData>;
 
+  renderMode: RenderMode;
   preloadedToken: string;
   userData: UserData;
   verifyUser: IFetchData<IVerifyUserResponseData>;
@@ -94,6 +95,7 @@ export const defaultMainState: IMainState = {
       expansions: [],
     },
   },
+  renderMode: RenderMode.Initial,
   userPreferences: {
     level: FetchLevel.initial,
     errors: {},

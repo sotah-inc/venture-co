@@ -4,9 +4,9 @@ import { DebugInfo, IStateProps } from "../../components/App/DebugInfo";
 import { IStoreState } from "../../types";
 
 function mapStateToProps(state: IStoreState): IStateProps {
-  const { userData } = state.Main;
+  const { userData, renderMode } = state.Main;
 
-  return { userData };
+  return { userData, renderMode };
 }
 
 export const DebugInfoContainer = connect<
