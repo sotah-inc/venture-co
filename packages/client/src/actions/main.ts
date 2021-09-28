@@ -23,7 +23,7 @@ import {
   verifyUser,
   VerifyUserResult,
 } from "../api/user";
-import { IClientRealm, IProfile } from "../types/global";
+import { IClientRealm, IProfile, RenderMode } from "../types/global";
 import { ActionsUnion, createAction } from "./helpers";
 
 export const USER_REGISTER = "USER_REGISTER";
@@ -120,6 +120,7 @@ export const ChangeIsRegisterDialogOpen = (payload: boolean) =>
   createAction(CHANGE_IS_REGISTER_DIALOG_OPEN, payload);
 
 export interface ILoadRootEntrypoint {
+  renderMode: RenderMode;
   boot: IGetBootResponseData | null;
   itemClasses: IGetItemClassesResponseData | null;
 }

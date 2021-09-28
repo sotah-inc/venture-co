@@ -160,6 +160,7 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
             data: action.payload.itemClasses,
             errors: {},
           },
+          renderMode: action.payload.renderMode,
         };
       },
     },
