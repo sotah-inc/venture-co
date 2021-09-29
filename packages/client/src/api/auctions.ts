@@ -1,5 +1,6 @@
 import {
   ConnectedRealmId,
+  GameVersion,
   GetAuctionsResponse,
   IGetAuctionsRequest,
   IGetAuctionsResponseData,
@@ -36,6 +37,7 @@ export async function getAuctions(
 }
 
 export interface IQueryAuctionStatsOptions {
+  gameVersion: GameVersion;
   regionName?: RegionName;
   connectedRealmId?: ConnectedRealmId;
 }
@@ -46,10 +48,17 @@ export interface IQueryAuctionStatsResult {
 }
 
 export async function queryAuctionStats({
+  gameVersion,
   regionName,
   connectedRealmId,
 }: IQueryAuctionStatsOptions): Promise<IQueryAuctionStatsResult> {
-  const url = [getApiEndpoint(), "query-auction-stats", regionName, connectedRealmId?.toString()];
+  const url = [
+    getApiEndpoint(),
+    "query-auction-stats",
+    gameVersion,
+    regionName,
+    connectedRealmId?.toString(),
+  ];
 
   const { body, status } = await gather<null, QueryAuctionStatsResponse>({
     headers: new Headers({ "content-type": "application/json" }),
