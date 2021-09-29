@@ -161,6 +161,7 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
             errors: {},
           },
           renderMode: action.payload.renderMode,
+          userData: action.payload.userData,
         };
       },
     },

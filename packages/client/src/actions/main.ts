@@ -24,6 +24,7 @@ import {
   VerifyUserResult,
 } from "../api/user";
 import { IClientRealm, IProfile, RenderMode } from "../types/global";
+import { UserData } from "../types/main";
 import { ActionsUnion, createAction } from "./helpers";
 
 export const USER_REGISTER = "USER_REGISTER";
@@ -121,6 +122,7 @@ export const ChangeIsRegisterDialogOpen = (payload: boolean) =>
 
 export interface ILoadRootEntrypoint {
   renderMode: RenderMode;
+  userData: UserData;
   boot: IGetBootResponseData | null;
   itemClasses: IGetItemClassesResponseData | null;
 }
