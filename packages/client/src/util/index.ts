@@ -1,4 +1,4 @@
-import { IRegionComposite } from "@sotah-inc/core";
+import { IConfigRegion } from "@sotah-inc/core";
 import moment from "moment";
 
 import { IRegions } from "../types/global";
@@ -54,8 +54,8 @@ export function getColor(index: number): string {
   return choices[index % choices.length];
 }
 
-export function FormatRegionList(regionList: IRegionComposite[]): IRegions {
+export function FormatRegionList(regionList: IConfigRegion[]): IRegions {
   return regionList.reduce((result, region) => {
-    return { ...result, [region.config_region.name]: region };
+    return { ...result, [region.name]: region };
   }, {});
 }

@@ -1,16 +1,16 @@
-import { IRegionComposite, IShortItem, IShortPet } from "@sotah-inc/core";
+import { IConfigRegion, IShortItem, IShortPet } from "@sotah-inc/core";
 
 import { IClientRealm } from "../types/global";
 
 export function didRegionChange(
-  prevRegion: IRegionComposite | null,
-  currentRegion: IRegionComposite,
+  prevRegion: IConfigRegion | null,
+  currentRegion: IConfigRegion,
 ): boolean {
   if (prevRegion === null) {
     return true;
   }
 
-  return prevRegion.config_region.name !== currentRegion.config_region.name;
+  return prevRegion.name !== currentRegion.name;
 }
 
 export function didRealmChange(

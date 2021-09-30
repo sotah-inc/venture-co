@@ -1,6 +1,6 @@
 import React from "react";
 
-import { IRegionComposite } from "@sotah-inc/core";
+import { IConfigRegion } from "@sotah-inc/core";
 import { WithRouterProps } from "next/dist/client/with-router";
 import { withRouter } from "next/router";
 
@@ -13,7 +13,7 @@ import { extractSlug } from "../../util/extract-slug";
 type Props = Readonly<
   WithRouterProps &
     IOwnProps & {
-      resolvePath: (region: IRegionComposite, realm: IClientRealm) => IResolveResult;
+      resolvePath: (region: IConfigRegion, realm: IClientRealm) => IResolveResult;
     }
 >;
 

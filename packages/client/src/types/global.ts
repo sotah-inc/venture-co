@@ -6,8 +6,9 @@ import {
   IItemSubClass,
   IPricesFlagged,
   IRealm,
-  IRegionComposite,
-  IShortItem, IStatusTimestamps,
+  IConfigRegion,
+  IShortItem,
+  IStatusTimestamps,
   IUserJson,
   RegionName,
 } from "@sotah-inc/core";
@@ -17,11 +18,11 @@ import { FetchLevel } from "./main";
 export enum RenderMode {
   Initial,
   Server,
-  Client
+  Client,
 }
 
 export interface IRegions {
-  [key: string]: IRegionComposite | undefined;
+  [key: string]: IConfigRegion | undefined;
 }
 // error types
 export interface IErrors {

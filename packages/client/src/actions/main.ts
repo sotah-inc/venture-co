@@ -5,7 +5,6 @@ import {
   ICreatePreferencesRequest,
   IGetBootResponseData,
   IGetItemClassesResponseData,
-  IRegionComposite,
   RealmSlug,
   RegionName,
   UpdatePreferencesRequest,
@@ -102,10 +101,10 @@ export const ReceiveGetConnectedRealms = (payload: IConnectedRealmComposite[] | 
 type FetchGetConnectedRealmsType = ReturnType<
   typeof RequestGetConnectedRealms | typeof ReceiveGetConnectedRealms
 >;
-export const FetchGetConnectedRealms = (region: IRegionComposite) => {
+export const FetchGetConnectedRealms = (region: IConfigRegion) => {
   return async (dispatch: Dispatch<FetchGetConnectedRealmsType>) => {
     dispatch(RequestGetConnectedRealms());
-    dispatch(ReceiveGetConnectedRealms(await getConnectedRealms(region.config_region.name)));
+    dispatch(ReceiveGetConnectedRealms(await getConnectedRealms(region.name)));
   };
 };
 
