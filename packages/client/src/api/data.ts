@@ -14,7 +14,7 @@ import {
   QueryGeneralResponse,
   RealmSlug,
   RegionName,
-  GetItemClassesResponse,
+  GetItemClassesResponse, RegionVersionTuple,
 } from "@sotah-inc/core";
 import { IGetConnectedRealmsResponseData } from "@sotah-inc/core/build/dist/types/contracts/data";
 import * as HTTPStatus from "http-status";
@@ -45,10 +45,10 @@ export async function getItemClasses(): Promise<IGetItemClassesResponseData | nu
 }
 
 export async function getConnectedRealms(
-  regionName: RegionName,
+  tuple: RegionVersionTuple,
 ): Promise<IConnectedRealmComposite[] | null> {
   const { body, status } = await gather<null, GetConnectedRealmsResponse>({
-    url: `${getApiEndpoint()}/connected-realms/${regionName}`,
+    url: `${getApiEndpoint()}/connected-realms/${tuple.game_version}/${tuple.region_name}`,
   });
   if (status !== HTTPStatus.OK || body === null) {
     return null;

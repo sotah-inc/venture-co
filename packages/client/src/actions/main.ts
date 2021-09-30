@@ -6,7 +6,7 @@ import {
   IGetBootResponseData,
   IGetItemClassesResponseData,
   RealmSlug,
-  RegionName,
+  RegionName, RegionVersionTuple,
   UpdatePreferencesRequest,
 } from "@sotah-inc/core";
 import { Dispatch } from "redux";
@@ -101,10 +101,10 @@ export const ReceiveGetConnectedRealms = (payload: IConnectedRealmComposite[] | 
 type FetchGetConnectedRealmsType = ReturnType<
   typeof RequestGetConnectedRealms | typeof ReceiveGetConnectedRealms
 >;
-export const FetchGetConnectedRealms = (region: IConfigRegion) => {
+export const FetchGetConnectedRealms = (tuple: RegionVersionTuple) => {
   return async (dispatch: Dispatch<FetchGetConnectedRealmsType>) => {
     dispatch(RequestGetConnectedRealms());
-    dispatch(ReceiveGetConnectedRealms(await getConnectedRealms(region.name)));
+    dispatch(ReceiveGetConnectedRealms(await getConnectedRealms(tuple)));
   };
 };
 
