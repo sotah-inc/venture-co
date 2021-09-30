@@ -19,11 +19,6 @@ do
 
   ffmpeg \
     -i "$SRC_FILEPATH" \
-    -y \
-    -map 0:v:0 \
-    -map 0:a:1 -map 0:a:0 -map 0:a:2 \
-    -map 0:s? \
-    -c copy \
-    -disposition:a:0 default \
+    -y -c copy -map 0:v:0 -map 0:a:1 -map 0:a:0 -map 0:s:0 -scodec mov_text \
     "$DST_FILEPATH"
 done
