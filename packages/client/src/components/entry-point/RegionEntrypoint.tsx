@@ -1,13 +1,19 @@
 import React from "react";
 
 import { Classes, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
-import { IGetBootResponseData, IConfigRegion } from "@sotah-inc/core";
+import {
+  IGetBootResponseData,
+  IConfigRegion,
+  IRegionVersionRealmTuple,
+  GameVersion,
+} from "@sotah-inc/core";
 
 import { ILoadRegionEntrypoint } from "../../actions/main";
 import { IClientRealm, IFetchData } from "../../types/global";
 import { FetchLevel, UserData } from "../../types/main";
 
 export interface IStateProps {
+  currentGameVersion: GameVersion | null;
   currentRegion: IConfigRegion | null;
   currentRealm: IClientRealm | null;
   userData: UserData;
@@ -25,13 +31,14 @@ export interface IOwnProps {
   label: string;
 }
 
-export interface IRouteProps {
-  routeParams: IRouteParams;
-  redirectToRealm: (region: IConfigRegion, realm: IClientRealm) => void;
+export interface IRouteParams {
+  game_version?: string;
+  region_name?: string;
 }
 
-export interface IRouteParams {
-  region_name?: string;
+export interface IRouteProps {
+  routeParams: IRouteParams;
+  redirectToRealm: (tuple: IRegionVersionRealmTuple) => void;
 }
 
 export type Props = Readonly<IStateProps & IDispatchProps & IOwnProps & IRouteProps>;
@@ -45,11 +52,17 @@ export class RegionEntrypoint extends React.Component<Props> {
 
   public render(): React.ReactNode {
     const {
+      currentGameVersion,
       currentRegion,
-      routeParams: { region_name },
+      routeParams: { game_version, region_name },
     } = this.props;
 
-    if (currentRegion === null || currentRegion.name !== region_name) {
+    if (
+      currentGameVersion === null ||
+      currentGameVersion !== game_version ||
+      currentRegion === null ||
+      currentRegion.name !== region_name
+    ) {
       return this.renderUnmatched();
     }
 
@@ -90,18 +103,22 @@ export class RegionEntrypoint extends React.Component<Props> {
   }
 
   private renderMatchedWithRealms() {
-    const { currentRealm, currentRegion, redirectToRealm, label } = this.props;
+    const { currentGameVersion, currentRealm, currentRegion, redirectToRealm, label } = this.props;
 
-    if (currentRegion === null || currentRealm === null) {
+    if (currentGameVersion === null || currentRegion === null || currentRealm === null) {
       return (
         <NonIdealState
-          title="No region or realm!"
+          title="No game-version, region, or realm!"
           icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={1} />}
         />
       );
     }
 
-    redirectToRealm(currentRegion, currentRealm);
+    redirectToRealm({
+      game_version: currentGameVersion,
+      region_name: currentRegion.name,
+      realm_slug: currentRealm.realm.slug,
+    });
 
     return <p>Redirecting to {label}!</p>;
   }
@@ -109,8 +126,26 @@ export class RegionEntrypoint extends React.Component<Props> {
   private renderUnmatched() {
     const {
       bootData,
-      routeParams: { region_name },
+      routeParams: { region_name, game_version },
     } = this.props;
+
+    if (game_version === undefined) {
+      return (
+        <NonIdealState
+          title={"Game-version is required!"}
+          icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={1} />}
+        />
+      );
+    }
+
+    if (!bootData.data.gameVersions.includes(game_version)) {
+      return (
+        <NonIdealState
+          title={`Game-version ${game_version} not found!`}
+          icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={1} />}
+        />
+      );
+    }
 
     if (region_name === undefined) {
       return (
@@ -121,7 +156,7 @@ export class RegionEntrypoint extends React.Component<Props> {
       );
     }
 
-    if (!bootData.data.regions.find(v => v.name === region_name)) {
+    if (bootData.data.regions.find(v => v.name === region_name) === undefined) {
       return (
         <NonIdealState
           title={`Region ${region_name} not found!`}

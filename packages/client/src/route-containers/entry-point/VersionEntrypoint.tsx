@@ -1,27 +1,27 @@
 import React from "react";
 
-import { IConfigRegion } from "@sotah-inc/core";
+import { RegionVersionTuple } from "@sotah-inc/core";
 import { WithRouterProps } from "next/dist/client/with-router";
 import { withRouter } from "next/router";
 
 import { IOwnProps } from "../../components/entry-point/BaseEntrypoint";
-import { BaseEntrypointContainer } from "../../containers/entry-point/BaseEntrypoint";
+import { VersionEntrypointContainer } from "../../containers/entry-point/VersionEntrypoint";
 import { resolveWrapper } from "../../util";
 
 type Props = Readonly<
   WithRouterProps &
     IOwnProps & {
-      resolvePath: (region: IConfigRegion) => { url: string; as: string };
+      resolvePath: (tuple: RegionVersionTuple) => { url: string; as: string };
     }
 >;
 
 function RouteContainer({ router, label, resolvePath }: Props) {
   return (
-    <BaseEntrypointContainer
-      redirectToVersion={resolveWrapper(resolvePath, router)}
+    <VersionEntrypointContainer
+      redirectToRegion={resolveWrapper(resolvePath, router)}
       label={label}
     />
   );
 }
 
-export const BaseEntrypointRouteContainer = withRouter(RouteContainer);
+export const VersionEntrypointRouteContainer = withRouter(RouteContainer);

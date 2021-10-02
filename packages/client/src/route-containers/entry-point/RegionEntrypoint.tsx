@@ -1,19 +1,18 @@
 import React from "react";
 
-import { IConfigRegion } from "@sotah-inc/core";
+import { IRegionVersionRealmTuple } from "@sotah-inc/core";
 import { WithRouterProps } from "next/dist/client/with-router";
 import { withRouter } from "next/router";
 
 import { IOwnProps } from "../../components/entry-point/RegionEntrypoint";
 import { RegionEntrypointContainer } from "../../containers/entry-point/RegionEntrypoint";
-import { IClientRealm } from "../../types/global";
 import { IResolveResult, resolveWrapper } from "../../util";
 import { extractSlug } from "../../util/extract-slug";
 
 type Props = Readonly<
   WithRouterProps &
     IOwnProps & {
-      resolvePath: (region: IConfigRegion, realm: IClientRealm) => IResolveResult;
+      resolvePath: (tuple: IRegionVersionRealmTuple) => IResolveResult;
     }
 >;
 

@@ -119,6 +119,17 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
           };
         }
 
+        const currentGameVersion = action.payload.boot.gameVersions.pop();
+        if (currentGameVersion === undefined) {
+          return {
+            ...state,
+            bootData: {
+              ...state.bootData,
+              level: FetchLevel.failure,
+            },
+          };
+        }
+
         const currentRegion = ((): IConfigRegion => {
           if (state.userPreferences.level !== FetchLevel.success) {
             return action.payload.boot.regions[0];
@@ -154,6 +165,7 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
             data: action.payload.boot,
             errors: {},
           },
+          currentGameVersion,
           currentRegion,
           itemClasses: {
             level: FetchLevel.success,

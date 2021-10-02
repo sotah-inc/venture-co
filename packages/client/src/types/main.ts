@@ -1,4 +1,5 @@
 import {
+  GameVersion,
   IConfigRegion,
   IGetBootResponseData,
   IGetItemClassesResponseData,
@@ -33,6 +34,8 @@ export interface IMainState {
 
   isRegisterDialogOpen: boolean;
   isLoginDialogOpen: boolean;
+
+  currentGameVersion: GameVersion | null;
 
   currentRegion: IConfigRegion | null;
 
@@ -69,6 +72,7 @@ export const defaultMainState: IMainState = {
       },
     },
   },
+  currentGameVersion: null,
   currentRealm: null,
   currentRegion: null,
   isLoginDialogOpen: false,

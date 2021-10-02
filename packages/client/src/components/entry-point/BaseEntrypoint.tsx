@@ -1,13 +1,13 @@
 import React from "react";
 
-import { IConfigRegion } from "@sotah-inc/core";
+import { GameVersion } from "@sotah-inc/core";
 
 export interface IRouteProps {
-  redirectToRegion: (region: IConfigRegion) => void;
+  redirectToVersion: (gameVersion: GameVersion) => void;
 }
 
 export interface IStateProps {
-  currentRegion: IConfigRegion | null;
+  currentGameVersion: GameVersion | null;
 }
 
 export interface IOwnProps {
@@ -17,19 +17,19 @@ export interface IOwnProps {
 export type Props = Readonly<IStateProps & IOwnProps & IRouteProps>;
 
 export function BaseEntrypoint({
-  currentRegion,
-  redirectToRegion,
+  currentGameVersion,
+  redirectToVersion,
   label,
 }: Props): JSX.Element | null {
-  if (currentRegion === null) {
+  if (currentGameVersion === null) {
     return null;
   }
 
-  redirectToRegion(currentRegion);
+  redirectToVersion(currentGameVersion);
 
   return (
     <p>
-      Redirecting to {label} for {currentRegion.name}!
+      Redirecting to {label} for {currentGameVersion}!
     </p>
   );
 }

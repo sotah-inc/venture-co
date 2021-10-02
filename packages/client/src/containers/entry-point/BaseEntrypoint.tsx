@@ -8,9 +8,9 @@ import {
 import { IStoreState } from "../../types";
 
 function mapStateToProps(state: IStoreState): IStateProps {
-  const { currentRegion } = state.Main;
+  const { currentGameVersion } = state.Main;
 
-  return { currentRegion };
+  return { currentGameVersion };
 }
 
 export const BaseEntrypointContainer = connect<

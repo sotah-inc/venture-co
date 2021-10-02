@@ -11,9 +11,17 @@ import {
 import { IStoreState } from "../../types";
 
 function mapStateToProps(state: IStoreState): IStateProps {
-  const { currentRegion, currentRealm, bootData, realms, userData } = state.Main;
+  const {
+    currentGameVersion,
+    currentRegion,
+    currentRealm,
+    bootData,
+    realms,
+    userData,
+  } = state.Main;
 
   return {
+    currentGameVersion,
     currentRealm,
     currentRegion,
     bootData,
