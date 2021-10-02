@@ -1,6 +1,6 @@
 import React from "react";
 
-import { IConfigRegion } from "@sotah-inc/core";
+import { GameVersion } from "@sotah-inc/core";
 import { WithRouterProps } from "next/dist/client/with-router";
 import { withRouter } from "next/router";
 
@@ -11,7 +11,7 @@ import { resolveWrapper } from "../../util";
 type Props = Readonly<
   WithRouterProps &
     IOwnProps & {
-      resolvePath: (region: IConfigRegion) => { url: string; as: string };
+      resolvePath: (gameVersion: GameVersion) => { url: string; as: string };
     }
 >;
 
