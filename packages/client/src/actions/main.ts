@@ -1,12 +1,14 @@
 /* eslint-disable func-style,@typescript-eslint/explicit-module-boundary-types */
 import {
+  GameVersion,
   IConfigRegion,
   IConnectedRealmComposite,
   ICreatePreferencesRequest,
   IGetBootResponseData,
   IGetItemClassesResponseData,
   RealmSlug,
-  RegionName, RegionVersionTuple,
+  RegionName,
+  RegionVersionTuple,
   UpdatePreferencesRequest,
 } from "@sotah-inc/core";
 import { Dispatch } from "redux";
@@ -130,7 +132,15 @@ export const LOAD_ROOT_ENTRYPOINT = "LOAD_ROOT_ENTRYPOINT";
 export const LoadRootEntrypoint = (payload: ILoadRootEntrypoint) =>
   createAction(LOAD_ROOT_ENTRYPOINT, payload);
 
-export interface ILoadRegionEntrypoint {
+export interface ILoadVersionEntrypoint {
+  nextGameVersion: GameVersion;
+}
+
+export const LOAD_VERSION_ENTRYPOINT = "LOAD_VERSION_ENTRYPOINT";
+export const LoadVersionEntrypoint = (payload: ILoadVersionEntrypoint) =>
+  createAction(LOAD_VERSION_ENTRYPOINT, payload);
+
+export interface ILoadRegionEntrypoint extends ILoadVersionEntrypoint {
   realms: IConnectedRealmComposite[] | null;
   nextRegionName: RegionName;
 }
@@ -139,9 +149,7 @@ export const LOAD_REGION_ENTRYPOINT = "LOAD_REGION_ENTRYPOINT";
 export const LoadRegionEntrypoint = (payload: ILoadRegionEntrypoint) =>
   createAction(LOAD_REGION_ENTRYPOINT, payload);
 
-export interface ILoadRealmEntrypoint {
-  realms: IConnectedRealmComposite[] | null;
-  nextRegionName: RegionName;
+export interface ILoadRealmEntrypoint extends ILoadRegionEntrypoint {
   nextRealmSlug: RealmSlug;
 }
 
@@ -155,6 +163,7 @@ export const MainActions = {
   LoadRealmEntrypoint,
   LoadRegionEntrypoint,
   LoadRootEntrypoint,
+  LoadVersionEntrypoint,
   RealmChange,
   ReceiveGetConnectedRealms,
   ReceiveGetUserPreferences,

@@ -4,6 +4,7 @@ import {
   LoadRealmEntrypoint,
   LoadRegionEntrypoint,
   LoadRootEntrypoint,
+  LoadVersionEntrypoint,
   MainActions,
   RECEIVE_GET_CONNECTEDREALMS,
   ReceiveGetUserPreferences,
@@ -28,10 +29,10 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
   entrypoint: {
     realm: {
       load: (state: IMainState, action: ReturnType<typeof LoadRealmEntrypoint>): IMainState => {
+        const currentGameVersion =
+          state.bootData.data.gameVersions.find(v => v === action.payload.nextGameVersion) ?? null;
         const currentRegion =
-          state.bootData.data.regions.find(
-            v => v?.name === action.payload.nextRegionName,
-          ) ?? null;
+          state.bootData.data.regions.find(v => v.name === action.payload.nextRegionName) ?? null;
 
         const currentRealm: IClientRealm | null = (() => {
           if (currentRegion === null) {
@@ -76,17 +77,18 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
             type: RECEIVE_GET_CONNECTEDREALMS,
             payload: action.payload.realms,
           }),
-          currentRealm,
+          currentGameVersion,
           currentRegion,
+          currentRealm,
         };
       },
     },
     region: {
       load: (state: IMainState, action: ReturnType<typeof LoadRegionEntrypoint>): IMainState => {
+        const currentGameVersion =
+          state.bootData.data.gameVersions.find(v => v === action.payload.nextGameVersion) ?? null;
         const currentRegion =
-          state.bootData.data.regions.find(
-            v => v?.name === action.payload.nextRegionName,
-          ) ?? null;
+          state.bootData.data.regions.find(v => v.name === action.payload.nextRegionName) ?? null;
 
         return {
           ...state,
@@ -94,13 +96,18 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
             type: RECEIVE_GET_CONNECTEDREALMS,
             payload: action.payload.realms,
           }),
+          currentGameVersion,
           currentRegion,
         };
       },
     },
     root: {
       load: (state: IMainState, action: ReturnType<typeof LoadRootEntrypoint>): IMainState => {
-        if (action.payload.boot === null || action.payload.boot.regions.length === 0) {
+        if (
+          action.payload.boot === null ||
+          action.payload.boot.regions.length === 0 ||
+          action.payload.boot.gameVersions.length === 0
+        ) {
           return {
             ...state,
             bootData: {
@@ -119,16 +126,7 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
           };
         }
 
-        const currentGameVersion = action.payload.boot.gameVersions.pop();
-        if (currentGameVersion === undefined) {
-          return {
-            ...state,
-            bootData: {
-              ...state.bootData,
-              level: FetchLevel.failure,
-            },
-          };
-        }
+        const currentGameVersion = action.payload.boot.gameVersions[0];
 
         const currentRegion = ((): IConfigRegion => {
           if (state.userPreferences.level !== FetchLevel.success) {
@@ -174,6 +172,20 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
           },
           renderMode: action.payload.renderMode,
           userData: action.payload.userData,
+        };
+      },
+    },
+    version: {
+      load: (state: IMainState, action: ReturnType<typeof LoadVersionEntrypoint>): IMainState => {
+        const currentGameVersion = state.bootData.data.gameVersions.includes(
+          action.payload.nextGameVersion,
+        )
+          ? action.payload.nextGameVersion
+          : null;
+
+        return {
+          ...state,
+          currentGameVersion,
         };
       },
     },

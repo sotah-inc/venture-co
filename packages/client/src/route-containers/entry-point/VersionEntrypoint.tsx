@@ -4,7 +4,7 @@ import { RegionVersionTuple } from "@sotah-inc/core";
 import { WithRouterProps } from "next/dist/client/with-router";
 import { withRouter } from "next/router";
 
-import { IOwnProps } from "../../components/entry-point/BaseEntrypoint";
+import { IOwnProps } from "../../components/entry-point/VersionEntrypoint";
 import { VersionEntrypointContainer } from "../../containers/entry-point/VersionEntrypoint";
 import { resolveWrapper } from "../../util";
 
@@ -15,10 +15,11 @@ type Props = Readonly<
     }
 >;
 
-function RouteContainer({ router, label, resolvePath }: Props) {
+function RouteContainer({ router, label, resolvePath, versionEntrypointData }: Props) {
   return (
     <VersionEntrypointContainer
-      redirectToRegion={resolveWrapper(resolvePath, router)}
+      redirectToVersion={resolveWrapper(resolvePath, router)}
+      versionEntrypointData={versionEntrypointData}
       label={label}
     />
   );

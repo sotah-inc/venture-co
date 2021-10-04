@@ -1,41 +1,49 @@
 import React from "react";
 
-import { GameVersion, IConfigRegion, RegionVersionTuple } from "@sotah-inc/core";
+import { GameVersion, IConfigRegion } from "@sotah-inc/core";
 
-export interface IRouteProps {
-  redirectToRegion: (tuple: RegionVersionTuple) => void;
-}
+import { ILoadVersionEntrypoint } from "../../actions/main";
 
 export interface IStateProps {
   currentGameVersion: GameVersion | null;
   currentRegion: IConfigRegion | null;
 }
 
+export interface IDispatchProps {
+  loadVersionEntrypoint: (payload: ILoadVersionEntrypoint) => void;
+}
+
 export interface IOwnProps {
+  versionEntrypointData: ILoadVersionEntrypoint;
   label: string;
 }
 
-export type Props = Readonly<IStateProps & IOwnProps & IRouteProps>;
+export interface IRouteProps {
+  redirectToVersion: (gameVersion: GameVersion) => void;
+}
 
-export function VersionEntrypoint({
-  currentGameVersion,
-  currentRegion,
-  redirectToRegion,
-  label,
-}: Props): JSX.Element | null {
-  if (currentGameVersion === null) {
-    return null;
+export type Props = Readonly<IStateProps & IDispatchProps & IOwnProps & IRouteProps>;
+
+export class VersionEntrypoint extends React.Component<Props> {
+  public componentDidMount(): void {
+    const { loadVersionEntrypoint, versionEntrypointData } = this.props;
+
+    loadVersionEntrypoint(versionEntrypointData);
   }
 
-  if (currentRegion === null) {
-    return null;
+  public render(): React.ReactNode {
+    const { currentGameVersion, redirectToVersion, label } = this.props;
+
+    if (currentGameVersion === null) {
+      return null;
+    }
+
+    redirectToVersion(currentGameVersion);
+
+    return (
+      <p>
+        Redirecting to {label} for {currentGameVersion}!
+      </p>
+    );
   }
-
-  redirectToRegion({ game_version: currentGameVersion, region_name: currentRegion.name });
-
-  return (
-    <p>
-      Redirecting to {label} for {currentGameVersion} - {currentRegion.name}!
-    </p>
-  );
 }

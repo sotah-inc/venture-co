@@ -1,7 +1,9 @@
 import { connect } from "react-redux";
 
+import { LoadVersionEntrypoint } from "../../actions/main";
 import {
   VersionEntrypoint,
+  IDispatchProps,
   IOwnProps,
   IStateProps,
 } from "../../components/entry-point/VersionEntrypoint";
@@ -13,9 +15,16 @@ function mapStateToProps(state: IStoreState): IStateProps {
   return { currentGameVersion, currentRegion };
 }
 
+const mapDispatchToProps: IDispatchProps = {
+  loadVersionEntrypoint: LoadVersionEntrypoint,
+};
+
 export const VersionEntrypointContainer = connect<
   IStateProps,
-  Record<string, unknown>,
+  IDispatchProps,
   IOwnProps,
   IStoreState
->(mapStateToProps)(VersionEntrypoint);
+>(
+  mapStateToProps,
+  mapDispatchToProps,
+)(VersionEntrypoint);
