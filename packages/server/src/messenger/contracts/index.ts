@@ -28,7 +28,7 @@ export interface IGetSessionSecretResponse {
 
 export interface IGetBootResponse {
   regions: IConfigRegion[];
-  gameVersions: GameVersion[];
+  game_versions: GameVersion[];
   expansions: IExpansion[];
   firebase_config: {
     browser_api_key: string;
