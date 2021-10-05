@@ -26,7 +26,7 @@ import { IShortItem } from "../short-item";
 export * from "./data/index";
 
 export interface IGetBootResponseData {
-  gameVersions: GameVersion[];
+  game_versions: GameVersion[];
   regions: IConfigRegion[];
   firebase_config: {
     browser_api_key: string;
