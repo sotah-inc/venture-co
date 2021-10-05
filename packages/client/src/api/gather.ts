@@ -109,7 +109,7 @@ async function handleResponse<A>(response: Response): Promise<IGatherResult<A>> 
         contentType,
         status: response.status,
         url: response.url,
-        body: response.text(),
+        responseText,
         headers: response.headers,
       });
 
