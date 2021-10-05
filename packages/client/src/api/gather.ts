@@ -107,7 +107,10 @@ async function handleResponse<A>(response: Response): Promise<IGatherResult<A>> 
       // eslint-disable-next-line no-console
       console.log("content-type did not match application json regex", {
         contentType,
+        status: response.status,
         url: response.url,
+        body: response.text(),
+        headers: response.headers,
       });
 
       return null;
