@@ -1,12 +1,11 @@
 import { code } from "./contracts";
 
-export class MessageError {
-  public message: string;
-
+export class MessageError extends Error {
   public code: code;
 
-  constructor() {
-    this.message = "";
+  constructor(message: string) {
+    super(message);
+
     this.code = code.genericError;
   }
 }
