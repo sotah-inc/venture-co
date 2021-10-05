@@ -51,13 +51,14 @@ export abstract class BaseMessenger {
       throw new Error("failed to resolve nats message");
     }
 
+    const messageText = natsMessage.data.toString();
+
     let parsedMsg: IMessage;
     try {
-
-      parsedMsg = JSON.parse(natsMessage.data.toString());
+      parsedMsg = JSON.parse(messageText);
     } catch (err) {
       console.error("failed to decode message", {
-        messageBody: natsMessage.data.toString().substr(0, 10),
+        messageBody: messageText.substr(0, 100),
         err: err.message,
       });
 
