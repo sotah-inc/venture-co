@@ -18,7 +18,7 @@ type Props = Readonly<
 function RouteContainer({ router, label, resolvePath, versionEntrypointData }: Props) {
   return (
     <VersionEntrypointContainer
-      redirectToVersion={resolveWrapper(resolvePath, router)}
+      redirectToRegion={resolveWrapper(resolvePath, router)}
       versionEntrypointData={versionEntrypointData}
       label={label}
     />

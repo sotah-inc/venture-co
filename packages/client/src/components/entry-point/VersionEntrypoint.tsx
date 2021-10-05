@@ -1,6 +1,6 @@
 import React from "react";
 
-import { GameVersion, IConfigRegion } from "@sotah-inc/core";
+import { GameVersion, IConfigRegion, RegionVersionTuple } from "@sotah-inc/core";
 
 import { ILoadVersionEntrypoint } from "../../actions/main";
 
@@ -19,7 +19,7 @@ export interface IOwnProps {
 }
 
 export interface IRouteProps {
-  redirectToVersion: (gameVersion: GameVersion) => void;
+  redirectToRegion: (tuple: RegionVersionTuple) => void;
 }
 
 export type Props = Readonly<IStateProps & IDispatchProps & IOwnProps & IRouteProps>;
@@ -32,13 +32,13 @@ export class VersionEntrypoint extends React.Component<Props> {
   }
 
   public render(): React.ReactNode {
-    const { currentGameVersion, redirectToVersion, label } = this.props;
+    const { currentGameVersion, currentRegion, redirectToRegion, label } = this.props;
 
-    if (currentGameVersion === null) {
+    if (currentGameVersion === null || currentRegion === null) {
       return null;
     }
 
-    redirectToVersion(currentGameVersion);
+    redirectToRegion({ game_version: currentGameVersion, region_name: currentRegion.name });
 
     return (
       <p>
