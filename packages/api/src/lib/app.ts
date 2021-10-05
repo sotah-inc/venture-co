@@ -97,7 +97,7 @@ export async function getApp(opts: IOptions): Promise<express.Express | null> {
   // }
   logger.info("appending error middleware");
   app.use((err: Error, _: express.Request, res: express.Response, next: () => void) => {
-    logger.error("dumping out error response", { error: err });
+    logger.error("dumping out error response", { error: err.message });
 
     res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(err.message);
     next();
