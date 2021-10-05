@@ -138,7 +138,7 @@ export class RegionEntrypoint extends React.Component<Props> {
       );
     }
 
-    if (!bootData.data.gameVersions.includes(game_version)) {
+    if (!bootData.data.game_versions.includes(game_version)) {
       return (
         <NonIdealState
           title={`Game-version ${game_version} not found!`}
