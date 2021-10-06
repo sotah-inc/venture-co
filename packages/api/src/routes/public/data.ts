@@ -79,7 +79,7 @@ export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
     ),
   );
   router.get(
-    "/auctions/:regionName/:realmSlug",
+    "/auctions/:gameVersion/:regionName/:realmSlug",
     wrap(async (req: Request, res: Response) =>
       handleResult(res, await auctionsController.getAuctions(req, res)),
     ),
