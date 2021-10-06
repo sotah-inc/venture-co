@@ -10,11 +10,12 @@ import { extractSlug } from "../../util/extract-slug";
 type Props = Readonly<WithRouterProps & IOwnProps>;
 
 function RouteContainer({ router, realmEntrypointData, auctionListEntrypointData, loadId }: Props) {
-  const [nextRegionName, nextRealmSlug] = extractSlug("slug", router.query);
+  const [nextGameVersion, nextRegionName, nextRealmSlug] = extractSlug("slug", router.query);
 
   return (
     <AuctionsListContainer
       routeParams={{
+        game_version: nextGameVersion,
         realm_slug: nextRealmSlug,
         region_name: nextRegionName,
       }}

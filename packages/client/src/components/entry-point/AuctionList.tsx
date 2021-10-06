@@ -62,6 +62,7 @@ export interface IRouteProps {
 }
 
 export interface IRouteParams {
+  game_version?: string;
   region_name?: string;
   realm_slug?: string;
 }
