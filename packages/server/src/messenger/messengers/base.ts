@@ -51,7 +51,7 @@ export abstract class BaseMessenger {
       throw new Error("failed to resolve nats message");
     }
 
-    const messageText = natsMessage.data.toString();
+    const messageText = Buffer.from(natsMessage.data).toString();
 
     let parsedMsg: IMessage;
     try {
