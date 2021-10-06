@@ -17,11 +17,11 @@ type Props = Readonly<
 >;
 
 function RouteContainer({ router, regionEntrypointData, label, resolvePath }: Props) {
-  const [nextRegionName] = extractSlug("slug", router.query);
+  const [nextGameVersion, nextRegionName] = extractSlug("slug", router.query);
 
   return (
     <RegionEntrypointContainer
-      routeParams={{ region_name: nextRegionName }}
+      routeParams={{ region_name: nextRegionName, game_version: nextGameVersion }}
       redirectToRealm={resolveWrapper(resolvePath, router)}
       regionEntrypointData={regionEntrypointData}
       label={label}
