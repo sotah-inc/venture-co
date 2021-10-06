@@ -1,4 +1,4 @@
-import { Msg, NatsConnection } from "nats";
+import { Msg, NatsConnection, JSONCodec, Codec } from "nats";
 
 import { code } from "../contracts";
 import { Message, ParseKind } from "../message";
@@ -31,8 +31,12 @@ function isNatsMessage(v: unknown): v is Msg {
 export abstract class BaseMessenger {
   protected conn: NatsConnection;
 
+  private codec: Codec<IMessage>;
+
   constructor(conn: NatsConnection) {
     this.conn = conn;
+
+    this.codec = JSONCodec<IMessage>();
   }
 
   protected async request<T>(subject: string, opts?: IRequestOptions): Promise<Message<T>> {
@@ -51,22 +55,7 @@ export abstract class BaseMessenger {
       throw new Error("failed to resolve nats message");
     }
 
-    const messageText = Buffer.from(natsMessage.data).toString();
-
-    let parsedMsg: IMessage;
-    try {
-      parsedMsg = JSON.parse(messageText);
-    } catch (err) {
-      console.error("failed to decode message", {
-        messageBody: messageText.substr(0, 100),
-        err: err.message,
-      });
-
-      const reason = new MessageError(err.message);
-      reason.code = code.msgJsonParseError;
-
-      throw reason;
-    }
+    const parsedMsg = this.codec.decode(natsMessage.data);
 
     const msg = new Message<T>(parsedMsg, parseKind);
     if (msg.error !== null && msg.code === code.genericError) {
