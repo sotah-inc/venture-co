@@ -1,4 +1,5 @@
 import "isomorphic-fetch";
+import log from "loglevel";
 import queryString, { StringifiableRecord } from "query-string";
 
 export interface IGatherOptions<T> {
@@ -35,14 +36,7 @@ export async function gather<T, A>(opts: IGatherOptions<T>): Promise<IGatherResu
 
   const resolvedUrl = typeof opts.url === "string" ? opts.url : opts.url.filter(v => !!v).join("/");
 
-  const response = await fetch(resolvedUrl, {
-    body,
-    cache: "default",
-    headers,
-    method,
-  });
-
-  return handleResponse(response);
+  return handleRequest(resolvedUrl, body, headers, method);
 }
 
 export async function gatherWithQuery<Q, A, B = unknown>(
@@ -74,6 +68,22 @@ export async function gatherWithQuery<Q, A, B = unknown>(
 
     return `${resolvedUrl}?${query}`;
   })();
+
+  return handleRequest(url, body, headers, method);
+}
+
+async function handleRequest<T>(
+  url: string,
+  body: string | null,
+  headers: Headers,
+  method: string,
+): Promise<IGatherResult<T>> {
+  log.debug("handling request", {
+    url,
+    body,
+    headers,
+    method,
+  });
 
   const response = await fetch(url, {
     body,
@@ -118,6 +128,11 @@ async function handleResponse<A>(response: Response): Promise<IGatherResult<A>> 
 
     return JSON.parse(responseText);
   })();
+
+  log.debug("received response", {
+    body: responseBody,
+    status: response.status,
+  });
 
   return {
     body: responseBody,
