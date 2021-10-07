@@ -204,7 +204,7 @@ export class ItemsController {
     }
 
     const pricelistMessage = await this.messengers.liveAuctions.priceList({
-      item_ids: itemIdsResult.body.itemIds,
+      item_ids: itemIdsResult.body.itemIds ?? [],
       tuple: resolveRealmSlugResult.data.tuple,
     });
     if (pricelistMessage.code !== code.ok) {
@@ -222,7 +222,7 @@ export class ItemsController {
     }
 
     const itemsMessage = await this.messengers.items.items({
-      itemIds: itemIdsResult.body.itemIds,
+      itemIds: itemIdsResult.body.itemIds ?? [],
       locale: resolveQueryResult.body.locale,
       game_version: resolveRealmSlugResult.data.gameVersion,
     });
@@ -281,7 +281,7 @@ export class ItemsController {
     const currentUnixTimestamp = Math.floor(Date.now() / 1000);
     const lowerBounds = currentUnixTimestamp - 60 * 60 * 24 * 14;
     const itemPricesHistoryMessage = await this.messengers.general.resolveItemPricesHistory({
-      item_ids: itemIdsResult.body.itemIds,
+      item_ids: itemIdsResult.body.itemIds ?? [],
       lower_bounds: lowerBounds,
       tuple: resolveRealmSlugResult.data.tuple,
       upper_bounds: currentUnixTimestamp,
@@ -294,7 +294,7 @@ export class ItemsController {
     }
 
     const itemsMessage = await this.messengers.items.items({
-      itemIds: itemIdsResult.body.itemIds,
+      itemIds: itemIdsResult.body.itemIds ?? [],
       locale: resolveQueryResult.body.locale,
       game_version: resolveRealmSlugResult.data.gameVersion,
     });
