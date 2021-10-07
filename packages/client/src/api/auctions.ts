@@ -15,6 +15,7 @@ import { getApiEndpoint } from "./config";
 import { gather, gatherWithQuery } from "./gather";
 
 export interface IGetAuctionsOptions {
+  gameVersion: GameVersion;
   regionName: RegionName;
   realmSlug: RealmSlug;
   request: IGetAuctionsRequest;
@@ -23,11 +24,11 @@ export interface IGetAuctionsOptions {
 export async function getAuctions(
   opts: IGetAuctionsOptions,
 ): Promise<IGetAuctionsResponseData | null> {
-  const { regionName, realmSlug, request } = opts;
+  const { regionName, realmSlug, request, gameVersion } = opts;
   const { body, status } = await gatherWithQuery<IGetAuctionsRequest, GetAuctionsResponse>({
     method: "GET",
     query: request,
-    url: `${getApiEndpoint()}/auctions/${regionName}/${realmSlug}`,
+    url: [getApiEndpoint(), "auctions", gameVersion, regionName, realmSlug],
   });
   if (status !== HTTPStatus.OK) {
     return null;

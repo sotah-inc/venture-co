@@ -18,7 +18,9 @@ import {
   IShortPet,
   ItemId,
   Locale,
-  PetId, StatusKind,
+  PetId,
+  StatusKind,
+  GameVersion,
 } from "@sotah-inc/core";
 
 import { ILoadAuctionListEntrypoint } from "../../actions/auction";
@@ -43,6 +45,7 @@ export interface IStateProps {
   totalResults: number;
   activeSelect: boolean;
 
+  currentGameVersion: GameVersion | null;
   currentRegion: IConfigRegion | null;
   currentRealm: IClientRealm | null;
   realms: IFetchData<IClientRealm[]>;
@@ -148,21 +151,24 @@ export class AuctionList extends React.Component<Props> {
       return;
     }
 
-    setTitle(
-      `Auctions - ${currentRegion.name.toUpperCase()} ${
-        currentRealm.realm.name.en_US
-      }`,
-    );
+    setTitle(`Auctions - ${currentRegion.name.toUpperCase()} ${currentRealm.realm.name.en_US}`);
   }
 
   private refreshAuctions() {
-    const { options, refreshAuctions, currentRealm, currentRegion } = this.props;
+    const {
+      options,
+      refreshAuctions,
+      currentRealm,
+      currentRegion,
+      currentGameVersion,
+    } = this.props;
 
-    if (currentRegion === null || currentRealm === null) {
+    if (currentGameVersion === null || currentRegion === null || currentRealm === null) {
       return;
     }
 
     refreshAuctions({
+      gameVersion: currentGameVersion,
       realmSlug: currentRealm.realm.slug,
       regionName: currentRegion.name,
       request: {
@@ -457,9 +463,7 @@ export class AuctionList extends React.Component<Props> {
 
     return (
       <>
-        <LastModified
-          targetDate={new Date(downloadedTimestamp * 1000)}
-        />
+        <LastModified targetDate={new Date(downloadedTimestamp * 1000)} />
       </>
     );
   }
