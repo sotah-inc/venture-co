@@ -97,6 +97,15 @@ async function handleRequest<T>(
 
 async function handleResponse<A>(response: Response): Promise<IGatherResult<A>> {
   const responseText = await response.text();
+
+  log.debug("received response", {
+    url: response.url,
+    body: responseText.substr(0, 10),
+    status: response.status,
+    headers: JSON.stringify(response.headers),
+    contentType: response.headers.get("content-type"),
+  });
+
   const responseBody: A | null =  (() => {
     if (responseText.length === 0) {
       log.error("response text was zero length");
@@ -114,10 +123,6 @@ async function handleResponse<A>(response: Response): Promise<IGatherResult<A>> 
     if (!/^application\/json/.test(contentType)) {
       log.error("content-type did not match application json regex", {
         contentType,
-        status: response.status,
-        url: response.url,
-        responseText: responseText.substr(0, 10),
-        headers: response.headers,
       });
 
       return null;
@@ -125,14 +130,6 @@ async function handleResponse<A>(response: Response): Promise<IGatherResult<A>> 
 
     return JSON.parse(responseText);
   })();
-
-  log.debug("received response", {
-    url: response.url,
-    body: responseText.substr(0, 10),
-    status: response.status,
-    headers: response.headers,
-    contentType: response.headers.get("content-type"),
-  });
 
   return {
     body: responseBody,
