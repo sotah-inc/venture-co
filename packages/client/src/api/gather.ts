@@ -116,7 +116,7 @@ async function handleResponse<A>(response: Response): Promise<IGatherResult<A>> 
         contentType,
         status: response.status,
         url: response.url,
-        responseText,
+        responseText: responseText.substr(0, 10),
         headers: response.headers,
       });
 
@@ -127,8 +127,11 @@ async function handleResponse<A>(response: Response): Promise<IGatherResult<A>> 
   })();
 
   log.debug("received response", {
+    url: response.url,
     body: responseText.substr(0, 10),
     status: response.status,
+    headers: response.headers,
+    contentType: response.headers.get("content-type"),
   });
 
   return {
