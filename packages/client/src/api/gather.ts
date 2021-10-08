@@ -81,7 +81,7 @@ async function handleRequest<T>(
   log.debug("handling request", {
     url,
     body,
-    headers,
+    headers: JSON.stringify(headers),
     method,
   });
 
