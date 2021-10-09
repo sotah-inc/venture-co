@@ -5,6 +5,7 @@ import {
   IExpansion,
   IItemClass,
   IStatusTimestamps,
+  IFeatureFlags,
 } from "@sotah-inc/core";
 
 export * from "./auctions";
@@ -33,6 +34,7 @@ export interface IGetBootResponse {
   firebase_config: {
     browser_api_key: string;
   };
+  feature_flags: IFeatureFlags;
 }
 
 export interface IGetItemClassesResponse {
