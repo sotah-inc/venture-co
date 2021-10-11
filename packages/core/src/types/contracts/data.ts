@@ -25,6 +25,10 @@ import { IShortItem } from "../short-item";
 
 export * from "./data/index";
 
+export enum FeatureFlag {
+  Auctions = "auctions"
+}
+
 export interface IFeatureFlags {
   [key: string]: GameVersion[];
 }
