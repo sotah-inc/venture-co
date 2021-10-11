@@ -65,6 +65,7 @@ export const defaultMainState: IMainState = {
     level: FetchLevel.initial,
     errors: {},
     data: {
+      feature_flags: {},
       game_versions: [],
       regions: [],
       firebase_config: {
