@@ -30,7 +30,7 @@ export enum FeatureFlag {
 }
 
 export interface IFeatureFlags {
-  [key: string]: GameVersion[];
+  [key: string]: undefined | GameVersion[];
 }
 
 export interface IGetBootResponseData {
