@@ -12,7 +12,6 @@ import {
   Spinner,
 } from "@blueprintjs/core";
 import {
-  IGetBootResponseData,
   IConfigRegion,
   IShortItem,
   IShortPet,
@@ -22,6 +21,7 @@ import {
   StatusKind,
   GameVersion,
 } from "@sotah-inc/core";
+import { FeatureFlag, IFeatureFlags } from "@sotah-inc/core/build/dist/types/contracts/data";
 
 import { ILoadAuctionListEntrypoint } from "../../actions/auction";
 import { ILoadRealmEntrypoint } from "../../actions/main";
@@ -49,7 +49,9 @@ export interface IStateProps {
   currentRegion: IConfigRegion | null;
   currentRealm: IClientRealm | null;
   realms: IFetchData<IClientRealm[]>;
-  bootData: IFetchData<IGetBootResponseData>;
+  regions: IConfigRegion[];
+  gameVersions: GameVersion[];
+  featureFlags: IFeatureFlags;
 }
 
 export interface IDispatchProps {
@@ -124,24 +126,44 @@ export class AuctionList extends React.Component<Props> {
 
   public render(): React.ReactNode {
     const {
-      currentRegion,
-      routeParams: { region_name },
+      currentGameVersion,
+      routeParams: { game_version },
+      featureFlags,
     } = this.props;
 
-    if (currentRegion === null) {
+    if (currentGameVersion === null) {
       return (
         <NonIdealState
-          title="Loading region"
+          title="Loading game-version"
           icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={0} />}
         />
       );
     }
 
-    if (currentRegion.name !== region_name) {
-      return this.renderUnmatchedRegion();
+    if (currentGameVersion !== game_version) {
+      return this.renderUnmatchedGameVersion();
     }
 
-    return this.renderMatchedRegion();
+    const auctionsGameVersions = featureFlags[FeatureFlag.Auctions];
+    if (auctionsGameVersions === undefined) {
+      return (
+        <NonIdealState
+          title="Could not find feature-flag for auctions"
+          icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={0} />}
+        />
+      );
+    }
+
+    if (!auctionsGameVersions.includes(currentGameVersion)) {
+      return (
+        <NonIdealState
+          title={`Auctions is not enabled for ${currentGameVersion}`}
+          icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={0} />}
+        />
+      );
+    }
+
+    return this.renderMatchedGameVersion();
   }
 
   private setTitle() {
@@ -195,9 +217,63 @@ export class AuctionList extends React.Component<Props> {
     });
   }
 
+  private renderUnmatchedGameVersion() {
+    const {
+      gameVersions,
+      routeParams: { game_version },
+    } = this.props;
+
+    if (game_version === undefined) {
+      return (
+        <NonIdealState
+          title={"Game-version is required!"}
+          icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={1} />}
+        />
+      );
+    }
+
+    if (!gameVersions.includes(game_version)) {
+      return (
+        <NonIdealState
+          title={`Game-version ${game_version} not found!`}
+          icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={1} />}
+        />
+      );
+    }
+
+    return (
+      <NonIdealState
+        title="Changing game-version"
+        icon={<Spinner className={Classes.LARGE} intent={Intent.NONE} />}
+      />
+    );
+  }
+
+  private renderMatchedGameVersion() {
+    const {
+      currentRegion,
+      routeParams: { region_name },
+    } = this.props;
+
+    if (currentRegion === null) {
+      return (
+        <NonIdealState
+          title="Loading region"
+          icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={0} />}
+        />
+      );
+    }
+
+    if (currentRegion.name !== region_name) {
+      return this.renderUnmatchedRegion();
+    }
+
+    return this.renderMatchedRegion();
+  }
+
   private renderUnmatchedRegion() {
     const {
-      bootData,
+      regions,
       routeParams: { region_name },
     } = this.props;
 
@@ -210,7 +286,7 @@ export class AuctionList extends React.Component<Props> {
       );
     }
 
-    if (!bootData.data.regions.map(v => v.name).includes(region_name)) {
+    if (!regions.map(v => v.name).includes(region_name)) {
       return (
         <NonIdealState
           title={`Region ${region_name} not found!`}

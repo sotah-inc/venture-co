@@ -22,7 +22,9 @@ function mapStateToProps(state: IStoreState): IStateProps {
   return {
     activeSelect,
     auctionsResult,
-    bootData,
+    regions: bootData.data.regions,
+    featureFlags: bootData.data.feature_flags,
+    gameVersions: bootData.data.game_versions,
     currentGameVersion,
     currentRealm,
     currentRegion,
