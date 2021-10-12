@@ -61,7 +61,7 @@ export class RegionEntrypoint extends React.Component<Props> {
     const x = 1+1;
 
     if (x === 2) {
-      return <p>Hello, world!</p>;
+      throw new Error("ayy");
     }
 
     if (
