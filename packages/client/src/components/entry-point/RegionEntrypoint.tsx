@@ -61,12 +61,6 @@ export class RegionEntrypoint extends React.Component<Props> {
       routeParams: { game_version, region_name },
     } = this.props;
 
-    const x = 1+1;
-
-    if (x === 2) {
-      return <p>Hello, world!!!!</p>;
-    }
-
     if (
       currentGameVersion === null ||
       currentGameVersion !== game_version ||
