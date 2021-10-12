@@ -163,10 +163,22 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
         )
           ? action.payload.nextGameVersion
           : null;
+        const currentRegion = ((): IConfigRegion | null => {
+          if (state.bootData.data.regions.length === 0) {
+            return null;
+          }
+
+          return (
+            state.bootData.data.regions.find(
+              v => state.userPreferences.data.current_region === v.name,
+            ) ?? state.bootData.data.regions[0]
+          );
+        })();
 
         return {
           ...state,
           currentGameVersion,
+          currentRegion,
         };
       },
     },
