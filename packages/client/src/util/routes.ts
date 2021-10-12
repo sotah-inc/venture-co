@@ -7,6 +7,7 @@ import {
   IShortSkillTier,
   IShortSkillTierCategoryRecipe,
 } from "@sotah-inc/core";
+import log from "loglevel";
 import { NextRouter } from "next/router";
 import getSlug from "speakingurl";
 
@@ -212,10 +213,12 @@ export interface IResolveResult {
 
 type ResolveFunc = (...args: unknown[]) => IResolveResult;
 
-export function resolveWrapper(handler: ResolveFunc, router: NextRouter) {
+export function resolveWrapper(handler: ResolveFunc, _router: NextRouter) {
   return async (...args: unknown[]): Promise<void> => {
     const { as, url } = handler(...args);
 
-    await router.replace(url, as);
+    log.info("redirecting", { as, url });
+
+    // await router.replace(url, as);
   };
 }
