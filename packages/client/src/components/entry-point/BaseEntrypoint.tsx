@@ -2,34 +2,44 @@ import React from "react";
 
 import { GameVersion } from "@sotah-inc/core";
 
-export interface IRouteProps {
-  redirectToVersion: (gameVersion: GameVersion) => void;
-}
-
 export interface IStateProps {
   currentGameVersion: GameVersion | null;
+}
+
+export interface IDispatchProps {
+  loadBaseEntrypoint: () => void;
 }
 
 export interface IOwnProps {
   label: string;
 }
 
-export type Props = Readonly<IStateProps & IOwnProps & IRouteProps>;
+export interface IRouteProps {
+  redirectToVersion: (gameVersion: GameVersion) => void;
+}
 
-export function BaseEntrypoint({
-  currentGameVersion,
-  redirectToVersion,
-  label,
-}: Props): JSX.Element | null {
-  if (currentGameVersion === null) {
-    return null;
+export type Props = Readonly<IStateProps & IDispatchProps & IOwnProps & IRouteProps>;
+
+export class BaseEntrypoint extends React.Component<Props> {
+  public componentDidMount(): void {
+    const { loadBaseEntrypoint } = this.props;
+
+    loadBaseEntrypoint();
   }
 
-  redirectToVersion(currentGameVersion);
+  public render(): React.ReactNode {
+    const { currentGameVersion, label, redirectToVersion } = this.props;
 
-  return (
-    <p>
-      Redirecting to {label} for {currentGameVersion}!
-    </p>
-  );
+    if (currentGameVersion === null) {
+      return null;
+    }
+
+    redirectToVersion(currentGameVersion);
+
+    return (
+      <p>
+        Redirecting to {label} for {currentGameVersion}!
+      </p>
+    );
+  }
 }

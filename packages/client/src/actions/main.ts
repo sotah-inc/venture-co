@@ -132,6 +132,10 @@ export const LOAD_ROOT_ENTRYPOINT = "LOAD_ROOT_ENTRYPOINT";
 export const LoadRootEntrypoint = (payload: ILoadRootEntrypoint) =>
   createAction(LOAD_ROOT_ENTRYPOINT, payload);
 
+export const LOAD_BASE_ENTRYPOINT = "LOAD_BASE_ENTRYPOINT";
+export const LoadBaseEntrypoint = () =>
+  createAction(LOAD_BASE_ENTRYPOINT);
+
 export interface ILoadVersionEntrypoint {
   nextGameVersion: GameVersion;
 }
@@ -160,6 +164,7 @@ export const LoadRealmEntrypoint = (payload: ILoadRealmEntrypoint) =>
 export const MainActions = {
   ChangeIsLoginDialogOpen,
   ChangeIsRegisterDialogOpen,
+  LoadBaseEntrypoint,
   LoadRealmEntrypoint,
   LoadRegionEntrypoint,
   LoadRootEntrypoint,
