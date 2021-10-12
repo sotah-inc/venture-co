@@ -126,34 +126,16 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
           };
         }
 
-        const currentGameVersion = action.payload.boot.game_versions[0];
-
-        const currentRegion = ((): IConfigRegion => {
+        const currentRegion = ((): IConfigRegion | null => {
           if (state.userPreferences.level !== FetchLevel.success) {
-            return action.payload.boot.regions[0];
+            return null;
           }
 
-          const { current_region: preferredRegionName } = state.userPreferences.data;
-          const foundRegion = action.payload.boot.regions.reduce<IConfigRegion | null>(
-            (result: IConfigRegion | null, v) => {
-              if (result !== null) {
-                return result;
-              }
-
-              if (v.name === preferredRegionName) {
-                return v;
-              }
-
-              return null;
-            },
-            null,
+          return (
+            action.payload.boot.regions.find(
+              v => v.name === state.userPreferences.data.current_region,
+            ) ?? null
           );
-
-          if (foundRegion === null) {
-            return action.payload.boot.regions[0];
-          }
-
-          return foundRegion;
         })();
 
         return {
@@ -163,7 +145,6 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
             data: action.payload.boot,
             errors: {},
           },
-          currentGameVersion,
           currentRegion,
           itemClasses: {
             level: FetchLevel.success,
