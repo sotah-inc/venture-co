@@ -109,10 +109,10 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
 
         return {
           ...state,
-          ...receiveGetConnectedRealms(state, {
-            type: RECEIVE_GET_CONNECTEDREALMS,
-            payload: action.payload.realms,
-          }),
+          // ...receiveGetConnectedRealms(state, {
+          //   type: RECEIVE_GET_CONNECTEDREALMS,
+          //   payload: action.payload.realms,
+          // }),
           currentGameVersion,
           currentRegion,
         };
