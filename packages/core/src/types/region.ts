@@ -27,22 +27,22 @@ export enum RealmType {
 }
 
 export interface IRealm extends ILinksBase {
+  category: LocaleMapping;
+  connected_realm: IHrefReference;
   id: RealmId;
+  is_tournament: boolean;
+  locale: string;
+  name: LocaleMapping;
   region: ILinksBase & {
     id: RegionId;
     name: LocaleMapping;
   };
-  connected_realm: IHrefReference;
-  name: LocaleMapping;
-  category: LocaleMapping;
-  locale: string;
+  slug: RealmSlug;
   timezone: string;
   type: {
     type: RealmType;
     name: LocaleMapping;
   };
-  is_tournament: boolean;
-  slug: RealmSlug;
 }
 
 export enum StatusKind {
@@ -70,19 +70,19 @@ export enum RealmPopulation {
 
 export interface IConnectedRealmComposite {
   connected_realm: ILinksBase & {
-    id: ConnectedRealmId;
+    auctions: IHrefReference;
     has_queue: boolean;
-    status: {
-      type: RealmStatus;
-      name: LocaleMapping;
-    };
+    id: ConnectedRealmId;
+    mythic_leaderboards: IHrefReference;
     population: {
       type: RealmPopulation;
       name: LocaleMapping;
     };
     realms: IRealm[];
-    mythic_leaderboards: IHrefReference;
-    auctions: IHrefReference;
+    status: {
+      type: RealmStatus;
+      name: LocaleMapping;
+    };
   };
   status_timestamps: IStatusTimestamps;
 }
