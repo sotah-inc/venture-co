@@ -7,7 +7,6 @@ import {
   IRegionVersionRealmTuple,
   GameVersion,
 } from "@sotah-inc/core";
-import log from "loglevel";
 
 import { ILoadRegionEntrypoint } from "../../actions/main";
 import { IClientRealm, IFetchData } from "../../types/global";
@@ -115,11 +114,6 @@ export class RegionEntrypoint extends React.Component<Props> {
       );
     }
 
-    log.info("redirectToRealm()", {
-      game_version: currentGameVersion,
-      region_name: currentRegion.name,
-      realm_slug: currentRealm.realm.slug,
-    });
     redirectToRealm({
       game_version: currentGameVersion,
       region_name: currentRegion.name,
