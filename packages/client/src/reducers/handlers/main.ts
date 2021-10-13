@@ -108,13 +108,13 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
           state.bootData.data.regions.find(v => v.name === action.payload.nextRegionName) ?? null;
 
         return {
-          ...state,
-          // ...receiveGetConnectedRealms(state, {
-          //   type: RECEIVE_GET_CONNECTEDREALMS,
-          //   payload: action.payload.realms,
-          // }),
-          currentGameVersion,
-          currentRegion,
+          ...receiveGetConnectedRealms(
+            { ...state, currentGameVersion, currentRegion },
+            {
+              type: RECEIVE_GET_CONNECTEDREALMS,
+              payload: action.payload.realms,
+            },
+          ),
         };
       },
     },

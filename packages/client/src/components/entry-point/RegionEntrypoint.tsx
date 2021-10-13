@@ -48,6 +48,9 @@ export class RegionEntrypoint extends React.Component<Props> {
   public componentDidMount(): void {
     const { loadRegionEntrypoint, regionEntrypointData } = this.props;
 
+    // eslint-disable-next-line no-debugger
+    debugger;
+
     loadRegionEntrypoint(regionEntrypointData);
   }
 
