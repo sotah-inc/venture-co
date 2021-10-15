@@ -1,4 +1,4 @@
-import { GameVersion, IConfigRegion, UserLevel } from "@sotah-inc/core";
+import { IConfigRegion, UserLevel } from "@sotah-inc/core";
 
 import {
   LoadBaseEntrypoint,
@@ -30,17 +30,17 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
   entrypoint: {
     base: {
       load: (state: IMainState, _action: ReturnType<typeof LoadBaseEntrypoint>): IMainState => {
-        const currentGameVersion = ((): GameVersion | null => {
-          if (state.bootData.data.game_versions.length === 0) {
-            return null;
-          }
-
-          return state.bootData.data.game_versions[0];
-        })();
+        // const currentGameVersion = ((): GameVersion | null => {
+        //   if (state.bootData.data.game_versions.length === 0) {
+        //     return null;
+        //   }
+        //
+        //   return state.bootData.data.game_versions[0];
+        // })();
 
         return {
           ...state,
-          currentGameVersion,
+          // currentGameVersion,
         };
       },
     },
