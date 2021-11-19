@@ -22,7 +22,7 @@ export interface IOptions {
 export async function getApp(opts: IOptions): Promise<express.Express | null> {
   const { logger, natsHost, natsPort, dbHost, dbPassword } = opts;
 
-  logger.info("starting app", { opts });
+  logger.info("starting app", { ...opts, logger: undefined });
 
   // const errors = isGceEnv ? new ErrorReporting() : null;
 
