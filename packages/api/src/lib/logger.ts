@@ -1,12 +1,18 @@
 import { LoggingWinston } from "@google-cloud/logging-winston";
 import { createLogger, format, Logger, transports } from "winston";
+import DailyRotateFile from "winston-daily-rotate-file";
 
 interface ILoggerOptions {
   level: string;
   isGceEnv: boolean;
+  logsDir: string | null;
 }
 
-const defaultLoggerOptions: ILoggerOptions = { level: "warn", isGceEnv: false };
+const defaultLoggerOptions: ILoggerOptions = {
+  level: "warn",
+  isGceEnv: false,
+  logsDir: null,
+};
 
 export function getLogger(opts?: ILoggerOptions): Logger {
   const settings: ILoggerOptions = (() => {
@@ -16,17 +22,30 @@ export function getLogger(opts?: ILoggerOptions): Logger {
 
     return { ...defaultLoggerOptions, ...opts };
   })();
-  const { level, isGceEnv } = settings;
+  const { level, isGceEnv, logsDir } = settings;
 
   const loggerTransports = (() => {
-    if (!isGceEnv) {
-      return [
-        new transports.Console({ level }),
-        new transports.File({ filename: "app.log", level }),
-      ];
+    const out = [];
+    out.push(new transports.Console({ level }));
+
+    if (isGceEnv) {
+      out.push(new LoggingWinston({ level }));
     }
 
-    return [new transports.Console({ level }), new LoggingWinston({ level })];
+    if (logsDir) {
+      out.push(
+        new DailyRotateFile({
+          level,
+          filename: `${logsDir}/app-%DATE%.log`,
+          datePattern: "YYYY-MM-DD-HH",
+          zippedArchive: true,
+          maxSize: "20m",
+          maxFiles: "14d",
+        }),
+      );
+    }
+
+    return out;
   })();
 
   return createLogger({
