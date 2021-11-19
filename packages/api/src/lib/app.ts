@@ -71,7 +71,11 @@ export async function getApp(opts: IOptions): Promise<express.Express | null> {
   // request logging
   logger.info("appending cors middleware");
   app.use((req, res, next) => {
-    logger.info("received HTTP request", { url: req.originalUrl, method: req.method });
+    logger.info("received HTTP request", {
+      url: req.originalUrl,
+      method: req.method,
+      appKind: opts.appKind,
+    });
 
     res.set("access-control-allow-origin", "*");
     res.set("access-control-allow-headers", "content-type,authorization");
