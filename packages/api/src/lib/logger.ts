@@ -1,5 +1,5 @@
 import { LoggingWinston } from "@google-cloud/logging-winston";
-import { createLogger, Logger, transports } from "winston";
+import { createLogger, format, Logger, transports } from "winston";
 import DailyRotateFile from "winston-daily-rotate-file";
 
 interface ILoggerOptions {
@@ -49,6 +49,7 @@ export function getLogger(opts?: ILoggerOptions): Logger {
   })();
 
   return createLogger({
+    format: format.timestamp(),
     level: settings.level,
     transports: loggerTransports,
   });
