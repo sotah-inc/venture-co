@@ -41,6 +41,7 @@ export function getLogger(opts?: ILoggerOptions): Logger {
           zippedArchive: true,
           maxSize: "20m",
           maxFiles: "14d",
+          createSymlink: true,
         }),
       );
     }
