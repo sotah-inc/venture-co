@@ -50,7 +50,6 @@ export function getLogger(opts?: ILoggerOptions): Logger {
 
   return createLogger({
     format: format.combine(
-      format.label({ label: "sotah-api" }),
       format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
       format.json(),
     ),
