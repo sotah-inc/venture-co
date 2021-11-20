@@ -49,7 +49,7 @@ export function getLogger(opts?: ILoggerOptions): Logger {
   })();
 
   return createLogger({
-    format: format.json(),
+    format: format.combine(format.json(), format.timestamp()),
     level: settings.level,
     transports: loggerTransports,
   });
