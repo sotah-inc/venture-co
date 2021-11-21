@@ -1,4 +1,6 @@
 import { LoggingWinston } from "@google-cloud/logging-winston";
+import { UnixTimestamp } from "@sotah-inc/core";
+import { Format, TransformableInfo, TransformFunction } from "logform";
 import { createLogger, format, Logger, transports } from "winston";
 import DailyRotateFile from "winston-daily-rotate-file";
 
@@ -13,6 +15,43 @@ const defaultLoggerOptions: ILoggerOptions = {
   isGceEnv: false,
   logsDir: null,
 };
+
+interface ILogMessage {
+  fields: Record<string, unknown>;
+  name: string;
+  timestamp: UnixTimestamp;
+}
+
+export class defaultFormatter extends Format {
+  constructor() {
+    super();
+  }
+
+  public transform: TransformFunction = (info: TransformableInfo): TransformableInfo => {
+    const timestamp = ((): UnixTimestamp => {
+      if (!("timestamp" in info)) {
+        return 0;
+      }
+
+      const parsedTimestamp = new Date(info.timestamp);
+
+      return parsedTimestamp.getTime() * 1000;
+    })();
+
+    const result: ILogMessage = {
+      name: "sotah-api",
+      timestamp,
+      fields: {
+        ...info,
+        message: undefined,
+        timestamp: undefined,
+        level: undefined,
+      },
+    };
+
+    return (result as unknown) as TransformableInfo;
+  };
+}
 
 export function getLogger(opts?: ILoggerOptions): Logger {
   const settings: ILoggerOptions = (() => {
@@ -52,7 +91,7 @@ export function getLogger(opts?: ILoggerOptions): Logger {
   return createLogger({
     format: format.combine(
       format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
-      format.json(),
+      new defaultFormatter(),
     ),
     level: settings.level,
     transports: loggerTransports,
