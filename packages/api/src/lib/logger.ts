@@ -51,7 +51,7 @@ const transform = format(
       name: "sotah-api",
       timestamp,
       fields: Object.keys(info)
-        .filter(v => fieldBlacklist.includes(v))
+        .filter(v => !fieldBlacklist.includes(v))
         .reduce((fieldsResult, v) => {
           return {
             ...fieldsResult,
