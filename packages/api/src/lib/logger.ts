@@ -1,5 +1,6 @@
 import { LoggingWinston } from "@google-cloud/logging-winston";
 import { UnixTimestamp } from "@sotah-inc/core";
+import logfmt from "logfmt";
 import { TransformableInfo } from "logform";
 import tripleBeam from "triple-beam";
 import { createLogger, format, Logger, transports } from "winston";
@@ -30,8 +31,8 @@ interface ILogMessage {
 const fieldBlacklist = ["message", "level", tripleBeam.LEVEL, tripleBeam.MESSAGE, tripleBeam.SPLAT];
 
 const transform = format(
-  (info: TransformableInfo): ILogMessage => {
-    return {
+  (info: TransformableInfo): TransformableInfo => {
+    const result: ILogMessage = {
       // required by winston
       level: info.level,
       [tripleBeam.LEVEL]: info.level,
@@ -49,6 +50,11 @@ const transform = format(
             [v]: info[v],
           };
         }, {}),
+    };
+
+    return {
+      ...info,
+      [tripleBeam.MESSAGE]: logfmt.stringify(result),
     };
   },
 );
@@ -90,7 +96,7 @@ export function getLogger(opts?: ILoggerOptions): Logger {
 
   return createLogger({
     level: settings.level,
-    format: format.combine(transform(), format.json()),
+    format: transform(),
     transports: loggerTransports,
   });
 }
