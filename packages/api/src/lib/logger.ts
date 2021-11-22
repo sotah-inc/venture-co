@@ -1,6 +1,7 @@
 import { LoggingWinston } from "@google-cloud/logging-winston";
 import { UnixTimestamp } from "@sotah-inc/core";
 import { TransformableInfo } from "logform";
+import tripleBeam from "triple-beam";
 import { format, createLogger, Logger, transports } from "winston";
 import DailyRotateFile from "winston-daily-rotate-file";
 
@@ -45,6 +46,9 @@ const transform = format(
         message: undefined,
         timestamp: undefined,
         level: undefined,
+        [tripleBeam.LEVEL]: undefined,
+        [tripleBeam.MESSAGE]: undefined,
+        [tripleBeam.SPLAT]: undefined,
       },
     };
     // eslint-disable-next-line no-console
