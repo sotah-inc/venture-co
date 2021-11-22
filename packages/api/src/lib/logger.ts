@@ -39,19 +39,9 @@ const transform = format(
     // eslint-disable-next-line no-console
     console.log("transform() info", { info, infoType: typeof info });
 
-    const timestamp = ((): UnixTimestamp => {
-      if (!("timestamp" in info)) {
-        return 0;
-      }
-
-      const parsedTimestamp = new Date(info.timestamp);
-
-      return parsedTimestamp.getTime() / 1000;
-    })();
-
     const result: ILogMessage = {
       name: "sotah-api",
-      timestamp: info.timestamp,
+      timestamp: new Date().getTime() / 1000,
       level: info.level,
       message: info.message,
       fields: Object.keys(info)
@@ -64,9 +54,9 @@ const transform = format(
         }, {}),
     };
     // eslint-disable-next-line no-console
-    console.log("transform() result", { result, timestamp });
+    console.log("transform() result", { result });
 
-    return info;
+    return result;
   },
 );
 
