@@ -21,6 +21,8 @@ interface ILogMessage {
   fields: Record<string, unknown>;
   name: string;
   timestamp: UnixTimestamp;
+  level: string;
+  message: string;
 }
 
 const fieldBlacklist = [
@@ -50,6 +52,8 @@ const transform = format(
     const result: ILogMessage = {
       name: "sotah-api",
       timestamp,
+      level: info.level,
+      message: info.message,
       fields: Object.keys(info)
         .filter(v => !fieldBlacklist.includes(v))
         .reduce((fieldsResult, v) => {
