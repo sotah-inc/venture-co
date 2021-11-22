@@ -51,7 +51,7 @@ const transform = format(
 
     const result: ILogMessage = {
       name: "sotah-api",
-      timestamp,
+      timestamp: info.timestamp,
       level: info.level,
       message: info.message,
       fields: Object.keys(info)
@@ -64,7 +64,7 @@ const transform = format(
         }, {}),
     };
     // eslint-disable-next-line no-console
-    console.log("transform() result", { result });
+    console.log("transform() result", { result, timestamp });
 
     return (result as unknown) as TransformableInfo;
   },
