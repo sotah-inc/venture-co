@@ -31,9 +31,6 @@ const fieldBlacklist = ["message", "level", tripleBeam.LEVEL, tripleBeam.MESSAGE
 
 const transform = format(
   (info: TransformableInfo): TransformableInfo => {
-    // eslint-disable-next-line no-console
-    console.log("transform() info", { info, infoType: typeof info });
-
     const result: ILogMessage = {
       // required by winston
       level: info.level,
@@ -53,9 +50,6 @@ const transform = format(
           };
         }, {}),
     };
-
-    // eslint-disable-next-line no-console
-    console.log("transform() result", { result });
 
     return result;
   },
