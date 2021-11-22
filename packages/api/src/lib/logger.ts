@@ -27,7 +27,6 @@ interface ILogMessage {
 
 const fieldBlacklist = [
   "message",
-  "timestamp",
   "level",
   tripleBeam.LEVEL,
   tripleBeam.MESSAGE,
