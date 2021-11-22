@@ -2,7 +2,7 @@ import { LoggingWinston } from "@google-cloud/logging-winston";
 import { UnixTimestamp } from "@sotah-inc/core";
 import { TransformableInfo } from "logform";
 import tripleBeam from "triple-beam";
-import { format, createLogger, Logger, transports } from "winston";
+import { createLogger, format, Logger, transports } from "winston";
 import DailyRotateFile from "winston-daily-rotate-file";
 
 interface ILoggerOptions {
@@ -30,8 +30,8 @@ interface ILogMessage {
 const fieldBlacklist = ["message", "level", tripleBeam.LEVEL, tripleBeam.MESSAGE, tripleBeam.SPLAT];
 
 const transform = format(
-  (info: TransformableInfo): TransformableInfo => {
-    const result: ILogMessage = {
+  (info: TransformableInfo): ILogMessage => {
+    return {
       // required by winston
       level: info.level,
       [tripleBeam.LEVEL]: info.level,
@@ -50,8 +50,6 @@ const transform = format(
           };
         }, {}),
     };
-
-    return result;
   },
 );
 
