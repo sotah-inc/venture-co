@@ -25,13 +25,7 @@ interface ILogMessage {
   message: string;
 }
 
-const fieldBlacklist = [
-  "message",
-  "level",
-  tripleBeam.LEVEL,
-  tripleBeam.MESSAGE,
-  tripleBeam.SPLAT,
-];
+const fieldBlacklist = ["message", "level", tripleBeam.LEVEL, tripleBeam.MESSAGE, tripleBeam.SPLAT];
 
 const transform = format(
   (info: TransformableInfo): TransformableInfo => {
@@ -40,7 +34,7 @@ const transform = format(
 
     const result: ILogMessage = {
       name: "sotah-api",
-      timestamp: new Date().getTime() / 1000,
+      timestamp: Number((new Date().getTime() / 1000).toFixed(0)),
       level: info.level,
       message: info.message,
       fields: Object.keys(info)
@@ -71,7 +65,7 @@ export function getLogger(opts?: ILoggerOptions): Logger {
 
   const loggerTransports = (() => {
     const out = [];
-    out.push(new transports.Console({ level }));
+    out.push(new transports.Console({ level, format: transform() }));
 
     if (isGceEnv) {
       out.push(new LoggingWinston({ level }));
@@ -87,6 +81,7 @@ export function getLogger(opts?: ILoggerOptions): Logger {
           maxSize: "20m",
           maxFiles: "14d",
           createSymlink: true,
+          format: transform(),
         }),
       );
     }
@@ -95,10 +90,6 @@ export function getLogger(opts?: ILoggerOptions): Logger {
   })();
 
   return createLogger({
-    format: format.combine(
-      format.json(),
-      transform(),
-    ),
     level: settings.level,
     transports: loggerTransports,
   });
