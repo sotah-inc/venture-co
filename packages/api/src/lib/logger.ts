@@ -1,5 +1,4 @@
 import { LoggingWinston } from "@google-cloud/logging-winston";
-import { UnixTimestamp } from "@sotah-inc/core";
 import logfmt from "logfmt";
 import { TransformableInfo } from "logform";
 import tripleBeam from "triple-beam";
@@ -25,10 +24,6 @@ interface ILogMessage {
   message: string;
   [tripleBeam.MESSAGE]: string;
 
-  // required by influxdb
-  name: string;
-  timestamp: UnixTimestamp;
-
   // etc
   [key: string]: unknown;
 }
@@ -43,10 +38,6 @@ const transform = format(
       [tripleBeam.MESSAGE]: info.message,
       level: info.level,
       [tripleBeam.LEVEL]: info.level,
-
-      // required by influxdb
-      name: "sotah-api",
-      timestamp: Number((new Date().getTime() / 1000).toFixed(0)),
 
       // etc
       ...Object.keys(info)
