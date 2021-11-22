@@ -1,7 +1,7 @@
 import { LoggingWinston } from "@google-cloud/logging-winston";
 import { UnixTimestamp } from "@sotah-inc/core";
-import { TransformableInfo, TransformFunction, format } from "logform";
-import { format as formatters, createLogger, Logger, transports } from "winston";
+import { TransformableInfo } from "logform";
+import { format, createLogger, Logger, transports } from "winston";
 import DailyRotateFile from "winston-daily-rotate-file";
 
 interface ILoggerOptions {
@@ -22,32 +22,32 @@ interface ILogMessage {
   timestamp: UnixTimestamp;
 }
 
-const transform: TransformFunction = (info: TransformableInfo): TransformableInfo => {
-  const timestamp = ((): UnixTimestamp => {
-    if (!("timestamp" in info)) {
-      return 0;
-    }
+const transform = format(
+  (info: TransformableInfo): TransformableInfo => {
+    const timestamp = ((): UnixTimestamp => {
+      if (!("timestamp" in info)) {
+        return 0;
+      }
 
-    const parsedTimestamp = new Date(info.timestamp);
+      const parsedTimestamp = new Date(info.timestamp);
 
-    return parsedTimestamp.getTime() * 1000;
-  })();
+      return parsedTimestamp.getTime() * 1000;
+    })();
 
-  const result: ILogMessage = {
-    name: "sotah-api",
-    timestamp,
-    fields: {
-      ...info,
-      message: undefined,
-      timestamp: undefined,
-      level: undefined,
-    },
-  };
+    const result: ILogMessage = {
+      name: "sotah-api",
+      timestamp,
+      fields: {
+        ...info,
+        message: undefined,
+        timestamp: undefined,
+        level: undefined,
+      },
+    };
 
-  return (result as unknown) as TransformableInfo;
-};
-
-const formattedTransform = format(transform);
+    return (result as unknown) as TransformableInfo;
+  },
+);
 
 export function getLogger(opts?: ILoggerOptions): Logger {
   const settings: ILoggerOptions = (() => {
@@ -85,10 +85,7 @@ export function getLogger(opts?: ILoggerOptions): Logger {
   })();
 
   return createLogger({
-    format: formatters.combine(
-      formatters.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
-      formattedTransform(),
-    ),
+    format: format.combine(format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }), transform()),
     level: settings.level,
     transports: loggerTransports,
   });
