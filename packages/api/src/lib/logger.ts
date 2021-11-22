@@ -65,7 +65,7 @@ export function getLogger(opts?: ILoggerOptions): Logger {
 
   const loggerTransports = (() => {
     const out = [];
-    out.push(new transports.Console({ level, format: format.combine(format.json(), transform()) }));
+    out.push(new transports.Console({ level }));
 
     if (isGceEnv) {
       out.push(new LoggingWinston({ level }));
@@ -81,7 +81,6 @@ export function getLogger(opts?: ILoggerOptions): Logger {
           maxSize: "20m",
           maxFiles: "14d",
           createSymlink: true,
-          format: format.combine(format.json(), transform()),
         }),
       );
     }
@@ -91,6 +90,7 @@ export function getLogger(opts?: ILoggerOptions): Logger {
 
   return createLogger({
     level: settings.level,
+    format: format.combine(format.json(), transform()),
     transports: loggerTransports,
   });
 }
