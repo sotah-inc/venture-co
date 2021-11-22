@@ -23,6 +23,15 @@ interface ILogMessage {
   timestamp: UnixTimestamp;
 }
 
+const fieldBlacklist = [
+  "message",
+  "timestamp",
+  "level",
+  tripleBeam.LEVEL,
+  tripleBeam.MESSAGE,
+  tripleBeam.SPLAT,
+];
+
 const transform = format(
   (info: TransformableInfo): TransformableInfo => {
     // eslint-disable-next-line no-console
@@ -41,15 +50,14 @@ const transform = format(
     const result: ILogMessage = {
       name: "sotah-api",
       timestamp,
-      fields: {
-        ...info,
-        message: undefined,
-        timestamp: undefined,
-        level: undefined,
-        [tripleBeam.LEVEL]: undefined,
-        [tripleBeam.MESSAGE]: undefined,
-        [tripleBeam.SPLAT]: undefined,
-      },
+      fields: Object.keys(info)
+        .filter(v => fieldBlacklist.includes(v))
+        .reduce((fieldsResult, v) => {
+          return {
+            ...fieldsResult,
+            [v]: info[v],
+          };
+        }, {}),
     };
     // eslint-disable-next-line no-console
     console.log("transform() result", { result });
