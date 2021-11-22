@@ -39,10 +39,10 @@ const transform = format(
   (info: TransformableInfo): TransformableInfo => {
     const result: ILogMessage = {
       // required by winston
-      level: info.level,
-      [tripleBeam.LEVEL]: info.level,
       message: info.message,
       [tripleBeam.MESSAGE]: info.message,
+      level: info.level,
+      [tripleBeam.LEVEL]: info.level,
 
       // required by influxdb
       name: "sotah-api",
