@@ -25,7 +25,7 @@ interface ILogMessage {
 const transform = format(
   (info: TransformableInfo): TransformableInfo => {
     // eslint-disable-next-line no-console
-    console.log("transform()", { info, infoType: typeof info });
+    console.log("transform() info", { info, infoType: typeof info });
 
     const timestamp = ((): UnixTimestamp => {
       if (!("timestamp" in info)) {
@@ -47,6 +47,8 @@ const transform = format(
         level: undefined,
       },
     };
+    // eslint-disable-next-line no-console
+    console.log("transform() result", { result });
 
     return (result as unknown) as TransformableInfo;
   },

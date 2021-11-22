@@ -1,6 +1,6 @@
 {
   "name": "@sotah-inc/api",
-  "version": "2.0.190",
+  "version": "2.0.191",
   "description": "SotAH API SDK",
   "main": "build/dist/index.js",
   "typings": "build/dist/index.d.ts",
