@@ -66,7 +66,7 @@ const transform = format(
     // eslint-disable-next-line no-console
     console.log("transform() result", { result, timestamp });
 
-    return (result as unknown) as TransformableInfo;
+    return info;
   },
 );
 
@@ -107,7 +107,6 @@ export function getLogger(opts?: ILoggerOptions): Logger {
 
   return createLogger({
     format: format.combine(
-      format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
       format.json(),
       transform(),
     ),
