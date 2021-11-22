@@ -19,16 +19,21 @@ const defaultLoggerOptions: ILoggerOptions = {
 };
 
 interface ILogMessage {
-  fields: Record<string, unknown>;
+  // required by winston
+  level: string;
+  [tripleBeam.LEVEL]: string;
+  message: string;
+  [tripleBeam.MESSAGE]: string;
+
+  // required by influxdb
   name: string;
   timestamp: UnixTimestamp;
-  level: string;
-  message: string;
-  [tripleBeam.LEVEL]: string;
-  [tripleBeam.MESSAGE]: string;
+
+  // etc
+  [key: string]: unknown;
 }
 
-const fieldBlacklist = ["message", "level", tripleBeam.LEVEL, tripleBeam.MESSAGE, tripleBeam.SPLAT];
+const fieldBlacklist = ["level", tripleBeam.LEVEL, "message", tripleBeam.MESSAGE];
 
 const transform = format(
   (info: TransformableInfo): TransformableInfo => {
@@ -39,10 +44,12 @@ const transform = format(
       message: info.message,
       [tripleBeam.MESSAGE]: info.message,
 
-      // appended by us
+      // required by influxdb
       name: "sotah-api",
       timestamp: Number((new Date().getTime() / 1000).toFixed(0)),
-      fields: Object.keys(info)
+
+      // etc
+      ...Object.keys(info)
         .filter(v => !fieldBlacklist.includes(v))
         .reduce((fieldsResult, v) => {
           return {
@@ -71,7 +78,7 @@ export function getLogger(opts?: ILoggerOptions): Logger {
 
   const loggerTransports = (() => {
     const out = [];
-    out.push(new transports.Console({ level }));
+    out.push(new transports.Console({ level, format: format.json() }));
 
     if (isGceEnv) {
       out.push(new LoggingWinston({ level }));
@@ -87,6 +94,7 @@ export function getLogger(opts?: ILoggerOptions): Logger {
           maxSize: "20m",
           maxFiles: "14d",
           createSymlink: true,
+          format: transform(),
         }),
       );
     }
@@ -96,7 +104,6 @@ export function getLogger(opts?: ILoggerOptions): Logger {
 
   return createLogger({
     level: settings.level,
-    format: transform(),
     transports: loggerTransports,
   });
 }
