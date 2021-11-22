@@ -98,7 +98,7 @@ export function getLogger(opts?: ILoggerOptions): Logger {
 
   return createLogger({
     level: settings.level,
-    format: format.combine(format.json(), transform()),
+    format: format.combine(transform(), format.json()),
     transports: loggerTransports,
   });
 }
