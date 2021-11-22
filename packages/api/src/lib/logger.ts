@@ -23,6 +23,8 @@ interface ILogMessage {
   timestamp: UnixTimestamp;
   level: string;
   message: string;
+  [tripleBeam.LEVEL]: string;
+  [tripleBeam.MESSAGE]: string;
 }
 
 const fieldBlacklist = ["message", "level", tripleBeam.LEVEL, tripleBeam.MESSAGE, tripleBeam.SPLAT];
@@ -33,10 +35,15 @@ const transform = format(
     console.log("transform() info", { info, infoType: typeof info });
 
     const result: ILogMessage = {
+      // required by winston
+      level: info.level,
+      [tripleBeam.LEVEL]: info.level,
+      message: info.message,
+      [tripleBeam.MESSAGE]: info.message,
+
+      // appended by us
       name: "sotah-api",
       timestamp: Number((new Date().getTime() / 1000).toFixed(0)),
-      level: info.level,
-      message: info.message,
       fields: Object.keys(info)
         .filter(v => !fieldBlacklist.includes(v))
         .reduce((fieldsResult, v) => {
@@ -46,6 +53,7 @@ const transform = format(
           };
         }, {}),
     };
+
     // eslint-disable-next-line no-console
     console.log("transform() result", { result });
 
