@@ -44,7 +44,7 @@ const transform = format(
 
       const parsedTimestamp = new Date(info.timestamp);
 
-      return parsedTimestamp.getTime() * 1000;
+      return parsedTimestamp.getTime() / 1000;
     })();
 
     const result: ILogMessage = {
