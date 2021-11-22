@@ -22,6 +22,9 @@ interface ILogMessage {
   timestamp: UnixTimestamp;
 }
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// @ts-ignore
 const transform = format(
   (info: TransformableInfo): TransformableInfo => {
     const timestamp = ((): UnixTimestamp => {
@@ -85,7 +88,7 @@ export function getLogger(opts?: ILoggerOptions): Logger {
   })();
 
   return createLogger({
-    format: format.combine(format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }), transform()),
+    format: format.combine(format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" })),
     level: settings.level,
     transports: loggerTransports,
   });
