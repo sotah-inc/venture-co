@@ -1,21 +1,17 @@
 import React from "react";
 
-import { Classes, H1, H4, Icon, IconName, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
-import { IConfigRegion } from "@sotah-inc/core";
+import { H1, H4, Icon, IconName } from "@blueprintjs/core";
 
 import { ILoadPostsEntrypoint } from "../../actions/posts";
 import { AuctionStatsGraphContainer } from "../../containers/entry-point/News/AuctionStatsGraph";
 import { TokenHistoryGraphContainer } from "../../containers/entry-point/News/TokenHistoryGraph";
-import {
-  DeletePostDialogRouteContainer,
-} from "../../route-containers/entry-point/News/DeletePostDialog";
+import { DeletePostDialogRouteContainer } from "../../route-containers/entry-point/News/DeletePostDialog";
 import { PostListRouteContainer } from "../../route-containers/entry-point/News/PostList";
 import { AuthLevel, UserData } from "../../types/main";
 import { setTitle } from "../../util";
 import { CardCallout } from "../util";
 
 export interface IStateProps {
-  currentRegion: IConfigRegion | null;
   userData: UserData;
 }
 
@@ -44,17 +40,6 @@ export class News extends React.Component<Props> {
   }
 
   public render(): React.ReactNode {
-    const { currentRegion } = this.props;
-
-    if (currentRegion === null) {
-      return (
-        <NonIdealState
-          title="Loading region..."
-          icon={<Spinner className={Classes.LARGE} intent={Intent.NONE} />}
-        />
-      );
-    }
-
     return (
       <>
         <DeletePostDialogRouteContainer />
@@ -78,7 +63,7 @@ export class News extends React.Component<Props> {
                     "/auctions/[region_name]",
                     "dollar",
                     "Browse Auctions",
-                    `/auctions/${currentRegion.name}`,
+                    "/auctions",
                   )}
                 </div>
                 <div className="pure-u-1-4 homepage-card-container">
@@ -86,7 +71,7 @@ export class News extends React.Component<Props> {
                     "/professions/[region_name]",
                     "chart",
                     "Discover Professions",
-                    `/professions/${currentRegion.name}`,
+                    "/professions",
                   )}
                 </div>
                 {this.renderUserCallout()}
