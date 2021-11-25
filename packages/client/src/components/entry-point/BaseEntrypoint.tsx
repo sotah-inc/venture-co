@@ -22,7 +22,10 @@ export type Props = Readonly<IStateProps & IDispatchProps & IOwnProps & IRoutePr
 
 export class BaseEntrypoint extends React.Component<Props> {
   public componentDidMount(): void {
-    const { loadBaseEntrypoint } = this.props;
+    const { loadBaseEntrypoint, currentGameVersion } = this.props;
+    if (currentGameVersion !== null) {
+      return;
+    }
 
     loadBaseEntrypoint();
   }
