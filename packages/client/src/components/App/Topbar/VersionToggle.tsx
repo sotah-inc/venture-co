@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Icon, NavbarHeading } from "@blueprintjs/core";
+import { Button, NavbarHeading } from "@blueprintjs/core";
 
 import { IVersionToggleConfig } from "../../../types/global";
 
@@ -25,8 +25,7 @@ export class VersionToggle extends React.Component<Props> {
 
     return (
       <NavbarHeading>
-        <Icon icon="globe" />
-        <span style={{ marginLeft: "5px" }}>SotAH</span>
+        <Button text={"SotAH"} disabled={true} icon={"globe"} />
       </NavbarHeading>
     );
   }
