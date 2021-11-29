@@ -11,6 +11,7 @@ import {
   IStatusTimestamps,
   IUserJson,
   RegionName,
+  IGameVersionTuple,
 } from "@sotah-inc/core";
 
 import { FetchLevel } from "./main";
@@ -88,4 +89,10 @@ export interface IItemPriceHistoriesState {
 export interface IRouteConfig {
   url: string;
   asDest: string;
+}
+
+export type VersionRouteConfig = IGameVersionTuple & IRouteConfig;
+
+export interface IVersionToggleConfig {
+  destinations: VersionRouteConfig[];
 }

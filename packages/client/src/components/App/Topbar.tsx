@@ -4,11 +4,9 @@ import {
   Alignment,
   ButtonGroup,
   Classes,
-  Icon,
   Navbar,
   NavbarDivider,
   NavbarGroup,
-  NavbarHeading,
 } from "@blueprintjs/core";
 import { Tooltip2 } from "@blueprintjs/popover2";
 import { IExpansion, IConfigRegion, GameVersion } from "@sotah-inc/core";
@@ -16,6 +14,7 @@ import { IExpansion, IConfigRegion, GameVersion } from "@sotah-inc/core";
 import { LoginContainer } from "../../containers/App/Login";
 import { RegisterContainer } from "../../containers/App/Register";
 import { NewsButtonRouteContainer } from "../../route-containers/App/Topbar/NewsButton";
+import { VersionToggleRouteContainer } from "../../route-containers/App/Topbar/VersionToggle";
 import { WorkOrdersButtonRouteContainer } from "../../route-containers/App/Topbar/WorkOrderButtons";
 import { LinkButtonRouteContainer } from "../../route-containers/util/LinkButton";
 import { IClientRealm } from "../../types/global";
@@ -113,10 +112,7 @@ export class Topbar extends React.Component<Props> {
         <Navbar className={Classes.DARK}>
           <div id="topbar">
             <NavbarGroup align={Alignment.LEFT}>
-              <NavbarHeading>
-                <Icon icon="globe" />
-                <span style={{ marginLeft: "5px" }}>SotAH</span>
-              </NavbarHeading>
+              <VersionToggleRouteContainer />
               <NavbarDivider />
               {contentLink}
               <NavbarDivider />

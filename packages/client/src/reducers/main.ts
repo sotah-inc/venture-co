@@ -4,6 +4,7 @@ import {
   MainActions,
   REALM_CHANGE,
   REGION_CHANGE,
+  SET_VERESIONTOGGLECONFIG,
   USER_LOGIN,
   USER_REGISTER,
 } from "../actions/main";
@@ -39,6 +40,8 @@ export function main(state: State | undefined, action: MainActions): State {
     return { ...state, isLoginDialogOpen: action.payload };
   case CHANGE_IS_REGISTER_DIALOG_OPEN:
     return { ...state, isRegisterDialogOpen: action.payload };
+  case SET_VERESIONTOGGLECONFIG:
+    return { ...state, versionToggleConfig: action.payload };
   default:
     return runners.main(state, action);
   }
