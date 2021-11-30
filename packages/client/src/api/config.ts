@@ -1,5 +1,3 @@
-import getConfig from "next/config";
-
 interface IConfig {
   publicRuntimeConfig?: {
     publicApiEndpoint: string;
@@ -8,6 +6,12 @@ interface IConfig {
     publicServerApiEndpoint: string;
     privateServerApiEndpoint: string;
   };
+}
+
+let config: IConfig | null = null;
+
+export function setConfig(foundConfig: IConfig): void {
+  config = foundConfig;
 }
 
 const hostname: string = (() => {
@@ -20,7 +24,12 @@ const hostname: string = (() => {
 
 const defaultApiEndpoint = "https://api.sotah.info";
 export function getApiEndpoint(): string {
-  const { publicRuntimeConfig, serverRuntimeConfig }: IConfig = getConfig();
+  if (!config) {
+    return defaultApiEndpoint;
+  }
+
+  const { publicRuntimeConfig, serverRuntimeConfig } = config;
+
   if (serverRuntimeConfig?.publicServerApiEndpoint) {
     return serverRuntimeConfig.publicServerApiEndpoint;
   }
@@ -37,7 +46,11 @@ export function getApiEndpoint(): string {
 }
 
 export function getPrivateApiEndpoint(): string | null {
-  const { serverRuntimeConfig }: IConfig = getConfig();
+  if (!config) {
+    return null;
+  }
+
+  const { serverRuntimeConfig } = config;
 
   return serverRuntimeConfig?.privateServerApiEndpoint ?? null;
 }
