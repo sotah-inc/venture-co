@@ -25,7 +25,13 @@ export class VersionToggle extends React.Component<Props> {
 
     return (
       <NavbarHeading>
-        <Button text={"SotAH"} minimal={true} icon={"globe"} />
+        <Button
+          text={"SotAH"}
+          minimal={true}
+          icon={"globe"}
+          large={true}
+          onMouseOver={e => e.preventDefault()}
+        />
       </NavbarHeading>
     );
   }
