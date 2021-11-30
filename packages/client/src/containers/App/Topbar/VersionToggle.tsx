@@ -4,9 +4,9 @@ import { IOwnProps, IStateProps, VersionToggle } from "../../../components/App/T
 import { IStoreState } from "../../../types";
 
 function mapStateToProps(state: IStoreState): IStateProps {
-  const { versionToggleConfig } = state.Main;
+  const { versionToggleConfig, currentGameVersion } = state.Main;
 
-  return { versionToggleConfig };
+  return { versionToggleConfig, currentGameVersion };
 }
 
 export const VersionToggleContainer = connect<

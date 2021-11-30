@@ -7,6 +7,7 @@ import { AuctionStatsGraphContainer } from "../../containers/entry-point/News/Au
 import { TokenHistoryGraphContainer } from "../../containers/entry-point/News/TokenHistoryGraph";
 import { DeletePostDialogRouteContainer } from "../../route-containers/entry-point/News/DeletePostDialog";
 import { PostListRouteContainer } from "../../route-containers/entry-point/News/PostList";
+import { IVersionToggleConfig } from "../../types/global";
 import { AuthLevel, UserData } from "../../types/main";
 import { setTitle } from "../../util";
 import { CardCallout } from "../util";
@@ -18,6 +19,7 @@ export interface IStateProps {
 export interface IDispatchProps {
   changeIsRegisterDialogOpen: (isOpen: boolean) => void;
   loadEntrypointData: (payload: ILoadPostsEntrypoint) => void;
+  setVersionToggleConfig: (config: IVersionToggleConfig) => void;
 }
 
 export interface IOwnProps {
@@ -32,11 +34,14 @@ type Props = Readonly<IStateProps & IDispatchProps & IOwnProps & IRouteProps>;
 
 export class News extends React.Component<Props> {
   public componentDidMount(): void {
-    const { entrypointData, loadEntrypointData } = this.props;
+    const { entrypointData, loadEntrypointData, setVersionToggleConfig } = this.props;
 
     setTitle("News");
 
     loadEntrypointData(entrypointData);
+    setVersionToggleConfig({
+      destinations: [],
+    });
   }
 
   public render(): React.ReactNode {
