@@ -25,7 +25,7 @@ export class VersionToggle extends React.Component<Props> {
 
     return (
       <NavbarHeading>
-        <Button text={"SotAH"} disabled={true} icon={"globe"} />
+        <Button text={"SotAH"} minimal={true} icon={"globe"} />
       </NavbarHeading>
     );
   }
