@@ -1,6 +1,6 @@
 {
   "name": "@sotah-inc/client",
-  "version": "2.0.576",
+  "version": "2.0.577",
   "description": "SotAH Web Client SDK",
   "main": "./build/dist/index.js",
   "typings": "build/dist/index.d.ts",
@@ -57,9 +57,7 @@
     "normalize.css": "^8.0.1",
     "purecss": "^2.0.6",
     "query-string": "^7.0.1",
-    "react": "^16.14.0",
     "react-cookie": "^4.0.3",
-    "react-dom": "^16.14.0",
     "react-markdown": "^6.0.2",
     "react-redux": "^7.2.4",
     "recharts": "2.0.8",
@@ -74,6 +72,8 @@
     "@types/gulp": "^4.0.8",
     "@types/gulp-concat": "^0.0.32",
     "@types/gulp-postcss": "^8.0.0",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0",
     "chokidar-cli": "^2.1.0",
     "google-artifactregistry-auth": "^2.1.0",
     "gulp": "^4.0.2",
@@ -87,7 +87,8 @@
     "typescript": "^4.3.5"
   },
   "peerDependencies": {
-    "react": "^16.14.0"
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0"
   },
   "publishConfig": {
     "registry": "https://us-central1-npm.pkg.dev/sotah-prod/sotah-inc/"
