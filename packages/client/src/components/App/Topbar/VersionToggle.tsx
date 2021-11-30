@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button, NavbarHeading } from "@blueprintjs/core";
+import { Button } from "@blueprintjs/core";
 
 import { IVersionToggleConfig } from "../../../types/global";
 
@@ -24,15 +24,13 @@ export class VersionToggle extends React.Component<Props> {
     console.log("VersionToggle.render()", { versionToggleConfig });
 
     return (
-      <NavbarHeading>
-        <Button
-          text={"SotAH"}
-          minimal={true}
-          icon={"globe"}
-          large={true}
-          onMouseOver={e => e.preventDefault()}
-        />
-      </NavbarHeading>
+      <Button
+        text={"SotAH"}
+        minimal={true}
+        icon={"globe"}
+        large={true}
+        onMouseOver={e => e.preventDefault()}
+      />
     );
   }
 }
