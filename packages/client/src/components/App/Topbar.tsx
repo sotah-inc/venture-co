@@ -112,7 +112,11 @@ export class Topbar extends React.Component<Props> {
         <Navbar className={Classes.DARK}>
           <div id="topbar">
             <NavbarGroup align={Alignment.LEFT}>
-              <VersionToggleRouteContainer />
+              <LinkButtonRouteContainer
+                destination={"/"}
+                asDestination={"/"}
+                buttonProps={{ icon: "globe", minimal: true, text: "SotAH" }}
+              />
               <NavbarDivider />
               {contentLink}
               <NavbarDivider />
@@ -316,15 +320,16 @@ export class Topbar extends React.Component<Props> {
     }
 
     return (
-      <LinkButtonRouteContainer
-        destination={"/auctions/[game_version]/[region_name]/[realm_slug]"}
-        asDestination={[
-          "/auctions",
-          currentGameVersion,
-          currentRegion.name,
-          currentRealm.realm.slug,
-        ].join("/")}
+      <VersionToggleRouteContainer
         buttonProps={{ icon: "dollar", text: "Auctions", minimal: true }}
+        resolveRouteConfig={gameVersion => {
+          return {
+            asDest: ["/auctions", gameVersion, currentRegion.name, currentRealm.realm.slug].join(
+              "/",
+            ),
+            url: "/auctions/[game_version]/[region_name]/[realm_slug]",
+          };
+        }}
       />
     );
   }
