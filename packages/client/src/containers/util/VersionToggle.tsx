@@ -5,8 +5,8 @@ import {
   IRouteProps,
   IStateProps,
   VersionToggle,
-} from "../../../components/App/Topbar/VersionToggle";
-import { IStoreState } from "../../../types";
+} from "../../components/util/VersionToggle";
+import { IStoreState } from "../../types";
 
 function mapStateToProps(state: IStoreState): IStateProps {
   const { currentGameVersion, bootData } = state.Main;

@@ -3,8 +3,8 @@ import React from "react";
 import { WithRouterProps } from "next/dist/client/with-router";
 import { withRouter } from "next/router";
 
-import { IOwnProps } from "../../../components/App/Topbar/VersionToggle";
-import { VersionToggleContainer } from "../../../containers/App/Topbar/VersionToggle";
+import { IOwnProps } from "../../components/util/VersionToggle";
+import { VersionToggleContainer } from "../../containers/util/VersionToggle";
 
 type Props = Readonly<WithRouterProps & IOwnProps>;
 

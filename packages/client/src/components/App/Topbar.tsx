@@ -14,9 +14,9 @@ import { IExpansion, IConfigRegion, GameVersion } from "@sotah-inc/core";
 import { LoginContainer } from "../../containers/App/Login";
 import { RegisterContainer } from "../../containers/App/Register";
 import { NewsButtonRouteContainer } from "../../route-containers/App/Topbar/NewsButton";
-import { VersionToggleRouteContainer } from "../../route-containers/App/Topbar/VersionToggle";
 import { WorkOrdersButtonRouteContainer } from "../../route-containers/App/Topbar/WorkOrderButtons";
 import { LinkButtonRouteContainer } from "../../route-containers/util/LinkButton";
+import { VersionToggleRouteContainer } from "../../route-containers/util/VersionToggle";
 import { IClientRealm } from "../../types/global";
 import { AuthLevel, UserData } from "../../types/main";
 import {

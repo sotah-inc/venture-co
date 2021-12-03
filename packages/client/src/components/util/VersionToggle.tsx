@@ -4,8 +4,8 @@ import { Button, Classes, H6, ButtonProps, Menu, MenuItem } from "@blueprintjs/c
 import { Popover2 } from "@blueprintjs/popover2";
 import { GameVersion } from "@sotah-inc/core";
 
-import { LinkButtonRouteContainer } from "../../../route-containers/util/LinkButton";
-import { IRouteConfig, VersionRouteConfig } from "../../../types/global";
+import { LinkButtonRouteContainer } from "../../route-containers/util/LinkButton";
+import { IRouteConfig, VersionRouteConfig } from "../../types/global";
 
 export interface IStateProps {
   currentGameVersion: GameVersion | null;

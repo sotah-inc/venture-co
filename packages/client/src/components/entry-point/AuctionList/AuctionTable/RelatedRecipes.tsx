@@ -177,7 +177,6 @@ export class RelatedRecipes extends React.Component<Props> {
           </ButtonGroup>
         </td>
         <td style={{ boxShadow: "inset 1px 0 0 0 rgba(255, 255, 255, 0.15)" }}>&nbsp;</td>
-        <td style={{ boxShadow: "inset 1px 0 0 0 rgba(255, 255, 255, 0.15)" }}>&nbsp;</td>
       </tr>
     );
   }
