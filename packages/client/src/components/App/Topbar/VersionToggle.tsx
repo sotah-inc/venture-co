@@ -20,6 +20,7 @@ export interface IRouteProps {
 export interface IOwnProps {
   buttonProps: ButtonProps;
   resolveRouteConfig: (version: GameVersion) => IRouteConfig;
+  exactOrPrefix?: boolean;
 }
 
 export type Props = Readonly<IStateProps & IOwnProps & IRouteProps>;
@@ -68,6 +69,7 @@ export class VersionToggle extends React.Component<Props> {
       gameVersions,
       locationAsPath,
       resolveRouteConfig,
+      exactOrPrefix,
     } = this.props;
 
     if (gameVersions.length === 0 || currentGameVersion === null) {
@@ -81,7 +83,10 @@ export class VersionToggle extends React.Component<Props> {
     }
 
     const currentRouteConfig = resolveRouteConfig(currentGameVersion);
-    if (locationAsPath !== currentRouteConfig.asDest) {
+    const isCurrent = exactOrPrefix
+      ? locationAsPath.startsWith(currentRouteConfig.asDest)
+      : locationAsPath === currentRouteConfig.asDest;
+    if (!isCurrent) {
       return (
         <LinkButtonRouteContainer
           destination={currentRouteConfig.url}

@@ -8,7 +8,7 @@ import { VersionToggleContainer } from "../../../containers/App/Topbar/VersionTo
 
 type Props = Readonly<WithRouterProps & IOwnProps>;
 
-function RouteContainer({ router, buttonProps, resolveRouteConfig }: Props) {
+function RouteContainer({ router, buttonProps, resolveRouteConfig, exactOrPrefix }: Props) {
   return (
     <VersionToggleContainer
       redirectToVersionDestination={(url, asDest) => {
@@ -19,6 +19,7 @@ function RouteContainer({ router, buttonProps, resolveRouteConfig }: Props) {
       buttonProps={buttonProps}
       resolveRouteConfig={resolveRouteConfig}
       locationAsPath={router.asPath}
+      exactOrPrefix={exactOrPrefix}
     />
   );
 }

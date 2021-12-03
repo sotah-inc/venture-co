@@ -322,14 +322,11 @@ export class Topbar extends React.Component<Props> {
     return (
       <VersionToggleRouteContainer
         buttonProps={{ icon: "dollar", text: "Auctions", minimal: true }}
-        resolveRouteConfig={gameVersion => {
-          return {
-            asDest: ["/auctions", gameVersion, currentRegion.name, currentRealm.realm.slug].join(
-              "/",
-            ),
-            url: "/auctions/[game_version]/[region_name]/[realm_slug]",
-          };
-        }}
+        resolveRouteConfig={gameVersion => ({
+          asDest: `/auctions/${gameVersion}`,
+          url: "/auctions/[game_version]",
+        })}
+        exactOrPrefix={true}
       />
     );
   }
