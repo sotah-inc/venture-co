@@ -65,7 +65,7 @@ export class News extends React.Component<Props> {
                 </div>
                 <div className="pure-u-1-4 homepage-card-container">
                   {this.renderCard(
-                    "/auctions/[region_name]",
+                    "/auctions",
                     "dollar",
                     "Browse Auctions",
                     "/auctions",

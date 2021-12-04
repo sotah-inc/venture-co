@@ -1,4 +1,5 @@
 import {
+  GameVersion,
   IConfigRegion,
   IExpansion,
   IPricelistJson,
@@ -11,6 +12,38 @@ import { NextRouter } from "next/router";
 import getSlug from "speakingurl";
 
 import { IClientRealm, IRouteConfig } from "../types/global";
+
+export function toAuctions(
+  gameVersion?: GameVersion | null,
+  region?: IConfigRegion | null,
+  realm?: IClientRealm | null,
+): IRouteConfig {
+  if (!gameVersion) {
+    return {
+      url: "/auctions",
+      asDest: "/auctions",
+    };
+  }
+
+  if (!region) {
+    return {
+      url: "/auctions/[game_version]",
+      asDest: `/auctions/${gameVersion}`,
+    };
+  }
+
+  if (!realm) {
+    return {
+      url: "/auctions/[game_version]/[region_name]",
+      asDest: `/auctions/${gameVersion}/${region.name}`,
+    };
+  }
+
+  return {
+    url: "/auctions/[game_version]/[region_name]/[realm_slug]",
+    asDest: `/auctions/${gameVersion}/${region.name}/${realm.realm.slug}`,
+  };
+}
 
 export function toRealmProfessions(region: IConfigRegion, realm: IClientRealm): IRouteConfig {
   const asDest = ["professions", region.name, realm.realm.slug].join("/");

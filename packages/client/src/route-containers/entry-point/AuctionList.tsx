@@ -5,6 +5,7 @@ import { withRouter } from "next/router";
 
 import { IOwnProps } from "../../components/entry-point/AuctionList";
 import { AuctionsListContainer } from "../../containers/entry-point/AuctionList";
+import { toAuctions } from "../../util";
 import { extractSlug } from "../../util/extract-slug";
 
 type Props = Readonly<WithRouterProps & IOwnProps>;
@@ -19,12 +20,13 @@ function RouteContainer({ router, realmEntrypointData, auctionListEntrypointData
         realm_slug: nextRealmSlug,
         region_name: nextRegionName,
       }}
-      browseToRealmAuctions={(region, realm) =>
-        router.replace(
-          "/auctions/[region_name]/[realm_slug]",
-          `/auctions/${region.name}/${realm.realm.slug}`,
-        )
-      }
+      browseToRealmAuctions={(gameVersion, region, realm) => {
+        const routeConfig = toAuctions(gameVersion, region, realm);
+
+        (async () => {
+          await router.replace(routeConfig.url, routeConfig.asDest);
+        })();
+      }}
       realmEntrypointData={realmEntrypointData}
       auctionListEntrypointData={auctionListEntrypointData}
       loadId={loadId}

@@ -20,6 +20,7 @@ import { VersionToggleRouteContainer } from "../../route-containers/util/Version
 import { IClientRealm } from "../../types/global";
 import { AuthLevel, UserData } from "../../types/main";
 import {
+  toAuctions,
   toExpansionProfessionPricelists,
   toRealmProfessionPricelists,
   toRealmProfessions,
@@ -311,10 +312,13 @@ export class Topbar extends React.Component<Props> {
     const { currentGameVersion, currentRegion, currentRealm } = this.props;
 
     if (currentGameVersion === null || currentRegion === null || currentRealm === null) {
+      const routeConfig = toAuctions(currentGameVersion, currentRegion, currentRealm);
+
       return (
         <LinkButtonRouteContainer
-          destination={""}
-          buttonProps={{ icon: "dollar", text: "Auctions", minimal: true, disabled: true }}
+          destination={routeConfig.url}
+          asDestination={routeConfig.asDest}
+          buttonProps={{ icon: "dollar", text: "Auctions", minimal: true }}
         />
       );
     }
@@ -322,10 +326,7 @@ export class Topbar extends React.Component<Props> {
     return (
       <VersionToggleRouteContainer
         buttonProps={{ icon: "dollar", text: "Auctions", minimal: true }}
-        resolveRouteConfig={gameVersion => ({
-          asDest: `/auctions/${gameVersion}`,
-          url: "/auctions/[game_version]",
-        })}
+        resolveRouteConfig={toAuctions}
         exactOrPrefix={true}
       />
     );

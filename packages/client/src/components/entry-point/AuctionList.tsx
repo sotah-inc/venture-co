@@ -67,7 +67,11 @@ export interface IDispatchProps {
 
 export interface IRouteProps {
   routeParams: IRouteParams;
-  browseToRealmAuctions: (region: IConfigRegion, realm: IClientRealm) => void;
+  browseToRealmAuctions: (
+    gameVersion: GameVersion,
+    region: IConfigRegion,
+    realm: IClientRealm,
+  ) => void;
 }
 
 export interface IRouteParams {
@@ -578,13 +582,13 @@ export class AuctionList extends React.Component<Props> {
   }
 
   private onRealmChange(realm: IClientRealm) {
-    const { browseToRealmAuctions, currentRegion } = this.props;
+    const { browseToRealmAuctions, currentRegion, currentGameVersion } = this.props;
 
-    if (currentRegion === null) {
+    if (currentGameVersion === null || currentRegion === null) {
       return;
     }
 
-    browseToRealmAuctions(currentRegion, realm);
+    browseToRealmAuctions(currentGameVersion, currentRegion, realm);
   }
 
   private renderAuctions() {
