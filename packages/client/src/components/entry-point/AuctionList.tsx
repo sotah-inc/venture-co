@@ -32,12 +32,7 @@ import { QueryAuctionsFilterContainer } from "../../containers/entry-point/Aucti
 import { RealmToggleContainer } from "../../containers/util/RealmToggle";
 import { RegionToggleContainer } from "../../containers/util/RegionToggle";
 import { IAuctionsOptions, IAuctionResultData } from "../../types/auction";
-import {
-  IClientRealm,
-  IFetchData,
-  IVersionToggleConfig,
-  VersionRouteConfig,
-} from "../../types/global";
+import { IClientRealm, IFetchData } from "../../types/global";
 import { FetchLevel } from "../../types/main";
 import { hasNewItems, hasNewPets, setTitle } from "../../util";
 import { LastModified, Pagination } from "../util";
@@ -62,7 +57,6 @@ export interface IDispatchProps {
   loadAuctionListEntrypoint: (payload: ILoadAuctionListEntrypoint) => void;
   refreshAuctions: (opts: IGetAuctionsOptions) => void;
   setCurrentPage: (page: number) => void;
-  setVersionToggleConfig: (config: IVersionToggleConfig) => void;
 }
 
 export interface IRouteProps {
@@ -95,21 +89,10 @@ export class AuctionList extends React.Component<Props> {
       loadAuctionListEntrypoint,
       loadRealmEntrypoint,
       realmEntrypointData,
-      setVersionToggleConfig,
-      gameVersions,
     } = this.props;
 
     loadRealmEntrypoint(realmEntrypointData);
     loadAuctionListEntrypoint(auctionListEntrypointData);
-    setVersionToggleConfig({
-      destinations: gameVersions.map<VersionRouteConfig>(v => {
-        return {
-          url: "/auctions/[game_version]",
-          asDest: `/auctions/${v}`,
-          game_version: v,
-        };
-      }),
-    });
   }
 
   public componentDidUpdate(prevProps: Props): void {

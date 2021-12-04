@@ -24,7 +24,7 @@ import {
   verifyUser,
   VerifyUserResult,
 } from "../api/user";
-import { IClientRealm, IProfile, IVersionToggleConfig, RenderMode } from "../types/global";
+import { IClientRealm, IProfile, RenderMode } from "../types/global";
 import { UserData } from "../types/main";
 import { ActionsUnion, createAction } from "./helpers";
 
@@ -160,10 +160,6 @@ export const LOAD_REALM_ENTRYPOINT = "LOAD_REALM_ENTRYPOINT";
 export const LoadRealmEntrypoint = (payload: ILoadRealmEntrypoint) =>
   createAction(LOAD_REALM_ENTRYPOINT, payload);
 
-export const SET_VERESIONTOGGLECONFIG = "SET_VERESIONTOGGLECONFIG";
-export const SetVersionToggleConfig = (payload: IVersionToggleConfig) =>
-  createAction(SET_VERESIONTOGGLECONFIG, payload);
-
 export const MainActions = {
   ChangeIsLoginDialogOpen,
   ChangeIsRegisterDialogOpen,
@@ -180,7 +176,6 @@ export const MainActions = {
   RequestGetConnectedRealms,
   RequestGetUserPreferences,
   RequestVerifyUser,
-  SetVersionToggleConfig,
   UserLogin,
   UserRegister,
 };

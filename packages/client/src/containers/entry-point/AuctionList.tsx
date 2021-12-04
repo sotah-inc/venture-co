@@ -5,7 +5,7 @@ import {
   LoadAuctionListEntrypoint,
   SetCurrentPageQueryAuctions,
 } from "../../actions/auction";
-import { LoadRealmEntrypoint, SetVersionToggleConfig } from "../../actions/main";
+import { LoadRealmEntrypoint } from "../../actions/main";
 import {
   AuctionList,
   IDispatchProps,
@@ -39,7 +39,6 @@ const mapDispatchToProps: IDispatchProps = {
   loadRealmEntrypoint: LoadRealmEntrypoint,
   refreshAuctions: FetchAuctions,
   setCurrentPage: SetCurrentPageQueryAuctions,
-  setVersionToggleConfig: SetVersionToggleConfig,
 };
 
 export const AuctionsListContainer = connect<

@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 
-import { ChangeIsRegisterDialogOpen, SetVersionToggleConfig } from "../../actions/main";
+import { ChangeIsRegisterDialogOpen } from "../../actions/main";
 import { LoadPostsEntrypoint } from "../../actions/posts";
 import {
   IDispatchProps,
@@ -20,7 +20,6 @@ function mapStateToProps(state: IStoreState): IStateProps {
 const mapDispatchToProps: IDispatchProps = {
   changeIsRegisterDialogOpen: ChangeIsRegisterDialogOpen,
   loadEntrypointData: LoadPostsEntrypoint,
-  setVersionToggleConfig: SetVersionToggleConfig,
 };
 
 export const NewsContainer = connect<IStateProps, IDispatchProps, IOwnProps & IRouteProps>(

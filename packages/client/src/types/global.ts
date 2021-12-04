@@ -92,7 +92,3 @@ export interface IRouteConfig {
 }
 
 export type VersionRouteConfig = IGameVersionTuple & IRouteConfig;
-
-export interface IVersionToggleConfig {
-  destinations: VersionRouteConfig[];
-}

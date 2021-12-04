@@ -8,7 +8,7 @@ import {
   IVerifyUserResponseData,
 } from "@sotah-inc/core";
 
-import { IClientRealm, IFetchData, IProfile, IVersionToggleConfig, RenderMode } from "./global";
+import { IClientRealm, IFetchData, IProfile, RenderMode } from "./global";
 
 export type UserData =
   | {
@@ -43,8 +43,6 @@ export interface IMainState {
   currentRealm: IClientRealm | null;
 
   itemClasses: IFetchData<IGetItemClassesResponseData>;
-
-  versionToggleConfig: IVersionToggleConfig;
 }
 
 export enum FetchLevel {
@@ -123,8 +121,5 @@ export const defaultMainState: IMainState = {
     },
     errors: {},
     level: FetchLevel.initial,
-  },
-  versionToggleConfig: {
-    destinations: [],
   },
 };
