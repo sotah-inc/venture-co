@@ -1,18 +1,23 @@
 import React from "react";
 
 import { H1, H4, Icon, IconName } from "@blueprintjs/core";
+import { GameVersion, IConfigRegion } from "@sotah-inc/core";
 
 import { ILoadPostsEntrypoint } from "../../actions/posts";
 import { AuctionStatsGraphContainer } from "../../containers/entry-point/News/AuctionStatsGraph";
 import { TokenHistoryGraphContainer } from "../../containers/entry-point/News/TokenHistoryGraph";
 import { DeletePostDialogRouteContainer } from "../../route-containers/entry-point/News/DeletePostDialog";
 import { PostListRouteContainer } from "../../route-containers/entry-point/News/PostList";
+import { IClientRealm } from "../../types/global";
 import { AuthLevel, UserData } from "../../types/main";
-import { setTitle } from "../../util";
+import { setTitle, toAuctions } from "../../util";
 import { CardCallout } from "../util";
 
 export interface IStateProps {
   userData: UserData;
+  currentGameVersion: GameVersion | null;
+  currentRegion: IConfigRegion | null;
+  currentRealm: IClientRealm | null;
 }
 
 export interface IDispatchProps {
@@ -40,6 +45,10 @@ export class News extends React.Component<Props> {
   }
 
   public render(): React.ReactNode {
+    const { currentGameVersion, currentRegion, currentRealm } = this.props;
+
+    const auctionsRouteConfig = toAuctions(currentGameVersion, currentRegion, currentRealm);
+
     return (
       <>
         <DeletePostDialogRouteContainer />
@@ -60,10 +69,10 @@ export class News extends React.Component<Props> {
                 </div>
                 <div className="pure-u-1-4 homepage-card-container">
                   {this.renderCard(
-                    "/auctions",
+                    auctionsRouteConfig.url,
                     "dollar",
                     "Browse Auctions",
-                    "/auctions",
+                    auctionsRouteConfig.asDest,
                   )}
                 </div>
                 <div className="pure-u-1-4 homepage-card-container">

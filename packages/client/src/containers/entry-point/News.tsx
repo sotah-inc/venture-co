@@ -12,9 +12,9 @@ import {
 import { IStoreState } from "../../types";
 
 function mapStateToProps(state: IStoreState): IStateProps {
-  const { userData } = state.Main;
+  const { userData, currentGameVersion, currentRegion, currentRealm } = state.Main;
 
-  return { userData };
+  return { userData, currentGameVersion, currentRegion, currentRealm };
 }
 
 const mapDispatchToProps: IDispatchProps = {
