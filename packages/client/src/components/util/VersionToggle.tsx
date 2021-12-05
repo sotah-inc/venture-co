@@ -27,7 +27,13 @@ export type Props = Readonly<IStateProps & IOwnProps & IRouteProps>;
 
 export class VersionToggle extends React.Component<Props> {
   private renderMenuItem(config: VersionRouteConfig, index: number): React.ReactElement {
-    const { redirectToVersionDestination, currentGameVersion, buttonProps } = this.props;
+    const {
+      currentGameVersion,
+      buttonProps,
+      locationAsPath,
+      exactOrPrefix,
+      redirectToVersionDestination,
+    } = this.props;
 
     const className =
       currentGameVersion !== null && config.game_version === currentGameVersion
@@ -39,7 +45,16 @@ export class VersionToggle extends React.Component<Props> {
         key={index}
         className={className}
         text={`${buttonProps.text} (${config.game_version})`}
-        onClick={() => redirectToVersionDestination(config.url, config.asDest)}
+        onClick={() => {
+          const isCurrent = exactOrPrefix
+            ? locationAsPath.startsWith(config.asDest)
+            : locationAsPath === config.asDest;
+          if (isCurrent) {
+            return;
+          }
+
+          redirectToVersionDestination(config.url, config.asDest);
+        }}
       />
     );
   }
