@@ -49,12 +49,12 @@ export function toAuctions(
 }
 
 export function toProfessionPricelist(
-  gameVersion: GameVersion | null,
-  region: IConfigRegion | null,
-  realm: IClientRealm | null,
-  expansion: IExpansion | null,
-  profession: IShortProfession | null,
-  pricelist: IPricelistJson | null,
+  gameVersion?: GameVersion | null,
+  region?: IConfigRegion | null,
+  realm?: IClientRealm | null,
+  expansion?: IExpansion | null,
+  profession?: IShortProfession | null,
+  pricelist?: IPricelistJson | null,
 ): IRouteConfig {
   return resolveRouteConfig("profession-pricelists", {
     game_version: gameVersion,

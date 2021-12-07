@@ -232,7 +232,7 @@ export class Topbar extends React.Component<Props> {
   }
 
   private renderProfessionPricelistsButton() {
-    const { currentGameVersion, currentRegion, currentRealm, selectedExpansion } = this.props;
+    const { currentGameVersion, currentRegion, currentRealm } = this.props;
 
     if (currentGameVersion === null || currentRegion === null || currentRealm === null) {
       return (
@@ -248,38 +248,11 @@ export class Topbar extends React.Component<Props> {
       );
     }
 
-    const { asDest, url } = (() => {
-      if (selectedExpansion === null) {
-        return toProfessionPricelist(
-          currentGameVersion,
-          currentRegion,
-          currentRealm,
-          null,
-          null,
-          null,
-        );
-      }
-
-      return toProfessionPricelist(
-        currentGameVersion,
-        currentRegion,
-        currentRealm,
-        selectedExpansion,
-        null,
-        null,
-      );
-    })();
-
     return (
-      <LinkButtonRouteContainer
-        destination={url}
-        asDestination={asDest}
-        buttonProps={{
-          icon: "polygon-filter",
-          minimal: true,
-          text: "Profession Pricelists",
-        }}
-        resolveActive={prefixActiveCheck}
+      <VersionToggleRouteContainer
+        buttonProps={{ icon: "polygon-filter", text: "Profession Pricelists", minimal: true }}
+        resolveRouteConfig={toProfessionPricelist}
+        exactOrPrefix={true}
       />
     );
   }
