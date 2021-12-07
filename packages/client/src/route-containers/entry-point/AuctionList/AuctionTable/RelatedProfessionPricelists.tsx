@@ -9,11 +9,7 @@ import {
 import {
   RelatedProfessionPricelistsContainer,
 } from "../../../../containers/entry-point/AuctionList/AuctionTable/RelatedProfessionPricelists";
-import {
-  toExpansionProfessionPricelists,
-  toProfessionPricelist,
-  toProfessionPricelistsProfession,
-} from "../../../../util";
+import { toProfessionPricelist } from "../../../../util";
 
 type Props = Readonly<WithRouterProps & IOwnProps>;
 
@@ -21,27 +17,44 @@ function RouteContainer({ router, professionPricelists }: Props) {
   return (
     <RelatedProfessionPricelistsContainer
       professionPricelists={professionPricelists}
-      browseToExpansion={(region, realm, expansion) => {
-        const { url, asDest } = toExpansionProfessionPricelists(region, realm, expansion);
-
-        (async () => {
-          await router.replace(`/${url}`, `/${asDest}`);
-        })();
-      }}
-      browseToProfession={(region, realm, expansion, profession) => {
-        const { url, asDest } = toProfessionPricelistsProfession(
+      browseToExpansion={(gameVersion, region, realm, expansion) => {
+        const { url, asDest } = toProfessionPricelist(
+          gameVersion,
           region,
           realm,
           expansion,
-          profession,
+          null,
+          null,
         );
 
         (async () => {
           await router.replace(`/${url}`, `/${asDest}`);
         })();
       }}
-      browseToProfessionPricelist={(region, realm, expansion, profession, pricelist) => {
+      browseToProfession={(gameVersion, region, realm, expansion, profession) => {
+        const { url, asDest } = toProfessionPricelist(
+          gameVersion,
+          region,
+          realm,
+          expansion,
+          profession,
+          null,
+        );
+
+        (async () => {
+          await router.replace(`/${url}`, `/${asDest}`);
+        })();
+      }}
+      browseToProfessionPricelist={(
+        gameVersion,
+        region,
+        realm,
+        expansion,
+        profession,
+        pricelist,
+      ) => {
         const { asDest, url } = toProfessionPricelist(
+          gameVersion,
           region,
           realm,
           expansion,

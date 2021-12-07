@@ -8,7 +8,7 @@ import {
 import { IStoreState } from "../../../types";
 
 function mapStateToProps(state: IStoreState): IStateProps {
-  const { currentRealm, currentRegion } = state.Main;
+  const { currentRealm, currentRegion, currentGameVersion } = state.Main;
   const {
     selectedExpansion,
     selectedProfession,
@@ -17,6 +17,7 @@ function mapStateToProps(state: IStoreState): IStateProps {
   } = state.PriceLists;
 
   return {
+    currentGameVersion,
     currentRealm,
     currentRegion,
     professionPricelists,

@@ -19,12 +19,7 @@ import { LinkButtonRouteContainer } from "../../route-containers/util/LinkButton
 import { VersionToggleRouteContainer } from "../../route-containers/util/VersionToggle";
 import { IClientRealm } from "../../types/global";
 import { AuthLevel, UserData } from "../../types/main";
-import {
-  toAuctions,
-  toExpansionProfessionPricelists,
-  toRealmProfessionPricelists,
-  toRealmProfessions,
-} from "../../util";
+import { toAuctions, toProfessionPricelist, toRealmProfessions } from "../../util";
 import { prefixActiveCheck } from "../util/LinkButton";
 
 export interface IStateProps {
@@ -237,9 +232,9 @@ export class Topbar extends React.Component<Props> {
   }
 
   private renderProfessionPricelistsButton() {
-    const { currentRegion, currentRealm, selectedExpansion } = this.props;
+    const { currentGameVersion, currentRegion, currentRealm, selectedExpansion } = this.props;
 
-    if (currentRegion === null || currentRealm === null) {
+    if (currentGameVersion === null || currentRegion === null || currentRealm === null) {
       return (
         <LinkButtonRouteContainer
           destination={""}
@@ -255,16 +250,30 @@ export class Topbar extends React.Component<Props> {
 
     const { asDest, url } = (() => {
       if (selectedExpansion === null) {
-        return toRealmProfessionPricelists(currentRegion, currentRealm);
+        return toProfessionPricelist(
+          currentGameVersion,
+          currentRegion,
+          currentRealm,
+          null,
+          null,
+          null,
+        );
       }
 
-      return toExpansionProfessionPricelists(currentRegion, currentRealm, selectedExpansion);
+      return toProfessionPricelist(
+        currentGameVersion,
+        currentRegion,
+        currentRealm,
+        selectedExpansion,
+        null,
+        null,
+      );
     })();
 
     return (
       <LinkButtonRouteContainer
-        destination={`/${url}`}
-        asDestination={`/${asDest}`}
+        destination={url}
+        asDestination={asDest}
         buttonProps={{
           icon: "polygon-filter",
           minimal: true,

@@ -11,10 +11,11 @@ type Props = Readonly<WithRouterProps>;
 function RouteContainer({ router }: Props) {
   return (
     <EditListDialogContainer
-      browseOnUpdate={(region, realm, pricelist, professionData) => {
+      browseOnUpdate={(gameVersion, region, realm, pricelist, professionData) => {
         const { asDest, url } = (() => {
           if (professionData) {
             return toProfessionPricelist(
+              gameVersion,
               region,
               realm,
               professionData.expansion,

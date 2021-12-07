@@ -9,7 +9,7 @@ import {
 import { IStoreState } from "../../../../../../types";
 
 function mapStateToProps(state: IStoreState): IStateProps {
-  const { regionData, currentRegion, currentRealm } = state.Main;
+  const { regionData, currentGameVersion, currentRegion, currentRealm } = state.Main;
   const {
     selectedExpansion,
     unmetDemand,
@@ -17,6 +17,7 @@ function mapStateToProps(state: IStoreState): IStateProps {
 
   return {
     regionData,
+    currentGameVersion,
     currentRealm,
     currentRegion,
     selectedExpansion,

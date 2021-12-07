@@ -15,7 +15,7 @@ import {
 import { IStoreState } from "../../../types";
 
 function mapStateToProps(state: IStoreState): IStateProps {
-  const { currentRegion, currentRealm, userData } = state.Main;
+  const { currentRegion, currentRealm, userData, currentGameVersion } = state.Main;
   const {
     isAddListDialogOpen,
     isAddEntryDialogOpen,
@@ -25,6 +25,7 @@ function mapStateToProps(state: IStoreState): IStateProps {
   } = state.PriceLists;
 
   return {
+    currentGameVersion,
     currentRealm,
     currentRegion,
     isAddEntryDialogOpen,

@@ -1,7 +1,13 @@
 import React from "react";
 
 import { Intent, IToastProps } from "@blueprintjs/core";
-import { IExpansion, IPricelistJson, IConfigRegion, IShortProfession } from "@sotah-inc/core";
+import {
+  IExpansion,
+  IPricelistJson,
+  IConfigRegion,
+  IShortProfession,
+  GameVersion,
+} from "@sotah-inc/core";
 
 import { ListDialogContainer } from "../../../containers/entry-point/PriceLists/util/ListDialog";
 import { IClientRealm, IErrors } from "../../../types/global";
@@ -15,6 +21,7 @@ export interface IStateProps {
   updatePricelistErrors: IErrors;
   userData: UserData;
   selectedList: IPricelistJson | null;
+  currentGameVersion: GameVersion | null;
   currentRegion: IConfigRegion | null;
   currentRealm: IClientRealm | null;
   selectedProfession: IShortProfession | null;
@@ -29,6 +36,7 @@ export interface IDispatchProps {
 
 export interface IRouteProps {
   browseOnUpdate: (
+    gameVersion: GameVersion,
     region: IConfigRegion,
     realm: IClientRealm,
     pricelist: IPricelistJson,
@@ -54,6 +62,7 @@ export class EditListDialog extends React.Component<Props, State> {
     const {
       updatePricelistLevel,
       selectedList,
+      currentGameVersion,
       currentRegion,
       currentRealm,
       selectedProfession,
@@ -63,7 +72,12 @@ export class EditListDialog extends React.Component<Props, State> {
     } = this.props;
     const { listDialogResetTrigger } = this.state;
 
-    if (currentRegion === null || currentRealm === null || selectedList === null) {
+    if (
+      currentGameVersion === null ||
+      currentRegion === null ||
+      currentRealm === null ||
+      selectedList === null
+    ) {
       return;
     }
 
@@ -88,7 +102,13 @@ export class EditListDialog extends React.Component<Props, State> {
         const shouldBrowse =
             prevProps.selectedList && prevProps.selectedList.slug !== selectedList.slug;
         if (shouldBrowse) {
-          browseOnUpdate(currentRegion, currentRealm, selectedList, professionData);
+          browseOnUpdate(
+            currentGameVersion,
+            currentRegion,
+            currentRealm,
+            selectedList,
+            professionData,
+          );
         }
 
         break;

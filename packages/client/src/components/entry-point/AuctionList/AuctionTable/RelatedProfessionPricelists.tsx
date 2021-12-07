@@ -2,6 +2,7 @@ import React from "react";
 
 import { Button, ButtonGroup } from "@blueprintjs/core";
 import {
+  GameVersion,
   IConfigRegion,
   IExpansion,
   IPricelistJson,
@@ -21,17 +22,25 @@ export interface IStateProps {
   expansions: IExpansion[];
   currentRealm: IClientRealm | null;
   currentRegion: IConfigRegion | null;
+  currentGameVersion: GameVersion | null;
 }
 
 export interface IRouteProps {
-  browseToExpansion: (region: IConfigRegion, realm: IClientRealm, expansion: IExpansion) => void;
+  browseToExpansion: (
+    gameVersion: GameVersion,
+    region: IConfigRegion,
+    realm: IClientRealm,
+    expansion: IExpansion,
+  ) => void;
   browseToProfession: (
+    gameVersion: GameVersion,
     region: IConfigRegion,
     realm: IClientRealm,
     expansion: IExpansion,
     profession: IShortProfession,
   ) => void;
   browseToProfessionPricelist: (
+    gameVersion: GameVersion,
     region: IConfigRegion,
     realm: IClientRealm,
     expansion: IExpansion,
@@ -57,6 +66,7 @@ export class RelatedProfessionPricelists extends React.Component<Props> {
     const {
       expansions,
       professions,
+      currentGameVersion,
       currentRegion,
       currentRealm,
       browseToProfessionPricelist,
@@ -64,7 +74,7 @@ export class RelatedProfessionPricelists extends React.Component<Props> {
       browseToProfession,
     } = this.props;
 
-    if (currentRegion === null || currentRealm === null) {
+    if (currentGameVersion === null || currentRegion === null || currentRealm === null) {
       return null;
     }
 
@@ -108,7 +118,9 @@ export class RelatedProfessionPricelists extends React.Component<Props> {
               rightIcon="chevron-right"
               minimal={true}
               small={true}
-              onClick={() => browseToExpansion(currentRegion, currentRealm, expansion)}
+              onClick={() =>
+                browseToExpansion(currentGameVersion, currentRegion, currentRealm, expansion)
+              }
             >
               <span style={{ color: expansion.label_color }}>{expansion.label}</span>
             </Button>
@@ -116,7 +128,15 @@ export class RelatedProfessionPricelists extends React.Component<Props> {
               rightIcon="chevron-right"
               minimal={true}
               small={true}
-              onClick={() => browseToProfession(currentRegion, currentRealm, expansion, profession)}
+              onClick={() =>
+                browseToProfession(
+                  currentGameVersion,
+                  currentRegion,
+                  currentRealm,
+                  expansion,
+                  profession,
+                )
+              }
             >
               <ProfessionIcon profession={profession} /> {profession.name}
             </Button>
@@ -126,6 +146,7 @@ export class RelatedProfessionPricelists extends React.Component<Props> {
               small={true}
               onClick={() =>
                 browseToProfessionPricelist(
+                  currentGameVersion,
                   currentRegion,
                   currentRealm,
                   expansion,

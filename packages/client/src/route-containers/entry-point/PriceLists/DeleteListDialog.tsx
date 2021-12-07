@@ -3,34 +3,30 @@ import React from "react";
 import { WithRouterProps } from "next/dist/client/with-router";
 import { withRouter } from "next/router";
 
-import {
-  DeleteListDialogContainer,
-} from "../../../containers/entry-point/PriceLists/DeleteListDialog";
-import {
-  toProfessionPricelist,
-  toProfessionPricelistsProfession,
-  toRealmProfessionPricelists,
-  toUserPricelist,
-} from "../../../util";
+import { DeleteListDialogContainer } from "../../../containers/entry-point/PriceLists/DeleteListDialog";
+import { toProfessionPricelist, toUserPricelist } from "../../../util";
 
 type Props = Readonly<WithRouterProps>;
 
 function RouteContainer({ router }: Props) {
   return (
     <DeleteListDialogContainer
-      browseOnDeletion={(region, realm, list, professionData) => {
+      browseOnDeletion={(gameVersion, region, realm, list, professionData) => {
         const { asDest, url } = (() => {
           if (professionData) {
             if (!list) {
-              return toProfessionPricelistsProfession(
+              return toProfessionPricelist(
+                gameVersion,
                 region,
                 realm,
                 professionData.expansion,
                 professionData.profession,
+                null,
               );
             }
 
             return toProfessionPricelist(
+              gameVersion,
               region,
               realm,
               professionData.expansion,
@@ -40,7 +36,7 @@ function RouteContainer({ router }: Props) {
           }
 
           if (!list) {
-            return toRealmProfessionPricelists(region, realm);
+            return toProfessionPricelist(gameVersion, region, realm, null, null, null);
           }
 
           return toUserPricelist(region, realm, list);

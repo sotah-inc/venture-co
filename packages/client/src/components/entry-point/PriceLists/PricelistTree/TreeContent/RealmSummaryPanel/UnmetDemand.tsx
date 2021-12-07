@@ -13,6 +13,7 @@ import {
   Spinner,
 } from "@blueprintjs/core";
 import {
+  GameVersion,
   IConfigRegion,
   IExpansion,
   IGetRegionResponseData,
@@ -36,18 +37,21 @@ export interface IStateProps {
   regionData: IFetchData<IGetRegionResponseData>;
   unmetDemand: IFetchData<IItemsData<IUnmetDemandState>>;
   selectedExpansion: IExpansion | null;
+  currentGameVersion: GameVersion | null;
   currentRegion: IConfigRegion | null;
   currentRealm: IClientRealm | null;
 }
 
 export interface IRouteProps {
   browseToProfession: (
+    gameVersion: GameVersion,
     region: IConfigRegion,
     realm: IClientRealm,
     expansion: IExpansion,
     profession: IShortProfession,
   ) => void;
   browseToProfessionPricelist: (
+    gameVersion: GameVersion,
     region: IConfigRegion,
     realm: IClientRealm,
     expansion: IExpansion,
@@ -92,25 +96,48 @@ export class UnmetDemand extends React.Component<Props, IState> {
   }
 
   public onProfessionClick(profession: IShortProfession): void {
-    const { browseToProfession, currentRegion, currentRealm, selectedExpansion } = this.props;
+    const {
+      browseToProfession,
+      currentGameVersion,
+      currentRegion,
+      currentRealm,
+      selectedExpansion,
+    } = this.props;
 
-    if (currentRegion === null || currentRealm === null || selectedExpansion === null) {
+    if (
+      currentGameVersion === null ||
+      currentRegion === null ||
+      currentRealm === null ||
+      selectedExpansion === null
+    ) {
       return;
     }
 
-    browseToProfession(currentRegion, currentRealm, selectedExpansion, profession);
+    browseToProfession(
+      currentGameVersion,
+      currentRegion,
+      currentRealm,
+      selectedExpansion,
+      profession,
+    );
   }
 
   public onPricelistClick(pricelist: IPricelistJson, professionId: ProfessionId): void {
     const {
       browseToProfessionPricelist,
       regionData,
+      currentGameVersion,
       currentRegion,
       currentRealm,
       selectedExpansion,
     } = this.props;
 
-    if (currentRegion === null || currentRealm === null || selectedExpansion === null) {
+    if (
+      currentGameVersion === null ||
+      currentRegion === null ||
+      currentRealm === null ||
+      selectedExpansion === null
+    ) {
       return;
     }
 
@@ -134,6 +161,7 @@ export class UnmetDemand extends React.Component<Props, IState> {
     }
 
     browseToProfessionPricelist(
+      currentGameVersion,
       currentRegion,
       currentRealm,
       selectedExpansion,

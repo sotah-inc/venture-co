@@ -7,11 +7,10 @@ import {
   IProfessionPricelistJson,
   IConfigRegion,
   IShortProfession,
+  GameVersion,
 } from "@sotah-inc/core";
 
-import {
-  TreeContentContainer,
-} from "../../../containers/entry-point/PriceLists/PricelistTree/TreeContent";
+import { TreeContentContainer } from "../../../containers/entry-point/PriceLists/PricelistTree/TreeContent";
 import { IClientRealm, IFetchData, IItemsData } from "../../../types/global";
 import { FetchLevel } from "../../../types/main";
 import { getItemFromPricelist } from "../../../util";
@@ -19,6 +18,7 @@ import { ProfessionIcon } from "../../util";
 import { ItemIcon } from "../../util/ItemIcon";
 
 export interface IStateProps {
+  currentGameVersion: GameVersion | null;
   currentRegion: IConfigRegion | null;
   currentRealm: IClientRealm | null;
   selectedProfession: {
@@ -32,8 +32,14 @@ export interface IStateProps {
 }
 
 export interface IRouteProps {
-  browseToExpansion: (region: IConfigRegion, realm: IClientRealm, expansion: IExpansion) => void;
+  browseToExpansion: (
+    gameVersion: GameVersion,
+    region: IConfigRegion,
+    realm: IClientRealm,
+    expansion: IExpansion,
+  ) => void;
   browseToProfessionPricelist: (
+    gameVersion: GameVersion,
     region: IConfigRegion,
     realm: IClientRealm,
     expansion: IExpansion,
@@ -205,6 +211,7 @@ export class PricelistTree extends React.Component<Props, IState> {
     const {
       professionPricelists,
       selectedExpansion,
+      currentGameVersion,
       currentRegion,
       currentRealm,
       selectedProfession,
@@ -212,6 +219,7 @@ export class PricelistTree extends React.Component<Props, IState> {
     } = this.props;
 
     if (
+      currentGameVersion === null ||
       currentRegion === null ||
       currentRealm === null ||
       selectedProfession.value === null ||
@@ -231,6 +239,7 @@ export class PricelistTree extends React.Component<Props, IState> {
     }
 
     browseToProfessionPricelist(
+      currentGameVersion,
       currentRegion,
       currentRealm,
       selectedExpansion,
@@ -240,15 +249,26 @@ export class PricelistTree extends React.Component<Props, IState> {
   }
 
   private onTopNodeClick(id: TopOpenKey) {
-    const { browseToExpansion, currentRegion, currentRealm, selectedExpansion } = this.props;
+    const {
+      browseToExpansion,
+      currentGameVersion,
+      currentRegion,
+      currentRealm,
+      selectedExpansion,
+    } = this.props;
     const { topOpenMap } = this.state;
 
-    if (currentRegion === null || currentRealm === null || selectedExpansion === null) {
+    if (
+      currentGameVersion === null ||
+      currentRegion === null ||
+      currentRealm === null ||
+      selectedExpansion === null
+    ) {
       return;
     }
 
     if (id === TopOpenKey.summary) {
-      browseToExpansion(currentRegion, currentRealm, selectedExpansion);
+      browseToExpansion(currentGameVersion, currentRegion, currentRealm, selectedExpansion);
 
       return;
     }

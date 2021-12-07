@@ -7,6 +7,7 @@ import {
   IShortProfession,
   IProfessionPricelistJson,
   IConfigRegion,
+  GameVersion,
 } from "@sotah-inc/core";
 
 import { ILoadRealmEntrypoint } from "../../actions/main";
@@ -14,27 +15,18 @@ import {
   ILoadPricelistsEntrypoint,
   ILoadPricelistsEntrypointFront,
 } from "../../actions/price-lists";
-import {
-  CreateEntryDialogContainer,
-} from "../../containers/entry-point/PriceLists/CreateEntryDialog";
+import { CreateEntryDialogContainer } from "../../containers/entry-point/PriceLists/CreateEntryDialog";
 import { ActionBarRouteContainer } from "../../route-containers/entry-point/PriceLists/ActionBar";
-import {
-  CreateListDialogRouteContainer,
-} from "../../route-containers/entry-point/PriceLists/CreateListDialog";
-import {
-  DeleteListDialogRouteContainer,
-} from "../../route-containers/entry-point/PriceLists/DeleteListDialog";
-import {
-  EditListDialogRouteContainer,
-} from "../../route-containers/entry-point/PriceLists/EditListDialog";
-import {
-  PricelistTreeRouteContainer,
-} from "../../route-containers/entry-point/PriceLists/PricelistTree";
+import { CreateListDialogRouteContainer } from "../../route-containers/entry-point/PriceLists/CreateListDialog";
+import { DeleteListDialogRouteContainer } from "../../route-containers/entry-point/PriceLists/DeleteListDialog";
+import { EditListDialogRouteContainer } from "../../route-containers/entry-point/PriceLists/EditListDialog";
+import { PricelistTreeRouteContainer } from "../../route-containers/entry-point/PriceLists/PricelistTree";
 import { IClientRealm } from "../../types/global";
 import { AuthLevel, UserData } from "../../types/main";
 import { setTitle } from "../../util";
 
 export interface IStateProps {
+  currentGameVersion: GameVersion | null;
   currentRealm: IClientRealm | null;
   currentRegion: IConfigRegion | null;
   selectedProfession: IShortProfession | null;
@@ -56,17 +48,20 @@ export interface IDispatchProps {
 export interface IRouteProps {
   routeParams: IRouteParams;
   redirectToExpansion: (
+    gameVersion: GameVersion,
     region: IConfigRegion,
     realm: IClientRealm,
     expansion: IExpansion,
   ) => void;
   redirectToProfession: (
+    gameVersion: GameVersion,
     region: IConfigRegion,
     realm: IClientRealm,
     expansion: IExpansion,
     profession: IShortProfession,
   ) => void;
   redirectToPricelist: (
+    gameVersion: GameVersion,
     region: IConfigRegion,
     realm: IClientRealm,
     expansion: IExpansion,
@@ -76,6 +71,7 @@ export interface IRouteProps {
 }
 
 export interface IRouteParams {
+  game_version?: string;
   region_name?: string;
   realm_slug?: string;
   profession_slug?: string;
@@ -111,8 +107,8 @@ export class PriceLists extends React.Component<Props> {
 
   public componentDidUpdate(prevProps: Props): void {
     const {
-      routeParams: { region_name },
-      currentRegion,
+      routeParams: { game_version },
+      currentGameVersion,
       loadRealmEntrypoint,
       realmEntrypointData,
       expansions,
@@ -133,14 +129,14 @@ export class PriceLists extends React.Component<Props> {
     }
 
     if (
-      currentRegion === null ||
-      region_name === undefined ||
-      currentRegion.name !== region_name
+      currentGameVersion === null ||
+      game_version === undefined ||
+      currentGameVersion !== game_version
     ) {
       return;
     }
 
-    this.handleWithRegion(currentRegion);
+    this.handleWithGameVersion(currentGameVersion);
   }
 
   public render(): React.ReactNode {
@@ -185,7 +181,20 @@ export class PriceLists extends React.Component<Props> {
     );
   }
 
-  private handleWithRegion(region: IConfigRegion) {
+  private handleWithGameVersion(gameVersion: GameVersion) {
+    const {
+      currentRegion,
+      routeParams: { region_name },
+    } = this.props;
+
+    if (currentRegion === null || region_name === undefined || currentRegion.name !== region_name) {
+      return;
+    }
+
+    this.handleWithRegion(gameVersion, currentRegion);
+  }
+
+  private handleWithRegion(gameVersion: GameVersion, region: IConfigRegion) {
     const {
       currentRealm,
       routeParams: { realm_slug },
@@ -199,10 +208,10 @@ export class PriceLists extends React.Component<Props> {
       return;
     }
 
-    this.handleWithRealm(region, currentRealm);
+    this.handleWithRealm(gameVersion, region, currentRealm);
   }
 
-  private handleWithRealm(region: IConfigRegion, realm: IClientRealm) {
+  private handleWithRealm(gameVersion: GameVersion, region: IConfigRegion, realm: IClientRealm) {
     const {
       routeParams: { expansion_name },
       selectedExpansion,
@@ -217,7 +226,7 @@ export class PriceLists extends React.Component<Props> {
           return;
         }
 
-        redirectToExpansion(region, realm, nextExpansion);
+        redirectToExpansion(gameVersion, region, realm, nextExpansion);
 
         return;
       }
@@ -229,10 +238,11 @@ export class PriceLists extends React.Component<Props> {
       return;
     }
 
-    this.handleWithExpansion(region, realm, selectedExpansion);
+    this.handleWithExpansion(gameVersion, region, realm, selectedExpansion);
   }
 
   private handleWithExpansion(
+    gameVersion: GameVersion,
     region: IConfigRegion,
     realm: IClientRealm,
     expansion: IExpansion,
@@ -250,11 +260,9 @@ export class PriceLists extends React.Component<Props> {
           return;
         }
 
-        const nextProfession = professions.sort((a, b) =>
-          a.name.localeCompare(b.name),
-        )[0];
+        const nextProfession = professions.sort((a, b) => a.name.localeCompare(b.name))[0];
 
-        redirectToProfession(region, realm, expansion, nextProfession);
+        redirectToProfession(gameVersion, region, realm, expansion, nextProfession);
 
         return;
       }
@@ -271,10 +279,11 @@ export class PriceLists extends React.Component<Props> {
       return;
     }
 
-    this.handleWithProfession(region, realm, expansion, selectedProfession);
+    this.handleWithProfession(gameVersion, region, realm, expansion, selectedProfession);
   }
 
   private handleWithProfession(
+    gameVersion: GameVersion,
     region: IConfigRegion,
     realm: IClientRealm,
     expansion: IExpansion,
@@ -297,7 +306,7 @@ export class PriceLists extends React.Component<Props> {
           a.pricelist.name.localeCompare(b.pricelist.name),
         )[0].pricelist;
 
-        redirectToPricelist(region, realm, expansion, profession, nextPricelist);
+        redirectToPricelist(gameVersion, region, realm, expansion, profession, nextPricelist);
 
         return;
       }

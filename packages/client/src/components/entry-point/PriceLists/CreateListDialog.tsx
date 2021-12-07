@@ -8,6 +8,7 @@ import {
   IPricelistJson,
   IConfigRegion,
   IShortProfession,
+  GameVersion,
 } from "@sotah-inc/core";
 
 import { ListDialogContainer } from "../../../containers/entry-point/PriceLists/util/ListDialog";
@@ -21,6 +22,7 @@ export interface IStateProps {
   userData: UserData;
   selectedProfession: IShortProfession | null;
   selectedExpansion: IExpansion | null;
+  currentGameVersion: GameVersion | null;
   currentRegion: IConfigRegion | null;
   currentRealm: IClientRealm | null;
   selectedList: IPricelistJson | null;
@@ -38,6 +40,7 @@ export interface IDispatchProps {
 
 export interface IRouteProps {
   browseOnCreate: (
+    gameVersion: GameVersion,
     region: IConfigRegion,
     realm: IClientRealm,
     pricelist: IPricelistJson,
@@ -65,6 +68,7 @@ export class CreateListDialog extends React.Component<Props, State> {
     const {
       createPricelist,
       selectedList,
+      currentGameVersion,
       currentRegion,
       currentRealm,
       selectedProfession,
@@ -74,7 +78,12 @@ export class CreateListDialog extends React.Component<Props, State> {
     } = this.props;
     const { listDialogResetTrigger } = this.state;
 
-    if (currentRegion === null || currentRealm === null || selectedList === null) {
+    if (
+      currentGameVersion === null ||
+      currentRegion === null ||
+      currentRealm === null ||
+      selectedList === null
+    ) {
       return;
     }
 
@@ -96,7 +105,13 @@ export class CreateListDialog extends React.Component<Props, State> {
           return { profession: selectedProfession, expansion: selectedExpansion };
         })();
 
-        browseOnCreate(currentRegion, currentRealm, selectedList, professionData);
+        browseOnCreate(
+          currentGameVersion,
+          currentRegion,
+          currentRealm,
+          selectedList,
+          professionData,
+        );
 
         break;
       }

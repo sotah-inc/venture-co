@@ -3,9 +3,7 @@ import React from "react";
 import { WithRouterProps } from "next/dist/client/with-router";
 import { withRouter } from "next/router";
 
-import {
-  CreateListDialogContainer,
-} from "../../../containers/entry-point/PriceLists/CreateListDialog";
+import { CreateListDialogContainer } from "../../../containers/entry-point/PriceLists/CreateListDialog";
 import { toProfessionPricelist, toUserPricelist } from "../../../util";
 
 type Props = Readonly<WithRouterProps>;
@@ -13,10 +11,11 @@ type Props = Readonly<WithRouterProps>;
 function RouteContainer({ router }: Props) {
   return (
     <CreateListDialogContainer
-      browseOnCreate={(region, realm, pricelist, professionData) => {
+      browseOnCreate={(gameVersion, region, realm, pricelist, professionData) => {
         const { asDest, url } = (() => {
           if (professionData) {
             return toProfessionPricelist(
+              gameVersion,
               region,
               realm,
               professionData.expansion,

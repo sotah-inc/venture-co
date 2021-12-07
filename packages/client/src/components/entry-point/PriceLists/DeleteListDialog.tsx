@@ -1,7 +1,13 @@
 import React from "react";
 
 import { Button, Callout, Dialog, Intent, IToastProps } from "@blueprintjs/core";
-import { IExpansion, IPricelistJson, IConfigRegion, IShortProfession } from "@sotah-inc/core";
+import {
+  IExpansion,
+  IPricelistJson,
+  IConfigRegion,
+  IShortProfession,
+  GameVersion,
+} from "@sotah-inc/core";
 
 import { IClientRealm, IErrors } from "../../../types/global";
 import { AuthLevel, FetchLevel, UserData } from "../../../types/main";
@@ -15,6 +21,7 @@ export interface IStateProps {
   deletePricelistLevel: FetchLevel;
   selectedProfession: IShortProfession | null;
   selectedExpansion: IExpansion | null;
+  currentGameVersion: GameVersion | null;
   currentRealm: IClientRealm | null;
   currentRegion: IConfigRegion | null;
 }
@@ -28,6 +35,7 @@ export interface IDispatchProps {
 
 export interface IRouteProps {
   browseOnDeletion: (
+    gameVersion: GameVersion,
     region: IConfigRegion,
     realm: IClientRealm,
     pricelist: IPricelistJson | null,
@@ -47,6 +55,7 @@ export class DeleteListDialog extends React.Component<Props> {
     const {
       deletePricelistErrors,
       deletePricelistLevel,
+      currentGameVersion,
       currentRegion,
       currentRealm,
       selectedProfession,
@@ -56,7 +65,7 @@ export class DeleteListDialog extends React.Component<Props> {
       insertToast,
     } = this.props;
 
-    if (currentRegion === null || currentRealm === null) {
+    if (currentGameVersion === null || currentRegion === null || currentRealm === null) {
       return;
     }
 
@@ -77,7 +86,13 @@ export class DeleteListDialog extends React.Component<Props> {
           return { profession: selectedProfession, expansion: selectedExpansion };
         })();
 
-        browseOnDeletion(currentRegion, currentRealm, selectedList, professionData);
+        browseOnDeletion(
+          currentGameVersion,
+          currentRegion,
+          currentRealm,
+          selectedList,
+          professionData,
+        );
 
         return;
       }

@@ -7,15 +7,23 @@ import {
   UnmetDemandContainer,
   // eslint-disable-next-line max-len
 } from "../../../../../../containers/entry-point/PriceLists/PricelistTree/TreeContent/RealmSummaryPanel/UnmetDemand";
-import { toProfessionPricelist, toProfessionPricelistsProfession } from "../../../../../../util";
+import { toProfessionPricelist } from "../../../../../../util";
 
 type Props = Readonly<WithRouterProps>;
 
 function RouteContainer({ router }: Props) {
   return (
     <UnmetDemandContainer
-      browseToProfessionPricelist={(region, realm, expansion, profession, pricelist) => {
+      browseToProfessionPricelist={(
+        gameVersion,
+        region,
+        realm,
+        expansion,
+        profession,
+        pricelist,
+      ) => {
         const { url, asDest } = toProfessionPricelist(
+          gameVersion,
           region,
           realm,
           expansion,
@@ -27,12 +35,14 @@ function RouteContainer({ router }: Props) {
           await router.replace(`/${url}`, `/${asDest}`);
         })();
       }}
-      browseToProfession={(region, realm, expansion, profession) => {
-        const { url, asDest } = toProfessionPricelistsProfession(
+      browseToProfession={(gameVersion, region, realm, expansion, profession) => {
+        const { url, asDest } = toProfessionPricelist(
+          gameVersion,
           region,
           realm,
           expansion,
           profession,
+          null,
         );
 
         (async () => {

@@ -4,38 +4,51 @@ import { WithRouterProps } from "next/dist/client/with-router";
 import { withRouter } from "next/router";
 
 import { ActionBarContainer } from "../../../containers/entry-point/PriceLists/ActionBar";
-import {
-  toExpansionProfessionPricelists,
-  toProfessionPricelist,
-  toProfessionPricelistsProfession,
-} from "../../../util";
+import { toProfessionPricelist } from "../../../util";
 
 type Props = Readonly<WithRouterProps>;
 
 function RouteContainer({ router }: Props) {
   return (
     <ActionBarContainer
-      browseToExpansion={(region, realm, expansion) => {
-        const { url, asDest } = toExpansionProfessionPricelists(region, realm, expansion);
-
-        (async () => {
-          await router.replace(`/${url}`, `/${asDest}`);
-        })();
-      }}
-      browseToProfession={(region, realm, expansion, profession) => {
-        const { url, asDest } = toProfessionPricelistsProfession(
+      browseToExpansion={(gameVersion, region, realm, expansion) => {
+        const { url, asDest } = toProfessionPricelist(
+          gameVersion,
           region,
           realm,
           expansion,
-          profession,
+          null,
+          null,
         );
 
         (async () => {
           await router.replace(`/${url}`, `/${asDest}`);
         })();
       }}
-      browseToProfessionPricelist={(region, realm, expansion, profession, pricelist) => {
+      browseToProfession={(gameVersion, region, realm, expansion, profession) => {
         const { url, asDest } = toProfessionPricelist(
+          gameVersion,
+          region,
+          realm,
+          expansion,
+          profession,
+          null,
+        );
+
+        (async () => {
+          await router.replace(`/${url}`, `/${asDest}`);
+        })();
+      }}
+      browseToProfessionPricelist={(
+        gameVersion,
+        region,
+        realm,
+        expansion,
+        profession,
+        pricelist,
+      ) => {
+        const { url, asDest } = toProfessionPricelist(
+          gameVersion,
           region,
           realm,
           expansion,

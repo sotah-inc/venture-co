@@ -17,18 +17,18 @@ import {
   IConfigRegion,
   IShortProfession,
   UserLevel,
+  GameVersion,
 } from "@sotah-inc/core";
 
 import { ExpansionToggleContainer } from "../../../containers/util/ExpansionToggle";
-import {
-  PricelistProfessionToggleContainer,
-} from "../../../containers/util/PricelistProfessionToggle";
+import { PricelistProfessionToggleContainer } from "../../../containers/util/PricelistProfessionToggle";
 import { RealmToggleContainer } from "../../../containers/util/RealmToggle";
 import { RegionToggleContainer } from "../../../containers/util/RegionToggle";
 import { IClientRealm } from "../../../types/global";
 import { AuthLevel, UserData } from "../../../types/main";
 
 export interface IStateProps {
+  currentGameVersion: GameVersion | null;
   currentRegion: IConfigRegion | null;
   currentRealm: IClientRealm | null;
   isAddListDialogOpen: boolean;
@@ -47,14 +47,21 @@ export interface IDispatchProps {
 }
 
 export interface IRouteProps {
-  browseToExpansion: (region: IConfigRegion, realm: IClientRealm, expansion: IExpansion) => void;
+  browseToExpansion: (
+    gameVersion: GameVersion,
+    region: IConfigRegion,
+    realm: IClientRealm,
+    expansion: IExpansion,
+  ) => void;
   browseToProfession: (
+    gameVersion: GameVersion,
     region: IConfigRegion,
     realm: IClientRealm,
     expansion: IExpansion,
     profession: IShortProfession,
   ) => void;
   browseToProfessionPricelist: (
+    gameVersion: GameVersion,
     region: IConfigRegion,
     realm: IClientRealm,
     expansion: IExpansion,
@@ -89,35 +96,59 @@ export class ActionBar extends React.Component<Props> {
   }
 
   private onProfessionChange(profession: IShortProfession) {
-    const { browseToProfession, currentRegion, currentRealm, selectedExpansion } = this.props;
+    const {
+      browseToProfession,
+      currentGameVersion,
+      currentRegion,
+      currentRealm,
+      selectedExpansion,
+    } = this.props;
 
-    if (currentRegion === null || currentRealm === null || selectedExpansion === null) {
+    if (
+      currentGameVersion === null ||
+      currentRegion === null ||
+      currentRealm === null ||
+      selectedExpansion === null
+    ) {
       return;
     }
 
-    browseToProfession(currentRegion, currentRealm, selectedExpansion, profession);
+    browseToProfession(
+      currentGameVersion,
+      currentRegion,
+      currentRealm,
+      selectedExpansion,
+      profession,
+    );
   }
 
   private onExpansionChange(expansion: IExpansion) {
     const {
       browseToExpansion,
+      currentGameVersion,
       browseToProfession,
       currentRegion,
       currentRealm,
       selectedProfession,
     } = this.props;
 
-    if (currentRegion === null || currentRealm === null) {
+    if (currentGameVersion === null || currentRegion === null || currentRealm === null) {
       return;
     }
 
     if (selectedProfession === null) {
-      browseToExpansion(currentRegion, currentRealm, expansion);
+      browseToExpansion(currentGameVersion, currentRegion, currentRealm, expansion);
 
       return;
     }
 
-    browseToProfession(currentRegion, currentRealm, expansion, selectedProfession);
+    browseToProfession(
+      currentGameVersion,
+      currentRegion,
+      currentRealm,
+      expansion,
+      selectedProfession,
+    );
   }
 
   private onRealmChange(realm: IClientRealm) {
@@ -125,18 +156,20 @@ export class ActionBar extends React.Component<Props> {
       browseToProfessionPricelist,
       browseToProfession,
       browseToExpansion,
+      currentGameVersion,
       currentRegion,
       selectedProfession,
       selectedList,
       selectedExpansion,
     } = this.props;
 
-    if (currentRegion === null || selectedExpansion === null) {
+    if (currentGameVersion === null || currentRegion === null || selectedExpansion === null) {
       return;
     }
 
     if (selectedProfession !== null && selectedList !== null) {
       browseToProfessionPricelist(
+        currentGameVersion,
         currentRegion,
         realm,
         selectedExpansion,
@@ -148,13 +181,19 @@ export class ActionBar extends React.Component<Props> {
     }
 
     if (selectedProfession !== null && selectedList === null) {
-      browseToProfession(currentRegion, realm, selectedExpansion, selectedProfession);
+      browseToProfession(
+        currentGameVersion,
+        currentRegion,
+        realm,
+        selectedExpansion,
+        selectedProfession,
+      );
 
       return;
     }
 
     if (selectedProfession === null && selectedList === null) {
-      browseToExpansion(currentRegion, realm, selectedExpansion);
+      browseToExpansion(currentGameVersion, currentRegion, realm, selectedExpansion);
     }
   }
 
