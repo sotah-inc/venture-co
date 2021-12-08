@@ -2,7 +2,6 @@ import {
   GameVersion,
   IConfigRegion,
   IConnectedRealmComposite,
-  IExpansion,
   IItemClass,
   IStatusTimestamps,
   IFeatureFlags,
@@ -30,7 +29,6 @@ export interface IGetSessionSecretResponse {
 export interface IGetBootResponse {
   regions: IConfigRegion[];
   game_versions: GameVersion[];
-  expansions: IExpansion[];
   firebase_config: {
     browser_api_key: string;
   };
