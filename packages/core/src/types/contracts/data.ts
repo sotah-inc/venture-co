@@ -48,7 +48,6 @@ export interface IGetBootResponseData {
 export type GetBootResponse = IGetBootResponseData | IValidationErrorResponse | null;
 
 export interface IGetRegionResponseData {
-  expansions: IExpansion[];
   professions: IShortProfession[];
   connectedRealms: IConnectedRealmComposite[];
 }
