@@ -96,7 +96,6 @@ export class RegionsController {
     return {
       data: {
         connectedRealms: resolveConnectedRealmsResult.data,
-        expansions: bootResult.expansions,
         professions: professionsResult.professions,
       },
       status: HTTPStatus.INTERNAL_SERVER_ERROR,
