@@ -13,7 +13,7 @@ import {
   IShortProfession,
   IShortTokenHistory,
   IValidationErrorResponse,
-  Locale,
+  Locale, LocaleMapping,
   PetId,
   RecipeId,
   SortDirection,
@@ -29,8 +29,11 @@ export enum FeatureFlag {
   Auctions = "auctions"
 }
 
-export interface IFeatureFlags {
-  [key: string]: undefined | GameVersion[];
+export interface IVersionMeta {
+  name: GameVersion;
+  label: LocaleMapping;
+  expansions: IExpansion[];
+  feature_flags: FeatureFlag[];
 }
 
 export interface IGetBootResponseData {
@@ -39,7 +42,7 @@ export interface IGetBootResponseData {
   firebase_config: {
     browser_api_key: string;
   };
-  feature_flags: IFeatureFlags;
+  version_meta: IVersionMeta[];
 }
 
 export type GetBootResponse = IGetBootResponseData | IValidationErrorResponse | null;
