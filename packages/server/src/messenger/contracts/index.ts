@@ -4,8 +4,8 @@ import {
   IConnectedRealmComposite,
   IItemClass,
   IStatusTimestamps,
-  IFeatureFlags,
 } from "@sotah-inc/core";
+import { IVersionMeta } from "@sotah-inc/core/build/dist/types/contracts/data";
 
 export * from "./auctions";
 export * from "./price-lists";
@@ -32,7 +32,7 @@ export interface IGetBootResponse {
   firebase_config: {
     browser_api_key: string;
   };
-  feature_flags: IFeatureFlags;
+  version_meta: IVersionMeta[];
 }
 
 export interface IGetItemClassesResponse {
