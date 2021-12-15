@@ -37,7 +37,6 @@ export interface IVersionMeta {
 }
 
 export interface IGetBootResponseData {
-  game_versions: GameVersion[];
   regions: IConfigRegion[];
   firebase_config: {
     browser_api_key: string;
