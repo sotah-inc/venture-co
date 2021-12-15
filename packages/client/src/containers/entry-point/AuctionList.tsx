@@ -1,3 +1,4 @@
+import { FeatureFlag } from "@sotah-inc/core/build/dist/types/contracts/data";
 import { connect } from "react-redux";
 
 import {
@@ -19,11 +20,24 @@ function mapStateToProps(state: IStoreState): IStateProps {
   const { realms, currentRegion, currentRealm, bootData, currentGameVersion } = state.Main;
   const { options, auctionsResult, totalResults, activeSelect } = state.Auction;
 
+  const featureFlags = ((): FeatureFlag[] => {
+    if (currentGameVersion === null) {
+      return [];
+    }
+
+    const foundMeta = bootData.data.version_meta.find(v => v.name === currentGameVersion);
+    if (foundMeta === undefined) {
+      return [];
+    }
+
+    return foundMeta.feature_flags;
+  })();
+
   return {
     activeSelect,
     auctionsResult,
     regions: bootData.data.regions,
-    featureFlags: bootData.data.feature_flags,
+    featureFlags,
     gameVersions: bootData.data.game_versions,
     currentGameVersion,
     currentRealm,

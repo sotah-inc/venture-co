@@ -65,12 +65,12 @@ export const defaultMainState: IMainState = {
     level: FetchLevel.initial,
     errors: {},
     data: {
-      feature_flags: {},
       game_versions: [],
       regions: [],
       firebase_config: {
         browser_api_key: "",
       },
+      version_meta: [],
     },
   },
   currentGameVersion: null,
@@ -97,7 +97,6 @@ export const defaultMainState: IMainState = {
     data: {
       connectedRealms: [],
       professions: [],
-      expansions: [],
     },
   },
   renderMode: RenderMode.Initial,

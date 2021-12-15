@@ -1,3 +1,4 @@
+import { IExpansion } from "@sotah-inc/core";
 import { connect } from "react-redux";
 
 import { ChangeIsLoginDialogOpen, LoadRealmEntrypoint } from "../../actions/main";
@@ -12,7 +13,16 @@ import {
 import { IStoreState } from "../../types";
 
 function mapStateToProps(state: IStoreState): IStateProps {
-  const { currentGameVersion, currentRegion, currentRealm, userData, regionData } = state.Main;
+  const {
+    currentGameVersion,
+    currentRegion,
+    currentRealm,
+    userData,
+    regionData,
+    bootData: {
+      data: { version_meta },
+    },
+  } = state.Main;
   const {
     selectedProfession: { value: selectedProfession },
     selectedExpansion,
@@ -25,6 +35,19 @@ function mapStateToProps(state: IStoreState): IStateProps {
     },
   } = state.PriceLists;
 
+  const expansions = ((): IExpansion[] => {
+    if (currentGameVersion === null) {
+      return [];
+    }
+
+    const foundMeta = version_meta.find(v => v.name === currentGameVersion);
+    if (foundMeta === undefined) {
+      return [];
+    }
+
+    return foundMeta.expansions;
+  })();
+
   return {
     currentGameVersion,
     currentRealm,
@@ -32,7 +55,7 @@ function mapStateToProps(state: IStoreState): IStateProps {
     pricelists,
     professionPricelists,
     professions: regionData.data.professions,
-    expansions: regionData.data.expansions,
+    expansions,
     selectedExpansion,
     selectedList,
     selectedProfession,

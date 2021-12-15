@@ -21,7 +21,7 @@ import {
   StatusKind,
   GameVersion,
 } from "@sotah-inc/core";
-import { FeatureFlag, IFeatureFlags } from "@sotah-inc/core/build/dist/types/contracts/data";
+import { FeatureFlag } from "@sotah-inc/core/build/dist/types/contracts/data";
 
 import { ILoadAuctionListEntrypoint } from "../../actions/auction";
 import { ILoadRealmEntrypoint } from "../../actions/main";
@@ -49,7 +49,7 @@ export interface IStateProps {
   realms: IFetchData<IClientRealm[]>;
   regions: IConfigRegion[];
   gameVersions: GameVersion[];
-  featureFlags: IFeatureFlags;
+  featureFlags: FeatureFlag[];
 }
 
 export interface IDispatchProps {
@@ -146,17 +146,7 @@ export class AuctionList extends React.Component<Props> {
       return this.renderUnmatchedGameVersion();
     }
 
-    const auctionsGameVersions = featureFlags[FeatureFlag.Auctions];
-    if (auctionsGameVersions === undefined) {
-      return (
-        <NonIdealState
-          title="Could not find feature-flag for auctions"
-          icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={0} />}
-        />
-      );
-    }
-
-    if (!auctionsGameVersions.includes(currentGameVersion)) {
+    if (!featureFlags.includes(FeatureFlag.Auctions)) {
       return (
         <NonIdealState
           title={`Auctions is not enabled for ${currentGameVersion}`}
