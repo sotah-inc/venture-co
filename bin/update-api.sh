@@ -1,4 +1,4 @@
 #! /bin/sh
 
 ./bin/rebuild-api.sh \
-  && kubectl rollout restart deployment sotah-api-deployment
+  && kubectl rollout restart statefulset sotah-api-statefulset
