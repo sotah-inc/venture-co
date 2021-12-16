@@ -65,7 +65,6 @@ export const defaultMainState: IMainState = {
     level: FetchLevel.initial,
     errors: {},
     data: {
-      game_versions: [],
       regions: [],
       firebase_config: {
         browser_api_key: "",

@@ -31,11 +31,11 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
     base: {
       load: (state: IMainState, _action: ReturnType<typeof LoadBaseEntrypoint>): IMainState => {
         const currentGameVersion = ((): GameVersion | null => {
-          if (state.bootData.data.game_versions.length === 0) {
+          if (state.bootData.data.version_meta.length === 0) {
             return null;
           }
 
-          return state.bootData.data.game_versions[0];
+          return state.bootData.data.version_meta[0].name;
         })();
 
         return {
@@ -47,7 +47,9 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
     realm: {
       load: (state: IMainState, action: ReturnType<typeof LoadRealmEntrypoint>): IMainState => {
         const currentGameVersion =
-          state.bootData.data.game_versions.find(v => v === action.payload.nextGameVersion) ?? null;
+          state.bootData.data.version_meta
+            .map(v => v.name)
+            .find(v => v === action.payload.nextGameVersion) ?? null;
         const currentRegion =
           state.bootData.data.regions.find(v => v.name === action.payload.nextRegionName) ?? null;
 
@@ -103,7 +105,9 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
     region: {
       load: (state: IMainState, action: ReturnType<typeof LoadRegionEntrypoint>): IMainState => {
         const currentGameVersion =
-          state.bootData.data.game_versions.find(v => v === action.payload.nextGameVersion) ?? null;
+          state.bootData.data.version_meta
+            .map(v => v.name)
+            .find(v => v === action.payload.nextGameVersion) ?? null;
         const currentRegion =
           state.bootData.data.regions.find(v => v.name === action.payload.nextRegionName) ?? null;
 
@@ -123,7 +127,7 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
         if (
           action.payload.boot === null ||
           action.payload.boot.regions.length === 0 ||
-          action.payload.boot.game_versions.length === 0
+          action.payload.boot.version_meta.length === 0
         ) {
           return {
             ...state,
@@ -175,9 +179,9 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
     },
     version: {
       load: (state: IMainState, action: ReturnType<typeof LoadVersionEntrypoint>): IMainState => {
-        const currentGameVersion = state.bootData.data.game_versions.includes(
-          action.payload.nextGameVersion,
-        )
+        const currentGameVersion = state.bootData.data.version_meta
+          .map(v => v.name)
+          .includes(action.payload.nextGameVersion)
           ? action.payload.nextGameVersion
           : null;
         const currentRegion = ((): IConfigRegion | null => {
