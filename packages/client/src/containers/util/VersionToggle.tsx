@@ -11,7 +11,7 @@ import { IStoreState } from "../../types";
 function mapStateToProps(state: IStoreState): IStateProps {
   const { currentGameVersion, bootData } = state.Main;
 
-  return { currentGameVersion, gameVersions: bootData.data.game_versions };
+  return { currentGameVersion, gameVersions: bootData.data.version_meta.map(v => v.name) };
 }
 
 export const VersionToggleContainer = connect<

@@ -38,7 +38,7 @@ function mapStateToProps(state: IStoreState): IStateProps {
     auctionsResult,
     regions: bootData.data.regions,
     featureFlags,
-    gameVersions: bootData.data.game_versions,
+    gameVersions: bootData.data.version_meta.map(v => v.name),
     currentGameVersion,
     currentRealm,
     currentRegion,
