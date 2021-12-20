@@ -10,12 +10,17 @@ import {
 import { IStoreState } from "../../../types";
 
 function mapStateToProps(state: IStoreState): IStateProps {
-  const { userData, currentGameVersion, currentRegion, currentRealm } = state.Main;
+  const {
+    userData,
+    currentGameVersion,
+    currentRegion,
+    currentRealm,
+    currentExpansion,
+  } = state.Main;
   const {
     isEditListDialogOpen,
     updatePricelist: { level: updatePricelistLevel, errors: updatePricelistErrors },
     selectedList,
-    selectedExpansion,
     selectedProfession: { value: selectedProfession },
   } = state.PriceLists;
 
@@ -25,7 +30,7 @@ function mapStateToProps(state: IStoreState): IStateProps {
     currentRegion,
     isEditListDialogOpen,
     userData,
-    selectedExpansion,
+    selectedExpansion: currentExpansion,
     selectedList,
     selectedProfession,
     updatePricelistErrors,

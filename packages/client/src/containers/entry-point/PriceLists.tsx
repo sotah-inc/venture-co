@@ -22,10 +22,10 @@ function mapStateToProps(state: IStoreState): IStateProps {
     bootData: {
       data: { version_meta },
     },
+    currentExpansion,
   } = state.Main;
   const {
     selectedProfession: { value: selectedProfession },
-    selectedExpansion,
     selectedList,
     professionPricelists: {
       data: { data: professionPricelists },
@@ -56,7 +56,7 @@ function mapStateToProps(state: IStoreState): IStateProps {
     professionPricelists,
     professions: regionData.data.professions,
     expansions,
-    selectedExpansion,
+    selectedExpansion: currentExpansion,
     selectedList,
     selectedProfession,
     userData,

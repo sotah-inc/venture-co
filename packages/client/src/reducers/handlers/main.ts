@@ -1,4 +1,4 @@
-import { GameVersion, IConfigRegion, UserLevel } from "@sotah-inc/core";
+import { GameVersion, IConfigRegion, IExpansion, UserLevel } from "@sotah-inc/core";
 
 import {
   LoadBaseEntrypoint,
@@ -90,9 +90,14 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
           }, null);
         })();
 
+        const currentExpansion: IExpansion | null =
+          state.bootData.data.version_meta
+            .find(v => v.name === action.payload.nextGameVersion)
+            ?.expansions.find(v => v.name === action.payload.nextExpansionName) ?? null;
+
         return {
           ...receiveGetConnectedRealms(
-            { ...state, currentGameVersion, currentRegion },
+            { ...state, currentGameVersion, currentRegion, currentExpansion },
             {
               type: RECEIVE_GET_CONNECTEDREALMS,
               payload: action.payload.realms,

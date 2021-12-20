@@ -1,5 +1,4 @@
 import {
-  IExpansion,
   IItemPrices,
   IPricelistJson,
   IProfessionPricelistJson,
@@ -40,8 +39,6 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
         const selectedProfession: IShortProfession | null =
           action.payload.professions.find(v => v.id === action.payload.professionIdData?.value) ??
           null;
-        const selectedExpansion: IExpansion | null =
-          action.payload.expansions.find(v => v.name === action.payload.expansionName) ?? null;
         const selectedList: IPricelistJson | null = action.payload.selectedList ?? null;
 
         const itemPriceHistories: IFetchData<IItemsData<IItemPriceHistoriesState>> = (() => {
@@ -149,7 +146,6 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           loadId,
           priceTable,
           professionPricelists,
-          selectedExpansion,
           selectedList,
           selectedProfession: {
             isPredefined: !!action.payload.professionIdData?.isPredefined,

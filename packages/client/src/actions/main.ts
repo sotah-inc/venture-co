@@ -1,5 +1,6 @@
 /* eslint-disable func-style,@typescript-eslint/explicit-module-boundary-types */
 import {
+  ExpansionName,
   GameVersion,
   IConfigRegion,
   IConnectedRealmComposite,
@@ -154,6 +155,7 @@ export const LoadRegionEntrypoint = (payload: ILoadRegionEntrypoint) =>
 
 export interface ILoadRealmEntrypoint extends ILoadRegionEntrypoint {
   nextRealmSlug: RealmSlug;
+  nextExpansionName?: ExpansionName;
 }
 
 export const LOAD_REALM_ENTRYPOINT = "LOAD_REALM_ENTRYPOINT";

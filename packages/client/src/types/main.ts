@@ -1,6 +1,6 @@
 import {
   GameVersion,
-  IConfigRegion,
+  IConfigRegion, IExpansion,
   IGetBootResponseData,
   IGetItemClassesResponseData,
   IGetRegionResponseData,
@@ -42,6 +42,8 @@ export interface IMainState {
   realms: IFetchData<IClientRealm[]>;
   currentRealm: IClientRealm | null;
 
+  currentExpansion: IExpansion | null;
+
   itemClasses: IFetchData<IGetItemClassesResponseData>;
 }
 
@@ -72,6 +74,7 @@ export const defaultMainState: IMainState = {
       version_meta: [],
     },
   },
+  currentExpansion: null,
   currentGameVersion: null,
   currentRealm: null,
   currentRegion: null,
