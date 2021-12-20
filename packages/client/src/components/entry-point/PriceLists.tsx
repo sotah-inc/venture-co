@@ -93,14 +93,12 @@ export class PriceLists extends React.Component<Props> {
       loadRealmEntrypoint,
       pricelistsEntrypointData,
       realmEntrypointData,
-      expansions,
       professions,
     } = this.props;
 
     loadRealmEntrypoint(realmEntrypointData);
     loadPricelistsEntrypoint({
       ...pricelistsEntrypointData,
-      expansions,
       professions,
     });
   }
@@ -111,7 +109,6 @@ export class PriceLists extends React.Component<Props> {
       currentGameVersion,
       loadRealmEntrypoint,
       realmEntrypointData,
-      expansions,
       professions,
       pricelistsEntrypointData,
       loadPricelistsEntrypoint,
@@ -121,7 +118,6 @@ export class PriceLists extends React.Component<Props> {
       loadRealmEntrypoint(realmEntrypointData);
       loadPricelistsEntrypoint({
         ...pricelistsEntrypointData,
-        expansions,
         professions,
       });
 

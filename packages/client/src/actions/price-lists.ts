@@ -3,7 +3,6 @@ import {
   ExpansionName,
   ICreatePricelistRequest,
   ICreateProfessionPricelistRequest,
-  IExpansion,
   IGetItemPriceHistoriesResponseData,
   IGetPricelistResponseData,
   IGetPricelistsResponseData,
@@ -223,7 +222,6 @@ export interface ILoadPricelistsEntrypointFront {
 
 export interface ILoadPricelistsEntrypoint extends ILoadPricelistsEntrypointFront {
   professions: IShortProfession[];
-  expansions: IExpansion[];
 }
 
 export const LOAD_PRICELISTS_ENTRYPOINT = "LOAD_PRICELISTS_ENTRYPOINT";

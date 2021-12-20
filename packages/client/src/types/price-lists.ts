@@ -1,5 +1,4 @@
 import {
-  IExpansion,
   IItemPrices,
   IPricelistJson,
   IProfessionPricelistJson,
@@ -31,7 +30,6 @@ export interface IPriceListsState {
     isPredefined: boolean;
     value: IShortProfession | null;
   };
-  selectedExpansion: IExpansion | null;
   pricelists: IFetchData<IItemsData<IPricelistJson[]>>;
   itemPriceHistories: IFetchData<IItemsData<IItemPriceHistoriesState>>;
   priceTable: IFetchData<IItemsData<IItemPrices>>;
@@ -106,7 +104,6 @@ export const defaultPriceListsState: IPriceListsState = {
     errors: {},
     level: FetchLevel.initial,
   },
-  selectedExpansion: null,
   selectedList: null,
   selectedProfession: {
     isPredefined: false,

@@ -5,8 +5,13 @@ import { ExpansionToggle, IOwnProps, IStateProps } from "../../components/util/E
 import { IStoreState } from "../../types";
 
 function mapStateToProps(state: IStoreState): IStateProps {
-  const { currentGameVersion, bootData: { data: { version_meta } } } = state.Main;
-  const { selectedExpansion } = state.PriceLists;
+  const {
+    currentGameVersion,
+    bootData: {
+      data: { version_meta },
+    },
+    currentExpansion,
+  } = state.Main;
 
   const expansions = ((): IExpansion[] => {
     if (currentGameVersion === null) {
@@ -22,7 +27,7 @@ function mapStateToProps(state: IStoreState): IStateProps {
   })();
 
   return {
-    selectedExpansion,
+    selectedExpansion: currentExpansion,
     expansions,
   };
 }

@@ -14,13 +14,18 @@ import {
 import { IStoreState } from "../../../types";
 
 function mapStateToProps(state: IStoreState): IStateProps {
-  const { userData, currentGameVersion, currentRegion, currentRealm } = state.Main;
+  const {
+    userData,
+    currentGameVersion,
+    currentRegion,
+    currentRealm,
+    currentExpansion,
+  } = state.Main;
   const {
     selectedList,
     isDeleteListDialogOpen,
     deletePricelist: { errors: deletePricelistErrors, level: deletePricelistLevel },
     selectedProfession: { value: selectedProfession },
-    selectedExpansion,
   } = state.PriceLists;
 
   return {
@@ -31,7 +36,7 @@ function mapStateToProps(state: IStoreState): IStateProps {
     deletePricelistLevel,
     isDeleteListDialogOpen,
     userData,
-    selectedExpansion,
+    selectedExpansion: currentExpansion,
     selectedList,
     selectedProfession,
   };
