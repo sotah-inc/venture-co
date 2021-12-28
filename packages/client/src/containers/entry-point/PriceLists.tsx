@@ -18,7 +18,7 @@ function mapStateToProps(state: IStoreState): IStateProps {
     currentRegion,
     currentRealm,
     userData,
-    regionData,
+    professions,
     bootData: {
       data: { version_meta },
     },
@@ -54,7 +54,7 @@ function mapStateToProps(state: IStoreState): IStateProps {
     currentRegion,
     pricelists,
     professionPricelists,
-    professions: regionData.data.professions,
+    professions,
     expansions,
     selectedExpansion: currentExpansion,
     selectedList,

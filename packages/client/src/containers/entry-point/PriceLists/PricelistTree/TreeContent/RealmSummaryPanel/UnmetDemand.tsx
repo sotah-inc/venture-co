@@ -10,7 +10,7 @@ import { IStoreState } from "../../../../../../types";
 
 function mapStateToProps(state: IStoreState): IStateProps {
   const {
-    regionData,
+    professions,
     currentGameVersion,
     currentRegion,
     currentRealm,
@@ -19,7 +19,7 @@ function mapStateToProps(state: IStoreState): IStateProps {
   const { unmetDemand } = state.PriceLists;
 
   return {
-    regionData,
+    professions,
     currentGameVersion,
     currentRealm,
     currentRegion,

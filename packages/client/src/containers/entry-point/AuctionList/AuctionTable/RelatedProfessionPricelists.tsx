@@ -9,13 +9,13 @@ import { IStoreState } from "../../../../types";
 
 function mapStateToProps(state: IStoreState): IStateProps {
   const {
-    regionData,
     currentRealm,
     currentRegion,
     currentGameVersion,
     bootData: {
       data: { version_meta },
     },
+    professions,
   } = state.Main;
   const {
     auctionsResult: { data: auctionsResultData },
@@ -39,7 +39,7 @@ function mapStateToProps(state: IStoreState): IStateProps {
     currentRealm,
     currentRegion,
     currentGameVersion,
-    professions: regionData.data.professions,
+    professions,
     expansions,
   };
 }

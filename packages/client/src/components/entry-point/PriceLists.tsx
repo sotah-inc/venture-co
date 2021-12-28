@@ -2,12 +2,12 @@ import React from "react";
 
 import { Classes, Intent, NonIdealState, Spinner } from "@blueprintjs/core";
 import {
+  GameVersion,
+  IConfigRegion,
   IExpansion,
   IPricelistJson,
-  IShortProfession,
   IProfessionPricelistJson,
-  IConfigRegion,
-  GameVersion,
+  IShortProfession,
 } from "@sotah-inc/core";
 
 import { ILoadRealmEntrypoint } from "../../actions/main";
@@ -21,8 +21,8 @@ import { CreateListDialogRouteContainer } from "../../route-containers/entry-poi
 import { DeleteListDialogRouteContainer } from "../../route-containers/entry-point/PriceLists/DeleteListDialog";
 import { EditListDialogRouteContainer } from "../../route-containers/entry-point/PriceLists/EditListDialog";
 import { PricelistTreeRouteContainer } from "../../route-containers/entry-point/PriceLists/PricelistTree";
-import { IClientRealm } from "../../types/global";
-import { AuthLevel, UserData } from "../../types/main";
+import { IClientRealm, IFetchData } from "../../types/global";
+import { AuthLevel, FetchLevel, UserData } from "../../types/main";
 import { setTitle } from "../../util";
 
 export interface IStateProps {
@@ -32,7 +32,7 @@ export interface IStateProps {
   selectedProfession: IShortProfession | null;
   selectedExpansion: IExpansion | null;
   expansions: IExpansion[];
-  professions: IShortProfession[];
+  professions: IFetchData<IShortProfession[]>;
   selectedList: IPricelistJson | null;
   professionPricelists: IProfessionPricelistJson[];
   pricelists: IPricelistJson[];
@@ -142,10 +142,20 @@ export class PriceLists extends React.Component<Props> {
       professions,
     } = this.props;
 
+    if (professions.level !== FetchLevel.success) {
+      return (
+        <NonIdealState
+          title="Profession not loaded"
+          description={"Professions were not loaded correctly"}
+          icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={1} />}
+        />
+      );
+    }
+
     if (profession_slug !== undefined && profession_slug.length > 0) {
       const professionId = Number(profession_slug.split("-")[0]);
 
-      if (!professions.some(v => v.id === professionId)) {
+      if (!professions.data.some(v => v.id === professionId)) {
         return (
           <NonIdealState
             title="Profession not found"
@@ -250,13 +260,17 @@ export class PriceLists extends React.Component<Props> {
       redirectToProfession,
     } = this.props;
 
+    if (professions.level !== FetchLevel.success) {
+      return;
+    }
+
     if (selectedProfession === null) {
       if (profession_slug === undefined) {
-        if (professions.length === 0) {
+        if (professions.data.length === 0) {
           return;
         }
 
-        const nextProfession = professions.sort((a, b) => a.name.localeCompare(b.name))[0];
+        const nextProfession = professions.data.sort((a, b) => a.name.localeCompare(b.name))[0];
 
         redirectToProfession(gameVersion, region, realm, expansion, nextProfession);
 

@@ -1,6 +1,6 @@
 {
   "name": "@sotah-inc/client",
-  "version": "2.0.582",
+  "version": "2.0.583",
   "description": "SotAH Web Client SDK",
   "main": "./build/dist/index.js",
   "typings": "build/dist/index.d.ts",
@@ -17,7 +17,7 @@
     "build:styles": "gulp -f ./build/dist/gulpfile.js --cwd . sass",
     "build:styles:watch": "gulp -f ./build/dist/gulpfile.js --cwd . sass:watch",
     "prepublishOnly": "run-s clean build",
-    "ar-login": "artifactregistry-auth ./.npmrc"
+    "ar-login": "artifactregistry-auth"
   },
   "repository": {
     "type": "git",
@@ -34,7 +34,7 @@
     "@blueprintjs/icons": "^3.27.0",
     "@blueprintjs/popover2": "^0.11.0",
     "@blueprintjs/select": "^3.16.5",
-    "@sotah-inc/core": "2.0.213",
+    "@sotah-inc/core": "^2.0.215",
     "@types/d3-scale": "^4.0.1",
     "@types/http-status": "^1.1.2",
     "@types/isomorphic-fetch": "0.0.35",
@@ -73,7 +73,7 @@
     "@types/gulp-concat": "^0.0.32",
     "@types/gulp-postcss": "^8.0.0",
     "chokidar-cli": "^2.1.0",
-    "google-artifactregistry-auth": "^2.1.0",
+    "google-artifactregistry-auth": "^3.0.0",
     "gulp": "^4.0.2",
     "gulp-cli": "^2.3.0",
     "gulp-concat": "^2.6.1",

@@ -1,10 +1,11 @@
 import {
   GameVersion,
-  IConfigRegion, IExpansion,
+  IConfigRegion,
+  IExpansion,
   IGetBootResponseData,
   IGetItemClassesResponseData,
-  IGetRegionResponseData,
   IPreferenceJson,
+  IShortProfession,
   IVerifyUserResponseData,
 } from "@sotah-inc/core";
 
@@ -24,7 +25,6 @@ export type UserData =
 
 export interface IMainState {
   bootData: IFetchData<IGetBootResponseData>;
-  regionData: IFetchData<IGetRegionResponseData>;
 
   renderMode: RenderMode;
   preloadedToken: string;
@@ -41,6 +41,7 @@ export interface IMainState {
 
   realms: IFetchData<IClientRealm[]>;
   currentRealm: IClientRealm | null;
+  professions: IFetchData<IShortProfession[]>;
 
   currentExpansion: IExpansion | null;
 
@@ -88,18 +89,15 @@ export const defaultMainState: IMainState = {
     },
   },
   preloadedToken: "",
+  professions: {
+    data: [],
+    errors: {},
+    level: FetchLevel.initial,
+  },
   realms: {
     level: FetchLevel.initial,
     errors: {},
     data: [],
-  },
-  regionData: {
-    level: FetchLevel.initial,
-    errors: {},
-    data: {
-      connectedRealms: [],
-      professions: [],
-    },
   },
   renderMode: RenderMode.Initial,
   userPreferences: {

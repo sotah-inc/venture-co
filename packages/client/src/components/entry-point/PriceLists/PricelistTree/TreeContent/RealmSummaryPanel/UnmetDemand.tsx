@@ -16,7 +16,6 @@ import {
   GameVersion,
   IConfigRegion,
   IExpansion,
-  IGetRegionResponseData,
   IPricelistEntryJson,
   IPricelistJson,
   IProfessionPricelistJson,
@@ -34,7 +33,7 @@ import { Pagination, ProfessionIcon } from "../../../../../util";
 import { ItemIcon } from "../../../../../util/ItemIcon";
 
 export interface IStateProps {
-  regionData: IFetchData<IGetRegionResponseData>;
+  professions: IFetchData<IShortProfession[]>;
   unmetDemand: IFetchData<IItemsData<IUnmetDemandState>>;
   selectedExpansion: IExpansion | null;
   currentGameVersion: GameVersion | null;
@@ -125,7 +124,7 @@ export class UnmetDemand extends React.Component<Props, IState> {
   public onPricelistClick(pricelist: IPricelistJson, professionId: ProfessionId): void {
     const {
       browseToProfessionPricelist,
-      regionData,
+      professions,
       currentGameVersion,
       currentRegion,
       currentRealm,
@@ -141,20 +140,21 @@ export class UnmetDemand extends React.Component<Props, IState> {
       return;
     }
 
-    const profession = regionData.data.professions.reduce<IShortProfession | null>(
-      (currentValue, v) => {
-        if (currentValue !== null) {
-          return currentValue;
-        }
+    if (professions.level !== FetchLevel.success) {
+      return;
+    }
 
-        if (v.id === professionId) {
-          return v;
-        }
-
+    const profession = professions.data.reduce<IShortProfession | null>((currentValue, v) => {
+      if (currentValue !== null) {
         return currentValue;
-      },
-      null,
-    );
+      }
+
+      if (v.id === professionId) {
+        return v;
+      }
+
+      return currentValue;
+    }, null);
 
     if (profession === null) {
       return;
@@ -314,10 +314,14 @@ export class UnmetDemand extends React.Component<Props, IState> {
   }
 
   private renderItemRow(index: number, resultItem: ICollapsedResultItem) {
-    const { unmetDemand, regionData } = this.props;
+    const { unmetDemand, professions } = this.props;
+
+    if (professions.level !== FetchLevel.success) {
+      return null;
+    }
 
     const { professionPricelist, entry } = resultItem;
-    const profession: IShortProfession | null = regionData.data.professions.reduce(
+    const profession: IShortProfession | null = professions.data.reduce(
       (currentValue: IShortProfession | null, v) => {
         if (currentValue !== null) {
           return currentValue;

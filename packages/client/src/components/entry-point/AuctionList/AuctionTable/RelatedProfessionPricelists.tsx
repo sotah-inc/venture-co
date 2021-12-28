@@ -11,14 +11,15 @@ import {
 } from "@sotah-inc/core";
 
 import { IAuctionResultData } from "../../../../types/auction";
-import { IClientRealm } from "../../../../types/global";
+import { IClientRealm, IFetchData } from "../../../../types/global";
+import { FetchLevel } from "../../../../types/main";
 import { getItemFromPricelist } from "../../../../util";
 import { ProfessionIcon } from "../../../util";
 import { ItemIcon } from "../../../util/ItemIcon";
 
 export interface IStateProps {
   auctionsResultData: IAuctionResultData;
-  professions: IShortProfession[];
+  professions: IFetchData<IShortProfession[]>;
   expansions: IExpansion[];
   currentRealm: IClientRealm | null;
   currentRegion: IConfigRegion | null;
@@ -93,7 +94,11 @@ export class RelatedProfessionPricelists extends React.Component<Props> {
       return null;
     }
 
-    const profession = professions.reduce<IShortProfession | null>((prev, v) => {
+    if (professions.level !== FetchLevel.success) {
+      return null;
+    }
+
+    const profession = professions.data.reduce<IShortProfession | null>((prev, v) => {
       if (prev !== null) {
         return prev;
       }

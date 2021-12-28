@@ -9,12 +9,11 @@ import {
   IGetItemClassesResponseData,
   RealmSlug,
   RegionName,
-  RegionVersionTuple,
   UpdatePreferencesRequest,
 } from "@sotah-inc/core";
 import { Dispatch } from "redux";
 
-import { getConnectedRealms } from "../api/data";
+import { getConnectedRealms, IGetConnectedRealmsOptions } from "../api/data";
 import {
   createPreferences,
   getPreferences,
@@ -104,10 +103,10 @@ export const ReceiveGetConnectedRealms = (payload: IConnectedRealmComposite[] | 
 type FetchGetConnectedRealmsType = ReturnType<
   typeof RequestGetConnectedRealms | typeof ReceiveGetConnectedRealms
 >;
-export const FetchGetConnectedRealms = (tuple: RegionVersionTuple) => {
+export const FetchGetConnectedRealms = (opts: IGetConnectedRealmsOptions) => {
   return async (dispatch: Dispatch<FetchGetConnectedRealmsType>) => {
     dispatch(RequestGetConnectedRealms());
-    dispatch(ReceiveGetConnectedRealms(await getConnectedRealms(tuple)));
+    dispatch(ReceiveGetConnectedRealms(await getConnectedRealms(opts)));
   };
 };
 

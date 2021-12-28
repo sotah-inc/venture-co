@@ -37,8 +37,9 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
         action: ReturnType<typeof LoadPricelistsEntrypoint>,
       ): IPriceListsState => {
         const selectedProfession: IShortProfession | null =
-          action.payload.professions.find(v => v.id === action.payload.professionIdData?.value) ??
-          null;
+          action.payload.professions.data.find(
+            v => v.id === action.payload.professionIdData?.value,
+          ) ?? null;
         const selectedList: IPricelistJson | null = action.payload.selectedList ?? null;
 
         const itemPriceHistories: IFetchData<IItemsData<IItemPriceHistoriesState>> = (() => {

@@ -29,6 +29,7 @@ import {
   IGetUnmetDemandResult,
   updatePricelist,
 } from "../api/price-lists";
+import { IFetchData } from "../types/global";
 import { FetchLevel } from "../types/main";
 import {
   IUpdatePricelistRequestOptions,
@@ -221,7 +222,7 @@ export interface ILoadPricelistsEntrypointFront {
 }
 
 export interface ILoadPricelistsEntrypoint extends ILoadPricelistsEntrypointFront {
-  professions: IShortProfession[];
+  professions: IFetchData<IShortProfession[]>;
 }
 
 export const LOAD_PRICELISTS_ENTRYPOINT = "LOAD_PRICELISTS_ENTRYPOINT";
