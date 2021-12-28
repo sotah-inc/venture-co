@@ -1,12 +1,12 @@
 import { GetConnectedRealmsResponse, StatusKind } from "@sotah-inc/core";
-import { IMessengers } from "@sotah-inc/server";
+import { code, IMessengers } from "@sotah-inc/server";
 import { Response } from "express";
 import HTTPStatus from "http-status";
 import moment from "moment";
 
 import { resolveConnectedRealms } from "./resolvers";
 import { validate, validationErrorsToResponse } from "./validators";
-import { createSchema, GameVersionRule, RegionNameRule } from "./validators/yup";
+import { createSchema, GameVersionRule, LocaleRule, RegionNameRule } from "./validators/yup";
 
 import { IRequestResult, PlainRequest } from "./index";
 
@@ -21,6 +21,36 @@ export class RegionsController {
     req: PlainRequest,
     _res: Response,
   ): Promise<IRequestResult<GetConnectedRealmsResponse>> {
+    const validateQueryResult = await validate(
+      createSchema({
+        locale: LocaleRule,
+      }),
+      req.query,
+    );
+    if (validateQueryResult.errors !== null) {
+      return {
+        data: validationErrorsToResponse(validateQueryResult.errors),
+        status: HTTPStatus.BAD_REQUEST,
+      };
+    }
+
+    const professionsMessage = await this.messengers.professions.professions(
+      validateQueryResult.body.locale,
+    );
+    if (professionsMessage.code !== code.ok) {
+      return {
+        data: { error: "professions message code was not ok" },
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+    const professionsResult = await professionsMessage.decode();
+    if (professionsResult === null) {
+      return {
+        data: { error: "professions message could not be decoded" },
+        status: HTTPStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+
     const validateParamsResult = await validate(
       createSchema({
         regionName: RegionNameRule,
@@ -69,7 +99,10 @@ export class RegionsController {
     })();
     if (lastModifiedDate === null) {
       return {
-        data: { connectedRealms: resolveConnectedRealmsResult.data },
+        data: {
+          connectedRealms: resolveConnectedRealmsResult.data,
+          professions: professionsResult.professions,
+        },
         status: HTTPStatus.OK,
       };
     }
@@ -82,7 +115,10 @@ export class RegionsController {
     const ifModifiedSince = req.header("if-modified-since");
     if (ifModifiedSince === undefined) {
       return {
-        data: { connectedRealms: resolveConnectedRealmsResult.data },
+        data: {
+          connectedRealms: resolveConnectedRealmsResult.data,
+          professions: professionsResult.professions,
+        },
         headers,
         status: HTTPStatus.OK,
       };
@@ -98,7 +134,10 @@ export class RegionsController {
     }
 
     return {
-      data: { connectedRealms: resolveConnectedRealmsResult.data },
+      data: {
+        connectedRealms: resolveConnectedRealmsResult.data,
+        professions: professionsResult.professions,
+      },
       headers,
       status: HTTPStatus.OK,
     };
