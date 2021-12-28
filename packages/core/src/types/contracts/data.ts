@@ -10,10 +10,10 @@ import {
   IItemPrices,
   IRegionTokenHistory,
   IShortPet,
-  IShortProfession,
   IShortTokenHistory,
   IValidationErrorResponse,
-  Locale, LocaleMapping,
+  Locale,
+  LocaleMapping,
   PetId,
   RecipeId,
   SortDirection,
@@ -26,7 +26,7 @@ import { IShortItem } from "../short-item";
 export * from "./data/index";
 
 export enum FeatureFlag {
-  Auctions = "auctions"
+  Auctions = "auctions",
 }
 
 export interface IVersionMeta {
@@ -45,13 +45,6 @@ export interface IGetBootResponseData {
 }
 
 export type GetBootResponse = IGetBootResponseData | IValidationErrorResponse | null;
-
-export interface IGetRegionResponseData {
-  professions: IShortProfession[];
-  connectedRealms: IConnectedRealmComposite[];
-}
-
-export type GetRegionResponse = IGetRegionResponseData | IValidationErrorResponse | null;
 
 export interface IGetItemClassesResponseData {
   item_classes: IItemClass[];
