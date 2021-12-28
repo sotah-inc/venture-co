@@ -61,12 +61,6 @@ export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
     ),
   );
   router.get(
-    "/region/:gameVersion/:regionName",
-    wrap(async (req: Request, res: Response) =>
-      handleResult(res, await regionsController.getRegion(req, res)),
-    ),
-  );
-  router.get(
     "/token-history",
     wrap(async (req: Request, res: Response) =>
       handleResult(res, await tokenHistoryController.getTokenHistory(req, res)),

@@ -1,6 +1,6 @@
 {
   "name": "@sotah-inc/api",
-  "version": "2.0.215",
+  "version": "2.0.216",
   "description": "SotAH API SDK",
   "main": "build/dist/index.js",
   "typings": "build/dist/index.d.ts",
@@ -21,7 +21,7 @@
     "test-coverage-report": "nyc report",
     "test-coverage-check": "nyc check-coverage --lines 95 --functions 75 --branches 95",
     "coveralls-coverage": "nyc report --reporter=text-lcov | coveralls",
-    "ar-login": "artifactregistry-auth ./.npmrc"
+    "ar-login": "artifactregistry-auth"
   },
   "repository": {
     "type": "git",
@@ -37,7 +37,7 @@
     "ava": "^3.15.0",
     "chokidar-cli": "^2.1.0",
     "coveralls": "^3.1.0",
-    "google-artifactregistry-auth": "^2.1.0",
+    "google-artifactregistry-auth": "^3.0.0",
     "npm-run-all": "^4.1.5",
     "nyc": "^15.1.0",
     "rimraf": "^3.0.2",
@@ -52,8 +52,8 @@
     "@google-cloud/pubsub": "^2.9.0",
     "@google-cloud/storage": "^5.7.4",
     "@sendgrid/mail": "^7.4.2",
-    "@sotah-inc/core": "2.0.213",
-    "@sotah-inc/server": "2.0.114",
+    "@sotah-inc/core": "^2.0.215",
+    "@sotah-inc/server": "^2.0.115",
     "@types/bcrypt": "^3.0.0",
     "@types/compression": "1.7.0",
     "@types/express": "4.17.11",
