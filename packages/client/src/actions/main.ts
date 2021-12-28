@@ -3,10 +3,9 @@ import {
   ExpansionName,
   GameVersion,
   IConfigRegion,
-  IConnectedRealmComposite,
   ICreatePreferencesRequest,
   IGetBootResponseData,
-  IGetItemClassesResponseData, IShortProfession,
+  IGetItemClassesResponseData,
   RealmSlug,
   RegionName,
   UpdatePreferencesRequest,
@@ -145,8 +144,7 @@ export const LoadVersionEntrypoint = (payload: ILoadVersionEntrypoint) =>
   createAction(LOAD_VERSION_ENTRYPOINT, payload);
 
 export interface ILoadRegionEntrypoint extends ILoadVersionEntrypoint {
-  realms: IConnectedRealmComposite[] | null;
-  professions: IShortProfession[];
+  realms: IGetConnectedRealmsResponseData | null;
   nextRegionName: RegionName;
 }
 

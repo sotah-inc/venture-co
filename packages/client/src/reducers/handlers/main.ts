@@ -62,32 +62,35 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
             return null;
           }
 
-          return action.payload.realms.reduce<IClientRealm | null>((out, current) => {
-            if (out !== null) {
-              return out;
-            }
+          return action.payload.realms.connectedRealms.reduce<IClientRealm | null>(
+            (out, current) => {
+              if (out !== null) {
+                return out;
+              }
 
-            return current.connected_realm.realms.reduce<IClientRealm | null>(
-              (connectedOut, connectedRealm) => {
-                if (connectedOut !== null) {
-                  return connectedOut;
-                }
+              return current.connected_realm.realms.reduce<IClientRealm | null>(
+                (connectedOut, connectedRealm) => {
+                  if (connectedOut !== null) {
+                    return connectedOut;
+                  }
 
-                if (connectedRealm.slug === action.payload.nextRealmSlug) {
-                  return {
-                    connectedRealmId: current.connected_realm.id,
-                    population: current.connected_realm.population,
-                    realm: connectedRealm,
-                    statusTimestamps: current.status_timestamps,
-                    regionName: currentRegion.name,
-                  };
-                }
+                  if (connectedRealm.slug === action.payload.nextRealmSlug) {
+                    return {
+                      connectedRealmId: current.connected_realm.id,
+                      population: current.connected_realm.population,
+                      realm: connectedRealm,
+                      statusTimestamps: current.status_timestamps,
+                      regionName: currentRegion.name,
+                    };
+                  }
 
-                return null;
-              },
-              null,
-            );
-          }, null);
+                  return null;
+                },
+                null,
+              );
+            },
+            null,
+          );
         })();
 
         const currentExpansion: IExpansion | null =
@@ -100,10 +103,7 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
             { ...state, currentGameVersion, currentRegion, currentExpansion },
             {
               type: RECEIVE_GET_CONNECTEDREALMS,
-              payload: {
-                connectedRealms: action.payload.realms ?? [],
-                professions: action.payload.professions,
-              },
+              payload: action.payload.realms,
             },
           ),
           currentRealm,
@@ -124,10 +124,7 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
             { ...state, currentGameVersion, currentRegion },
             {
               type: RECEIVE_GET_CONNECTEDREALMS,
-              payload: {
-                connectedRealms: action.payload.realms ?? [],
-                professions: action.payload.professions,
-              },
+              payload: action.payload.realms,
             },
           ),
         };
