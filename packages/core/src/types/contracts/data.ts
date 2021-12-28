@@ -9,7 +9,7 @@ import {
   IGetItemsRecipesResponseData,
   IItemPrices,
   IRegionTokenHistory,
-  IShortPet,
+  IShortPet, IShortProfession,
   IShortTokenHistory,
   IValidationErrorResponse,
   Locale,
@@ -66,6 +66,7 @@ export type GetPostsResponse = IGetPostsResponseData;
 
 export interface IGetConnectedRealmsResponseData {
   connectedRealms: IConnectedRealmComposite[];
+  professions: IShortProfession[];
 }
 
 export type GetConnectedRealmsResponse =

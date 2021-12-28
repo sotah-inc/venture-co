@@ -1,6 +1,6 @@
 {
   "name": "@sotah-inc/core",
-  "version": "2.0.215",
+  "version": "2.0.216",
   "description": "SotAH Core SDK",
   "main": "build/dist/index.js",
   "typings": "build/dist/index.d.ts",
@@ -20,6 +20,7 @@
   "author": "Adrian Parker <ihsw.aparker.kilabuk@gmail.com>",
   "license": "ISC",
   "devDependencies": {
+    "@types/node": "^17.0.5",
     "chokidar-cli": "^2.1.0",
     "eslint": "^8.5.0",
     "google-artifactregistry-auth": "^3.0.0",
