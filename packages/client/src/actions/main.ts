@@ -6,11 +6,12 @@ import {
   IConnectedRealmComposite,
   ICreatePreferencesRequest,
   IGetBootResponseData,
-  IGetItemClassesResponseData,
+  IGetItemClassesResponseData, IShortProfession,
   RealmSlug,
   RegionName,
   UpdatePreferencesRequest,
 } from "@sotah-inc/core";
+import { IGetConnectedRealmsResponseData } from "@sotah-inc/core/build/dist/types/contracts/data";
 import { Dispatch } from "redux";
 
 import { getConnectedRealms, IGetConnectedRealmsOptions } from "../api/data";
@@ -98,7 +99,7 @@ export const RegionChange = (payload: IConfigRegion) => createAction(REGION_CHAN
 export const REQUEST_GET_CONNECTEDREALMS = "REQUEST_GET_CONNECTEDREALMS";
 export const RECEIVE_GET_CONNECTEDREALMS = "RECEIVE_GET_CONNECTEDREALMS";
 export const RequestGetConnectedRealms = () => createAction(REQUEST_GET_CONNECTEDREALMS);
-export const ReceiveGetConnectedRealms = (payload: IConnectedRealmComposite[] | null) =>
+export const ReceiveGetConnectedRealms = (payload: IGetConnectedRealmsResponseData | null) =>
   createAction(RECEIVE_GET_CONNECTEDREALMS, payload);
 type FetchGetConnectedRealmsType = ReturnType<
   typeof RequestGetConnectedRealms | typeof ReceiveGetConnectedRealms
@@ -145,6 +146,7 @@ export const LoadVersionEntrypoint = (payload: ILoadVersionEntrypoint) =>
 
 export interface ILoadRegionEntrypoint extends ILoadVersionEntrypoint {
   realms: IConnectedRealmComposite[] | null;
+  professions: IShortProfession[];
   nextRegionName: RegionName;
 }
 

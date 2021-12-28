@@ -100,7 +100,10 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
             { ...state, currentGameVersion, currentRegion, currentExpansion },
             {
               type: RECEIVE_GET_CONNECTEDREALMS,
-              payload: action.payload.realms,
+              payload: {
+                connectedRealms: action.payload.realms ?? [],
+                professions: action.payload.professions,
+              },
             },
           ),
           currentRealm,
@@ -121,7 +124,10 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
             { ...state, currentGameVersion, currentRegion },
             {
               type: RECEIVE_GET_CONNECTEDREALMS,
-              payload: action.payload.realms,
+              payload: {
+                connectedRealms: action.payload.realms ?? [],
+                professions: action.payload.professions,
+              },
             },
           ),
         };

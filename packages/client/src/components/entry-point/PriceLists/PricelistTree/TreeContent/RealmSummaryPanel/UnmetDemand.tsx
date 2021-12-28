@@ -33,7 +33,7 @@ import { Pagination, ProfessionIcon } from "../../../../../util";
 import { ItemIcon } from "../../../../../util/ItemIcon";
 
 export interface IStateProps {
-  professions: IFetchData<IShortProfession[]>;
+  professions: IShortProfession[];
   unmetDemand: IFetchData<IItemsData<IUnmetDemandState>>;
   selectedExpansion: IExpansion | null;
   currentGameVersion: GameVersion | null;
@@ -140,11 +140,7 @@ export class UnmetDemand extends React.Component<Props, IState> {
       return;
     }
 
-    if (professions.level !== FetchLevel.success) {
-      return;
-    }
-
-    const profession = professions.data.reduce<IShortProfession | null>((currentValue, v) => {
+    const profession = professions.reduce<IShortProfession | null>((currentValue, v) => {
       if (currentValue !== null) {
         return currentValue;
       }
@@ -316,12 +312,8 @@ export class UnmetDemand extends React.Component<Props, IState> {
   private renderItemRow(index: number, resultItem: ICollapsedResultItem) {
     const { unmetDemand, professions } = this.props;
 
-    if (professions.level !== FetchLevel.success) {
-      return null;
-    }
-
     const { professionPricelist, entry } = resultItem;
-    const profession: IShortProfession | null = professions.data.reduce(
+    const profession: IShortProfession | null = professions.reduce(
       (currentValue: IShortProfession | null, v) => {
         if (currentValue !== null) {
           return currentValue;

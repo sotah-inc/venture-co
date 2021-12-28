@@ -41,7 +41,7 @@ export interface IMainState {
 
   realms: IFetchData<IClientRealm[]>;
   currentRealm: IClientRealm | null;
-  professions: IFetchData<IShortProfession[]>;
+  professions: IShortProfession[];
 
   currentExpansion: IExpansion | null;
 
@@ -89,11 +89,7 @@ export const defaultMainState: IMainState = {
     },
   },
   preloadedToken: "",
-  professions: {
-    data: [],
-    errors: {},
-    level: FetchLevel.initial,
-  },
+  professions: [],
   realms: {
     level: FetchLevel.initial,
     errors: {},

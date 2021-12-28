@@ -1,6 +1,6 @@
 {
   "name": "@sotah-inc/client",
-  "version": "2.0.583",
+  "version": "2.0.584",
   "description": "SotAH Web Client SDK",
   "main": "./build/dist/index.js",
   "typings": "build/dist/index.d.ts",
@@ -34,7 +34,7 @@
     "@blueprintjs/icons": "^3.27.0",
     "@blueprintjs/popover2": "^0.11.0",
     "@blueprintjs/select": "^3.16.5",
-    "@sotah-inc/core": "^2.0.215",
+    "@sotah-inc/core": "2.0.216",
     "@types/d3-scale": "^4.0.1",
     "@types/http-status": "^1.1.2",
     "@types/isomorphic-fetch": "0.0.35",

@@ -2,7 +2,6 @@ import {
   GetBootResponse,
   GetConnectedRealmsResponse,
   GetPricelistResponse,
-  IConnectedRealmComposite,
   IGetBootResponseData,
   IGetItemClassesResponseData,
   IGetPricelistRequest,
@@ -52,7 +51,7 @@ export interface IGetConnectedRealmsOptions {
 
 export async function getConnectedRealms(
   opts: IGetConnectedRealmsOptions,
-): Promise<IConnectedRealmComposite[] | null> {
+): Promise<IGetConnectedRealmsResponseData | null> {
   const { body, status } = await gatherWithQuery<{ locale: Locale }, GetConnectedRealmsResponse>({
     url: [getApiEndpoint(), "connected-realms", opts.tuple.game_version, opts.tuple.region_name],
     query: {
@@ -63,7 +62,7 @@ export async function getConnectedRealms(
     return null;
   }
 
-  return (body as IGetConnectedRealmsResponseData).connectedRealms;
+  return body as IGetConnectedRealmsResponseData;
 }
 
 export async function queryGeneral(

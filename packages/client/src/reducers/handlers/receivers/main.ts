@@ -8,11 +8,11 @@ export function receiveGetConnectedRealms(
   state: IMainState,
   action: ReturnType<typeof ReceiveGetConnectedRealmsAction>,
 ): IMainState {
-  if (action.payload === null || action.payload.length === 0) {
+  if (action.payload === null || action.payload.connectedRealms.length === 0) {
     return { ...state, realms: { ...state.realms, level: FetchLevel.failure } };
   }
 
-  const realms = action.payload.reduce<IClientRealm[]>((out, connectedRealm) => {
+  const realms = action.payload.connectedRealms.reduce<IClientRealm[]>((out, connectedRealm) => {
     const currentRegionName = state.currentRegion?.name;
     if (currentRegionName === undefined) {
       return out;
@@ -55,5 +55,6 @@ export function receiveGetConnectedRealms(
     ...state,
     currentRealm,
     realms: { level: FetchLevel.success, data: realms, errors: {} },
+    professions: action.payload.professions,
   };
 }
