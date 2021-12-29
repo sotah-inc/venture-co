@@ -35,6 +35,9 @@ function RouteContainer({ router }: Props) {
           null,
         );
 
+        // eslint-disable-next-line no-console
+        console.log({ url, asDest });
+
         (async () => {
           await router.replace(`/${url}`, `/${asDest}`);
         })();
