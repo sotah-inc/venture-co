@@ -38,9 +38,9 @@ function RouteContainer({ router }: Props) {
         // eslint-disable-next-line no-console
         console.log({ url, asDest });
 
-        (async () => {
-          await router.replace(`/${url}`, `/${asDest}`);
-        })();
+        // (async () => {
+        //   await router.replace(`/${url}`, `/${asDest}`);
+        // })();
       }}
       browseToProfessionPricelist={(
         gameVersion,
