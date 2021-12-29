@@ -31,7 +31,7 @@ function resolveRouteConfig(prefix: string, parts: IRouteConfigParts): IRouteCon
   }, {});
 
   return {
-    url: `/${[prefix, ...Object.keys(resolvedParts)].join("/")}`,
+    url: `/${[prefix, ...Object.keys(resolvedParts).map(v => `[${v}]`)].join("/")}`,
     asDest: `/${[prefix, ...Object.values(resolvedParts)].join("/")}`,
   };
 }
