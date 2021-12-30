@@ -56,12 +56,16 @@ export function toProfessionPricelist(
   profession?: IShortProfession | null,
   pricelist?: IPricelistJson | null,
 ): IRouteConfig {
+  const profession_id = profession
+    ? [profession.id, getSlug(profession.name)].join("-")
+    : undefined;
+
   return resolveRouteConfig("profession-pricelists", {
     game_version: gameVersion,
     region_name: region?.name,
     realm_slug: realm?.realm.slug,
     expansion_name: expansion?.name,
-    profession_id: profession?.id.toString(),
+    profession_id,
     pricelist_slug: pricelist?.slug,
   });
 }
