@@ -41,7 +41,12 @@ export interface IMainState {
 
   realms: IFetchData<IClientRealm[]>;
   currentRealm: IClientRealm | null;
+
   professions: IShortProfession[];
+  selectedProfession: {
+    isPredefined: boolean;
+    value: IShortProfession | null;
+  };
 
   currentExpansion: IExpansion | null;
 
@@ -90,6 +95,10 @@ export const defaultMainState: IMainState = {
   },
   preloadedToken: "",
   professions: [],
+  selectedProfession: {
+    isPredefined: false,
+    value: null,
+  },
   realms: {
     level: FetchLevel.initial,
     errors: {},

@@ -16,12 +16,12 @@ function mapStateToProps(state: IStoreState): IStateProps {
     currentRegion,
     currentRealm,
     currentExpansion,
+    selectedProfession: { value: selectedProfession },
   } = state.Main;
   const {
     isEditListDialogOpen,
     updatePricelist: { level: updatePricelistLevel, errors: updatePricelistErrors },
     selectedList,
-    selectedProfession: { value: selectedProfession },
   } = state.PriceLists;
 
   return {

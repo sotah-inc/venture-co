@@ -2,7 +2,6 @@ import {
   IItemPrices,
   IPricelistJson,
   IProfessionPricelistJson,
-  IShortProfession,
   ItemId,
   UpdatePricelistRequest,
 } from "@sotah-inc/core";
@@ -26,10 +25,6 @@ export interface IPriceListsState {
   isDeleteListDialogOpen: boolean;
   isAddEntryDialogOpen: boolean;
   deletePricelist: IFetchInfo;
-  selectedProfession: {
-    isPredefined: boolean;
-    value: IShortProfession | null;
-  };
   pricelists: IFetchData<IItemsData<IPricelistJson[]>>;
   itemPriceHistories: IFetchData<IItemsData<IItemPriceHistoriesState>>;
   priceTable: IFetchData<IItemsData<IItemPrices>>;
@@ -105,10 +100,6 @@ export const defaultPriceListsState: IPriceListsState = {
     level: FetchLevel.initial,
   },
   selectedList: null,
-  selectedProfession: {
-    isPredefined: false,
-    value: null,
-  },
   unmetDemand: {
     data: {
       data: {

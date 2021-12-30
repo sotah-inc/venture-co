@@ -1,9 +1,4 @@
-import {
-  IItemPrices,
-  IPricelistJson,
-  IProfessionPricelistJson,
-  IShortProfession,
-} from "@sotah-inc/core";
+import { IItemPrices, IPricelistJson, IProfessionPricelistJson } from "@sotah-inc/core";
 
 import {
   LoadPricelistsEntrypoint,
@@ -36,10 +31,6 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
         state: IPriceListsState,
         action: ReturnType<typeof LoadPricelistsEntrypoint>,
       ): IPriceListsState => {
-        const selectedProfession: IShortProfession | null =
-          action.payload.professions.data.find(
-            v => v.id === action.payload.professionIdData?.value,
-          ) ?? null;
         const selectedList: IPricelistJson | null = action.payload.selectedList ?? null;
 
         const itemPriceHistories: IFetchData<IItemsData<IItemPriceHistoriesState>> = (() => {
@@ -148,10 +139,6 @@ export const handlers: IKindHandlers<IPriceListsState, PriceListsActions> = {
           priceTable,
           professionPricelists,
           selectedList,
-          selectedProfession: {
-            isPredefined: !!action.payload.professionIdData?.isPredefined,
-            value: selectedProfession,
-          },
           unmetDemand,
         };
       },

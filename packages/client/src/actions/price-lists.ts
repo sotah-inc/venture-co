@@ -7,7 +7,6 @@ import {
   IGetPricelistResponseData,
   IGetPricelistsResponseData,
   IPricelistJson,
-  IShortProfession,
   Locale,
   ProfessionId,
 } from "@sotah-inc/core";
@@ -29,7 +28,6 @@ import {
   IGetUnmetDemandResult,
   updatePricelist,
 } from "../api/price-lists";
-import { IFetchData } from "../types/global";
 import { FetchLevel } from "../types/main";
 import {
   IUpdatePricelistRequestOptions,
@@ -221,9 +219,7 @@ export interface ILoadPricelistsEntrypointFront {
   loadId: string;
 }
 
-export interface ILoadPricelistsEntrypoint extends ILoadPricelistsEntrypointFront {
-  professions: IFetchData<IShortProfession[]>;
-}
+export type ILoadPricelistsEntrypoint = ILoadPricelistsEntrypointFront
 
 export const LOAD_PRICELISTS_ENTRYPOINT = "LOAD_PRICELISTS_ENTRYPOINT";
 export const LoadPricelistsEntrypoint = (payload: ILoadPricelistsEntrypoint) =>

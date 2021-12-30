@@ -22,7 +22,7 @@ import { DeleteListDialogRouteContainer } from "../../route-containers/entry-poi
 import { EditListDialogRouteContainer } from "../../route-containers/entry-point/PriceLists/EditListDialog";
 import { PricelistTreeRouteContainer } from "../../route-containers/entry-point/PriceLists/PricelistTree";
 import { IClientRealm } from "../../types/global";
-import { AuthLevel, FetchLevel, UserData } from "../../types/main";
+import { AuthLevel, UserData } from "../../types/main";
 import { setTitle } from "../../util";
 
 export interface IStateProps {
@@ -93,18 +93,10 @@ export class PriceLists extends React.Component<Props> {
       loadRealmEntrypoint,
       pricelistsEntrypointData,
       realmEntrypointData,
-      professions,
     } = this.props;
 
     loadRealmEntrypoint(realmEntrypointData);
-    loadPricelistsEntrypoint({
-      ...pricelistsEntrypointData,
-      professions: {
-        data: professions,
-        level: FetchLevel.success,
-        errors: {},
-      },
-    });
+    loadPricelistsEntrypoint(pricelistsEntrypointData);
   }
 
   public componentDidUpdate(prevProps: Props): void {
@@ -113,21 +105,13 @@ export class PriceLists extends React.Component<Props> {
       currentGameVersion,
       loadRealmEntrypoint,
       realmEntrypointData,
-      professions,
       pricelistsEntrypointData,
       loadPricelistsEntrypoint,
     } = this.props;
 
     if (prevProps.pricelistsEntrypointData.loadId !== pricelistsEntrypointData.loadId) {
       loadRealmEntrypoint(realmEntrypointData);
-      loadPricelistsEntrypoint({
-        ...pricelistsEntrypointData,
-        professions: {
-          data: professions,
-          level: FetchLevel.success,
-          errors: {},
-        },
-      });
+      loadPricelistsEntrypoint(pricelistsEntrypointData);
 
       return;
     }

@@ -20,12 +20,12 @@ function mapStateToProps(state: IStoreState): IStateProps {
     currentRegion,
     currentRealm,
     currentExpansion,
+    selectedProfession: { value: selectedProfession },
   } = state.Main;
   const {
     selectedList,
     isDeleteListDialogOpen,
     deletePricelist: { errors: deletePricelistErrors, level: deletePricelistLevel },
-    selectedProfession: { value: selectedProfession },
   } = state.PriceLists;
 
   return {

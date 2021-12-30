@@ -21,13 +21,9 @@ function mapStateToProps(state: IStoreState): IStateProps {
     userData,
     currentGameVersion,
     currentExpansion,
-  } = state.Main;
-  const {
-    isAddListDialogOpen,
-    isAddEntryDialogOpen,
-    selectedList,
     selectedProfession: { value: selectedProfession },
-  } = state.PriceLists;
+  } = state.Main;
+  const { isAddListDialogOpen, isAddEntryDialogOpen, selectedList } = state.PriceLists;
 
   return {
     currentGameVersion,
