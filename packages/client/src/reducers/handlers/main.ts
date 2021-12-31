@@ -108,14 +108,6 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
           action.payload.realms?.professions.find(v => v.id === action.payload.nextProfessionId) ??
           null;
 
-        // eslint-disable-next-line no-console
-        console.log(
-          "found",
-          selectedProfession,
-          action.payload.nextProfessionId,
-          state.professions,
-        );
-
         return {
           ...receiveGetConnectedRealms(
             { ...state, currentGameVersion, currentRegion, currentExpansion },
