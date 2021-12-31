@@ -105,7 +105,8 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
             ?.expansions.find(v => v.name === action.payload.nextExpansionName) ?? null;
 
         const selectedProfession: IShortProfession | null =
-          state.professions.find(v => v.id === action.payload.nextProfessionId) ?? null;
+          action.payload.realms?.professions.find(v => v.id === action.payload.nextProfessionId) ??
+          null;
 
         // eslint-disable-next-line no-console
         console.log(
