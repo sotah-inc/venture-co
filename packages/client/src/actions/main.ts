@@ -5,7 +5,7 @@ import {
   IConfigRegion,
   ICreatePreferencesRequest,
   IGetBootResponseData,
-  IGetItemClassesResponseData,
+  IGetItemClassesResponseData, ProfessionId,
   RealmSlug,
   RegionName,
   UpdatePreferencesRequest,
@@ -155,6 +155,7 @@ export const LoadRegionEntrypoint = (payload: ILoadRegionEntrypoint) =>
 export interface ILoadRealmEntrypoint extends ILoadRegionEntrypoint {
   nextRealmSlug: RealmSlug;
   nextExpansionName?: ExpansionName;
+  nextProfessionId?: ProfessionId;
 }
 
 export const LOAD_REALM_ENTRYPOINT = "LOAD_REALM_ENTRYPOINT";

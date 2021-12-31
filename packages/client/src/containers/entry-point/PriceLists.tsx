@@ -23,7 +23,7 @@ function mapStateToProps(state: IStoreState): IStateProps {
       data: { version_meta },
     },
     currentExpansion,
-    selectedProfession: { value: selectedProfession },
+    selectedProfession,
   } = state.Main;
   const {
     selectedList,

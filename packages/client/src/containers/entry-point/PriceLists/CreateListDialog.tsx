@@ -20,7 +20,7 @@ function mapStateToProps(state: IStoreState): IStateProps {
     currentRealm,
     currentGameVersion,
     currentExpansion,
-    selectedProfession: { value: selectedProfession },
+    selectedProfession,
   } = state.Main;
   const { isAddListDialogOpen, createPricelist, selectedList } = state.PriceLists;
 

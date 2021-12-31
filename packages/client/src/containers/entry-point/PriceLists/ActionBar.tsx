@@ -21,7 +21,7 @@ function mapStateToProps(state: IStoreState): IStateProps {
     userData,
     currentGameVersion,
     currentExpansion,
-    selectedProfession: { value: selectedProfession },
+    selectedProfession,
   } = state.Main;
   const { isAddListDialogOpen, isAddEntryDialogOpen, selectedList } = state.PriceLists;
 

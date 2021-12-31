@@ -43,10 +43,7 @@ export interface IMainState {
   currentRealm: IClientRealm | null;
 
   professions: IShortProfession[];
-  selectedProfession: {
-    isPredefined: boolean;
-    value: IShortProfession | null;
-  };
+  selectedProfession: IShortProfession | null;
 
   currentExpansion: IExpansion | null;
 
@@ -95,10 +92,7 @@ export const defaultMainState: IMainState = {
   },
   preloadedToken: "",
   professions: [],
-  selectedProfession: {
-    isPredefined: false,
-    value: null,
-  },
+  selectedProfession: null,
   realms: {
     level: FetchLevel.initial,
     errors: {},

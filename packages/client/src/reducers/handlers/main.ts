@@ -1,4 +1,10 @@
-import { GameVersion, IConfigRegion, IExpansion, UserLevel } from "@sotah-inc/core";
+import {
+  GameVersion,
+  IConfigRegion,
+  IExpansion,
+  IShortProfession,
+  UserLevel,
+} from "@sotah-inc/core";
 
 import {
   LoadBaseEntrypoint,
@@ -98,6 +104,9 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
             .find(v => v.name === action.payload.nextGameVersion)
             ?.expansions.find(v => v.name === action.payload.nextExpansionName) ?? null;
 
+        const selectedProfession: IShortProfession | null =
+          state.professions.find(v => v.id === action.payload.nextProfessionId) ?? null;
+
         return {
           ...receiveGetConnectedRealms(
             { ...state, currentGameVersion, currentRegion, currentExpansion },
@@ -107,6 +116,7 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
             },
           ),
           currentRealm,
+          selectedProfession,
         };
       },
     },
