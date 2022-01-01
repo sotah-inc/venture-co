@@ -120,8 +120,8 @@ export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
       handleResult(res, await professionsController.getRecipePriceHistories(req, res)),
     ),
   );
-  router.post(
-    "/unmet-demand/:regionName/:realmSlug",
+  router.get(
+    "/unmet-demand/:gameVersion/:regionName/:realmSlug/:expansionName",
     wrap(async (req: Request, res: Response) =>
       handleResult(res, await dataController.getUnmetDemand(req, res)),
     ),

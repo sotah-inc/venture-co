@@ -78,7 +78,6 @@ export class DataController {
         regionName: RegionNameRule,
         realmSlug: SlugRule,
         expansionName: ExpansionNameRule,
-        locale: LocaleRule,
       }),
       req.params,
     );
@@ -86,6 +85,19 @@ export class DataController {
       return {
         status: HTTPStatus.BAD_REQUEST,
         data: validationErrorsToResponse(validateParamsResult.errors),
+      };
+    }
+
+    const validateQueryResult = await validate(
+      createSchema({
+        locale: LocaleRule,
+      }),
+      req.query,
+    );
+    if (validateQueryResult.errors !== null) {
+      return {
+        data: validationErrorsToResponse(validateQueryResult.errors),
+        status: HTTPStatus.BAD_REQUEST,
       };
     }
 
@@ -124,7 +136,7 @@ export class DataController {
     // gathering items
     const itemsMsg = await this.messengers.items.items({
       itemIds,
-      locale: validateParamsResult.body.locale,
+      locale: validateQueryResult.body.locale,
       game_version: validateParamsResult.body.gameVersion,
     });
     if (itemsMsg.code !== code.ok) {
