@@ -127,7 +127,7 @@ export function getRouter(dbConn: Connection, messengers: IMessengers): Router {
     ),
   );
   router.get(
-    "/profession-pricelists/:professionId/:expansion",
+    "/profession-pricelists/:professionId/:expansionName",
     wrap(async (req: Request, res: Response) =>
       handleResult(res, await professionPricelistController.getProfessionPricelists(req, res)),
     ),
