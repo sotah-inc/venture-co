@@ -8,7 +8,6 @@ import {
   IGetPricelistsResponseData,
   IPricelistJson,
   Locale,
-  ProfessionId,
 } from "@sotah-inc/core";
 import { Dispatch } from "redux";
 
@@ -23,7 +22,7 @@ import {
   getProfessionPricelists,
   ICreatePricelistResult,
   ICreateProfessionPricelistResult,
-  IDeleteProfessionPricelistResult,
+  IDeleteProfessionPricelistResult, IGetProfessionPricelistsOptions,
   IGetProfessionPricelistsResult,
   IGetUnmetDemandResult,
   updatePricelist,
@@ -161,16 +160,12 @@ export const ReceiveGetProfessionPricelists = (payload: IGetProfessionPricelists
 type FetchProfessionPricelistsType = ReturnType<
   typeof RequestGetProfessionPricelists | typeof ReceiveGetProfessionPricelists
 >;
-export const FetchGetProfessionPricelists = (
-  professionId: ProfessionId,
-  expansion: ExpansionName,
-  locale: Locale,
-) => {
+export const FetchGetProfessionPricelists = (opts: IGetProfessionPricelistsOptions) => {
   return async (dispatch: Dispatch<FetchProfessionPricelistsType>) => {
     dispatch(RequestGetProfessionPricelists());
     dispatch(
       ReceiveGetProfessionPricelists(
-        await getProfessionPricelists(professionId, expansion, locale),
+        await getProfessionPricelists(opts),
       ),
     );
   };

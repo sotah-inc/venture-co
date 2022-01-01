@@ -2,6 +2,7 @@ import {
   CreatePricelistResponse,
   CreateProfessionPricelistResponse,
   ExpansionName,
+  GameVersion,
   GetPricelistsResponse,
   GetProfessionPricelistsResponse,
   GetUnmetDemandResponse,
@@ -180,23 +181,37 @@ export async function deleteProfessionPricelist(
   }
 }
 
+export interface IGetProfessionPricelistsOptions {
+  gameVersion: GameVersion;
+  professionId: ProfessionId;
+  expansion: ExpansionName;
+  locale: Locale;
+}
+
 export interface IGetProfessionPricelistsResult {
   data: IGetProfessionPricelistsResponseData | null;
   errors: IValidationErrorResponse | null;
 }
 
-export async function getProfessionPricelists(
-  professionId: ProfessionId,
-  expansion: ExpansionName,
-  locale: Locale,
-): Promise<IGetProfessionPricelistsResult> {
+export async function getProfessionPricelists({
+  gameVersion,
+  professionId,
+  expansion,
+  locale,
+}: IGetProfessionPricelistsOptions): Promise<IGetProfessionPricelistsResult> {
   const { body, status } = await gatherWithQuery<
     { locale: Locale },
     GetProfessionPricelistsResponse
   >({
     method: "GET",
     query: { locale },
-    url: `${getApiEndpoint()}/profession-pricelists/${professionId}/${expansion}`,
+    url: [
+      getApiEndpoint(),
+      "profession-pricelists",
+      gameVersion,
+      professionId.toString(),
+      expansion,
+    ],
   });
   switch (status) {
   case HTTPStatus.OK:
