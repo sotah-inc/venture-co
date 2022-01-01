@@ -13,7 +13,6 @@ import {
   IErrorResponse,
   IGetPricelistsResponseData,
   IGetProfessionPricelistsResponseData,
-  IGetUnmetDemandRequest,
   IGetUnmetDemandResponseData,
   IPricelistJson,
   IProfessionPricelistJson,
@@ -271,9 +270,10 @@ export async function getUserPricelist(token: string, slug: string): Promise<IGe
 }
 
 export interface IGetUnmetDemandOptions {
+  gameVersion: GameVersion;
   region: RegionName;
   realm: RealmSlug;
-  request: IGetUnmetDemandRequest;
+  expansionName: ExpansionName;
   locale: Locale;
 }
 
@@ -282,17 +282,18 @@ export interface IGetUnmetDemandResult {
   errors: IErrorResponse | IValidationErrorResponse | null;
 }
 
-export async function getUnmetDemand(opts: IGetUnmetDemandOptions): Promise<IGetUnmetDemandResult> {
-  const { body, status } = await gatherWithQuery<
-    { locale: Locale },
-    GetUnmetDemandResponse,
-    IGetUnmetDemandRequest
-  >({
-    body: opts.request,
+export async function getUnmetDemand({
+  gameVersion,
+  region,
+  realm,
+  expansionName,
+  locale,
+}: IGetUnmetDemandOptions): Promise<IGetUnmetDemandResult> {
+  const { body, status } = await gatherWithQuery<{ locale: Locale }, GetUnmetDemandResponse>({
     headers: new Headers({ "content-type": "application/json" }),
-    method: "POST",
-    query: { locale: opts.locale },
-    url: `${getApiEndpoint()}/unmet-demand/${opts.region}/${opts.realm}`,
+    method: "GET",
+    query: { locale },
+    url: [getApiEndpoint(), "unmet-demand", gameVersion, region, realm, expansionName],
   });
   switch (status) {
   case HTTPStatus.OK:
