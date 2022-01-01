@@ -125,7 +125,7 @@ export class PricelistTree extends React.Component<Props, IState> {
   private isSummarySelected() {
     const { selectedList, selectedProfession } = this.props;
 
-    return selectedList === null && selectedProfession === null;
+    return selectedProfession === null || selectedList === null;
   }
 
   private getProfessionPricelistNodes(): TreeNodeInfo[] {
