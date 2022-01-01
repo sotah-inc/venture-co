@@ -22,7 +22,7 @@ function RouteContainer({ router }: Props) {
         );
 
         (async () => {
-          await router.replace(`/${url}`, `/${asDest}`);
+          await router.replace(url, asDest);
         })();
       }}
       browseToProfessionPricelist={(
@@ -43,7 +43,7 @@ function RouteContainer({ router }: Props) {
         );
 
         (async () => {
-          await router.replace(`/${url}`, `/${asDest}`);
+          await router.replace(url, asDest);
         })();
       }}
     />
