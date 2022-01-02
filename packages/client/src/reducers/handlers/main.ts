@@ -99,6 +99,19 @@ export const handlers: IKindHandlers<IMainState, MainActions> = {
           );
         })();
 
+        const hasExpansions =
+          (state.bootData.data.version_meta.find(v => v.name === action.payload.nextGameVersion)
+            ?.expansions.length ?? 0) > 0;
+        if (!hasExpansions) {
+          return {
+            ...state,
+            realms: {
+              ...state.realms,
+              level: FetchLevel.failure,
+            },
+          };
+        }
+
         const currentExpansion: IExpansion | null =
           state.bootData.data.version_meta
             .find(v => v.name === action.payload.nextGameVersion)
