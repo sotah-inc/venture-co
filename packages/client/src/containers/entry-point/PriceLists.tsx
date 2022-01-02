@@ -24,6 +24,7 @@ function mapStateToProps(state: IStoreState): IStateProps {
     },
     currentExpansion,
     selectedProfession,
+    realms,
   } = state.Main;
   const {
     selectedList,
@@ -60,6 +61,7 @@ function mapStateToProps(state: IStoreState): IStateProps {
     selectedList,
     selectedProfession,
     userData,
+    realms,
   };
 }
 

@@ -21,12 +21,13 @@ import { CreateListDialogRouteContainer } from "../../route-containers/entry-poi
 import { DeleteListDialogRouteContainer } from "../../route-containers/entry-point/PriceLists/DeleteListDialog";
 import { EditListDialogRouteContainer } from "../../route-containers/entry-point/PriceLists/EditListDialog";
 import { PricelistTreeRouteContainer } from "../../route-containers/entry-point/PriceLists/PricelistTree";
-import { IClientRealm } from "../../types/global";
-import { AuthLevel, UserData } from "../../types/main";
+import { IClientRealm, IFetchData } from "../../types/global";
+import { AuthLevel, FetchLevel, UserData } from "../../types/main";
 import { setTitle } from "../../util";
 
 export interface IStateProps {
   currentGameVersion: GameVersion | null;
+  realms: IFetchData<IClientRealm[]>;
   currentRealm: IClientRealm | null;
   currentRegion: IConfigRegion | null;
   selectedProfession: IShortProfession | null;
@@ -130,9 +131,20 @@ export class PriceLists extends React.Component<Props> {
   public render(): React.ReactNode {
     const {
       userData,
-      routeParams: { profession_slug },
+      routeParams: { profession_slug, realm_slug },
       professions,
+      realms,
     } = this.props;
+
+    if (realms.level !== FetchLevel.success) {
+      return (
+        <NonIdealState
+          title="Failed to load realm"
+          description={`Realm with slug ${realm_slug} could not be loaded`}
+          icon={<Spinner className={Classes.LARGE} intent={Intent.DANGER} value={1} />}
+        />
+      );
+    }
 
     if (profession_slug !== undefined && profession_slug.length > 0) {
       const professionId = Number(profession_slug.split("-")[0]);
